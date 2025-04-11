@@ -44,33 +44,7 @@ There are 3 ways to specify a directory path:
 1. **URI**: a URI that follows the [RFC 3986 specification](https://datatracker.ietf.org/doc/html/rfc3986), e.g. `s3://mu-bucket/prefix`.
 2. **Absolute POSIX file system path**: an absolute file path in a POSIX standard file system, e.g. `/my/dir`.
 2. **Relative POSIX file system path**: a relative file path in a POSIX standard file system, e.g. `my/dir2`.
-   The absolute path should be derived by using the current directory of the running process. 
-
-### Table Directory Ignore File
-
-`.lanceignore` is a file in the namespace directory that describes the directories that 
-should not be treated as a table directory.  
-It is a text file where each new line describes a new directory name.
-Consider the following example directory layout:
-
-```
-.
-└── /my/dir2/
-    ├── table1
-    ├── table2
-    ├── table3
-    ├── .git
-    ├── build
-    └── .lanceignore
-```
-
-We can have the following contents in `.lanceignore` in order to ignore the directories
-that are not a table directory:
-
-```
-.git
-build
-```
+   The absolute path should be derived by using the current directory of the running process.
 
 ## Lance REST Protocol
 
