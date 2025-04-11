@@ -158,7 +158,7 @@ Otherwise if should be treated as a namespace through the REST protocol.
 For example, consider the following Apache Spark configuration:
 
 ```shell
-spark-shell \
+spark-sql \
   --conf spark.sql.catalog.lance=com.lancedb.lance.spark.LanceCatalog \
   --conf spark.sql.catalog.lance.rest.uri=https://my.lance.catalog.com \
   --conf spark.sql.defaultCatalog=lance
