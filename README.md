@@ -1,11 +1,10 @@
 # Lance Catalog
 
-**Lance Catalog** is an OpenAPI specification on top of the storage-based Lance format.
-It provides an integration point for catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, etc. 
-to store and use Lance tables. To integrate, the catalog service implements a **Lance Catalog Adapter**, 
-which is a REST server that converts the Lance catalog requests to native requests against the catalog service.
-Different tools can integrate with Lance Catalog using the generated OpenAPI clients in various languages,
-and invoke operations in Lance Catalog to read, write and manage Lance tables in the integrated catalog services.
+**Lance Catalog** is an open specification on top of the storage-based Lance open format
+to standardize access to a collection of Lance tables.
+It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, etc.
+should store and use Lance tables, as well as how ML/AI tools and analytics compute engines
+should access Lance tables.
 
 ## Repository structure
 
