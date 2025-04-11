@@ -96,12 +96,9 @@ components:
   schemas:
     ErrorModel:
       type: object
-      description: JSON error payload returned in a response with further details on the error
+      description: JSON error model(based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)) payload returned in a response with further details on the error
       required:
         - type
-        - title
-        - detail
-        - instance
       properties:
         type:
           type: string
@@ -115,7 +112,7 @@ components:
           type: integer
           minimum: 400
           maximum: 600
-          description: HTTP response code
+          description: HTTP response code, (if present) it must match the actual HTTP code returned by the service
           example: 404
         detail:
           type: string
