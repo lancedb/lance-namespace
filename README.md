@@ -15,8 +15,3 @@ and invoke operations in Lance Catalog to read, write and manage Lance tables in
 | [rust/lance-catalog-reqwest-client](./rust/lance-catalog-reqwest-client)       | Generated Rust reqwest client for Lance Catalog     |
 | [java/lance-catalog-apache-client](./java/lance-catalog-apache-client)         | Generated Java Apache HTTP client for Lance Catalog |
 | [java/lance-catalog-springboot-server](./java/lance-catalog-springboot-server) | Generated Java SpringBoot server for Lance          |
-
-## Development Guide
-
-### Generating clients and servers
-
