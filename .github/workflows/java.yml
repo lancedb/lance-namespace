@@ -61,13 +61,13 @@ jobs:
         with:
           repository: lancedb/lance
           path: lance
-      - uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: lance/java/core/lance-jni
       - name: Checkout lance-catalog repo
         uses: actions/checkout@v4
         with:
           path: lance-catalog
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: lance/java/core/lance-jni -> lance/java/core/target/rust-maven-plugin/lance-jni
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
