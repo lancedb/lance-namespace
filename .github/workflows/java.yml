@@ -74,7 +74,7 @@ jobs:
           path: lance-catalog
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: ~/lance/java/core/lance-jni -> ~/lance/java/core/target/rust-maven-plugin/lance-jni
+          workspaces: lance/java/core/lance-jni -> ../target/rust-maven-plugin/lance-jni
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
