@@ -119,7 +119,7 @@ jobs:
             -Dio.netty.tryReflectionSetAccessible=true"
           fi
           mvn clean checkstyle:check spotless:check
-      - name: Running tests with Java ${{ matrix.java-version }} Scala ${{ matrix.scala-version }} for Spark ${{ matrix.spark-version }}
+      - name: Running tests with Java ${{ matrix.java-version }}
         working-directory: lance-catalog/java
         run: |
           if [ "${{ matrix.java-version }}" == "17" ]; then
