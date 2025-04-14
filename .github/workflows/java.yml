@@ -17,6 +17,11 @@ on:
     branches:
       - main
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+      - reopened
     paths:
       - spec/**
       - java/**
