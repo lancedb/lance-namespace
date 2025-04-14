@@ -56,6 +56,13 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y protobuf-compiler libssl-dev
+      # pin the toolchain version to avoid surprises
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: ${{ matrix.toolchain }}
+      - uses: rui314/setup-mold@v1
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
       - name: Checkout lance repo
         uses: actions/checkout@v4
         with:
@@ -74,6 +81,9 @@ jobs:
           distribution: temurin
           java-version: ${{ matrix.java-version }}
           cache: "maven"
+      - name: Run Cargo build for lance-jni to trigger caching
+        working-directory: lance/java
+        run: cargo build --target-dir core/target/rust-maven-plugin/lance-jni
       - name: Install Lance Java SDK
         working-directory: lance/java
         run: |
@@ -98,7 +108,7 @@ jobs:
             -Djdk.reflect.useDirectMethodHandle=false \
             -Dio.netty.tryReflectionSetAccessible=true"
           fi
-          mvn clean install -pl :lance-core -DskipTests -am
+          mvn install -pl :lance-core -DskipTests -am
       - name: Check code style
         working-directory: lance-catalog/java
         run: |
