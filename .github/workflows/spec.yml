@@ -48,10 +48,10 @@ jobs:
           java-version: 11
           cache: "maven"
       - name: Install openapi-generator
-        run: pip install --user ci openapi-generator-cli
+        run: pip install --user openapi-generator-cli
       - name: list
         run: |
-          ls ~/.local/bin/ci
+          ls ~/.local/bin
       - name: Generate Java
         working-directory: java
         run: make gen
