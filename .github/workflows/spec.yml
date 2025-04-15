@@ -34,11 +34,11 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-      - name: Set up npm
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          node-version: 20
-          cache: 'npm'
+          python-version: '3.13'
+          cache: 'pip'
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
@@ -46,7 +46,7 @@ jobs:
           java-version: 11
           cache: "maven"
       - name: Install openapi-generator
-        run: npm install @openapitools/openapi-generator-cli -g
+        run: pip install openapi-generator-cli
       - name: Generate Java
         working-directory: java
         run: make gen
