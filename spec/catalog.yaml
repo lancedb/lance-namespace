@@ -53,14 +53,6 @@ security:
   - BearerAuth: []
 
 paths:
-  /v1/ping:
-    get:
-      summary: Ping the server for use cases like health check
-      operationId: Ping
-      responses:
-        '201':
-          description: OK
-
   /v1/namespaces:
     post:
       tags: [ Namespace ]

@@ -1,8 +1,8 @@
 .openapi-generator-ignore
 README.md
+api/openapi.yaml
 docs/CreateNamespaceRequest.md
 docs/CreateNamespaceResponse.md
-docs/DefaultApi.md
 docs/ErrorModel.md
 docs/NamespaceApi.md
 pom.xml
@@ -17,6 +17,7 @@ src/main/java/com/lancedb/lance/catalog/client/apache/RFC3339DateFormat.java
 src/main/java/com/lancedb/lance/catalog/client/apache/ServerConfiguration.java
 src/main/java/com/lancedb/lance/catalog/client/apache/ServerVariable.java
 src/main/java/com/lancedb/lance/catalog/client/apache/StringUtil.java
+src/main/java/com/lancedb/lance/catalog/client/apache/api/NamespaceApi.java
 src/main/java/com/lancedb/lance/catalog/client/apache/auth/ApiKeyAuth.java
 src/main/java/com/lancedb/lance/catalog/client/apache/auth/Authentication.java
 src/main/java/com/lancedb/lance/catalog/client/apache/auth/HttpBasicAuth.java

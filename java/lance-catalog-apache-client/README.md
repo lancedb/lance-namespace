@@ -83,19 +83,21 @@ Please follow the [installation](#installation) instruction and execute the foll
 import com.lancedb.lance.catalog.client.apache.*;
 import com.lancedb.lance.catalog.client.apache.auth.*;
 import com.lancedb.lance.catalog.client.apache.model.*;
-import com.lancedb.lance.catalog.client.apache.api.DefaultApi;
+import com.lancedb.lance.catalog.client.apache.api.NamespaceApi;
 
-public class DefaultApiExample {
+public class NamespaceApiExample {
 
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
         
-        DefaultApi apiInstance = new DefaultApi(defaultClient);
+        NamespaceApi apiInstance = new NamespaceApi(defaultClient);
+        CreateNamespaceRequest createNamespaceRequest = new CreateNamespaceRequest(); // CreateNamespaceRequest | 
         try {
-            apiInstance.ping();
+            CreateNamespaceResponse result = apiInstance.createNamespace(createNamespaceRequest);
+            System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#ping");
+            System.err.println("Exception when calling NamespaceApi#createNamespace");
             System.err.println("Status code: " + e.getCode());
             System.err.println("Reason: " + e.getResponseBody());
             System.err.println("Response headers: " + e.getResponseHeaders());
@@ -112,7 +114,6 @@ All URIs are relative to *http://localhost:2333*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*DefaultApi* | [**ping**](docs/DefaultApi.md#ping) | **GET** /v1/ping | Ping the server for use cases like health check
 *NamespaceApi* | [**createNamespace**](docs/NamespaceApi.md#createNamespace) | **POST** /v1/namespaces | Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:   * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.   * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.   * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created. 
 
 
