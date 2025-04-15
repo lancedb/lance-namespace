@@ -87,7 +87,6 @@ paths:
       tags: [ Namespace ]
       summary: >
         List all namespaces in the catalog.
-        The list is paginated, and the client can use the startAfter and limit query parameters to control the pagination.
       operationId: listNamespaces
       responses:
         200:
@@ -105,17 +104,6 @@ paths:
 
 
 components:
-  parameters:
-    startAfter:
-      name: startAfter
-      in: query
-      schema: { type: string }
-
-    limit:
-      name: limit
-      in: query
-      schema: { type: integer }
-
   schemas:
     ErrorModel:
       type: object
@@ -145,13 +133,6 @@ components:
           type: string
           description: a URI that identifies the specific occurrence of the error
           example: /login/log/abc123
-
-    Namespace:
-      description: Reference to a namespace
-      type: array
-      items:
-        type: string
-      example: [ "accounting", "tax" ]
 
     CreateNamespaceRequest:
       type: object
@@ -187,7 +168,10 @@ components:
           type: array
           uniqueItems: true
           items:
-            $ref: '#/components/schemas/Namespace'
+            type: array
+            items:
+              type: string
+            example: [ "accounting", "tax" ]
 
   responses:
     CreateNamespaceResponse:
