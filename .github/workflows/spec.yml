@@ -57,4 +57,12 @@ jobs:
         working-directory: rust
         run: make gen
       - name: Check no difference in codegen
-        run: git diff
+        run: |
+          output=$(git diff)
+          if [ -z "$output" ]; then
+            echo "There is no difference in codegen"
+          else
+            echo "Detected difference in codegen"
+            echo "$output"
+            exit 1
+          fi
