@@ -11,6 +11,11 @@ gen-rust-reqwest-client: clean-rust-reqwest-client
 	  -o lance-catalog-reqwest-client \
 	  --additional-properties=packageName=lance-catalog-reqwest-client,packageVersion=$(VERSION),asyncApi=true,library=reqwest
 
+build-rust-reqwest-client: gen-rust-reqwest-client
+	cargo test
+
 clean: clean-rust-reqwest-client
 
 gen: gen-rust-reqwest-client
+
+build: build-rust-reqwest-client
