@@ -165,6 +165,7 @@ components:
       type: object
       properties:
         namespaces:
+          description: An array of namespace names in the catalog.
           type: array
           uniqueItems: true
           items:
