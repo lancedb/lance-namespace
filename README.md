@@ -18,10 +18,12 @@ and invoke operations in Lance Catalog to read, write and manage Lance tables in
 
 ## Development Guide
 
-## Install OpenAPI Generator
+### Install OpenAPI Generator
 
-We use OpenAPI Generator to generate various clients and servers for the catalog specification.
-We recommend installing the tool through pip for consistent experience across platforms.
+We use [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator) 
+to generate various clients and servers for the catalog specification.
+We recommend installing the tool through [pip](https://pypi.org/project/openapi-generator-cli/) 
+for consistent experience across platforms.
 First time setup of virtual environment and installation:
 
 ```bash
@@ -30,7 +32,7 @@ source .env/bin/activate
 pip install -r requirements.txt
 ```
 
-## Develop Rust
+### Develop Rust
 
 ```bash
 cd rust
@@ -41,11 +43,14 @@ make clean
 # clean, and then generate all clients and servers
 make gen 
 
+# clean and generate the rust reqwest client
+make gen-rust-reqwest-client
+
 # clean, generate and build the modules 
 make build
 ```
 
-## Develop Java
+### Develop Java
 
 ```bash
 cd java
@@ -55,6 +60,12 @@ make clean
 
 # clean, and then generate all clients and servers
 make gen 
+
+# clean and generate the Java Apache client
+make gen-java-apache-client
+
+# clean and generate the Java Spring Boot server
+make gen-java-springboot-server
 
 # clean, generate and build the modules 
 make build
