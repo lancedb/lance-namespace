@@ -3,3 +3,7 @@ README.md
 pom.xml
 src/main/java/com/lancedb/lance/catalog/server/springboot/api/ApiUtil.java
 src/main/java/com/lancedb/lance/catalog/server/springboot/api/DefaultApi.java
+src/main/java/com/lancedb/lance/catalog/server/springboot/api/NamespaceApi.java
+src/main/java/com/lancedb/lance/catalog/server/springboot/model/CreateNamespaceRequest.java
+src/main/java/com/lancedb/lance/catalog/server/springboot/model/CreateNamespaceResponse.java
+src/main/java/com/lancedb/lance/catalog/server/springboot/model/ErrorModel.java

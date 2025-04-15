@@ -53,7 +53,8 @@ jobs:
             "rules": {
               "body-max-line-length": [0, "always", Infinity],
               "footer-max-line-length": [0, "always", Infinity],
-              "body-leading-blank": [0, "always"]
+              "body-leading-blank": [0, "always"],
+              "type-enum": [2, "always", ["build", "chore", "ci", "docs", "feat", "fix", "perf", "refactor", "revert", "style", "test", "spec", "codegen"]]
             }
           }' > .commitlintrc.js
       - run: npx commitlint --extends @commitlint/config-conventional --verbose <<< $COMMIT_MSG

@@ -7,4 +7,5 @@
 <suppressions>
     <!-- Generated Apache client server configuration having a method with name 'URL' -->
     <suppress checks="MethodName" files="lance-catalog-apache-client/src/main/java/com/lancedb/lance/catalog/client/apache/ServerConfiguration.java"/>
+    <suppress checks="LineLength" files="lance-catalog-springboot-server/src/main/java/com/lancedb/lance/catalog/server/springboot/*"/>
 </suppressions>

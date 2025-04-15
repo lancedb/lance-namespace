@@ -130,7 +130,7 @@ jobs:
             -Djdk.reflect.useDirectMethodHandle=false \
             -Dio.netty.tryReflectionSetAccessible=true"
           fi
-          mvn clean checkstyle:check spotless:check
+          mvn checkstyle:check spotless:check
       - name: Running tests with Java ${{ matrix.java-version }}
         working-directory: lance-catalog/java
         run: |

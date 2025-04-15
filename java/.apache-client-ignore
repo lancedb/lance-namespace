@@ -6,6 +6,8 @@
 **gradlew
 **gradlew.bat
 **settings.gradle
-**gradle
-**src/test
-**.github
+**.gitignore
+**/gradle/**
+**/.github/**
+**/api/**
+**/src/test/**

@@ -1,5 +1,3 @@
-.github/workflows/maven.yml
-.gitignore
 .openapi-generator-ignore
 README.md
 api/openapi.yaml
@@ -18,7 +16,6 @@ src/main/java/com/lancedb/lance/catalog/client/apache/RFC3339DateFormat.java
 src/main/java/com/lancedb/lance/catalog/client/apache/ServerConfiguration.java
 src/main/java/com/lancedb/lance/catalog/client/apache/ServerVariable.java
 src/main/java/com/lancedb/lance/catalog/client/apache/StringUtil.java
-src/main/java/com/lancedb/lance/catalog/client/apache/api/DefaultApi.java
 src/main/java/com/lancedb/lance/catalog/client/apache/auth/ApiKeyAuth.java
 src/main/java/com/lancedb/lance/catalog/client/apache/auth/Authentication.java
 src/main/java/com/lancedb/lance/catalog/client/apache/auth/HttpBasicAuth.java
