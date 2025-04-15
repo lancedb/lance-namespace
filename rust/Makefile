@@ -5,7 +5,7 @@ clean-rust-reqwest-client:
 	rm -rf lance-catalog-reqwest-client
 
 gen-rust-reqwest-client: clean-rust-reqwest-client
-	openapi-generator generate \
+	openapi-generator-cli generate \
 	  -i ../spec/catalog.yaml \
 	  -g rust \
 	  -o lance-catalog-reqwest-client \

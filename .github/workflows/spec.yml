@@ -34,8 +34,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-      - name: Add Python requirement to enable caching
-        run: touch ./requirements.txt
       - name: Set up Python
         uses: actions/setup-python@v5
         with:

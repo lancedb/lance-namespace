@@ -5,7 +5,7 @@ clean-java-apache-client:
 	rm -rf lance-catalog-apache-client
 
 gen-java-apache-client: clean-java-apache-client
-	openapi-generator generate \
+	openapi-generator-cli generate \
 	  -i ../spec/catalog.yaml \
 	  -g java \
 	  -o lance-catalog-apache-client \
@@ -21,7 +21,7 @@ clean-java-springboot-server:
 	rm -rf lance-catalog-springboot-server
 
 gen-java-springboot-server: clean-java-springboot-server
-	openapi-generator generate \
+	openapi-generator-cli generate \
 	  -i ../spec/catalog.yaml \
 	  -g spring \
       -o lance-catalog-springboot-server \

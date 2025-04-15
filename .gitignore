@@ -106,3 +106,12 @@ test_data/venv
 
 **/*.profraw
 *.lance
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
