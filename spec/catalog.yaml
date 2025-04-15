@@ -83,7 +83,38 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+    get:
+      tags: [ Namespace ]
+      summary: >
+        List all namespaces in the catalog.
+        The list is paginated, and the client can use the startAfter and limit query parameters to control the pagination.
+      operationId: listNamespaces
+      responses:
+        200:
+          $ref: '#/components/responses/ListNamespacesResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        406:
+          $ref: '#/components/responses/UnsupportedOperationResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+
 components:
+  parameters:
+    startAfter:
+      name: startAfter
+      in: query
+      schema: { type: string }
+
+    limit:
+      name: limit
+      in: query
+      schema: { type: integer }
 
   schemas:
     ErrorModel:
@@ -115,6 +146,13 @@ components:
           description: a URI that identifies the specific occurrence of the error
           example: /login/log/abc123
 
+    Namespace:
+      description: Reference to a namespace
+      type: array
+      items:
+        type: string
+      example: [ "accounting", "tax" ]
+
     CreateNamespaceRequest:
       type: object
       required: [ name, mode ]
@@ -142,6 +180,15 @@ components:
           example: { "created_at": "1452120468" }
           default: { }
 
+    ListNamespacesResponse:
+      type: object
+      properties:
+        namespaces:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Namespace'
+
   responses:
     CreateNamespaceResponse:
       description:
@@ -157,6 +204,18 @@ components:
             "namespace": [ "lance.ns1" ],
             "properties": { "created_at": "1452120468" }
           }
+
+    ListNamespacesResponse:
+      description: A list of namespaces
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListNamespacesResponse'
+          examples:
+            NonEmptyResponse:
+              $ref: '#/components/examples/ListNamespacesNonEmptyExample'
+            EmptyResponse:
+              $ref: '#/components/examples/ListNamespacesEmptyExample'
 
     BadRequestErrorResponse:
       description:
@@ -236,3 +295,19 @@ components:
             "detail": "",
             "instance": "/v1/namespaces"
           }
+
+  examples:
+    ListNamespacesEmptyExample:
+      summary: An empty list of namespaces
+      value: {
+        "namespaces": [ ]
+      }
+
+    ListNamespacesNonEmptyExample:
+      summary: A non-empty list of namespaces
+      value: {
+        "namespaces": [
+          [ "accounting", "tax" ],
+          [ "accounting", "credits" ]
+        ]
+      }
