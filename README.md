@@ -46,7 +46,7 @@ make gen
 # clean and generate the rust reqwest client
 make gen-rust-reqwest-client
 
-# clean, generate and build the modules 
+# clean, generate and build all clients and servers
 make build
 ```
 
@@ -67,6 +67,6 @@ make gen-java-apache-client
 # clean and generate the Java Spring Boot server
 make gen-java-springboot-server
 
-# clean, generate and build the modules 
+# clean, generate and build all clients and servers
 make build
 ```
