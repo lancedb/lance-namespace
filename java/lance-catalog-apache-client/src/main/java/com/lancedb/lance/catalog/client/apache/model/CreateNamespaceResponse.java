@@ -34,14 +34,14 @@ import java.util.StringJoiner;
     comments = "Generator version: 7.12.0")
 public class CreateNamespaceResponse {
   public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nullable private String name;
+  @javax.annotation.Nonnull private String name;
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public CreateNamespaceResponse() {}
 
-  public CreateNamespaceResponse name(@javax.annotation.Nullable String name) {
+  public CreateNamespaceResponse name(@javax.annotation.Nonnull String name) {
 
     this.name = name;
     return this;
@@ -52,16 +52,16 @@ public class CreateNamespaceResponse {
    *
    * @return name
    */
-  @javax.annotation.Nullable
+  @javax.annotation.Nonnull
   @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public String getName() {
     return name;
   }
 
   @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setName(@javax.annotation.Nullable String name) {
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setName(@javax.annotation.Nonnull String name) {
     this.name = name;
   }
 

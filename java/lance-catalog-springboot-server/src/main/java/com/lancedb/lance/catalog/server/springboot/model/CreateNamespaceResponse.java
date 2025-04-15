@@ -35,6 +35,15 @@ public class CreateNamespaceResponse {
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
+  public CreateNamespaceResponse() {
+    super();
+  }
+
+  /** Constructor with only required parameters */
+  public CreateNamespaceResponse(String name) {
+    this.name = name;
+  }
+
   public CreateNamespaceResponse name(String name) {
     this.name = name;
     return this;
@@ -45,7 +54,8 @@ public class CreateNamespaceResponse {
    *
    * @return name
    */
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
     return name;
