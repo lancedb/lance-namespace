@@ -125,11 +125,11 @@ The goal of these guidelines is to offer a consistent user experience across dif
 We recommend tools to offer the following configurations in some form or shape 
 for users to configure connection to a Lance catalog:
 
-| Config Key           | Description                                                                                 | Required?                   | 
-|----------------------|---------------------------------------------------------------------------------------------|-----------------------------|
-| catalog.type         | The type of the catalog, either `dir` for Lance directory, or `rest` for Lance REST Catalog | Yes                         |
-| catalog.dir.location | The location of the Lance directory                                                         | Yes for `dir` catalog type  | 
-| catalog.rest.uri     | The HTTP URI for the Lance REST Catalog                                                     | Yes for `rest` catalog type |
+| Config Key | Description                                                                                 | Required?                   | 
+|------------|---------------------------------------------------------------------------------------------|-----------------------------|
+| type       | The type of the catalog, either `dir` for Lance directory, or `rest` for Lance REST Catalog | Yes                         |
+| path       | The path to the Lance directory                                                             | Yes for `dir` catalog type  | 
+| uri        | The HTTP URI for the Lance REST Catalog                                                     | Yes for `rest` catalog type |
 
 ### Hierarchy Mapping
 
