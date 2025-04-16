@@ -2,7 +2,7 @@
 
 **Lance Catalog** is an open specification on top of the storage-based Lance open format
 to standardize access to a collection of Lance tables.
-It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, etc.
+It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc.
 should store and use Lance tables, as well as how ML/AI tools and analytics compute engines
 should access Lance tables.
 
