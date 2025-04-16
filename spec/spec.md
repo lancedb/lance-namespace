@@ -83,7 +83,7 @@ The REST Catalog provides a container concept called **Namespace** and
 exposes a 2 level hierarchy below the root REST catalog server to organize tables.
 A catalog contains a list of namespaces, and a namespace contains a list of tables.
 
-### Relationship with Table on Storage
+### Relationship with Lance Table on Storage
 
 This section defines the possible relationships between a Lance table definition in a REST catalog and
 the corresponding Lance table sitting in some storage system.
@@ -122,7 +122,7 @@ The goal of these guidelines is to offer a consistent user experience across dif
 
 ### Configurations
 
-We recommend any tool to offer the following configurations in some form or shape 
+We recommend tools to offer the following configurations in some form or shape 
 for users to configure connection to a Lance catalog:
 
 | Config Key           | Description                                                                                 | Required?                   | 
