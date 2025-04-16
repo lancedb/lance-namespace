@@ -102,7 +102,44 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/namespaces/{ns}:
+    parameters:
+      - $ref: '#/components/parameters/namespace'
+
+    get:
+      tags: [ Namespace ]
+      summary: Load the metadata properties for a namespace
+      operationId: loadNamespaceMetadata
+      description: Return all stored metadata properties for a given namespace
+      responses:
+        200:
+          $ref: '#/components/responses/GetNamespaceResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        404:
+          description: Not Found - Namespace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFoundResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
 components:
+  parameters:
+    namespace:
+      name: ns
+      in: path
+      required: true
+      description:
+        The name of the namespace.
+      schema:
+        type: string
+
   schemas:
     ErrorModel:
       type: object
@@ -171,6 +208,25 @@ components:
             type: string
             example: "accounting"
 
+    GetNamespaceResponse:
+      type: object
+      required:
+        - namespace
+      properties:
+        namespace:
+          type: string
+        properties:
+          type: object
+          description:
+            Properties stored on the namespace, if supported by the server.
+            If the server does not support namespace properties, it should return null for this field.
+            If namespace properties are supported, but none are set, it should return an empty object.
+          additionalProperties:
+            type: string
+          example: { "owner": "Ralph", 'created_at': '1452120468' }
+          default: { }
+          nullable: true
+
   responses:
     CreateNamespaceResponse:
       description:
@@ -198,6 +254,15 @@ components:
               $ref: '#/components/examples/ListNamespacesNonEmptyExample'
             EmptyResponse:
               $ref: '#/components/examples/ListNamespacesEmptyExample'
+
+    GetNamespaceResponse:
+      description:
+        Returns a namespace, as well as any properties stored on the namespace if namespace properties
+        are supported by the server.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetNamespaceResponse'
 
     BadRequestErrorResponse:
       description:
@@ -276,6 +341,21 @@ components:
             "status": 500,
             "detail": "",
             "instance": "/v1/namespaces"
+          }
+
+    NotFoundResponse:
+      description:
+        A server-side problem that means can not find the specified resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example: {
+            "type": "/errors/not-found-error",
+            "title": "Not found Error",
+            "status": 404,
+            "detail": "",
+            "instance": "/v1/namespaces/{ns}"
           }
 
   examples:
