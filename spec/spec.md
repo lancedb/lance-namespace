@@ -4,19 +4,19 @@
 to standardize access to a collection of Lance tables.
 It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc.
 should store and use Lance tables, as well as how ML/AI tools and analytics compute engines
-(will together be called _"tools"_ in this document) should access Lance tables.
+(will together be called _"tools"_ in this document) should integrate with Lance.
 
 ## Definition
 
 A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables.
-There are 2 types of Lance catalogs: file system directory and REST catalog.
+There are 2 types of Lance catalogs: storage directory and REST catalog.
 
 ## Lance Directory
 
-Lance file system directory, or **Lance Directory**, is a lightweight and simple catalog
-for people to get started with creating and using Lance tables based on file system structure.
+Lance storage directory, or **Lance Directory**, is a lightweight and simple catalog
+for people to get started with creating and using Lance tables directly on top of any local or remote storage system.
 
-A directory in a file system can contain a list of Lance tables, 
+A directory in a storage can contain a list of Lance tables, 
 where the name of each Lance table is the name of the subdirectory.
 We call such a subdirectories **Table Directory**.
 
@@ -48,8 +48,8 @@ sitting at table directories `/my/dirs/table1`, `/my/dirs/table2`, `/my/dirs/tab
 There are 3 ways to specify a directory path:
 
 1. **URI**: a URI that follows the [RFC 3986 specification](https://datatracker.ietf.org/doc/html/rfc3986), e.g. `s3://mu-bucket/prefix`.
-2. **Absolute POSIX file system path**: an absolute file path in a POSIX standard file system, e.g. `/my/dir`.
-3. **Relative POSIX file system path**: a relative file path in a POSIX standard file system, e.g. `my/dir2`.
+2. **Absolute POSIX storage path**: an absolute file path in a POSIX standard storage, e.g. `/my/dir`.
+3. **Relative POSIX storage path**: a relative file path in a POSIX standard storage, e.g. `my/dir2`.
    The absolute path of the directory should be based on the current directory of the running process.
 
 ### Table Existence
@@ -87,7 +87,7 @@ A catalog contains a list of namespaces, and a namespace contains a list of tabl
 
 This section defines the possible relationships between a Lance table definition in a REST catalog and
 the corresponding Lance table sitting in some storage system.
-A catalog can choose to support one or multiple types of relationships when integrating with Lance REST Protocol.
+A catalog can choose to support one or multiple types of relationships when integrating with the REST protocol.
 
 #### Catalog Managed Table
 
@@ -122,14 +122,14 @@ The goal of these guidelines is to offer a consistent user experience across dif
 
 ### Configurations
 
-We recommend the tool to offer the following configurations in some form or shape 
+We recommend any tool to offer the following configurations in some form or shape 
 for users to configure connection to a Lance catalog:
 
-| Config Key   | Description                                                                                 | Required?                   | 
-|--------------|---------------------------------------------------------------------------------------------|-----------------------------|
-| catalog-type | The type of the catalog, either `dir` for Lance directory, or `rest` for Lance REST Catalog | Yes                         |
-| dir.location | The location of the Lance directory                                                         | Yes for `dir` catalog type  | 
-| rest.uri     | The HTTP URI for the Lance REST Catalog                                                     | Yes for `rest` catalog type |
+| Config Key           | Description                                                                                 | Required?                   | 
+|----------------------|---------------------------------------------------------------------------------------------|-----------------------------|
+| catalog.type         | The type of the catalog, either `dir` for Lance directory, or `rest` for Lance REST Catalog | Yes                         |
+| catalog.dir.location | The location of the Lance directory                                                         | Yes for `dir` catalog type  | 
+| catalog.rest.uri     | The HTTP URI for the Lance REST Catalog                                                     | Yes for `rest` catalog type |
 
 ### Hierarchy Mapping
 
@@ -142,5 +142,5 @@ We recommend mapping Lance directory to the lowest level of container in the hie
 and mapping Lance REST catalog to the second-lowest level of container in the hierarchy.
 
 Consider a tool that exposes a 3 level hierarchy - database, schema and table.
-A Lance directory should be mapped to a schema when integrated in this tool,
-and a Lance REST catalog should be mapped to a database when integrated in this tool.
+A Lance directory should be mapped to a schema when integrated with this tool,
+and a Lance REST catalog should be mapped to a database when integrated with this tool.
