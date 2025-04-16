@@ -119,11 +119,7 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenResponse'
         404:
-          description: Not Found - Namespace not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/NotFoundResponse'
+          $ref: '#/components/responses/NotFoundResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableResponse'
         5XX:
