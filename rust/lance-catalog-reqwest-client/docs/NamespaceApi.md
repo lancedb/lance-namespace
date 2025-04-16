@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**create_namespace**](NamespaceApi.md#create_namespace) | **POST** /v1/namespaces | Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:   * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.   * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.   * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created. 
 [**list_namespaces**](NamespaceApi.md#list_namespaces) | **GET** /v1/namespaces | List all namespaces in the catalog. 
+[**load_namespace_metadata**](NamespaceApi.md#load_namespace_metadata) | **GET** /v1/namespaces/{ns} | Load the metadata properties for a namespace
 
 
 
@@ -49,6 +50,36 @@ This endpoint does not need any parameter.
 ### Return type
 
 [**models::ListNamespacesResponse**](ListNamespacesResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## load_namespace_metadata
+
+> models::GetNamespaceResponse load_namespace_metadata(ns)
+Load the metadata properties for a namespace
+
+Return all stored metadata properties for a given namespace
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**ns** | **String** | The name of the namespace. | [required] |
+
+### Return type
+
+[**models::GetNamespaceResponse**](GetNamespaceResponse.md)
 
 ### Authorization
 

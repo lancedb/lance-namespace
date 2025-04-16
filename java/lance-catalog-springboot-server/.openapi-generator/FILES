@@ -6,4 +6,5 @@ src/main/java/com/lancedb/lance/catalog/server/springboot/api/NamespaceApi.java
 src/main/java/com/lancedb/lance/catalog/server/springboot/model/CreateNamespaceRequest.java
 src/main/java/com/lancedb/lance/catalog/server/springboot/model/CreateNamespaceResponse.java
 src/main/java/com/lancedb/lance/catalog/server/springboot/model/ErrorModel.java
+src/main/java/com/lancedb/lance/catalog/server/springboot/model/GetNamespaceResponse.java
 src/main/java/com/lancedb/lance/catalog/server/springboot/model/ListNamespacesResponse.java

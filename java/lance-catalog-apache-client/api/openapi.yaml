@@ -90,6 +90,32 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/namespaces/{ns}:
+    get:
+      description: Return all stored metadata properties for a given namespace
+      operationId: loadNamespaceMetadata
+      parameters:
+      - $ref: '#/components/parameters/namespace'
+      responses:
+        "200":
+          $ref: '#/components/responses/GetNamespaceResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Load the metadata properties for a namespace
+      tags:
+      - Namespace
+      x-accepts:
+      - application/json
+    parameters:
+    - $ref: '#/components/parameters/namespace'
 components:
   examples:
     ListNamespacesEmptyExample:
@@ -102,6 +128,16 @@ components:
         namespaces:
         - accounting
         - credits
+  parameters:
+    namespace:
+      description: The name of the namespace.
+      explode: false
+      in: path
+      name: ns
+      required: true
+      schema:
+        type: string
+      style: simple
   responses:
     CreateNamespaceResponse:
       content:
@@ -128,6 +164,13 @@ components:
           schema:
             $ref: '#/components/schemas/ListNamespacesResponse'
       description: A list of namespaces
+    GetNamespaceResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetNamespaceResponse'
+      description: "Returns a namespace, as well as any properties stored on the namespace\
+        \ if namespace properties are supported by the server."
     BadRequestErrorResponse:
       content:
         application/json:
@@ -196,6 +239,18 @@ components:
       description: A server-side problem that might not be addressable from the client
         side. Used for server 5xx errors without more specific documentation in individual
         routes.
+    NotFoundResponse:
+      content:
+        application/json:
+          example:
+            type: /errors/not-found-error
+            title: Not found Error
+            status: 404
+            detail: ""
+            instance: "/v1/namespaces/{ns}"
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+      description: A server-side problem that means can not find the specified resource.
   schemas:
     ErrorModel:
       description: "JSON error model(based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807))\
@@ -283,4 +338,27 @@ components:
             type: string
           type: array
           uniqueItems: true
+    GetNamespaceResponse:
+      example:
+        namespace: namespace
+        properties:
+          owner: Ralph
+          created_at: "1452120468"
+      properties:
+        namespace:
+          type: string
+        properties:
+          additionalProperties:
+            type: string
+          default: {}
+          description: "Properties stored on the namespace, if supported by the server.\
+            \ If the server does not support namespace properties, it should return\
+            \ null for this field. If namespace properties are supported, but none\
+            \ are set, it should return an empty object."
+          example:
+            owner: Ralph
+            created_at: "1452120468"
+          nullable: true
+      required:
+      - namespace
 
