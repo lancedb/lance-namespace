@@ -68,7 +68,7 @@ such as Apache Hive MetaStore, Apache Gravitino, Unity Catalog, etc.
 for more advanced governance features around access control, auditing, lineage tracking, etc.
 
 **Lance REST Catalog** is a standardized OpenAPI protocol to read, write and manage Lance tables.
-The detailed OpenAPI specification content can be found in [catalog.yaml](./rest-catalog.yaml).
+The detailed OpenAPI specification content can be found in [rest-catalog.yaml](./rest-catalog.yaml).
 
 ### Catalog Server
 
@@ -131,9 +131,9 @@ for users to configure connection to a Lance catalog:
 | dir.location | The location of the Lance directory                                                         | Yes for `dir` catalog type  | 
 | rest.uri     | The HTTP URI for the Lance REST Catalog                                                     | Yes for `rest` catalog type |
 
-### Catalog Hierarchy Mapping
+### Hierarchy Mapping
 
-Some tools have internal hierarchy to organize a collection of tables and other objects used by the tool,
+Most tools have internal hierarchy to organize and use a collection of tables and other objects used by the tool,
 and there might be multiple levels of hierarchy that is inconsistent with a Lance directory or Lance catalog.
 
 Lance directory provides a 1 level hierarchy of just tables within a directory, 
