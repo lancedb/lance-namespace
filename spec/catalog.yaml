@@ -102,7 +102,6 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
-
 components:
   schemas:
     ErrorModel:
@@ -169,10 +168,8 @@ components:
           type: array
           uniqueItems: true
           items:
-            type: array
-            items:
-              type: string
-            example: [ "accounting", "tax" ]
+            type: string
+            example: "accounting"
 
   responses:
     CreateNamespaceResponse:
@@ -292,7 +289,7 @@ components:
       summary: A non-empty list of namespaces
       value: {
         "namespaces": [
-          [ "accounting", "tax" ],
-          [ "accounting", "credits" ]
+          "accounting",
+          "credits"
         ]
       }
