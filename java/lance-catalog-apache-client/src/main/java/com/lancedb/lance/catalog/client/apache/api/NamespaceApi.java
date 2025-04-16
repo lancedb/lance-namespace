@@ -20,6 +20,7 @@ import com.lancedb.lance.catalog.client.apache.Configuration;
 import com.lancedb.lance.catalog.client.apache.Pair;
 import com.lancedb.lance.catalog.client.apache.model.CreateNamespaceRequest;
 import com.lancedb.lance.catalog.client.apache.model.CreateNamespaceResponse;
+import com.lancedb.lance.catalog.client.apache.model.ListNamespacesResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -128,6 +129,67 @@ public class NamespaceApi extends BaseApi {
         localVarReturnType);
   }
 
+  /**
+   * List all namespaces in the catalog.
+   *
+   * @return ListNamespacesResponse
+   * @throws ApiException if fails to make API call
+   */
+  public ListNamespacesResponse listNamespaces() throws ApiException {
+    return this.listNamespaces(Collections.emptyMap());
+  }
+
+  /**
+   * List all namespaces in the catalog.
+   *
+   * @param additionalHeaders additionalHeaders for this call
+   * @return ListNamespacesResponse
+   * @throws ApiException if fails to make API call
+   */
+  public ListNamespacesResponse listNamespaces(Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = null;
+
+    // create path and map variables
+    String localVarPath = "/v1/namespaces";
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {};
+
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<ListNamespacesResponse> localVarReturnType =
+        new TypeReference<ListNamespacesResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
   @Override
   public <T> T invokeAPI(
       String url,
@@ -149,7 +211,8 @@ public class NamespaceApi extends BaseApi {
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {"application/json"};
+    final String[] localVarContentTypes = {};
+
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
     String[] localVarAuthNames = new String[] {};

@@ -38,6 +38,27 @@ security:
 - BearerAuth: []
 paths:
   /v1/namespaces:
+    get:
+      operationId: listNamespaces
+      responses:
+        "200":
+          $ref: '#/components/responses/ListNamespacesResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenResponse'
+        "406":
+          $ref: '#/components/responses/UnsupportedOperationResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: |
+        List all namespaces in the catalog.
+      tags:
+      - Namespace
+      x-accepts:
+      - application/json
     post:
       operationId: CreateNamespace
       requestBody:
@@ -70,6 +91,17 @@ paths:
       x-accepts:
       - application/json
 components:
+  examples:
+    ListNamespacesEmptyExample:
+      summary: An empty list of namespaces
+      value:
+        namespaces: []
+    ListNamespacesNonEmptyExample:
+      summary: A non-empty list of namespaces
+      value:
+        namespaces:
+        - accounting
+        - credits
   responses:
     CreateNamespaceResponse:
       content:
@@ -85,6 +117,17 @@ components:
         \ namespace created, as well as any properties that were stored for the namespace,\
         \ including those the server might have added. Implementations are not required\
         \ to support namespace properties."
+    ListNamespacesResponse:
+      content:
+        application/json:
+          examples:
+            NonEmptyResponse:
+              $ref: '#/components/examples/ListNamespacesNonEmptyExample'
+            EmptyResponse:
+              $ref: '#/components/examples/ListNamespacesEmptyExample'
+          schema:
+            $ref: '#/components/schemas/ListNamespacesResponse'
+      description: A list of namespaces
     BadRequestErrorResponse:
       content:
         application/json:
@@ -227,4 +270,17 @@ components:
             created_at: "1452120468"
       required:
       - name
+    ListNamespacesResponse:
+      example:
+        namespaces:
+        - accounting
+        - accounting
+      properties:
+        namespaces:
+          description: An array of namespace names in the catalog.
+          items:
+            example: accounting
+            type: string
+          type: array
+          uniqueItems: true
 
