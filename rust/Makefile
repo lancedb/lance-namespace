@@ -2,7 +2,7 @@
 VERSION = 0.0.1
 
 clean-rust-reqwest-client:
-	rm -rf lance-catalog-reqwest-client
+	rm -rf lance-catalog-reqwest-client/**
 
 gen-rust-reqwest-client: clean-rust-reqwest-client
 	openapi-generator-cli generate \

@@ -1,11 +1,11 @@
 .gitignore
-.openapi-generator-ignore
 .travis.yml
 Cargo.toml
 README.md
 docs/CreateNamespaceRequest.md
 docs/CreateNamespaceResponse.md
 docs/ErrorModel.md
+docs/ListNamespacesResponse.md
 docs/NamespaceApi.md
 git_push.sh
 src/apis/configuration.rs
@@ -15,4 +15,5 @@ src/lib.rs
 src/models/create_namespace_request.rs
 src/models/create_namespace_response.rs
 src/models/error_model.rs
+src/models/list_namespaces_response.rs
 src/models/mod.rs
