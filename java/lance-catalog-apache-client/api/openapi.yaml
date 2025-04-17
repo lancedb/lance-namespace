@@ -91,6 +91,28 @@ paths:
       x-accepts:
       - application/json
   /v1/namespaces/{ns}:
+    delete:
+      operationId: DropNamespace
+      parameters:
+      - $ref: '#/components/parameters/namespace'
+      responses:
+        "204":
+          description: "Success, no content"
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Drop a namespace from the catalog. Namespace must be empty.
+      tags:
+      - Namespace
+      x-accepts:
+      - application/json
     get:
       description: Return a detailed information for a given namespace
       operationId: GetNamespace

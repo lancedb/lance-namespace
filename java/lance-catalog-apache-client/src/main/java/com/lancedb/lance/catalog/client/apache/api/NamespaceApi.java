@@ -131,6 +131,72 @@ public class NamespaceApi extends BaseApi {
   }
 
   /**
+   * Drop a namespace from the catalog. Namespace must be empty.
+   *
+   * @param ns The name of the namespace. (required)
+   * @throws ApiException if fails to make API call
+   */
+  public void dropNamespace(String ns) throws ApiException {
+    this.dropNamespace(ns, Collections.emptyMap());
+  }
+
+  /**
+   * Drop a namespace from the catalog. Namespace must be empty.
+   *
+   * @param ns The name of the namespace. (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @throws ApiException if fails to make API call
+   */
+  public void dropNamespace(String ns, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+
+    // verify the required parameter 'ns' is set
+    if (ns == null) {
+      throw new ApiException(400, "Missing the required parameter 'ns' when calling dropNamespace");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/namespaces/{ns}"
+            .replaceAll(
+                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {};
+
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "DELETE",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null);
+  }
+
+  /**
    * Get information about a namespace Return a detailed information for a given namespace
    *
    * @param ns The name of the namespace. (required)
