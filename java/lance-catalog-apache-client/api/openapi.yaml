@@ -39,7 +39,7 @@ security:
 paths:
   /v1/namespaces:
     get:
-      operationId: listNamespaces
+      operationId: ListNamespaces
       responses:
         "200":
           $ref: '#/components/responses/ListNamespacesResponse'

@@ -87,7 +87,7 @@ paths:
       tags: [ Namespace ]
       summary: >
         List all namespaces in the catalog.
-      operationId: listNamespaces
+      operationId: ListNamespaces
       responses:
         200:
           $ref: '#/components/responses/ListNamespacesResponse'
