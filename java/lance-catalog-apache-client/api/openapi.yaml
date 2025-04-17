@@ -136,6 +136,29 @@ paths:
       - Namespace
       x-accepts:
       - application/json
+    head:
+      description: Check if a namespace exists. The response does not contain a body.
+      operationId: NamespaceExists
+      parameters:
+      - $ref: '#/components/parameters/namespace'
+      responses:
+        "204":
+          description: "Success, no content"
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Check if a namespace exists
+      tags:
+      - Namespace
+      x-accepts:
+      - application/json
     parameters:
     - $ref: '#/components/parameters/namespace'
 components:

@@ -143,6 +143,26 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+    head:
+      tags: [ Namespace ]
+      summary: Check if a namespace exists
+      operationId: NamespaceExists
+      description:
+        Check if a namespace exists. The response does not contain a body.
+      responses:
+        200:
+          description: Success, no content
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
 components:
   parameters:
     namespace:

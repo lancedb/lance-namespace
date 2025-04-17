@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**drop_namespace**](NamespaceApi.md#drop_namespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace from the catalog. Namespace must be empty.
 [**get_namespace**](NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
 [**list_namespaces**](NamespaceApi.md#list_namespaces) | **GET** /v1/namespaces | List all namespaces in the catalog. 
+[**namespace_exists**](NamespaceApi.md#namespace_exists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists
 
 
 
@@ -109,6 +110,36 @@ This endpoint does not need any parameter.
 ### Return type
 
 [**models::ListNamespacesResponse**](ListNamespacesResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## namespace_exists
+
+> namespace_exists(ns)
+Check if a namespace exists
+
+Check if a namespace exists. The response does not contain a body.
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**ns** | **String** | The name of the namespace. | [required] |
+
+### Return type
+
+ (empty response body)
 
 ### Authorization
 

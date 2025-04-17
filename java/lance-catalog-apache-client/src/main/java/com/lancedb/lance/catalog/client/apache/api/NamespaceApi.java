@@ -328,6 +328,74 @@ public class NamespaceApi extends BaseApi {
         localVarReturnType);
   }
 
+  /**
+   * Check if a namespace exists Check if a namespace exists. The response does not contain a body.
+   *
+   * @param ns The name of the namespace. (required)
+   * @throws ApiException if fails to make API call
+   */
+  public void namespaceExists(String ns) throws ApiException {
+    this.namespaceExists(ns, Collections.emptyMap());
+  }
+
+  /**
+   * Check if a namespace exists Check if a namespace exists. The response does not contain a body.
+   *
+   * @param ns The name of the namespace. (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @throws ApiException if fails to make API call
+   */
+  public void namespaceExists(String ns, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = null;
+
+    // verify the required parameter 'ns' is set
+    if (ns == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'ns' when calling namespaceExists");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/namespaces/{ns}"
+            .replaceAll(
+                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {};
+
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "HEAD",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null);
+  }
+
   @Override
   public <T> T invokeAPI(
       String url,

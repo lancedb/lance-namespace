@@ -36,6 +36,7 @@ Class | Method | HTTP request | Description
 *NamespaceApi* | [**drop_namespace**](docs/NamespaceApi.md#drop_namespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace from the catalog. Namespace must be empty.
 *NamespaceApi* | [**get_namespace**](docs/NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
 *NamespaceApi* | [**list_namespaces**](docs/NamespaceApi.md#list_namespaces) | **GET** /v1/namespaces | List all namespaces in the catalog. 
+*NamespaceApi* | [**namespace_exists**](docs/NamespaceApi.md#namespace_exists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists
 
 
 ## Documentation For Models
