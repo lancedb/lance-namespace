@@ -115,8 +115,8 @@ All URIs are relative to *http://localhost:2333*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *NamespaceApi* | [**createNamespace**](docs/NamespaceApi.md#createNamespace) | **POST** /v1/namespaces | Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:   * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.   * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.   * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created. 
+*NamespaceApi* | [**getNamespace**](docs/NamespaceApi.md#getNamespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
 *NamespaceApi* | [**listNamespaces**](docs/NamespaceApi.md#listNamespaces) | **GET** /v1/namespaces | List all namespaces in the catalog. 
-*NamespaceApi* | [**loadNamespaceMetadata**](docs/NamespaceApi.md#loadNamespaceMetadata) | **GET** /v1/namespaces/{ns} | Load the metadata properties for a namespace
 
 
 ## Documentation for Models

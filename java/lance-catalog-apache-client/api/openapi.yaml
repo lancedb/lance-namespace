@@ -92,8 +92,8 @@ paths:
       - application/json
   /v1/namespaces/{ns}:
     get:
-      description: Return all stored metadata properties for a given namespace
-      operationId: loadNamespaceMetadata
+      description: Return a detailed information for a given namespace
+      operationId: getNamespace
       parameters:
       - $ref: '#/components/parameters/namespace'
       responses:
@@ -109,7 +109,7 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: Load the metadata properties for a namespace
+      summary: Get information about a namespace
       tags:
       - Namespace
       x-accepts:
@@ -198,6 +198,18 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorModel'
       description: Forbidden. Authenticated user does not have the necessary permissions.
+    NotFoundResponse:
+      content:
+        application/json:
+          example:
+            type: /errors/not-found-error
+            title: Not found Error
+            status: 404
+            detail: ""
+            instance: "/v1/namespaces/{ns}"
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+      description: A server-side problem that means can not find the specified resource.
     UnsupportedOperationResponse:
       content:
         application/json:
@@ -239,18 +251,6 @@ components:
       description: A server-side problem that might not be addressable from the client
         side. Used for server 5xx errors without more specific documentation in individual
         routes.
-    NotFoundResponse:
-      content:
-        application/json:
-          example:
-            type: /errors/not-found-error
-            title: Not found Error
-            status: 404
-            detail: ""
-            instance: "/v1/namespaces/{ns}"
-          schema:
-            $ref: '#/components/schemas/ErrorModel'
-      description: A server-side problem that means can not find the specified resource.
   schemas:
     ErrorModel:
       description: "JSON error model(based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807))\

@@ -131,6 +131,77 @@ public class NamespaceApi extends BaseApi {
   }
 
   /**
+   * Get information about a namespace Return a detailed information for a given namespace
+   *
+   * @param ns The name of the namespace. (required)
+   * @return GetNamespaceResponse
+   * @throws ApiException if fails to make API call
+   */
+  public GetNamespaceResponse getNamespace(String ns) throws ApiException {
+    return this.getNamespace(ns, Collections.emptyMap());
+  }
+
+  /**
+   * Get information about a namespace Return a detailed information for a given namespace
+   *
+   * @param ns The name of the namespace. (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return GetNamespaceResponse
+   * @throws ApiException if fails to make API call
+   */
+  public GetNamespaceResponse getNamespace(String ns, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = null;
+
+    // verify the required parameter 'ns' is set
+    if (ns == null) {
+      throw new ApiException(400, "Missing the required parameter 'ns' when calling getNamespace");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/namespaces/{ns}"
+            .replaceAll(
+                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {};
+
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<GetNamespaceResponse> localVarReturnType =
+        new TypeReference<GetNamespaceResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
    * List all namespaces in the catalog.
    *
    * @return ListNamespacesResponse
@@ -175,80 +246,6 @@ public class NamespaceApi extends BaseApi {
 
     TypeReference<ListNamespacesResponse> localVarReturnType =
         new TypeReference<ListNamespacesResponse>() {};
-    return apiClient.invokeAPI(
-        localVarPath,
-        "GET",
-        localVarQueryParams,
-        localVarCollectionQueryParams,
-        localVarQueryStringJoiner.toString(),
-        localVarPostBody,
-        localVarHeaderParams,
-        localVarCookieParams,
-        localVarFormParams,
-        localVarAccept,
-        localVarContentType,
-        localVarAuthNames,
-        localVarReturnType);
-  }
-
-  /**
-   * Load the metadata properties for a namespace Return all stored metadata properties for a given
-   * namespace
-   *
-   * @param ns The name of the namespace. (required)
-   * @return GetNamespaceResponse
-   * @throws ApiException if fails to make API call
-   */
-  public GetNamespaceResponse loadNamespaceMetadata(String ns) throws ApiException {
-    return this.loadNamespaceMetadata(ns, Collections.emptyMap());
-  }
-
-  /**
-   * Load the metadata properties for a namespace Return all stored metadata properties for a given
-   * namespace
-   *
-   * @param ns The name of the namespace. (required)
-   * @param additionalHeaders additionalHeaders for this call
-   * @return GetNamespaceResponse
-   * @throws ApiException if fails to make API call
-   */
-  public GetNamespaceResponse loadNamespaceMetadata(
-      String ns, Map<String, String> additionalHeaders) throws ApiException {
-    Object localVarPostBody = null;
-
-    // verify the required parameter 'ns' is set
-    if (ns == null) {
-      throw new ApiException(
-          400, "Missing the required parameter 'ns' when calling loadNamespaceMetadata");
-    }
-
-    // create path and map variables
-    String localVarPath =
-        "/v1/namespaces/{ns}"
-            .replaceAll(
-                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)));
-
-    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-    String localVarQueryParameterBaseName;
-    List<Pair> localVarQueryParams = new ArrayList<Pair>();
-    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-    Map<String, String> localVarCookieParams = new HashMap<String, String>();
-    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-    localVarHeaderParams.putAll(additionalHeaders);
-
-    final String[] localVarAccepts = {"application/json"};
-    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-    final String[] localVarContentTypes = {};
-
-    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-    String[] localVarAuthNames = new String[] {};
-
-    TypeReference<GetNamespaceResponse> localVarReturnType =
-        new TypeReference<GetNamespaceResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "GET",

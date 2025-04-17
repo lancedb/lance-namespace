@@ -5,8 +5,8 @@ All URIs are relative to *http://localhost:2333*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**create_namespace**](NamespaceApi.md#create_namespace) | **POST** /v1/namespaces | Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:   * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.   * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.   * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created. 
+[**get_namespace**](NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
 [**list_namespaces**](NamespaceApi.md#list_namespaces) | **GET** /v1/namespaces | List all namespaces in the catalog. 
-[**load_namespace_metadata**](NamespaceApi.md#load_namespace_metadata) | **GET** /v1/namespaces/{ns} | Load the metadata properties for a namespace
 
 
 
@@ -38,18 +38,23 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
-## list_namespaces
+## get_namespace
 
-> models::ListNamespacesResponse list_namespaces()
-List all namespaces in the catalog. 
+> models::GetNamespaceResponse get_namespace(ns)
+Get information about a namespace
+
+Return a detailed information for a given namespace
 
 ### Parameters
 
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**ns** | **String** | The name of the namespace. | [required] |
 
 ### Return type
 
-[**models::ListNamespacesResponse**](ListNamespacesResponse.md)
+[**models::GetNamespaceResponse**](GetNamespaceResponse.md)
 
 ### Authorization
 
@@ -63,23 +68,18 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
-## load_namespace_metadata
+## list_namespaces
 
-> models::GetNamespaceResponse load_namespace_metadata(ns)
-Load the metadata properties for a namespace
-
-Return all stored metadata properties for a given namespace
+> models::ListNamespacesResponse list_namespaces()
+List all namespaces in the catalog. 
 
 ### Parameters
 
-
-Name | Type | Description  | Required | Notes
-------------- | ------------- | ------------- | ------------- | -------------
-**ns** | **String** | The name of the namespace. | [required] |
+This endpoint does not need any parameter.
 
 ### Return type
 
-[**models::GetNamespaceResponse**](GetNamespaceResponse.md)
+[**models::ListNamespacesResponse**](ListNamespacesResponse.md)
 
 ### Authorization
 

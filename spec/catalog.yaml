@@ -108,9 +108,9 @@ paths:
 
     get:
       tags: [ Namespace ]
-      summary: Load the metadata properties for a namespace
-      operationId: loadNamespaceMetadata
-      description: Return all stored metadata properties for a given namespace
+      summary: Get information about a namespace
+      operationId: getNamespace
+      description: Return a detailed information for a given namespace
       responses:
         200:
           $ref: '#/components/responses/GetNamespaceResponse'
@@ -292,6 +292,21 @@ components:
             "instance": "/v1/namespaces"
           }
 
+    NotFoundResponse:
+      description:
+        A server-side problem that means can not find the specified resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example: {
+            "type": "/errors/not-found-error",
+            "title": "Not found Error",
+            "status": 404,
+            "detail": "",
+            "instance": "/v1/namespaces/{ns}"
+          }
+
     UnsupportedOperationResponse:
       description: Not Acceptable / Unsupported Operation. The server does not support this operation.
       content:
@@ -337,21 +352,6 @@ components:
             "status": 500,
             "detail": "",
             "instance": "/v1/namespaces"
-          }
-
-    NotFoundResponse:
-      description:
-        A server-side problem that means can not find the specified resource.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorModel'
-          example: {
-            "type": "/errors/not-found-error",
-            "title": "Not found Error",
-            "status": 404,
-            "detail": "",
-            "instance": "/v1/namespaces/{ns}"
           }
 
   examples:
