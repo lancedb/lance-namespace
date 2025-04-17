@@ -109,7 +109,7 @@ paths:
     get:
       tags: [ Namespace ]
       summary: Get information about a namespace
-      operationId: getNamespace
+      operationId: GetNamespace
       description: Return a detailed information for a given namespace
       responses:
         200:

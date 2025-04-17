@@ -93,7 +93,7 @@ paths:
   /v1/namespaces/{ns}:
     get:
       description: Return a detailed information for a given namespace
-      operationId: getNamespace
+      operationId: GetNamespace
       parameters:
       - $ref: '#/components/parameters/namespace'
       responses:
