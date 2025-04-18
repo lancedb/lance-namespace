@@ -20,6 +20,7 @@ use super::{Error, configuration, ContentType};
 #[serde(untagged)]
 pub enum CreateNamespaceError {
     Status400(models::ErrorModel),
+    Status401(models::ErrorModel),
     Status403(models::ErrorModel),
     Status406(models::ErrorModel),
     Status503(models::ErrorModel),
@@ -32,6 +33,7 @@ pub enum CreateNamespaceError {
 #[serde(untagged)]
 pub enum DropNamespaceError {
     Status400(models::ErrorModel),
+    Status401(models::ErrorModel),
     Status403(models::ErrorModel),
     Status404(models::ErrorModel),
     Status503(models::ErrorModel),
@@ -44,6 +46,7 @@ pub enum DropNamespaceError {
 #[serde(untagged)]
 pub enum GetNamespaceError {
     Status400(models::ErrorModel),
+    Status401(models::ErrorModel),
     Status403(models::ErrorModel),
     Status404(models::ErrorModel),
     Status503(models::ErrorModel),
@@ -56,6 +59,7 @@ pub enum GetNamespaceError {
 #[serde(untagged)]
 pub enum ListNamespacesError {
     Status400(models::ErrorModel),
+    Status401(models::ErrorModel),
     Status403(models::ErrorModel),
     Status406(models::ErrorModel),
     Status503(models::ErrorModel),
@@ -68,6 +72,7 @@ pub enum ListNamespacesError {
 #[serde(untagged)]
 pub enum NamespaceExistsError {
     Status400(models::ErrorModel),
+    Status401(models::ErrorModel),
     Status403(models::ErrorModel),
     Status404(models::ErrorModel),
     Status503(models::ErrorModel),
