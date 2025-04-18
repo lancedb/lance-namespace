@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Java
+name: Python
 
 on:
   push:
@@ -75,12 +75,18 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: lance/python
+      - name: Install poetry
+        run: |
+          curl -O -sSL https://install.python-poetry.org/install-poetry.py
+          python install-poetry.py -y --version 1.1.12
+          echo "PATH=${HOME}/.poetry/bin:${PATH}" >> $GITHUB_ENV
+          rm install-poetry.py
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'poetry'
-      - name: Setup Python Tools
+      - name: Set up Python tools
         run: |
           pip install maturin
       - name: Install Lance Python SDK
