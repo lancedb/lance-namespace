@@ -45,6 +45,8 @@ paths:
           $ref: '#/components/responses/ListNamespacesResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedResponse'
         "403":
           $ref: '#/components/responses/ForbiddenResponse'
         "406":
@@ -72,6 +74,8 @@ paths:
           $ref: '#/components/responses/CreateNamespaceResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedResponse'
         "403":
           $ref: '#/components/responses/ForbiddenResponse'
         "406":
@@ -100,6 +104,8 @@ paths:
           description: "Success, no content"
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedResponse'
         "403":
           $ref: '#/components/responses/ForbiddenResponse'
         "404":
@@ -123,6 +129,8 @@ paths:
           $ref: '#/components/responses/GetNamespaceResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedResponse'
         "403":
           $ref: '#/components/responses/ForbiddenResponse'
         "404":
@@ -146,6 +154,8 @@ paths:
           description: "Success, no content"
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedResponse'
         "403":
           $ref: '#/components/responses/ForbiddenResponse'
         "404":
@@ -231,6 +241,19 @@ components:
         \ request body format or other forms of request validation failure, such as\
         \ invalid json. Usually serves application/json content, although in some\
         \ cases simple text/plain content might be returned by the server's middleware."
+    UnauthorizedResponse:
+      content:
+        application/json:
+          example:
+            type: /errors/unauthorized-request
+            title: No valid authentication credentials for the operation
+            status: 401
+            detail: ""
+            instance: /v1/namespaces
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+      description: Unauthorized. The request lacks valid authentication credentials
+        for the operation.
     ForbiddenResponse:
       content:
         application/json:

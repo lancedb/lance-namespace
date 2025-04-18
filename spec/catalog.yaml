@@ -74,6 +74,8 @@ paths:
           $ref: '#/components/responses/CreateNamespaceResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
         403:
           $ref: '#/components/responses/ForbiddenResponse'
         406:
@@ -93,6 +95,8 @@ paths:
           $ref: '#/components/responses/ListNamespacesResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
         403:
           $ref: '#/components/responses/ForbiddenResponse'
         406:
@@ -116,6 +120,8 @@ paths:
           $ref: '#/components/responses/GetNamespaceResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
         403:
           $ref: '#/components/responses/ForbiddenResponse'
         404:
@@ -134,6 +140,8 @@ paths:
           description: Success, no content
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
         403:
           $ref: '#/components/responses/ForbiddenResponse'
         404:
@@ -154,6 +162,8 @@ paths:
           description: Success, no content
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
         403:
           $ref: '#/components/responses/ForbiddenResponse'
         404:
@@ -312,6 +322,20 @@ components:
             "type": "/errors/bad-request",
             "title": "Malformed request",
             "status": 400,
+            "detail": "",
+            "instance": "/v1/namespaces"
+          }
+
+    UnauthorizedResponse:
+      description: Unauthorized. The request lacks valid authentication credentials for the operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example: {
+            "type": "/errors/unauthorized-request",
+            "title": "No valid authentication credentials for the operation",
+            "status": 401,
             "detail": "",
             "instance": "/v1/namespaces"
           }
