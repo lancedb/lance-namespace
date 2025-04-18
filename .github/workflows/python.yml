@@ -88,7 +88,11 @@ jobs:
           pip install poetry
       - name: Install Lance Python SDK
         working-directory: lance/python
-        run: maturin develop
+        run: |
+          source ../../venv/bin/activate
+          maturin develop
       - name: Test lance_catalog_urllib3_client with Python ${{ matrix.java-version }}
         working-directory: lance-catalog/python/lance_catalog_urllib3_client
-        run: poetry run pytest
+        run: |
+          source ../../venv/bin/activate
+          poetry run pytest
