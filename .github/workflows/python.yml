@@ -86,13 +86,15 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'poetry'
-      - name: Set up Python tools
+      - name: Set up Lance Python SDK Dev Tools
         run: |
-          poetry env use ${{ matrix.python-version }}
           pip install maturin
       - name: Install Lance Python SDK
         working-directory: lance/python
         run: maturin develop
+      - name: Set up Lance Catalog Python Dev Tools
+        run: |
+          poetry env use ${{ matrix.python-version }}
       - name: Test lance_catalog_urllib3_client with Python ${{ matrix.java-version }}
         working-directory: lance-catalog/python/lance_catalog_urllib3_client
         run: poetry run pytest
