@@ -1,0 +1,91 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Java
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+      - reopened
+    paths:
+      - spec/**
+      - java/**
+      - .github/workflows/java.yml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  # This env var is used by Swatinem/rust-cache@v2 for the cache
+  # key, so we set it to make sure it is always consistent.
+  CARGO_TERM_COLOR: always
+  # Disable full debug symbol generation to speed up CI build and keep memory down
+  # "1" means line tables only, which is useful for panic tracebacks.
+  RUSTFLAGS: "-C debuginfo=1"
+  RUST_BACKTRACE: "1"
+  # according to: https://matklad.github.io/2021/09/04/fast-rust-builds.html
+  # CI builds are faster with incremental disabled.
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "1"
+
+jobs:
+  linux-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        python-version: [ 3.11 ] # Ray does not support 3.12 yet.
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y protobuf-compiler libssl-dev
+      # pin the toolchain version to avoid surprises
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - uses: rui314/setup-mold@v1
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+      - name: Checkout lance repo
+        uses: actions/checkout@v4
+        with:
+          repository: lancedb/lance
+          path: lance
+      - name: Checkout lance-catalog repo
+        uses: actions/checkout@v4
+        with:
+          path: lance-catalog
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: lance/python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'poetry'
+      - name: Setup Python Tools
+        run: |
+          pip install maturin
+      - name: Install Lance Python SDK
+        working-directory: lance/python
+        run: maturin develop
+      - name: Test lance_catalog_urllib3_client with Python ${{ matrix.java-version }}
+        working-directory: lance-catalog/python/lance_catalog_urllib3_client
+        run: poetry run pytest

@@ -13,6 +13,7 @@ and invoke operations in Lance Catalog to read, write and manage Lance tables in
 |--------------------------------------------------------------------------------|-----------------------------------------------------|
 | [spec](./spec)                                                                 | Lance Catalog OpenAPI specification                 |
 | [rust/lance-catalog-reqwest-client](./rust/lance-catalog-reqwest-client)       | Generated Rust reqwest client for Lance Catalog     |
+| [python/lance_catalog_urllib3_client](./python/lance_catalog_urllib3_client)   | Generated Python urllib3 client for Lance Catalog   |
 | [java/lance-catalog-apache-client](./java/lance-catalog-apache-client)         | Generated Java Apache HTTP client for Lance Catalog |
 | [java/lance-catalog-springboot-server](./java/lance-catalog-springboot-server) | Generated Java SpringBoot server for Lance          |
 
@@ -45,6 +46,34 @@ make gen
 
 # clean and generate the rust reqwest client
 make gen-rust-reqwest-client
+
+# clean, generate and build all clients and servers
+make build
+```
+
+### Develop Python
+
+We use [poetry](https://python-poetry.org/) for managing dependency of Python modules.
+If you are already in a virtual environment for [OpenAPI Generator](#install-openapi-generator),
+you can just run the following to install poetry in the same environment:
+
+```bash
+pip install -r python/requirements.txt
+```
+
+To run codegen and build actions:
+
+```bash
+cd python
+
+# clean all existing generated modules
+make clean
+
+# clean, and then generate all clients and servers
+make gen 
+
+# clean and generate the python urllib3 client
+make gen-python-urllib3-client
 
 # clean, generate and build all clients and servers
 make build
