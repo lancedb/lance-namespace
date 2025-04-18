@@ -270,21 +270,29 @@ public class NamespaceApi extends BaseApi {
   /**
    * List all namespaces in the catalog.
    *
+   * @param pageToken (optional)
+   * @param pageSize An inclusive upper bound of the number of results that a client will receive.
+   *     (optional)
    * @return ListNamespacesResponse
    * @throws ApiException if fails to make API call
    */
-  public ListNamespacesResponse listNamespaces() throws ApiException {
-    return this.listNamespaces(Collections.emptyMap());
+  public ListNamespacesResponse listNamespaces(String pageToken, Integer pageSize)
+      throws ApiException {
+    return this.listNamespaces(pageToken, pageSize, Collections.emptyMap());
   }
 
   /**
    * List all namespaces in the catalog.
    *
+   * @param pageToken (optional)
+   * @param pageSize An inclusive upper bound of the number of results that a client will receive.
+   *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return ListNamespacesResponse
    * @throws ApiException if fails to make API call
    */
-  public ListNamespacesResponse listNamespaces(Map<String, String> additionalHeaders)
+  public ListNamespacesResponse listNamespaces(
+      String pageToken, Integer pageSize, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
 
@@ -298,6 +306,9 @@ public class NamespaceApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("pageToken", pageToken));
+    localVarQueryParams.addAll(apiClient.parameterToPair("pageSize", pageSize));
 
     localVarHeaderParams.putAll(additionalHeaders);
 

@@ -90,6 +90,9 @@ paths:
       summary: >
         List all namespaces in the catalog.
       operationId: ListNamespaces
+      parameters:
+        - $ref: '#/components/parameters/pageToken'
+        - $ref: '#/components/parameters/pageSize'
       responses:
         200:
           $ref: '#/components/responses/ListNamespacesResponse'
@@ -184,6 +187,24 @@ components:
       schema:
         type: string
 
+    pageToken:
+      name: pageToken
+      in: query
+      required: false
+      allowEmptyValue: true
+      schema:
+        $ref: '#/components/schemas/PageToken'
+
+    pageSize:
+      name: pageSize
+      in: query
+      description:
+        An inclusive upper bound of the number of results that a client will receive.
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+
   schemas:
     ErrorModel:
       type: object
@@ -243,6 +264,8 @@ components:
 
     ListNamespacesResponse:
       type: object
+      required:
+        - namespaces
       properties:
         namespaces:
           description: An array of namespace names in the catalog.
@@ -251,6 +274,8 @@ components:
           items:
             type: string
             example: "accounting"
+        nextPageToken:
+          $ref: "#/components/schemas/PageToken"
 
     GetNamespaceResponse:
       type: object
@@ -270,6 +295,22 @@ components:
           example: { "owner": "Ralph", 'created_at': '1452120468' }
           default: { }
           nullable: true
+
+    PageToken:
+      description:
+        An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
+        
+        For an initial client request for a list API, if the server cannot return all items in one response,
+        or if there are more items than the `pageSize` specified in the client request,
+        the server must return a `nextPageToken` in the response indicating there are more results available.
+        
+        After the initial request, the value of `nextPageToken` from each response must be used by the client 
+        as the `pageToken` parameter value for the next request.
+        
+        Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from 
+        a server response as the end of the listing results.
+      type: string
+      nullable: true
 
   responses:
     CreateNamespaceResponse:

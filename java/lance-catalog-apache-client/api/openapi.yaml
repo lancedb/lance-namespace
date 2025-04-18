@@ -40,6 +40,9 @@ paths:
   /v1/namespaces:
     get:
       operationId: ListNamespaces
+      parameters:
+      - $ref: '#/components/parameters/pageToken'
+      - $ref: '#/components/parameters/pageSize'
       responses:
         "200":
           $ref: '#/components/responses/ListNamespacesResponse'
@@ -193,6 +196,26 @@ components:
       schema:
         type: string
       style: simple
+    pageToken:
+      allowEmptyValue: true
+      explode: true
+      in: query
+      name: pageToken
+      required: false
+      schema:
+        $ref: '#/components/schemas/PageToken'
+      style: form
+    pageSize:
+      description: An inclusive upper bound of the number of results that a client
+        will receive.
+      explode: true
+      in: query
+      name: pageSize
+      required: false
+      schema:
+        minimum: 1
+        type: integer
+      style: form
   responses:
     CreateNamespaceResponse:
       content:
@@ -395,6 +418,7 @@ components:
       - name
     ListNamespacesResponse:
       example:
+        nextPageToken: nextPageToken
         namespaces:
         - accounting
         - accounting
@@ -406,6 +430,16 @@ components:
             type: string
           type: array
           uniqueItems: true
+        nextPageToken:
+          description: |-
+            An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
+            For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available.
+            After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request.
+            Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.
+          type: string
+          nullable: true
+      required:
+      - namespaces
     GetNamespaceResponse:
       example:
         namespace: namespace
@@ -429,4 +463,12 @@ components:
           nullable: true
       required:
       - namespace
+    PageToken:
+      description: |-
+        An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
+        For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available.
+        After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request.
+        Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.
+      type: string
+      nullable: true
 

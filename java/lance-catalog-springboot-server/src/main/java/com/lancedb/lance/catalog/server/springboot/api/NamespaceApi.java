@@ -493,6 +493,9 @@ public interface NamespaceApi {
   /**
    * GET /v1/namespaces : List all namespaces in the catalog.
    *
+   * @param pageToken (optional)
+   * @param pageSize An inclusive upper bound of the number of results that a client will receive.
+   *     (optional)
    * @return A list of namespaces (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
    *     such as invalid json. Usually serves application/json content, although in some cases
@@ -577,14 +580,26 @@ public interface NamespaceApi {
       method = RequestMethod.GET,
       value = "/v1/namespaces",
       produces = {"application/json"})
-  default ResponseEntity<ListNamespacesResponse> listNamespaces() {
-
+  default ResponseEntity<ListNamespacesResponse> listNamespaces(
+      @Parameter(name = "pageToken", description = "", in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "pageToken", required = false)
+          Optional<String> pageToken,
+      @Parameter(
+              name = "pageSize",
+              description =
+                  "An inclusive upper bound of the number of results that a client will receive.",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "pageSize", required = false)
+          Optional<@Min(1) Integer> pageSize) {
     getRequest()
         .ifPresent(
             request -> {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString = "{ \"namespaces\" : [ \"accounting\", \"accounting\" ] }";
+                  String exampleString =
+                      "{ \"nextPageToken\" : \"nextPageToken\", \"namespaces\" : [ \"accounting\", \"accounting\" ] }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }

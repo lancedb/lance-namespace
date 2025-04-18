@@ -180,11 +180,20 @@ pub async fn get_namespace(configuration: &configuration::Configuration, ns: &st
     }
 }
 
-pub async fn list_namespaces(configuration: &configuration::Configuration, ) -> Result<models::ListNamespacesResponse, Error<ListNamespacesError>> {
+pub async fn list_namespaces(configuration: &configuration::Configuration, page_token: Option<&str>, page_size: Option<i32>) -> Result<models::ListNamespacesResponse, Error<ListNamespacesError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_page_token = page_token;
+    let p_page_size = page_size;
 
     let uri_str = format!("{}/v1/namespaces", configuration.base_path);
     let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
 
+    if let Some(ref param_value) = p_page_token {
+        req_builder = req_builder.query(&[("pageToken", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_page_size {
+        req_builder = req_builder.query(&[("pageSize", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }

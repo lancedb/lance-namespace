@@ -225,7 +225,7 @@ No authorization required
 
 ## listNamespaces
 
-> ListNamespacesResponse listNamespaces()
+> ListNamespacesResponse listNamespaces(pageToken, pageSize)
 
 List all namespaces in the catalog. 
 
@@ -245,8 +245,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
+        String pageToken = "pageToken_example"; // String | 
+        Integer pageSize = 56; // Integer | An inclusive upper bound of the number of results that a client will receive.
         try {
-            ListNamespacesResponse result = apiInstance.listNamespaces();
+            ListNamespacesResponse result = apiInstance.listNamespaces(pageToken, pageSize);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#listNamespaces");
@@ -261,7 +263,11 @@ public class Example {
 
 ### Parameters
 
-This endpoint does not need any parameter.
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **pageToken** | **String**|  | [optional] |
+| **pageSize** | **Integer**| An inclusive upper bound of the number of results that a client will receive. | [optional] |
 
 ### Return type
 

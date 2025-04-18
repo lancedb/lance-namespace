@@ -100,12 +100,16 @@ No authorization required
 
 ## list_namespaces
 
-> models::ListNamespacesResponse list_namespaces()
+> models::ListNamespacesResponse list_namespaces(page_token, page_size)
 List all namespaces in the catalog. 
 
 ### Parameters
 
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**page_token** | Option<**String**> |  |  |
+**page_size** | Option<**i32**> | An inclusive upper bound of the number of results that a client will receive. |  |
 
 ### Return type
 
