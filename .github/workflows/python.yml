@@ -24,8 +24,8 @@ on:
       - reopened
     paths:
       - spec/**
-      - java/**
-      - .github/workflows/java.yml
+      - python/**
+      - .github/workflows/python.yml
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
