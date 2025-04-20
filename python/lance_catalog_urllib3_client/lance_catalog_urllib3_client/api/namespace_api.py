@@ -96,6 +96,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CreateNamespaceResponse",
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '406': "ErrorModel",
             '503': "ErrorModel",
@@ -167,6 +168,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CreateNamespaceResponse",
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '406': "ErrorModel",
             '503': "ErrorModel",
@@ -238,6 +240,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CreateNamespaceResponse",
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '406': "ErrorModel",
             '503': "ErrorModel",
@@ -381,6 +384,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '404': "ErrorModel",
             '503': "ErrorModel",
@@ -452,6 +456,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '404': "ErrorModel",
             '503': "ErrorModel",
@@ -523,6 +528,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '404': "ErrorModel",
             '503': "ErrorModel",
@@ -654,6 +660,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "GetNamespaceResponse",
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '404': "ErrorModel",
             '503': "ErrorModel",
@@ -726,6 +733,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "GetNamespaceResponse",
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '404': "ErrorModel",
             '503': "ErrorModel",
@@ -798,6 +806,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "GetNamespaceResponse",
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '404': "ErrorModel",
             '503': "ErrorModel",
@@ -924,6 +933,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListNamespacesResponse",
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '406': "ErrorModel",
             '503': "ErrorModel",
@@ -991,6 +1001,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListNamespacesResponse",
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '406': "ErrorModel",
             '503': "ErrorModel",
@@ -1058,6 +1069,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListNamespacesResponse",
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '406': "ErrorModel",
             '503': "ErrorModel",
@@ -1186,6 +1198,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '404': "ErrorModel",
             '503': "ErrorModel",
@@ -1258,6 +1271,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '404': "ErrorModel",
             '503': "ErrorModel",
@@ -1330,6 +1344,7 @@ class NamespaceApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
             '400': "ErrorModel",
+            '401': "ErrorModel",
             '403': "ErrorModel",
             '404': "ErrorModel",
             '503': "ErrorModel",
