@@ -5,8 +5,11 @@ docs/CreateNamespaceRequest.md
 docs/CreateNamespaceResponse.md
 docs/ErrorModel.md
 docs/GetNamespaceResponse.md
+docs/GetTableResponse.md
 docs/ListNamespacesResponse.md
 docs/NamespaceApi.md
+docs/RegisterTableRequest.md
+docs/TableApi.md
 pom.xml
 src/main/AndroidManifest.xml
 src/main/java/com/lancedb/lance/catalog/client/apache/ApiClient.java
@@ -20,6 +23,7 @@ src/main/java/com/lancedb/lance/catalog/client/apache/ServerConfiguration.java
 src/main/java/com/lancedb/lance/catalog/client/apache/ServerVariable.java
 src/main/java/com/lancedb/lance/catalog/client/apache/StringUtil.java
 src/main/java/com/lancedb/lance/catalog/client/apache/api/NamespaceApi.java
+src/main/java/com/lancedb/lance/catalog/client/apache/api/TableApi.java
 src/main/java/com/lancedb/lance/catalog/client/apache/auth/ApiKeyAuth.java
 src/main/java/com/lancedb/lance/catalog/client/apache/auth/Authentication.java
 src/main/java/com/lancedb/lance/catalog/client/apache/auth/HttpBasicAuth.java
@@ -28,4 +32,6 @@ src/main/java/com/lancedb/lance/catalog/client/apache/model/CreateNamespaceReque
 src/main/java/com/lancedb/lance/catalog/client/apache/model/CreateNamespaceResponse.java
 src/main/java/com/lancedb/lance/catalog/client/apache/model/ErrorModel.java
 src/main/java/com/lancedb/lance/catalog/client/apache/model/GetNamespaceResponse.java
+src/main/java/com/lancedb/lance/catalog/client/apache/model/GetTableResponse.java
 src/main/java/com/lancedb/lance/catalog/client/apache/model/ListNamespacesResponse.java
+src/main/java/com/lancedb/lance/catalog/client/apache/model/RegisterTableRequest.java

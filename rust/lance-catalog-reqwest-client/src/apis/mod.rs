@@ -112,5 +112,6 @@ impl From<&str> for ContentType {
 }
 
 pub mod namespace_api;
+pub mod table_api;
 
 pub mod configuration;
