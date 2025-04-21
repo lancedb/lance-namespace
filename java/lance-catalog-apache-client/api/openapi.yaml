@@ -83,6 +83,8 @@ paths:
           $ref: '#/components/responses/ForbiddenResponse'
         "406":
           $ref: '#/components/responses/UnsupportedOperationResponse'
+        "409":
+          $ref: '#/components/responses/ConflictErrorResponse'
         "503":
           $ref: '#/components/responses/ServiceUnavailableResponse'
         "5XX":
@@ -393,6 +395,18 @@ components:
             $ref: '#/components/schemas/ErrorModel'
       description: Not Acceptable / Unsupported Operation. The server does not support
         this operation.
+    ConflictErrorResponse:
+      content:
+        application/json:
+          example:
+            type: /errors/conflict
+            title: The namespace has been concurrently modified
+            status: 409
+            detail: ""
+            instance: "/v1/namespaces/{ns}"
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+      description: The request conflicts with the current state of the target resource.
     ServiceUnavailableResponse:
       content:
         application/json:

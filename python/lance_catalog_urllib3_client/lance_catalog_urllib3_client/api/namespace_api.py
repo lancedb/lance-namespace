@@ -100,6 +100,7 @@ class NamespaceApi:
             '401': "ErrorModel",
             '403': "ErrorModel",
             '406': "ErrorModel",
+            '409': "ErrorModel",
             '503': "ErrorModel",
             '5XX': "ErrorModel",
         }
@@ -172,6 +173,7 @@ class NamespaceApi:
             '401': "ErrorModel",
             '403': "ErrorModel",
             '406': "ErrorModel",
+            '409': "ErrorModel",
             '503': "ErrorModel",
             '5XX': "ErrorModel",
         }
@@ -244,6 +246,7 @@ class NamespaceApi:
             '401': "ErrorModel",
             '403': "ErrorModel",
             '406': "ErrorModel",
+            '409': "ErrorModel",
             '503': "ErrorModel",
             '5XX': "ErrorModel",
         }
