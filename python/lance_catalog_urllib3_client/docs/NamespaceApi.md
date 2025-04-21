@@ -228,7 +228,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_namespaces**
-> ListNamespacesResponse list_namespaces()
+> ListNamespacesResponse list_namespaces(page_token=page_token, page_size=page_size)
 
 List all namespaces in the catalog. 
 
@@ -252,10 +252,12 @@ configuration = lance_catalog_urllib3_client.Configuration(
 with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_catalog_urllib3_client.NamespaceApi(api_client)
+    page_token = 'page_token_example' # str |  (optional)
+    page_size = 56 # int | An inclusive upper bound of the number of results that a client will receive. (optional)
 
     try:
         # List all namespaces in the catalog. 
-        api_response = api_instance.list_namespaces()
+        api_response = api_instance.list_namespaces(page_token=page_token, page_size=page_size)
         print("The response of NamespaceApi->list_namespaces:\n")
         pprint(api_response)
     except Exception as e:
@@ -266,7 +268,11 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page_token** | **str**|  | [optional] 
+ **page_size** | **int**| An inclusive upper bound of the number of results that a client will receive. | [optional] 
 
 ### Return type
 

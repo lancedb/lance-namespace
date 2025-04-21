@@ -17,6 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
+from typing import Optional
 from typing_extensions import Annotated
 from lance_catalog_urllib3_client.models.create_namespace_request import CreateNamespaceRequest
 from lance_catalog_urllib3_client.models.create_namespace_response import CreateNamespaceResponse
@@ -885,6 +886,8 @@ class NamespaceApi:
     @validate_call
     def list_namespaces(
         self,
+        page_token: Optional[StrictStr] = None,
+        page_size: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="An inclusive upper bound of the number of results that a client will receive.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -901,6 +904,10 @@ class NamespaceApi:
         """List all namespaces in the catalog. 
 
 
+        :param page_token:
+        :type page_token: str
+        :param page_size: An inclusive upper bound of the number of results that a client will receive.
+        :type page_size: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -924,6 +931,8 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._list_namespaces_serialize(
+            page_token=page_token,
+            page_size=page_size,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -953,6 +962,8 @@ class NamespaceApi:
     @validate_call
     def list_namespaces_with_http_info(
         self,
+        page_token: Optional[StrictStr] = None,
+        page_size: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="An inclusive upper bound of the number of results that a client will receive.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -969,6 +980,10 @@ class NamespaceApi:
         """List all namespaces in the catalog. 
 
 
+        :param page_token:
+        :type page_token: str
+        :param page_size: An inclusive upper bound of the number of results that a client will receive.
+        :type page_size: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -992,6 +1007,8 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._list_namespaces_serialize(
+            page_token=page_token,
+            page_size=page_size,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1021,6 +1038,8 @@ class NamespaceApi:
     @validate_call
     def list_namespaces_without_preload_content(
         self,
+        page_token: Optional[StrictStr] = None,
+        page_size: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="An inclusive upper bound of the number of results that a client will receive.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1037,6 +1056,10 @@ class NamespaceApi:
         """List all namespaces in the catalog. 
 
 
+        :param page_token:
+        :type page_token: str
+        :param page_size: An inclusive upper bound of the number of results that a client will receive.
+        :type page_size: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1060,6 +1083,8 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._list_namespaces_serialize(
+            page_token=page_token,
+            page_size=page_size,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1084,6 +1109,8 @@ class NamespaceApi:
 
     def _list_namespaces_serialize(
         self,
+        page_token,
+        page_size,
         _request_auth,
         _content_type,
         _headers,
@@ -1106,6 +1133,14 @@ class NamespaceApi:
 
         # process the path parameters
         # process the query parameters
+        if page_token is not None:
+            
+            _query_params.append(('pageToken', page_token))
+            
+        if page_size is not None:
+            
+            _query_params.append(('pageSize', page_size))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
