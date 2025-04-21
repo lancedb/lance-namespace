@@ -176,6 +176,37 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/namespaces/{ns}/register:
+    post:
+      tags: [ Table ]
+      summary: >
+        Register a new table in the given namespace. A table represents a lance dataset. 
+        In Lance catalog, a table must be hosted in a namespace.
+      operationId: RegisterTable
+      parameters:
+        - $ref: '#/components/parameters/namespace'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterTableRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/GetTableResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        406:
+          $ref: '#/components/responses/UnsupportedOperationResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
 components:
   parameters:
     namespace:
@@ -312,6 +343,34 @@ components:
       type: string
       nullable: true
 
+    RegisterTableRequest:
+      type: object
+      required:
+        - name
+        - location
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+
+    GetTableResponse:
+      description: |
+        Result used when a table is successfully loaded.
+      type: object
+      required:
+        - name
+        - location
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+
   responses:
     CreateNamespaceResponse:
       description:
@@ -348,6 +407,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/GetNamespaceResponse'
+
+    GetTableResponse:
+      description: Table properties result when loading a table
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetTableResponse'
 
     BadRequestErrorResponse:
       description:
