@@ -18,6 +18,7 @@ __version__ = "0.0.1"
 
 # import apis into sdk package
 from lance_catalog_urllib3_client.api.namespace_api import NamespaceApi
+from lance_catalog_urllib3_client.api.table_api import TableApi
 
 # import ApiClient
 from lance_catalog_urllib3_client.api_response import ApiResponse
@@ -35,4 +36,6 @@ from lance_catalog_urllib3_client.models.create_namespace_request import CreateN
 from lance_catalog_urllib3_client.models.create_namespace_response import CreateNamespaceResponse
 from lance_catalog_urllib3_client.models.error_model import ErrorModel
 from lance_catalog_urllib3_client.models.get_namespace_response import GetNamespaceResponse
+from lance_catalog_urllib3_client.models.get_table_response import GetTableResponse
 from lance_catalog_urllib3_client.models.list_namespaces_response import ListNamespacesResponse
+from lance_catalog_urllib3_client.models.register_table_request import RegisterTableRequest

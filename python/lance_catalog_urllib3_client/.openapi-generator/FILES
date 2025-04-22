@@ -7,12 +7,16 @@ docs/CreateNamespaceRequest.md
 docs/CreateNamespaceResponse.md
 docs/ErrorModel.md
 docs/GetNamespaceResponse.md
+docs/GetTableResponse.md
 docs/ListNamespacesResponse.md
 docs/NamespaceApi.md
+docs/RegisterTableRequest.md
+docs/TableApi.md
 git_push.sh
 lance_catalog_urllib3_client/__init__.py
 lance_catalog_urllib3_client/api/__init__.py
 lance_catalog_urllib3_client/api/namespace_api.py
+lance_catalog_urllib3_client/api/table_api.py
 lance_catalog_urllib3_client/api_client.py
 lance_catalog_urllib3_client/api_response.py
 lance_catalog_urllib3_client/configuration.py
@@ -22,7 +26,9 @@ lance_catalog_urllib3_client/models/create_namespace_request.py
 lance_catalog_urllib3_client/models/create_namespace_response.py
 lance_catalog_urllib3_client/models/error_model.py
 lance_catalog_urllib3_client/models/get_namespace_response.py
+lance_catalog_urllib3_client/models/get_table_response.py
 lance_catalog_urllib3_client/models/list_namespaces_response.py
+lance_catalog_urllib3_client/models/register_table_request.py
 lance_catalog_urllib3_client/py.typed
 lance_catalog_urllib3_client/rest.py
 pyproject.toml
@@ -31,4 +37,7 @@ setup.cfg
 setup.py
 test-requirements.txt
 test/__init__.py
+test/test_get_table_response.py
+test/test_register_table_request.py
+test/test_table_api.py
 tox.ini

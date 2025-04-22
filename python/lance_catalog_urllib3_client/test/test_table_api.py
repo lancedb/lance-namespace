@@ -1,6 +1,5 @@
 # coding: utf-8
 
-# flake8: noqa
 """
     Lance Catalog REST Specification
 
@@ -13,11 +12,27 @@
 """  # noqa: E501
 
 
-# import models into model package
-from lance_catalog_urllib3_client.models.create_namespace_request import CreateNamespaceRequest
-from lance_catalog_urllib3_client.models.create_namespace_response import CreateNamespaceResponse
-from lance_catalog_urllib3_client.models.error_model import ErrorModel
-from lance_catalog_urllib3_client.models.get_namespace_response import GetNamespaceResponse
-from lance_catalog_urllib3_client.models.get_table_response import GetTableResponse
-from lance_catalog_urllib3_client.models.list_namespaces_response import ListNamespacesResponse
-from lance_catalog_urllib3_client.models.register_table_request import RegisterTableRequest
+import unittest
+
+from lance_catalog_urllib3_client.api.table_api import TableApi
+
+
+class TestTableApi(unittest.TestCase):
+    """TableApi unit test stubs"""
+
+    def setUp(self) -> None:
+        self.api = TableApi()
+
+    def tearDown(self) -> None:
+        pass
+
+    def test_register_table(self) -> None:
+        """Test case for register_table
+
+        Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace. 
+        """
+        pass
+
+
+if __name__ == '__main__':
+    unittest.main()
