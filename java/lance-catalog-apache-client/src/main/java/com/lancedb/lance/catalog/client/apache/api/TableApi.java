@@ -206,6 +206,84 @@ public class TableApi extends BaseApi {
         localVarReturnType);
   }
 
+  /**
+   * Check if a table exists Check if a table exists within a given namespace.
+   *
+   * @param ns The name of the namespace. (required)
+   * @param table A table name. (required)
+   * @throws ApiException if fails to make API call
+   */
+  public void tableExists(String ns, String table) throws ApiException {
+    this.tableExists(ns, table, Collections.emptyMap());
+  }
+
+  /**
+   * Check if a table exists Check if a table exists within a given namespace.
+   *
+   * @param ns The name of the namespace. (required)
+   * @param table A table name. (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @throws ApiException if fails to make API call
+   */
+  public void tableExists(String ns, String table, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = null;
+
+    // verify the required parameter 'ns' is set
+    if (ns == null) {
+      throw new ApiException(400, "Missing the required parameter 'ns' when calling tableExists");
+    }
+
+    // verify the required parameter 'table' is set
+    if (table == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'table' when calling tableExists");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/namespaces/{ns}/tables/{table}"
+            .replaceAll(
+                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)))
+            .replaceAll(
+                "\\{" + "table" + "\\}",
+                apiClient.escapeString(apiClient.parameterToString(table)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {};
+
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "HEAD",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null);
+  }
+
   @Override
   public <T> T invokeAPI(
       String url,
@@ -227,7 +305,8 @@ public class TableApi extends BaseApi {
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {"application/json"};
+    final String[] localVarContentTypes = {};
+
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
     String[] localVarAuthNames = new String[] {};

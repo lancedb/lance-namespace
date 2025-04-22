@@ -240,6 +240,28 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+    head:
+      tags: [ Table ]
+      summary: Check if a table exists
+      operationId: TableExists
+      description:
+        Check if a table exists within a given namespace.
+      responses:
+        204:
+          description: Success, no content
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
 components:
   parameters:
     namespace:
