@@ -151,6 +151,8 @@ paths:
           $ref: '#/components/responses/ForbiddenResponse'
         404:
           $ref: '#/components/responses/NotFoundResponse'
+        409:
+          $ref: '#/components/responses/ConflictErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableResponse'
         5XX:
@@ -204,6 +206,8 @@ paths:
           $ref: '#/components/responses/ForbiddenResponse'
         406:
           $ref: '#/components/responses/UnsupportedOperationResponse'
+        409:
+          $ref: '#/components/responses/ConflictErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableResponse'
         5XX:

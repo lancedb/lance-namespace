@@ -36,6 +36,7 @@ pub enum RegisterTableError {
     Status401(models::ErrorModel),
     Status403(models::ErrorModel),
     Status406(models::ErrorModel),
+    Status409(models::ErrorModel),
     Status503(models::ErrorModel),
     Status5XX(models::ErrorModel),
     UnknownValue(serde_json::Value),

@@ -37,6 +37,7 @@ pub enum DropNamespaceError {
     Status401(models::ErrorModel),
     Status403(models::ErrorModel),
     Status404(models::ErrorModel),
+    Status409(models::ErrorModel),
     Status503(models::ErrorModel),
     Status5XX(models::ErrorModel),
     UnknownValue(serde_json::Value),
