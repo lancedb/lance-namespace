@@ -44,6 +44,88 @@ public class TableApi extends BaseApi {
   }
 
   /**
+   * Get a table from the catalog Get a table&#39;s detailed information under a specified namespace
+   * from the catalog.
+   *
+   * @param ns The name of the namespace. (required)
+   * @param table A table name. (required)
+   * @return GetTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public GetTableResponse getTable(String ns, String table) throws ApiException {
+    return this.getTable(ns, table, Collections.emptyMap());
+  }
+
+  /**
+   * Get a table from the catalog Get a table&#39;s detailed information under a specified namespace
+   * from the catalog.
+   *
+   * @param ns The name of the namespace. (required)
+   * @param table A table name. (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return GetTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public GetTableResponse getTable(String ns, String table, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = null;
+
+    // verify the required parameter 'ns' is set
+    if (ns == null) {
+      throw new ApiException(400, "Missing the required parameter 'ns' when calling getTable");
+    }
+
+    // verify the required parameter 'table' is set
+    if (table == null) {
+      throw new ApiException(400, "Missing the required parameter 'table' when calling getTable");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/namespaces/{ns}/tables/{table}"
+            .replaceAll(
+                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)))
+            .replaceAll(
+                "\\{" + "table" + "\\}",
+                apiClient.escapeString(apiClient.parameterToString(table)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {};
+
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<GetTableResponse> localVarReturnType = new TypeReference<GetTableResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
    * Register a new table in the given namespace. A table represents a lance dataset. In Lance
    * catalog, a table must be hosted in a namespace.
    *

@@ -207,6 +207,37 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/namespaces/{ns}/tables/{table}:
+    get:
+      description: Get a table's detailed information under a specified namespace
+        from the catalog.
+      operationId: GetTable
+      parameters:
+      - $ref: '#/components/parameters/namespace'
+      - $ref: '#/components/parameters/table'
+      responses:
+        "200":
+          $ref: '#/components/responses/GetTableResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Get a table from the catalog
+      tags:
+      - Table
+      x-accepts:
+      - application/json
+    parameters:
+    - $ref: '#/components/parameters/namespace'
+    - $ref: '#/components/parameters/table'
 components:
   examples:
     ListNamespacesEmptyExample:
@@ -249,6 +280,15 @@ components:
         minimum: 1
         type: integer
       style: form
+    table:
+      description: A table name.
+      explode: false
+      in: path
+      name: table
+      required: true
+      schema:
+        type: string
+      style: simple
   responses:
     CreateNamespaceResponse:
       content:
