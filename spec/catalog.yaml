@@ -240,6 +240,34 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+    delete:
+      tags: [ Table ]
+      summary: Drop a table from the catalog
+      operationId: DropTable
+      parameters:
+        - name: purgeRequested
+          in: query
+          required: false
+          description: Whether the user requested to purge the underlying table's data and metadata
+          schema:
+            type: boolean
+            default: false
+      responses:
+        204:
+          description: Success, no content
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
 components:
   parameters:
     namespace:

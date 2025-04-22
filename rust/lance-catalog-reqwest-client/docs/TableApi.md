@@ -4,9 +4,40 @@ All URIs are relative to *http://localhost:2333*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**drop_table**](TableApi.md#drop_table) | **DELETE** /v1/namespaces/{ns}/tables/{table} | Drop a table from the catalog
 [**get_table**](TableApi.md#get_table) | **GET** /v1/namespaces/{ns}/tables/{table} | Get a table from the catalog
 [**register_table**](TableApi.md#register_table) | **POST** /v1/namespaces/{ns}/register | Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace. 
 
+
+
+## drop_table
+
+> drop_table(ns, table, purge_requested)
+Drop a table from the catalog
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**ns** | **String** | The name of the namespace. | [required] |
+**table** | **String** | A table name. | [required] |
+**purge_requested** | Option<**bool**> | Whether the user requested to purge the underlying table's data and metadata |  |[default to false]
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
 ## get_table

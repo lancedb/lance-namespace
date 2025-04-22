@@ -15,6 +15,19 @@ use crate::{apis::ResponseContent, models};
 use super::{Error, configuration, ContentType};
 
 
+/// struct for typed errors of method [`drop_table`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum DropTableError {
+    Status400(models::ErrorModel),
+    Status401(models::ErrorModel),
+    Status403(models::ErrorModel),
+    Status404(models::ErrorModel),
+    Status503(models::ErrorModel),
+    Status5XX(models::ErrorModel),
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`get_table`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -42,6 +55,36 @@ pub enum RegisterTableError {
     UnknownValue(serde_json::Value),
 }
 
+
+pub async fn drop_table(configuration: &configuration::Configuration, ns: &str, table: &str, purge_requested: Option<bool>) -> Result<(), Error<DropTableError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_ns = ns;
+    let p_table = table;
+    let p_purge_requested = purge_requested;
+
+    let uri_str = format!("{}/v1/namespaces/{ns}/tables/{table}", configuration.base_path, ns=crate::apis::urlencode(p_ns), table=crate::apis::urlencode(p_table));
+    let mut req_builder = configuration.client.request(reqwest::Method::DELETE, &uri_str);
+
+    if let Some(ref param_value) = p_purge_requested {
+        req_builder = req_builder.query(&[("purgeRequested", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+
+    if !status.is_client_error() && !status.is_server_error() {
+        Ok(())
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<DropTableError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
 
 /// Get a table's detailed information under a specified namespace from the catalog.
 pub async fn get_table(configuration: &configuration::Configuration, ns: &str, table: &str) -> Result<models::GetTableResponse, Error<GetTableError>> {

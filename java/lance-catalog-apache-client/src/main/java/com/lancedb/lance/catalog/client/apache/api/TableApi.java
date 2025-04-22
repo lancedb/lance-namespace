@@ -44,6 +44,90 @@ public class TableApi extends BaseApi {
   }
 
   /**
+   * Drop a table from the catalog
+   *
+   * @param ns The name of the namespace. (required)
+   * @param table A table name. (required)
+   * @param purgeRequested Whether the user requested to purge the underlying table&#39;s data and
+   *     metadata (optional, default to false)
+   * @throws ApiException if fails to make API call
+   */
+  public void dropTable(String ns, String table, Boolean purgeRequested) throws ApiException {
+    this.dropTable(ns, table, purgeRequested, Collections.emptyMap());
+  }
+
+  /**
+   * Drop a table from the catalog
+   *
+   * @param ns The name of the namespace. (required)
+   * @param table A table name. (required)
+   * @param purgeRequested Whether the user requested to purge the underlying table&#39;s data and
+   *     metadata (optional, default to false)
+   * @param additionalHeaders additionalHeaders for this call
+   * @throws ApiException if fails to make API call
+   */
+  public void dropTable(
+      String ns, String table, Boolean purgeRequested, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = null;
+
+    // verify the required parameter 'ns' is set
+    if (ns == null) {
+      throw new ApiException(400, "Missing the required parameter 'ns' when calling dropTable");
+    }
+
+    // verify the required parameter 'table' is set
+    if (table == null) {
+      throw new ApiException(400, "Missing the required parameter 'table' when calling dropTable");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/namespaces/{ns}/tables/{table}"
+            .replaceAll(
+                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)))
+            .replaceAll(
+                "\\{" + "table" + "\\}",
+                apiClient.escapeString(apiClient.parameterToString(table)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("purgeRequested", purgeRequested));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {};
+
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "DELETE",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null);
+  }
+
+  /**
    * Get a table from the catalog Get a table&#39;s detailed information under a specified namespace
    * from the catalog.
    *
