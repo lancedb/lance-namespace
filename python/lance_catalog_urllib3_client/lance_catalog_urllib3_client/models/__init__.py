@@ -16,7 +16,7 @@
 # import models into model package
 from lance_catalog_urllib3_client.models.create_namespace_request import CreateNamespaceRequest
 from lance_catalog_urllib3_client.models.create_namespace_response import CreateNamespaceResponse
-from lance_catalog_urllib3_client.models.error_model import ErrorModel
+from lance_catalog_urllib3_client.models.error_response import ErrorResponse
 from lance_catalog_urllib3_client.models.get_namespace_response import GetNamespaceResponse
 from lance_catalog_urllib3_client.models.get_table_response import GetTableResponse
 from lance_catalog_urllib3_client.models.list_namespaces_response import ListNamespacesResponse

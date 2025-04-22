@@ -13,7 +13,7 @@
  */
 package com.lancedb.lance.catalog.server.springboot.api;
 
-import com.lancedb.lance.catalog.server.springboot.model.ErrorModel;
+import com.lancedb.lance.catalog.server.springboot.model.ErrorResponse;
 import com.lancedb.lance.catalog.server.springboot.model.GetTableResponse;
 import com.lancedb.lance.catalog.server.springboot.model.RegisterTableRequest;
 
@@ -89,7 +89,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -98,7 +98,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "403",
@@ -106,7 +106,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "404",
@@ -114,7 +114,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -123,7 +123,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "5XX",
@@ -132,7 +132,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
       })
   @RequestMapping(
@@ -246,7 +246,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -255,7 +255,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "403",
@@ -263,7 +263,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "406",
@@ -272,7 +272,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "409",
@@ -280,7 +280,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -289,7 +289,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "5XX",
@@ -298,7 +298,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
       })
   @RequestMapping(

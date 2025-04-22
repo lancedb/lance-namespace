@@ -11,9 +11,9 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// ErrorModel : JSON error model(based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)) payload returned in a response with further details on the error
+/// ErrorResponse : JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ErrorModel {
+pub struct ErrorResponse {
     /// a URI identifier that categorizes the error
     #[serde(rename = "type")]
     pub r#type: String,
@@ -31,10 +31,10 @@ pub struct ErrorModel {
     pub instance: Option<String>,
 }
 
-impl ErrorModel {
-    /// JSON error model(based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)) payload returned in a response with further details on the error
-    pub fn new(r#type: String) -> ErrorModel {
-        ErrorModel {
+impl ErrorResponse {
+    /// JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)
+    pub fn new(r#type: String) -> ErrorResponse {
+        ErrorResponse {
             r#type,
             title: None,
             status: None,

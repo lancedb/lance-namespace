@@ -4,7 +4,7 @@ Cargo.toml
 README.md
 docs/CreateNamespaceRequest.md
 docs/CreateNamespaceResponse.md
-docs/ErrorModel.md
+docs/ErrorResponse.md
 docs/GetNamespaceResponse.md
 docs/GetTableResponse.md
 docs/ListNamespacesResponse.md
@@ -19,7 +19,7 @@ src/apis/table_api.rs
 src/lib.rs
 src/models/create_namespace_request.rs
 src/models/create_namespace_response.rs
-src/models/error_model.rs
+src/models/error_response.rs
 src/models/get_namespace_response.rs
 src/models/get_table_response.rs
 src/models/list_namespaces_response.rs

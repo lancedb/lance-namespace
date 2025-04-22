@@ -49,13 +49,13 @@ paths:
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
-          $ref: '#/components/responses/UnauthorizedResponse'
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
         "403":
-          $ref: '#/components/responses/ForbiddenResponse'
+          $ref: '#/components/responses/ForbiddenErrorResponse'
         "406":
-          $ref: '#/components/responses/UnsupportedOperationResponse'
+          $ref: '#/components/responses/UnsupportedOperationErrorResponse'
         "503":
-          $ref: '#/components/responses/ServiceUnavailableResponse'
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
       summary: |
@@ -78,15 +78,15 @@ paths:
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
-          $ref: '#/components/responses/UnauthorizedResponse'
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
         "403":
-          $ref: '#/components/responses/ForbiddenResponse'
+          $ref: '#/components/responses/ForbiddenErrorResponse'
         "406":
-          $ref: '#/components/responses/UnsupportedOperationResponse'
+          $ref: '#/components/responses/UnsupportedOperationErrorResponse'
         "409":
           $ref: '#/components/responses/ConflictErrorResponse'
         "503":
-          $ref: '#/components/responses/ServiceUnavailableResponse'
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
       summary: |
@@ -110,15 +110,15 @@ paths:
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
-          $ref: '#/components/responses/UnauthorizedResponse'
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
         "403":
-          $ref: '#/components/responses/ForbiddenResponse'
+          $ref: '#/components/responses/ForbiddenErrorResponse'
         "404":
-          $ref: '#/components/responses/NotFoundResponse'
+          $ref: '#/components/responses/NotFoundErrorResponse'
         "409":
           $ref: '#/components/responses/ConflictErrorResponse'
         "503":
-          $ref: '#/components/responses/ServiceUnavailableResponse'
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
       summary: Drop a namespace from the catalog. Namespace must be empty.
@@ -137,13 +137,13 @@ paths:
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
-          $ref: '#/components/responses/UnauthorizedResponse'
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
         "403":
-          $ref: '#/components/responses/ForbiddenResponse'
+          $ref: '#/components/responses/ForbiddenErrorResponse'
         "404":
-          $ref: '#/components/responses/NotFoundResponse'
+          $ref: '#/components/responses/NotFoundErrorResponse'
         "503":
-          $ref: '#/components/responses/ServiceUnavailableResponse'
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
       summary: Get information about a namespace
@@ -162,13 +162,13 @@ paths:
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
-          $ref: '#/components/responses/UnauthorizedResponse'
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
         "403":
-          $ref: '#/components/responses/ForbiddenResponse'
+          $ref: '#/components/responses/ForbiddenErrorResponse'
         "404":
-          $ref: '#/components/responses/NotFoundResponse'
+          $ref: '#/components/responses/NotFoundErrorResponse'
         "503":
-          $ref: '#/components/responses/ServiceUnavailableResponse'
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
       summary: Check if a namespace exists
@@ -195,15 +195,15 @@ paths:
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
-          $ref: '#/components/responses/UnauthorizedResponse'
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
         "403":
-          $ref: '#/components/responses/ForbiddenResponse'
+          $ref: '#/components/responses/ForbiddenErrorResponse'
         "406":
-          $ref: '#/components/responses/UnsupportedOperationResponse'
+          $ref: '#/components/responses/UnsupportedOperationErrorResponse'
         "409":
           $ref: '#/components/responses/ConflictErrorResponse'
         "503":
-          $ref: '#/components/responses/ServiceUnavailableResponse'
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
       summary: |
@@ -227,13 +227,13 @@ paths:
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
-          $ref: '#/components/responses/UnauthorizedResponse'
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
         "403":
-          $ref: '#/components/responses/ForbiddenResponse'
+          $ref: '#/components/responses/ForbiddenErrorResponse'
         "404":
-          $ref: '#/components/responses/NotFoundResponse'
+          $ref: '#/components/responses/NotFoundErrorResponse'
         "503":
-          $ref: '#/components/responses/ServiceUnavailableResponse'
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
       summary: Get a table from the catalog
@@ -344,12 +344,12 @@ components:
             detail: ""
             instance: /v1/namespaces
           schema:
-            $ref: '#/components/schemas/ErrorModel'
+            $ref: '#/components/schemas/ErrorResponse'
       description: "Indicates a bad request error. It could be caused by an unexpected\
         \ request body format or other forms of request validation failure, such as\
         \ invalid json. Usually serves application/json content, although in some\
         \ cases simple text/plain content might be returned by the server's middleware."
-    UnauthorizedResponse:
+    UnauthorizedErrorResponse:
       content:
         application/json:
           example:
@@ -359,10 +359,10 @@ components:
             detail: ""
             instance: /v1/namespaces
           schema:
-            $ref: '#/components/schemas/ErrorModel'
+            $ref: '#/components/schemas/ErrorResponse'
       description: Unauthorized. The request lacks valid authentication credentials
         for the operation.
-    ForbiddenResponse:
+    ForbiddenErrorResponse:
       content:
         application/json:
           example:
@@ -372,9 +372,9 @@ components:
             detail: ""
             instance: /v1/namespaces
           schema:
-            $ref: '#/components/schemas/ErrorModel'
+            $ref: '#/components/schemas/ErrorResponse'
       description: Forbidden. Authenticated user does not have the necessary permissions.
-    NotFoundResponse:
+    NotFoundErrorResponse:
       content:
         application/json:
           example:
@@ -384,9 +384,9 @@ components:
             detail: ""
             instance: "/v1/namespaces/{ns}"
           schema:
-            $ref: '#/components/schemas/ErrorModel'
+            $ref: '#/components/schemas/ErrorResponse'
       description: A server-side problem that means can not find the specified resource.
-    UnsupportedOperationResponse:
+    UnsupportedOperationErrorResponse:
       content:
         application/json:
           example:
@@ -396,7 +396,7 @@ components:
             detail: ""
             instance: /v1/namespaces
           schema:
-            $ref: '#/components/schemas/ErrorModel'
+            $ref: '#/components/schemas/ErrorResponse'
       description: Not Acceptable / Unsupported Operation. The server does not support
         this operation.
     ConflictErrorResponse:
@@ -409,9 +409,9 @@ components:
             detail: ""
             instance: "/v1/namespaces/{ns}"
           schema:
-            $ref: '#/components/schemas/ErrorModel'
+            $ref: '#/components/schemas/ErrorResponse'
       description: The request conflicts with the current state of the target resource.
-    ServiceUnavailableResponse:
+    ServiceUnavailableErrorResponse:
       content:
         application/json:
           example:
@@ -421,7 +421,7 @@ components:
             detail: ""
             instance: /v1/namespaces
           schema:
-            $ref: '#/components/schemas/ErrorModel'
+            $ref: '#/components/schemas/ErrorResponse'
       description: The service is not ready to handle the request. The client should
         wait and retry. The service may additionally send a Retry-After header to
         indicate when to retry.
@@ -435,14 +435,13 @@ components:
             detail: ""
             instance: /v1/namespaces
           schema:
-            $ref: '#/components/schemas/ErrorModel'
+            $ref: '#/components/schemas/ErrorResponse'
       description: A server-side problem that might not be addressable from the client
         side. Used for server 5xx errors without more specific documentation in individual
         routes.
   schemas:
-    ErrorModel:
-      description: "JSON error model(based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807))\
-        \ payload returned in a response with further details on the error"
+    ErrorResponse:
+      description: "JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)"
       example:
         instance: /login/log/abc123
         detail: Authentication failed due to incorrect username or password

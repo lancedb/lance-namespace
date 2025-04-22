@@ -1,4 +1,4 @@
-# ErrorModel
+# ErrorResponse
 
 ## Properties
 

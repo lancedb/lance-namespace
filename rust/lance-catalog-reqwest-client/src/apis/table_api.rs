@@ -19,12 +19,12 @@ use super::{Error, configuration, ContentType};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetTableError {
-    Status400(models::ErrorModel),
-    Status401(models::ErrorModel),
-    Status403(models::ErrorModel),
-    Status404(models::ErrorModel),
-    Status503(models::ErrorModel),
-    Status5XX(models::ErrorModel),
+    Status400(models::ErrorResponse),
+    Status401(models::ErrorResponse),
+    Status403(models::ErrorResponse),
+    Status404(models::ErrorResponse),
+    Status503(models::ErrorResponse),
+    Status5XX(models::ErrorResponse),
     UnknownValue(serde_json::Value),
 }
 
@@ -32,13 +32,13 @@ pub enum GetTableError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum RegisterTableError {
-    Status400(models::ErrorModel),
-    Status401(models::ErrorModel),
-    Status403(models::ErrorModel),
-    Status406(models::ErrorModel),
-    Status409(models::ErrorModel),
-    Status503(models::ErrorModel),
-    Status5XX(models::ErrorModel),
+    Status400(models::ErrorResponse),
+    Status401(models::ErrorResponse),
+    Status403(models::ErrorResponse),
+    Status406(models::ErrorResponse),
+    Status409(models::ErrorResponse),
+    Status503(models::ErrorResponse),
+    Status5XX(models::ErrorResponse),
     UnknownValue(serde_json::Value),
 }
 

@@ -5,7 +5,7 @@
 README.md
 docs/CreateNamespaceRequest.md
 docs/CreateNamespaceResponse.md
-docs/ErrorModel.md
+docs/ErrorResponse.md
 docs/GetNamespaceResponse.md
 docs/GetTableResponse.md
 docs/ListNamespacesResponse.md
@@ -24,7 +24,7 @@ lance_catalog_urllib3_client/exceptions.py
 lance_catalog_urllib3_client/models/__init__.py
 lance_catalog_urllib3_client/models/create_namespace_request.py
 lance_catalog_urllib3_client/models/create_namespace_response.py
-lance_catalog_urllib3_client/models/error_model.py
+lance_catalog_urllib3_client/models/error_response.py
 lance_catalog_urllib3_client/models/get_namespace_response.py
 lance_catalog_urllib3_client/models/get_table_response.py
 lance_catalog_urllib3_client/models/list_namespaces_response.py
@@ -37,4 +37,5 @@ setup.cfg
 setup.py
 test-requirements.txt
 test/__init__.py
+test/test_error_response.py
 tox.ini

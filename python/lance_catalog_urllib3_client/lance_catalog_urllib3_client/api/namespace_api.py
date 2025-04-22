@@ -96,13 +96,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CreateNamespaceResponse",
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '406': "ErrorModel",
-            '409': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '406': "ErrorResponse",
+            '409': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -169,13 +169,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CreateNamespaceResponse",
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '406': "ErrorModel",
-            '409': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '406': "ErrorResponse",
+            '409': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -242,13 +242,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CreateNamespaceResponse",
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '406': "ErrorModel",
-            '409': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '406': "ErrorResponse",
+            '409': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -387,13 +387,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '404': "ErrorModel",
-            '409': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '409': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -460,13 +460,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '404': "ErrorModel",
-            '409': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '409': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -533,13 +533,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '404': "ErrorModel",
-            '409': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '409': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -666,12 +666,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "GetNamespaceResponse",
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '404': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -739,12 +739,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "GetNamespaceResponse",
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '404': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -812,12 +812,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "GetNamespaceResponse",
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '404': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -947,12 +947,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListNamespacesResponse",
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '406': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '406': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1023,12 +1023,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListNamespacesResponse",
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '406': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '406': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1099,12 +1099,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListNamespacesResponse",
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '406': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '406': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1238,12 +1238,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '404': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1311,12 +1311,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '404': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1384,12 +1384,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
-            '400': "ErrorModel",
-            '401': "ErrorModel",
-            '403': "ErrorModel",
-            '404': "ErrorModel",
-            '503': "ErrorModel",
-            '5XX': "ErrorModel",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,

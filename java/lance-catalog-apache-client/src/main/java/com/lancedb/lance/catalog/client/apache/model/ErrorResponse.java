@@ -22,21 +22,18 @@ import java.net.URLEncoder;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/**
- * JSON error model(based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)) payload
- * returned in a response with further details on the error
- */
+/** JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807) */
 @JsonPropertyOrder({
-  ErrorModel.JSON_PROPERTY_TYPE,
-  ErrorModel.JSON_PROPERTY_TITLE,
-  ErrorModel.JSON_PROPERTY_STATUS,
-  ErrorModel.JSON_PROPERTY_DETAIL,
-  ErrorModel.JSON_PROPERTY_INSTANCE
+  ErrorResponse.JSON_PROPERTY_TYPE,
+  ErrorResponse.JSON_PROPERTY_TITLE,
+  ErrorResponse.JSON_PROPERTY_STATUS,
+  ErrorResponse.JSON_PROPERTY_DETAIL,
+  ErrorResponse.JSON_PROPERTY_INSTANCE
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class ErrorModel {
+public class ErrorResponse {
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull private String type;
 
@@ -52,9 +49,9 @@ public class ErrorModel {
   public static final String JSON_PROPERTY_INSTANCE = "instance";
   @javax.annotation.Nullable private String instance;
 
-  public ErrorModel() {}
+  public ErrorResponse() {}
 
-  public ErrorModel type(@javax.annotation.Nonnull String type) {
+  public ErrorResponse type(@javax.annotation.Nonnull String type) {
 
     this.type = type;
     return this;
@@ -78,7 +75,7 @@ public class ErrorModel {
     this.type = type;
   }
 
-  public ErrorModel title(@javax.annotation.Nullable String title) {
+  public ErrorResponse title(@javax.annotation.Nullable String title) {
 
     this.title = title;
     return this;
@@ -102,7 +99,7 @@ public class ErrorModel {
     this.title = title;
   }
 
-  public ErrorModel status(@javax.annotation.Nullable Integer status) {
+  public ErrorResponse status(@javax.annotation.Nullable Integer status) {
 
     this.status = status;
     return this;
@@ -127,7 +124,7 @@ public class ErrorModel {
     this.status = status;
   }
 
-  public ErrorModel detail(@javax.annotation.Nullable String detail) {
+  public ErrorResponse detail(@javax.annotation.Nullable String detail) {
 
     this.detail = detail;
     return this;
@@ -151,7 +148,7 @@ public class ErrorModel {
     this.detail = detail;
   }
 
-  public ErrorModel instance(@javax.annotation.Nullable String instance) {
+  public ErrorResponse instance(@javax.annotation.Nullable String instance) {
 
     this.instance = instance;
     return this;
@@ -183,12 +180,12 @@ public class ErrorModel {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ErrorModel errorModel = (ErrorModel) o;
-    return Objects.equals(this.type, errorModel.type)
-        && Objects.equals(this.title, errorModel.title)
-        && Objects.equals(this.status, errorModel.status)
-        && Objects.equals(this.detail, errorModel.detail)
-        && Objects.equals(this.instance, errorModel.instance);
+    ErrorResponse errorResponse = (ErrorResponse) o;
+    return Objects.equals(this.type, errorResponse.type)
+        && Objects.equals(this.title, errorResponse.title)
+        && Objects.equals(this.status, errorResponse.status)
+        && Objects.equals(this.detail, errorResponse.detail)
+        && Objects.equals(this.instance, errorResponse.instance);
   }
 
   @Override
@@ -199,7 +196,7 @@ public class ErrorModel {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ErrorModel {\n");
+    sb.append("class ErrorResponse {\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    title: ").append(toIndentedString(title)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");

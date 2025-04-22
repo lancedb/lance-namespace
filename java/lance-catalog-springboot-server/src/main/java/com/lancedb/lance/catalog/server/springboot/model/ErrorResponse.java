@@ -22,18 +22,15 @@ import javax.validation.constraints.*;
 import java.util.*;
 import java.util.Objects;
 
-/**
- * JSON error model(based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)) payload
- * returned in a response with further details on the error
- */
+/** JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807) */
 @Schema(
-    name = "ErrorModel",
+    name = "ErrorResponse",
     description =
-        "JSON error model(based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)) payload returned in a response with further details on the error")
+        "JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
-public class ErrorModel {
+public class ErrorResponse {
 
   private String type;
 
@@ -45,16 +42,16 @@ public class ErrorModel {
 
   private String instance;
 
-  public ErrorModel() {
+  public ErrorResponse() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public ErrorModel(String type) {
+  public ErrorResponse(String type) {
     this.type = type;
   }
 
-  public ErrorModel type(String type) {
+  public ErrorResponse type(String type) {
     this.type = type;
     return this;
   }
@@ -79,7 +76,7 @@ public class ErrorModel {
     this.type = type;
   }
 
-  public ErrorModel title(String title) {
+  public ErrorResponse title(String title) {
     this.title = title;
     return this;
   }
@@ -103,7 +100,7 @@ public class ErrorModel {
     this.title = title;
   }
 
-  public ErrorModel status(Integer status) {
+  public ErrorResponse status(Integer status) {
     this.status = status;
     return this;
   }
@@ -131,7 +128,7 @@ public class ErrorModel {
     this.status = status;
   }
 
-  public ErrorModel detail(String detail) {
+  public ErrorResponse detail(String detail) {
     this.detail = detail;
     return this;
   }
@@ -155,7 +152,7 @@ public class ErrorModel {
     this.detail = detail;
   }
 
-  public ErrorModel instance(String instance) {
+  public ErrorResponse instance(String instance) {
     this.instance = instance;
     return this;
   }
@@ -187,12 +184,12 @@ public class ErrorModel {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ErrorModel errorModel = (ErrorModel) o;
-    return Objects.equals(this.type, errorModel.type)
-        && Objects.equals(this.title, errorModel.title)
-        && Objects.equals(this.status, errorModel.status)
-        && Objects.equals(this.detail, errorModel.detail)
-        && Objects.equals(this.instance, errorModel.instance);
+    ErrorResponse errorResponse = (ErrorResponse) o;
+    return Objects.equals(this.type, errorResponse.type)
+        && Objects.equals(this.title, errorResponse.title)
+        && Objects.equals(this.status, errorResponse.status)
+        && Objects.equals(this.detail, errorResponse.detail)
+        && Objects.equals(this.instance, errorResponse.instance);
   }
 
   @Override
@@ -203,7 +200,7 @@ public class ErrorModel {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ErrorModel {\n");
+    sb.append("class ErrorResponse {\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    title: ").append(toIndentedString(title)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");

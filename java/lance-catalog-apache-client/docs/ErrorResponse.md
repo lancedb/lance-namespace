@@ -1,8 +1,8 @@
 
 
-# ErrorModel
+# ErrorResponse
 
-JSON error model(based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)) payload returned in a response with further details on the error
+JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)
 
 ## Properties
 
