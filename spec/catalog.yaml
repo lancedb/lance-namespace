@@ -247,7 +247,7 @@ paths:
       description:
         Check if a table exists within a given namespace.
       responses:
-        204:
+        200:
           description: Success, no content
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'

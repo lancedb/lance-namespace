@@ -696,7 +696,7 @@ class TableApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': None,
             '400': "ErrorModel",
             '401': "ErrorModel",
             '403': "ErrorModel",
@@ -773,7 +773,7 @@ class TableApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': None,
             '400': "ErrorModel",
             '401': "ErrorModel",
             '403': "ErrorModel",
@@ -850,7 +850,7 @@ class TableApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': None,
             '400': "ErrorModel",
             '401': "ErrorModel",
             '403': "ErrorModel",

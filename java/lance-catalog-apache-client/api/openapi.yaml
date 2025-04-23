@@ -248,7 +248,7 @@ paths:
       - $ref: '#/components/parameters/namespace'
       - $ref: '#/components/parameters/table'
       responses:
-        "204":
+        "200":
           description: "Success, no content"
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'

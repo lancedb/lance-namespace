@@ -381,7 +381,7 @@ public interface TableApi {
    *
    * @param ns The name of the namespace. (required)
    * @param table A table name. (required)
-   * @return Success, no content (status code 204) or Indicates a bad request error. It could be
+   * @return Success, no content (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
    *     such as invalid json. Usually serves application/json content, although in some cases
    *     simple text/plain content might be returned by the server&#39;s middleware. (status code
@@ -400,7 +400,7 @@ public interface TableApi {
       description = "Check if a table exists within a given namespace.",
       tags = {"Table"},
       responses = {
-        @ApiResponse(responseCode = "204", description = "Success, no content"),
+        @ApiResponse(responseCode = "200", description = "Success, no content"),
         @ApiResponse(
             responseCode = "400",
             description =
