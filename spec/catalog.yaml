@@ -567,6 +567,12 @@ components:
             - EXIST_OK
             - OVERWRITE
           default: CREATE
+        type:
+          type: string
+          enum:
+            - STORAGE_MANAGED
+            - CATALOG_MANAGED
+          default: STORAGE_MANAGED
         location:
           type: string
         schema:

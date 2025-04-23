@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **str** |  | 
 **mode** | **str** |  | [optional] [default to 'CREATE']
+**type** | **str** |  | [optional] [default to 'STORAGE_MANAGED']
 **location** | **str** |  | [optional] 
 **var_schema** | [**ModelSchema**](ModelSchema.md) |  | 
 **writer_version** | [**WriterVersion**](WriterVersion.md) |  | [optional] 

@@ -756,6 +756,7 @@ components:
             parentId: ""
         name: name
         location: location
+        type: STORAGE_MANAGED
         config:
           key: config
         writerVersion:
@@ -770,6 +771,12 @@ components:
           - CREATE
           - EXIST_OK
           - OVERWRITE
+          type: string
+        type:
+          default: STORAGE_MANAGED
+          enum:
+          - STORAGE_MANAGED
+          - CATALOG_MANAGED
           type: string
         location:
           type: string

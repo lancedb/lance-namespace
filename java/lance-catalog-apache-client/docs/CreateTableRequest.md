@@ -9,6 +9,7 @@
 |------------ | ------------- | ------------- | -------------|
 |**name** | **String** |  |  |
 |**mode** | [**ModeEnum**](#ModeEnum) |  |  [optional] |
+|**type** | [**TypeEnum**](#TypeEnum) |  |  [optional] |
 |**location** | **String** |  |  [optional] |
 |**schema** | [**Schema**](Schema.md) |  |  |
 |**writerVersion** | [**WriterVersion**](WriterVersion.md) |  |  [optional] |
@@ -23,6 +24,15 @@
 | CREATE | &quot;CREATE&quot; |
 | EXIST_OK | &quot;EXIST_OK&quot; |
 | OVERWRITE | &quot;OVERWRITE&quot; |
+
+
+
+## Enum: TypeEnum
+
+| Name | Value |
+|---- | -----|
+| STORAGE_MANAGED | &quot;STORAGE_MANAGED&quot; |
+| CATALOG_MANAGED | &quot;CATALOG_MANAGED&quot; |
 
 
 

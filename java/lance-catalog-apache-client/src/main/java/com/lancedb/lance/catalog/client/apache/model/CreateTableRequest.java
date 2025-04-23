@@ -31,6 +31,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({
   CreateTableRequest.JSON_PROPERTY_NAME,
   CreateTableRequest.JSON_PROPERTY_MODE,
+  CreateTableRequest.JSON_PROPERTY_TYPE,
   CreateTableRequest.JSON_PROPERTY_LOCATION,
   CreateTableRequest.JSON_PROPERTY_SCHEMA,
   CreateTableRequest.JSON_PROPERTY_WRITER_VERSION,
@@ -80,6 +81,42 @@ public class CreateTableRequest {
 
   public static final String JSON_PROPERTY_MODE = "mode";
   @javax.annotation.Nullable private ModeEnum mode = ModeEnum.CREATE;
+
+  /** Gets or Sets type */
+  public enum TypeEnum {
+    STORAGE_MANAGED(String.valueOf("STORAGE_MANAGED")),
+
+    CATALOG_MANAGED(String.valueOf("CATALOG_MANAGED"));
+
+    private String value;
+
+    TypeEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static TypeEnum fromValue(String value) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
+
+  public static final String JSON_PROPERTY_TYPE = "type";
+  @javax.annotation.Nullable private TypeEnum type = TypeEnum.STORAGE_MANAGED;
 
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nullable private String location;
@@ -141,6 +178,30 @@ public class CreateTableRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMode(@javax.annotation.Nullable ModeEnum mode) {
     this.mode = mode;
+  }
+
+  public CreateTableRequest type(@javax.annotation.Nullable TypeEnum type) {
+
+    this.type = type;
+    return this;
+  }
+
+  /**
+   * Get type
+   *
+   * @return type
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TYPE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public TypeEnum getType() {
+    return type;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TYPE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setType(@javax.annotation.Nullable TypeEnum type) {
+    this.type = type;
   }
 
   public CreateTableRequest location(@javax.annotation.Nullable String location) {
@@ -260,6 +321,7 @@ public class CreateTableRequest {
     CreateTableRequest createTableRequest = (CreateTableRequest) o;
     return Objects.equals(this.name, createTableRequest.name)
         && Objects.equals(this.mode, createTableRequest.mode)
+        && Objects.equals(this.type, createTableRequest.type)
         && Objects.equals(this.location, createTableRequest.location)
         && Objects.equals(this.schema, createTableRequest.schema)
         && Objects.equals(this.writerVersion, createTableRequest.writerVersion)
@@ -268,7 +330,7 @@ public class CreateTableRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, location, schema, writerVersion, config);
+    return Objects.hash(name, mode, type, location, schema, writerVersion, config);
   }
 
   @Override
@@ -277,6 +339,7 @@ public class CreateTableRequest {
     sb.append("class CreateTableRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    writerVersion: ").append(toIndentedString(writerVersion)).append("\n");
@@ -351,6 +414,21 @@ public class CreateTableRequest {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getMode()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `type` to the URL query string
+    if (getType() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%stype%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getType()), "UTF-8").replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

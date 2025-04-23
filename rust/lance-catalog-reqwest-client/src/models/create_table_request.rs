@@ -17,6 +17,8 @@ pub struct CreateTableRequest {
     pub name: String,
     #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
     pub mode: Option<Mode>,
+    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    pub r#type: Option<Type>,
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
     #[serde(rename = "schema")]
@@ -33,6 +35,7 @@ impl CreateTableRequest {
         CreateTableRequest {
             name,
             mode: None,
+            r#type: None,
             location: None,
             schema: Box::new(schema),
             writer_version: None,
@@ -54,6 +57,20 @@ pub enum Mode {
 impl Default for Mode {
     fn default() -> Mode {
         Self::Create
+    }
+}
+/// 
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum Type {
+    #[serde(rename = "STORAGE_MANAGED")]
+    StorageManaged,
+    #[serde(rename = "CATALOG_MANAGED")]
+    CatalogManaged,
+}
+
+impl Default for Type {
+    fn default() -> Type {
+        Self::StorageManaged
     }
 }
 

@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **String** |  | 
 **mode** | Option<**String**> |  | [optional][default to Create]
+**r#type** | Option<**String**> |  | [optional][default to StorageManaged]
 **location** | Option<**String**> |  | [optional]
 **schema** | [**models::Schema**](Schema.md) |  | 
 **writer_version** | Option<[**models::WriterVersion**](WriterVersion.md)> |  | [optional]

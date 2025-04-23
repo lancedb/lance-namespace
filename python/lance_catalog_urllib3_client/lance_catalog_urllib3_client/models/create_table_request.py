@@ -30,11 +30,12 @@ class CreateTableRequest(BaseModel):
     """ # noqa: E501
     name: StrictStr
     mode: Optional[StrictStr] = 'CREATE'
+    type: Optional[StrictStr] = 'STORAGE_MANAGED'
     location: Optional[StrictStr] = None
     var_schema: ModelSchema = Field(alias="schema")
     writer_version: Optional[WriterVersion] = Field(default=None, alias="writerVersion")
     config: Optional[Dict[str, StrictStr]] = Field(default=None, description="optional configurations for the table. Keys with the prefix \"lance.\" are reserved for the Lance library.  Other libraries may wish to similarly prefix their configuration keys appropriately. ")
-    __properties: ClassVar[List[str]] = ["name", "mode", "location", "schema", "writerVersion", "config"]
+    __properties: ClassVar[List[str]] = ["name", "mode", "type", "location", "schema", "writerVersion", "config"]
 
     @field_validator('mode')
     def mode_validate_enum(cls, value):
@@ -44,6 +45,16 @@ class CreateTableRequest(BaseModel):
 
         if value not in set(['CREATE', 'EXIST_OK', 'OVERWRITE']):
             raise ValueError("must be one of enum values ('CREATE', 'EXIST_OK', 'OVERWRITE')")
+        return value
+
+    @field_validator('type')
+    def type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['STORAGE_MANAGED', 'CATALOG_MANAGED']):
+            raise ValueError("must be one of enum values ('STORAGE_MANAGED', 'CATALOG_MANAGED')")
         return value
 
     model_config = ConfigDict(
@@ -105,6 +116,7 @@ class CreateTableRequest(BaseModel):
         _obj = cls.model_validate({
             "name": obj.get("name"),
             "mode": obj.get("mode") if obj.get("mode") is not None else 'CREATE',
+            "type": obj.get("type") if obj.get("type") is not None else 'STORAGE_MANAGED',
             "location": obj.get("location"),
             "schema": ModelSchema.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
             "writerVersion": WriterVersion.from_dict(obj["writerVersion"]) if obj.get("writerVersion") is not None else None,

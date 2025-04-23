@@ -72,6 +72,41 @@ public class CreateTableRequest {
 
   private ModeEnum mode = ModeEnum.CREATE;
 
+  /** Gets or Sets type */
+  public enum TypeEnum {
+    STORAGE_MANAGED("STORAGE_MANAGED"),
+
+    CATALOG_MANAGED("CATALOG_MANAGED");
+
+    private String value;
+
+    TypeEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static TypeEnum fromValue(String value) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
+
+  private TypeEnum type = TypeEnum.STORAGE_MANAGED;
+
   private String location;
 
   private Schema schema;
@@ -129,6 +164,26 @@ public class CreateTableRequest {
 
   public void setMode(ModeEnum mode) {
     this.mode = mode;
+  }
+
+  public CreateTableRequest type(TypeEnum type) {
+    this.type = type;
+    return this;
+  }
+
+  /**
+   * Get type
+   *
+   * @return type
+   */
+  @Schema(name = "type", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("type")
+  public TypeEnum getType() {
+    return type;
+  }
+
+  public void setType(TypeEnum type) {
+    this.type = type;
   }
 
   public CreateTableRequest location(String location) {
@@ -239,6 +294,7 @@ public class CreateTableRequest {
     CreateTableRequest createTableRequest = (CreateTableRequest) o;
     return Objects.equals(this.name, createTableRequest.name)
         && Objects.equals(this.mode, createTableRequest.mode)
+        && Objects.equals(this.type, createTableRequest.type)
         && Objects.equals(this.location, createTableRequest.location)
         && Objects.equals(this.schema, createTableRequest.schema)
         && Objects.equals(this.writerVersion, createTableRequest.writerVersion)
@@ -247,7 +303,7 @@ public class CreateTableRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, location, schema, writerVersion, config);
+    return Objects.hash(name, mode, type, location, schema, writerVersion, config);
   }
 
   @Override
@@ -256,6 +312,7 @@ public class CreateTableRequest {
     sb.append("class CreateTableRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    writerVersion: ").append(toIndentedString(writerVersion)).append("\n");
