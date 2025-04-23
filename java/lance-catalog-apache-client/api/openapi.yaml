@@ -213,6 +213,46 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/namespaces/{ns}/tables:
+    parameters:
+    - $ref: '#/components/parameters/namespace'
+    post:
+      description: |
+        Create a new Lance table in the catalog.
+        There are three modes when trying to create a table: * CREATE: Create the table if it does not exist. If a table of the same name already exists, the operation fails with 400. * EXIST_OK: Create the table if it does not exist. If a table of the same name already exists, the operation succeeds and the existing table is kept. * OVERWRITE: Create the table if it does not exist. If a table of the same name already exists, the existing table and all data is dropped and a new table with this name with no data is created.
+        The server might create the table using a library and writer version that is different from the one in the user environment. The server is responsible for rejecting the request if the table created by the server cannot be properly used by the client library and writer version.
+      operationId: CreateTable
+      parameters:
+      - $ref: '#/components/parameters/namespace'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTableRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/GetTableResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "406":
+          $ref: '#/components/responses/UnsupportedOperationErrorResponse'
+        "409":
+          $ref: '#/components/responses/ConflictErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Create a table in the catalog
+      tags:
+      - Table
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/namespaces/{ns}/tables/{table}:
     get:
       description: Get a table's detailed information under a specified namespace
@@ -605,6 +645,153 @@ components:
       required:
       - location
       - name
+    Schema:
+      example:
+        metadata:
+          key: metadata
+        fields:
+        - metadata:
+            key: metadata
+          logicalType: logicalType
+          nullable: true
+          name: name
+          id: ""
+          type: PARENT
+          parentId: ""
+        - metadata:
+            key: metadata
+          logicalType: logicalType
+          nullable: true
+          name: name
+          id: ""
+          type: PARENT
+          parentId: ""
+      properties:
+        metadata:
+          additionalProperties:
+            type: string
+        fields:
+          items:
+            $ref: '#/components/schemas/Field'
+          type: array
+          uniqueItems: true
+      required:
+      - fields
+    Field:
+      example:
+        metadata:
+          key: metadata
+        logicalType: logicalType
+        nullable: true
+        name: name
+        id: ""
+        type: PARENT
+        parentId: ""
+      properties:
+        type:
+          enum:
+          - PARENT
+          - REPEATED
+          - LEAF
+          type: string
+        name:
+          type: string
+        id:
+          type: int
+        parentId:
+          type: int
+        logicalType:
+          description: |
+            Logical types, currently support parameterized Arrow Type.
+            PARENT types will always have logical type "struct".
+            Logical type "map" is represented as a struct with a single child field "entries". "entries" is a struct with fields "key" and "value".
+            REPEATED types may have logical types: * "list" * "large_list" * "list.struct" * "large_list.struct" The final two are used if the list values are structs, and therefore the field is both implicitly REPEATED and PARENT.
+            LEAF types may have logical types: * "null" * "bool" * "int8" / "uint8" * "int16" / "uint16" * "int32" / "uint32" * "int64" / "uint64" * "halffloat" / "float" / "double" * "string" / "large_string" * "binary" / "large_binary" * "date32:day" * "date64:ms" * "decimal:128:{precision}:{scale}" / "decimal:256:{precision}:{scale}" * "time:{unit}" / "timestamp:{unit}" / "duration:{unit}", where unit is "s", "ms", "us", "ns" * "dict:{value_type}:{index_type}:false"
+          type: string
+        nullable:
+          type: boolean
+        metadata:
+          additionalProperties:
+            type: string
+          description: optional field metadata (e.g. extension type name/parameters)
+      required:
+      - id
+      - logicalType
+      - name
+      - type
+    WriterVersion:
+      example:
+        library: library
+        version: version
+      properties:
+        library:
+          description: The name of the library that created this file.
+          type: string
+        version:
+          description: |
+            The version of the library that created this file.  Because we cannot assume that the library is semantically versioned, this is a string.  However, if it is semantically versioned, it should be a valid semver string without any 'v' prefix.  For example: `2.0.0`, `2.0.0-rc.1`.
+          type: string
+    CreateTableRequest:
+      example:
+        mode: CREATE
+        schema:
+          metadata:
+            key: metadata
+          fields:
+          - metadata:
+              key: metadata
+            logicalType: logicalType
+            nullable: true
+            name: name
+            id: ""
+            type: PARENT
+            parentId: ""
+          - metadata:
+              key: metadata
+            logicalType: logicalType
+            nullable: true
+            name: name
+            id: ""
+            type: PARENT
+            parentId: ""
+        name: name
+        location: location
+        type: STORAGE_MANAGED
+        config:
+          key: config
+        writerVersion:
+          library: library
+          version: version
+      properties:
+        name:
+          type: string
+        mode:
+          default: CREATE
+          enum:
+          - CREATE
+          - EXIST_OK
+          - OVERWRITE
+          type: string
+        type:
+          default: STORAGE_MANAGED
+          enum:
+          - STORAGE_MANAGED
+          - CATALOG_MANAGED
+          type: string
+        location:
+          type: string
+        schema:
+          $ref: '#/components/schemas/Schema'
+        writerVersion:
+          $ref: '#/components/schemas/WriterVersion'
+        config:
+          additionalProperties:
+            type: string
+          description: |
+            optional configurations for the table. Keys with the prefix "lance." are reserved for the Lance library.  Other libraries may wish to similarly prefix their configuration keys appropriately.
+      required:
+      - name
+      - schema
     GetTableResponse:
       description: |
         Result used when a table is successfully loaded.

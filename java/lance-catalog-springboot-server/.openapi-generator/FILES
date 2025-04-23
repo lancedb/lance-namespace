@@ -6,8 +6,12 @@ src/main/java/com/lancedb/lance/catalog/server/springboot/api/NamespaceApi.java
 src/main/java/com/lancedb/lance/catalog/server/springboot/api/TableApi.java
 src/main/java/com/lancedb/lance/catalog/server/springboot/model/CreateNamespaceRequest.java
 src/main/java/com/lancedb/lance/catalog/server/springboot/model/CreateNamespaceResponse.java
+src/main/java/com/lancedb/lance/catalog/server/springboot/model/CreateTableRequest.java
 src/main/java/com/lancedb/lance/catalog/server/springboot/model/ErrorResponse.java
+src/main/java/com/lancedb/lance/catalog/server/springboot/model/Field.java
 src/main/java/com/lancedb/lance/catalog/server/springboot/model/GetNamespaceResponse.java
 src/main/java/com/lancedb/lance/catalog/server/springboot/model/GetTableResponse.java
 src/main/java/com/lancedb/lance/catalog/server/springboot/model/ListNamespacesResponse.java
 src/main/java/com/lancedb/lance/catalog/server/springboot/model/RegisterTableRequest.java
+src/main/java/com/lancedb/lance/catalog/server/springboot/model/Schema.java
+src/main/java/com/lancedb/lance/catalog/server/springboot/model/WriterVersion.java
