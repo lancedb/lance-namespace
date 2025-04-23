@@ -11,7 +11,7 @@ should store and use Lance tables, as well as how ML/AI tools and analytics comp
 A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables.
 There are 2 types of Lance catalogs: storage directory and REST catalog.
 
-## Lance Directory
+## Lance Directory Catalog
 
 Lance storage directory, or **Lance Directory**, is a lightweight and simple catalog
 for people to get started with creating and using Lance tables directly on top of any local or remote storage system.
