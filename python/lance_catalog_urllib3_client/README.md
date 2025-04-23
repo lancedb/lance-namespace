@@ -96,6 +96,7 @@ Class | Method | HTTP request | Description
 *NamespaceApi* | [**get_namespace**](docs/NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
 *NamespaceApi* | [**list_namespaces**](docs/NamespaceApi.md#list_namespaces) | **GET** /v1/namespaces | List all namespaces in the catalog. 
 *NamespaceApi* | [**namespace_exists**](docs/NamespaceApi.md#namespace_exists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists
+*TableApi* | [**create_table**](docs/TableApi.md#create_table) | **POST** /v1/namespaces/{ns}/tables | Create a table in the catalog
 *TableApi* | [**get_table**](docs/TableApi.md#get_table) | **GET** /v1/namespaces/{ns}/tables/{table} | Get a table from the catalog
 *TableApi* | [**register_table**](docs/TableApi.md#register_table) | **POST** /v1/namespaces/{ns}/register | Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace. 
 *TableApi* | [**table_exists**](docs/TableApi.md#table_exists) | **HEAD** /v1/namespaces/{ns}/tables/{table} | Check if a table exists
@@ -105,11 +106,15 @@ Class | Method | HTTP request | Description
 
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
+ - [CreateTableRequest](docs/CreateTableRequest.md)
  - [ErrorResponse](docs/ErrorResponse.md)
  - [GetNamespaceResponse](docs/GetNamespaceResponse.md)
  - [GetTableResponse](docs/GetTableResponse.md)
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
+ - [ModelField](docs/ModelField.md)
+ - [ModelSchema](docs/ModelSchema.md)
  - [RegisterTableRequest](docs/RegisterTableRequest.md)
+ - [WriterVersion](docs/WriterVersion.md)
 
 
 <a id="documentation-for-authorization"></a>

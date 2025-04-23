@@ -15,6 +15,20 @@ use crate::{apis::ResponseContent, models};
 use super::{Error, configuration, ContentType};
 
 
+/// struct for typed errors of method [`create_table`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CreateTableError {
+    Status400(models::ErrorResponse),
+    Status401(models::ErrorResponse),
+    Status403(models::ErrorResponse),
+    Status406(models::ErrorResponse),
+    Status409(models::ErrorResponse),
+    Status503(models::ErrorResponse),
+    Status5XX(models::ErrorResponse),
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`get_table`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -55,6 +69,45 @@ pub enum TableExistsError {
     UnknownValue(serde_json::Value),
 }
 
+
+/// Create a new Lance table in the catalog. There are three modes when trying to create a table: * CREATE: Create the table if it does not exist. If a table of the same name already exists, the operation fails with 400. * EXIST_OK: Create the table if it does not exist. If a table of the same name already exists, the operation succeeds and the existing table is kept. * OVERWRITE: Create the table if it does not exist. If a table of the same name already exists, the existing table and all data is dropped and a new table with this name with no data is created. The server might create the table using a library and writer version that is different from the one in the user environment. The server is responsible for rejecting the request if the table created by the server cannot be properly used by the client library and writer version. 
+pub async fn create_table(configuration: &configuration::Configuration, ns: &str, create_table_request: models::CreateTableRequest) -> Result<models::GetTableResponse, Error<CreateTableError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_ns = ns;
+    let p_create_table_request = create_table_request;
+
+    let uri_str = format!("{}/v1/namespaces/{ns}/tables", configuration.base_path, ns=crate::apis::urlencode(p_ns));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    req_builder = req_builder.json(&p_create_table_request);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetTableResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetTableResponse`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<CreateTableError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
 
 /// Get a table's detailed information under a specified namespace from the catalog.
 pub async fn get_table(configuration: &configuration::Configuration, ns: &str, table: &str) -> Result<models::GetTableResponse, Error<GetTableError>> {

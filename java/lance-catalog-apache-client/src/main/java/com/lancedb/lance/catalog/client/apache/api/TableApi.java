@@ -18,6 +18,7 @@ import com.lancedb.lance.catalog.client.apache.ApiException;
 import com.lancedb.lance.catalog.client.apache.BaseApi;
 import com.lancedb.lance.catalog.client.apache.Configuration;
 import com.lancedb.lance.catalog.client.apache.Pair;
+import com.lancedb.lance.catalog.client.apache.model.CreateTableRequest;
 import com.lancedb.lance.catalog.client.apache.model.GetTableResponse;
 import com.lancedb.lance.catalog.client.apache.model.RegisterTableRequest;
 
@@ -41,6 +42,103 @@ public class TableApi extends BaseApi {
 
   public TableApi(ApiClient apiClient) {
     super(apiClient);
+  }
+
+  /**
+   * Create a table in the catalog Create a new Lance table in the catalog. There are three modes
+   * when trying to create a table: * CREATE: Create the table if it does not exist. If a table of
+   * the same name already exists, the operation fails with 400. * EXIST_OK: Create the table if it
+   * does not exist. If a table of the same name already exists, the operation succeeds and the
+   * existing table is kept. * OVERWRITE: Create the table if it does not exist. If a table of the
+   * same name already exists, the existing table and all data is dropped and a new table with this
+   * name with no data is created. The server might create the table using a library and writer
+   * version that is different from the one in the user environment. The server is responsible for
+   * rejecting the request if the table created by the server cannot be properly used by the client
+   * library and writer version.
+   *
+   * @param ns The name of the namespace. (required)
+   * @param createTableRequest (required)
+   * @return GetTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public GetTableResponse createTable(String ns, CreateTableRequest createTableRequest)
+      throws ApiException {
+    return this.createTable(ns, createTableRequest, Collections.emptyMap());
+  }
+
+  /**
+   * Create a table in the catalog Create a new Lance table in the catalog. There are three modes
+   * when trying to create a table: * CREATE: Create the table if it does not exist. If a table of
+   * the same name already exists, the operation fails with 400. * EXIST_OK: Create the table if it
+   * does not exist. If a table of the same name already exists, the operation succeeds and the
+   * existing table is kept. * OVERWRITE: Create the table if it does not exist. If a table of the
+   * same name already exists, the existing table and all data is dropped and a new table with this
+   * name with no data is created. The server might create the table using a library and writer
+   * version that is different from the one in the user environment. The server is responsible for
+   * rejecting the request if the table created by the server cannot be properly used by the client
+   * library and writer version.
+   *
+   * @param ns The name of the namespace. (required)
+   * @param createTableRequest (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return GetTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public GetTableResponse createTable(
+      String ns, CreateTableRequest createTableRequest, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = createTableRequest;
+
+    // verify the required parameter 'ns' is set
+    if (ns == null) {
+      throw new ApiException(400, "Missing the required parameter 'ns' when calling createTable");
+    }
+
+    // verify the required parameter 'createTableRequest' is set
+    if (createTableRequest == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'createTableRequest' when calling createTable");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/namespaces/{ns}/tables"
+            .replaceAll(
+                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<GetTableResponse> localVarReturnType = new TypeReference<GetTableResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
   }
 
   /**
