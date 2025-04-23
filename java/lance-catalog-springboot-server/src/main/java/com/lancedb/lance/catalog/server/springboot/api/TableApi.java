@@ -408,7 +408,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -417,7 +417,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "403",
@@ -425,7 +425,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "404",
@@ -433,7 +433,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -442,7 +442,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             }),
         @ApiResponse(
             responseCode = "5XX",
@@ -451,7 +451,7 @@ public interface TableApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorModel.class))
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
       })
   @RequestMapping(

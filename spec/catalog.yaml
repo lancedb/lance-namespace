@@ -252,13 +252,13 @@ paths:
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
-          $ref: '#/components/responses/UnauthorizedResponse'
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
-          $ref: '#/components/responses/ForbiddenResponse'
+          $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundResponse'
+          $ref: '#/components/responses/NotFoundErrorResponse'
         503:
-          $ref: '#/components/responses/ServiceUnavailableResponse'
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
