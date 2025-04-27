@@ -34,39 +34,8 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class AlterTransactionUnsetProperty {
-  /** Gets or Sets type */
-  public enum TypeEnum {
-    UNSET_PROPERTY(String.valueOf("UnsetProperty"));
-
-    private String value;
-
-    TypeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static TypeEnum fromValue(String value) {
-      for (TypeEnum b : TypeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
   public static final String JSON_PROPERTY_TYPE = "type";
-  @javax.annotation.Nonnull private TypeEnum type;
+  @javax.annotation.Nonnull private String type = "UnsetProperty";
 
   public static final String JSON_PROPERTY_KEY = "key";
   @javax.annotation.Nullable private String key;
@@ -109,7 +78,7 @@ public class AlterTransactionUnsetProperty {
 
   public AlterTransactionUnsetProperty() {}
 
-  public AlterTransactionUnsetProperty type(@javax.annotation.Nonnull TypeEnum type) {
+  public AlterTransactionUnsetProperty type(@javax.annotation.Nonnull String type) {
 
     this.type = type;
     return this;
@@ -123,13 +92,13 @@ public class AlterTransactionUnsetProperty {
   @javax.annotation.Nonnull
   @JsonProperty(JSON_PROPERTY_TYPE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public TypeEnum getType() {
+  public String getType() {
     return type;
   }
 
   @JsonProperty(JSON_PROPERTY_TYPE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull TypeEnum type) {
+  public void setType(@javax.annotation.Nonnull String type) {
     this.type = type;
   }
 

@@ -14,7 +14,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AlterTransactionUnsetProperty {
     #[serde(rename = "type")]
-    pub r#type: Type,
+    pub r#type: String,
     #[serde(rename = "key", skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     /// the behavior if the property key to unset does not exist
@@ -23,24 +23,12 @@ pub struct AlterTransactionUnsetProperty {
 }
 
 impl AlterTransactionUnsetProperty {
-    pub fn new(r#type: Type) -> AlterTransactionUnsetProperty {
+    pub fn new(r#type: String) -> AlterTransactionUnsetProperty {
         AlterTransactionUnsetProperty {
             r#type,
             key: None,
             mode: None,
         }
-    }
-}
-/// 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Type {
-    #[serde(rename = "UnsetProperty")]
-    UnsetProperty,
-}
-
-impl Default for Type {
-    fn default() -> Type {
-        Self::UnsetProperty
     }
 }
 /// the behavior if the property key to unset does not exist

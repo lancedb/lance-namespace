@@ -7,18 +7,10 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**type** | [**TypeEnum**](#TypeEnum) |  |  |
+|**type** | **String** |  |  |
 |**key** | **String** |  |  [optional] |
 |**value** | **String** |  |  [optional] |
 |**mode** | [**ModeEnum**](#ModeEnum) | the behavior if the property key already exists |  [optional] |
-
-
-
-## Enum: TypeEnum
-
-| Name | Value |
-|---- | -----|
-| SET_PROPERTY | &quot;SetProperty&quot; |
 
 
 

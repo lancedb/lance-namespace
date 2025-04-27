@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **str** |  | 
+**type** | **str** |  | [default to 'SetStatus']
 **status** | [**TransactionStatus**](TransactionStatus.md) |  | [optional] 
 
 ## Example

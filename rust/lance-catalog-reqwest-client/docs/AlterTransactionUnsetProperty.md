@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**r#type** | **String** |  | 
+**r#type** | **String** |  | [default to UnsetProperty]
 **key** | Option<**String**> |  | [optional]
 **mode** | Option<**String**> | the behavior if the property key to unset does not exist | [optional][default to Skip]
 

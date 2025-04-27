@@ -770,8 +770,7 @@ components:
         status: QUEUED
       properties:
         type:
-          enum:
-          - SetStatus
+          default: SetStatus
           type: string
         status:
           $ref: '#/components/schemas/TransactionStatus'
@@ -780,8 +779,7 @@ components:
     AlterTransactionSetProperty:
       properties:
         type:
-          enum:
-          - SetProperty
+          default: SetProperty
           type: string
         key:
           type: string
@@ -800,8 +798,7 @@ components:
     AlterTransactionUnsetProperty:
       properties:
         type:
-          enum:
-          - UnsetProperty
+          default: UnsetProperty
           type: string
         key:
           type: string

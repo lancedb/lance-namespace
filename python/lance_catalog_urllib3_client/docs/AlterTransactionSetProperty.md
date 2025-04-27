@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **str** |  | 
+**type** | **str** |  | [default to 'SetProperty']
 **key** | **str** |  | [optional] 
 **value** | **str** |  | [optional] 
 **mode** | **str** | the behavior if the property key already exists | [optional] [default to 'OVERWRITE']

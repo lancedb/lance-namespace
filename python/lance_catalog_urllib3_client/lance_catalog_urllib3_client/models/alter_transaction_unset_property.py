@@ -31,13 +31,6 @@ class AlterTransactionUnsetProperty(BaseModel):
     mode: Optional[StrictStr] = Field(default='SKIP', description="the behavior if the property key to unset does not exist")
     __properties: ClassVar[List[str]] = ["type", "key", "mode"]
 
-    @field_validator('type')
-    def type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['UnsetProperty']):
-            raise ValueError("must be one of enum values ('UnsetProperty')")
-        return value
-
     @field_validator('mode')
     def mode_validate_enum(cls, value):
         """Validates the enum"""
@@ -99,7 +92,7 @@ class AlterTransactionUnsetProperty(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "type": obj.get("type"),
+            "type": obj.get("type") if obj.get("type") is not None else 'UnsetProperty',
             "key": obj.get("key"),
             "mode": obj.get("mode") if obj.get("mode") is not None else 'SKIP'
         })

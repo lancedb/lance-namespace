@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **str** |  | 
+**type** | **str** |  | [default to 'UnsetProperty']
 **status** | [**TransactionStatus**](TransactionStatus.md) |  | [optional] 
 **key** | **str** |  | [optional] 
 **value** | **str** |  | [optional] 

@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from lance_catalog_urllib3_client.models.transaction_status import TransactionStatus
 from typing import Optional, Set
@@ -30,13 +30,6 @@ class AlterTransactionSetStatus(BaseModel):
     type: StrictStr
     status: Optional[TransactionStatus] = None
     __properties: ClassVar[List[str]] = ["type", "status"]
-
-    @field_validator('type')
-    def type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['SetStatus']):
-            raise ValueError("must be one of enum values ('SetStatus')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,7 +82,7 @@ class AlterTransactionSetStatus(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "type": obj.get("type"),
+            "type": obj.get("type") if obj.get("type") is not None else 'SetStatus',
             "status": obj.get("status")
         })
         return _obj

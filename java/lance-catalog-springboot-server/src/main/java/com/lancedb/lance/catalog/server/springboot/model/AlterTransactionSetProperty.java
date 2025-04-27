@@ -30,38 +30,7 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class AlterTransactionSetProperty implements AlterTransactionAction {
 
-  /** Gets or Sets type */
-  public enum TypeEnum {
-    SET_PROPERTY("SetProperty");
-
-    private String value;
-
-    TypeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static TypeEnum fromValue(String value) {
-      for (TypeEnum b : TypeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private TypeEnum type;
+  private String type = "SetProperty";
 
   private String key;
 
@@ -109,11 +78,11 @@ public class AlterTransactionSetProperty implements AlterTransactionAction {
   }
 
   /** Constructor with only required parameters */
-  public AlterTransactionSetProperty(TypeEnum type) {
+  public AlterTransactionSetProperty(String type) {
     this.type = type;
   }
 
-  public AlterTransactionSetProperty type(TypeEnum type) {
+  public AlterTransactionSetProperty type(String type) {
     this.type = type;
     return this;
   }
@@ -126,11 +95,11 @@ public class AlterTransactionSetProperty implements AlterTransactionAction {
   @NotNull
   @Schema(name = "type", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("type")
-  public TypeEnum getType() {
+  public String getType() {
     return type;
   }
 
-  public void setType(TypeEnum type) {
+  public void setType(String type) {
     this.type = type;
   }
 

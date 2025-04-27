@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **str** |  | 
+**type** | **str** |  | [default to 'UnsetProperty']
 **key** | **str** |  | [optional] 
 **mode** | **str** | the behavior if the property key to unset does not exist | [optional] [default to 'SKIP']
 

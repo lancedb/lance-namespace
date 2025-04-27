@@ -575,8 +575,7 @@ components:
       properties:
         type:
           type: string
-          enum:
-            - SetStatus
+          default: SetStatus
         status:
           $ref: '#/components/schemas/TransactionStatus'
 
@@ -587,8 +586,7 @@ components:
       properties:
         type:
           type: string
-          enum:
-            - SetProperty
+          default: SetProperty
         key:
           type: string
         value:
@@ -609,8 +607,7 @@ components:
       properties:
         type:
           type: string
-          enum:
-            - UnsetProperty
+          default: UnsetProperty
         key:
           type: string
         mode:

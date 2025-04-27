@@ -7,17 +7,9 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**type** | [**TypeEnum**](#TypeEnum) |  |  |
+|**type** | **String** |  |  |
 |**key** | **String** |  |  [optional] |
 |**mode** | [**ModeEnum**](#ModeEnum) | the behavior if the property key to unset does not exist |  [optional] |
-
-
-
-## Enum: TypeEnum
-
-| Name | Value |
-|---- | -----|
-| UNSET_PROPERTY | &quot;UnsetProperty&quot; |
 
 
 

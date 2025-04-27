@@ -53,12 +53,4 @@ setup.cfg
 setup.py
 test-requirements.txt
 test/__init__.py
-test/test_alter_transaction_action.py
-test/test_alter_transaction_request.py
-test/test_alter_transaction_set_property.py
-test/test_alter_transaction_set_status.py
-test/test_alter_transaction_unset_property.py
-test/test_get_transaction_response.py
-test/test_transaction_api.py
-test/test_transaction_status.py
 tox.ini

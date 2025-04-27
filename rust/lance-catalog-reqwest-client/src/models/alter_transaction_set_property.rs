@@ -14,7 +14,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AlterTransactionSetProperty {
     #[serde(rename = "type")]
-    pub r#type: Type,
+    pub r#type: String,
     #[serde(rename = "key", skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     #[serde(rename = "value", skip_serializing_if = "Option::is_none")]
@@ -25,25 +25,13 @@ pub struct AlterTransactionSetProperty {
 }
 
 impl AlterTransactionSetProperty {
-    pub fn new(r#type: Type) -> AlterTransactionSetProperty {
+    pub fn new(r#type: String) -> AlterTransactionSetProperty {
         AlterTransactionSetProperty {
             r#type,
             key: None,
             value: None,
             mode: None,
         }
-    }
-}
-/// 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Type {
-    #[serde(rename = "SetProperty")]
-    SetProperty,
-}
-
-impl Default for Type {
-    fn default() -> Type {
-        Self::SetProperty
     }
 }
 /// the behavior if the property key already exists

@@ -7,16 +7,8 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**type** | [**TypeEnum**](#TypeEnum) |  |  |
+|**type** | **String** |  |  |
 |**status** | **TransactionStatus** |  |  [optional] |
-
-
-
-## Enum: TypeEnum
-
-| Name | Value |
-|---- | -----|
-| SET_STATUS | &quot;SetStatus&quot; |
 
 
 

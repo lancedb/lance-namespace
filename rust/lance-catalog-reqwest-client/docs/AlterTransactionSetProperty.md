@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**r#type** | **String** |  | 
+**r#type** | **String** |  | [default to SetProperty]
 **key** | Option<**String**> |  | [optional]
 **value** | Option<**String**> |  | [optional]
 **mode** | Option<**String**> | the behavior if the property key already exists | [optional][default to Overwrite]

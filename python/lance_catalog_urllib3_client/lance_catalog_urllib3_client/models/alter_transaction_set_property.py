@@ -32,13 +32,6 @@ class AlterTransactionSetProperty(BaseModel):
     mode: Optional[StrictStr] = Field(default='OVERWRITE', description="the behavior if the property key already exists")
     __properties: ClassVar[List[str]] = ["type", "key", "value", "mode"]
 
-    @field_validator('type')
-    def type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['SetProperty']):
-            raise ValueError("must be one of enum values ('SetProperty')")
-        return value
-
     @field_validator('mode')
     def mode_validate_enum(cls, value):
         """Validates the enum"""
@@ -100,7 +93,7 @@ class AlterTransactionSetProperty(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "type": obj.get("type"),
+            "type": obj.get("type") if obj.get("type") is not None else 'SetProperty',
             "key": obj.get("key"),
             "value": obj.get("value"),
             "mode": obj.get("mode") if obj.get("mode") is not None else 'OVERWRITE'
