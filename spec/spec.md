@@ -9,7 +9,19 @@ should store and use Lance tables, as well as how ML/AI tools and analytics comp
 ## Catalog Definition
 
 A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables.
-A Lance catalog can either contain a list of tables, or contain a list of child Lance catalogs recursively.
+It is a generalized concept that is also called namespace, metastore, database, schema in other similar systems.
+A Lance catalog can either contain a list of tables, or contain a list of Lance catalogs recursively.
+Here is an example layout of a Lance catalog:
+
+![Lance catalog layout](./catalog-layout.png)
+
+In this example, we have:
+
+- **Root catalog** `cat1` contains 3 **child catalogs** `cat2`, `cat3` and `cat4`
+- Catalog `cat2` contains a child catalog `cat5`
+- Catalog `cat3` contains a table `t2`
+- Catalog `cat4` contains 2 tables `t3` and `t4`
+- Catalog `cat5` contains a table `t1`
 
 ## Catalog Types
 
@@ -17,9 +29,9 @@ There are 2 types of Lance catalogs: directory catalog and REST catalog.
 
 ### Lance Directory Catalog
 
-**Lance directory catalog** is a lightweight and simple catalog that only contains a list of tables.
-People can easily get started with creating and using Lance tables directly on top of any local or remote storage system
-with a Lance directory catalog.
+**Lance directory catalog** is a lightweight and simple Lance catalog that only contains a list of tables.
+People can easily get started with creating and using Lance tables directly on top of any 
+local or remote storage system with a Lance directory catalog.
 
 The directory catalog maps to a directory on storage.
 A Lance table corresponds to a subdirectory in the directory.
@@ -70,11 +82,10 @@ indicating the content in the folder is not compliant with the Lance table forma
 In an enterprise environment, typically there is a requirement to store tables in a catalog service 
 such as Apache Hive MetaStore, Apache Gravitino, Unity Catalog, etc. 
 for more advanced governance features around access control, auditing, lineage tracking, etc.
-
-**Lance REST Catalog** is a standardized OpenAPI protocol to read, write and manage Lance tables.
+**Lance REST catalog** is a standardized OpenAPI protocol to read, write and manage Lance tables.
 The detailed OpenAPI specification content can be found in [rest-catalog.yaml](./rest-catalog.yaml).
 
-#### Catalog Server
+#### Catalog Server and Adapter
 
 Any REST HTTP server that implements this OpenAPI protocol is called a **Lance Catalog Server**.
 If the main purpose of this server is to be a proxy on top of an existing catalog service,
