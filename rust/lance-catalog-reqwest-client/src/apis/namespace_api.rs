@@ -120,13 +120,22 @@ pub async fn create_namespace(configuration: &configuration::Configuration, crea
     }
 }
 
-pub async fn drop_namespace(configuration: &configuration::Configuration, ns: &str) -> Result<(), Error<DropNamespaceError>> {
+/// Drop a namespace from the catalog. If the operation can be completed immediately, the server should respond with 204. If the operation is long running, the server should respond with 202 to provide a transaction that the client can use to track namespace drop progress. 
+pub async fn drop_namespace(configuration: &configuration::Configuration, ns: &str, mode: Option<&str>, behavior: Option<&str>) -> Result<models::GetTransactionResponse, Error<DropNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_ns = ns;
+    let p_mode = mode;
+    let p_behavior = behavior;
 
     let uri_str = format!("{}/v1/namespaces/{ns}", configuration.base_path, ns=crate::apis::urlencode(p_ns));
     let mut req_builder = configuration.client.request(reqwest::Method::DELETE, &uri_str);
 
+    if let Some(ref param_value) = p_mode {
+        req_builder = req_builder.query(&[("mode", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_behavior {
+        req_builder = req_builder.query(&[("behavior", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -135,9 +144,20 @@ pub async fn drop_namespace(configuration: &configuration::Configuration, ns: &s
     let resp = configuration.client.execute(req).await?;
 
     let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
 
     if !status.is_client_error() && !status.is_server_error() {
-        Ok(())
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetTransactionResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetTransactionResponse`")))),
+        }
     } else {
         let content = resp.text().await?;
         let entity: Option<DropNamespaceError> = serde_json::from_str(&content).ok();

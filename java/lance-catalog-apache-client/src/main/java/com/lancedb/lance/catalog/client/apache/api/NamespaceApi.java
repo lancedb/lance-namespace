@@ -21,6 +21,7 @@ import com.lancedb.lance.catalog.client.apache.Pair;
 import com.lancedb.lance.catalog.client.apache.model.CreateNamespaceRequest;
 import com.lancedb.lance.catalog.client.apache.model.CreateNamespaceResponse;
 import com.lancedb.lance.catalog.client.apache.model.GetNamespaceResponse;
+import com.lancedb.lance.catalog.client.apache.model.GetTransactionResponse;
 import com.lancedb.lance.catalog.client.apache.model.ListNamespacesResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -131,23 +132,50 @@ public class NamespaceApi extends BaseApi {
   }
 
   /**
-   * Drop a namespace from the catalog. Namespace must be empty.
+   * Drop a namespace from the catalog Drop a namespace from the catalog. If the operation can be
+   * completed immediately, the server should respond with 204. If the operation is long running,
+   * the server should respond with 202 to provide a transaction that the client can use to track
+   * namespace drop progress.
    *
    * @param ns The name of the namespace. (required)
+   * @param mode The mode for dropping a namespace, deciding the server behavior when the namespace
+   *     to drop is not found. FAIL (default): the server must return 400 indicating the namespace
+   *     to drop does not exist. SKIP: the server must return 204 indicating the drop operation has
+   *     succeeded. (optional)
+   * @param behavior The behavior for dropping a namespace. RESTRICT (default): the namespace should
+   *     not contain any table when drop is initiated. If tables are found, the server should return
+   *     error and not drop the namespace. CASCADE: all tables in the namespace are dropped before
+   *     the namespace is dropped. (optional)
+   * @return GetTransactionResponse
    * @throws ApiException if fails to make API call
    */
-  public void dropNamespace(String ns) throws ApiException {
-    this.dropNamespace(ns, Collections.emptyMap());
+  public GetTransactionResponse dropNamespace(String ns, String mode, String behavior)
+      throws ApiException {
+    return this.dropNamespace(ns, mode, behavior, Collections.emptyMap());
   }
 
   /**
-   * Drop a namespace from the catalog. Namespace must be empty.
+   * Drop a namespace from the catalog Drop a namespace from the catalog. If the operation can be
+   * completed immediately, the server should respond with 204. If the operation is long running,
+   * the server should respond with 202 to provide a transaction that the client can use to track
+   * namespace drop progress.
    *
    * @param ns The name of the namespace. (required)
+   * @param mode The mode for dropping a namespace, deciding the server behavior when the namespace
+   *     to drop is not found. FAIL (default): the server must return 400 indicating the namespace
+   *     to drop does not exist. SKIP: the server must return 204 indicating the drop operation has
+   *     succeeded. (optional)
+   * @param behavior The behavior for dropping a namespace. RESTRICT (default): the namespace should
+   *     not contain any table when drop is initiated. If tables are found, the server should return
+   *     error and not drop the namespace. CASCADE: all tables in the namespace are dropped before
+   *     the namespace is dropped. (optional)
    * @param additionalHeaders additionalHeaders for this call
+   * @return GetTransactionResponse
    * @throws ApiException if fails to make API call
    */
-  public void dropNamespace(String ns, Map<String, String> additionalHeaders) throws ApiException {
+  public GetTransactionResponse dropNamespace(
+      String ns, String mode, String behavior, Map<String, String> additionalHeaders)
+      throws ApiException {
     Object localVarPostBody = null;
 
     // verify the required parameter 'ns' is set
@@ -169,6 +197,9 @@ public class NamespaceApi extends BaseApi {
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
+    localVarQueryParams.addAll(apiClient.parameterToPair("mode", mode));
+    localVarQueryParams.addAll(apiClient.parameterToPair("behavior", behavior));
+
     localVarHeaderParams.putAll(additionalHeaders);
 
     final String[] localVarAccepts = {"application/json"};
@@ -180,7 +211,9 @@ public class NamespaceApi extends BaseApi {
 
     String[] localVarAuthNames = new String[] {};
 
-    apiClient.invokeAPI(
+    TypeReference<GetTransactionResponse> localVarReturnType =
+        new TypeReference<GetTransactionResponse>() {};
+    return apiClient.invokeAPI(
         localVarPath,
         "DELETE",
         localVarQueryParams,
@@ -193,7 +226,7 @@ public class NamespaceApi extends BaseApi {
         localVarAccept,
         localVarContentType,
         localVarAuthNames,
-        null);
+        localVarReturnType);
   }
 
   /**

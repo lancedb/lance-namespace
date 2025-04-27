@@ -115,24 +115,33 @@ All URIs are relative to *http://localhost:2333*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *NamespaceApi* | [**createNamespace**](docs/NamespaceApi.md#createNamespace) | **POST** /v1/namespaces | Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:   * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.   * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.   * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created. 
-*NamespaceApi* | [**dropNamespace**](docs/NamespaceApi.md#dropNamespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace from the catalog. Namespace must be empty.
+*NamespaceApi* | [**dropNamespace**](docs/NamespaceApi.md#dropNamespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace from the catalog
 *NamespaceApi* | [**getNamespace**](docs/NamespaceApi.md#getNamespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
 *NamespaceApi* | [**listNamespaces**](docs/NamespaceApi.md#listNamespaces) | **GET** /v1/namespaces | List all namespaces in the catalog. 
 *NamespaceApi* | [**namespaceExists**](docs/NamespaceApi.md#namespaceExists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists
 *TableApi* | [**getTable**](docs/TableApi.md#getTable) | **GET** /v1/namespaces/{ns}/tables/{table} | Get a table from the catalog
 *TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /v1/namespaces/{ns}/register | Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace. 
 *TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **HEAD** /v1/namespaces/{ns}/tables/{table} | Check if a table exists
+*TransactionApi* | [**alterTransaction**](docs/TransactionApi.md#alterTransaction) | **POST** /v1/transactions/{txn} | Alter information of a transaction.
+*TransactionApi* | [**getTransaction**](docs/TransactionApi.md#getTransaction) | **GET** /v1/transactions/{txn} | Get information about a transaction
 
 
 ## Documentation for Models
 
+ - [AlterTransactionAction](docs/AlterTransactionAction.md)
+ - [AlterTransactionRequest](docs/AlterTransactionRequest.md)
+ - [AlterTransactionSetProperty](docs/AlterTransactionSetProperty.md)
+ - [AlterTransactionSetStatus](docs/AlterTransactionSetStatus.md)
+ - [AlterTransactionUnsetProperty](docs/AlterTransactionUnsetProperty.md)
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
  - [ErrorResponse](docs/ErrorResponse.md)
  - [GetNamespaceResponse](docs/GetNamespaceResponse.md)
  - [GetTableResponse](docs/GetTableResponse.md)
+ - [GetTransactionResponse](docs/GetTransactionResponse.md)
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
  - [RegisterTableRequest](docs/RegisterTableRequest.md)
+ - [TransactionStatus](docs/TransactionStatus.md)
 
 
 <a id="documentation-for-authorization"></a>

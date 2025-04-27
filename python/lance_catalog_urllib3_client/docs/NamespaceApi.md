@@ -5,7 +5,7 @@ All URIs are relative to *http://localhost:2333*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**create_namespace**](NamespaceApi.md#create_namespace) | **POST** /v1/namespaces | Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:   * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.   * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.   * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created. 
-[**drop_namespace**](NamespaceApi.md#drop_namespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace from the catalog. Namespace must be empty.
+[**drop_namespace**](NamespaceApi.md#drop_namespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace from the catalog
 [**get_namespace**](NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
 [**list_namespaces**](NamespaceApi.md#list_namespaces) | **GET** /v1/namespaces | List all namespaces in the catalog. 
 [**namespace_exists**](NamespaceApi.md#namespace_exists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists
@@ -86,15 +86,21 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **drop_namespace**
-> drop_namespace(ns)
+> GetTransactionResponse drop_namespace(ns, mode=mode, behavior=behavior)
 
-Drop a namespace from the catalog. Namespace must be empty.
+Drop a namespace from the catalog
+
+Drop a namespace from the catalog.
+If the operation can be completed immediately, the server should respond with 204.
+If the operation is long running, the server should respond with 202 to provide a transaction that the client can use to track namespace drop progress.
+
 
 ### Example
 
 
 ```python
 import lance_catalog_urllib3_client
+from lance_catalog_urllib3_client.models.get_transaction_response import GetTransactionResponse
 from lance_catalog_urllib3_client.rest import ApiException
 from pprint import pprint
 
@@ -110,10 +116,14 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_catalog_urllib3_client.NamespaceApi(api_client)
     ns = 'ns_example' # str | The name of the namespace.
+    mode = 'mode_example' # str | The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. FAIL (default): the server must return 400 indicating the namespace to drop does not exist. SKIP: the server must return 204 indicating the drop operation has succeeded.   (optional)
+    behavior = 'behavior_example' # str | The behavior for dropping a namespace. RESTRICT (default): the namespace should not contain any table when drop is initiated. If tables are found, the server should return error and not drop the namespace. CASCADE: all tables in the namespace are dropped before the namespace is dropped.  (optional)
 
     try:
-        # Drop a namespace from the catalog. Namespace must be empty.
-        api_instance.drop_namespace(ns)
+        # Drop a namespace from the catalog
+        api_response = api_instance.drop_namespace(ns, mode=mode, behavior=behavior)
+        print("The response of NamespaceApi->drop_namespace:\n")
+        pprint(api_response)
     except Exception as e:
         print("Exception when calling NamespaceApi->drop_namespace: %s\n" % e)
 ```
@@ -126,10 +136,12 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ns** | **str**| The name of the namespace. | 
+ **mode** | **str**| The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. FAIL (default): the server must return 400 indicating the namespace to drop does not exist. SKIP: the server must return 204 indicating the drop operation has succeeded.   | [optional] 
+ **behavior** | **str**| The behavior for dropping a namespace. RESTRICT (default): the namespace should not contain any table when drop is initiated. If tables are found, the server should return error and not drop the namespace. CASCADE: all tables in the namespace are dropped before the namespace is dropped.  | [optional] 
 
 ### Return type
 
-void (empty response body)
+[**GetTransactionResponse**](GetTransactionResponse.md)
 
 ### Authorization
 
@@ -144,6 +156,7 @@ No authorization required
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
+**202** | Response for GetTransaction operation |  -  |
 **204** | Success, no content |  -  |
 **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |

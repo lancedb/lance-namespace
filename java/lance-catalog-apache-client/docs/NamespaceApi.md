@@ -5,7 +5,7 @@ All URIs are relative to *http://localhost:2333*
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
 | [**createNamespace**](NamespaceApi.md#createNamespace) | **POST** /v1/namespaces | Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:   * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.   * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.   * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created.  |
-| [**dropNamespace**](NamespaceApi.md#dropNamespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace from the catalog. Namespace must be empty. |
+| [**dropNamespace**](NamespaceApi.md#dropNamespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace from the catalog |
 | [**getNamespace**](NamespaceApi.md#getNamespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace |
 | [**listNamespaces**](NamespaceApi.md#listNamespaces) | **GET** /v1/namespaces | List all namespaces in the catalog.  |
 | [**namespaceExists**](NamespaceApi.md#namespaceExists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists |
@@ -85,9 +85,11 @@ No authorization required
 
 ## dropNamespace
 
-> dropNamespace(ns)
+> GetTransactionResponse dropNamespace(ns, mode, behavior)
 
-Drop a namespace from the catalog. Namespace must be empty.
+Drop a namespace from the catalog
+
+Drop a namespace from the catalog. If the operation can be completed immediately, the server should respond with 204. If the operation is long running, the server should respond with 202 to provide a transaction that the client can use to track namespace drop progress. 
 
 ### Example
 
@@ -106,8 +108,11 @@ public class Example {
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
         String ns = "ns_example"; // String | The name of the namespace.
+        String mode = "SKIP"; // String | The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. FAIL (default): the server must return 400 indicating the namespace to drop does not exist. SKIP: the server must return 204 indicating the drop operation has succeeded.  
+        String behavior = "CASCADE"; // String | The behavior for dropping a namespace. RESTRICT (default): the namespace should not contain any table when drop is initiated. If tables are found, the server should return error and not drop the namespace. CASCADE: all tables in the namespace are dropped before the namespace is dropped. 
         try {
-            apiInstance.dropNamespace(ns);
+            GetTransactionResponse result = apiInstance.dropNamespace(ns, mode, behavior);
+            System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#dropNamespace");
             System.err.println("Status code: " + e.getCode());
@@ -125,10 +130,12 @@ public class Example {
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **ns** | **String**| The name of the namespace. | |
+| **mode** | **String**| The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. FAIL (default): the server must return 400 indicating the namespace to drop does not exist. SKIP: the server must return 204 indicating the drop operation has succeeded.   | [optional] [enum: SKIP, FAIL] |
+| **behavior** | **String**| The behavior for dropping a namespace. RESTRICT (default): the namespace should not contain any table when drop is initiated. If tables are found, the server should return error and not drop the namespace. CASCADE: all tables in the namespace are dropped before the namespace is dropped.  | [optional] [enum: CASCADE, RESTRICT] |
 
 ### Return type
 
-null (empty response body)
+[**GetTransactionResponse**](GetTransactionResponse.md)
 
 ### Authorization
 
@@ -143,6 +150,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
+| **202** | Response for GetTransaction operation |  -  |
 | **204** | Success, no content |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
