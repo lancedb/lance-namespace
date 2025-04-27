@@ -1,8 +1,8 @@
 # Rust API client for lance-catalog-reqwest-client
 
-**Lance Catalog** is an open specification on top of the storage-based Lance open table and data format  to standardize access to a collection of Lance tables. It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance.
-A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables. It is a generalized concept that is also called namespace, metastore, database, schema in other similar systems. A Lance catalog can either contain a list of tables, or contain a list of Lance catalogs recursively.
-In an enterprise environment, typically there is a requirement to store tables in a catalog service  such as Apache Hive MetaStore, Apache Gravitino, Unity Catalog, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST catalog** is a standardized OpenAPI protocol to read, write and manage Lance tables.
+**Lance Catalog Specification** is an open specification on top of the storage-based Lance open table and data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables.
+A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance catalogs recursively. It is designed to encapsulates concepts like namespace, metastore, database, schema, etc. that could appear in other similar systems, so that it can better integrate with any system with any type of object hierarchy.
+In an enterprise environment, typically there is a requirement to store tables in a catalog service  such as Apache Hive MetaStore, Apache Gravitino, Unity Catalog, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST catalog** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those catalog services or building a custom catalog server in a standardized way.
 
 
 
@@ -35,7 +35,7 @@ Class | Method | HTTP request | Description
 *CatalogApi* | [**get_catalog**](docs/CatalogApi.md#get_catalog) | **GET** /v1/catalogs/{catalog} | Get information about a catalog
 *CatalogApi* | [**list_catalogs**](docs/CatalogApi.md#list_catalogs) | **GET** /v1/catalogs | List all direct child catalogs of the root catalog. 
 *TableApi* | [**get_table**](docs/TableApi.md#get_table) | **GET** /v1/tables/{table} | Get a table from the catalog
-*TableApi* | [**register_table**](docs/TableApi.md#register_table) | **POST** /v1/catalogs/{catalog}/register | Register an existing table in the given catalog. 
+*TableApi* | [**register_table**](docs/TableApi.md#register_table) | **POST** /v1/table/register | Register an existing table in the given catalog. 
 *TableApi* | [**table_exists**](docs/TableApi.md#table_exists) | **HEAD** /v1/tables/{table} | Check if a table exists
 
 

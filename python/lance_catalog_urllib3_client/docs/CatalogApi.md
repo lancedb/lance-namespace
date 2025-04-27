@@ -38,7 +38,7 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_catalog_urllib3_client.CatalogApi(api_client)
     catalog = 'catalog_example' # str | An identifier of the catalog.
-    catalog_delimiter = '.' # str | The delimiter used by the catalog identifier (optional) (default to '.')
+    catalog_delimiter = '.' # str | The delimiter used by the catalog identifier string (optional) (default to '.')
 
     try:
         # Check if a catalog exists
@@ -55,7 +55,7 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **catalog** | **str**| An identifier of the catalog. | 
- **catalog_delimiter** | **str**| The delimiter used by the catalog identifier | [optional] [default to &#39;.&#39;]
+ **catalog_delimiter** | **str**| The delimiter used by the catalog identifier string | [optional] [default to &#39;.&#39;]
 
 ### Return type
 
@@ -187,7 +187,7 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_catalog_urllib3_client.CatalogApi(api_client)
     catalog = 'catalog_example' # str | An identifier of the catalog.
-    catalog_delimiter = '.' # str | The delimiter used by the catalog identifier (optional) (default to '.')
+    catalog_delimiter = '.' # str | The delimiter used by the catalog identifier string (optional) (default to '.')
 
     try:
         # Drop a catalog. The catalog must be empty.
@@ -204,7 +204,7 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **catalog** | **str**| An identifier of the catalog. | 
- **catalog_delimiter** | **str**| The delimiter used by the catalog identifier | [optional] [default to &#39;.&#39;]
+ **catalog_delimiter** | **str**| The delimiter used by the catalog identifier string | [optional] [default to &#39;.&#39;]
 
 ### Return type
 
@@ -262,7 +262,7 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_catalog_urllib3_client.CatalogApi(api_client)
     catalog = 'catalog_example' # str | An identifier of the catalog.
-    catalog_delimiter = '.' # str | The delimiter used by the catalog identifier (optional) (default to '.')
+    catalog_delimiter = '.' # str | The delimiter used by the catalog identifier string (optional) (default to '.')
 
     try:
         # Get information about a catalog
@@ -281,7 +281,7 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **catalog** | **str**| An identifier of the catalog. | 
- **catalog_delimiter** | **str**| The delimiter used by the catalog identifier | [optional] [default to &#39;.&#39;]
+ **catalog_delimiter** | **str**| The delimiter used by the catalog identifier string | [optional] [default to &#39;.&#39;]
 
 ### Return type
 

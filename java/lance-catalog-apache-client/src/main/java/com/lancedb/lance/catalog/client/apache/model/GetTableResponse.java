@@ -19,7 +19,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -27,6 +29,7 @@ import java.util.StringJoiner;
 /** Result used when a table is successfully loaded. */
 @JsonPropertyOrder({
   GetTableResponse.JSON_PROPERTY_NAME,
+  GetTableResponse.JSON_PROPERTY_CATALOG,
   GetTableResponse.JSON_PROPERTY_LOCATION,
   GetTableResponse.JSON_PROPERTY_PROPERTIES
 })
@@ -36,6 +39,9 @@ import java.util.StringJoiner;
 public class GetTableResponse {
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nonnull private String name;
+
+  public static final String JSON_PROPERTY_CATALOG = "catalog";
+  @javax.annotation.Nonnull private List<String> catalog = new ArrayList<>();
 
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nonnull private String location;
@@ -67,6 +73,38 @@ public class GetTableResponse {
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public void setName(@javax.annotation.Nonnull String name) {
     this.name = name;
+  }
+
+  public GetTableResponse catalog(@javax.annotation.Nonnull List<String> catalog) {
+
+    this.catalog = catalog;
+    return this;
+  }
+
+  public GetTableResponse addCatalogItem(String catalogItem) {
+    if (this.catalog == null) {
+      this.catalog = new ArrayList<>();
+    }
+    this.catalog.add(catalogItem);
+    return this;
+  }
+
+  /**
+   * An identifier expressed as a list of object names
+   *
+   * @return catalog
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_CATALOG)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public List<String> getCatalog() {
+    return catalog;
+  }
+
+  @JsonProperty(JSON_PROPERTY_CATALOG)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setCatalog(@javax.annotation.Nonnull List<String> catalog) {
+    this.catalog = catalog;
   }
 
   public GetTableResponse location(@javax.annotation.Nonnull String location) {
@@ -135,13 +173,14 @@ public class GetTableResponse {
     }
     GetTableResponse getTableResponse = (GetTableResponse) o;
     return Objects.equals(this.name, getTableResponse.name)
+        && Objects.equals(this.catalog, getTableResponse.catalog)
         && Objects.equals(this.location, getTableResponse.location)
         && Objects.equals(this.properties, getTableResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, location, properties);
+    return Objects.hash(name, catalog, location, properties);
   }
 
   @Override
@@ -149,6 +188,7 @@ public class GetTableResponse {
     StringBuilder sb = new StringBuilder();
     sb.append("class GetTableResponse {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    catalog: ").append(toIndentedString(catalog)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
@@ -209,6 +249,27 @@ public class GetTableResponse {
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);
+      }
+    }
+
+    // add `catalog` to the URL query string
+    if (getCatalog() != null) {
+      for (int i = 0; i < getCatalog().size(); i++) {
+        try {
+          joiner.add(
+              String.format(
+                  "%scatalog%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
+                  URLEncoder.encode(String.valueOf(getCatalog().get(i)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 

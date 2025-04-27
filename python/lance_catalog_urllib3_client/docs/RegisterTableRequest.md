@@ -6,6 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **str** |  | 
+**catalog** | **List[str]** | An identifier expressed as a list of object names  | 
 **location** | **str** |  | 
 
 ## Example

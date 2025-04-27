@@ -162,7 +162,7 @@ public class TableApi extends BaseApi {
 
     // create path and map variables
     String localVarPath =
-        "/v1/catalogs/{catalog}/register"
+        "/v1/table/register"
             .replaceAll(
                 "\\{" + "catalog" + "\\}",
                 apiClient.escapeString(apiClient.parameterToString(catalog)));

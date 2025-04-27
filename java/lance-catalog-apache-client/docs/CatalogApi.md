@@ -37,7 +37,7 @@ public class Example {
 
         CatalogApi apiInstance = new CatalogApi(defaultClient);
         String catalog = "catalog_example"; // String | An identifier of the catalog.
-        String catalogDelimiter = "."; // String | The delimiter used by the catalog identifier
+        String catalogDelimiter = "."; // String | The delimiter used by the catalog identifier string
         try {
             apiInstance.catalogExists(catalog, catalogDelimiter);
         } catch (ApiException e) {
@@ -57,7 +57,7 @@ public class Example {
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **catalog** | **String**| An identifier of the catalog. | |
-| **catalogDelimiter** | **String**| The delimiter used by the catalog identifier | [optional] [default to .] |
+| **catalogDelimiter** | **String**| The delimiter used by the catalog identifier string | [optional] [default to .] |
 
 ### Return type
 
@@ -183,7 +183,7 @@ public class Example {
 
         CatalogApi apiInstance = new CatalogApi(defaultClient);
         String catalog = "catalog_example"; // String | An identifier of the catalog.
-        String catalogDelimiter = "."; // String | The delimiter used by the catalog identifier
+        String catalogDelimiter = "."; // String | The delimiter used by the catalog identifier string
         try {
             apiInstance.dropCatalog(catalog, catalogDelimiter);
         } catch (ApiException e) {
@@ -203,7 +203,7 @@ public class Example {
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **catalog** | **String**| An identifier of the catalog. | |
-| **catalogDelimiter** | **String**| The delimiter used by the catalog identifier | [optional] [default to .] |
+| **catalogDelimiter** | **String**| The delimiter used by the catalog identifier string | [optional] [default to .] |
 
 ### Return type
 
@@ -257,7 +257,7 @@ public class Example {
 
         CatalogApi apiInstance = new CatalogApi(defaultClient);
         String catalog = "catalog_example"; // String | An identifier of the catalog.
-        String catalogDelimiter = "."; // String | The delimiter used by the catalog identifier
+        String catalogDelimiter = "."; // String | The delimiter used by the catalog identifier string
         try {
             GetCatalogResponse result = apiInstance.getCatalog(catalog, catalogDelimiter);
             System.out.println(result);
@@ -278,7 +278,7 @@ public class Example {
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **catalog** | **String**| An identifier of the catalog. | |
-| **catalogDelimiter** | **String**| The delimiter used by the catalog identifier | [optional] [default to .] |
+| **catalogDelimiter** | **String**| The delimiter used by the catalog identifier string | [optional] [default to .] |
 
 ### Return type
 

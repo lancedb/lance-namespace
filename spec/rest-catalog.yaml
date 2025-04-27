@@ -19,15 +19,17 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 0.0.1
   description: >
-    **Lance Catalog** is an open specification on top of the storage-based Lance open table and data format 
+    **Lance Catalog Specification** is an open specification on top of the storage-based Lance open table and data format 
     to standardize access to a collection of Lance tables (a.k.a. Lance datasets).
     It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc.
     should store and use Lance tables, as well as how ML/AI tools and analytics compute engines
     (will together be called _"tools"_ in this document) should integrate with Lance tables.
     
     A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables.
-    It is a generalized concept that is also called namespace, metastore, database, schema, etc. in other similar systems.
-    A Lance catalog can either contain a collection of tables, or contain a collection of Lance catalogs recursively.
+    It can either contain a collection of tables, or a collection of Lance catalogs recursively.
+    It is designed to encapsulates concepts like namespace, metastore, database, schema, etc.
+    that could appear in other similar systems,
+    so that it can better integrate with any system with any type of object hierarchy.
     
     In an enterprise environment, typically there is a requirement to store tables in a catalog service 
     such as Apache Hive MetaStore, Apache Gravitino, Unity Catalog, etc. 
@@ -193,7 +195,7 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
-  /v1/catalogs/{catalog}/register:
+  /v1/table/register:
     post:
       tags: [ Table ]
       summary: >
@@ -283,13 +285,13 @@ components:
       description:
         An identifier of the catalog.
       schema:
-        $ref: '#/components/schemas/Identifier'
+        $ref: '#/components/schemas/StringIdentifier'
 
     catalogDelimiter:
       name: catalogDelimiter
       in: query
       description:
-        The delimiter used by the catalog identifier
+        The delimiter used by the catalog identifier string
       schema:
         $ref: '#/components/schemas/Delimiter'
 
@@ -299,7 +301,7 @@ components:
       description:
         An identifier of the parent catalog.
       schema:
-        $ref: '#/components/schemas/Identifier'
+        $ref: '#/components/schemas/StringIdentifier'
 
     parentCatalogDelimiter:
       name: parentCatalogDelimiter
@@ -334,7 +336,7 @@ components:
         An identifier of the table
       required: true
       schema:
-        $ref: '#/components/schemas/Identifier'
+        $ref: '#/components/schemas/StringIdentifier'
 
     tableDelimiter:
       name: tableDelimiter
@@ -374,10 +376,17 @@ components:
           description: a URI that identifies the specific occurrence of the error
           example: /login/log/abc123
 
-    Identifier:
+    StringIdentifier:
       type: string
       description: >
-        An identifier string
+        An identifier string that follows the Lance Catalog Specification
+
+    ListIdentifier:
+      type: array
+      description: >
+        An identifier expressed as a list of object names
+      items:
+        type: string
 
     Delimiter:
       type: string
@@ -466,10 +475,13 @@ components:
       type: object
       required:
         - name
+        - catalog
         - location
       properties:
         name:
           type: string
+        catalog:
+          $ref: '#/components/schemas/ListIdentifier'
         location:
           type: string
 
@@ -479,10 +491,13 @@ components:
       type: object
       required:
         - name
+        - catalog
         - location
       properties:
         name:
           type: string
+        catalog:
+          $ref: '#/components/schemas/ListIdentifier'
         location:
           type: string
         properties:

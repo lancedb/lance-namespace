@@ -158,7 +158,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"name\" : \"name\", \"location\" : \"location\", \"properties\" : { \"key\" : \"properties\" } }";
+                      "{ \"catalog\" : [ \"catalog\", \"catalog\" ], \"name\" : \"name\", \"location\" : \"location\", \"properties\" : { \"key\" : \"properties\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -204,7 +204,7 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/catalogs/{catalog}/register : Register an existing table in the given catalog.
+   * POST /v1/table/register : Register an existing table in the given catalog.
    *
    * @param catalog An identifier of the catalog. (required)
    * @param registerTableRequest (required)
@@ -299,7 +299,7 @@ public interface TableApi {
       })
   @RequestMapping(
       method = RequestMethod.POST,
-      value = "/v1/catalogs/{catalog}/register",
+      value = "/v1/table/register",
       produces = {"application/json"},
       consumes = {"application/json"})
   default ResponseEntity<GetTableResponse> registerTable(
@@ -320,7 +320,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"name\" : \"name\", \"location\" : \"location\", \"properties\" : { \"key\" : \"properties\" } }";
+                      "{ \"catalog\" : [ \"catalog\", \"catalog\" ], \"name\" : \"name\", \"location\" : \"location\", \"properties\" : { \"key\" : \"properties\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }

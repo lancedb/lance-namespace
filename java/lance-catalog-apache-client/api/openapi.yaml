@@ -1,9 +1,9 @@
 openapi: 3.1.1
 info:
   description: |
-    **Lance Catalog** is an open specification on top of the storage-based Lance open table and data format  to standardize access to a collection of Lance tables. It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _"tools"_ in this document) should integrate with Lance.
-    A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables. It is a generalized concept that is also called namespace, metastore, database, schema in other similar systems. A Lance catalog can either contain a list of tables, or contain a list of Lance catalogs recursively.
-    In an enterprise environment, typically there is a requirement to store tables in a catalog service  such as Apache Hive MetaStore, Apache Gravitino, Unity Catalog, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST catalog** is a standardized OpenAPI protocol to read, write and manage Lance tables.
+    **Lance Catalog Specification** is an open specification on top of the storage-based Lance open table and data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _"tools"_ in this document) should integrate with Lance tables.
+    A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance catalogs recursively. It is designed to encapsulates concepts like namespace, metastore, database, schema, etc. that could appear in other similar systems, so that it can better integrate with any system with any type of object hierarchy.
+    In an enterprise environment, typically there is a requirement to store tables in a catalog service  such as Apache Hive MetaStore, Apache Gravitino, Unity Catalog, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST catalog** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those catalog services or building a custom catalog server in a standardized way.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -187,7 +187,7 @@ paths:
     parameters:
     - $ref: '#/components/parameters/catalog'
     - $ref: '#/components/parameters/catalogDelimiter'
-  /v1/catalogs/{catalog}/register:
+  /v1/table/register:
     post:
       operationId: RegisterTable
       parameters:
@@ -299,10 +299,10 @@ components:
       name: catalog
       required: true
       schema:
-        $ref: '#/components/schemas/Identifier'
+        $ref: '#/components/schemas/StringIdentifier'
       style: simple
     catalogDelimiter:
-      description: The delimiter used by the catalog identifier
+      description: The delimiter used by the catalog identifier string
       explode: true
       in: query
       name: catalogDelimiter
@@ -317,7 +317,7 @@ components:
       name: parentCatalog
       required: false
       schema:
-        $ref: '#/components/schemas/Identifier'
+        $ref: '#/components/schemas/StringIdentifier'
       style: form
     parentCatalogDelimiter:
       description: The delimiter used by the parent catalog identifier
@@ -355,7 +355,7 @@ components:
       name: table
       required: true
       schema:
-        $ref: '#/components/schemas/Identifier'
+        $ref: '#/components/schemas/StringIdentifier'
       style: simple
     tableDelimiter:
       description: The delimiter used by the table identifier
@@ -544,10 +544,16 @@ components:
           type: string
       required:
       - type
-    Identifier:
+    StringIdentifier:
       description: |
-        An identifier string
+        An identifier string that follows the Lance Catalog Specification
       type: string
+    ListIdentifier:
+      description: |
+        An identifier expressed as a list of object names
+      items:
+        type: string
+      type: array
     Delimiter:
       default: "."
       description: |
@@ -648,20 +654,33 @@ components:
       nullable: true
     RegisterTableRequest:
       example:
+        catalog:
+        - catalog
+        - catalog
         name: name
         location: location
       properties:
         name:
           type: string
+        catalog:
+          description: |
+            An identifier expressed as a list of object names
+          items:
+            type: string
+          type: array
         location:
           type: string
       required:
+      - catalog
       - location
       - name
     GetTableResponse:
       description: |
         Result used when a table is successfully loaded.
       example:
+        catalog:
+        - catalog
+        - catalog
         name: name
         location: location
         properties:
@@ -669,12 +688,19 @@ components:
       properties:
         name:
           type: string
+        catalog:
+          description: |
+            An identifier expressed as a list of object names
+          items:
+            type: string
+          type: array
         location:
           type: string
         properties:
           additionalProperties:
             type: string
       required:
+      - catalog
       - location
       - name
 

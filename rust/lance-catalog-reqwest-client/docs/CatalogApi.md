@@ -25,7 +25,7 @@ Check if a catalog exists. The response does not contain a body.
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **catalog** | **String** | An identifier of the catalog. | [required] |
-**catalog_delimiter** | Option<**String**> | The delimiter used by the catalog identifier |  |[default to .]
+**catalog_delimiter** | Option<**String**> | The delimiter used by the catalog identifier string |  |[default to .]
 
 ### Return type
 
@@ -84,7 +84,7 @@ Drop a catalog. The catalog must be empty.
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **catalog** | **String** | An identifier of the catalog. | [required] |
-**catalog_delimiter** | Option<**String**> | The delimiter used by the catalog identifier |  |[default to .]
+**catalog_delimiter** | Option<**String**> | The delimiter used by the catalog identifier string |  |[default to .]
 
 ### Return type
 
@@ -115,7 +115,7 @@ Return a detailed information for a given catalog
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **catalog** | **String** | An identifier of the catalog. | [required] |
-**catalog_delimiter** | Option<**String**> | The delimiter used by the catalog identifier |  |[default to .]
+**catalog_delimiter** | Option<**String**> | The delimiter used by the catalog identifier string |  |[default to .]
 
 ### Return type
 

@@ -37,9 +37,4 @@ setup.cfg
 setup.py
 test-requirements.txt
 test/__init__.py
-test/test_catalog_api.py
-test/test_create_catalog_request.py
-test/test_create_catalog_response.py
-test/test_get_catalog_response.py
-test/test_list_catalogs_response.py
 tox.ini

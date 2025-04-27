@@ -17,9 +17,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.annotation.Generated;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /** RegisterTableRequest */
@@ -30,6 +33,8 @@ public class RegisterTableRequest {
 
   private String name;
 
+  @Valid private List<String> catalog = new ArrayList<>();
+
   private String location;
 
   public RegisterTableRequest() {
@@ -37,8 +42,9 @@ public class RegisterTableRequest {
   }
 
   /** Constructor with only required parameters */
-  public RegisterTableRequest(String name, String location) {
+  public RegisterTableRequest(String name, List<String> catalog, String location) {
     this.name = name;
+    this.catalog = catalog;
     this.location = location;
   }
 
@@ -61,6 +67,38 @@ public class RegisterTableRequest {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public RegisterTableRequest catalog(List<String> catalog) {
+    this.catalog = catalog;
+    return this;
+  }
+
+  public RegisterTableRequest addCatalogItem(String catalogItem) {
+    if (this.catalog == null) {
+      this.catalog = new ArrayList<>();
+    }
+    this.catalog.add(catalogItem);
+    return this;
+  }
+
+  /**
+   * An identifier expressed as a list of object names
+   *
+   * @return catalog
+   */
+  @NotNull
+  @Schema(
+      name = "catalog",
+      description = "An identifier expressed as a list of object names ",
+      requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("catalog")
+  public List<String> getCatalog() {
+    return catalog;
+  }
+
+  public void setCatalog(List<String> catalog) {
+    this.catalog = catalog;
   }
 
   public RegisterTableRequest location(String location) {
@@ -94,12 +132,13 @@ public class RegisterTableRequest {
     }
     RegisterTableRequest registerTableRequest = (RegisterTableRequest) o;
     return Objects.equals(this.name, registerTableRequest.name)
+        && Objects.equals(this.catalog, registerTableRequest.catalog)
         && Objects.equals(this.location, registerTableRequest.location);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, location);
+    return Objects.hash(name, catalog, location);
   }
 
   @Override
@@ -107,6 +146,7 @@ public class RegisterTableRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class RegisterTableRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    catalog: ").append(toIndentedString(catalog)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("}");
     return sb.toString();

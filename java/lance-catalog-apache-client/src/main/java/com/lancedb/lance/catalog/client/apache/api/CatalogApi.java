@@ -49,7 +49,8 @@ public class CatalogApi extends BaseApi {
    * Check if a catalog exists Check if a catalog exists. The response does not contain a body.
    *
    * @param catalog An identifier of the catalog. (required)
-   * @param catalogDelimiter The delimiter used by the catalog identifier (optional, default to .)
+   * @param catalogDelimiter The delimiter used by the catalog identifier string (optional, default
+   *     to .)
    * @throws ApiException if fails to make API call
    */
   public void catalogExists(String catalog, String catalogDelimiter) throws ApiException {
@@ -60,7 +61,8 @@ public class CatalogApi extends BaseApi {
    * Check if a catalog exists Check if a catalog exists. The response does not contain a body.
    *
    * @param catalog An identifier of the catalog. (required)
-   * @param catalogDelimiter The delimiter used by the catalog identifier (optional, default to .)
+   * @param catalogDelimiter The delimiter used by the catalog identifier string (optional, default
+   *     to .)
    * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
@@ -218,7 +220,8 @@ public class CatalogApi extends BaseApi {
    * Drop a catalog. The catalog must be empty.
    *
    * @param catalog An identifier of the catalog. (required)
-   * @param catalogDelimiter The delimiter used by the catalog identifier (optional, default to .)
+   * @param catalogDelimiter The delimiter used by the catalog identifier string (optional, default
+   *     to .)
    * @throws ApiException if fails to make API call
    */
   public void dropCatalog(String catalog, String catalogDelimiter) throws ApiException {
@@ -229,7 +232,8 @@ public class CatalogApi extends BaseApi {
    * Drop a catalog. The catalog must be empty.
    *
    * @param catalog An identifier of the catalog. (required)
-   * @param catalogDelimiter The delimiter used by the catalog identifier (optional, default to .)
+   * @param catalogDelimiter The delimiter used by the catalog identifier string (optional, default
+   *     to .)
    * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
@@ -292,7 +296,8 @@ public class CatalogApi extends BaseApi {
    * Get information about a catalog Return a detailed information for a given catalog
    *
    * @param catalog An identifier of the catalog. (required)
-   * @param catalogDelimiter The delimiter used by the catalog identifier (optional, default to .)
+   * @param catalogDelimiter The delimiter used by the catalog identifier string (optional, default
+   *     to .)
    * @return GetCatalogResponse
    * @throws ApiException if fails to make API call
    */
@@ -305,7 +310,8 @@ public class CatalogApi extends BaseApi {
    * Get information about a catalog Return a detailed information for a given catalog
    *
    * @param catalog An identifier of the catalog. (required)
-   * @param catalogDelimiter The delimiter used by the catalog identifier (optional, default to .)
+   * @param catalogDelimiter The delimiter used by the catalog identifier string (optional, default
+   *     to .)
    * @param additionalHeaders additionalHeaders for this call
    * @return GetCatalogResponse
    * @throws ApiException if fails to make API call

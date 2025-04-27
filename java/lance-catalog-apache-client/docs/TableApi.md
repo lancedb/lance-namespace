@@ -5,7 +5,7 @@ All URIs are relative to *http://localhost:2333*
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
 | [**getTable**](TableApi.md#getTable) | **GET** /v1/tables/{table} | Get a table from the catalog |
-| [**registerTable**](TableApi.md#registerTable) | **POST** /v1/catalogs/{catalog}/register | Register an existing table in the given catalog.  |
+| [**registerTable**](TableApi.md#registerTable) | **POST** /v1/table/register | Register an existing table in the given catalog.  |
 | [**tableExists**](TableApi.md#tableExists) | **HEAD** /v1/tables/{table} | Check if a table exists |
 
 

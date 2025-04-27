@@ -55,7 +55,8 @@ public interface CatalogApi {
    * does not contain a body.
    *
    * @param catalog An identifier of the catalog. (required)
-   * @param catalogDelimiter The delimiter used by the catalog identifier (optional, default to .)
+   * @param catalogDelimiter The delimiter used by the catalog identifier string (optional, default
+   *     to .)
    * @return Success, no content (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
    *     such as invalid json. Usually serves application/json content, although in some cases
@@ -143,7 +144,7 @@ public interface CatalogApi {
           String catalog,
       @Parameter(
               name = "catalogDelimiter",
-              description = "The delimiter used by the catalog identifier",
+              description = "The delimiter used by the catalog identifier string",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "catalogDelimiter", required = false, defaultValue = ".")
@@ -383,7 +384,8 @@ public interface CatalogApi {
    * DELETE /v1/catalogs/{catalog} : Drop a catalog. The catalog must be empty.
    *
    * @param catalog An identifier of the catalog. (required)
-   * @param catalogDelimiter The delimiter used by the catalog identifier (optional, default to .)
+   * @param catalogDelimiter The delimiter used by the catalog identifier string (optional, default
+   *     to .)
    * @return Success, no content (status code 204) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
    *     such as invalid json. Usually serves application/json content, although in some cases
@@ -479,7 +481,7 @@ public interface CatalogApi {
           String catalog,
       @Parameter(
               name = "catalogDelimiter",
-              description = "The delimiter used by the catalog identifier",
+              description = "The delimiter used by the catalog identifier string",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "catalogDelimiter", required = false, defaultValue = ".")
@@ -540,7 +542,8 @@ public interface CatalogApi {
    * a given catalog
    *
    * @param catalog An identifier of the catalog. (required)
-   * @param catalogDelimiter The delimiter used by the catalog identifier (optional, default to .)
+   * @param catalogDelimiter The delimiter used by the catalog identifier string (optional, default
+   *     to .)
    * @return Returns a catalog, as well as any properties stored on the catalog if catalog
    *     properties are supported by the server. (status code 200) or Indicates a bad request error.
    *     It could be caused by an unexpected request body format or other forms of request
@@ -637,7 +640,7 @@ public interface CatalogApi {
           String catalog,
       @Parameter(
               name = "catalogDelimiter",
-              description = "The delimiter used by the catalog identifier",
+              description = "The delimiter used by the catalog identifier string",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "catalogDelimiter", required = false, defaultValue = ".")

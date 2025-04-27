@@ -1,27 +1,60 @@
 # Lance Catalog Specification
 
-**Lance Catalog** is an open specification on top of the storage-based Lance open table and data format 
+**Lance Catalog Specification** is an open specification on top of the storage-based Lance open table and data format 
 to standardize access to a collection of Lance tables (a.k.a. Lance datasets).
 It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc.
 should store and use Lance tables, as well as how ML/AI tools and analytics compute engines
 (will together be called _"tools"_ in this document) should integrate with Lance tables.
 
-## Catalog Definition
+## Concepts
+
+### Definition
 
 A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables.
-It is a generalized concept that is also called namespace, metastore, database, schema, etc. in other similar systems.
-A Lance catalog can either contain a collection of tables, or contain a collection of Lance catalogs recursively.
+It can either contain a collection of tables, or a collection of Lance catalogs recursively.
+It is designed to encapsulates concepts like namespace, metastore, database, schema, etc.
+that could appear in other similar systems,
+so that it can better integrate with any system with any type of object hierarchy.
+
 Here is an example layout of a Lance catalog:
 
 ![Lance catalog layout](./catalog-layout.png)
 
-In this example, we have:
+### Terminologies
+
+We will use the example above to introduce some commonly used terminologies:
 
 - **Root catalog** `cat1` contains 3 **child catalogs** `cat2`, `cat3` and `cat4`
-- Catalog `cat2` contains a child catalog `cat5`
+- Catalog `cat2` contains a child catalog `cat5`. Conversely, `cat2` is the **parent catalog** of `cat5`.
 - Catalog `cat3` contains a table `t2`
 - Catalog `cat4` contains 2 tables `t3` and `t4`
 - Catalog `cat5` contains a table `t1`
+
+### Name and Identifier
+
+The **name** of any object under the root catalog must be unique within the parent object. 
+
+Use the same catalog example as above, we have:
+ 
+- `cat2`, `cat3` and `cat4` are unique names under `cat1`
+- `t3` and `t4` are unique names under `cat4`
+
+The **identifier** of an object under the root catalog is a string that 
+uniquely identifies the object among all objects in the root catalog.
+it is the list of names of all objects starting under (not including) the root catalog.
+The dot (`.`) symbol is typically used as the delimiter to join all the names to form a string identifier, 
+but other symbols could also be used if dot is used in the object name.
+
+Use the same catalog example as above, we have:
+
+- the identifier of `t1` is `[cat2, cat5, t1]` in list form or `cat2.cat5.t1` in string form
+- the identifier of `cat5` is `cat2.cat5` in string form
+- the identifier of `t3` is `cat4$t3` in string form when using delimiter `$`
+
+The root catalog itself technically does not have a fixed name or identifier.
+It is typically assigned by users through some configuration when used in a tool.
+For example, a Lance catalog can be called `cat1` in Ray, but `cat2` in Apache Spark,
+but they are both configured to connect to the same server with URI `https://mylancecatalog.com`.
 
 ## Catalog Types
 

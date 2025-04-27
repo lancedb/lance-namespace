@@ -7,6 +7,7 @@ Result used when a table is successfully loaded.
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **str** |  | 
+**catalog** | **List[str]** | An identifier expressed as a list of object names  | 
 **location** | **str** |  | 
 **properties** | **Dict[str, str]** |  | [optional] 
 
