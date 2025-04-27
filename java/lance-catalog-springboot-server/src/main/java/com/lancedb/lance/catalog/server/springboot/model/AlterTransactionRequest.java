@@ -69,6 +69,7 @@ public class AlterTransactionRequest {
    */
   @NotNull
   @Valid
+  @Size(min = 1)
   @Schema(name = "actions", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("actions")
   public List<AlterTransactionAction> getActions() {

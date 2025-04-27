@@ -838,6 +838,7 @@ components:
         actions:
           items:
             $ref: '#/components/schemas/AlterTransactionAction'
+          minItems: 1
           type: array
       required:
       - actions

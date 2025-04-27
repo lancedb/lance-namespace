@@ -643,6 +643,7 @@ components:
       properties:
         actions:
           type: array
+          minItems: 1
           items:
             $ref: '#/components/schemas/AlterTransactionAction'
 
