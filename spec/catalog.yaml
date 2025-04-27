@@ -138,9 +138,21 @@ paths:
 
     delete:
       tags: [ Namespace ]
-      summary: Drop a namespace from the catalog. Namespace must be empty.
+      summary: Drop a namespace from the catalog
       operationId: DropNamespace
+      description: >
+        Drop a namespace from the catalog.
+        
+        If the operation can be completed immediately, the server should respond with 204.
+        
+        If the operation is long running, the server should respond with 202 to provide a transaction that
+        the client can use to track namespace drop progress.
+      parameters:
+        - $ref: '#/components/parameters/dropNamespaceMode'
+        - $ref: '#/components/parameters/dropNamespaceBehavior'
       responses:
+        202:
+          $ref: '#/components/responses/GetTransactionResponse'
         204:
           description: Success, no content
         400:
@@ -262,6 +274,59 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/transactions/{txn}:
+    parameters:
+      - $ref: '#/components/parameters/transaction'
+
+    get:
+      tags: [ Transaction ]
+      summary: Get information about a transaction
+      operationId: GetTransaction
+      description: Return a detailed information for a given transaction
+      responses:
+        200:
+          $ref: '#/components/responses/GetTransactionResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+    post:
+      tags: [ Transaction ]
+      summary: Alter information of a transaction.
+      operationId: AlterTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlterTransactionRequest'
+      responses:
+        204:
+          description: Success, no content
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        409:
+          $ref: '#/components/responses/ConflictErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
 components:
   parameters:
     namespace:
@@ -270,6 +335,15 @@ components:
       required: true
       description:
         The name of the namespace.
+      schema:
+        type: string
+
+    transaction:
+      name: txn
+      in: path
+      required: true
+      description:
+        The ID of the transaction.
       schema:
         type: string
 
@@ -290,6 +364,40 @@ components:
       schema:
         type: integer
         minimum: 1
+
+    dropNamespaceMode:
+      name: mode
+      in: query
+      description: >
+        The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found.
+        
+        FAIL (default): the server must return 400 indicating the namespace to drop does not exist.
+        
+        SKIP: the server must return 204 indicating the drop operation has succeeded. 
+
+      required: false
+      schema:
+        type: string
+        enum:
+          - SKIP
+          - FAIL
+
+    dropNamespaceBehavior:
+      name: behavior
+      in: query
+      description: >
+        The behavior for dropping a namespace.
+        
+        RESTRICT (default): the namespace should not contain any table when drop is initiated.
+        If tables are found, the server should return error and not drop the namespace.
+        
+        CASCADE: all tables in the namespace are dropped before the namespace is dropped.
+      required: false
+      schema:
+        type: string
+        enum:
+          - CASCADE
+          - RESTRICT
 
     table:
       name: table
@@ -435,6 +543,110 @@ components:
           additionalProperties:
             type: string
 
+    TransactionStatus:
+      type: string
+      enum:
+        - QUEUED
+        - RUNNING
+        - SUCCEEDED
+        - FAILED
+        - CANCELED
+
+    GetTransactionResponse:
+      type: object
+      required:
+        - id
+        - status
+        - properties
+      properties:
+        id:
+          type: string
+        status:
+          $ref: '#/components/schemas/TransactionStatus'
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+
+    AlterTransactionSetStatus:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          default: SetStatus
+          pattern: "^SetStatus$"
+        status:
+          $ref: '#/components/schemas/TransactionStatus'
+
+    AlterTransactionSetProperty:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          default: SetProperty
+          pattern: "^SetProperty$"
+        key:
+          type: string
+        value:
+          type: string
+        mode:
+          type: string
+          description: the behavior if the property key already exists
+          enum:
+            - OVERWRITE
+            - FAIL
+            - SKIP
+          default: OVERWRITE
+
+    AlterTransactionUnsetProperty:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          default: UnsetProperty
+          pattern: "^UnsetProperty$"
+        key:
+          type: string
+        mode:
+          type: string
+          description: the behavior if the property key to unset does not exist
+          enum:
+            - SKIP
+            - FAIL
+          default: SKIP
+
+    AlterTransactionAction:
+      discriminator:
+        propertyName: type
+        mapping:
+          SetStatus: '#/components/schemas/AlterTransactionSetStatus'
+          SetProperty: '#/components/schemas/AlterTransactionSetProperty'
+          UnsetProperty: '#/components/schemas/AlterTransactionUnsetProperty'
+      oneOf:
+        - $ref: '#/components/schemas/AlterTransactionSetStatus'
+        - $ref: '#/components/schemas/AlterTransactionSetProperty'
+        - $ref: '#/components/schemas/AlterTransactionUnsetProperty'
+
+    AlterTransactionRequest:
+      type: object
+      description: >
+        Alter a transaction with a list of actions.
+        The server should either succeed and apply all actions, or fail and apply no action.
+      required:
+        - actions
+      properties:
+        actions:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/AlterTransactionAction'
+
   responses:
     CreateNamespaceResponse:
       description:
@@ -478,6 +690,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/GetTableResponse'
+
+    GetTransactionResponse:
+      description: Response for GetTransaction operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetTransactionResponse'
 
     # Error Responses
 

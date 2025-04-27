@@ -101,10 +101,18 @@ paths:
       - application/json
   /v1/namespaces/{ns}:
     delete:
+      description: |
+        Drop a namespace from the catalog.
+        If the operation can be completed immediately, the server should respond with 204.
+        If the operation is long running, the server should respond with 202 to provide a transaction that the client can use to track namespace drop progress.
       operationId: DropNamespace
       parameters:
+      - $ref: '#/components/parameters/dropNamespaceMode'
+      - $ref: '#/components/parameters/dropNamespaceBehavior'
       - $ref: '#/components/parameters/namespace'
       responses:
+        "202":
+          $ref: '#/components/responses/GetTransactionResponse'
         "204":
           description: "Success, no content"
         "400":
@@ -121,7 +129,7 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: Drop a namespace from the catalog. Namespace must be empty.
+      summary: Drop a namespace from the catalog
       tags:
       - Namespace
       x-accepts:
@@ -270,6 +278,67 @@ paths:
     parameters:
     - $ref: '#/components/parameters/namespace'
     - $ref: '#/components/parameters/table'
+  /v1/transactions/{txn}:
+    get:
+      description: Return a detailed information for a given transaction
+      operationId: GetTransaction
+      parameters:
+      - $ref: '#/components/parameters/transaction'
+      responses:
+        "200":
+          $ref: '#/components/responses/GetTransactionResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Get information about a transaction
+      tags:
+      - Transaction
+      x-accepts:
+      - application/json
+    parameters:
+    - $ref: '#/components/parameters/transaction'
+    post:
+      operationId: AlterTransaction
+      parameters:
+      - $ref: '#/components/parameters/transaction'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlterTransactionRequest'
+        required: true
+      responses:
+        "204":
+          description: "Success, no content"
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "409":
+          $ref: '#/components/responses/ConflictErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Alter information of a transaction.
+      tags:
+      - Transaction
+      x-content-type: application/json
+      x-accepts:
+      - application/json
 components:
   examples:
     ListNamespacesEmptyExample:
@@ -288,6 +357,15 @@ components:
       explode: false
       in: path
       name: ns
+      required: true
+      schema:
+        type: string
+      style: simple
+    transaction:
+      description: The ID of the transaction.
+      explode: false
+      in: path
+      name: txn
       required: true
       schema:
         type: string
@@ -311,6 +389,36 @@ components:
       schema:
         minimum: 1
         type: integer
+      style: form
+    dropNamespaceMode:
+      description: "The mode for dropping a namespace, deciding the server behavior\
+        \ when the namespace to drop is not found.\nFAIL (default): the server must\
+        \ return 400 indicating the namespace to drop does not exist.\nSKIP: the server\
+        \ must return 204 indicating the drop operation has succeeded. \n"
+      explode: true
+      in: query
+      name: mode
+      required: false
+      schema:
+        enum:
+        - SKIP
+        - FAIL
+        type: string
+      style: form
+    dropNamespaceBehavior:
+      description: |
+        The behavior for dropping a namespace.
+        RESTRICT (default): the namespace should not contain any table when drop is initiated. If tables are found, the server should return error and not drop the namespace.
+        CASCADE: all tables in the namespace are dropped before the namespace is dropped.
+      explode: true
+      in: query
+      name: behavior
+      required: false
+      schema:
+        enum:
+        - CASCADE
+        - RESTRICT
+        type: string
       style: form
     table:
       description: A table name.
@@ -360,6 +468,12 @@ components:
           schema:
             $ref: '#/components/schemas/GetTableResponse'
       description: Table properties result when loading a table
+    GetTransactionResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetTransactionResponse'
+      description: Response for GetTransaction operation
     BadRequestErrorResponse:
       content:
         application/json:
@@ -624,4 +738,108 @@ components:
       required:
       - location
       - name
+    TransactionStatus:
+      enum:
+      - QUEUED
+      - RUNNING
+      - SUCCEEDED
+      - FAILED
+      - CANCELED
+      type: string
+    GetTransactionResponse:
+      example:
+        id: id
+        properties:
+          key: properties
+        status: QUEUED
+      properties:
+        id:
+          type: string
+        status:
+          $ref: '#/components/schemas/TransactionStatus'
+        properties:
+          additionalProperties:
+            type: string
+      required:
+      - id
+      - properties
+      - status
+    AlterTransactionSetStatus:
+      example:
+        type: SetStatus
+        status: QUEUED
+      properties:
+        type:
+          default: SetStatus
+          pattern: ^SetStatus$
+          type: string
+        status:
+          $ref: '#/components/schemas/TransactionStatus'
+      required:
+      - type
+    AlterTransactionSetProperty:
+      properties:
+        type:
+          default: SetProperty
+          pattern: ^SetProperty$
+          type: string
+        key:
+          type: string
+        value:
+          type: string
+        mode:
+          default: OVERWRITE
+          description: the behavior if the property key already exists
+          enum:
+          - OVERWRITE
+          - FAIL
+          - SKIP
+          type: string
+      required:
+      - type
+    AlterTransactionUnsetProperty:
+      properties:
+        type:
+          default: UnsetProperty
+          pattern: ^UnsetProperty$
+          type: string
+        key:
+          type: string
+        mode:
+          default: SKIP
+          description: the behavior if the property key to unset does not exist
+          enum:
+          - SKIP
+          - FAIL
+          type: string
+      required:
+      - type
+    AlterTransactionAction:
+      discriminator:
+        mapping:
+          SetStatus: '#/components/schemas/AlterTransactionSetStatus'
+          SetProperty: '#/components/schemas/AlterTransactionSetProperty'
+          UnsetProperty: '#/components/schemas/AlterTransactionUnsetProperty'
+        propertyName: type
+      oneOf:
+      - $ref: '#/components/schemas/AlterTransactionSetStatus'
+      - $ref: '#/components/schemas/AlterTransactionSetProperty'
+      - $ref: '#/components/schemas/AlterTransactionUnsetProperty'
+    AlterTransactionRequest:
+      description: |
+        Alter a transaction with a list of actions. The server should either succeed and apply all actions, or fail and apply no action.
+      example:
+        actions:
+        - type: SetStatus
+          status: QUEUED
+        - type: SetStatus
+          status: QUEUED
+      properties:
+        actions:
+          items:
+            $ref: '#/components/schemas/AlterTransactionAction'
+          minItems: 1
+          type: array
+      required:
+      - actions
 
