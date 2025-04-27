@@ -6,20 +6,24 @@ It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Grav
 should store and use Lance tables, as well as how ML/AI tools and analytics compute engines
 (will together be called _"tools"_ in this document) should integrate with Lance.
 
-## Definition
+## Catalog Definition
 
 A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables.
-There are 2 types of Lance catalogs: storage directory and REST catalog.
+A Lance catalog can either contain a list of tables, or contain a list of child Lance catalogs recursively.
 
-## Lance Directory Catalog
+## Catalog Types
 
-Lance storage directory, or **Lance Directory**, is a lightweight and simple catalog
-for people to get started with creating and using Lance tables directly on top of any local or remote storage system.
+There are 2 types of Lance catalogs: directory catalog and REST catalog.
 
-A directory in a storage can contain a list of Lance tables, 
-where the name of each Lance table is the name of the subdirectory.
+### Lance Directory Catalog
+
+**Lance directory catalog** is a lightweight and simple catalog that only contains a list of tables.
+People can easily get started with creating and using Lance tables directly on top of any local or remote storage system
+with a Lance directory catalog.
+
+The directory catalog maps to a directory on storage.
+A Lance table corresponds to a subdirectory in the directory.
 We call such a subdirectories **Table Directory**.
-
 Consider the following example directory layout:
 
 ```
@@ -40,10 +44,10 @@ Consider the following example directory layout:
     └── table3
 ```
 
-This describes a Lance directory `/my/dir1/` that contains tables `table1`, `table2`, `table3`
+This describes a Lance directory catalog at `/my/dir1/` that contains tables `table1`, `table2`, `table3`
 sitting at table directories `/my/dirs/table1`, `/my/dirs/table2`, `/my/dirs/table3` respectively.
 
-### Directory Path
+#### Directory Path
 
 There are 3 ways to specify a directory path:
 
@@ -52,16 +56,16 @@ There are 3 ways to specify a directory path:
 3. **Relative POSIX storage path**: a relative file path in a POSIX standard storage, e.g. `my/dir2`.
    The absolute path of the directory should be based on the current directory of the running process.
 
-### Table Existence
+#### Table Existence
 
-A table exists in a Lance directory if a table directory of the specific name exists.
+A table exists in a Lance directory catalog if a table directory of the specific name exists.
 This is true even if the directory is empty or the contents in the directory does not follow the Lance table format spec.
 For such cases, an operation that lists all tables in the directory should show the specific table,
 and an operation that checks if a table exists should return true.
 However, an operation that loads the Lance table metadata should fail with error 
 indicating the content in the folder is not compliant with the Lance table format spec.
 
-## Lance REST Catalog
+### Lance REST Catalog
 
 In an enterprise environment, typically there is a requirement to store tables in a catalog service 
 such as Apache Hive MetaStore, Apache Gravitino, Unity Catalog, etc. 
@@ -70,26 +74,20 @@ for more advanced governance features around access control, auditing, lineage t
 **Lance REST Catalog** is a standardized OpenAPI protocol to read, write and manage Lance tables.
 The detailed OpenAPI specification content can be found in [rest-catalog.yaml](./rest-catalog.yaml).
 
-### Catalog Server
+#### Catalog Server
 
 Any REST HTTP server that implements this OpenAPI protocol is called a **Lance Catalog Server**.
 If the main purpose of this server is to be a proxy on top of an existing catalog service,
 converting back and forth between Lance REST API models and native API models of the catalog service,
 then this Lance catalog server is called a **Lance Catalog Adapter**.
 
-### Object Hierarchy
-
-The REST Catalog provides a container concept called **Namespace** and 
-exposes a 2 level hierarchy below the root REST catalog server to organize tables.
-A catalog contains a list of namespaces, and a namespace contains a list of tables.
-
-### Relationship with Lance Table on Storage
+#### Relationship with Lance Table on Storage
 
 This section defines the possible relationships between a Lance table definition in a REST catalog and
 the corresponding Lance table sitting in some storage system.
 A catalog can choose to support one or multiple types of relationships when integrating with the REST protocol.
 
-#### Catalog Managed Table
+##### Catalog Managed Table
 
 A catalog managed Lance table is a table that is fully managed by a catalog.
 The catalog must contain information about the latest version of the Lance table.
@@ -100,7 +98,7 @@ the catalog must not reflect the changes in the table to the catalog users.
 This mode ensures the catalog service is aware of all activities in the table,
 and can thus fully enforce any governance and management features for the table. 
 
-#### Storage Managed Table
+##### Storage Managed Table
 
 A storage managed Lance table is a table that is fully managed by the storage with a metadata definition in catalog.
 The catalog only contains information about the table directory location.
@@ -128,19 +126,5 @@ for users to configure connection to a Lance catalog:
 | Config Key | Description                                                                                 | Required?                   | 
 |------------|---------------------------------------------------------------------------------------------|-----------------------------|
 | type       | The type of the catalog, either `dir` for Lance directory, or `rest` for Lance REST Catalog | Yes                         |
-| path       | The path to the Lance directory                                                             | Yes for `dir` catalog type  | 
+| path       | The path to the Lance directory catalog                                                     | Yes for `dir` catalog type  | 
 | uri        | The HTTP URI for the Lance REST Catalog                                                     | Yes for `rest` catalog type |
-
-### Hierarchy Mapping
-
-Most tools have internal hierarchy to organize and use a collection of tables and other objects used by the tool,
-and there might be multiple levels of hierarchy that is inconsistent with a Lance directory or Lance catalog.
-
-Lance directory provides a 1 level hierarchy of just tables within a directory, 
-and Lance REST catalog provides a 2 level hierarchy of namespace and table.
-We recommend mapping Lance directory to the lowest level of container in the hierarchy,
-and mapping Lance REST catalog to the second-lowest level of container in the hierarchy.
-
-Consider a tool that exposes a 3 level hierarchy - database, schema and table.
-A Lance directory should be mapped to a schema when integrated with this tool,
-and a Lance REST catalog should be mapped to a database when integrated with this tool.
