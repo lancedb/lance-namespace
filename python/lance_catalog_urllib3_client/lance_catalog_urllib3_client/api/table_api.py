@@ -338,7 +338,6 @@ class TableApi:
     @validate_call
     def register_table(
         self,
-        catalog: Annotated[StrictStr, Field(description="An identifier of the catalog.")],
         register_table_request: RegisterTableRequest,
         _request_timeout: Union[
             None,
@@ -356,8 +355,6 @@ class TableApi:
         """Register an existing table in the given catalog. 
 
 
-        :param catalog: An identifier of the catalog. (required)
-        :type catalog: str
         :param register_table_request: (required)
         :type register_table_request: RegisterTableRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -383,7 +380,6 @@ class TableApi:
         """ # noqa: E501
 
         _param = self._register_table_serialize(
-            catalog=catalog,
             register_table_request=register_table_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -415,7 +411,6 @@ class TableApi:
     @validate_call
     def register_table_with_http_info(
         self,
-        catalog: Annotated[StrictStr, Field(description="An identifier of the catalog.")],
         register_table_request: RegisterTableRequest,
         _request_timeout: Union[
             None,
@@ -433,8 +428,6 @@ class TableApi:
         """Register an existing table in the given catalog. 
 
 
-        :param catalog: An identifier of the catalog. (required)
-        :type catalog: str
         :param register_table_request: (required)
         :type register_table_request: RegisterTableRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -460,7 +453,6 @@ class TableApi:
         """ # noqa: E501
 
         _param = self._register_table_serialize(
-            catalog=catalog,
             register_table_request=register_table_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -492,7 +484,6 @@ class TableApi:
     @validate_call
     def register_table_without_preload_content(
         self,
-        catalog: Annotated[StrictStr, Field(description="An identifier of the catalog.")],
         register_table_request: RegisterTableRequest,
         _request_timeout: Union[
             None,
@@ -510,8 +501,6 @@ class TableApi:
         """Register an existing table in the given catalog. 
 
 
-        :param catalog: An identifier of the catalog. (required)
-        :type catalog: str
         :param register_table_request: (required)
         :type register_table_request: RegisterTableRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -537,7 +526,6 @@ class TableApi:
         """ # noqa: E501
 
         _param = self._register_table_serialize(
-            catalog=catalog,
             register_table_request=register_table_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -564,7 +552,6 @@ class TableApi:
 
     def _register_table_serialize(
         self,
-        catalog,
         register_table_request,
         _request_auth,
         _content_type,
@@ -587,8 +574,6 @@ class TableApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if catalog is not None:
-            _path_params['catalog'] = catalog
         # process the query parameters
         # process the header parameters
         # process the form parameters

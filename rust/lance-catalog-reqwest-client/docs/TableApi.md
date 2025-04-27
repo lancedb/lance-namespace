@@ -43,7 +43,7 @@ No authorization required
 
 ## register_table
 
-> models::GetTableResponse register_table(catalog, register_table_request)
+> models::GetTableResponse register_table(register_table_request)
 Register an existing table in the given catalog. 
 
 ### Parameters
@@ -51,7 +51,6 @@ Register an existing table in the given catalog.
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**catalog** | **String** | An identifier of the catalog. | [required] |
 **register_table_request** | [**RegisterTableRequest**](RegisterTableRequest.md) |  | [required] |
 
 ### Return type

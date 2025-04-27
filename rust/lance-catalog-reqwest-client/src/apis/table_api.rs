@@ -97,12 +97,11 @@ pub async fn get_table(configuration: &configuration::Configuration, table: &str
     }
 }
 
-pub async fn register_table(configuration: &configuration::Configuration, catalog: &str, register_table_request: models::RegisterTableRequest) -> Result<models::GetTableResponse, Error<RegisterTableError>> {
+pub async fn register_table(configuration: &configuration::Configuration, register_table_request: models::RegisterTableRequest) -> Result<models::GetTableResponse, Error<RegisterTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_catalog = catalog;
     let p_register_table_request = register_table_request;
 
-    let uri_str = format!("{}/v1/table/register", configuration.base_path, catalog=crate::apis::urlencode(p_catalog));
+    let uri_str = format!("{}/v1/table/register", configuration.base_path);
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
     if let Some(ref user_agent) = configuration.user_agent {

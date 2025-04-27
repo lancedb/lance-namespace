@@ -86,7 +86,7 @@ No authorization required
 
 ## registerTable
 
-> GetTableResponse registerTable(catalog, registerTableRequest)
+> GetTableResponse registerTable(registerTableRequest)
 
 Register an existing table in the given catalog. 
 
@@ -106,10 +106,9 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         TableApi apiInstance = new TableApi(defaultClient);
-        String catalog = "catalog_example"; // String | An identifier of the catalog.
         RegisterTableRequest registerTableRequest = new RegisterTableRequest(); // RegisterTableRequest | 
         try {
-            GetTableResponse result = apiInstance.registerTable(catalog, registerTableRequest);
+            GetTableResponse result = apiInstance.registerTable(registerTableRequest);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#registerTable");
@@ -127,7 +126,6 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **catalog** | **String**| An identifier of the catalog. | |
 | **registerTableRequest** | [**RegisterTableRequest**](RegisterTableRequest.md)|  | |
 
 ### Return type

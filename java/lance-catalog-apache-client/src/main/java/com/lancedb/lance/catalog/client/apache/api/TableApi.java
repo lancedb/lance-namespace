@@ -122,37 +122,27 @@ public class TableApi extends BaseApi {
   /**
    * Register an existing table in the given catalog.
    *
-   * @param catalog An identifier of the catalog. (required)
    * @param registerTableRequest (required)
    * @return GetTableResponse
    * @throws ApiException if fails to make API call
    */
-  public GetTableResponse registerTable(String catalog, RegisterTableRequest registerTableRequest)
+  public GetTableResponse registerTable(RegisterTableRequest registerTableRequest)
       throws ApiException {
-    return this.registerTable(catalog, registerTableRequest, Collections.emptyMap());
+    return this.registerTable(registerTableRequest, Collections.emptyMap());
   }
 
   /**
    * Register an existing table in the given catalog.
    *
-   * @param catalog An identifier of the catalog. (required)
    * @param registerTableRequest (required)
    * @param additionalHeaders additionalHeaders for this call
    * @return GetTableResponse
    * @throws ApiException if fails to make API call
    */
   public GetTableResponse registerTable(
-      String catalog,
-      RegisterTableRequest registerTableRequest,
-      Map<String, String> additionalHeaders)
+      RegisterTableRequest registerTableRequest, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = registerTableRequest;
-
-    // verify the required parameter 'catalog' is set
-    if (catalog == null) {
-      throw new ApiException(
-          400, "Missing the required parameter 'catalog' when calling registerTable");
-    }
 
     // verify the required parameter 'registerTableRequest' is set
     if (registerTableRequest == null) {
@@ -161,11 +151,7 @@ public class TableApi extends BaseApi {
     }
 
     // create path and map variables
-    String localVarPath =
-        "/v1/table/register"
-            .replaceAll(
-                "\\{" + "catalog" + "\\}",
-                apiClient.escapeString(apiClient.parameterToString(catalog)));
+    String localVarPath = "/v1/table/register";
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;

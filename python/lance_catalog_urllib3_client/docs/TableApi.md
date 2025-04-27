@@ -87,7 +87,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **register_table**
-> GetTableResponse register_table(catalog, register_table_request)
+> GetTableResponse register_table(register_table_request)
 
 Register an existing table in the given catalog. 
 
@@ -112,12 +112,11 @@ configuration = lance_catalog_urllib3_client.Configuration(
 with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_catalog_urllib3_client.TableApi(api_client)
-    catalog = 'catalog_example' # str | An identifier of the catalog.
     register_table_request = lance_catalog_urllib3_client.RegisterTableRequest() # RegisterTableRequest | 
 
     try:
         # Register an existing table in the given catalog. 
-        api_response = api_instance.register_table(catalog, register_table_request)
+        api_response = api_instance.register_table(register_table_request)
         print("The response of TableApi->register_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -131,7 +130,6 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **catalog** | **str**| An identifier of the catalog. | 
  **register_table_request** | [**RegisterTableRequest**](RegisterTableRequest.md)|  | 
 
 ### Return type

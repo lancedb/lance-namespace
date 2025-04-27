@@ -201,8 +201,6 @@ paths:
       summary: >
         Register an existing table in the given catalog.
       operationId: RegisterTable
-      parameters:
-        - $ref: '#/components/parameters/catalog'
       requestBody:
         required: true
         content:

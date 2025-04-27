@@ -206,7 +206,6 @@ public interface TableApi {
   /**
    * POST /v1/table/register : Register an existing table in the given catalog.
    *
-   * @param catalog An identifier of the catalog. (required)
    * @param registerTableRequest (required)
    * @return Table properties result when loading a table (status code 200) or Indicates a bad
    *     request error. It could be caused by an unexpected request body format or other forms of
@@ -303,13 +302,6 @@ public interface TableApi {
       produces = {"application/json"},
       consumes = {"application/json"})
   default ResponseEntity<GetTableResponse> registerTable(
-      @Parameter(
-              name = "catalog",
-              description = "An identifier of the catalog.",
-              required = true,
-              in = ParameterIn.PATH)
-          @PathVariable("catalog")
-          String catalog,
       @Parameter(name = "RegisterTableRequest", description = "", required = true)
           @Valid
           @RequestBody

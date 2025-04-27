@@ -190,8 +190,6 @@ paths:
   /v1/table/register:
     post:
       operationId: RegisterTable
-      parameters:
-      - $ref: '#/components/parameters/catalog'
       requestBody:
         content:
           application/json:
