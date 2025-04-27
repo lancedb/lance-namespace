@@ -1,7 +1,7 @@
 /*
- * Lance Catalog REST Specification
+ * Lance REST Catalog Specification
  *
- * **Lance Catalog** is an OpenAPI specification on top of the storage-based Lance format. It provides an integration point for catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, etc. to store and use Lance tables. To integrate, the catalog service implements a **Lance Catalog Adapter**, which is a REST server that converts the Lance catalog requests to native requests against the catalog service. Different tools can integrate with Lance Catalog using the generated OpenAPI clients in various languages, and invoke operations in Lance Catalog to read, write and manage Lance tables in the integrated catalog services. 
+ * **Lance Catalog** is an open specification on top of the storage-based Lance open table and data format  to standardize access to a collection of Lance tables. It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance. A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables. It is a generalized concept that is also called namespace, metastore, database, schema in other similar systems. A Lance catalog can either contain a list of tables, or contain a list of Lance catalogs recursively. In an enterprise environment, typically there is a requirement to store tables in a catalog service  such as Apache Hive MetaStore, Apache Gravitino, Unity Catalog, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST catalog** is a standardized OpenAPI protocol to read, write and manage Lance tables. 
  *
  * The version of the OpenAPI document: 0.0.1
  * 
@@ -56,15 +56,18 @@ pub enum TableExistsError {
 }
 
 
-/// Get a table's detailed information under a specified namespace from the catalog.
-pub async fn get_table(configuration: &configuration::Configuration, ns: &str, table: &str) -> Result<models::GetTableResponse, Error<GetTableError>> {
+/// Get a table's detailed information. 
+pub async fn get_table(configuration: &configuration::Configuration, table: &str, table_delimiter: Option<&str>) -> Result<models::GetTableResponse, Error<GetTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_ns = ns;
     let p_table = table;
+    let p_table_delimiter = table_delimiter;
 
-    let uri_str = format!("{}/v1/namespaces/{ns}/tables/{table}", configuration.base_path, ns=crate::apis::urlencode(p_ns), table=crate::apis::urlencode(p_table));
+    let uri_str = format!("{}/v1/tables/{table}", configuration.base_path, table=crate::apis::urlencode(p_table));
     let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
 
+    if let Some(ref param_value) = p_table_delimiter {
+        req_builder = req_builder.query(&[("tableDelimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -94,12 +97,12 @@ pub async fn get_table(configuration: &configuration::Configuration, ns: &str, t
     }
 }
 
-pub async fn register_table(configuration: &configuration::Configuration, ns: &str, register_table_request: models::RegisterTableRequest) -> Result<models::GetTableResponse, Error<RegisterTableError>> {
+pub async fn register_table(configuration: &configuration::Configuration, catalog: &str, register_table_request: models::RegisterTableRequest) -> Result<models::GetTableResponse, Error<RegisterTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_ns = ns;
+    let p_catalog = catalog;
     let p_register_table_request = register_table_request;
 
-    let uri_str = format!("{}/v1/namespaces/{ns}/register", configuration.base_path, ns=crate::apis::urlencode(p_ns));
+    let uri_str = format!("{}/v1/catalogs/{catalog}/register", configuration.base_path, catalog=crate::apis::urlencode(p_catalog));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
     if let Some(ref user_agent) = configuration.user_agent {
@@ -132,15 +135,18 @@ pub async fn register_table(configuration: &configuration::Configuration, ns: &s
     }
 }
 
-/// Check if a table exists within a given namespace.
-pub async fn table_exists(configuration: &configuration::Configuration, ns: &str, table: &str) -> Result<(), Error<TableExistsError>> {
+/// Check if a table exists.
+pub async fn table_exists(configuration: &configuration::Configuration, table: &str, table_delimiter: Option<&str>) -> Result<(), Error<TableExistsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_ns = ns;
     let p_table = table;
+    let p_table_delimiter = table_delimiter;
 
-    let uri_str = format!("{}/v1/namespaces/{ns}/tables/{table}", configuration.base_path, ns=crate::apis::urlencode(p_ns), table=crate::apis::urlencode(p_table));
+    let uri_str = format!("{}/v1/tables/{table}", configuration.base_path, table=crate::apis::urlencode(p_table));
     let mut req_builder = configuration.client.request(reqwest::Method::HEAD, &uri_str);
 
+    if let Some(ref param_value) = p_table_delimiter {
+        req_builder = req_builder.query(&[("tableDelimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }

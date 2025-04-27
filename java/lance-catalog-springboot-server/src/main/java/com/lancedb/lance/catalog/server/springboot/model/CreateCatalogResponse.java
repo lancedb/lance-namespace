@@ -25,52 +25,52 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/** GetNamespaceResponse */
+/** CreateCatalogResponse */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
-public class GetNamespaceResponse {
+public class CreateCatalogResponse {
 
-  private String namespace;
+  private String name;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
-  public GetNamespaceResponse() {
+  public CreateCatalogResponse() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public GetNamespaceResponse(String namespace) {
-    this.namespace = namespace;
+  public CreateCatalogResponse(String name) {
+    this.name = name;
   }
 
-  public GetNamespaceResponse namespace(String namespace) {
-    this.namespace = namespace;
+  public CreateCatalogResponse name(String name) {
+    this.name = name;
     return this;
   }
 
   /**
-   * Get namespace
+   * Get name
    *
-   * @return namespace
+   * @return name
    */
   @NotNull
-  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("namespace")
-  public String getNamespace() {
-    return namespace;
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("name")
+  public String getName() {
+    return name;
   }
 
-  public void setNamespace(String namespace) {
-    this.namespace = namespace;
+  public void setName(String name) {
+    this.name = name;
   }
 
-  public GetNamespaceResponse properties(Map<String, String> properties) {
+  public CreateCatalogResponse properties(Map<String, String> properties) {
     this.properties = properties;
     return this;
   }
 
-  public GetNamespaceResponse putPropertiesItem(String key, String propertiesItem) {
+  public CreateCatalogResponse putPropertiesItem(String key, String propertiesItem) {
     if (this.properties == null) {
       this.properties = new HashMap<>();
     }
@@ -79,17 +79,14 @@ public class GetNamespaceResponse {
   }
 
   /**
-   * Properties stored on the namespace, if supported by the server. If the server does not support
-   * namespace properties, it should return null for this field. If namespace properties are
-   * supported, but none are set, it should return an empty object.
+   * Properties stored on the catalog, if supported by the server.
    *
    * @return properties
    */
   @Schema(
       name = "properties",
-      example = "{owner=Ralph, created_at=1452120468}",
-      description =
-          "Properties stored on the namespace, if supported by the server. If the server does not support namespace properties, it should return null for this field. If namespace properties are supported, but none are set, it should return an empty object.",
+      example = "{created_at=1452120468}",
+      description = "Properties stored on the catalog, if supported by the server.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("properties")
   public Map<String, String> getProperties() {
@@ -108,21 +105,21 @@ public class GetNamespaceResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    GetNamespaceResponse getNamespaceResponse = (GetNamespaceResponse) o;
-    return Objects.equals(this.namespace, getNamespaceResponse.namespace)
-        && Objects.equals(this.properties, getNamespaceResponse.properties);
+    CreateCatalogResponse createCatalogResponse = (CreateCatalogResponse) o;
+    return Objects.equals(this.name, createCatalogResponse.name)
+        && Objects.equals(this.properties, createCatalogResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(namespace, properties);
+    return Objects.hash(name, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class GetNamespaceResponse {\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("class CreateCatalogResponse {\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();

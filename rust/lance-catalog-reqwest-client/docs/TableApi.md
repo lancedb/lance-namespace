@@ -4,26 +4,26 @@ All URIs are relative to *http://localhost:2333*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**get_table**](TableApi.md#get_table) | **GET** /v1/namespaces/{ns}/tables/{table} | Get a table from the catalog
-[**register_table**](TableApi.md#register_table) | **POST** /v1/namespaces/{ns}/register | Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace. 
-[**table_exists**](TableApi.md#table_exists) | **HEAD** /v1/namespaces/{ns}/tables/{table} | Check if a table exists
+[**get_table**](TableApi.md#get_table) | **GET** /v1/tables/{table} | Get a table from the catalog
+[**register_table**](TableApi.md#register_table) | **POST** /v1/catalogs/{catalog}/register | Register an existing table in the given catalog. 
+[**table_exists**](TableApi.md#table_exists) | **HEAD** /v1/tables/{table} | Check if a table exists
 
 
 
 ## get_table
 
-> models::GetTableResponse get_table(ns, table)
+> models::GetTableResponse get_table(table, table_delimiter)
 Get a table from the catalog
 
-Get a table's detailed information under a specified namespace from the catalog.
+Get a table's detailed information. 
 
 ### Parameters
 
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**ns** | **String** | The name of the namespace. | [required] |
-**table** | **String** | A table name. | [required] |
+**table** | **String** | An identifier of the table | [required] |
+**table_delimiter** | Option<**String**> | The delimiter used by the table identifier |  |[default to .]
 
 ### Return type
 
@@ -43,15 +43,15 @@ No authorization required
 
 ## register_table
 
-> models::GetTableResponse register_table(ns, register_table_request)
-Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace. 
+> models::GetTableResponse register_table(catalog, register_table_request)
+Register an existing table in the given catalog. 
 
 ### Parameters
 
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**ns** | **String** | The name of the namespace. | [required] |
+**catalog** | **String** | An identifier of the catalog. | [required] |
 **register_table_request** | [**RegisterTableRequest**](RegisterTableRequest.md) |  | [required] |
 
 ### Return type
@@ -72,18 +72,18 @@ No authorization required
 
 ## table_exists
 
-> table_exists(ns, table)
+> table_exists(table, table_delimiter)
 Check if a table exists
 
-Check if a table exists within a given namespace.
+Check if a table exists.
 
 ### Parameters
 
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**ns** | **String** | The name of the namespace. | [required] |
-**table** | **String** | A table name. | [required] |
+**table** | **String** | An identifier of the table | [required] |
+**table_delimiter** | Option<**String**> | The delimiter used by the table identifier |  |[default to .]
 
 ### Return type
 

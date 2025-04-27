@@ -4,19 +4,19 @@ All URIs are relative to *http://localhost:2333*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**getTable**](TableApi.md#getTable) | **GET** /v1/namespaces/{ns}/tables/{table} | Get a table from the catalog |
-| [**registerTable**](TableApi.md#registerTable) | **POST** /v1/namespaces/{ns}/register | Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace.  |
-| [**tableExists**](TableApi.md#tableExists) | **HEAD** /v1/namespaces/{ns}/tables/{table} | Check if a table exists |
+| [**getTable**](TableApi.md#getTable) | **GET** /v1/tables/{table} | Get a table from the catalog |
+| [**registerTable**](TableApi.md#registerTable) | **POST** /v1/catalogs/{catalog}/register | Register an existing table in the given catalog.  |
+| [**tableExists**](TableApi.md#tableExists) | **HEAD** /v1/tables/{table} | Check if a table exists |
 
 
 
 ## getTable
 
-> GetTableResponse getTable(ns, table)
+> GetTableResponse getTable(table, tableDelimiter)
 
 Get a table from the catalog
 
-Get a table&#39;s detailed information under a specified namespace from the catalog.
+Get a table&#39;s detailed information. 
 
 ### Example
 
@@ -34,10 +34,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         TableApi apiInstance = new TableApi(defaultClient);
-        String ns = "ns_example"; // String | The name of the namespace.
-        String table = "table_example"; // String | A table name.
+        String table = "table_example"; // String | An identifier of the table
+        String tableDelimiter = "."; // String | The delimiter used by the table identifier
         try {
-            GetTableResponse result = apiInstance.getTable(ns, table);
+            GetTableResponse result = apiInstance.getTable(table, tableDelimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#getTable");
@@ -55,8 +55,8 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **ns** | **String**| The name of the namespace. | |
-| **table** | **String**| A table name. | |
+| **table** | **String**| An identifier of the table | |
+| **tableDelimiter** | **String**| The delimiter used by the table identifier | [optional] [default to .] |
 
 ### Return type
 
@@ -86,9 +86,9 @@ No authorization required
 
 ## registerTable
 
-> GetTableResponse registerTable(ns, registerTableRequest)
+> GetTableResponse registerTable(catalog, registerTableRequest)
 
-Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace. 
+Register an existing table in the given catalog. 
 
 ### Example
 
@@ -106,10 +106,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         TableApi apiInstance = new TableApi(defaultClient);
-        String ns = "ns_example"; // String | The name of the namespace.
+        String catalog = "catalog_example"; // String | An identifier of the catalog.
         RegisterTableRequest registerTableRequest = new RegisterTableRequest(); // RegisterTableRequest | 
         try {
-            GetTableResponse result = apiInstance.registerTable(ns, registerTableRequest);
+            GetTableResponse result = apiInstance.registerTable(catalog, registerTableRequest);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#registerTable");
@@ -127,7 +127,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **ns** | **String**| The name of the namespace. | |
+| **catalog** | **String**| An identifier of the catalog. | |
 | **registerTableRequest** | [**RegisterTableRequest**](RegisterTableRequest.md)|  | |
 
 ### Return type
@@ -159,11 +159,11 @@ No authorization required
 
 ## tableExists
 
-> tableExists(ns, table)
+> tableExists(table, tableDelimiter)
 
 Check if a table exists
 
-Check if a table exists within a given namespace.
+Check if a table exists.
 
 ### Example
 
@@ -181,10 +181,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         TableApi apiInstance = new TableApi(defaultClient);
-        String ns = "ns_example"; // String | The name of the namespace.
-        String table = "table_example"; // String | A table name.
+        String table = "table_example"; // String | An identifier of the table
+        String tableDelimiter = "."; // String | The delimiter used by the table identifier
         try {
-            apiInstance.tableExists(ns, table);
+            apiInstance.tableExists(table, tableDelimiter);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#tableExists");
             System.err.println("Status code: " + e.getCode());
@@ -201,8 +201,8 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **ns** | **String**| The name of the namespace. | |
-| **table** | **String**| A table name. | |
+| **table** | **String**| An identifier of the table | |
+| **tableDelimiter** | **String**| The delimiter used by the table identifier | [optional] [default to .] |
 
 ### Return type
 

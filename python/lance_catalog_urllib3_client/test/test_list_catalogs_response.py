@@ -1,6 +1,5 @@
 # coding: utf-8
 
-# flake8: noqa
 """
     Lance REST Catalog Specification
 
@@ -13,11 +12,46 @@
 """  # noqa: E501
 
 
-# import models into model package
-from lance_catalog_urllib3_client.models.create_catalog_request import CreateCatalogRequest
-from lance_catalog_urllib3_client.models.create_catalog_response import CreateCatalogResponse
-from lance_catalog_urllib3_client.models.error_response import ErrorResponse
-from lance_catalog_urllib3_client.models.get_catalog_response import GetCatalogResponse
-from lance_catalog_urllib3_client.models.get_table_response import GetTableResponse
+import unittest
+
 from lance_catalog_urllib3_client.models.list_catalogs_response import ListCatalogsResponse
-from lance_catalog_urllib3_client.models.register_table_request import RegisterTableRequest
+
+class TestListCatalogsResponse(unittest.TestCase):
+    """ListCatalogsResponse unit test stubs"""
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def make_instance(self, include_optional) -> ListCatalogsResponse:
+        """Test ListCatalogsResponse
+            include_optional is a boolean, when False only required
+            params are included, when True both required and
+            optional params are included """
+        # uncomment below to create an instance of `ListCatalogsResponse`
+        """
+        model = ListCatalogsResponse()
+        if include_optional:
+            return ListCatalogsResponse(
+                catalogs = [
+                    'accounting'
+                    ],
+                next_page_token = ''
+            )
+        else:
+            return ListCatalogsResponse(
+                catalogs = [
+                    'accounting'
+                    ],
+        )
+        """
+
+    def testListCatalogsResponse(self):
+        """Test ListCatalogsResponse"""
+        # inst_req_only = self.make_instance(include_optional=False)
+        # inst_req_and_optional = self.make_instance(include_optional=True)
+
+if __name__ == '__main__':
+    unittest.main()

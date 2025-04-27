@@ -12,18 +12,19 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct RegisterTableRequest {
-    #[serde(rename = "name")]
-    pub name: String,
-    #[serde(rename = "location")]
-    pub location: String,
+pub struct GetCatalogResponse {
+    #[serde(rename = "catalog")]
+    pub catalog: String,
+    /// Properties stored on the catalog, if supported by the server. If the server does not support catalog properties, it should return null for this field. If catalog properties are supported, but none are set, it should return an empty object.
+    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
+    pub properties: Option<std::collections::HashMap<String, String>>,
 }
 
-impl RegisterTableRequest {
-    pub fn new(name: String, location: String) -> RegisterTableRequest {
-        RegisterTableRequest {
-            name,
-            location,
+impl GetCatalogResponse {
+    pub fn new(catalog: String) -> GetCatalogResponse {
+        GetCatalogResponse {
+            catalog,
+            properties: None,
         }
     }
 }

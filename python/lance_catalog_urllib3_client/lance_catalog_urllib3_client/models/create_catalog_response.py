@@ -17,18 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class RegisterTableRequest(BaseModel):
+class CreateCatalogResponse(BaseModel):
     """
-    RegisterTableRequest
+    CreateCatalogResponse
     """ # noqa: E501
     name: StrictStr
-    location: StrictStr
-    __properties: ClassVar[List[str]] = ["name", "location"]
+    properties: Optional[Dict[str, StrictStr]] = Field(default=None, description="Properties stored on the catalog, if supported by the server.")
+    __properties: ClassVar[List[str]] = ["name", "properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +48,7 @@ class RegisterTableRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of RegisterTableRequest from a JSON string"""
+        """Create an instance of CreateCatalogResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +73,7 @@ class RegisterTableRequest(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of RegisterTableRequest from a dict"""
+        """Create an instance of CreateCatalogResponse from a dict"""
         if obj is None:
             return None
 
@@ -82,7 +82,7 @@ class RegisterTableRequest(BaseModel):
 
         _obj = cls.model_validate({
             "name": obj.get("name"),
-            "location": obj.get("location")
+            "properties": obj.get("properties")
         })
         return _obj
 

@@ -24,55 +24,54 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** GetNamespaceResponse */
+/** GetCatalogResponse */
 @JsonPropertyOrder({
-  GetNamespaceResponse.JSON_PROPERTY_NAMESPACE,
-  GetNamespaceResponse.JSON_PROPERTY_PROPERTIES
+  GetCatalogResponse.JSON_PROPERTY_CATALOG,
+  GetCatalogResponse.JSON_PROPERTY_PROPERTIES
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class GetNamespaceResponse {
-  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nonnull private String namespace;
+public class GetCatalogResponse {
+  public static final String JSON_PROPERTY_CATALOG = "catalog";
+  @javax.annotation.Nonnull private String catalog;
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
-  public GetNamespaceResponse() {}
+  public GetCatalogResponse() {}
 
-  public GetNamespaceResponse namespace(@javax.annotation.Nonnull String namespace) {
+  public GetCatalogResponse catalog(@javax.annotation.Nonnull String catalog) {
 
-    this.namespace = namespace;
+    this.catalog = catalog;
     return this;
   }
 
   /**
-   * Get namespace
+   * Get catalog
    *
-   * @return namespace
+   * @return catalog
    */
   @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonProperty(JSON_PROPERTY_CATALOG)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getNamespace() {
-    return namespace;
+  public String getCatalog() {
+    return catalog;
   }
 
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonProperty(JSON_PROPERTY_CATALOG)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setNamespace(@javax.annotation.Nonnull String namespace) {
-    this.namespace = namespace;
+  public void setCatalog(@javax.annotation.Nonnull String catalog) {
+    this.catalog = catalog;
   }
 
-  public GetNamespaceResponse properties(
-      @javax.annotation.Nullable Map<String, String> properties) {
+  public GetCatalogResponse properties(@javax.annotation.Nullable Map<String, String> properties) {
 
     this.properties = properties;
     return this;
   }
 
-  public GetNamespaceResponse putPropertiesItem(String key, String propertiesItem) {
+  public GetCatalogResponse putPropertiesItem(String key, String propertiesItem) {
     if (this.properties == null) {
       this.properties = new HashMap<>();
     }
@@ -81,9 +80,9 @@ public class GetNamespaceResponse {
   }
 
   /**
-   * Properties stored on the namespace, if supported by the server. If the server does not support
-   * namespace properties, it should return null for this field. If namespace properties are
-   * supported, but none are set, it should return an empty object.
+   * Properties stored on the catalog, if supported by the server. If the server does not support
+   * catalog properties, it should return null for this field. If catalog properties are supported,
+   * but none are set, it should return an empty object.
    *
    * @return properties
    */
@@ -108,21 +107,21 @@ public class GetNamespaceResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    GetNamespaceResponse getNamespaceResponse = (GetNamespaceResponse) o;
-    return Objects.equals(this.namespace, getNamespaceResponse.namespace)
-        && Objects.equals(this.properties, getNamespaceResponse.properties);
+    GetCatalogResponse getCatalogResponse = (GetCatalogResponse) o;
+    return Objects.equals(this.catalog, getCatalogResponse.catalog)
+        && Objects.equals(this.properties, getCatalogResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(namespace, properties);
+    return Objects.hash(catalog, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class GetNamespaceResponse {\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("class GetCatalogResponse {\n");
+    sb.append("    catalog: ").append(toIndentedString(catalog)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -170,16 +169,15 @@ public class GetNamespaceResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `namespace` to the URL query string
-    if (getNamespace() != null) {
+    // add `catalog` to the URL query string
+    if (getCatalog() != null) {
       try {
         joiner.add(
             String.format(
-                "%snamespace%s=%s",
+                "%scatalog%s=%s",
                 prefix,
                 suffix,
-                URLEncoder.encode(String.valueOf(getNamespace()), "UTF-8")
-                    .replaceAll("\\+", "%20")));
+                URLEncoder.encode(String.valueOf(getCatalog()), "UTF-8").replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

@@ -49,11 +49,10 @@ public interface TableApi {
   }
 
   /**
-   * GET /v1/namespaces/{ns}/tables/{table} : Get a table from the catalog Get a table&#39;s
-   * detailed information under a specified namespace from the catalog.
+   * GET /v1/tables/{table} : Get a table from the catalog Get a table&#39;s detailed information.
    *
-   * @param ns The name of the namespace. (required)
-   * @param table A table name. (required)
+   * @param table An identifier of the table (required)
+   * @param tableDelimiter The delimiter used by the table identifier (optional, default to .)
    * @return Table properties result when loading a table (status code 200) or Indicates a bad
    *     request error. It could be caused by an unexpected request body format or other forms of
    *     request validation failure, such as invalid json. Usually serves application/json content,
@@ -70,8 +69,7 @@ public interface TableApi {
   @Operation(
       operationId = "getTable",
       summary = "Get a table from the catalog",
-      description =
-          "Get a table's detailed information under a specified namespace from the catalog.",
+      description = "Get a table's detailed information. ",
       tags = {"Table"},
       responses = {
         @ApiResponse(
@@ -137,23 +135,23 @@ public interface TableApi {
       })
   @RequestMapping(
       method = RequestMethod.GET,
-      value = "/v1/namespaces/{ns}/tables/{table}",
+      value = "/v1/tables/{table}",
       produces = {"application/json"})
   default ResponseEntity<GetTableResponse> getTable(
       @Parameter(
-              name = "ns",
-              description = "The name of the namespace.",
-              required = true,
-              in = ParameterIn.PATH)
-          @PathVariable("ns")
-          String ns,
-      @Parameter(
               name = "table",
-              description = "A table name.",
+              description = "An identifier of the table",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("table")
-          String table) {
+          String table,
+      @Parameter(
+              name = "tableDelimiter",
+              description = "The delimiter used by the table identifier",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "tableDelimiter", required = false, defaultValue = ".")
+          Optional<String> tableDelimiter) {
     getRequest()
         .ifPresent(
             request -> {
@@ -206,10 +204,9 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/namespaces/{ns}/register : Register a new table in the given namespace. A table
-   * represents a lance dataset. In Lance catalog, a table must be hosted in a namespace.
+   * POST /v1/catalogs/{catalog}/register : Register an existing table in the given catalog.
    *
-   * @param ns The name of the namespace. (required)
+   * @param catalog An identifier of the catalog. (required)
    * @param registerTableRequest (required)
    * @return Table properties result when loading a table (status code 200) or Indicates a bad
    *     request error. It could be caused by an unexpected request body format or other forms of
@@ -227,8 +224,7 @@ public interface TableApi {
    */
   @Operation(
       operationId = "registerTable",
-      summary =
-          "Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace. ",
+      summary = "Register an existing table in the given catalog. ",
       tags = {"Table"},
       responses = {
         @ApiResponse(
@@ -303,17 +299,17 @@ public interface TableApi {
       })
   @RequestMapping(
       method = RequestMethod.POST,
-      value = "/v1/namespaces/{ns}/register",
+      value = "/v1/catalogs/{catalog}/register",
       produces = {"application/json"},
       consumes = {"application/json"})
   default ResponseEntity<GetTableResponse> registerTable(
       @Parameter(
-              name = "ns",
-              description = "The name of the namespace.",
+              name = "catalog",
+              description = "An identifier of the catalog.",
               required = true,
               in = ParameterIn.PATH)
-          @PathVariable("ns")
-          String ns,
+          @PathVariable("catalog")
+          String catalog,
       @Parameter(name = "RegisterTableRequest", description = "", required = true)
           @Valid
           @RequestBody
@@ -376,11 +372,10 @@ public interface TableApi {
   }
 
   /**
-   * HEAD /v1/namespaces/{ns}/tables/{table} : Check if a table exists Check if a table exists
-   * within a given namespace.
+   * HEAD /v1/tables/{table} : Check if a table exists Check if a table exists.
    *
-   * @param ns The name of the namespace. (required)
-   * @param table A table name. (required)
+   * @param table An identifier of the table (required)
+   * @param tableDelimiter The delimiter used by the table identifier (optional, default to .)
    * @return Success, no content (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
    *     such as invalid json. Usually serves application/json content, although in some cases
@@ -397,7 +392,7 @@ public interface TableApi {
   @Operation(
       operationId = "tableExists",
       summary = "Check if a table exists",
-      description = "Check if a table exists within a given namespace.",
+      description = "Check if a table exists.",
       tags = {"Table"},
       responses = {
         @ApiResponse(responseCode = "200", description = "Success, no content"),
@@ -456,23 +451,23 @@ public interface TableApi {
       })
   @RequestMapping(
       method = RequestMethod.HEAD,
-      value = "/v1/namespaces/{ns}/tables/{table}",
+      value = "/v1/tables/{table}",
       produces = {"application/json"})
   default ResponseEntity<Void> tableExists(
       @Parameter(
-              name = "ns",
-              description = "The name of the namespace.",
-              required = true,
-              in = ParameterIn.PATH)
-          @PathVariable("ns")
-          String ns,
-      @Parameter(
               name = "table",
-              description = "A table name.",
+              description = "An identifier of the table",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("table")
-          String table) {
+          String table,
+      @Parameter(
+              name = "tableDelimiter",
+              description = "The delimiter used by the table identifier",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "tableDelimiter", required = false, defaultValue = ".")
+          Optional<String> tableDelimiter) {
     getRequest()
         .ifPresent(
             request -> {

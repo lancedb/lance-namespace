@@ -44,36 +44,30 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Get a table from the catalog Get a table&#39;s detailed information under a specified namespace
-   * from the catalog.
+   * Get a table from the catalog Get a table&#39;s detailed information.
    *
-   * @param ns The name of the namespace. (required)
-   * @param table A table name. (required)
+   * @param table An identifier of the table (required)
+   * @param tableDelimiter The delimiter used by the table identifier (optional, default to .)
    * @return GetTableResponse
    * @throws ApiException if fails to make API call
    */
-  public GetTableResponse getTable(String ns, String table) throws ApiException {
-    return this.getTable(ns, table, Collections.emptyMap());
+  public GetTableResponse getTable(String table, String tableDelimiter) throws ApiException {
+    return this.getTable(table, tableDelimiter, Collections.emptyMap());
   }
 
   /**
-   * Get a table from the catalog Get a table&#39;s detailed information under a specified namespace
-   * from the catalog.
+   * Get a table from the catalog Get a table&#39;s detailed information.
    *
-   * @param ns The name of the namespace. (required)
-   * @param table A table name. (required)
+   * @param table An identifier of the table (required)
+   * @param tableDelimiter The delimiter used by the table identifier (optional, default to .)
    * @param additionalHeaders additionalHeaders for this call
    * @return GetTableResponse
    * @throws ApiException if fails to make API call
    */
-  public GetTableResponse getTable(String ns, String table, Map<String, String> additionalHeaders)
+  public GetTableResponse getTable(
+      String table, String tableDelimiter, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
-
-    // verify the required parameter 'ns' is set
-    if (ns == null) {
-      throw new ApiException(400, "Missing the required parameter 'ns' when calling getTable");
-    }
 
     // verify the required parameter 'table' is set
     if (table == null) {
@@ -82,9 +76,7 @@ public class TableApi extends BaseApi {
 
     // create path and map variables
     String localVarPath =
-        "/v1/namespaces/{ns}/tables/{table}"
-            .replaceAll(
-                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)))
+        "/v1/tables/{table}"
             .replaceAll(
                 "\\{" + "table" + "\\}",
                 apiClient.escapeString(apiClient.parameterToString(table)));
@@ -96,6 +88,8 @@ public class TableApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("tableDelimiter", tableDelimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -126,37 +120,38 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Register a new table in the given namespace. A table represents a lance dataset. In Lance
-   * catalog, a table must be hosted in a namespace.
+   * Register an existing table in the given catalog.
    *
-   * @param ns The name of the namespace. (required)
+   * @param catalog An identifier of the catalog. (required)
    * @param registerTableRequest (required)
    * @return GetTableResponse
    * @throws ApiException if fails to make API call
    */
-  public GetTableResponse registerTable(String ns, RegisterTableRequest registerTableRequest)
+  public GetTableResponse registerTable(String catalog, RegisterTableRequest registerTableRequest)
       throws ApiException {
-    return this.registerTable(ns, registerTableRequest, Collections.emptyMap());
+    return this.registerTable(catalog, registerTableRequest, Collections.emptyMap());
   }
 
   /**
-   * Register a new table in the given namespace. A table represents a lance dataset. In Lance
-   * catalog, a table must be hosted in a namespace.
+   * Register an existing table in the given catalog.
    *
-   * @param ns The name of the namespace. (required)
+   * @param catalog An identifier of the catalog. (required)
    * @param registerTableRequest (required)
    * @param additionalHeaders additionalHeaders for this call
    * @return GetTableResponse
    * @throws ApiException if fails to make API call
    */
   public GetTableResponse registerTable(
-      String ns, RegisterTableRequest registerTableRequest, Map<String, String> additionalHeaders)
+      String catalog,
+      RegisterTableRequest registerTableRequest,
+      Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = registerTableRequest;
 
-    // verify the required parameter 'ns' is set
-    if (ns == null) {
-      throw new ApiException(400, "Missing the required parameter 'ns' when calling registerTable");
+    // verify the required parameter 'catalog' is set
+    if (catalog == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'catalog' when calling registerTable");
     }
 
     // verify the required parameter 'registerTableRequest' is set
@@ -167,9 +162,10 @@ public class TableApi extends BaseApi {
 
     // create path and map variables
     String localVarPath =
-        "/v1/namespaces/{ns}/register"
+        "/v1/catalogs/{catalog}/register"
             .replaceAll(
-                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)));
+                "\\{" + "catalog" + "\\}",
+                apiClient.escapeString(apiClient.parameterToString(catalog)));
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -207,32 +203,28 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Check if a table exists Check if a table exists within a given namespace.
+   * Check if a table exists Check if a table exists.
    *
-   * @param ns The name of the namespace. (required)
-   * @param table A table name. (required)
+   * @param table An identifier of the table (required)
+   * @param tableDelimiter The delimiter used by the table identifier (optional, default to .)
    * @throws ApiException if fails to make API call
    */
-  public void tableExists(String ns, String table) throws ApiException {
-    this.tableExists(ns, table, Collections.emptyMap());
+  public void tableExists(String table, String tableDelimiter) throws ApiException {
+    this.tableExists(table, tableDelimiter, Collections.emptyMap());
   }
 
   /**
-   * Check if a table exists Check if a table exists within a given namespace.
+   * Check if a table exists Check if a table exists.
    *
-   * @param ns The name of the namespace. (required)
-   * @param table A table name. (required)
+   * @param table An identifier of the table (required)
+   * @param tableDelimiter The delimiter used by the table identifier (optional, default to .)
    * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void tableExists(String ns, String table, Map<String, String> additionalHeaders)
+  public void tableExists(
+      String table, String tableDelimiter, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
-
-    // verify the required parameter 'ns' is set
-    if (ns == null) {
-      throw new ApiException(400, "Missing the required parameter 'ns' when calling tableExists");
-    }
 
     // verify the required parameter 'table' is set
     if (table == null) {
@@ -242,9 +234,7 @@ public class TableApi extends BaseApi {
 
     // create path and map variables
     String localVarPath =
-        "/v1/namespaces/{ns}/tables/{table}"
-            .replaceAll(
-                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)))
+        "/v1/tables/{table}"
             .replaceAll(
                 "\\{" + "table" + "\\}",
                 apiClient.escapeString(apiClient.parameterToString(table)));
@@ -256,6 +246,8 @@ public class TableApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("tableDelimiter", tableDelimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 

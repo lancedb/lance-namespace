@@ -27,11 +27,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/** CreateNamespaceRequest */
+/** CreateCatalogRequest */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
-public class CreateNamespaceRequest {
+public class CreateCatalogRequest {
 
   private String name;
 
@@ -74,17 +74,17 @@ public class CreateNamespaceRequest {
 
   @Valid private Map<String, String> options = new HashMap<>();
 
-  public CreateNamespaceRequest() {
+  public CreateCatalogRequest() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public CreateNamespaceRequest(String name, ModeEnum mode) {
+  public CreateCatalogRequest(String name, ModeEnum mode) {
     this.name = name;
     this.mode = mode;
   }
 
-  public CreateNamespaceRequest name(String name) {
+  public CreateCatalogRequest name(String name) {
     this.name = name;
     return this;
   }
@@ -105,7 +105,7 @@ public class CreateNamespaceRequest {
     this.name = name;
   }
 
-  public CreateNamespaceRequest mode(ModeEnum mode) {
+  public CreateCatalogRequest mode(ModeEnum mode) {
     this.mode = mode;
     return this;
   }
@@ -126,12 +126,12 @@ public class CreateNamespaceRequest {
     this.mode = mode;
   }
 
-  public CreateNamespaceRequest options(Map<String, String> options) {
+  public CreateCatalogRequest options(Map<String, String> options) {
     this.options = options;
     return this;
   }
 
-  public CreateNamespaceRequest putOptionsItem(String key, String optionsItem) {
+  public CreateCatalogRequest putOptionsItem(String key, String optionsItem) {
     if (this.options == null) {
       this.options = new HashMap<>();
     }
@@ -162,10 +162,10 @@ public class CreateNamespaceRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateNamespaceRequest createNamespaceRequest = (CreateNamespaceRequest) o;
-    return Objects.equals(this.name, createNamespaceRequest.name)
-        && Objects.equals(this.mode, createNamespaceRequest.mode)
-        && Objects.equals(this.options, createNamespaceRequest.options);
+    CreateCatalogRequest createCatalogRequest = (CreateCatalogRequest) o;
+    return Objects.equals(this.name, createCatalogRequest.name)
+        && Objects.equals(this.mode, createCatalogRequest.mode)
+        && Objects.equals(this.options, createCatalogRequest.options);
   }
 
   @Override
@@ -176,7 +176,7 @@ public class CreateNamespaceRequest {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateNamespaceRequest {\n");
+    sb.append("class CreateCatalogRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    options: ").append(toIndentedString(options)).append("\n");

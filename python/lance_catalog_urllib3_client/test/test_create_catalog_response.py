@@ -1,6 +1,5 @@
 # coding: utf-8
 
-# flake8: noqa
 """
     Lance REST Catalog Specification
 
@@ -13,11 +12,42 @@
 """  # noqa: E501
 
 
-# import models into model package
-from lance_catalog_urllib3_client.models.create_catalog_request import CreateCatalogRequest
+import unittest
+
 from lance_catalog_urllib3_client.models.create_catalog_response import CreateCatalogResponse
-from lance_catalog_urllib3_client.models.error_response import ErrorResponse
-from lance_catalog_urllib3_client.models.get_catalog_response import GetCatalogResponse
-from lance_catalog_urllib3_client.models.get_table_response import GetTableResponse
-from lance_catalog_urllib3_client.models.list_catalogs_response import ListCatalogsResponse
-from lance_catalog_urllib3_client.models.register_table_request import RegisterTableRequest
+
+class TestCreateCatalogResponse(unittest.TestCase):
+    """CreateCatalogResponse unit test stubs"""
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def make_instance(self, include_optional) -> CreateCatalogResponse:
+        """Test CreateCatalogResponse
+            include_optional is a boolean, when False only required
+            params are included, when True both required and
+            optional params are included """
+        # uncomment below to create an instance of `CreateCatalogResponse`
+        """
+        model = CreateCatalogResponse()
+        if include_optional:
+            return CreateCatalogResponse(
+                name = '',
+                properties = {created_at=1452120468}
+            )
+        else:
+            return CreateCatalogResponse(
+                name = '',
+        )
+        """
+
+    def testCreateCatalogResponse(self):
+        """Test CreateCatalogResponse"""
+        # inst_req_only = self.make_instance(include_optional=False)
+        # inst_req_and_optional = self.make_instance(include_optional=True)
+
+if __name__ == '__main__':
+    unittest.main()

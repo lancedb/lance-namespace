@@ -24,24 +24,24 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** CreateNamespaceResponse */
+/** CreateCatalogResponse */
 @JsonPropertyOrder({
-  CreateNamespaceResponse.JSON_PROPERTY_NAME,
-  CreateNamespaceResponse.JSON_PROPERTY_PROPERTIES
+  CreateCatalogResponse.JSON_PROPERTY_NAME,
+  CreateCatalogResponse.JSON_PROPERTY_PROPERTIES
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class CreateNamespaceResponse {
+public class CreateCatalogResponse {
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nonnull private String name;
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
-  public CreateNamespaceResponse() {}
+  public CreateCatalogResponse() {}
 
-  public CreateNamespaceResponse name(@javax.annotation.Nonnull String name) {
+  public CreateCatalogResponse name(@javax.annotation.Nonnull String name) {
 
     this.name = name;
     return this;
@@ -65,14 +65,14 @@ public class CreateNamespaceResponse {
     this.name = name;
   }
 
-  public CreateNamespaceResponse properties(
+  public CreateCatalogResponse properties(
       @javax.annotation.Nullable Map<String, String> properties) {
 
     this.properties = properties;
     return this;
   }
 
-  public CreateNamespaceResponse putPropertiesItem(String key, String propertiesItem) {
+  public CreateCatalogResponse putPropertiesItem(String key, String propertiesItem) {
     if (this.properties == null) {
       this.properties = new HashMap<>();
     }
@@ -81,7 +81,7 @@ public class CreateNamespaceResponse {
   }
 
   /**
-   * Properties stored on the namespace, if supported by the server.
+   * Properties stored on the catalog, if supported by the server.
    *
    * @return properties
    */
@@ -106,9 +106,9 @@ public class CreateNamespaceResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateNamespaceResponse createNamespaceResponse = (CreateNamespaceResponse) o;
-    return Objects.equals(this.name, createNamespaceResponse.name)
-        && Objects.equals(this.properties, createNamespaceResponse.properties);
+    CreateCatalogResponse createCatalogResponse = (CreateCatalogResponse) o;
+    return Objects.equals(this.name, createCatalogResponse.name)
+        && Objects.equals(this.properties, createCatalogResponse.properties);
   }
 
   @Override
@@ -119,7 +119,7 @@ public class CreateNamespaceResponse {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateNamespaceResponse {\n");
+    sb.append("class CreateCatalogResponse {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");

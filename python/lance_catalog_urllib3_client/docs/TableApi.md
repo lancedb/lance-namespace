@@ -4,17 +4,18 @@ All URIs are relative to *http://localhost:2333*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**get_table**](TableApi.md#get_table) | **GET** /v1/namespaces/{ns}/tables/{table} | Get a table from the catalog
-[**register_table**](TableApi.md#register_table) | **POST** /v1/namespaces/{ns}/register | Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace. 
-[**table_exists**](TableApi.md#table_exists) | **HEAD** /v1/namespaces/{ns}/tables/{table} | Check if a table exists
+[**get_table**](TableApi.md#get_table) | **GET** /v1/tables/{table} | Get a table from the catalog
+[**register_table**](TableApi.md#register_table) | **POST** /v1/catalogs/{catalog}/register | Register an existing table in the given catalog. 
+[**table_exists**](TableApi.md#table_exists) | **HEAD** /v1/tables/{table} | Check if a table exists
 
 
 # **get_table**
-> GetTableResponse get_table(ns, table)
+> GetTableResponse get_table(table, table_delimiter=table_delimiter)
 
 Get a table from the catalog
 
-Get a table's detailed information under a specified namespace from the catalog.
+Get a table's detailed information.
+
 
 ### Example
 
@@ -36,12 +37,12 @@ configuration = lance_catalog_urllib3_client.Configuration(
 with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_catalog_urllib3_client.TableApi(api_client)
-    ns = 'ns_example' # str | The name of the namespace.
-    table = 'table_example' # str | A table name.
+    table = 'table_example' # str | An identifier of the table
+    table_delimiter = '.' # str | The delimiter used by the table identifier (optional) (default to '.')
 
     try:
         # Get a table from the catalog
-        api_response = api_instance.get_table(ns, table)
+        api_response = api_instance.get_table(table, table_delimiter=table_delimiter)
         print("The response of TableApi->get_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -55,8 +56,8 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **ns** | **str**| The name of the namespace. | 
- **table** | **str**| A table name. | 
+ **table** | **str**| An identifier of the table | 
+ **table_delimiter** | **str**| The delimiter used by the table identifier | [optional] [default to &#39;.&#39;]
 
 ### Return type
 
@@ -86,9 +87,9 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **register_table**
-> GetTableResponse register_table(ns, register_table_request)
+> GetTableResponse register_table(catalog, register_table_request)
 
-Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace. 
+Register an existing table in the given catalog. 
 
 ### Example
 
@@ -111,12 +112,12 @@ configuration = lance_catalog_urllib3_client.Configuration(
 with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_catalog_urllib3_client.TableApi(api_client)
-    ns = 'ns_example' # str | The name of the namespace.
+    catalog = 'catalog_example' # str | An identifier of the catalog.
     register_table_request = lance_catalog_urllib3_client.RegisterTableRequest() # RegisterTableRequest | 
 
     try:
-        # Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace. 
-        api_response = api_instance.register_table(ns, register_table_request)
+        # Register an existing table in the given catalog. 
+        api_response = api_instance.register_table(catalog, register_table_request)
         print("The response of TableApi->register_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -130,7 +131,7 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **ns** | **str**| The name of the namespace. | 
+ **catalog** | **str**| An identifier of the catalog. | 
  **register_table_request** | [**RegisterTableRequest**](RegisterTableRequest.md)|  | 
 
 ### Return type
@@ -162,11 +163,11 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **table_exists**
-> table_exists(ns, table)
+> table_exists(table, table_delimiter=table_delimiter)
 
 Check if a table exists
 
-Check if a table exists within a given namespace.
+Check if a table exists.
 
 ### Example
 
@@ -187,12 +188,12 @@ configuration = lance_catalog_urllib3_client.Configuration(
 with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_catalog_urllib3_client.TableApi(api_client)
-    ns = 'ns_example' # str | The name of the namespace.
-    table = 'table_example' # str | A table name.
+    table = 'table_example' # str | An identifier of the table
+    table_delimiter = '.' # str | The delimiter used by the table identifier (optional) (default to '.')
 
     try:
         # Check if a table exists
-        api_instance.table_exists(ns, table)
+        api_instance.table_exists(table, table_delimiter=table_delimiter)
     except Exception as e:
         print("Exception when calling TableApi->table_exists: %s\n" % e)
 ```
@@ -204,8 +205,8 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **ns** | **str**| The name of the namespace. | 
- **table** | **str**| A table name. | 
+ **table** | **str**| An identifier of the table | 
+ **table_delimiter** | **str**| The delimiter used by the table identifier | [optional] [default to &#39;.&#39;]
 
 ### Return type
 

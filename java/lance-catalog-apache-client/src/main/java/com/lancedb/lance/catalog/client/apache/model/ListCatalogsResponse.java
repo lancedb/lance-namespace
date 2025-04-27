@@ -25,70 +25,70 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
-/** ListNamespacesResponse */
+/** ListCatalogsResponse */
 @JsonPropertyOrder({
-  ListNamespacesResponse.JSON_PROPERTY_NAMESPACES,
-  ListNamespacesResponse.JSON_PROPERTY_NEXT_PAGE_TOKEN
+  ListCatalogsResponse.JSON_PROPERTY_CATALOGS,
+  ListCatalogsResponse.JSON_PROPERTY_NEXT_PAGE_TOKEN
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class ListNamespacesResponse {
-  public static final String JSON_PROPERTY_NAMESPACES = "namespaces";
-  @javax.annotation.Nonnull private Set<String> namespaces = new LinkedHashSet<>();
+public class ListCatalogsResponse {
+  public static final String JSON_PROPERTY_CATALOGS = "catalogs";
+  @javax.annotation.Nonnull private Set<String> catalogs = new LinkedHashSet<>();
 
   public static final String JSON_PROPERTY_NEXT_PAGE_TOKEN = "nextPageToken";
   @javax.annotation.Nullable private String nextPageToken;
 
-  public ListNamespacesResponse() {}
+  public ListCatalogsResponse() {}
 
-  public ListNamespacesResponse namespaces(@javax.annotation.Nonnull Set<String> namespaces) {
+  public ListCatalogsResponse catalogs(@javax.annotation.Nonnull Set<String> catalogs) {
 
-    this.namespaces = namespaces;
+    this.catalogs = catalogs;
     return this;
   }
 
-  public ListNamespacesResponse addNamespacesItem(String namespacesItem) {
-    if (this.namespaces == null) {
-      this.namespaces = new LinkedHashSet<>();
+  public ListCatalogsResponse addCatalogsItem(String catalogsItem) {
+    if (this.catalogs == null) {
+      this.catalogs = new LinkedHashSet<>();
     }
-    this.namespaces.add(namespacesItem);
+    this.catalogs.add(catalogsItem);
     return this;
   }
 
   /**
-   * An array of namespace names in the catalog.
+   * An array of child catalog names in the catalog.
    *
-   * @return namespaces
+   * @return catalogs
    */
   @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAMESPACES)
+  @JsonProperty(JSON_PROPERTY_CATALOGS)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public Set<String> getNamespaces() {
-    return namespaces;
+  public Set<String> getCatalogs() {
+    return catalogs;
   }
 
   @JsonDeserialize(as = LinkedHashSet.class)
-  @JsonProperty(JSON_PROPERTY_NAMESPACES)
+  @JsonProperty(JSON_PROPERTY_CATALOGS)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setNamespaces(@javax.annotation.Nonnull Set<String> namespaces) {
-    this.namespaces = namespaces;
+  public void setCatalogs(@javax.annotation.Nonnull Set<String> catalogs) {
+    this.catalogs = catalogs;
   }
 
-  public ListNamespacesResponse nextPageToken(@javax.annotation.Nullable String nextPageToken) {
+  public ListCatalogsResponse nextPageToken(@javax.annotation.Nullable String nextPageToken) {
 
     this.nextPageToken = nextPageToken;
     return this;
   }
 
   /**
-   * An opaque token that allows pagination for list APIs (e.g. ListNamespaces). For an initial
-   * client request for a list API, if the server cannot return all items in one response, or if
-   * there are more items than the &#x60;pageSize&#x60; specified in the client request, the server
-   * must return a &#x60;nextPageToken&#x60; in the response indicating there are more results
-   * available. After the initial request, the value of &#x60;nextPageToken&#x60; from each response
-   * must be used by the client as the &#x60;pageToken&#x60; parameter value for the next request.
-   * Clients must interpret either &#x60;null&#x60;, missing value or empty string value of
+   * An opaque token that allows pagination for list APIs (e.g. ListCatalogs). For an initial client
+   * request for a list API, if the server cannot return all items in one response, or if there are
+   * more items than the &#x60;pageSize&#x60; specified in the client request, the server must
+   * return a &#x60;nextPageToken&#x60; in the response indicating there are more results available.
+   * After the initial request, the value of &#x60;nextPageToken&#x60; from each response must be
+   * used by the client as the &#x60;pageToken&#x60; parameter value for the next request. Clients
+   * must interpret either &#x60;null&#x60;, missing value or empty string value of
    * &#x60;nextPageToken&#x60; from a server response as the end of the listing results.
    *
    * @return nextPageToken
@@ -114,21 +114,21 @@ public class ListNamespacesResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ListNamespacesResponse listNamespacesResponse = (ListNamespacesResponse) o;
-    return Objects.equals(this.namespaces, listNamespacesResponse.namespaces)
-        && Objects.equals(this.nextPageToken, listNamespacesResponse.nextPageToken);
+    ListCatalogsResponse listCatalogsResponse = (ListCatalogsResponse) o;
+    return Objects.equals(this.catalogs, listCatalogsResponse.catalogs)
+        && Objects.equals(this.nextPageToken, listCatalogsResponse.nextPageToken);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(namespaces, nextPageToken);
+    return Objects.hash(catalogs, nextPageToken);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ListNamespacesResponse {\n");
-    sb.append("    namespaces: ").append(toIndentedString(namespaces)).append("\n");
+    sb.append("class ListCatalogsResponse {\n");
+    sb.append("    catalogs: ").append(toIndentedString(catalogs)).append("\n");
     sb.append("    nextPageToken: ").append(toIndentedString(nextPageToken)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -176,14 +176,14 @@ public class ListNamespacesResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `namespaces` to the URL query string
-    if (getNamespaces() != null) {
+    // add `catalogs` to the URL query string
+    if (getCatalogs() != null) {
       int i = 0;
-      for (String _item : getNamespaces()) {
+      for (String _item : getCatalogs()) {
         try {
           joiner.add(
               String.format(
-                  "%snamespaces%s%s=%s",
+                  "%scatalogs%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)

@@ -25,52 +25,52 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/** CreateNamespaceResponse */
+/** GetCatalogResponse */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
-public class CreateNamespaceResponse {
+public class GetCatalogResponse {
 
-  private String name;
+  private String catalog;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
-  public CreateNamespaceResponse() {
+  public GetCatalogResponse() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public CreateNamespaceResponse(String name) {
-    this.name = name;
+  public GetCatalogResponse(String catalog) {
+    this.catalog = catalog;
   }
 
-  public CreateNamespaceResponse name(String name) {
-    this.name = name;
+  public GetCatalogResponse catalog(String catalog) {
+    this.catalog = catalog;
     return this;
   }
 
   /**
-   * Get name
+   * Get catalog
    *
-   * @return name
+   * @return catalog
    */
   @NotNull
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
+  @Schema(name = "catalog", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("catalog")
+  public String getCatalog() {
+    return catalog;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setCatalog(String catalog) {
+    this.catalog = catalog;
   }
 
-  public CreateNamespaceResponse properties(Map<String, String> properties) {
+  public GetCatalogResponse properties(Map<String, String> properties) {
     this.properties = properties;
     return this;
   }
 
-  public CreateNamespaceResponse putPropertiesItem(String key, String propertiesItem) {
+  public GetCatalogResponse putPropertiesItem(String key, String propertiesItem) {
     if (this.properties == null) {
       this.properties = new HashMap<>();
     }
@@ -79,14 +79,17 @@ public class CreateNamespaceResponse {
   }
 
   /**
-   * Properties stored on the namespace, if supported by the server.
+   * Properties stored on the catalog, if supported by the server. If the server does not support
+   * catalog properties, it should return null for this field. If catalog properties are supported,
+   * but none are set, it should return an empty object.
    *
    * @return properties
    */
   @Schema(
       name = "properties",
-      example = "{created_at=1452120468}",
-      description = "Properties stored on the namespace, if supported by the server.",
+      example = "{owner=Ralph, created_at=1452120468}",
+      description =
+          "Properties stored on the catalog, if supported by the server. If the server does not support catalog properties, it should return null for this field. If catalog properties are supported, but none are set, it should return an empty object.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("properties")
   public Map<String, String> getProperties() {
@@ -105,21 +108,21 @@ public class CreateNamespaceResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateNamespaceResponse createNamespaceResponse = (CreateNamespaceResponse) o;
-    return Objects.equals(this.name, createNamespaceResponse.name)
-        && Objects.equals(this.properties, createNamespaceResponse.properties);
+    GetCatalogResponse getCatalogResponse = (GetCatalogResponse) o;
+    return Objects.equals(this.catalog, getCatalogResponse.catalog)
+        && Objects.equals(this.properties, getCatalogResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, properties);
+    return Objects.hash(catalog, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateNamespaceResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("class GetCatalogResponse {\n");
+    sb.append("    catalog: ").append(toIndentedString(catalog)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();

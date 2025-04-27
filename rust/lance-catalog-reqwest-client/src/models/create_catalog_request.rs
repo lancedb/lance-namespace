@@ -12,19 +12,38 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct RegisterTableRequest {
+pub struct CreateCatalogRequest {
     #[serde(rename = "name")]
     pub name: String,
-    #[serde(rename = "location")]
-    pub location: String,
+    #[serde(rename = "mode")]
+    pub mode: Mode,
+    #[serde(rename = "options", skip_serializing_if = "Option::is_none")]
+    pub options: Option<std::collections::HashMap<String, String>>,
 }
 
-impl RegisterTableRequest {
-    pub fn new(name: String, location: String) -> RegisterTableRequest {
-        RegisterTableRequest {
+impl CreateCatalogRequest {
+    pub fn new(name: String, mode: Mode) -> CreateCatalogRequest {
+        CreateCatalogRequest {
             name,
-            location,
+            mode,
+            options: None,
         }
+    }
+}
+/// 
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum Mode {
+    #[serde(rename = "CREATE")]
+    Create,
+    #[serde(rename = "EXIST_OK")]
+    ExistOk,
+    #[serde(rename = "OVERWRITE")]
+    Overwrite,
+}
+
+impl Default for Mode {
+    fn default() -> Mode {
+        Self::Create
     }
 }
 

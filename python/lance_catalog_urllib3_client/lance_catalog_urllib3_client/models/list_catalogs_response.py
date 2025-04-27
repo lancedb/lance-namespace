@@ -17,18 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class RegisterTableRequest(BaseModel):
+class ListCatalogsResponse(BaseModel):
     """
-    RegisterTableRequest
+    ListCatalogsResponse
     """ # noqa: E501
-    name: StrictStr
-    location: StrictStr
-    __properties: ClassVar[List[str]] = ["name", "location"]
+    catalogs: List[StrictStr] = Field(description="An array of child catalog names in the catalog.")
+    next_page_token: Optional[StrictStr] = Field(default=None, description="An opaque token that allows pagination for list APIs (e.g. ListCatalogs). For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available. After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request. Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.", alias="nextPageToken")
+    __properties: ClassVar[List[str]] = ["catalogs", "nextPageToken"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +48,7 @@ class RegisterTableRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of RegisterTableRequest from a JSON string"""
+        """Create an instance of ListCatalogsResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +73,7 @@ class RegisterTableRequest(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of RegisterTableRequest from a dict"""
+        """Create an instance of ListCatalogsResponse from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +81,8 @@ class RegisterTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "location": obj.get("location")
+            "catalogs": obj.get("catalogs"),
+            "nextPageToken": obj.get("nextPageToken")
         })
         return _obj
 

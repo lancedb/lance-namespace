@@ -1,22 +1,24 @@
-# NamespaceApi
+# CatalogApi
 
 All URIs are relative to *http://localhost:2333*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**createNamespace**](NamespaceApi.md#createNamespace) | **POST** /v1/namespaces | Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:   * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.   * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.   * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created.  |
-| [**dropNamespace**](NamespaceApi.md#dropNamespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace from the catalog. Namespace must be empty. |
-| [**getNamespace**](NamespaceApi.md#getNamespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace |
-| [**listNamespaces**](NamespaceApi.md#listNamespaces) | **GET** /v1/namespaces | List all namespaces in the catalog.  |
-| [**namespaceExists**](NamespaceApi.md#namespaceExists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists |
+| [**catalogExists**](CatalogApi.md#catalogExists) | **HEAD** /v1/catalogs/{catalog} | Check if a catalog exists |
+| [**createCatalog**](CatalogApi.md#createCatalog) | **POST** /v1/catalogs | Create a new catalog. A catalog can manage either a collection of child catalogs, or a collection of tables. There are three modes when trying to create a catalog to differentiate the behavior when a catalog of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing catalog is kept.   * OVERWRITE: the existing catalog is dropped and a new empty catalog with this name is created.  |
+| [**dropCatalog**](CatalogApi.md#dropCatalog) | **DELETE** /v1/catalogs/{catalog} | Drop a catalog. The catalog must be empty. |
+| [**getCatalog**](CatalogApi.md#getCatalog) | **GET** /v1/catalogs/{catalog} | Get information about a catalog |
+| [**listCatalogs**](CatalogApi.md#listCatalogs) | **GET** /v1/catalogs | List all direct child catalogs of the root catalog.  |
 
 
 
-## createNamespace
+## catalogExists
 
-> CreateNamespaceResponse createNamespace(createNamespaceRequest)
+> catalogExists(catalog, catalogDelimiter)
 
-Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:   * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.   * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.   * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created. 
+Check if a catalog exists
+
+Check if a catalog exists. The response does not contain a body.
 
 ### Example
 
@@ -26,20 +28,20 @@ import com.lancedb.lance.catalog.client.apache.ApiClient;
 import com.lancedb.lance.catalog.client.apache.ApiException;
 import com.lancedb.lance.catalog.client.apache.Configuration;
 import com.lancedb.lance.catalog.client.apache.models.*;
-import com.lancedb.lance.catalog.client.apache.api.NamespaceApi;
+import com.lancedb.lance.catalog.client.apache.api.CatalogApi;
 
 public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
 
-        NamespaceApi apiInstance = new NamespaceApi(defaultClient);
-        CreateNamespaceRequest createNamespaceRequest = new CreateNamespaceRequest(); // CreateNamespaceRequest | 
+        CatalogApi apiInstance = new CatalogApi(defaultClient);
+        String catalog = "catalog_example"; // String | An identifier of the catalog.
+        String catalogDelimiter = "."; // String | The delimiter used by the catalog identifier
         try {
-            CreateNamespaceResponse result = apiInstance.createNamespace(createNamespaceRequest);
-            System.out.println(result);
+            apiInstance.catalogExists(catalog, catalogDelimiter);
         } catch (ApiException e) {
-            System.err.println("Exception when calling NamespaceApi#createNamespace");
+            System.err.println("Exception when calling CatalogApi#catalogExists");
             System.err.println("Status code: " + e.getCode());
             System.err.println("Reason: " + e.getResponseBody());
             System.err.println("Response headers: " + e.getResponseHeaders());
@@ -54,11 +56,86 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **createNamespaceRequest** | [**CreateNamespaceRequest**](CreateNamespaceRequest.md)|  | |
+| **catalog** | **String**| An identifier of the catalog. | |
+| **catalogDelimiter** | **String**| The delimiter used by the catalog identifier | [optional] [default to .] |
 
 ### Return type
 
-[**CreateNamespaceResponse**](CreateNamespaceResponse.md)
+null (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Success, no content |  -  |
+| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
+| **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
+| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
+| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+
+
+## createCatalog
+
+> CreateCatalogResponse createCatalog(createCatalogRequest, parentCatalog, parentCatalogDelimiter)
+
+Create a new catalog. A catalog can manage either a collection of child catalogs, or a collection of tables. There are three modes when trying to create a catalog to differentiate the behavior when a catalog of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing catalog is kept.   * OVERWRITE: the existing catalog is dropped and a new empty catalog with this name is created. 
+
+### Example
+
+```java
+// Import classes:
+import com.lancedb.lance.catalog.client.apache.ApiClient;
+import com.lancedb.lance.catalog.client.apache.ApiException;
+import com.lancedb.lance.catalog.client.apache.Configuration;
+import com.lancedb.lance.catalog.client.apache.models.*;
+import com.lancedb.lance.catalog.client.apache.api.CatalogApi;
+
+public class Example {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        defaultClient.setBasePath("http://localhost:2333");
+
+        CatalogApi apiInstance = new CatalogApi(defaultClient);
+        CreateCatalogRequest createCatalogRequest = new CreateCatalogRequest(); // CreateCatalogRequest | 
+        String parentCatalog = "parentCatalog_example"; // String | An identifier of the parent catalog.
+        String parentCatalogDelimiter = "."; // String | The delimiter used by the parent catalog identifier
+        try {
+            CreateCatalogResponse result = apiInstance.createCatalog(createCatalogRequest, parentCatalog, parentCatalogDelimiter);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling CatalogApi#createCatalog");
+            System.err.println("Status code: " + e.getCode());
+            System.err.println("Reason: " + e.getResponseBody());
+            System.err.println("Response headers: " + e.getResponseHeaders());
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **createCatalogRequest** | [**CreateCatalogRequest**](CreateCatalogRequest.md)|  | |
+| **parentCatalog** | **String**| An identifier of the parent catalog. | [optional] |
+| **parentCatalogDelimiter** | **String**| The delimiter used by the parent catalog identifier | [optional] [default to .] |
+
+### Return type
+
+[**CreateCatalogResponse**](CreateCatalogResponse.md)
 
 ### Authorization
 
@@ -73,7 +150,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Represents a successful call to create a namespace. Returns the namespace created, as well as any properties that were stored for the namespace, including those the server might have added. Implementations are not required to support namespace properties. |  -  |
+| **200** | Represents a successful call to create a catalog. Returns the catalog created, as well as any properties that were stored for the catalog, including those the server might have added. Implementations are not required to support catalog properties. |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -83,11 +160,11 @@ No authorization required
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
 
-## dropNamespace
+## dropCatalog
 
-> dropNamespace(ns)
+> dropCatalog(catalog, catalogDelimiter)
 
-Drop a namespace from the catalog. Namespace must be empty.
+Drop a catalog. The catalog must be empty.
 
 ### Example
 
@@ -97,19 +174,20 @@ import com.lancedb.lance.catalog.client.apache.ApiClient;
 import com.lancedb.lance.catalog.client.apache.ApiException;
 import com.lancedb.lance.catalog.client.apache.Configuration;
 import com.lancedb.lance.catalog.client.apache.models.*;
-import com.lancedb.lance.catalog.client.apache.api.NamespaceApi;
+import com.lancedb.lance.catalog.client.apache.api.CatalogApi;
 
 public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
 
-        NamespaceApi apiInstance = new NamespaceApi(defaultClient);
-        String ns = "ns_example"; // String | The name of the namespace.
+        CatalogApi apiInstance = new CatalogApi(defaultClient);
+        String catalog = "catalog_example"; // String | An identifier of the catalog.
+        String catalogDelimiter = "."; // String | The delimiter used by the catalog identifier
         try {
-            apiInstance.dropNamespace(ns);
+            apiInstance.dropCatalog(catalog, catalogDelimiter);
         } catch (ApiException e) {
-            System.err.println("Exception when calling NamespaceApi#dropNamespace");
+            System.err.println("Exception when calling CatalogApi#dropCatalog");
             System.err.println("Status code: " + e.getCode());
             System.err.println("Reason: " + e.getResponseBody());
             System.err.println("Response headers: " + e.getResponseHeaders());
@@ -124,7 +202,8 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **ns** | **String**| The name of the namespace. | |
+| **catalog** | **String**| An identifier of the catalog. | |
+| **catalogDelimiter** | **String**| The delimiter used by the catalog identifier | [optional] [default to .] |
 
 ### Return type
 
@@ -153,13 +232,13 @@ No authorization required
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
 
-## getNamespace
+## getCatalog
 
-> GetNamespaceResponse getNamespace(ns)
+> GetCatalogResponse getCatalog(catalog, catalogDelimiter)
 
-Get information about a namespace
+Get information about a catalog
 
-Return a detailed information for a given namespace
+Return a detailed information for a given catalog
 
 ### Example
 
@@ -169,20 +248,21 @@ import com.lancedb.lance.catalog.client.apache.ApiClient;
 import com.lancedb.lance.catalog.client.apache.ApiException;
 import com.lancedb.lance.catalog.client.apache.Configuration;
 import com.lancedb.lance.catalog.client.apache.models.*;
-import com.lancedb.lance.catalog.client.apache.api.NamespaceApi;
+import com.lancedb.lance.catalog.client.apache.api.CatalogApi;
 
 public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
 
-        NamespaceApi apiInstance = new NamespaceApi(defaultClient);
-        String ns = "ns_example"; // String | The name of the namespace.
+        CatalogApi apiInstance = new CatalogApi(defaultClient);
+        String catalog = "catalog_example"; // String | An identifier of the catalog.
+        String catalogDelimiter = "."; // String | The delimiter used by the catalog identifier
         try {
-            GetNamespaceResponse result = apiInstance.getNamespace(ns);
+            GetCatalogResponse result = apiInstance.getCatalog(catalog, catalogDelimiter);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling NamespaceApi#getNamespace");
+            System.err.println("Exception when calling CatalogApi#getCatalog");
             System.err.println("Status code: " + e.getCode());
             System.err.println("Reason: " + e.getResponseBody());
             System.err.println("Response headers: " + e.getResponseHeaders());
@@ -197,11 +277,12 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **ns** | **String**| The name of the namespace. | |
+| **catalog** | **String**| An identifier of the catalog. | |
+| **catalogDelimiter** | **String**| The delimiter used by the catalog identifier | [optional] [default to .] |
 
 ### Return type
 
-[**GetNamespaceResponse**](GetNamespaceResponse.md)
+[**GetCatalogResponse**](GetCatalogResponse.md)
 
 ### Authorization
 
@@ -216,7 +297,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns a namespace, as well as any properties stored on the namespace if namespace properties are supported by the server. |  -  |
+| **200** | Returns a catalog, as well as any properties stored on the catalog if catalog properties are supported by the server. |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -225,11 +306,11 @@ No authorization required
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
 
-## listNamespaces
+## listCatalogs
 
-> ListNamespacesResponse listNamespaces(pageToken, pageSize)
+> ListCatalogsResponse listCatalogs(pageToken, pageSize, parentCatalog, parentCatalogDelimiter)
 
-List all namespaces in the catalog. 
+List all direct child catalogs of the root catalog. 
 
 ### Example
 
@@ -239,21 +320,23 @@ import com.lancedb.lance.catalog.client.apache.ApiClient;
 import com.lancedb.lance.catalog.client.apache.ApiException;
 import com.lancedb.lance.catalog.client.apache.Configuration;
 import com.lancedb.lance.catalog.client.apache.models.*;
-import com.lancedb.lance.catalog.client.apache.api.NamespaceApi;
+import com.lancedb.lance.catalog.client.apache.api.CatalogApi;
 
 public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
 
-        NamespaceApi apiInstance = new NamespaceApi(defaultClient);
+        CatalogApi apiInstance = new CatalogApi(defaultClient);
         String pageToken = "pageToken_example"; // String | 
         Integer pageSize = 56; // Integer | An inclusive upper bound of the number of results that a client will receive.
+        String parentCatalog = "parentCatalog_example"; // String | An identifier of the parent catalog.
+        String parentCatalogDelimiter = "."; // String | The delimiter used by the parent catalog identifier
         try {
-            ListNamespacesResponse result = apiInstance.listNamespaces(pageToken, pageSize);
+            ListCatalogsResponse result = apiInstance.listCatalogs(pageToken, pageSize, parentCatalog, parentCatalogDelimiter);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling NamespaceApi#listNamespaces");
+            System.err.println("Exception when calling CatalogApi#listCatalogs");
             System.err.println("Status code: " + e.getCode());
             System.err.println("Reason: " + e.getResponseBody());
             System.err.println("Response headers: " + e.getResponseHeaders());
@@ -270,10 +353,12 @@ public class Example {
 |------------- | ------------- | ------------- | -------------|
 | **pageToken** | **String**|  | [optional] |
 | **pageSize** | **Integer**| An inclusive upper bound of the number of results that a client will receive. | [optional] |
+| **parentCatalog** | **String**| An identifier of the parent catalog. | [optional] |
+| **parentCatalogDelimiter** | **String**| The delimiter used by the parent catalog identifier | [optional] [default to .] |
 
 ### Return type
 
-[**ListNamespacesResponse**](ListNamespacesResponse.md)
+[**ListCatalogsResponse**](ListCatalogsResponse.md)
 
 ### Authorization
 
@@ -288,82 +373,11 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | A list of namespaces |  -  |
+| **200** | A list of catalogs |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
 | **406** | Not Acceptable / Unsupported Operation. The server does not support this operation. |  -  |
-| **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
-
-
-## namespaceExists
-
-> namespaceExists(ns)
-
-Check if a namespace exists
-
-Check if a namespace exists. The response does not contain a body.
-
-### Example
-
-```java
-// Import classes:
-import com.lancedb.lance.catalog.client.apache.ApiClient;
-import com.lancedb.lance.catalog.client.apache.ApiException;
-import com.lancedb.lance.catalog.client.apache.Configuration;
-import com.lancedb.lance.catalog.client.apache.models.*;
-import com.lancedb.lance.catalog.client.apache.api.NamespaceApi;
-
-public class Example {
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        defaultClient.setBasePath("http://localhost:2333");
-
-        NamespaceApi apiInstance = new NamespaceApi(defaultClient);
-        String ns = "ns_example"; // String | The name of the namespace.
-        try {
-            apiInstance.namespaceExists(ns);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling NamespaceApi#namespaceExists");
-            System.err.println("Status code: " + e.getCode());
-            System.err.println("Reason: " + e.getResponseBody());
-            System.err.println("Response headers: " + e.getResponseHeaders());
-            e.printStackTrace();
-        }
-    }
-}
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **ns** | **String**| The name of the namespace. | |
-
-### Return type
-
-null (empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Success, no content |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
-| **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
-| **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
