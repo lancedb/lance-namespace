@@ -1,16 +1,16 @@
 # Lance Catalog Specification
 
 **Lance Catalog** is an open specification on top of the storage-based Lance open table and data format 
-to standardize access to a collection of Lance tables.
+to standardize access to a collection of Lance tables (a.k.a. Lance datasets).
 It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc.
 should store and use Lance tables, as well as how ML/AI tools and analytics compute engines
-(will together be called _"tools"_ in this document) should integrate with Lance.
+(will together be called _"tools"_ in this document) should integrate with Lance tables.
 
 ## Catalog Definition
 
 A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables.
-It is a generalized concept that is also called namespace, metastore, database, schema in other similar systems.
-A Lance catalog can either contain a list of tables, or contain a list of Lance catalogs recursively.
+It is a generalized concept that is also called namespace, metastore, database, schema, etc. in other similar systems.
+A Lance catalog can either contain a collection of tables, or contain a collection of Lance catalogs recursively.
 Here is an example layout of a Lance catalog:
 
 ![Lance catalog layout](./catalog-layout.png)
@@ -65,7 +65,7 @@ There are 3 ways to specify a directory path:
 
 1. **URI**: a URI that follows the [RFC 3986 specification](https://datatracker.ietf.org/doc/html/rfc3986), e.g. `s3://mu-bucket/prefix`.
 2. **Absolute POSIX storage path**: an absolute file path in a POSIX standard storage, e.g. `/my/dir`.
-3. **Relative POSIX storage path**: a relative file path in a POSIX standard storage, e.g. `my/dir2`.
+3. **Relative POSIX storage path**: a relative file path in a POSIX standard storage, e.g. `my/dir2`, `./my/dir3`.
    The absolute path of the directory should be based on the current directory of the running process.
 
 #### Table Existence
@@ -82,7 +82,8 @@ indicating the content in the folder is not compliant with the Lance table forma
 In an enterprise environment, typically there is a requirement to store tables in a catalog service 
 such as Apache Hive MetaStore, Apache Gravitino, Unity Catalog, etc. 
 for more advanced governance features around access control, auditing, lineage tracking, etc.
-**Lance REST catalog** is a standardized OpenAPI protocol to read, write and manage Lance tables.
+**Lance REST catalog** is an OpenAPI protocol that enables reading, writing and managing Lance tables
+by connecting those catalog services or building a custom catalog server in a standardized way.
 The detailed OpenAPI specification content can be found in [rest-catalog.yaml](./rest-catalog.yaml).
 
 #### Catalog Server and Adapter
