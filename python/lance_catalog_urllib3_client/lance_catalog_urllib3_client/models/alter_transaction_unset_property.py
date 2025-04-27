@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,10 +27,17 @@ class AlterTransactionUnsetProperty(BaseModel):
     """
     AlterTransactionUnsetProperty
     """ # noqa: E501
-    type: StrictStr
+    type: Annotated[str, Field(strict=True)]
     key: Optional[StrictStr] = None
     mode: Optional[StrictStr] = Field(default='SKIP', description="the behavior if the property key to unset does not exist")
     __properties: ClassVar[List[str]] = ["type", "key", "mode"]
+
+    @field_validator('type')
+    def type_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if not re.match(r"^UnsetProperty$", value):
+            raise ValueError(r"must validate the regular expression /^UnsetProperty$/")
+        return value
 
     @field_validator('mode')
     def mode_validate_enum(cls, value):

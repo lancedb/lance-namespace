@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,11 +27,18 @@ class AlterTransactionSetProperty(BaseModel):
     """
     AlterTransactionSetProperty
     """ # noqa: E501
-    type: StrictStr
+    type: Annotated[str, Field(strict=True)]
     key: Optional[StrictStr] = None
     value: Optional[StrictStr] = None
     mode: Optional[StrictStr] = Field(default='OVERWRITE', description="the behavior if the property key already exists")
     __properties: ClassVar[List[str]] = ["type", "key", "value", "mode"]
+
+    @field_validator('type')
+    def type_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if not re.match(r"^SetProperty$", value):
+            raise ValueError(r"must validate the regular expression /^SetProperty$/")
+        return value
 
     @field_validator('mode')
     def mode_validate_enum(cls, value):

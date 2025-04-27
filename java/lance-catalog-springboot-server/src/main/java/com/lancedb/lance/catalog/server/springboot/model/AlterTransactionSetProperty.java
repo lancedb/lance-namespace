@@ -93,6 +93,7 @@ public class AlterTransactionSetProperty implements AlterTransactionAction {
    * @return type
    */
   @NotNull
+  @Pattern(regexp = "^SetProperty$")
   @Schema(name = "type", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("type")
   public String getType() {

@@ -53,6 +53,7 @@ public class AlterTransactionSetStatus implements AlterTransactionAction {
    * @return type
    */
   @NotNull
+  @Pattern(regexp = "^SetStatus$")
   @Schema(name = "type", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("type")
   public String getType() {

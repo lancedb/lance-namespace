@@ -576,6 +576,7 @@ components:
         type:
           type: string
           default: SetStatus
+          pattern: "^SetStatus$"
         status:
           $ref: '#/components/schemas/TransactionStatus'
 
@@ -587,6 +588,7 @@ components:
         type:
           type: string
           default: SetProperty
+          pattern: "^SetProperty$"
         key:
           type: string
         value:
@@ -608,6 +610,7 @@ components:
         type:
           type: string
           default: UnsetProperty
+          pattern: "^UnsetProperty$"
         key:
           type: string
         mode:
