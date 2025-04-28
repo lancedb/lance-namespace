@@ -17,6 +17,7 @@ import com.lancedb.lance.catalog.server.springboot.model.CreateNamespaceRequest;
 import com.lancedb.lance.catalog.server.springboot.model.CreateNamespaceResponse;
 import com.lancedb.lance.catalog.server.springboot.model.ErrorResponse;
 import com.lancedb.lance.catalog.server.springboot.model.GetNamespaceResponse;
+import com.lancedb.lance.catalog.server.springboot.model.GetTransactionResponse;
 import com.lancedb.lance.catalog.server.springboot.model.ListNamespacesResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -223,28 +224,50 @@ public interface NamespaceApi {
   }
 
   /**
-   * DELETE /v1/namespaces/{ns} : Drop a namespace from the catalog. Namespace must be empty.
+   * DELETE /v1/namespaces/{ns} : Drop a namespace from the catalog. Namespace must be empty. Drop a
+   * namespace from the catalog. If the operation is completed immediately, the server should
+   * respond with 204. If the operation is long running, the server should respond with 202 to
+   * provide a transaction that the client can use to track namespace drop progress.
    *
    * @param ns The name of the namespace. (required)
-   * @return Success, no content (status code 204) or Indicates a bad request error. It could be
-   *     caused by an unexpected request body format or other forms of request validation failure,
-   *     such as invalid json. Usually serves application/json content, although in some cases
-   *     simple text/plain content might be returned by the server&#39;s middleware. (status code
-   *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
-   *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The request conflicts with the current state of the target resource.
-   *     (status code 409) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   * @param mode The mode for dropping a namespace, deciding the server behavior when the namespace
+   *     to drop is not found. FAIL (default): the server must return 400 indicating the namespace
+   *     to drop does not exist. SKIP: the server must return 204 indicating the drop operation has
+   *     succeeded. (optional)
+   * @param behavior The behavior for dropping a namespace. RESTRICT (default): the namespace should
+   *     not contain any table when drop is initiated. If tables are found, the server should return
+   *     error and not drop the namespace. CASCADE: all tables in the namespace are dropped before
+   *     the namespace is dropped. (optional)
+   * @return Response for GetTransaction operation (status code 202) or Success, no content (status
+   *     code 204) or Indicates a bad request error. It could be caused by an unexpected request
+   *     body format or other forms of request validation failure, such as invalid json. Usually
+   *     serves application/json content, although in some cases simple text/plain content might be
+   *     returned by the server&#39;s middleware. (status code 400) or Unauthorized. The request
+   *     lacks valid authentication credentials for the operation. (status code 401) or Forbidden.
+   *     Authenticated user does not have the necessary permissions. (status code 403) or A
+   *     server-side problem that means can not find the specified resource. (status code 404) or
+   *     The request conflicts with the current state of the target resource. (status code 409) or
+   *     The service is not ready to handle the request. The client should wait and retry. The
+   *     service may additionally send a Retry-After header to indicate when to retry. (status code
+   *     503) or A server-side problem that might not be addressable from the client side. Used for
+   *     server 5xx errors without more specific documentation in individual routes. (status code
+   *     5XX)
    */
   @Operation(
       operationId = "dropNamespace",
       summary = "Drop a namespace from the catalog. Namespace must be empty.",
+      description =
+          "Drop a namespace from the catalog. If the operation is completed immediately, the server should respond with 204. If the operation is long running, the server should respond with 202 to provide a transaction that the client can use to track namespace drop progress. ",
       tags = {"Namespace"},
       responses = {
+        @ApiResponse(
+            responseCode = "202",
+            description = "Response for GetTransaction operation",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = GetTransactionResponse.class))
+            }),
         @ApiResponse(responseCode = "204", description = "Success, no content"),
         @ApiResponse(
             responseCode = "400",
@@ -311,18 +334,40 @@ public interface NamespaceApi {
       method = RequestMethod.DELETE,
       value = "/v1/namespaces/{ns}",
       produces = {"application/json"})
-  default ResponseEntity<Void> dropNamespace(
+  default ResponseEntity<GetTransactionResponse> dropNamespace(
       @Parameter(
               name = "ns",
               description = "The name of the namespace.",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("ns")
-          String ns) {
+          String ns,
+      @Parameter(
+              name = "mode",
+              description =
+                  "The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. FAIL (default): the server must return 400 indicating the namespace to drop does not exist. SKIP: the server must return 204 indicating the drop operation has succeeded. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "mode", required = false)
+          Optional<String> mode,
+      @Parameter(
+              name = "behavior",
+              description =
+                  "The behavior for dropping a namespace. RESTRICT (default): the namespace should not contain any table when drop is initiated. If tables are found, the server should return error and not drop the namespace. CASCADE: all tables in the namespace are dropped before the namespace is dropped. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "behavior", required = false)
+          Optional<String> behavior) {
     getRequest()
         .ifPresent(
             request -> {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"id\" : \"id\", \"properties\" : { \"key\" : \"properties\" }, \"status\" : \"QUEUED\" }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
                       "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";

@@ -122,17 +122,26 @@ Class | Method | HTTP request | Description
 *TableApi* | [**getTable**](docs/TableApi.md#getTable) | **GET** /v1/namespaces/{ns}/tables/{table} | Get a table from the catalog
 *TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /v1/namespaces/{ns}/register | Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace. 
 *TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **HEAD** /v1/namespaces/{ns}/tables/{table} | Check if a table exists
+*TransactionApi* | [**alterTransaction**](docs/TransactionApi.md#alterTransaction) | **POST** /v1/transactions/{txn} | Alter information of a transaction.
+*TransactionApi* | [**getTransaction**](docs/TransactionApi.md#getTransaction) | **GET** /v1/transactions/{txn} | Get information about a transaction
 
 
 ## Documentation for Models
 
+ - [AlterTransactionAction](docs/AlterTransactionAction.md)
+ - [AlterTransactionRequest](docs/AlterTransactionRequest.md)
+ - [AlterTransactionSetProperty](docs/AlterTransactionSetProperty.md)
+ - [AlterTransactionSetStatus](docs/AlterTransactionSetStatus.md)
+ - [AlterTransactionUnsetProperty](docs/AlterTransactionUnsetProperty.md)
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
  - [ErrorResponse](docs/ErrorResponse.md)
  - [GetNamespaceResponse](docs/GetNamespaceResponse.md)
  - [GetTableResponse](docs/GetTableResponse.md)
+ - [GetTransactionResponse](docs/GetTransactionResponse.md)
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
  - [RegisterTableRequest](docs/RegisterTableRequest.md)
+ - [TransactionStatus](docs/TransactionStatus.md)
 
 
 <a id="documentation-for-authorization"></a>
