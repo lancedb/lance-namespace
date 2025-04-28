@@ -19,6 +19,8 @@ src/main/java/com/lancedb/lance/catalog/client/apache/Configuration.java
 src/main/java/com/lancedb/lance/catalog/client/apache/JavaTimeFormatter.java
 src/main/java/com/lancedb/lance/catalog/client/apache/Pair.java
 src/main/java/com/lancedb/lance/catalog/client/apache/RFC3339DateFormat.java
+src/main/java/com/lancedb/lance/catalog/client/apache/RFC3339InstantDeserializer.java
+src/main/java/com/lancedb/lance/catalog/client/apache/RFC3339JavaTimeModule.java
 src/main/java/com/lancedb/lance/catalog/client/apache/ServerConfiguration.java
 src/main/java/com/lancedb/lance/catalog/client/apache/ServerVariable.java
 src/main/java/com/lancedb/lance/catalog/client/apache/StringUtil.java

@@ -4,7 +4,7 @@ Lance Catalog REST Specification
 
 - API version: 0.0.1
 
-- Generator version: 7.12.0
+- Generator version: 7.13.0
 
 **Lance Catalog** is an OpenAPI specification on top of the storage-based Lance format.
 It provides an integration point for catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, etc.

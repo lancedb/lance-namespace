@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,7 +42,7 @@ import java.util.Optional;
 
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+    comments = "Generator version: 7.13.0")
 @Validated
 @Tag(name = "Namespace", description = "the Namespace API")
 public interface NamespaceApi {
@@ -550,7 +551,15 @@ public interface NamespaceApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ListNamespacesResponse.class))
+                  schema = @Schema(implementation = ListNamespacesResponse.class),
+                  examples = {
+                    @ExampleObject(
+                        name = "ListNamespacesNonEmptyExample",
+                        value = "{\"namespaces\":[\"accounting\",\"credits\"]}"),
+                    @ExampleObject(
+                        name = "ListNamespacesEmptyExample",
+                        value = "{\"namespaces\":[]}")
+                  })
             }),
         @ApiResponse(
             responseCode = "400",

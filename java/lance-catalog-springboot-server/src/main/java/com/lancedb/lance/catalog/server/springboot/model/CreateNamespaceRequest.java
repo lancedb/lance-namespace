@@ -30,7 +30,7 @@ import java.util.Objects;
 /** CreateNamespaceRequest */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+    comments = "Generator version: 7.13.0")
 public class CreateNamespaceRequest {
 
   private String name;
@@ -43,7 +43,7 @@ public class CreateNamespaceRequest {
 
     OVERWRITE("OVERWRITE");
 
-    private String value;
+    private final String value;
 
     ModeEnum(String value) {
       this.value = value;

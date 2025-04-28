@@ -28,7 +28,7 @@ import java.util.Objects;
 /** CreateNamespaceResponse */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+    comments = "Generator version: 7.13.0")
 public class CreateNamespaceResponse {
 
   private String name;

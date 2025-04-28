@@ -34,7 +34,7 @@ import java.util.StringJoiner;
 
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    comments = "Generator version: 7.12.0")
+    comments = "Generator version: 7.13.0")
 public class NamespaceApi extends BaseApi {
 
   public NamespaceApi() {
@@ -59,8 +59,8 @@ public class NamespaceApi extends BaseApi {
    * @return CreateNamespaceResponse
    * @throws ApiException if fails to make API call
    */
-  public CreateNamespaceResponse createNamespace(CreateNamespaceRequest createNamespaceRequest)
-      throws ApiException {
+  public CreateNamespaceResponse createNamespace(
+      @javax.annotation.Nonnull CreateNamespaceRequest createNamespaceRequest) throws ApiException {
     return this.createNamespace(createNamespaceRequest, Collections.emptyMap());
   }
 
@@ -80,7 +80,8 @@ public class NamespaceApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public CreateNamespaceResponse createNamespace(
-      CreateNamespaceRequest createNamespaceRequest, Map<String, String> additionalHeaders)
+      @javax.annotation.Nonnull CreateNamespaceRequest createNamespaceRequest,
+      Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = createNamespaceRequest;
 
@@ -136,7 +137,7 @@ public class NamespaceApi extends BaseApi {
    * @param ns The name of the namespace. (required)
    * @throws ApiException if fails to make API call
    */
-  public void dropNamespace(String ns) throws ApiException {
+  public void dropNamespace(@javax.annotation.Nonnull String ns) throws ApiException {
     this.dropNamespace(ns, Collections.emptyMap());
   }
 
@@ -147,7 +148,9 @@ public class NamespaceApi extends BaseApi {
    * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void dropNamespace(String ns, Map<String, String> additionalHeaders) throws ApiException {
+  public void dropNamespace(
+      @javax.annotation.Nonnull String ns, Map<String, String> additionalHeaders)
+      throws ApiException {
     Object localVarPostBody = null;
 
     // verify the required parameter 'ns' is set
@@ -203,7 +206,8 @@ public class NamespaceApi extends BaseApi {
    * @return GetNamespaceResponse
    * @throws ApiException if fails to make API call
    */
-  public GetNamespaceResponse getNamespace(String ns) throws ApiException {
+  public GetNamespaceResponse getNamespace(@javax.annotation.Nonnull String ns)
+      throws ApiException {
     return this.getNamespace(ns, Collections.emptyMap());
   }
 
@@ -215,7 +219,8 @@ public class NamespaceApi extends BaseApi {
    * @return GetNamespaceResponse
    * @throws ApiException if fails to make API call
    */
-  public GetNamespaceResponse getNamespace(String ns, Map<String, String> additionalHeaders)
+  public GetNamespaceResponse getNamespace(
+      @javax.annotation.Nonnull String ns, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
 
@@ -276,7 +281,8 @@ public class NamespaceApi extends BaseApi {
    * @return ListNamespacesResponse
    * @throws ApiException if fails to make API call
    */
-  public ListNamespacesResponse listNamespaces(String pageToken, Integer pageSize)
+  public ListNamespacesResponse listNamespaces(
+      @javax.annotation.Nullable String pageToken, @javax.annotation.Nullable Integer pageSize)
       throws ApiException {
     return this.listNamespaces(pageToken, pageSize, Collections.emptyMap());
   }
@@ -292,7 +298,9 @@ public class NamespaceApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public ListNamespacesResponse listNamespaces(
-      String pageToken, Integer pageSize, Map<String, String> additionalHeaders)
+      @javax.annotation.Nullable String pageToken,
+      @javax.annotation.Nullable Integer pageSize,
+      Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
 
@@ -345,7 +353,7 @@ public class NamespaceApi extends BaseApi {
    * @param ns The name of the namespace. (required)
    * @throws ApiException if fails to make API call
    */
-  public void namespaceExists(String ns) throws ApiException {
+  public void namespaceExists(@javax.annotation.Nonnull String ns) throws ApiException {
     this.namespaceExists(ns, Collections.emptyMap());
   }
 
@@ -356,7 +364,8 @@ public class NamespaceApi extends BaseApi {
    * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void namespaceExists(String ns, Map<String, String> additionalHeaders)
+  public void namespaceExists(
+      @javax.annotation.Nonnull String ns, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
 

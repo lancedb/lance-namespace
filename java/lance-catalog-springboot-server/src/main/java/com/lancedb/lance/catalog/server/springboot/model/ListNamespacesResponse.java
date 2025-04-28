@@ -29,7 +29,7 @@ import java.util.Set;
 /** ListNamespacesResponse */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+    comments = "Generator version: 7.13.0")
 public class ListNamespacesResponse {
 
   @Valid private Set<String> namespaces = new LinkedHashSet<>();

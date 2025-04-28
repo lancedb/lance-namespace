@@ -39,7 +39,7 @@ import java.util.Optional;
 
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+    comments = "Generator version: 7.13.0")
 @Validated
 @Tag(name = "Table", description = "the Table API")
 public interface TableApi {
