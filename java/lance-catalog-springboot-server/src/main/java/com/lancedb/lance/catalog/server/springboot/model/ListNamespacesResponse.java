@@ -59,15 +59,12 @@ public class ListNamespacesResponse {
   }
 
   /**
-   * An array of namespace names in the catalog.
+   * Get namespaces
    *
    * @return namespaces
    */
   @NotNull
-  @Schema(
-      name = "namespaces",
-      description = "An array of namespace names in the catalog.",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "namespaces", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("namespaces")
   public Set<String> getNamespaces() {
     return namespaces;

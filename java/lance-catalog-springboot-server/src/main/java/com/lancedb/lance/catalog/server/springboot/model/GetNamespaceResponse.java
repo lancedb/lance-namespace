@@ -21,7 +21,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -31,7 +33,9 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class GetNamespaceResponse {
 
-  private String namespace;
+  private String name;
+
+  @Valid private List<String> parent = new ArrayList<>();
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
@@ -40,29 +44,57 @@ public class GetNamespaceResponse {
   }
 
   /** Constructor with only required parameters */
-  public GetNamespaceResponse(String namespace) {
-    this.namespace = namespace;
+  public GetNamespaceResponse(String name) {
+    this.name = name;
   }
 
-  public GetNamespaceResponse namespace(String namespace) {
-    this.namespace = namespace;
+  public GetNamespaceResponse name(String name) {
+    this.name = name;
     return this;
   }
 
   /**
-   * Get namespace
+   * Get name
    *
-   * @return namespace
+   * @return name
    */
   @NotNull
-  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("namespace")
-  public String getNamespace() {
-    return namespace;
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("name")
+  public String getName() {
+    return name;
   }
 
-  public void setNamespace(String namespace) {
-    this.namespace = namespace;
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public GetNamespaceResponse parent(List<String> parent) {
+    this.parent = parent;
+    return this;
+  }
+
+  public GetNamespaceResponse addParentItem(String parentItem) {
+    if (this.parent == null) {
+      this.parent = new ArrayList<>();
+    }
+    this.parent.add(parentItem);
+    return this;
+  }
+
+  /**
+   * Get parent
+   *
+   * @return parent
+   */
+  @Schema(name = "parent", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("parent")
+  public List<String> getParent() {
+    return parent;
+  }
+
+  public void setParent(List<String> parent) {
+    this.parent = parent;
   }
 
   public GetNamespaceResponse properties(Map<String, String> properties) {
@@ -109,20 +141,22 @@ public class GetNamespaceResponse {
       return false;
     }
     GetNamespaceResponse getNamespaceResponse = (GetNamespaceResponse) o;
-    return Objects.equals(this.namespace, getNamespaceResponse.namespace)
+    return Objects.equals(this.name, getNamespaceResponse.name)
+        && Objects.equals(this.parent, getNamespaceResponse.parent)
         && Objects.equals(this.properties, getNamespaceResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(namespace, properties);
+    return Objects.hash(name, parent, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class GetNamespaceResponse {\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();

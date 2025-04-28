@@ -4,19 +4,21 @@ All URIs are relative to *http://localhost:2333*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**createNamespace**](NamespaceApi.md#createNamespace) | **POST** /v1/namespaces | Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:   * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.   * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.   * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created.  |
-| [**dropNamespace**](NamespaceApi.md#dropNamespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace from the catalog. Namespace must be empty. |
-| [**getNamespace**](NamespaceApi.md#getNamespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace |
-| [**listNamespaces**](NamespaceApi.md#listNamespaces) | **GET** /v1/namespaces | List all namespaces in the catalog.  |
-| [**namespaceExists**](NamespaceApi.md#namespaceExists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists |
+| [**createNamespace**](NamespaceApi.md#createNamespace) | **POST** /v1/namespaces | Create a new namespace |
+| [**dropNamespace**](NamespaceApi.md#dropNamespace) | **DELETE** /v1/namespaces/{namespace} | Drop a namespace |
+| [**getNamespace**](NamespaceApi.md#getNamespace) | **GET** /v1/namespaces/{namespace} | Get information about a namespace |
+| [**listNamespaces**](NamespaceApi.md#listNamespaces) | **GET** /v1/namespaces | List namespaces |
+| [**namespaceExists**](NamespaceApi.md#namespaceExists) | **HEAD** /v1/namespaces/{namespace} | Check if a namespace exists |
 
 
 
 ## createNamespace
 
-> CreateNamespaceResponse createNamespace(createNamespaceRequest)
+> GetNamespaceResponse createNamespace(createNamespaceRequest)
 
-Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:   * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.   * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.   * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created. 
+Create a new namespace
+
+Create a new namespace. A namespace can manage either a collection of child namespaces, or a collection of tables. There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
 
 ### Example
 
@@ -36,7 +38,7 @@ public class Example {
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
         CreateNamespaceRequest createNamespaceRequest = new CreateNamespaceRequest(); // CreateNamespaceRequest | 
         try {
-            CreateNamespaceResponse result = apiInstance.createNamespace(createNamespaceRequest);
+            GetNamespaceResponse result = apiInstance.createNamespace(createNamespaceRequest);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#createNamespace");
@@ -58,7 +60,7 @@ public class Example {
 
 ### Return type
 
-[**CreateNamespaceResponse**](CreateNamespaceResponse.md)
+[**GetNamespaceResponse**](GetNamespaceResponse.md)
 
 ### Authorization
 
@@ -73,7 +75,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Represents a successful call to create a namespace. Returns the namespace created, as well as any properties that were stored for the namespace, including those the server might have added. Implementations are not required to support namespace properties. |  -  |
+| **200** | Returns a namespace, as well as any properties stored on the namespace if namespace properties are supported by the server. |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -85,9 +87,11 @@ No authorization required
 
 ## dropNamespace
 
-> dropNamespace(ns)
+> dropNamespace(namespace, delimiter)
 
-Drop a namespace from the catalog. Namespace must be empty.
+Drop a namespace
+
+Drop a namespace. The namespace must be empty. 
 
 ### Example
 
@@ -105,9 +109,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
-        String ns = "ns_example"; // String | The name of the namespace.
+        String namespace = "namespace_example"; // String | A string identifier of the namespace.
+        String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
         try {
-            apiInstance.dropNamespace(ns);
+            apiInstance.dropNamespace(namespace, delimiter);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#dropNamespace");
             System.err.println("Status code: " + e.getCode());
@@ -124,7 +129,8 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **ns** | **String**| The name of the namespace. | |
+| **namespace** | **String**| A string identifier of the namespace. | |
+| **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
 
 ### Return type
 
@@ -155,11 +161,11 @@ No authorization required
 
 ## getNamespace
 
-> GetNamespaceResponse getNamespace(ns)
+> GetNamespaceResponse getNamespace(namespace, delimiter)
 
 Get information about a namespace
 
-Return a detailed information for a given namespace
+Return the detailed information for a given namespace 
 
 ### Example
 
@@ -177,9 +183,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
-        String ns = "ns_example"; // String | The name of the namespace.
+        String namespace = "namespace_example"; // String | A string identifier of the namespace.
+        String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
         try {
-            GetNamespaceResponse result = apiInstance.getNamespace(ns);
+            GetNamespaceResponse result = apiInstance.getNamespace(namespace, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#getNamespace");
@@ -197,7 +204,8 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **ns** | **String**| The name of the namespace. | |
+| **namespace** | **String**| A string identifier of the namespace. | |
+| **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
 
 ### Return type
 
@@ -227,9 +235,11 @@ No authorization required
 
 ## listNamespaces
 
-> ListNamespacesResponse listNamespaces(pageToken, pageSize)
+> ListNamespacesResponse listNamespaces(pageToken, pageSize, parent, delimiter)
 
-List all namespaces in the catalog. 
+List namespaces
+
+List all child namespace names of the root namespace or a given parent namespace. 
 
 ### Example
 
@@ -249,8 +259,10 @@ public class Example {
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
         String pageToken = "pageToken_example"; // String | 
         Integer pageSize = 56; // Integer | An inclusive upper bound of the number of results that a client will receive.
+        String parent = "parent_example"; // String | A string identifier of the parent namespace.
+        String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
         try {
-            ListNamespacesResponse result = apiInstance.listNamespaces(pageToken, pageSize);
+            ListNamespacesResponse result = apiInstance.listNamespaces(pageToken, pageSize, parent, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#listNamespaces");
@@ -270,6 +282,8 @@ public class Example {
 |------------- | ------------- | ------------- | -------------|
 | **pageToken** | **String**|  | [optional] |
 | **pageSize** | **Integer**| An inclusive upper bound of the number of results that a client will receive. | [optional] |
+| **parent** | **String**| A string identifier of the parent namespace. | [optional] |
+| **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
 
 ### Return type
 
@@ -299,11 +313,11 @@ No authorization required
 
 ## namespaceExists
 
-> namespaceExists(ns)
+> namespaceExists(namespace, delimiter)
 
 Check if a namespace exists
 
-Check if a namespace exists. The response does not contain a body.
+Check if a namespace exists. This API should behave exactly like the GetNamespace API, except it does not contain a body. 
 
 ### Example
 
@@ -321,9 +335,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
-        String ns = "ns_example"; // String | The name of the namespace.
+        String namespace = "namespace_example"; // String | A string identifier of the namespace.
+        String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
         try {
-            apiInstance.namespaceExists(ns);
+            apiInstance.namespaceExists(namespace, delimiter);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#namespaceExists");
             System.err.println("Status code: " + e.getCode());
@@ -340,7 +355,8 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **ns** | **String**| The name of the namespace. | |
+| **namespace** | **String**| A string identifier of the namespace. | |
+| **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
 
 ### Return type
 

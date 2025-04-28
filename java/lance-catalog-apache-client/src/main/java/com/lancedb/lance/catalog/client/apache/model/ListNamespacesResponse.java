@@ -57,7 +57,7 @@ public class ListNamespacesResponse {
   }
 
   /**
-   * An array of namespace names in the catalog.
+   * Get namespaces
    *
    * @return namespaces
    */

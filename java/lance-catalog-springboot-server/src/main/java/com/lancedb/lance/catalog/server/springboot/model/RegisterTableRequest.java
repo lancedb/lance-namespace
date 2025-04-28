@@ -17,9 +17,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.annotation.Generated;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /** RegisterTableRequest */
@@ -30,6 +33,8 @@ public class RegisterTableRequest {
 
   private String name;
 
+  @Valid private List<String> namespace = new ArrayList<>();
+
   private String location;
 
   public RegisterTableRequest() {
@@ -37,8 +42,9 @@ public class RegisterTableRequest {
   }
 
   /** Constructor with only required parameters */
-  public RegisterTableRequest(String name, String location) {
+  public RegisterTableRequest(String name, List<String> namespace, String location) {
     this.name = name;
+    this.namespace = namespace;
     this.location = location;
   }
 
@@ -61,6 +67,35 @@ public class RegisterTableRequest {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public RegisterTableRequest namespace(List<String> namespace) {
+    this.namespace = namespace;
+    return this;
+  }
+
+  public RegisterTableRequest addNamespaceItem(String namespaceItem) {
+    if (this.namespace == null) {
+      this.namespace = new ArrayList<>();
+    }
+    this.namespace.add(namespaceItem);
+    return this;
+  }
+
+  /**
+   * Get namespace
+   *
+   * @return namespace
+   */
+  @NotNull
+  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("namespace")
+  public List<String> getNamespace() {
+    return namespace;
+  }
+
+  public void setNamespace(List<String> namespace) {
+    this.namespace = namespace;
   }
 
   public RegisterTableRequest location(String location) {
@@ -94,12 +129,13 @@ public class RegisterTableRequest {
     }
     RegisterTableRequest registerTableRequest = (RegisterTableRequest) o;
     return Objects.equals(this.name, registerTableRequest.name)
+        && Objects.equals(this.namespace, registerTableRequest.namespace)
         && Objects.equals(this.location, registerTableRequest.location);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, location);
+    return Objects.hash(name, namespace, location);
   }
 
   @Override
@@ -107,6 +143,7 @@ public class RegisterTableRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class RegisterTableRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -1,11 +1,8 @@
 # Rust API client for lance-catalog-reqwest-client
 
-**Lance Catalog** is an OpenAPI specification on top of the storage-based Lance format.
-It provides an integration point for catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, etc.
-to store and use Lance tables. To integrate, the catalog service implements a **Lance Catalog Adapter**,
-which is a REST server that converts the Lance catalog requests to native requests against the catalog service.
-Different tools can integrate with Lance Catalog using the generated OpenAPI clients in various languages,
-and invoke operations in Lance Catalog to read, write and manage Lance tables in the integrated catalog services.
+**Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables.
+A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, namespace, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy.
+In an enterprise environment, typically there is a requirement to store tables in a metadata service  such as Apache Hive MetaStore, Apache Gravitino, Unity Namespace, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way. The detailed OpenAPI specification content can be found in [rest.yaml](./rest.yaml).
 
 
 
@@ -32,20 +29,19 @@ All URIs are relative to *http://localhost:2333*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*NamespaceApi* | [**create_namespace**](docs/NamespaceApi.md#create_namespace) | **POST** /v1/namespaces | Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:   * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.   * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.   * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created. 
-*NamespaceApi* | [**drop_namespace**](docs/NamespaceApi.md#drop_namespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace from the catalog. Namespace must be empty.
-*NamespaceApi* | [**get_namespace**](docs/NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
-*NamespaceApi* | [**list_namespaces**](docs/NamespaceApi.md#list_namespaces) | **GET** /v1/namespaces | List all namespaces in the catalog. 
-*NamespaceApi* | [**namespace_exists**](docs/NamespaceApi.md#namespace_exists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists
-*TableApi* | [**get_table**](docs/TableApi.md#get_table) | **GET** /v1/namespaces/{ns}/tables/{table} | Get a table from the catalog
-*TableApi* | [**register_table**](docs/TableApi.md#register_table) | **POST** /v1/namespaces/{ns}/register | Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace. 
-*TableApi* | [**table_exists**](docs/TableApi.md#table_exists) | **HEAD** /v1/namespaces/{ns}/tables/{table} | Check if a table exists
+*NamespaceApi* | [**create_namespace**](docs/NamespaceApi.md#create_namespace) | **POST** /v1/namespaces | Create a new namespace
+*NamespaceApi* | [**drop_namespace**](docs/NamespaceApi.md#drop_namespace) | **DELETE** /v1/namespaces/{namespace} | Drop a namespace
+*NamespaceApi* | [**get_namespace**](docs/NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{namespace} | Get information about a namespace
+*NamespaceApi* | [**list_namespaces**](docs/NamespaceApi.md#list_namespaces) | **GET** /v1/namespaces | List namespaces
+*NamespaceApi* | [**namespace_exists**](docs/NamespaceApi.md#namespace_exists) | **HEAD** /v1/namespaces/{namespace} | Check if a namespace exists
+*TableApi* | [**get_table**](docs/TableApi.md#get_table) | **GET** /v1/tables/{table} | Get a table from the namespace
+*TableApi* | [**register_table**](docs/TableApi.md#register_table) | **POST** /v1/table/register | Register a table to a namespace
+*TableApi* | [**table_exists**](docs/TableApi.md#table_exists) | **HEAD** /v1/tables/{table} | Check if a table exists
 
 
 ## Documentation For Models
 
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
- - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
  - [ErrorResponse](docs/ErrorResponse.md)
  - [GetNamespaceResponse](docs/GetNamespaceResponse.md)
  - [GetTableResponse](docs/GetTableResponse.md)

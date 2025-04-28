@@ -5,7 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**namespace** | **str** |  | 
+**name** | **str** |  | 
+**parent** | **List[str]** |  | [optional] 
 **properties** | **Dict[str, str]** | Properties stored on the namespace, if supported by the server. If the server does not support namespace properties, it should return null for this field. If namespace properties are supported, but none are set, it should return an empty object. | [optional] 
 
 ## Example
