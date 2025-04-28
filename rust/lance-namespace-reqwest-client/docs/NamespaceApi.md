@@ -5,10 +5,10 @@ All URIs are relative to *http://localhost:2333*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**create_namespace**](NamespaceApi.md#create_namespace) | **POST** /v1/namespaces | Create a new namespace
-[**drop_namespace**](NamespaceApi.md#drop_namespace) | **DELETE** /v1/namespaces/{namespace} | Drop a namespace
-[**get_namespace**](NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{namespace} | Get information about a namespace
+[**drop_namespace**](NamespaceApi.md#drop_namespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace
+[**get_namespace**](NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
 [**list_namespaces**](NamespaceApi.md#list_namespaces) | **GET** /v1/namespaces | List namespaces
-[**namespace_exists**](NamespaceApi.md#namespace_exists) | **HEAD** /v1/namespaces/{namespace} | Check if a namespace exists
+[**namespace_exists**](NamespaceApi.md#namespace_exists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists
 
 
 
@@ -44,7 +44,7 @@ No authorization required
 
 ## drop_namespace
 
-> drop_namespace(namespace, delimiter)
+> drop_namespace(ns, delimiter)
 Drop a namespace
 
 Drop a namespace. The namespace must be empty. 
@@ -54,7 +54,7 @@ Drop a namespace. The namespace must be empty.
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**namespace** | **String** | A string identifier of the namespace. | [required] |
+**ns** | **String** | A string identifier of the namespace. | [required] |
 **delimiter** | Option<**String**> | The delimiter for the identifier used in the context |  |
 
 ### Return type
@@ -75,7 +75,7 @@ No authorization required
 
 ## get_namespace
 
-> models::GetNamespaceResponse get_namespace(namespace, delimiter)
+> models::GetNamespaceResponse get_namespace(ns, delimiter)
 Get information about a namespace
 
 Return the detailed information for a given namespace 
@@ -85,7 +85,7 @@ Return the detailed information for a given namespace
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**namespace** | **String** | A string identifier of the namespace. | [required] |
+**ns** | **String** | A string identifier of the namespace. | [required] |
 **delimiter** | Option<**String**> | The delimiter for the identifier used in the context |  |
 
 ### Return type
@@ -139,7 +139,7 @@ No authorization required
 
 ## namespace_exists
 
-> namespace_exists(namespace, delimiter)
+> namespace_exists(ns, delimiter)
 Check if a namespace exists
 
 Check if a namespace exists. This API should behave exactly like the GetNamespace API, except it does not contain a body. 
@@ -149,7 +149,7 @@ Check if a namespace exists. This API should behave exactly like the GetNamespac
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**namespace** | **String** | A string identifier of the namespace. | [required] |
+**ns** | **String** | A string identifier of the namespace. | [required] |
 **delimiter** | Option<**String**> | The delimiter for the identifier used in the context |  |
 
 ### Return type

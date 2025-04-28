@@ -49,7 +49,8 @@ public interface TableApi {
   }
 
   /**
-   * GET /v1/tables/{table} : Get a table from the namespace Get a table&#39;s detailed information.
+   * GET /v1/tables/{table} : Get a table from the namespace Get a table&#39;s detailed information
+   * under a specified namespace.
    *
    * @param table A string identifier of the table (required)
    * @param delimiter The delimiter for the identifier used in the context (optional)
@@ -69,7 +70,7 @@ public interface TableApi {
   @Operation(
       operationId = "getTable",
       summary = "Get a table from the namespace",
-      description = "Get a table's detailed information. ",
+      description = "Get a table's detailed information under a specified namespace. ",
       tags = {"Table"},
       responses = {
         @ApiResponse(

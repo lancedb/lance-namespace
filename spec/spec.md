@@ -6,7 +6,7 @@ It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gra
 should store and use Lance tables, as well as how ML/AI tools and analytics compute engines
 (will together be called _"tools"_ in this document) should integrate with Lance tables.
 
-## Concepts
+## Namespace Concepts
 
 ### Namespace Definition
 
@@ -36,7 +36,7 @@ In the example layout, `ns1` is a root namespace.
 
 ### Object Name
 
-The **name** of an object is a string that uniquely identifies the object within the namespace it belongs to.
+The **name** of an object is a string that uniquely identifies the object within the parent namespace it belongs to.
 The name of any object must be unique among all other objects that share the same parent namespace.
 For examples:
  
@@ -48,9 +48,9 @@ For examples:
 The **identifier** of an object uniquely identifies the object within the root namespace it belongs to.
 The identifier of any object must be unique among all other objects that share the same root namespace.
 
-Based on the uniqueness property of an object name, 
-an object identifier is the list of object names starting from (not including) the root namespace to the object itself.
-This is also called the **list identifier**.
+Based on the uniqueness property of an object name within its parent namespace, 
+an object identifier is the list of object names starting from (not including) the root namespace to (including) the object itself.
+This is also called an **list identifier**.
 For examples:
 
 - the list identifier of `cat5` is `[cat2, cat5]`
@@ -64,7 +64,7 @@ For examples:
 - the string identifier of `t1` is `cat2.cat5.t1`
 - the string identifier of `t3` is `cat4$t3` when using delimiter `$`
 
-## Name and Identifier for Root Namespace
+### Name and Identifier for Root Namespace
 
 The root namespace itself has no name and identifier.
 When represented in code, its name and string identifier is represented by an empty or null string,
@@ -141,10 +141,10 @@ The detailed OpenAPI specification content can be found in [rest.yaml](./rest.ya
 
 #### Namespace Server and Adapter
 
-Any REST HTTP server that implements this OpenAPI protocol is called a **Lance Namespace Server**.
+Any REST HTTP server that implements this OpenAPI protocol is called a **Lance Namespace server**.
 If the main purpose of this server is to be a proxy on top of an existing metadata service,
 converting back and forth between Lance REST API models and native API models of the metadata service,
-then this Lance namespace server is called a **Lance Namespace Adapter**.
+then this Lance namespace server is called a **Lance Namespace adapter**.
 
 #### Server and Storage
 

@@ -122,12 +122,12 @@ pub async fn create_namespace(configuration: &configuration::Configuration, crea
 }
 
 /// Drop a namespace. The namespace must be empty. 
-pub async fn drop_namespace(configuration: &configuration::Configuration, namespace: &str, delimiter: Option<&str>) -> Result<(), Error<DropNamespaceError>> {
+pub async fn drop_namespace(configuration: &configuration::Configuration, ns: &str, delimiter: Option<&str>) -> Result<(), Error<DropNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_namespace = namespace;
+    let p_ns = ns;
     let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/v1/namespaces/{namespace}", configuration.base_path, namespace=crate::apis::urlencode(p_namespace));
+    let uri_str = format!("{}/v1/namespaces/{ns}", configuration.base_path, ns=crate::apis::urlencode(p_ns));
     let mut req_builder = configuration.client.request(reqwest::Method::DELETE, &uri_str);
 
     if let Some(ref param_value) = p_delimiter {
@@ -152,12 +152,12 @@ pub async fn drop_namespace(configuration: &configuration::Configuration, namesp
 }
 
 /// Return the detailed information for a given namespace 
-pub async fn get_namespace(configuration: &configuration::Configuration, namespace: &str, delimiter: Option<&str>) -> Result<models::GetNamespaceResponse, Error<GetNamespaceError>> {
+pub async fn get_namespace(configuration: &configuration::Configuration, ns: &str, delimiter: Option<&str>) -> Result<models::GetNamespaceResponse, Error<GetNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_namespace = namespace;
+    let p_ns = ns;
     let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/v1/namespaces/{namespace}", configuration.base_path, namespace=crate::apis::urlencode(p_namespace));
+    let uri_str = format!("{}/v1/namespaces/{ns}", configuration.base_path, ns=crate::apis::urlencode(p_ns));
     let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
 
     if let Some(ref param_value) = p_delimiter {
@@ -245,12 +245,12 @@ pub async fn list_namespaces(configuration: &configuration::Configuration, page_
 }
 
 /// Check if a namespace exists. This API should behave exactly like the GetNamespace API, except it does not contain a body. 
-pub async fn namespace_exists(configuration: &configuration::Configuration, namespace: &str, delimiter: Option<&str>) -> Result<(), Error<NamespaceExistsError>> {
+pub async fn namespace_exists(configuration: &configuration::Configuration, ns: &str, delimiter: Option<&str>) -> Result<(), Error<NamespaceExistsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_namespace = namespace;
+    let p_ns = ns;
     let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/v1/namespaces/{namespace}", configuration.base_path, namespace=crate::apis::urlencode(p_namespace));
+    let uri_str = format!("{}/v1/namespaces/{ns}", configuration.base_path, ns=crate::apis::urlencode(p_ns));
     let mut req_builder = configuration.client.request(reqwest::Method::HEAD, &uri_str);
 
     if let Some(ref param_value) = p_delimiter {

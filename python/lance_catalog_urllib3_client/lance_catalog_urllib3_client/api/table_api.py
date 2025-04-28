@@ -60,7 +60,7 @@ class TableApi:
     ) -> GetTableResponse:
         """Get a table from the namespace
 
-        Get a table's detailed information. 
+        Get a table's detailed information under a specified namespace. 
 
         :param table: A string identifier of the table (required)
         :type table: str
@@ -137,7 +137,7 @@ class TableApi:
     ) -> ApiResponse[GetTableResponse]:
         """Get a table from the namespace
 
-        Get a table's detailed information. 
+        Get a table's detailed information under a specified namespace. 
 
         :param table: A string identifier of the table (required)
         :type table: str
@@ -214,7 +214,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Get a table from the namespace
 
-        Get a table's detailed information. 
+        Get a table's detailed information under a specified namespace. 
 
         :param table: A string identifier of the table (required)
         :type table: str

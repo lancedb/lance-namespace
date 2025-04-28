@@ -102,7 +102,7 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
-  /v1/namespaces/{namespace}:
+  /v1/namespaces/{ns}:
     delete:
       description: |
         Drop a namespace. The namespace must be empty.
@@ -227,7 +227,7 @@ paths:
   /v1/tables/{table}:
     get:
       description: |
-        Get a table's detailed information.
+        Get a table's detailed information under a specified namespace.
       operationId: GetTable
       parameters:
       - $ref: '#/components/parameters/table'
@@ -300,7 +300,7 @@ components:
       description: A string identifier of the namespace.
       explode: false
       in: path
-      name: namespace
+      name: ns
       required: true
       schema:
         type: string
@@ -425,7 +425,7 @@ components:
             title: Not found Error
             status: 404
             detail: ""
-            instance: "/v1/namespaces/{namespace}"
+            instance: "/v1/namespaces/{ns}"
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       description: A server-side problem that means can not find the specified resource.
@@ -450,7 +450,7 @@ components:
             title: The namespace has been concurrently modified
             status: 409
             detail: ""
-            instance: "/v1/namespaces/{namespace}"
+            instance: "/v1/namespaces/{ns}"
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       description: The request conflicts with the current state of the target resource.

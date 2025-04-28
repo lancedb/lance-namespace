@@ -128,39 +128,36 @@ public class NamespaceApi extends BaseApi {
   /**
    * Drop a namespace Drop a namespace. The namespace must be empty.
    *
-   * @param namespace A string identifier of the namespace. (required)
+   * @param ns A string identifier of the namespace. (required)
    * @param delimiter The delimiter for the identifier used in the context (optional)
    * @throws ApiException if fails to make API call
    */
-  public void dropNamespace(String namespace, String delimiter) throws ApiException {
-    this.dropNamespace(namespace, delimiter, Collections.emptyMap());
+  public void dropNamespace(String ns, String delimiter) throws ApiException {
+    this.dropNamespace(ns, delimiter, Collections.emptyMap());
   }
 
   /**
    * Drop a namespace Drop a namespace. The namespace must be empty.
    *
-   * @param namespace A string identifier of the namespace. (required)
+   * @param ns A string identifier of the namespace. (required)
    * @param delimiter The delimiter for the identifier used in the context (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void dropNamespace(
-      String namespace, String delimiter, Map<String, String> additionalHeaders)
+  public void dropNamespace(String ns, String delimiter, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
 
-    // verify the required parameter 'namespace' is set
-    if (namespace == null) {
-      throw new ApiException(
-          400, "Missing the required parameter 'namespace' when calling dropNamespace");
+    // verify the required parameter 'ns' is set
+    if (ns == null) {
+      throw new ApiException(400, "Missing the required parameter 'ns' when calling dropNamespace");
     }
 
     // create path and map variables
     String localVarPath =
-        "/v1/namespaces/{namespace}"
+        "/v1/namespaces/{ns}"
             .replaceAll(
-                "\\{" + "namespace" + "\\}",
-                apiClient.escapeString(apiClient.parameterToString(namespace)));
+                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)));
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -202,41 +199,38 @@ public class NamespaceApi extends BaseApi {
   /**
    * Get information about a namespace Return the detailed information for a given namespace
    *
-   * @param namespace A string identifier of the namespace. (required)
+   * @param ns A string identifier of the namespace. (required)
    * @param delimiter The delimiter for the identifier used in the context (optional)
    * @return GetNamespaceResponse
    * @throws ApiException if fails to make API call
    */
-  public GetNamespaceResponse getNamespace(String namespace, String delimiter) throws ApiException {
-    return this.getNamespace(namespace, delimiter, Collections.emptyMap());
+  public GetNamespaceResponse getNamespace(String ns, String delimiter) throws ApiException {
+    return this.getNamespace(ns, delimiter, Collections.emptyMap());
   }
 
   /**
    * Get information about a namespace Return the detailed information for a given namespace
    *
-   * @param namespace A string identifier of the namespace. (required)
+   * @param ns A string identifier of the namespace. (required)
    * @param delimiter The delimiter for the identifier used in the context (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return GetNamespaceResponse
    * @throws ApiException if fails to make API call
    */
   public GetNamespaceResponse getNamespace(
-      String namespace, String delimiter, Map<String, String> additionalHeaders)
-      throws ApiException {
+      String ns, String delimiter, Map<String, String> additionalHeaders) throws ApiException {
     Object localVarPostBody = null;
 
-    // verify the required parameter 'namespace' is set
-    if (namespace == null) {
-      throw new ApiException(
-          400, "Missing the required parameter 'namespace' when calling getNamespace");
+    // verify the required parameter 'ns' is set
+    if (ns == null) {
+      throw new ApiException(400, "Missing the required parameter 'ns' when calling getNamespace");
     }
 
     // create path and map variables
     String localVarPath =
-        "/v1/namespaces/{namespace}"
+        "/v1/namespaces/{ns}"
             .replaceAll(
-                "\\{" + "namespace" + "\\}",
-                apiClient.escapeString(apiClient.parameterToString(namespace)));
+                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)));
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -365,40 +359,38 @@ public class NamespaceApi extends BaseApi {
    * Check if a namespace exists Check if a namespace exists. This API should behave exactly like
    * the GetNamespace API, except it does not contain a body.
    *
-   * @param namespace A string identifier of the namespace. (required)
+   * @param ns A string identifier of the namespace. (required)
    * @param delimiter The delimiter for the identifier used in the context (optional)
    * @throws ApiException if fails to make API call
    */
-  public void namespaceExists(String namespace, String delimiter) throws ApiException {
-    this.namespaceExists(namespace, delimiter, Collections.emptyMap());
+  public void namespaceExists(String ns, String delimiter) throws ApiException {
+    this.namespaceExists(ns, delimiter, Collections.emptyMap());
   }
 
   /**
    * Check if a namespace exists Check if a namespace exists. This API should behave exactly like
    * the GetNamespace API, except it does not contain a body.
    *
-   * @param namespace A string identifier of the namespace. (required)
+   * @param ns A string identifier of the namespace. (required)
    * @param delimiter The delimiter for the identifier used in the context (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void namespaceExists(
-      String namespace, String delimiter, Map<String, String> additionalHeaders)
+  public void namespaceExists(String ns, String delimiter, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
 
-    // verify the required parameter 'namespace' is set
-    if (namespace == null) {
+    // verify the required parameter 'ns' is set
+    if (ns == null) {
       throw new ApiException(
-          400, "Missing the required parameter 'namespace' when calling namespaceExists");
+          400, "Missing the required parameter 'ns' when calling namespaceExists");
     }
 
     // create path and map variables
     String localVarPath =
-        "/v1/namespaces/{namespace}"
+        "/v1/namespaces/{ns}"
             .replaceAll(
-                "\\{" + "namespace" + "\\}",
-                apiClient.escapeString(apiClient.parameterToString(namespace)));
+                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)));
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;

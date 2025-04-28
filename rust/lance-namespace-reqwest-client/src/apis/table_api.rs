@@ -56,7 +56,7 @@ pub enum TableExistsError {
 }
 
 
-/// Get a table's detailed information. 
+/// Get a table's detailed information under a specified namespace. 
 pub async fn get_table(configuration: &configuration::Configuration, table: &str, delimiter: Option<&str>) -> Result<models::GetTableResponse, Error<GetTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_table = table;

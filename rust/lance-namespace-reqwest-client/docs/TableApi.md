@@ -15,7 +15,7 @@ Method | HTTP request | Description
 > models::GetTableResponse get_table(table, delimiter)
 Get a table from the namespace
 
-Get a table's detailed information. 
+Get a table's detailed information under a specified namespace. 
 
 ### Parameters
 

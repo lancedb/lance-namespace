@@ -129,7 +129,7 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
-  /v1/namespaces/{namespace}:
+  /v1/namespaces/{ns}:
     parameters:
       - $ref: '#/components/parameters/namespace'
       - $ref: '#/components/parameters/delimiter'
@@ -245,7 +245,7 @@ paths:
       summary: Get a table from the namespace
       operationId: GetTable
       description: >
-        Get a table's detailed information.
+        Get a table's detailed information under a specified namespace.
       responses:
         200:
           $ref: '#/components/responses/GetTableResponse'
@@ -289,7 +289,7 @@ paths:
 components:
   parameters:
     namespace:
-      name: namespace
+      name: ns
       in: path
       required: true
       description: A string identifier of the namespace.
@@ -567,7 +567,7 @@ components:
             "title": "Not found Error",
             "status": 404,
             "detail": "",
-            "instance": "/v1/namespaces/{namespace}"
+            "instance": "/v1/namespaces/{ns}"
           }
 
     UnsupportedOperationErrorResponse:
@@ -595,7 +595,7 @@ components:
             "title": "The namespace has been concurrently modified",
             "status": 409,
             "detail": "",
-            "instance": "/v1/namespaces/{namespace}"
+            "instance": "/v1/namespaces/{ns}"
           }
 
     ServiceUnavailableErrorResponse:

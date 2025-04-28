@@ -5,10 +5,10 @@ All URIs are relative to *http://localhost:2333*
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
 | [**createNamespace**](NamespaceApi.md#createNamespace) | **POST** /v1/namespaces | Create a new namespace |
-| [**dropNamespace**](NamespaceApi.md#dropNamespace) | **DELETE** /v1/namespaces/{namespace} | Drop a namespace |
-| [**getNamespace**](NamespaceApi.md#getNamespace) | **GET** /v1/namespaces/{namespace} | Get information about a namespace |
+| [**dropNamespace**](NamespaceApi.md#dropNamespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace |
+| [**getNamespace**](NamespaceApi.md#getNamespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace |
 | [**listNamespaces**](NamespaceApi.md#listNamespaces) | **GET** /v1/namespaces | List namespaces |
-| [**namespaceExists**](NamespaceApi.md#namespaceExists) | **HEAD** /v1/namespaces/{namespace} | Check if a namespace exists |
+| [**namespaceExists**](NamespaceApi.md#namespaceExists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists |
 
 
 
@@ -87,7 +87,7 @@ No authorization required
 
 ## dropNamespace
 
-> dropNamespace(namespace, delimiter)
+> dropNamespace(ns, delimiter)
 
 Drop a namespace
 
@@ -109,10 +109,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
-        String namespace = "namespace_example"; // String | A string identifier of the namespace.
+        String ns = "ns_example"; // String | A string identifier of the namespace.
         String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
         try {
-            apiInstance.dropNamespace(namespace, delimiter);
+            apiInstance.dropNamespace(ns, delimiter);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#dropNamespace");
             System.err.println("Status code: " + e.getCode());
@@ -129,7 +129,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **namespace** | **String**| A string identifier of the namespace. | |
+| **ns** | **String**| A string identifier of the namespace. | |
 | **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
 
 ### Return type
@@ -161,7 +161,7 @@ No authorization required
 
 ## getNamespace
 
-> GetNamespaceResponse getNamespace(namespace, delimiter)
+> GetNamespaceResponse getNamespace(ns, delimiter)
 
 Get information about a namespace
 
@@ -183,10 +183,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
-        String namespace = "namespace_example"; // String | A string identifier of the namespace.
+        String ns = "ns_example"; // String | A string identifier of the namespace.
         String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
         try {
-            GetNamespaceResponse result = apiInstance.getNamespace(namespace, delimiter);
+            GetNamespaceResponse result = apiInstance.getNamespace(ns, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#getNamespace");
@@ -204,7 +204,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **namespace** | **String**| A string identifier of the namespace. | |
+| **ns** | **String**| A string identifier of the namespace. | |
 | **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
 
 ### Return type
@@ -313,7 +313,7 @@ No authorization required
 
 ## namespaceExists
 
-> namespaceExists(namespace, delimiter)
+> namespaceExists(ns, delimiter)
 
 Check if a namespace exists
 
@@ -335,10 +335,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
-        String namespace = "namespace_example"; // String | A string identifier of the namespace.
+        String ns = "ns_example"; // String | A string identifier of the namespace.
         String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
         try {
-            apiInstance.namespaceExists(namespace, delimiter);
+            apiInstance.namespaceExists(ns, delimiter);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#namespaceExists");
             System.err.println("Status code: " + e.getCode());
@@ -355,7 +355,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **namespace** | **String**| A string identifier of the namespace. | |
+| **ns** | **String**| A string identifier of the namespace. | |
 | **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
 
 ### Return type

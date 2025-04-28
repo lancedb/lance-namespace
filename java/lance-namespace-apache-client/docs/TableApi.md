@@ -16,7 +16,7 @@ All URIs are relative to *http://localhost:2333*
 
 Get a table from the namespace
 
-Get a table&#39;s detailed information. 
+Get a table&#39;s detailed information under a specified namespace. 
 
 ### Example
 

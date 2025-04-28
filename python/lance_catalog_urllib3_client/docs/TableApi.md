@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 Get a table from the namespace
 
-Get a table's detailed information.
+Get a table's detailed information under a specified namespace.
 
 
 ### Example

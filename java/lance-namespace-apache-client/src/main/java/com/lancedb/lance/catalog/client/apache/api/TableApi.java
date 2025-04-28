@@ -44,7 +44,8 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Get a table from the namespace Get a table&#39;s detailed information.
+   * Get a table from the namespace Get a table&#39;s detailed information under a specified
+   * namespace.
    *
    * @param table A string identifier of the table (required)
    * @param delimiter The delimiter for the identifier used in the context (optional)
@@ -56,7 +57,8 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Get a table from the namespace Get a table&#39;s detailed information.
+   * Get a table from the namespace Get a table&#39;s detailed information under a specified
+   * namespace.
    *
    * @param table A string identifier of the table (required)
    * @param delimiter The delimiter for the identifier used in the context (optional)

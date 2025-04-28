@@ -112,10 +112,10 @@ All URIs are relative to *http://localhost:2333*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *NamespaceApi* | [**createNamespace**](docs/NamespaceApi.md#createNamespace) | **POST** /v1/namespaces | Create a new namespace
-*NamespaceApi* | [**dropNamespace**](docs/NamespaceApi.md#dropNamespace) | **DELETE** /v1/namespaces/{namespace} | Drop a namespace
-*NamespaceApi* | [**getNamespace**](docs/NamespaceApi.md#getNamespace) | **GET** /v1/namespaces/{namespace} | Get information about a namespace
+*NamespaceApi* | [**dropNamespace**](docs/NamespaceApi.md#dropNamespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace
+*NamespaceApi* | [**getNamespace**](docs/NamespaceApi.md#getNamespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
 *NamespaceApi* | [**listNamespaces**](docs/NamespaceApi.md#listNamespaces) | **GET** /v1/namespaces | List namespaces
-*NamespaceApi* | [**namespaceExists**](docs/NamespaceApi.md#namespaceExists) | **HEAD** /v1/namespaces/{namespace} | Check if a namespace exists
+*NamespaceApi* | [**namespaceExists**](docs/NamespaceApi.md#namespaceExists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists
 *TableApi* | [**getTable**](docs/TableApi.md#getTable) | **GET** /v1/tables/{table} | Get a table from the namespace
 *TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /v1/table/register | Register a table to a namespace
 *TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **HEAD** /v1/tables/{table} | Check if a table exists

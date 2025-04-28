@@ -219,10 +219,9 @@ public interface NamespaceApi {
   }
 
   /**
-   * DELETE /v1/namespaces/{namespace} : Drop a namespace Drop a namespace. The namespace must be
-   * empty.
+   * DELETE /v1/namespaces/{ns} : Drop a namespace Drop a namespace. The namespace must be empty.
    *
-   * @param namespace A string identifier of the namespace. (required)
+   * @param ns A string identifier of the namespace. (required)
    * @param delimiter The delimiter for the identifier used in the context (optional)
    * @return Success, no content (status code 204) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
@@ -308,16 +307,16 @@ public interface NamespaceApi {
       })
   @RequestMapping(
       method = RequestMethod.DELETE,
-      value = "/v1/namespaces/{namespace}",
+      value = "/v1/namespaces/{ns}",
       produces = {"application/json"})
   default ResponseEntity<Void> dropNamespace(
       @Parameter(
-              name = "namespace",
+              name = "ns",
               description = "A string identifier of the namespace.",
               required = true,
               in = ParameterIn.PATH)
-          @PathVariable("namespace")
-          String namespace,
+          @PathVariable("ns")
+          String ns,
       @Parameter(
               name = "delimiter",
               description = "The delimiter for the identifier used in the context",
@@ -377,10 +376,10 @@ public interface NamespaceApi {
   }
 
   /**
-   * GET /v1/namespaces/{namespace} : Get information about a namespace Return the detailed
-   * information for a given namespace
+   * GET /v1/namespaces/{ns} : Get information about a namespace Return the detailed information for
+   * a given namespace
    *
-   * @param namespace A string identifier of the namespace. (required)
+   * @param ns A string identifier of the namespace. (required)
    * @param delimiter The delimiter for the identifier used in the context (optional)
    * @return Returns a namespace, as well as any properties stored on the namespace if namespace
    *     properties are supported by the server. (status code 200) or Indicates a bad request error.
@@ -466,16 +465,16 @@ public interface NamespaceApi {
       })
   @RequestMapping(
       method = RequestMethod.GET,
-      value = "/v1/namespaces/{namespace}",
+      value = "/v1/namespaces/{ns}",
       produces = {"application/json"})
   default ResponseEntity<GetNamespaceResponse> getNamespace(
       @Parameter(
-              name = "namespace",
+              name = "ns",
               description = "A string identifier of the namespace.",
               required = true,
               in = ParameterIn.PATH)
-          @PathVariable("namespace")
-          String namespace,
+          @PathVariable("ns")
+          String ns,
       @Parameter(
               name = "delimiter",
               description = "The delimiter for the identifier used in the context",
@@ -708,10 +707,10 @@ public interface NamespaceApi {
   }
 
   /**
-   * HEAD /v1/namespaces/{namespace} : Check if a namespace exists Check if a namespace exists. This
-   * API should behave exactly like the GetNamespace API, except it does not contain a body.
+   * HEAD /v1/namespaces/{ns} : Check if a namespace exists Check if a namespace exists. This API
+   * should behave exactly like the GetNamespace API, except it does not contain a body.
    *
-   * @param namespace A string identifier of the namespace. (required)
+   * @param ns A string identifier of the namespace. (required)
    * @param delimiter The delimiter for the identifier used in the context (optional)
    * @return Success, no content (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
@@ -789,16 +788,16 @@ public interface NamespaceApi {
       })
   @RequestMapping(
       method = RequestMethod.HEAD,
-      value = "/v1/namespaces/{namespace}",
+      value = "/v1/namespaces/{ns}",
       produces = {"application/json"})
   default ResponseEntity<Void> namespaceExists(
       @Parameter(
-              name = "namespace",
+              name = "ns",
               description = "A string identifier of the namespace.",
               required = true,
               in = ParameterIn.PATH)
-          @PathVariable("namespace")
-          String namespace,
+          @PathVariable("ns")
+          String ns,
       @Parameter(
               name = "delimiter",
               description = "The delimiter for the identifier used in the context",

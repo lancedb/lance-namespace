@@ -5,10 +5,10 @@ All URIs are relative to *http://localhost:2333*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**create_namespace**](NamespaceApi.md#create_namespace) | **POST** /v1/namespaces | Create a new namespace
-[**drop_namespace**](NamespaceApi.md#drop_namespace) | **DELETE** /v1/namespaces/{namespace} | Drop a namespace
-[**get_namespace**](NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{namespace} | Get information about a namespace
+[**drop_namespace**](NamespaceApi.md#drop_namespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace
+[**get_namespace**](NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
 [**list_namespaces**](NamespaceApi.md#list_namespaces) | **GET** /v1/namespaces | List namespaces
-[**namespace_exists**](NamespaceApi.md#namespace_exists) | **HEAD** /v1/namespaces/{namespace} | Check if a namespace exists
+[**namespace_exists**](NamespaceApi.md#namespace_exists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists
 
 
 # **create_namespace**
@@ -94,7 +94,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **drop_namespace**
-> drop_namespace(namespace, delimiter=delimiter)
+> drop_namespace(ns, delimiter=delimiter)
 
 Drop a namespace
 
@@ -120,12 +120,12 @@ configuration = lance_catalog_urllib3_client.Configuration(
 with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_catalog_urllib3_client.NamespaceApi(api_client)
-    namespace = 'namespace_example' # str | A string identifier of the namespace.
+    ns = 'ns_example' # str | A string identifier of the namespace.
     delimiter = 'delimiter_example' # str | The delimiter for the identifier used in the context (optional)
 
     try:
         # Drop a namespace
-        api_instance.drop_namespace(namespace, delimiter=delimiter)
+        api_instance.drop_namespace(ns, delimiter=delimiter)
     except Exception as e:
         print("Exception when calling NamespaceApi->drop_namespace: %s\n" % e)
 ```
@@ -137,7 +137,7 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **namespace** | **str**| A string identifier of the namespace. | 
+ **ns** | **str**| A string identifier of the namespace. | 
  **delimiter** | **str**| The delimiter for the identifier used in the context | [optional] 
 
 ### Return type
@@ -169,7 +169,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_namespace**
-> GetNamespaceResponse get_namespace(namespace, delimiter=delimiter)
+> GetNamespaceResponse get_namespace(ns, delimiter=delimiter)
 
 Get information about a namespace
 
@@ -196,12 +196,12 @@ configuration = lance_catalog_urllib3_client.Configuration(
 with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_catalog_urllib3_client.NamespaceApi(api_client)
-    namespace = 'namespace_example' # str | A string identifier of the namespace.
+    ns = 'ns_example' # str | A string identifier of the namespace.
     delimiter = 'delimiter_example' # str | The delimiter for the identifier used in the context (optional)
 
     try:
         # Get information about a namespace
-        api_response = api_instance.get_namespace(namespace, delimiter=delimiter)
+        api_response = api_instance.get_namespace(ns, delimiter=delimiter)
         print("The response of NamespaceApi->get_namespace:\n")
         pprint(api_response)
     except Exception as e:
@@ -215,7 +215,7 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **namespace** | **str**| A string identifier of the namespace. | 
+ **ns** | **str**| A string identifier of the namespace. | 
  **delimiter** | **str**| The delimiter for the identifier used in the context | [optional] 
 
 ### Return type
@@ -327,7 +327,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **namespace_exists**
-> namespace_exists(namespace, delimiter=delimiter)
+> namespace_exists(ns, delimiter=delimiter)
 
 Check if a namespace exists
 
@@ -354,12 +354,12 @@ configuration = lance_catalog_urllib3_client.Configuration(
 with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_catalog_urllib3_client.NamespaceApi(api_client)
-    namespace = 'namespace_example' # str | A string identifier of the namespace.
+    ns = 'ns_example' # str | A string identifier of the namespace.
     delimiter = 'delimiter_example' # str | The delimiter for the identifier used in the context (optional)
 
     try:
         # Check if a namespace exists
-        api_instance.namespace_exists(namespace, delimiter=delimiter)
+        api_instance.namespace_exists(ns, delimiter=delimiter)
     except Exception as e:
         print("Exception when calling NamespaceApi->namespace_exists: %s\n" % e)
 ```
@@ -371,7 +371,7 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **namespace** | **str**| A string identifier of the namespace. | 
+ **ns** | **str**| A string identifier of the namespace. | 
  **delimiter** | **str**| The delimiter for the identifier used in the context | [optional] 
 
 ### Return type

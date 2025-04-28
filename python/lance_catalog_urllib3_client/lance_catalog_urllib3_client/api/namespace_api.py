@@ -338,7 +338,7 @@ class NamespaceApi:
     @validate_call
     def drop_namespace(
         self,
-        namespace: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
+        ns: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
         delimiter: Annotated[Optional[StrictStr], Field(description="The delimiter for the identifier used in the context")] = None,
         _request_timeout: Union[
             None,
@@ -357,8 +357,8 @@ class NamespaceApi:
 
         Drop a namespace. The namespace must be empty. 
 
-        :param namespace: A string identifier of the namespace. (required)
-        :type namespace: str
+        :param ns: A string identifier of the namespace. (required)
+        :type ns: str
         :param delimiter: The delimiter for the identifier used in the context
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -384,7 +384,7 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._drop_namespace_serialize(
-            namespace=namespace,
+            ns=ns,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -416,7 +416,7 @@ class NamespaceApi:
     @validate_call
     def drop_namespace_with_http_info(
         self,
-        namespace: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
+        ns: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
         delimiter: Annotated[Optional[StrictStr], Field(description="The delimiter for the identifier used in the context")] = None,
         _request_timeout: Union[
             None,
@@ -435,8 +435,8 @@ class NamespaceApi:
 
         Drop a namespace. The namespace must be empty. 
 
-        :param namespace: A string identifier of the namespace. (required)
-        :type namespace: str
+        :param ns: A string identifier of the namespace. (required)
+        :type ns: str
         :param delimiter: The delimiter for the identifier used in the context
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -462,7 +462,7 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._drop_namespace_serialize(
-            namespace=namespace,
+            ns=ns,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -494,7 +494,7 @@ class NamespaceApi:
     @validate_call
     def drop_namespace_without_preload_content(
         self,
-        namespace: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
+        ns: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
         delimiter: Annotated[Optional[StrictStr], Field(description="The delimiter for the identifier used in the context")] = None,
         _request_timeout: Union[
             None,
@@ -513,8 +513,8 @@ class NamespaceApi:
 
         Drop a namespace. The namespace must be empty. 
 
-        :param namespace: A string identifier of the namespace. (required)
-        :type namespace: str
+        :param ns: A string identifier of the namespace. (required)
+        :type ns: str
         :param delimiter: The delimiter for the identifier used in the context
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -540,7 +540,7 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._drop_namespace_serialize(
-            namespace=namespace,
+            ns=ns,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -567,7 +567,7 @@ class NamespaceApi:
 
     def _drop_namespace_serialize(
         self,
-        namespace,
+        ns,
         delimiter,
         _request_auth,
         _content_type,
@@ -590,8 +590,8 @@ class NamespaceApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if namespace is not None:
-            _path_params['namespace'] = namespace
+        if ns is not None:
+            _path_params['ns'] = ns
         # process the query parameters
         if delimiter is not None:
             
@@ -617,7 +617,7 @@ class NamespaceApi:
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/v1/namespaces/{namespace}',
+            resource_path='/v1/namespaces/{ns}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -636,7 +636,7 @@ class NamespaceApi:
     @validate_call
     def get_namespace(
         self,
-        namespace: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
+        ns: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
         delimiter: Annotated[Optional[StrictStr], Field(description="The delimiter for the identifier used in the context")] = None,
         _request_timeout: Union[
             None,
@@ -655,8 +655,8 @@ class NamespaceApi:
 
         Return the detailed information for a given namespace 
 
-        :param namespace: A string identifier of the namespace. (required)
-        :type namespace: str
+        :param ns: A string identifier of the namespace. (required)
+        :type ns: str
         :param delimiter: The delimiter for the identifier used in the context
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -682,7 +682,7 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._get_namespace_serialize(
-            namespace=namespace,
+            ns=ns,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -713,7 +713,7 @@ class NamespaceApi:
     @validate_call
     def get_namespace_with_http_info(
         self,
-        namespace: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
+        ns: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
         delimiter: Annotated[Optional[StrictStr], Field(description="The delimiter for the identifier used in the context")] = None,
         _request_timeout: Union[
             None,
@@ -732,8 +732,8 @@ class NamespaceApi:
 
         Return the detailed information for a given namespace 
 
-        :param namespace: A string identifier of the namespace. (required)
-        :type namespace: str
+        :param ns: A string identifier of the namespace. (required)
+        :type ns: str
         :param delimiter: The delimiter for the identifier used in the context
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -759,7 +759,7 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._get_namespace_serialize(
-            namespace=namespace,
+            ns=ns,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -790,7 +790,7 @@ class NamespaceApi:
     @validate_call
     def get_namespace_without_preload_content(
         self,
-        namespace: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
+        ns: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
         delimiter: Annotated[Optional[StrictStr], Field(description="The delimiter for the identifier used in the context")] = None,
         _request_timeout: Union[
             None,
@@ -809,8 +809,8 @@ class NamespaceApi:
 
         Return the detailed information for a given namespace 
 
-        :param namespace: A string identifier of the namespace. (required)
-        :type namespace: str
+        :param ns: A string identifier of the namespace. (required)
+        :type ns: str
         :param delimiter: The delimiter for the identifier used in the context
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -836,7 +836,7 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._get_namespace_serialize(
-            namespace=namespace,
+            ns=ns,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -862,7 +862,7 @@ class NamespaceApi:
 
     def _get_namespace_serialize(
         self,
-        namespace,
+        ns,
         delimiter,
         _request_auth,
         _content_type,
@@ -885,8 +885,8 @@ class NamespaceApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if namespace is not None:
-            _path_params['namespace'] = namespace
+        if ns is not None:
+            _path_params['ns'] = ns
         # process the query parameters
         if delimiter is not None:
             
@@ -912,7 +912,7 @@ class NamespaceApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/namespaces/{namespace}',
+            resource_path='/v1/namespaces/{ns}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1262,7 +1262,7 @@ class NamespaceApi:
     @validate_call
     def namespace_exists(
         self,
-        namespace: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
+        ns: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
         delimiter: Annotated[Optional[StrictStr], Field(description="The delimiter for the identifier used in the context")] = None,
         _request_timeout: Union[
             None,
@@ -1281,8 +1281,8 @@ class NamespaceApi:
 
         Check if a namespace exists. This API should behave exactly like the GetNamespace API, except it does not contain a body. 
 
-        :param namespace: A string identifier of the namespace. (required)
-        :type namespace: str
+        :param ns: A string identifier of the namespace. (required)
+        :type ns: str
         :param delimiter: The delimiter for the identifier used in the context
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1308,7 +1308,7 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._namespace_exists_serialize(
-            namespace=namespace,
+            ns=ns,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1339,7 +1339,7 @@ class NamespaceApi:
     @validate_call
     def namespace_exists_with_http_info(
         self,
-        namespace: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
+        ns: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
         delimiter: Annotated[Optional[StrictStr], Field(description="The delimiter for the identifier used in the context")] = None,
         _request_timeout: Union[
             None,
@@ -1358,8 +1358,8 @@ class NamespaceApi:
 
         Check if a namespace exists. This API should behave exactly like the GetNamespace API, except it does not contain a body. 
 
-        :param namespace: A string identifier of the namespace. (required)
-        :type namespace: str
+        :param ns: A string identifier of the namespace. (required)
+        :type ns: str
         :param delimiter: The delimiter for the identifier used in the context
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1385,7 +1385,7 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._namespace_exists_serialize(
-            namespace=namespace,
+            ns=ns,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1416,7 +1416,7 @@ class NamespaceApi:
     @validate_call
     def namespace_exists_without_preload_content(
         self,
-        namespace: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
+        ns: Annotated[StrictStr, Field(description="A string identifier of the namespace.")],
         delimiter: Annotated[Optional[StrictStr], Field(description="The delimiter for the identifier used in the context")] = None,
         _request_timeout: Union[
             None,
@@ -1435,8 +1435,8 @@ class NamespaceApi:
 
         Check if a namespace exists. This API should behave exactly like the GetNamespace API, except it does not contain a body. 
 
-        :param namespace: A string identifier of the namespace. (required)
-        :type namespace: str
+        :param ns: A string identifier of the namespace. (required)
+        :type ns: str
         :param delimiter: The delimiter for the identifier used in the context
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1462,7 +1462,7 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._namespace_exists_serialize(
-            namespace=namespace,
+            ns=ns,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1488,7 +1488,7 @@ class NamespaceApi:
 
     def _namespace_exists_serialize(
         self,
-        namespace,
+        ns,
         delimiter,
         _request_auth,
         _content_type,
@@ -1511,8 +1511,8 @@ class NamespaceApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if namespace is not None:
-            _path_params['namespace'] = namespace
+        if ns is not None:
+            _path_params['ns'] = ns
         # process the query parameters
         if delimiter is not None:
             
@@ -1538,7 +1538,7 @@ class NamespaceApi:
 
         return self.api_client.param_serialize(
             method='HEAD',
-            resource_path='/v1/namespaces/{namespace}',
+            resource_path='/v1/namespaces/{ns}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
