@@ -47,14 +47,10 @@ jobs:
           cache: "maven"
       - name: Install openapi-generator
         run: pip install --user openapi-generator-cli
-      - name: Generate
-        run: make gen
-#      - name: Generate Rust
-#        working-directory: rust
-#        run: make gen
-#      - name: Generate Python
-#        working-directory: python
-#        run: make gen
+      - name: Codegen
+        run: | 
+          make clean
+          make gen
       - name: Check no difference in codegen
         run: |
           output=$(git diff)
