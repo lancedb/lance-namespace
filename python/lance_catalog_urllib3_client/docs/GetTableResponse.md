@@ -1,12 +1,12 @@
 # GetTableResponse
 
-Result used when a table is successfully loaded. 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **str** |  | 
+**namespace** | **List[str]** |  | 
 **location** | **str** |  | 
 **properties** | **Dict[str, str]** |  | [optional] 
 

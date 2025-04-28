@@ -1,7 +1,7 @@
 /*
- * Lance Catalog REST Specification
+ * Lance REST Namespace Specification
  *
- * **Lance Catalog** is an OpenAPI specification on top of the storage-based Lance format. It provides an integration point for catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, etc. to store and use Lance tables. To integrate, the catalog service implements a **Lance Catalog Adapter**, which is a REST server that converts the Lance catalog requests to native requests against the catalog service. Different tools can integrate with Lance Catalog using the generated OpenAPI clients in various languages, and invoke operations in Lance Catalog to read, write and manage Lance tables in the integrated catalog services. 
+ * **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables. A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, namespace, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy. In an enterprise environment, typically there is a requirement to store tables in a metadata service  such as Apache Hive MetaStore, Apache Gravitino, Unity Namespace, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way. The detailed OpenAPI specification content can be found in [rest.yaml](./rest.yaml). 
  *
  * The version of the OpenAPI document: 0.0.1
  * 
@@ -56,15 +56,18 @@ pub enum TableExistsError {
 }
 
 
-/// Get a table's detailed information under a specified namespace from the catalog.
-pub async fn get_table(configuration: &configuration::Configuration, ns: &str, table: &str) -> Result<models::GetTableResponse, Error<GetTableError>> {
+/// Get a table's detailed information. 
+pub async fn get_table(configuration: &configuration::Configuration, table: &str, delimiter: Option<&str>) -> Result<models::GetTableResponse, Error<GetTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_ns = ns;
     let p_table = table;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/v1/namespaces/{ns}/tables/{table}", configuration.base_path, ns=crate::apis::urlencode(p_ns), table=crate::apis::urlencode(p_table));
+    let uri_str = format!("{}/v1/tables/{table}", configuration.base_path, table=crate::apis::urlencode(p_table));
     let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -94,12 +97,12 @@ pub async fn get_table(configuration: &configuration::Configuration, ns: &str, t
     }
 }
 
-pub async fn register_table(configuration: &configuration::Configuration, ns: &str, register_table_request: models::RegisterTableRequest) -> Result<models::GetTableResponse, Error<RegisterTableError>> {
+/// Register an existing table at a given storage location to a namespace. 
+pub async fn register_table(configuration: &configuration::Configuration, register_table_request: models::RegisterTableRequest) -> Result<models::GetTableResponse, Error<RegisterTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_ns = ns;
     let p_register_table_request = register_table_request;
 
-    let uri_str = format!("{}/v1/namespaces/{ns}/register", configuration.base_path, ns=crate::apis::urlencode(p_ns));
+    let uri_str = format!("{}/v1/table/register", configuration.base_path);
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
     if let Some(ref user_agent) = configuration.user_agent {
@@ -132,15 +135,18 @@ pub async fn register_table(configuration: &configuration::Configuration, ns: &s
     }
 }
 
-/// Check if a table exists within a given namespace.
-pub async fn table_exists(configuration: &configuration::Configuration, ns: &str, table: &str) -> Result<(), Error<TableExistsError>> {
+/// Check if a table exists. This API should behave exactly like the GetTable API, except it does not contain a body. 
+pub async fn table_exists(configuration: &configuration::Configuration, table: &str, delimiter: Option<&str>) -> Result<(), Error<TableExistsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_ns = ns;
     let p_table = table;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/v1/namespaces/{ns}/tables/{table}", configuration.base_path, ns=crate::apis::urlencode(p_ns), table=crate::apis::urlencode(p_table));
+    let uri_str = format!("{}/v1/tables/{table}", configuration.base_path, table=crate::apis::urlencode(p_table));
     let mut req_builder = configuration.client.request(reqwest::Method::HEAD, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }

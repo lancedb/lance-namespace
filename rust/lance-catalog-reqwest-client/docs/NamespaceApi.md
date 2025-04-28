@@ -4,18 +4,20 @@ All URIs are relative to *http://localhost:2333*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create_namespace**](NamespaceApi.md#create_namespace) | **POST** /v1/namespaces | Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:   * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.   * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.   * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created. 
-[**drop_namespace**](NamespaceApi.md#drop_namespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace from the catalog. Namespace must be empty.
-[**get_namespace**](NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
-[**list_namespaces**](NamespaceApi.md#list_namespaces) | **GET** /v1/namespaces | List all namespaces in the catalog. 
-[**namespace_exists**](NamespaceApi.md#namespace_exists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists
+[**create_namespace**](NamespaceApi.md#create_namespace) | **POST** /v1/namespaces | Create a new namespace
+[**drop_namespace**](NamespaceApi.md#drop_namespace) | **DELETE** /v1/namespaces/{namespace} | Drop a namespace
+[**get_namespace**](NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{namespace} | Get information about a namespace
+[**list_namespaces**](NamespaceApi.md#list_namespaces) | **GET** /v1/namespaces | List namespaces
+[**namespace_exists**](NamespaceApi.md#namespace_exists) | **HEAD** /v1/namespaces/{namespace} | Check if a namespace exists
 
 
 
 ## create_namespace
 
-> models::CreateNamespaceResponse create_namespace(create_namespace_request)
-Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:   * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.   * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.   * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created. 
+> models::GetNamespaceResponse create_namespace(create_namespace_request)
+Create a new namespace
+
+Create a new namespace. A namespace can manage either a collection of child namespaces, or a collection of tables. There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
 
 ### Parameters
 
@@ -26,7 +28,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::CreateNamespaceResponse**](CreateNamespaceResponse.md)
+[**models::GetNamespaceResponse**](GetNamespaceResponse.md)
 
 ### Authorization
 
@@ -42,15 +44,18 @@ No authorization required
 
 ## drop_namespace
 
-> drop_namespace(ns)
-Drop a namespace from the catalog. Namespace must be empty.
+> drop_namespace(namespace, delimiter)
+Drop a namespace
+
+Drop a namespace. The namespace must be empty. 
 
 ### Parameters
 
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**ns** | **String** | The name of the namespace. | [required] |
+**namespace** | **String** | A string identifier of the namespace. | [required] |
+**delimiter** | Option<**String**> | The delimiter for the identifier used in the context |  |
 
 ### Return type
 
@@ -70,17 +75,18 @@ No authorization required
 
 ## get_namespace
 
-> models::GetNamespaceResponse get_namespace(ns)
+> models::GetNamespaceResponse get_namespace(namespace, delimiter)
 Get information about a namespace
 
-Return a detailed information for a given namespace
+Return the detailed information for a given namespace 
 
 ### Parameters
 
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**ns** | **String** | The name of the namespace. | [required] |
+**namespace** | **String** | A string identifier of the namespace. | [required] |
+**delimiter** | Option<**String**> | The delimiter for the identifier used in the context |  |
 
 ### Return type
 
@@ -100,8 +106,10 @@ No authorization required
 
 ## list_namespaces
 
-> models::ListNamespacesResponse list_namespaces(page_token, page_size)
-List all namespaces in the catalog. 
+> models::ListNamespacesResponse list_namespaces(page_token, page_size, parent, delimiter)
+List namespaces
+
+List all child namespace names of the root namespace or a given parent namespace. 
 
 ### Parameters
 
@@ -110,6 +118,8 @@ Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **page_token** | Option<**String**> |  |  |
 **page_size** | Option<**i32**> | An inclusive upper bound of the number of results that a client will receive. |  |
+**parent** | Option<**String**> | A string identifier of the parent namespace. |  |
+**delimiter** | Option<**String**> | The delimiter for the identifier used in the context |  |
 
 ### Return type
 
@@ -129,17 +139,18 @@ No authorization required
 
 ## namespace_exists
 
-> namespace_exists(ns)
+> namespace_exists(namespace, delimiter)
 Check if a namespace exists
 
-Check if a namespace exists. The response does not contain a body.
+Check if a namespace exists. This API should behave exactly like the GetNamespace API, except it does not contain a body. 
 
 ### Parameters
 
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**ns** | **String** | The name of the namespace. | [required] |
+**namespace** | **String** | A string identifier of the namespace. | [required] |
+**delimiter** | Option<**String**> | The delimiter for the identifier used in the context |  |
 
 ### Return type
 

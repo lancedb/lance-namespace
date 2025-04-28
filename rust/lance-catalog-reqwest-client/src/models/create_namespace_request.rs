@@ -1,7 +1,7 @@
 /*
- * Lance Catalog REST Specification
+ * Lance REST Namespace Specification
  *
- * **Lance Catalog** is an OpenAPI specification on top of the storage-based Lance format. It provides an integration point for catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, etc. to store and use Lance tables. To integrate, the catalog service implements a **Lance Catalog Adapter**, which is a REST server that converts the Lance catalog requests to native requests against the catalog service. Different tools can integrate with Lance Catalog using the generated OpenAPI clients in various languages, and invoke operations in Lance Catalog to read, write and manage Lance tables in the integrated catalog services. 
+ * **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables. A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, namespace, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy. In an enterprise environment, typically there is a requirement to store tables in a metadata service  such as Apache Hive MetaStore, Apache Gravitino, Unity Namespace, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way. The detailed OpenAPI specification content can be found in [rest.yaml](./rest.yaml). 
  *
  * The version of the OpenAPI document: 0.0.1
  * 
@@ -15,6 +15,8 @@ use serde::{Deserialize, Serialize};
 pub struct CreateNamespaceRequest {
     #[serde(rename = "name")]
     pub name: String,
+    #[serde(rename = "parent", skip_serializing_if = "Option::is_none")]
+    pub parent: Option<Vec<String>>,
     #[serde(rename = "mode")]
     pub mode: Mode,
     #[serde(rename = "options", skip_serializing_if = "Option::is_none")]
@@ -25,6 +27,7 @@ impl CreateNamespaceRequest {
     pub fn new(name: String, mode: Mode) -> CreateNamespaceRequest {
         CreateNamespaceRequest {
             name,
+            parent: None,
             mode,
             options: None,
         }

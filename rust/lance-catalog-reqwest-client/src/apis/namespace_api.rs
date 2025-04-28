@@ -1,7 +1,7 @@
 /*
- * Lance Catalog REST Specification
+ * Lance REST Namespace Specification
  *
- * **Lance Catalog** is an OpenAPI specification on top of the storage-based Lance format. It provides an integration point for catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, etc. to store and use Lance tables. To integrate, the catalog service implements a **Lance Catalog Adapter**, which is a REST server that converts the Lance catalog requests to native requests against the catalog service. Different tools can integrate with Lance Catalog using the generated OpenAPI clients in various languages, and invoke operations in Lance Catalog to read, write and manage Lance tables in the integrated catalog services. 
+ * **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables. A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, namespace, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy. In an enterprise environment, typically there is a requirement to store tables in a metadata service  such as Apache Hive MetaStore, Apache Gravitino, Unity Namespace, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way. The detailed OpenAPI specification content can be found in [rest.yaml](./rest.yaml). 
  *
  * The version of the OpenAPI document: 0.0.1
  * 
@@ -83,7 +83,8 @@ pub enum NamespaceExistsError {
 }
 
 
-pub async fn create_namespace(configuration: &configuration::Configuration, create_namespace_request: models::CreateNamespaceRequest) -> Result<models::CreateNamespaceResponse, Error<CreateNamespaceError>> {
+/// Create a new namespace. A namespace can manage either a collection of child namespaces, or a collection of tables. There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
+pub async fn create_namespace(configuration: &configuration::Configuration, create_namespace_request: models::CreateNamespaceRequest) -> Result<models::GetNamespaceResponse, Error<CreateNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_create_namespace_request = create_namespace_request;
 
@@ -110,8 +111,8 @@ pub async fn create_namespace(configuration: &configuration::Configuration, crea
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::CreateNamespaceResponse`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::CreateNamespaceResponse`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetNamespaceResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetNamespaceResponse`")))),
         }
     } else {
         let content = resp.text().await?;
@@ -120,13 +121,18 @@ pub async fn create_namespace(configuration: &configuration::Configuration, crea
     }
 }
 
-pub async fn drop_namespace(configuration: &configuration::Configuration, ns: &str) -> Result<(), Error<DropNamespaceError>> {
+/// Drop a namespace. The namespace must be empty. 
+pub async fn drop_namespace(configuration: &configuration::Configuration, namespace: &str, delimiter: Option<&str>) -> Result<(), Error<DropNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_ns = ns;
+    let p_namespace = namespace;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/v1/namespaces/{ns}", configuration.base_path, ns=crate::apis::urlencode(p_ns));
+    let uri_str = format!("{}/v1/namespaces/{namespace}", configuration.base_path, namespace=crate::apis::urlencode(p_namespace));
     let mut req_builder = configuration.client.request(reqwest::Method::DELETE, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -145,14 +151,18 @@ pub async fn drop_namespace(configuration: &configuration::Configuration, ns: &s
     }
 }
 
-/// Return a detailed information for a given namespace
-pub async fn get_namespace(configuration: &configuration::Configuration, ns: &str) -> Result<models::GetNamespaceResponse, Error<GetNamespaceError>> {
+/// Return the detailed information for a given namespace 
+pub async fn get_namespace(configuration: &configuration::Configuration, namespace: &str, delimiter: Option<&str>) -> Result<models::GetNamespaceResponse, Error<GetNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_ns = ns;
+    let p_namespace = namespace;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/v1/namespaces/{ns}", configuration.base_path, ns=crate::apis::urlencode(p_ns));
+    let uri_str = format!("{}/v1/namespaces/{namespace}", configuration.base_path, namespace=crate::apis::urlencode(p_namespace));
     let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -182,10 +192,13 @@ pub async fn get_namespace(configuration: &configuration::Configuration, ns: &st
     }
 }
 
-pub async fn list_namespaces(configuration: &configuration::Configuration, page_token: Option<&str>, page_size: Option<i32>) -> Result<models::ListNamespacesResponse, Error<ListNamespacesError>> {
+/// List all child namespace names of the root namespace or a given parent namespace. 
+pub async fn list_namespaces(configuration: &configuration::Configuration, page_token: Option<&str>, page_size: Option<i32>, parent: Option<&str>, delimiter: Option<&str>) -> Result<models::ListNamespacesResponse, Error<ListNamespacesError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_page_token = page_token;
     let p_page_size = page_size;
+    let p_parent = parent;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/namespaces", configuration.base_path);
     let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
@@ -195,6 +208,12 @@ pub async fn list_namespaces(configuration: &configuration::Configuration, page_
     }
     if let Some(ref param_value) = p_page_size {
         req_builder = req_builder.query(&[("pageSize", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_parent {
+        req_builder = req_builder.query(&[("parent", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
     }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
@@ -225,14 +244,18 @@ pub async fn list_namespaces(configuration: &configuration::Configuration, page_
     }
 }
 
-/// Check if a namespace exists. The response does not contain a body.
-pub async fn namespace_exists(configuration: &configuration::Configuration, ns: &str) -> Result<(), Error<NamespaceExistsError>> {
+/// Check if a namespace exists. This API should behave exactly like the GetNamespace API, except it does not contain a body. 
+pub async fn namespace_exists(configuration: &configuration::Configuration, namespace: &str, delimiter: Option<&str>) -> Result<(), Error<NamespaceExistsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_ns = ns;
+    let p_namespace = namespace;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/v1/namespaces/{ns}", configuration.base_path, ns=crate::apis::urlencode(p_ns));
+    let uri_str = format!("{}/v1/namespaces/{namespace}", configuration.base_path, namespace=crate::apis::urlencode(p_namespace));
     let mut req_builder = configuration.client.request(reqwest::Method::HEAD, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }

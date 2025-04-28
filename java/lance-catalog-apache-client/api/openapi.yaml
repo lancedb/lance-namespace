@@ -1,16 +1,13 @@
 openapi: 3.1.1
 info:
   description: |
-    **Lance Catalog** is an OpenAPI specification on top of the storage-based Lance format.
-    It provides an integration point for catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, etc.
-    to store and use Lance tables. To integrate, the catalog service implements a **Lance Catalog Adapter**,
-    which is a REST server that converts the Lance catalog requests to native requests against the catalog service.
-    Different tools can integrate with Lance Catalog using the generated OpenAPI clients in various languages,
-    and invoke operations in Lance Catalog to read, write and manage Lance tables in the integrated catalog services.
+    **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _"tools"_ in this document) should integrate with Lance tables.
+    A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, namespace, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy.
+    In an enterprise environment, typically there is a requirement to store tables in a metadata service  such as Apache Hive MetaStore, Apache Gravitino, Unity Namespace, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way. The detailed OpenAPI specification content can be found in [rest.yaml](./rest.yaml).
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  title: Lance Catalog REST Specification
+  title: Lance REST Namespace Specification
   version: 0.0.1
 servers:
 - description: Generic server URL with all parts configurable
@@ -39,10 +36,14 @@ security:
 paths:
   /v1/namespaces:
     get:
+      description: |
+        List all child namespace names of the root namespace or a given parent namespace.
       operationId: ListNamespaces
       parameters:
       - $ref: '#/components/parameters/pageToken'
       - $ref: '#/components/parameters/pageSize'
+      - $ref: '#/components/parameters/parent'
+      - $ref: '#/components/parameters/delimiter'
       responses:
         "200":
           $ref: '#/components/responses/ListNamespacesResponse'
@@ -58,13 +59,19 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: |
-        List all namespaces in the catalog.
+      summary: List namespaces
       tags:
       - Namespace
       x-accepts:
       - application/json
     post:
+      description: |
+        Create a new namespace.
+        A namespace can manage either a collection of child namespaces, or a collection of tables.
+        There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:
+          * CREATE: the operation fails with 400.
+          * EXIST_OK: the operation succeeds and the existing namespace is kept.
+          * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created.
       operationId: CreateNamespace
       requestBody:
         content:
@@ -74,7 +81,7 @@ paths:
         required: true
       responses:
         "200":
-          $ref: '#/components/responses/CreateNamespaceResponse'
+          $ref: '#/components/responses/GetNamespaceResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
@@ -89,21 +96,20 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: |
-        Create a new namespace. A catalog can manage one or more namespaces. A namespace is used to manage one or more tables. There are three modes when trying to create a namespace:
-          * CREATE: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation fails with 400.
-          * EXIST_OK: Create the namespace if it does not exist. If a namespace of the same name already exists, the operation succeeds and the existing namespace is kept.
-          * OVERWRITE: Create the namespace if it does not exist. If a namespace of the same name already exists, the existing namespace is dropped and a new namespace with this name with no table is created.
+      summary: Create a new namespace
       tags:
       - Namespace
       x-content-type: application/json
       x-accepts:
       - application/json
-  /v1/namespaces/{ns}:
+  /v1/namespaces/{namespace}:
     delete:
+      description: |
+        Drop a namespace. The namespace must be empty.
       operationId: DropNamespace
       parameters:
       - $ref: '#/components/parameters/namespace'
+      - $ref: '#/components/parameters/delimiter'
       responses:
         "204":
           description: "Success, no content"
@@ -121,16 +127,18 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: Drop a namespace from the catalog. Namespace must be empty.
+      summary: Drop a namespace
       tags:
       - Namespace
       x-accepts:
       - application/json
     get:
-      description: Return a detailed information for a given namespace
+      description: |
+        Return the detailed information for a given namespace
       operationId: GetNamespace
       parameters:
       - $ref: '#/components/parameters/namespace'
+      - $ref: '#/components/parameters/delimiter'
       responses:
         "200":
           $ref: '#/components/responses/GetNamespaceResponse'
@@ -152,10 +160,13 @@ paths:
       x-accepts:
       - application/json
     head:
-      description: Check if a namespace exists. The response does not contain a body.
+      description: |
+        Check if a namespace exists.
+        This API should behave exactly like the GetNamespace API, except it does not contain a body.
       operationId: NamespaceExists
       parameters:
       - $ref: '#/components/parameters/namespace'
+      - $ref: '#/components/parameters/delimiter'
       responses:
         "200":
           description: "Success, no content"
@@ -178,11 +189,12 @@ paths:
       - application/json
     parameters:
     - $ref: '#/components/parameters/namespace'
-  /v1/namespaces/{ns}/register:
+    - $ref: '#/components/parameters/delimiter'
+  /v1/table/register:
     post:
+      description: |
+        Register an existing table at a given storage location to a namespace.
       operationId: RegisterTable
-      parameters:
-      - $ref: '#/components/parameters/namespace'
       requestBody:
         content:
           application/json:
@@ -206,21 +218,20 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: |
-        Register a new table in the given namespace. A table represents a lance dataset.  In Lance catalog, a table must be hosted in a namespace.
+      summary: Register a table to a namespace
       tags:
       - Table
       x-content-type: application/json
       x-accepts:
       - application/json
-  /v1/namespaces/{ns}/tables/{table}:
+  /v1/tables/{table}:
     get:
-      description: Get a table's detailed information under a specified namespace
-        from the catalog.
+      description: |
+        Get a table's detailed information.
       operationId: GetTable
       parameters:
-      - $ref: '#/components/parameters/namespace'
       - $ref: '#/components/parameters/table'
+      - $ref: '#/components/parameters/delimiter'
       responses:
         "200":
           $ref: '#/components/responses/GetTableResponse'
@@ -236,17 +247,19 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: Get a table from the catalog
+      summary: Get a table from the namespace
       tags:
       - Table
       x-accepts:
       - application/json
     head:
-      description: Check if a table exists within a given namespace.
+      description: |
+        Check if a table exists.
+        This API should behave exactly like the GetTable API, except it does not contain a body.
       operationId: TableExists
       parameters:
-      - $ref: '#/components/parameters/namespace'
       - $ref: '#/components/parameters/table'
+      - $ref: '#/components/parameters/delimiter'
       responses:
         "200":
           description: "Success, no content"
@@ -268,8 +281,8 @@ paths:
       x-accepts:
       - application/json
     parameters:
-    - $ref: '#/components/parameters/namespace'
     - $ref: '#/components/parameters/table'
+    - $ref: '#/components/parameters/delimiter'
 components:
   examples:
     ListNamespacesEmptyExample:
@@ -284,14 +297,23 @@ components:
         - credits
   parameters:
     namespace:
-      description: The name of the namespace.
+      description: A string identifier of the namespace.
       explode: false
       in: path
-      name: ns
+      name: namespace
       required: true
       schema:
         type: string
       style: simple
+    parent:
+      description: A string identifier of the parent namespace.
+      explode: true
+      in: query
+      name: parent
+      required: false
+      schema:
+        type: string
+      style: form
     pageToken:
       allowEmptyValue: true
       explode: true
@@ -313,7 +335,7 @@ components:
         type: integer
       style: form
     table:
-      description: A table name.
+      description: A string identifier of the table
       explode: false
       in: path
       name: table
@@ -321,21 +343,16 @@ components:
       schema:
         type: string
       style: simple
+    delimiter:
+      description: The delimiter for the identifier used in the context
+      explode: true
+      in: query
+      name: delimiter
+      required: false
+      schema:
+        type: string
+      style: form
   responses:
-    CreateNamespaceResponse:
-      content:
-        application/json:
-          example:
-            namespace:
-            - lance.ns1
-            properties:
-              created_at: "1452120468"
-          schema:
-            $ref: '#/components/schemas/CreateNamespaceResponse'
-      description: "Represents a successful call to create a namespace. Returns the\
-        \ namespace created, as well as any properties that were stored for the namespace,\
-        \ including those the server might have added. Implementations are not required\
-        \ to support namespace properties."
     ListNamespacesResponse:
       content:
         application/json:
@@ -408,7 +425,7 @@ components:
             title: Not found Error
             status: 404
             detail: ""
-            instance: "/v1/namespaces/{ns}"
+            instance: "/v1/namespaces/{namespace}"
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       description: A server-side problem that means can not find the specified resource.
@@ -433,7 +450,7 @@ components:
             title: The namespace has been concurrently modified
             status: 409
             detail: ""
-            instance: "/v1/namespaces/{ns}"
+            instance: "/v1/namespaces/{namespace}"
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       description: The request conflicts with the current state of the target resource.
@@ -503,12 +520,19 @@ components:
     CreateNamespaceRequest:
       example:
         mode: CREATE
+        parent:
+        - parent
+        - parent
         name: name
         options:
           key: options
       properties:
         name:
           type: string
+        parent:
+          items:
+            type: string
+          type: array
         mode:
           enum:
           - CREATE
@@ -521,23 +545,6 @@ components:
       required:
       - mode
       - name
-    CreateNamespaceResponse:
-      example:
-        name: name
-        properties:
-          created_at: "1452120468"
-      properties:
-        name:
-          type: string
-        properties:
-          additionalProperties:
-            type: string
-          default: {}
-          description: "Properties stored on the namespace, if supported by the server."
-          example:
-            created_at: "1452120468"
-      required:
-      - name
     ListNamespacesResponse:
       example:
         nextPageToken: nextPageToken
@@ -546,7 +553,6 @@ components:
         - accounting
       properties:
         namespaces:
-          description: An array of namespace names in the catalog.
           items:
             example: accounting
             type: string
@@ -564,13 +570,20 @@ components:
       - namespaces
     GetNamespaceResponse:
       example:
-        namespace: namespace
+        parent:
+        - parent
+        - parent
+        name: name
         properties:
           owner: Ralph
           created_at: "1452120468"
       properties:
-        namespace:
+        name:
           type: string
+        parent:
+          items:
+            type: string
+          type: array
         properties:
           additionalProperties:
             type: string
@@ -584,7 +597,7 @@ components:
             created_at: "1452120468"
           nullable: true
       required:
-      - namespace
+      - name
     PageToken:
       description: |-
         An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
@@ -596,26 +609,39 @@ components:
     RegisterTableRequest:
       example:
         name: name
+        namespace:
+        - namespace
+        - namespace
         location: location
       properties:
         name:
           type: string
+        namespace:
+          items:
+            type: string
+          type: array
         location:
           type: string
       required:
       - location
       - name
+      - namespace
     GetTableResponse:
-      description: |
-        Result used when a table is successfully loaded.
       example:
         name: name
+        namespace:
+        - namespace
+        - namespace
         location: location
         properties:
           key: properties
       properties:
         name:
           type: string
+        namespace:
+          items:
+            type: string
+          type: array
         location:
           type: string
         properties:
@@ -624,4 +650,5 @@ components:
       required:
       - location
       - name
+      - namespace
 

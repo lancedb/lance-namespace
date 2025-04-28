@@ -23,7 +23,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -34,6 +36,8 @@ import java.util.Objects;
 public class CreateNamespaceRequest {
 
   private String name;
+
+  @Valid private List<String> parent = new ArrayList<>();
 
   /** Gets or Sets mode */
   public enum ModeEnum {
@@ -105,6 +109,34 @@ public class CreateNamespaceRequest {
     this.name = name;
   }
 
+  public CreateNamespaceRequest parent(List<String> parent) {
+    this.parent = parent;
+    return this;
+  }
+
+  public CreateNamespaceRequest addParentItem(String parentItem) {
+    if (this.parent == null) {
+      this.parent = new ArrayList<>();
+    }
+    this.parent.add(parentItem);
+    return this;
+  }
+
+  /**
+   * Get parent
+   *
+   * @return parent
+   */
+  @Schema(name = "parent", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("parent")
+  public List<String> getParent() {
+    return parent;
+  }
+
+  public void setParent(List<String> parent) {
+    this.parent = parent;
+  }
+
   public CreateNamespaceRequest mode(ModeEnum mode) {
     this.mode = mode;
     return this;
@@ -164,13 +196,14 @@ public class CreateNamespaceRequest {
     }
     CreateNamespaceRequest createNamespaceRequest = (CreateNamespaceRequest) o;
     return Objects.equals(this.name, createNamespaceRequest.name)
+        && Objects.equals(this.parent, createNamespaceRequest.parent)
         && Objects.equals(this.mode, createNamespaceRequest.mode)
         && Objects.equals(this.options, createNamespaceRequest.options);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, options);
+    return Objects.hash(name, parent, mode, options);
   }
 
   @Override
@@ -178,6 +211,7 @@ public class CreateNamespaceRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateNamespaceRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    options: ").append(toIndentedString(options)).append("\n");
     sb.append("}");

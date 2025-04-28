@@ -21,20 +21,21 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/** Result used when a table is successfully loaded. */
-@Schema(
-    name = "GetTableResponse",
-    description = "Result used when a table is successfully loaded. ")
+/** GetTableResponse */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class GetTableResponse {
 
   private String name;
+
+  @Valid private List<String> namespace = new ArrayList<>();
 
   private String location;
 
@@ -45,8 +46,9 @@ public class GetTableResponse {
   }
 
   /** Constructor with only required parameters */
-  public GetTableResponse(String name, String location) {
+  public GetTableResponse(String name, List<String> namespace, String location) {
     this.name = name;
+    this.namespace = namespace;
     this.location = location;
   }
 
@@ -69,6 +71,35 @@ public class GetTableResponse {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public GetTableResponse namespace(List<String> namespace) {
+    this.namespace = namespace;
+    return this;
+  }
+
+  public GetTableResponse addNamespaceItem(String namespaceItem) {
+    if (this.namespace == null) {
+      this.namespace = new ArrayList<>();
+    }
+    this.namespace.add(namespaceItem);
+    return this;
+  }
+
+  /**
+   * Get namespace
+   *
+   * @return namespace
+   */
+  @NotNull
+  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("namespace")
+  public List<String> getNamespace() {
+    return namespace;
+  }
+
+  public void setNamespace(List<String> namespace) {
+    this.namespace = namespace;
   }
 
   public GetTableResponse location(String location) {
@@ -130,13 +161,14 @@ public class GetTableResponse {
     }
     GetTableResponse getTableResponse = (GetTableResponse) o;
     return Objects.equals(this.name, getTableResponse.name)
+        && Objects.equals(this.namespace, getTableResponse.namespace)
         && Objects.equals(this.location, getTableResponse.location)
         && Objects.equals(this.properties, getTableResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, location, properties);
+    return Objects.hash(name, namespace, location, properties);
   }
 
   @Override
@@ -144,6 +176,7 @@ public class GetTableResponse {
     StringBuilder sb = new StringBuilder();
     sb.append("class GetTableResponse {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
