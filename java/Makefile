@@ -13,39 +13,39 @@
 VERSION = 0.0.1
 
 clean-java-apache-client:
-	rm -rf lance-catalog-apache-client
+	rm -rf lance-namespace-apache-client
 
 gen-java-apache-client: clean-java-apache-client
 	openapi-generator-cli generate \
-	  -i ../spec/catalog.yaml \
+	  -i ../spec/rest.yaml \
 	  -g java \
-	  -o lance-catalog-apache-client \
+	  -o lance-namespace-apache-client \
 	  --ignore-file-override=.apache-client-ignore \
-	  --additional-properties=groupId=com.lancedb,artifactId=lance-catalog-apache-client,artifactVersion=$(VERSION),parentGroupId=com.lancedb,parentArtifactId=lance-catalog-root,parentVersion=$(VERSION),parentRelativePath=pom.xml,library=apache-httpclient,apiPackage=com.lancedb.lance.catalog.client.apache.api,modelPackage=com.lancedb.lance.catalog.client.apache.model,hideGenerationTimestamp=true,licenseName=Apache-2.0,licenseUrl=https://www.apache.org/licenses/LICENSE-2.0.txt
-	sed -i -e 's#<junit-version>5.10.2</junit-version>#<junit-version>5.8.2</junit-version>#g' lance-catalog-apache-client/pom.xml
-	rm -f lance-catalog-apache-client/pom.xml-e
+	  --additional-properties=groupId=com.lancedb,artifactId=lance-namespace-apache-client,artifactVersion=$(VERSION),parentGroupId=com.lancedb,parentArtifactId=lance-namespace-root,parentVersion=$(VERSION),parentRelativePath=pom.xml,library=apache-httpclient,apiPackage=com.lancedb.lance.catalog.client.apache.api,modelPackage=com.lancedb.lance.catalog.client.apache.model,hideGenerationTimestamp=true,licenseName=Apache-2.0,licenseUrl=https://www.apache.org/licenses/LICENSE-2.0.txt
+	sed -i -e 's#<junit-version>5.10.2</junit-version>#<junit-version>5.8.2</junit-version>#g' lance-namespace-apache-client/pom.xml
+	rm -f lance-namespace-apache-client/pom.xml-e
 
 lint-java-apache-client: gen-java-apache-client gen-java-springboot-server
-	./mvnw spotless:apply -pl lance-catalog-apache-client -am
+	./mvnw spotless:apply -pl lance-namespace-apache-client -am
 
 build-java-apache-client: gen-java-apache-client lint-java-apache-client
-	./mvnw install -pl lance-catalog-apache-client -am
+	./mvnw install -pl lance-namespace-apache-client -am
 
 clean-java-springboot-server:
-	rm -rf lance-catalog-springboot-server
+	rm -rf lance-namespace-springboot-server
 
 gen-java-springboot-server: clean-java-springboot-server
 	openapi-generator-cli generate \
-	  -i ../spec/catalog.yaml \
+	  -i ../spec/rest.yaml \
 	  -g spring \
-      -o lance-catalog-springboot-server \
-      --additional-properties=groupId=com.lancedb,artifactId=lance-catalog-springboot-server,artifactVersion=$(VERSION),parentGroupId=com.lancedb,parentArtifactId=lance-catalog-root,parentVersion=$(VERSION),parentRelativePath=pom.xml,library=spring-boot,interfaceOnly=true,useOptional=true,openApiNullable=false,java8=true,apiPackage=com.lancedb.lance.catalog.server.springboot.api,modelPackage=com.lancedb.lance.catalog.server.springboot.model,useTags=true,skipDefaultInterface=false,hideGenerationTimestamp=true,licenseName=Apache-2.0,licenseUrl=https://www.apache.org/licenses/LICENSE-2.0.txt
+      -o lance-namespace-springboot-server \
+      --additional-properties=groupId=com.lancedb,artifactId=lance-namespace-springboot-server,artifactVersion=$(VERSION),parentGroupId=com.lancedb,parentArtifactId=lance-namespace-root,parentVersion=$(VERSION),parentRelativePath=pom.xml,library=spring-boot,interfaceOnly=true,useOptional=true,openApiNullable=false,java8=true,apiPackage=com.lancedb.lance.catalog.server.springboot.api,modelPackage=com.lancedb.lance.catalog.server.springboot.model,useTags=true,skipDefaultInterface=false,hideGenerationTimestamp=true,licenseName=Apache-2.0,licenseUrl=https://www.apache.org/licenses/LICENSE-2.0.txt
 
 lint-java-springboot-server: gen-java-apache-client gen-java-springboot-server
-	./mvnw spotless:apply -pl lance-catalog-springboot-server -am
+	./mvnw spotless:apply -pl lance-namespace-springboot-server -am
 
 build-java-springboot-server: gen-java-springboot-server lint-java-springboot-server
-	./mvnw install -pl lance-catalog-springboot-server -am
+	./mvnw install -pl lance-namespace-springboot-server -am
 
 clean: clean-java-apache-client clean-java-springboot-server
 

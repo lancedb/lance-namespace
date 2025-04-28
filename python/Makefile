@@ -13,11 +13,11 @@
 VERSION = 0.0.1
 
 clean-python-urllib3-client:
-	rm -rf lance-catalog-urllib3-client/**
+	rm -rf lance-namespace-urllib3-client/**
 
 gen-python-urllib3-client: clean-python-urllib3-client
 	openapi-generator-cli generate \
-	  -i ../spec/catalog.yaml \
+	  -i ../spec/rest.yaml \
 	  -g python \
 	  -o lance_catalog_urllib3_client \
 	  --additional-properties=packageName=lance_catalog_urllib3_client,packageVersion=$(VERSION),library=urllib3

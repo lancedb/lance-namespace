@@ -13,14 +13,14 @@
 VERSION = 0.0.1
 
 clean-rust-reqwest-client:
-	rm -rf lance-catalog-reqwest-client/**
+	rm -rf lance-namespace-reqwest-client/**
 
 gen-rust-reqwest-client: clean-rust-reqwest-client
 	openapi-generator-cli generate \
-	  -i ../spec/catalog.yaml \
+	  -i ../spec/rest.yaml \
 	  -g rust \
-	  -o lance-catalog-reqwest-client \
-	  --additional-properties=packageName=lance-catalog-reqwest-client,packageVersion=$(VERSION),asyncApi=true,library=reqwest
+	  -o lance-namespace-reqwest-client \
+	  --additional-properties=packageName=lance-namespace-reqwest-client,packageVersion=$(VERSION),asyncApi=true,library=reqwest
 
 build-rust-reqwest-client: gen-rust-reqwest-client
 	cargo test

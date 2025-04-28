@@ -68,10 +68,10 @@ jobs:
         with:
           repository: lancedb/lance
           path: lance
-      - name: Checkout lance-catalog repo
+      - name: Checkout lance-namespace repo
         uses: actions/checkout@v4
         with:
-          path: lance-catalog
+          path: lance-namespace
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: lance/java/core/lance-jni -> ../target/rust-maven-plugin/lance-jni
@@ -107,7 +107,7 @@ jobs:
           fi
           mvn install -pl :lance-core -DskipTests -am
       - name: Check code style
-        working-directory: lance-catalog/java
+        working-directory: lance-namespace/java
         run: |
           if [ "${{ matrix.java-version }}" == "17" ]; then
             export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS \
@@ -132,7 +132,7 @@ jobs:
           fi
           mvn checkstyle:check spotless:check
       - name: Running tests with Java ${{ matrix.java-version }}
-        working-directory: lance-catalog/java
+        working-directory: lance-namespace/java
         run: |
           if [ "${{ matrix.java-version }}" == "17" ]; then
             export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS \

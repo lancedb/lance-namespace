@@ -68,10 +68,10 @@ jobs:
         with:
           repository: lancedb/lance
           path: lance
-      - name: Checkout lance-catalog repo
+      - name: Checkout lance-namespace repo
         uses: actions/checkout@v4
         with:
-          path: lance-catalog
+          path: lance-namespace
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: lance/python
@@ -92,7 +92,7 @@ jobs:
           source ../../venv/bin/activate
           maturin develop
       - name: Test lance_catalog_urllib3_client with Python ${{ matrix.python-version }}
-        working-directory: lance-catalog/python/lance_catalog_urllib3_client
+        working-directory: lance-namespace/python/lance_catalog_urllib3_client
         run: |
           source ../../../venv/bin/activate
           poetry install

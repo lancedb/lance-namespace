@@ -1,0 +1,654 @@
+openapi: 3.1.1
+info:
+  description: |
+    **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _"tools"_ in this document) should integrate with Lance tables.
+    A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, namespace, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy.
+    In an enterprise environment, typically there is a requirement to store tables in a metadata service  such as Apache Hive MetaStore, Apache Gravitino, Unity Namespace, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way. The detailed OpenAPI specification content can be found in [rest.yaml](./rest.yaml).
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: Lance REST Namespace Specification
+  version: 0.0.1
+servers:
+- description: Generic server URL with all parts configurable
+  url: "{scheme}://{host}:{port}/{basePath}"
+  variables:
+    scheme:
+      default: http
+    host:
+      default: localhost
+    port:
+      default: "2333"
+    basePath:
+      default: ""
+- description: Server URL when the port can be inferred from the scheme
+  url: "{scheme}://{host}/{basePath}"
+  variables:
+    scheme:
+      default: http
+    host:
+      default: localhost
+    basePath:
+      default: ""
+security:
+- OAuth2: []
+- BearerAuth: []
+paths:
+  /v1/namespaces:
+    get:
+      description: |
+        List all child namespace names of the root namespace or a given parent namespace.
+      operationId: ListNamespaces
+      parameters:
+      - $ref: '#/components/parameters/pageToken'
+      - $ref: '#/components/parameters/pageSize'
+      - $ref: '#/components/parameters/parent'
+      - $ref: '#/components/parameters/delimiter'
+      responses:
+        "200":
+          $ref: '#/components/responses/ListNamespacesResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "406":
+          $ref: '#/components/responses/UnsupportedOperationErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: List namespaces
+      tags:
+      - Namespace
+      x-accepts:
+      - application/json
+    post:
+      description: |
+        Create a new namespace.
+        A namespace can manage either a collection of child namespaces, or a collection of tables.
+        There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:
+          * CREATE: the operation fails with 400.
+          * EXIST_OK: the operation succeeds and the existing namespace is kept.
+          * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created.
+      operationId: CreateNamespace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNamespaceRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/GetNamespaceResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "406":
+          $ref: '#/components/responses/UnsupportedOperationErrorResponse'
+        "409":
+          $ref: '#/components/responses/ConflictErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Create a new namespace
+      tags:
+      - Namespace
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /v1/namespaces/{namespace}:
+    delete:
+      description: |
+        Drop a namespace. The namespace must be empty.
+      operationId: DropNamespace
+      parameters:
+      - $ref: '#/components/parameters/namespace'
+      - $ref: '#/components/parameters/delimiter'
+      responses:
+        "204":
+          description: "Success, no content"
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "409":
+          $ref: '#/components/responses/ConflictErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Drop a namespace
+      tags:
+      - Namespace
+      x-accepts:
+      - application/json
+    get:
+      description: |
+        Return the detailed information for a given namespace
+      operationId: GetNamespace
+      parameters:
+      - $ref: '#/components/parameters/namespace'
+      - $ref: '#/components/parameters/delimiter'
+      responses:
+        "200":
+          $ref: '#/components/responses/GetNamespaceResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Get information about a namespace
+      tags:
+      - Namespace
+      x-accepts:
+      - application/json
+    head:
+      description: |
+        Check if a namespace exists.
+        This API should behave exactly like the GetNamespace API, except it does not contain a body.
+      operationId: NamespaceExists
+      parameters:
+      - $ref: '#/components/parameters/namespace'
+      - $ref: '#/components/parameters/delimiter'
+      responses:
+        "200":
+          description: "Success, no content"
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Check if a namespace exists
+      tags:
+      - Namespace
+      x-accepts:
+      - application/json
+    parameters:
+    - $ref: '#/components/parameters/namespace'
+    - $ref: '#/components/parameters/delimiter'
+  /v1/table/register:
+    post:
+      description: |
+        Register an existing table at a given storage location to a namespace.
+      operationId: RegisterTable
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterTableRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/GetTableResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "406":
+          $ref: '#/components/responses/UnsupportedOperationErrorResponse'
+        "409":
+          $ref: '#/components/responses/ConflictErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Register a table to a namespace
+      tags:
+      - Table
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /v1/tables/{table}:
+    get:
+      description: |
+        Get a table's detailed information.
+      operationId: GetTable
+      parameters:
+      - $ref: '#/components/parameters/table'
+      - $ref: '#/components/parameters/delimiter'
+      responses:
+        "200":
+          $ref: '#/components/responses/GetTableResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Get a table from the namespace
+      tags:
+      - Table
+      x-accepts:
+      - application/json
+    head:
+      description: |
+        Check if a table exists.
+        This API should behave exactly like the GetTable API, except it does not contain a body.
+      operationId: TableExists
+      parameters:
+      - $ref: '#/components/parameters/table'
+      - $ref: '#/components/parameters/delimiter'
+      responses:
+        "200":
+          description: "Success, no content"
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Check if a table exists
+      tags:
+      - Table
+      x-accepts:
+      - application/json
+    parameters:
+    - $ref: '#/components/parameters/table'
+    - $ref: '#/components/parameters/delimiter'
+components:
+  examples:
+    ListNamespacesEmptyExample:
+      summary: An empty list of namespaces
+      value:
+        namespaces: []
+    ListNamespacesNonEmptyExample:
+      summary: A non-empty list of namespaces
+      value:
+        namespaces:
+        - accounting
+        - credits
+  parameters:
+    namespace:
+      description: A string identifier of the namespace.
+      explode: false
+      in: path
+      name: namespace
+      required: true
+      schema:
+        type: string
+      style: simple
+    parent:
+      description: A string identifier of the parent namespace.
+      explode: true
+      in: query
+      name: parent
+      required: false
+      schema:
+        type: string
+      style: form
+    pageToken:
+      allowEmptyValue: true
+      explode: true
+      in: query
+      name: pageToken
+      required: false
+      schema:
+        $ref: '#/components/schemas/PageToken'
+      style: form
+    pageSize:
+      description: An inclusive upper bound of the number of results that a client
+        will receive.
+      explode: true
+      in: query
+      name: pageSize
+      required: false
+      schema:
+        minimum: 1
+        type: integer
+      style: form
+    table:
+      description: A string identifier of the table
+      explode: false
+      in: path
+      name: table
+      required: true
+      schema:
+        type: string
+      style: simple
+    delimiter:
+      description: The delimiter for the identifier used in the context
+      explode: true
+      in: query
+      name: delimiter
+      required: false
+      schema:
+        type: string
+      style: form
+  responses:
+    ListNamespacesResponse:
+      content:
+        application/json:
+          examples:
+            NonEmptyResponse:
+              $ref: '#/components/examples/ListNamespacesNonEmptyExample'
+            EmptyResponse:
+              $ref: '#/components/examples/ListNamespacesEmptyExample'
+          schema:
+            $ref: '#/components/schemas/ListNamespacesResponse'
+      description: A list of namespaces
+    GetNamespaceResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetNamespaceResponse'
+      description: "Returns a namespace, as well as any properties stored on the namespace\
+        \ if namespace properties are supported by the server."
+    GetTableResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetTableResponse'
+      description: Table properties result when loading a table
+    BadRequestErrorResponse:
+      content:
+        application/json:
+          example:
+            type: /errors/bad-request
+            title: Malformed request
+            status: 400
+            detail: ""
+            instance: /v1/namespaces
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      description: "Indicates a bad request error. It could be caused by an unexpected\
+        \ request body format or other forms of request validation failure, such as\
+        \ invalid json. Usually serves application/json content, although in some\
+        \ cases simple text/plain content might be returned by the server's middleware."
+    UnauthorizedErrorResponse:
+      content:
+        application/json:
+          example:
+            type: /errors/unauthorized-request
+            title: No valid authentication credentials for the operation
+            status: 401
+            detail: ""
+            instance: /v1/namespaces
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      description: Unauthorized. The request lacks valid authentication credentials
+        for the operation.
+    ForbiddenErrorResponse:
+      content:
+        application/json:
+          example:
+            type: /errors/forbidden-request
+            title: Not authorized to make this request
+            status: 403
+            detail: ""
+            instance: /v1/namespaces
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      description: Forbidden. Authenticated user does not have the necessary permissions.
+    NotFoundErrorResponse:
+      content:
+        application/json:
+          example:
+            type: /errors/not-found-error
+            title: Not found Error
+            status: 404
+            detail: ""
+            instance: "/v1/namespaces/{namespace}"
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      description: A server-side problem that means can not find the specified resource.
+    UnsupportedOperationErrorResponse:
+      content:
+        application/json:
+          example:
+            type: /errors/unsupported-operation
+            title: The server does not support this operation
+            status: 406
+            detail: ""
+            instance: /v1/namespaces
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      description: Not Acceptable / Unsupported Operation. The server does not support
+        this operation.
+    ConflictErrorResponse:
+      content:
+        application/json:
+          example:
+            type: /errors/conflict
+            title: The namespace has been concurrently modified
+            status: 409
+            detail: ""
+            instance: "/v1/namespaces/{namespace}"
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      description: The request conflicts with the current state of the target resource.
+    ServiceUnavailableErrorResponse:
+      content:
+        application/json:
+          example:
+            type: /errors/service-unavailable
+            title: Slow down
+            status: 503
+            detail: ""
+            instance: /v1/namespaces
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      description: The service is not ready to handle the request. The client should
+        wait and retry. The service may additionally send a Retry-After header to
+        indicate when to retry.
+    ServerErrorResponse:
+      content:
+        application/json:
+          example:
+            type: /errors/server-error
+            title: Internal Server Error
+            status: 500
+            detail: ""
+            instance: /v1/namespaces
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+      description: A server-side problem that might not be addressable from the client
+        side. Used for server 5xx errors without more specific documentation in individual
+        routes.
+  schemas:
+    ErrorResponse:
+      description: "JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)"
+      example:
+        instance: /login/log/abc123
+        detail: Authentication failed due to incorrect username or password
+        type: /errors/incorrect-user-pass
+        title: Incorrect username or password
+        status: 404
+      properties:
+        type:
+          description: a URI identifier that categorizes the error
+          example: /errors/incorrect-user-pass
+          type: string
+        title:
+          description: "a brief, human-readable message about the error"
+          example: Incorrect username or password
+          type: string
+        status:
+          description: "HTTP response code, (if present) it must match the actual\
+            \ HTTP code returned by the service"
+          example: 404
+          maximum: 600
+          minimum: 400
+          type: integer
+        detail:
+          description: a human-readable explanation of the error
+          example: Authentication failed due to incorrect username or password
+          type: string
+        instance:
+          description: a URI that identifies the specific occurrence of the error
+          example: /login/log/abc123
+          type: string
+      required:
+      - type
+    CreateNamespaceRequest:
+      example:
+        mode: CREATE
+        parent:
+        - parent
+        - parent
+        name: name
+        options:
+          key: options
+      properties:
+        name:
+          type: string
+        parent:
+          items:
+            type: string
+          type: array
+        mode:
+          enum:
+          - CREATE
+          - EXIST_OK
+          - OVERWRITE
+          type: string
+        options:
+          additionalProperties:
+            type: string
+      required:
+      - mode
+      - name
+    ListNamespacesResponse:
+      example:
+        nextPageToken: nextPageToken
+        namespaces:
+        - accounting
+        - accounting
+      properties:
+        namespaces:
+          items:
+            example: accounting
+            type: string
+          type: array
+          uniqueItems: true
+        nextPageToken:
+          description: |-
+            An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
+            For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available.
+            After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request.
+            Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.
+          type: string
+          nullable: true
+      required:
+      - namespaces
+    GetNamespaceResponse:
+      example:
+        parent:
+        - parent
+        - parent
+        name: name
+        properties:
+          owner: Ralph
+          created_at: "1452120468"
+      properties:
+        name:
+          type: string
+        parent:
+          items:
+            type: string
+          type: array
+        properties:
+          additionalProperties:
+            type: string
+          default: {}
+          description: "Properties stored on the namespace, if supported by the server.\
+            \ If the server does not support namespace properties, it should return\
+            \ null for this field. If namespace properties are supported, but none\
+            \ are set, it should return an empty object."
+          example:
+            owner: Ralph
+            created_at: "1452120468"
+          nullable: true
+      required:
+      - name
+    PageToken:
+      description: |-
+        An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
+        For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available.
+        After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request.
+        Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.
+      type: string
+      nullable: true
+    RegisterTableRequest:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+        location: location
+      properties:
+        name:
+          type: string
+        namespace:
+          items:
+            type: string
+          type: array
+        location:
+          type: string
+      required:
+      - location
+      - name
+      - namespace
+    GetTableResponse:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+        location: location
+        properties:
+          key: properties
+      properties:
+        name:
+          type: string
+        namespace:
+          items:
+            type: string
+          type: array
+        location:
+          type: string
+        properties:
+          additionalProperties:
+            type: string
+      required:
+      - location
+      - name
+      - namespace
+

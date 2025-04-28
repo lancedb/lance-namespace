@@ -1,29 +1,27 @@
-# Lance Catalog
+# Lance Namespace Specification
 
-**Lance Catalog** is an OpenAPI specification on top of the storage-based Lance format.
-It provides an integration point for catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, etc. 
-to store and use Lance tables. To integrate, the catalog service implements a **Lance Catalog Adapter**, 
-which is a REST server that converts the Lance catalog requests to native requests against the catalog service.
-Different tools can integrate with Lance Catalog using the generated OpenAPI clients in various languages,
-and invoke operations in Lance Catalog to read, write and manage Lance tables in the integrated catalog services.
+**Lance Namespace Specification** is an open specification on top of the storage-based Lance data format
+to standardize access to a collection of Lance tables (a.k.a. Lance datasets).
+It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc.
+should store and use Lance tables, as well as how ML/AI tools and analytics compute engines should integrate with Lance tables.
 
 ## Repository structure
 
 | Directory                                                                      | Description                                         |
 |--------------------------------------------------------------------------------|-----------------------------------------------------|
 | [spec](./spec)                                                                 | Lance Catalog OpenAPI specification                 |
-| [rust/lance-catalog-reqwest-client](./rust/lance-catalog-reqwest-client)       | Generated Rust reqwest client for Lance Catalog     |
+| [rust/lance-namespace-reqwest-client](./rust/lance-namespace-reqwest-client)       | Generated Rust reqwest client for Lance Catalog     |
 | [python/lance_catalog_urllib3_client](./python/lance_catalog_urllib3_client)   | Generated Python urllib3 client for Lance Catalog   |
-| [java/lance-catalog-apache-client](./java/lance-catalog-apache-client)         | Generated Java Apache HTTP client for Lance Catalog |
-| [java/lance-catalog-springboot-server](./java/lance-catalog-springboot-server) | Generated Java SpringBoot server for Lance          |
+| [java/lance-namespace-apache-client](./java/lance-namespace-apache-client)         | Generated Java Apache HTTP client for Lance Catalog |
+| [java/lance-namespace-springboot-server](./java/lance-namespace-springboot-server) | Generated Java SpringBoot server for Lance          |
 
 ## Development Guide
 
 ### Install OpenAPI Generator
 
-We use [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator) 
+We use [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator)
 to generate various clients and servers for the catalog specification.
-We recommend installing the tool through [pip](https://pypi.org/project/openapi-generator-cli/) 
+We recommend installing the tool through [pip](https://pypi.org/project/openapi-generator-cli/)
 for consistent experience across platforms.
 First time setup of virtual environment and installation:
 

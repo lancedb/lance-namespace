@@ -6,13 +6,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.lancedb</groupId>
-    <artifactId>lance-catalog-root</artifactId>
+    <artifactId>lance-namespace-root</artifactId>
     <version>0.0.1</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
     <description>Lance Catalog</description>
-    <url>https://lancedb.github.io/lance-catalog</url>
+    <url>https://lancedb.github.io/lance-namespace</url>
 
     <licenses>
         <license>
@@ -23,15 +23,15 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git@github.com:lancedb/lance-catalog.git</connection>
-        <developerConnection>scm:git:git@github.com:lancedb/lance-catalog.git</developerConnection>
-        <url>git@github.com:lancedb/lance-catalog.git</url>
+        <connection>scm:git:git@github.com:lancedb/lance-namespace.git</connection>
+        <developerConnection>scm:git:git@github.com:lancedb/lance-namespace.git</developerConnection>
+        <url>git@github.com:lancedb/lance-namespace.git</url>
         <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/lancedb/lance-catalog/issues</url>
+        <url>https://github.com/lancedb/lance-namespace/issues</url>
     </issueManagement>
 
     <distributionManagement>
@@ -76,8 +76,8 @@
     </properties>
 
     <modules>
-        <module>lance-catalog-apache-client</module>
-        <module>lance-catalog-springboot-server</module>
+        <module>lance-namespace-apache-client</module>
+        <module>lance-namespace-springboot-server</module>
     </modules>
 
     <dependencyManagement>

@@ -549,7 +549,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "lance-catalog-reqwest-client"
+name = "lance-namespace-reqwest-client"
 version = "0.0.1"
 dependencies = [
  "reqwest",

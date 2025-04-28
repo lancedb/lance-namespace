@@ -65,18 +65,18 @@ jobs:
         with:
           repository: lancedb/lance
           path: lance
-      - name: Checkout lance-catalog repo
+      - name: Checkout lance-namespace repo
         uses: actions/checkout@v4
         with:
-          path: lance-catalog
+          path: lance-namespace
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: |
             lance
-            lance-catalog/rust
+            lance-namespace/rust
       - name: Install lance
         working-directory: lance
         run: cargo build
-      - name: Running lance-catalog tests
-        working-directory: lance-catalog/rust
+      - name: Running lance-namespace tests
+        working-directory: lance-namespace/rust
         run: cargo test
