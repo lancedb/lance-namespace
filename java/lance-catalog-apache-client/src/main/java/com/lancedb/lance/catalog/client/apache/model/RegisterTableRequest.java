@@ -27,7 +27,7 @@ import java.util.StringJoiner;
 /** RegisterTableRequest */
 @JsonPropertyOrder({
   RegisterTableRequest.JSON_PROPERTY_NAME,
-  RegisterTableRequest.JSON_PROPERTY_CATALOG,
+  RegisterTableRequest.JSON_PROPERTY_NAMESPACE,
   RegisterTableRequest.JSON_PROPERTY_LOCATION
 })
 @javax.annotation.Generated(
@@ -37,8 +37,8 @@ public class RegisterTableRequest {
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nonnull private String name;
 
-  public static final String JSON_PROPERTY_CATALOG = "catalog";
-  @javax.annotation.Nonnull private List<String> catalog = new ArrayList<>();
+  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
+  @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
 
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nonnull private String location;
@@ -69,36 +69,36 @@ public class RegisterTableRequest {
     this.name = name;
   }
 
-  public RegisterTableRequest catalog(@javax.annotation.Nonnull List<String> catalog) {
+  public RegisterTableRequest namespace(@javax.annotation.Nonnull List<String> namespace) {
 
-    this.catalog = catalog;
+    this.namespace = namespace;
     return this;
   }
 
-  public RegisterTableRequest addCatalogItem(String catalogItem) {
-    if (this.catalog == null) {
-      this.catalog = new ArrayList<>();
+  public RegisterTableRequest addNamespaceItem(String namespaceItem) {
+    if (this.namespace == null) {
+      this.namespace = new ArrayList<>();
     }
-    this.catalog.add(catalogItem);
+    this.namespace.add(namespaceItem);
     return this;
   }
 
   /**
-   * An identifier expressed as a list of object names
+   * Get namespace
    *
-   * @return catalog
+   * @return namespace
    */
   @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_CATALOG)
+  @JsonProperty(JSON_PROPERTY_NAMESPACE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public List<String> getCatalog() {
-    return catalog;
+  public List<String> getNamespace() {
+    return namespace;
   }
 
-  @JsonProperty(JSON_PROPERTY_CATALOG)
+  @JsonProperty(JSON_PROPERTY_NAMESPACE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setCatalog(@javax.annotation.Nonnull List<String> catalog) {
-    this.catalog = catalog;
+  public void setNamespace(@javax.annotation.Nonnull List<String> namespace) {
+    this.namespace = namespace;
   }
 
   public RegisterTableRequest location(@javax.annotation.Nonnull String location) {
@@ -135,13 +135,13 @@ public class RegisterTableRequest {
     }
     RegisterTableRequest registerTableRequest = (RegisterTableRequest) o;
     return Objects.equals(this.name, registerTableRequest.name)
-        && Objects.equals(this.catalog, registerTableRequest.catalog)
+        && Objects.equals(this.namespace, registerTableRequest.namespace)
         && Objects.equals(this.location, registerTableRequest.location);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, catalog, location);
+    return Objects.hash(name, namespace, location);
   }
 
   @Override
@@ -149,7 +149,7 @@ public class RegisterTableRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class RegisterTableRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    catalog: ").append(toIndentedString(catalog)).append("\n");
+    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -212,19 +212,19 @@ public class RegisterTableRequest {
       }
     }
 
-    // add `catalog` to the URL query string
-    if (getCatalog() != null) {
-      for (int i = 0; i < getCatalog().size(); i++) {
+    // add `namespace` to the URL query string
+    if (getNamespace() != null) {
+      for (int i = 0; i < getNamespace().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%scatalog%s%s=%s",
+                  "%snamespace%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getCatalog().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

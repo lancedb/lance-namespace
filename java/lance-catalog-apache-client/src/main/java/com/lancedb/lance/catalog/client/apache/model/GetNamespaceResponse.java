@@ -19,29 +19,35 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** CreateCatalogResponse */
+/** GetNamespaceResponse */
 @JsonPropertyOrder({
-  CreateCatalogResponse.JSON_PROPERTY_NAME,
-  CreateCatalogResponse.JSON_PROPERTY_PROPERTIES
+  GetNamespaceResponse.JSON_PROPERTY_NAME,
+  GetNamespaceResponse.JSON_PROPERTY_PARENT,
+  GetNamespaceResponse.JSON_PROPERTY_PROPERTIES
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class CreateCatalogResponse {
+public class GetNamespaceResponse {
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nonnull private String name;
+
+  public static final String JSON_PROPERTY_PARENT = "parent";
+  @javax.annotation.Nullable private List<String> parent = new ArrayList<>();
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
-  public CreateCatalogResponse() {}
+  public GetNamespaceResponse() {}
 
-  public CreateCatalogResponse name(@javax.annotation.Nonnull String name) {
+  public GetNamespaceResponse name(@javax.annotation.Nonnull String name) {
 
     this.name = name;
     return this;
@@ -65,14 +71,46 @@ public class CreateCatalogResponse {
     this.name = name;
   }
 
-  public CreateCatalogResponse properties(
+  public GetNamespaceResponse parent(@javax.annotation.Nullable List<String> parent) {
+
+    this.parent = parent;
+    return this;
+  }
+
+  public GetNamespaceResponse addParentItem(String parentItem) {
+    if (this.parent == null) {
+      this.parent = new ArrayList<>();
+    }
+    this.parent.add(parentItem);
+    return this;
+  }
+
+  /**
+   * Get parent
+   *
+   * @return parent
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_PARENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<String> getParent() {
+    return parent;
+  }
+
+  @JsonProperty(JSON_PROPERTY_PARENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setParent(@javax.annotation.Nullable List<String> parent) {
+    this.parent = parent;
+  }
+
+  public GetNamespaceResponse properties(
       @javax.annotation.Nullable Map<String, String> properties) {
 
     this.properties = properties;
     return this;
   }
 
-  public CreateCatalogResponse putPropertiesItem(String key, String propertiesItem) {
+  public GetNamespaceResponse putPropertiesItem(String key, String propertiesItem) {
     if (this.properties == null) {
       this.properties = new HashMap<>();
     }
@@ -81,7 +119,9 @@ public class CreateCatalogResponse {
   }
 
   /**
-   * Properties stored on the catalog, if supported by the server.
+   * Properties stored on the namespace, if supported by the server. If the server does not support
+   * namespace properties, it should return null for this field. If namespace properties are
+   * supported, but none are set, it should return an empty object.
    *
    * @return properties
    */
@@ -106,21 +146,23 @@ public class CreateCatalogResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateCatalogResponse createCatalogResponse = (CreateCatalogResponse) o;
-    return Objects.equals(this.name, createCatalogResponse.name)
-        && Objects.equals(this.properties, createCatalogResponse.properties);
+    GetNamespaceResponse getNamespaceResponse = (GetNamespaceResponse) o;
+    return Objects.equals(this.name, getNamespaceResponse.name)
+        && Objects.equals(this.parent, getNamespaceResponse.parent)
+        && Objects.equals(this.properties, getNamespaceResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, properties);
+    return Objects.hash(name, parent, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateCatalogResponse {\n");
+    sb.append("class GetNamespaceResponse {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -180,6 +222,27 @@ public class CreateCatalogResponse {
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);
+      }
+    }
+
+    // add `parent` to the URL query string
+    if (getParent() != null) {
+      for (int i = 0; i < getParent().size(); i++) {
+        try {
+          joiner.add(
+              String.format(
+                  "%sparent%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
+                  URLEncoder.encode(String.valueOf(getParent().get(i)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 

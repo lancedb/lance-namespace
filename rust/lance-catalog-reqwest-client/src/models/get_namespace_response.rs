@@ -11,35 +11,23 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// ErrorResponse : JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ErrorResponse {
-    /// a URI identifier that categorizes the error
-    #[serde(rename = "type")]
-    pub r#type: String,
-    /// a brief, human-readable message about the error
-    #[serde(rename = "title", skip_serializing_if = "Option::is_none")]
-    pub title: Option<String>,
-    /// HTTP response code, (if present) it must match the actual HTTP code returned by the service
-    #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
-    pub status: Option<i32>,
-    /// a human-readable explanation of the error
-    #[serde(rename = "detail", skip_serializing_if = "Option::is_none")]
-    pub detail: Option<String>,
-    /// a URI that identifies the specific occurrence of the error
-    #[serde(rename = "instance", skip_serializing_if = "Option::is_none")]
-    pub instance: Option<String>,
+pub struct GetNamespaceResponse {
+    #[serde(rename = "name")]
+    pub name: String,
+    #[serde(rename = "parent", skip_serializing_if = "Option::is_none")]
+    pub parent: Option<Vec<String>>,
+    /// Properties stored on the namespace, if supported by the server. If the server does not support namespace properties, it should return null for this field. If namespace properties are supported, but none are set, it should return an empty object.
+    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
+    pub properties: Option<std::collections::HashMap<String, String>>,
 }
 
-impl ErrorResponse {
-    /// JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)
-    pub fn new(r#type: String) -> ErrorResponse {
-        ErrorResponse {
-            r#type,
-            title: None,
-            status: None,
-            detail: None,
-            instance: None,
+impl GetNamespaceResponse {
+    pub fn new(name: String) -> GetNamespaceResponse {
+        GetNamespaceResponse {
+            name,
+            parent: None,
+            properties: None,
         }
     }
 }

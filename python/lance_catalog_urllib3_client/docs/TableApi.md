@@ -4,15 +4,15 @@ All URIs are relative to *http://localhost:2333*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**get_table**](TableApi.md#get_table) | **GET** /v1/tables/{table} | Get a table from the catalog
-[**register_table**](TableApi.md#register_table) | **POST** /v1/table/register | Register an existing table in the given catalog. 
+[**get_table**](TableApi.md#get_table) | **GET** /v1/tables/{table} | Get a table from the namespace
+[**register_table**](TableApi.md#register_table) | **POST** /v1/table/register | Register a table to a namespace
 [**table_exists**](TableApi.md#table_exists) | **HEAD** /v1/tables/{table} | Check if a table exists
 
 
 # **get_table**
-> GetTableResponse get_table(table, table_delimiter=table_delimiter)
+> GetTableResponse get_table(table, delimiter=delimiter)
 
-Get a table from the catalog
+Get a table from the namespace
 
 Get a table's detailed information.
 
@@ -37,12 +37,12 @@ configuration = lance_catalog_urllib3_client.Configuration(
 with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_catalog_urllib3_client.TableApi(api_client)
-    table = 'table_example' # str | An identifier of the table
-    table_delimiter = '.' # str | The delimiter used by the table identifier (optional) (default to '.')
+    table = 'table_example' # str | A string identifier of the table
+    delimiter = 'delimiter_example' # str | The delimiter for the identifier used in the context (optional)
 
     try:
-        # Get a table from the catalog
-        api_response = api_instance.get_table(table, table_delimiter=table_delimiter)
+        # Get a table from the namespace
+        api_response = api_instance.get_table(table, delimiter=delimiter)
         print("The response of TableApi->get_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -56,8 +56,8 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **table** | **str**| An identifier of the table | 
- **table_delimiter** | **str**| The delimiter used by the table identifier | [optional] [default to &#39;.&#39;]
+ **table** | **str**| A string identifier of the table | 
+ **delimiter** | **str**| The delimiter for the identifier used in the context | [optional] 
 
 ### Return type
 
@@ -89,7 +89,10 @@ No authorization required
 # **register_table**
 > GetTableResponse register_table(register_table_request)
 
-Register an existing table in the given catalog. 
+Register a table to a namespace
+
+Register an existing table at a given storage location to a namespace.
+
 
 ### Example
 
@@ -115,7 +118,7 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     register_table_request = lance_catalog_urllib3_client.RegisterTableRequest() # RegisterTableRequest | 
 
     try:
-        # Register an existing table in the given catalog. 
+        # Register a table to a namespace
         api_response = api_instance.register_table(register_table_request)
         print("The response of TableApi->register_table:\n")
         pprint(api_response)
@@ -161,11 +164,13 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **table_exists**
-> table_exists(table, table_delimiter=table_delimiter)
+> table_exists(table, delimiter=delimiter)
 
 Check if a table exists
 
 Check if a table exists.
+This API should behave exactly like the GetTable API, except it does not contain a body.
+
 
 ### Example
 
@@ -186,12 +191,12 @@ configuration = lance_catalog_urllib3_client.Configuration(
 with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_catalog_urllib3_client.TableApi(api_client)
-    table = 'table_example' # str | An identifier of the table
-    table_delimiter = '.' # str | The delimiter used by the table identifier (optional) (default to '.')
+    table = 'table_example' # str | A string identifier of the table
+    delimiter = 'delimiter_example' # str | The delimiter for the identifier used in the context (optional)
 
     try:
         # Check if a table exists
-        api_instance.table_exists(table, table_delimiter=table_delimiter)
+        api_instance.table_exists(table, delimiter=delimiter)
     except Exception as e:
         print("Exception when calling TableApi->table_exists: %s\n" % e)
 ```
@@ -203,8 +208,8 @@ with lance_catalog_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **table** | **str**| An identifier of the table | 
- **table_delimiter** | **str**| The delimiter used by the table identifier | [optional] [default to &#39;.&#39;]
+ **table** | **str**| A string identifier of the table | 
+ **delimiter** | **str**| The delimiter for the identifier used in the context | [optional] 
 
 ### Return type
 

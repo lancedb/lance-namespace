@@ -44,29 +44,28 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Get a table from the catalog Get a table&#39;s detailed information.
+   * Get a table from the namespace Get a table&#39;s detailed information.
    *
-   * @param table An identifier of the table (required)
-   * @param tableDelimiter The delimiter used by the table identifier (optional, default to .)
+   * @param table A string identifier of the table (required)
+   * @param delimiter The delimiter for the identifier used in the context (optional)
    * @return GetTableResponse
    * @throws ApiException if fails to make API call
    */
-  public GetTableResponse getTable(String table, String tableDelimiter) throws ApiException {
-    return this.getTable(table, tableDelimiter, Collections.emptyMap());
+  public GetTableResponse getTable(String table, String delimiter) throws ApiException {
+    return this.getTable(table, delimiter, Collections.emptyMap());
   }
 
   /**
-   * Get a table from the catalog Get a table&#39;s detailed information.
+   * Get a table from the namespace Get a table&#39;s detailed information.
    *
-   * @param table An identifier of the table (required)
-   * @param tableDelimiter The delimiter used by the table identifier (optional, default to .)
+   * @param table A string identifier of the table (required)
+   * @param delimiter The delimiter for the identifier used in the context (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return GetTableResponse
    * @throws ApiException if fails to make API call
    */
   public GetTableResponse getTable(
-      String table, String tableDelimiter, Map<String, String> additionalHeaders)
-      throws ApiException {
+      String table, String delimiter, Map<String, String> additionalHeaders) throws ApiException {
     Object localVarPostBody = null;
 
     // verify the required parameter 'table' is set
@@ -89,7 +88,7 @@ public class TableApi extends BaseApi {
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarQueryParams.addAll(apiClient.parameterToPair("tableDelimiter", tableDelimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -120,7 +119,8 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Register an existing table in the given catalog.
+   * Register a table to a namespace Register an existing table at a given storage location to a
+   * namespace.
    *
    * @param registerTableRequest (required)
    * @return GetTableResponse
@@ -132,7 +132,8 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Register an existing table in the given catalog.
+   * Register a table to a namespace Register an existing table at a given storage location to a
+   * namespace.
    *
    * @param registerTableRequest (required)
    * @param additionalHeaders additionalHeaders for this call
@@ -189,26 +190,27 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Check if a table exists Check if a table exists.
+   * Check if a table exists Check if a table exists. This API should behave exactly like the
+   * GetTable API, except it does not contain a body.
    *
-   * @param table An identifier of the table (required)
-   * @param tableDelimiter The delimiter used by the table identifier (optional, default to .)
+   * @param table A string identifier of the table (required)
+   * @param delimiter The delimiter for the identifier used in the context (optional)
    * @throws ApiException if fails to make API call
    */
-  public void tableExists(String table, String tableDelimiter) throws ApiException {
-    this.tableExists(table, tableDelimiter, Collections.emptyMap());
+  public void tableExists(String table, String delimiter) throws ApiException {
+    this.tableExists(table, delimiter, Collections.emptyMap());
   }
 
   /**
-   * Check if a table exists Check if a table exists.
+   * Check if a table exists Check if a table exists. This API should behave exactly like the
+   * GetTable API, except it does not contain a body.
    *
-   * @param table An identifier of the table (required)
-   * @param tableDelimiter The delimiter used by the table identifier (optional, default to .)
+   * @param table A string identifier of the table (required)
+   * @param delimiter The delimiter for the identifier used in the context (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void tableExists(
-      String table, String tableDelimiter, Map<String, String> additionalHeaders)
+  public void tableExists(String table, String delimiter, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
 
@@ -233,7 +235,7 @@ public class TableApi extends BaseApi {
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarQueryParams.addAll(apiClient.parameterToPair("tableDelimiter", tableDelimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 

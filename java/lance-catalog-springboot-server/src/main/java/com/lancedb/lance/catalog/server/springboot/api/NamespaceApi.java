@@ -13,11 +13,10 @@
  */
 package com.lancedb.lance.catalog.server.springboot.api;
 
-import com.lancedb.lance.catalog.server.springboot.model.CreateCatalogRequest;
-import com.lancedb.lance.catalog.server.springboot.model.CreateCatalogResponse;
+import com.lancedb.lance.catalog.server.springboot.model.CreateNamespaceRequest;
 import com.lancedb.lance.catalog.server.springboot.model.ErrorResponse;
-import com.lancedb.lance.catalog.server.springboot.model.GetCatalogResponse;
-import com.lancedb.lance.catalog.server.springboot.model.ListCatalogsResponse;
+import com.lancedb.lance.catalog.server.springboot.model.GetNamespaceResponse;
+import com.lancedb.lance.catalog.server.springboot.model.ListNamespacesResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -43,199 +42,52 @@ import java.util.Optional;
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 @Validated
-@Tag(name = "Catalog", description = "the Catalog API")
-public interface CatalogApi {
+@Tag(name = "Namespace", description = "the Namespace API")
+public interface NamespaceApi {
 
   default Optional<NativeWebRequest> getRequest() {
     return Optional.empty();
   }
 
   /**
-   * HEAD /v1/catalogs/{catalog} : Check if a catalog exists Check if a catalog exists. The response
-   * does not contain a body.
+   * POST /v1/namespaces : Create a new namespace Create a new namespace. A namespace can manage
+   * either a collection of child namespaces, or a collection of tables. There are three modes when
+   * trying to create a namespace, to differentiate the behavior when a namespace of the same name
+   * already exists: * CREATE: the operation fails with 400. * EXIST_OK: the operation succeeds and
+   * the existing namespace is kept. * OVERWRITE: the existing namespace is dropped and a new empty
+   * namespace with this name is created.
    *
-   * @param catalog An identifier of the catalog. (required)
-   * @param catalogDelimiter The delimiter used by the catalog identifier string (optional, default
-   *     to .)
-   * @return Success, no content (status code 200) or Indicates a bad request error. It could be
-   *     caused by an unexpected request body format or other forms of request validation failure,
-   *     such as invalid json. Usually serves application/json content, although in some cases
-   *     simple text/plain content might be returned by the server&#39;s middleware. (status code
-   *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
-   *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   * @param createNamespaceRequest (required)
+   * @return Returns a namespace, as well as any properties stored on the namespace if namespace
+   *     properties are supported by the server. (status code 200) or Indicates a bad request error.
+   *     It could be caused by an unexpected request body format or other forms of request
+   *     validation failure, such as invalid json. Usually serves application/json content, although
+   *     in some cases simple text/plain content might be returned by the server&#39;s middleware.
+   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
+   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
+   *     necessary permissions. (status code 403) or Not Acceptable / Unsupported Operation. The
+   *     server does not support this operation. (status code 406) or The request conflicts with the
+   *     current state of the target resource. (status code 409) or The service is not ready to
+   *     handle the request. The client should wait and retry. The service may additionally send a
+   *     Retry-After header to indicate when to retry. (status code 503) or A server-side problem
+   *     that might not be addressable from the client side. Used for server 5xx errors without more
+   *     specific documentation in individual routes. (status code 5XX)
    */
   @Operation(
-      operationId = "catalogExists",
-      summary = "Check if a catalog exists",
-      description = "Check if a catalog exists. The response does not contain a body.",
-      tags = {"Catalog"},
-      responses = {
-        @ApiResponse(responseCode = "200", description = "Success, no content"),
-        @ApiResponse(
-            responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "401",
-            description =
-                "Unauthorized. The request lacks valid authentication credentials for the operation.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "403",
-            description = "Forbidden. Authenticated user does not have the necessary permissions.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "503",
-            description =
-                "The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            })
-      })
-  @RequestMapping(
-      method = RequestMethod.HEAD,
-      value = "/v1/catalogs/{catalog}",
-      produces = {"application/json"})
-  default ResponseEntity<Void> catalogExists(
-      @Parameter(
-              name = "catalog",
-              description = "An identifier of the catalog.",
-              required = true,
-              in = ParameterIn.PATH)
-          @PathVariable("catalog")
-          String catalog,
-      @Parameter(
-              name = "catalogDelimiter",
-              description = "The delimiter used by the catalog identifier string",
-              in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "catalogDelimiter", required = false, defaultValue = ".")
-          Optional<String> catalogDelimiter) {
-    getRequest()
-        .ifPresent(
-            request -> {
-              for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-              }
-            });
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-  }
-
-  /**
-   * POST /v1/catalogs : Create a new catalog. A catalog can manage either a collection of child
-   * catalogs, or a collection of tables. There are three modes when trying to create a catalog to
-   * differentiate the behavior when a catalog of the same name already exists: * CREATE: the
-   * operation fails with 400. * EXIST_OK: the operation succeeds and the existing catalog is kept.
-   * * OVERWRITE: the existing catalog is dropped and a new empty catalog with this name is created.
-   *
-   * @param createCatalogRequest (required)
-   * @param parentCatalog An identifier of the parent catalog. (optional)
-   * @param parentCatalogDelimiter The delimiter used by the parent catalog identifier (optional,
-   *     default to .)
-   * @return Represents a successful call to create a catalog. Returns the catalog created, as well
-   *     as any properties that were stored for the catalog, including those the server might have
-   *     added. Implementations are not required to support catalog properties. (status code 200) or
-   *     Indicates a bad request error. It could be caused by an unexpected request body format or
-   *     other forms of request validation failure, such as invalid json. Usually serves
-   *     application/json content, although in some cases simple text/plain content might be
-   *     returned by the server&#39;s middleware. (status code 400) or Unauthorized. The request
-   *     lacks valid authentication credentials for the operation. (status code 401) or Forbidden.
-   *     Authenticated user does not have the necessary permissions. (status code 403) or Not
-   *     Acceptable / Unsupported Operation. The server does not support this operation. (status
-   *     code 406) or The request conflicts with the current state of the target resource. (status
-   *     code 409) or The service is not ready to handle the request. The client should wait and
-   *     retry. The service may additionally send a Retry-After header to indicate when to retry.
-   *     (status code 503) or A server-side problem that might not be addressable from the client
-   *     side. Used for server 5xx errors without more specific documentation in individual routes.
-   *     (status code 5XX)
-   */
-  @Operation(
-      operationId = "createCatalog",
-      summary =
-          "Create a new catalog. A catalog can manage either a collection of child catalogs, or a collection of tables. There are three modes when trying to create a catalog to differentiate the behavior when a catalog of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing catalog is kept.   * OVERWRITE: the existing catalog is dropped and a new empty catalog with this name is created. ",
-      tags = {"Catalog"},
+      operationId = "createNamespace",
+      summary = "Create a new namespace",
+      description =
+          "Create a new namespace. A namespace can manage either a collection of child namespaces, or a collection of tables. There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. ",
+      tags = {"Namespace"},
       responses = {
         @ApiResponse(
             responseCode = "200",
             description =
-                "Represents a successful call to create a catalog. Returns the catalog created, as well as any properties that were stored for the catalog, including those the server might have added. Implementations are not required to support catalog properties.",
+                "Returns a namespace, as well as any properties stored on the namespace if namespace properties are supported by the server.",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = CreateCatalogResponse.class))
+                  schema = @Schema(implementation = GetNamespaceResponse.class))
             }),
         @ApiResponse(
             responseCode = "400",
@@ -301,35 +153,21 @@ public interface CatalogApi {
       })
   @RequestMapping(
       method = RequestMethod.POST,
-      value = "/v1/catalogs",
+      value = "/v1/namespaces",
       produces = {"application/json"},
       consumes = {"application/json"})
-  default ResponseEntity<CreateCatalogResponse> createCatalog(
-      @Parameter(name = "CreateCatalogRequest", description = "", required = true)
+  default ResponseEntity<GetNamespaceResponse> createNamespace(
+      @Parameter(name = "CreateNamespaceRequest", description = "", required = true)
           @Valid
           @RequestBody
-          CreateCatalogRequest createCatalogRequest,
-      @Parameter(
-              name = "parentCatalog",
-              description = "An identifier of the parent catalog.",
-              in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "parentCatalog", required = false)
-          Optional<String> parentCatalog,
-      @Parameter(
-              name = "parentCatalogDelimiter",
-              description = "The delimiter used by the parent catalog identifier",
-              in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "parentCatalogDelimiter", required = false, defaultValue = ".")
-          Optional<String> parentCatalogDelimiter) {
+          CreateNamespaceRequest createNamespaceRequest) {
     getRequest()
         .ifPresent(
             request -> {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"name\" : \"name\", \"properties\" : { \"created_at\" : \"1452120468\" } }";
+                      "{ \"parent\" : [ \"parent\", \"parent\" ], \"name\" : \"name\", \"properties\" : { \"owner\" : \"Ralph\", \"created_at\" : \"1452120468\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -381,11 +219,11 @@ public interface CatalogApi {
   }
 
   /**
-   * DELETE /v1/catalogs/{catalog} : Drop a catalog. The catalog must be empty.
+   * DELETE /v1/namespaces/{namespace} : Drop a namespace Drop a namespace. The namespace must be
+   * empty.
    *
-   * @param catalog An identifier of the catalog. (required)
-   * @param catalogDelimiter The delimiter used by the catalog identifier string (optional, default
-   *     to .)
+   * @param namespace A string identifier of the namespace. (required)
+   * @param delimiter The delimiter for the identifier used in the context (optional)
    * @return Success, no content (status code 204) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
    *     such as invalid json. Usually serves application/json content, although in some cases
@@ -401,9 +239,10 @@ public interface CatalogApi {
    *     routes. (status code 5XX)
    */
   @Operation(
-      operationId = "dropCatalog",
-      summary = "Drop a catalog. The catalog must be empty.",
-      tags = {"Catalog"},
+      operationId = "dropNamespace",
+      summary = "Drop a namespace",
+      description = "Drop a namespace. The namespace must be empty. ",
+      tags = {"Namespace"},
       responses = {
         @ApiResponse(responseCode = "204", description = "Success, no content"),
         @ApiResponse(
@@ -469,23 +308,23 @@ public interface CatalogApi {
       })
   @RequestMapping(
       method = RequestMethod.DELETE,
-      value = "/v1/catalogs/{catalog}",
+      value = "/v1/namespaces/{namespace}",
       produces = {"application/json"})
-  default ResponseEntity<Void> dropCatalog(
+  default ResponseEntity<Void> dropNamespace(
       @Parameter(
-              name = "catalog",
-              description = "An identifier of the catalog.",
+              name = "namespace",
+              description = "A string identifier of the namespace.",
               required = true,
               in = ParameterIn.PATH)
-          @PathVariable("catalog")
-          String catalog,
+          @PathVariable("namespace")
+          String namespace,
       @Parameter(
-              name = "catalogDelimiter",
-              description = "The delimiter used by the catalog identifier string",
+              name = "delimiter",
+              description = "The delimiter for the identifier used in the context",
               in = ParameterIn.QUERY)
           @Valid
-          @RequestParam(value = "catalogDelimiter", required = false, defaultValue = ".")
-          Optional<String> catalogDelimiter) {
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter) {
     getRequest()
         .ifPresent(
             request -> {
@@ -538,13 +377,12 @@ public interface CatalogApi {
   }
 
   /**
-   * GET /v1/catalogs/{catalog} : Get information about a catalog Return a detailed information for
-   * a given catalog
+   * GET /v1/namespaces/{namespace} : Get information about a namespace Return the detailed
+   * information for a given namespace
    *
-   * @param catalog An identifier of the catalog. (required)
-   * @param catalogDelimiter The delimiter used by the catalog identifier string (optional, default
-   *     to .)
-   * @return Returns a catalog, as well as any properties stored on the catalog if catalog
+   * @param namespace A string identifier of the namespace. (required)
+   * @param delimiter The delimiter for the identifier used in the context (optional)
+   * @return Returns a namespace, as well as any properties stored on the namespace if namespace
    *     properties are supported by the server. (status code 200) or Indicates a bad request error.
    *     It could be caused by an unexpected request body format or other forms of request
    *     validation failure, such as invalid json. Usually serves application/json content, although
@@ -559,19 +397,19 @@ public interface CatalogApi {
    *     documentation in individual routes. (status code 5XX)
    */
   @Operation(
-      operationId = "getCatalog",
-      summary = "Get information about a catalog",
-      description = "Return a detailed information for a given catalog",
-      tags = {"Catalog"},
+      operationId = "getNamespace",
+      summary = "Get information about a namespace",
+      description = "Return the detailed information for a given namespace ",
+      tags = {"Namespace"},
       responses = {
         @ApiResponse(
             responseCode = "200",
             description =
-                "Returns a catalog, as well as any properties stored on the catalog if catalog properties are supported by the server.",
+                "Returns a namespace, as well as any properties stored on the namespace if namespace properties are supported by the server.",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = GetCatalogResponse.class))
+                  schema = @Schema(implementation = GetNamespaceResponse.class))
             }),
         @ApiResponse(
             responseCode = "400",
@@ -628,30 +466,30 @@ public interface CatalogApi {
       })
   @RequestMapping(
       method = RequestMethod.GET,
-      value = "/v1/catalogs/{catalog}",
+      value = "/v1/namespaces/{namespace}",
       produces = {"application/json"})
-  default ResponseEntity<GetCatalogResponse> getCatalog(
+  default ResponseEntity<GetNamespaceResponse> getNamespace(
       @Parameter(
-              name = "catalog",
-              description = "An identifier of the catalog.",
+              name = "namespace",
+              description = "A string identifier of the namespace.",
               required = true,
               in = ParameterIn.PATH)
-          @PathVariable("catalog")
-          String catalog,
+          @PathVariable("namespace")
+          String namespace,
       @Parameter(
-              name = "catalogDelimiter",
-              description = "The delimiter used by the catalog identifier string",
+              name = "delimiter",
+              description = "The delimiter for the identifier used in the context",
               in = ParameterIn.QUERY)
           @Valid
-          @RequestParam(value = "catalogDelimiter", required = false, defaultValue = ".")
-          Optional<String> catalogDelimiter) {
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter) {
     getRequest()
         .ifPresent(
             request -> {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"catalog\" : \"catalog\", \"properties\" : { \"owner\" : \"Ralph\", \"created_at\" : \"1452120468\" } }";
+                      "{ \"parent\" : [ \"parent\", \"parent\" ], \"name\" : \"name\", \"properties\" : { \"owner\" : \"Ralph\", \"created_at\" : \"1452120468\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -697,15 +535,15 @@ public interface CatalogApi {
   }
 
   /**
-   * GET /v1/catalogs : List all direct child catalogs of the root catalog.
+   * GET /v1/namespaces : List namespaces List all child namespace names of the root namespace or a
+   * given parent namespace.
    *
    * @param pageToken (optional)
    * @param pageSize An inclusive upper bound of the number of results that a client will receive.
    *     (optional)
-   * @param parentCatalog An identifier of the parent catalog. (optional)
-   * @param parentCatalogDelimiter The delimiter used by the parent catalog identifier (optional,
-   *     default to .)
-   * @return A list of catalogs (status code 200) or Indicates a bad request error. It could be
+   * @param parent A string identifier of the parent namespace. (optional)
+   * @param delimiter The delimiter for the identifier used in the context (optional)
+   * @return A list of namespaces (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
    *     such as invalid json. Usually serves application/json content, although in some cases
    *     simple text/plain content might be returned by the server&#39;s middleware. (status code
@@ -719,17 +557,19 @@ public interface CatalogApi {
    *     documentation in individual routes. (status code 5XX)
    */
   @Operation(
-      operationId = "listCatalogs",
-      summary = "List all direct child catalogs of the root catalog. ",
-      tags = {"Catalog"},
+      operationId = "listNamespaces",
+      summary = "List namespaces",
+      description =
+          "List all child namespace names of the root namespace or a given parent namespace. ",
+      tags = {"Namespace"},
       responses = {
         @ApiResponse(
             responseCode = "200",
-            description = "A list of catalogs",
+            description = "A list of namespaces",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ListCatalogsResponse.class))
+                  schema = @Schema(implementation = ListNamespacesResponse.class))
             }),
         @ApiResponse(
             responseCode = "400",
@@ -787,9 +627,9 @@ public interface CatalogApi {
       })
   @RequestMapping(
       method = RequestMethod.GET,
-      value = "/v1/catalogs",
+      value = "/v1/namespaces",
       produces = {"application/json"})
-  default ResponseEntity<ListCatalogsResponse> listCatalogs(
+  default ResponseEntity<ListNamespacesResponse> listNamespaces(
       @Parameter(name = "pageToken", description = "", in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "pageToken", required = false)
@@ -803,29 +643,173 @@ public interface CatalogApi {
           @RequestParam(value = "pageSize", required = false)
           Optional<@Min(1) Integer> pageSize,
       @Parameter(
-              name = "parentCatalog",
-              description = "An identifier of the parent catalog.",
+              name = "parent",
+              description = "A string identifier of the parent namespace.",
               in = ParameterIn.QUERY)
           @Valid
-          @RequestParam(value = "parentCatalog", required = false)
-          Optional<String> parentCatalog,
+          @RequestParam(value = "parent", required = false)
+          Optional<String> parent,
       @Parameter(
-              name = "parentCatalogDelimiter",
-              description = "The delimiter used by the parent catalog identifier",
+              name = "delimiter",
+              description = "The delimiter for the identifier used in the context",
               in = ParameterIn.QUERY)
           @Valid
-          @RequestParam(value = "parentCatalogDelimiter", required = false, defaultValue = ".")
-          Optional<String> parentCatalogDelimiter) {
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter) {
     getRequest()
         .ifPresent(
             request -> {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"catalogs\" : [ \"accounting\", \"accounting\" ], \"nextPageToken\" : \"nextPageToken\" }";
+                      "{ \"nextPageToken\" : \"nextPageToken\", \"namespaces\" : [ \"accounting\", \"accounting\" ] }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+              }
+            });
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
+
+  /**
+   * HEAD /v1/namespaces/{namespace} : Check if a namespace exists Check if a namespace exists. This
+   * API should behave exactly like the GetNamespace API, except it does not contain a body.
+   *
+   * @param namespace A string identifier of the namespace. (required)
+   * @param delimiter The delimiter for the identifier used in the context (optional)
+   * @return Success, no content (status code 200) or Indicates a bad request error. It could be
+   *     caused by an unexpected request body format or other forms of request validation failure,
+   *     such as invalid json. Usually serves application/json content, although in some cases
+   *     simple text/plain content might be returned by the server&#39;s middleware. (status code
+   *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
+   *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
+   *     (status code 403) or A server-side problem that means can not find the specified resource.
+   *     (status code 404) or The service is not ready to handle the request. The client should wait
+   *     and retry. The service may additionally send a Retry-After header to indicate when to
+   *     retry. (status code 503) or A server-side problem that might not be addressable from the
+   *     client side. Used for server 5xx errors without more specific documentation in individual
+   *     routes. (status code 5XX)
+   */
+  @Operation(
+      operationId = "namespaceExists",
+      summary = "Check if a namespace exists",
+      description =
+          "Check if a namespace exists. This API should behave exactly like the GetNamespace API, except it does not contain a body. ",
+      tags = {"Namespace"},
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Success, no content"),
+        @ApiResponse(
+            responseCode = "400",
+            description =
+                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "401",
+            description =
+                "Unauthorized. The request lacks valid authentication credentials for the operation.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "403",
+            description = "Forbidden. Authenticated user does not have the necessary permissions.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "404",
+            description = "A server-side problem that means can not find the specified resource.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "503",
+            description =
+                "The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "5XX",
+            description =
+                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            })
+      })
+  @RequestMapping(
+      method = RequestMethod.HEAD,
+      value = "/v1/namespaces/{namespace}",
+      produces = {"application/json"})
+  default ResponseEntity<Void> namespaceExists(
+      @Parameter(
+              name = "namespace",
+              description = "A string identifier of the namespace.",
+              required = true,
+              in = ParameterIn.PATH)
+          @PathVariable("namespace")
+          String namespace,
+      @Parameter(
+              name = "delimiter",
+              description = "The delimiter for the identifier used in the context",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter) {
+    getRequest()
+        .ifPresent(
+            request -> {
+              for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
                       "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";

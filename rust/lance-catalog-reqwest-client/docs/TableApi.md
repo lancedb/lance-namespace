@@ -4,16 +4,16 @@ All URIs are relative to *http://localhost:2333*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**get_table**](TableApi.md#get_table) | **GET** /v1/tables/{table} | Get a table from the catalog
-[**register_table**](TableApi.md#register_table) | **POST** /v1/table/register | Register an existing table in the given catalog. 
+[**get_table**](TableApi.md#get_table) | **GET** /v1/tables/{table} | Get a table from the namespace
+[**register_table**](TableApi.md#register_table) | **POST** /v1/table/register | Register a table to a namespace
 [**table_exists**](TableApi.md#table_exists) | **HEAD** /v1/tables/{table} | Check if a table exists
 
 
 
 ## get_table
 
-> models::GetTableResponse get_table(table, table_delimiter)
-Get a table from the catalog
+> models::GetTableResponse get_table(table, delimiter)
+Get a table from the namespace
 
 Get a table's detailed information. 
 
@@ -22,8 +22,8 @@ Get a table's detailed information.
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**table** | **String** | An identifier of the table | [required] |
-**table_delimiter** | Option<**String**> | The delimiter used by the table identifier |  |[default to .]
+**table** | **String** | A string identifier of the table | [required] |
+**delimiter** | Option<**String**> | The delimiter for the identifier used in the context |  |
 
 ### Return type
 
@@ -44,7 +44,9 @@ No authorization required
 ## register_table
 
 > models::GetTableResponse register_table(register_table_request)
-Register an existing table in the given catalog. 
+Register a table to a namespace
+
+Register an existing table at a given storage location to a namespace. 
 
 ### Parameters
 
@@ -71,18 +73,18 @@ No authorization required
 
 ## table_exists
 
-> table_exists(table, table_delimiter)
+> table_exists(table, delimiter)
 Check if a table exists
 
-Check if a table exists.
+Check if a table exists. This API should behave exactly like the GetTable API, except it does not contain a body. 
 
 ### Parameters
 
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**table** | **String** | An identifier of the table | [required] |
-**table_delimiter** | Option<**String**> | The delimiter used by the table identifier |  |[default to .]
+**table** | **String** | A string identifier of the table | [required] |
+**delimiter** | Option<**String**> | The delimiter for the identifier used in the context |  |
 
 ### Return type
 

@@ -33,7 +33,7 @@ public class RegisterTableRequest {
 
   private String name;
 
-  @Valid private List<String> catalog = new ArrayList<>();
+  @Valid private List<String> namespace = new ArrayList<>();
 
   private String location;
 
@@ -42,9 +42,9 @@ public class RegisterTableRequest {
   }
 
   /** Constructor with only required parameters */
-  public RegisterTableRequest(String name, List<String> catalog, String location) {
+  public RegisterTableRequest(String name, List<String> namespace, String location) {
     this.name = name;
-    this.catalog = catalog;
+    this.namespace = namespace;
     this.location = location;
   }
 
@@ -69,36 +69,33 @@ public class RegisterTableRequest {
     this.name = name;
   }
 
-  public RegisterTableRequest catalog(List<String> catalog) {
-    this.catalog = catalog;
+  public RegisterTableRequest namespace(List<String> namespace) {
+    this.namespace = namespace;
     return this;
   }
 
-  public RegisterTableRequest addCatalogItem(String catalogItem) {
-    if (this.catalog == null) {
-      this.catalog = new ArrayList<>();
+  public RegisterTableRequest addNamespaceItem(String namespaceItem) {
+    if (this.namespace == null) {
+      this.namespace = new ArrayList<>();
     }
-    this.catalog.add(catalogItem);
+    this.namespace.add(namespaceItem);
     return this;
   }
 
   /**
-   * An identifier expressed as a list of object names
+   * Get namespace
    *
-   * @return catalog
+   * @return namespace
    */
   @NotNull
-  @Schema(
-      name = "catalog",
-      description = "An identifier expressed as a list of object names ",
-      requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("catalog")
-  public List<String> getCatalog() {
-    return catalog;
+  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("namespace")
+  public List<String> getNamespace() {
+    return namespace;
   }
 
-  public void setCatalog(List<String> catalog) {
-    this.catalog = catalog;
+  public void setNamespace(List<String> namespace) {
+    this.namespace = namespace;
   }
 
   public RegisterTableRequest location(String location) {
@@ -132,13 +129,13 @@ public class RegisterTableRequest {
     }
     RegisterTableRequest registerTableRequest = (RegisterTableRequest) o;
     return Objects.equals(this.name, registerTableRequest.name)
-        && Objects.equals(this.catalog, registerTableRequest.catalog)
+        && Objects.equals(this.namespace, registerTableRequest.namespace)
         && Objects.equals(this.location, registerTableRequest.location);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, catalog, location);
+    return Objects.hash(name, namespace, location);
   }
 
   @Override
@@ -146,7 +143,7 @@ public class RegisterTableRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class RegisterTableRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    catalog: ").append(toIndentedString(catalog)).append("\n");
+    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("}");
     return sb.toString();

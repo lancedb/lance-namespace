@@ -23,17 +23,21 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/** CreateCatalogRequest */
+/** CreateNamespaceRequest */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
-public class CreateCatalogRequest {
+public class CreateNamespaceRequest {
 
   private String name;
+
+  @Valid private List<String> parent = new ArrayList<>();
 
   /** Gets or Sets mode */
   public enum ModeEnum {
@@ -74,17 +78,17 @@ public class CreateCatalogRequest {
 
   @Valid private Map<String, String> options = new HashMap<>();
 
-  public CreateCatalogRequest() {
+  public CreateNamespaceRequest() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public CreateCatalogRequest(String name, ModeEnum mode) {
+  public CreateNamespaceRequest(String name, ModeEnum mode) {
     this.name = name;
     this.mode = mode;
   }
 
-  public CreateCatalogRequest name(String name) {
+  public CreateNamespaceRequest name(String name) {
     this.name = name;
     return this;
   }
@@ -105,7 +109,35 @@ public class CreateCatalogRequest {
     this.name = name;
   }
 
-  public CreateCatalogRequest mode(ModeEnum mode) {
+  public CreateNamespaceRequest parent(List<String> parent) {
+    this.parent = parent;
+    return this;
+  }
+
+  public CreateNamespaceRequest addParentItem(String parentItem) {
+    if (this.parent == null) {
+      this.parent = new ArrayList<>();
+    }
+    this.parent.add(parentItem);
+    return this;
+  }
+
+  /**
+   * Get parent
+   *
+   * @return parent
+   */
+  @Schema(name = "parent", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("parent")
+  public List<String> getParent() {
+    return parent;
+  }
+
+  public void setParent(List<String> parent) {
+    this.parent = parent;
+  }
+
+  public CreateNamespaceRequest mode(ModeEnum mode) {
     this.mode = mode;
     return this;
   }
@@ -126,12 +158,12 @@ public class CreateCatalogRequest {
     this.mode = mode;
   }
 
-  public CreateCatalogRequest options(Map<String, String> options) {
+  public CreateNamespaceRequest options(Map<String, String> options) {
     this.options = options;
     return this;
   }
 
-  public CreateCatalogRequest putOptionsItem(String key, String optionsItem) {
+  public CreateNamespaceRequest putOptionsItem(String key, String optionsItem) {
     if (this.options == null) {
       this.options = new HashMap<>();
     }
@@ -162,22 +194,24 @@ public class CreateCatalogRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateCatalogRequest createCatalogRequest = (CreateCatalogRequest) o;
-    return Objects.equals(this.name, createCatalogRequest.name)
-        && Objects.equals(this.mode, createCatalogRequest.mode)
-        && Objects.equals(this.options, createCatalogRequest.options);
+    CreateNamespaceRequest createNamespaceRequest = (CreateNamespaceRequest) o;
+    return Objects.equals(this.name, createNamespaceRequest.name)
+        && Objects.equals(this.parent, createNamespaceRequest.parent)
+        && Objects.equals(this.mode, createNamespaceRequest.mode)
+        && Objects.equals(this.options, createNamespaceRequest.options);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, options);
+    return Objects.hash(name, parent, mode, options);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateCatalogRequest {\n");
+    sb.append("class CreateNamespaceRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    options: ").append(toIndentedString(options)).append("\n");
     sb.append("}");

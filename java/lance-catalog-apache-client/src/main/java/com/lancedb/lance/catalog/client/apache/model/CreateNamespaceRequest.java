@@ -21,23 +21,29 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** CreateCatalogRequest */
+/** CreateNamespaceRequest */
 @JsonPropertyOrder({
-  CreateCatalogRequest.JSON_PROPERTY_NAME,
-  CreateCatalogRequest.JSON_PROPERTY_MODE,
-  CreateCatalogRequest.JSON_PROPERTY_OPTIONS
+  CreateNamespaceRequest.JSON_PROPERTY_NAME,
+  CreateNamespaceRequest.JSON_PROPERTY_PARENT,
+  CreateNamespaceRequest.JSON_PROPERTY_MODE,
+  CreateNamespaceRequest.JSON_PROPERTY_OPTIONS
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class CreateCatalogRequest {
+public class CreateNamespaceRequest {
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nonnull private String name;
+
+  public static final String JSON_PROPERTY_PARENT = "parent";
+  @javax.annotation.Nullable private List<String> parent = new ArrayList<>();
 
   /** Gets or Sets mode */
   public enum ModeEnum {
@@ -80,9 +86,9 @@ public class CreateCatalogRequest {
   public static final String JSON_PROPERTY_OPTIONS = "options";
   @javax.annotation.Nullable private Map<String, String> options = new HashMap<>();
 
-  public CreateCatalogRequest() {}
+  public CreateNamespaceRequest() {}
 
-  public CreateCatalogRequest name(@javax.annotation.Nonnull String name) {
+  public CreateNamespaceRequest name(@javax.annotation.Nonnull String name) {
 
     this.name = name;
     return this;
@@ -106,7 +112,39 @@ public class CreateCatalogRequest {
     this.name = name;
   }
 
-  public CreateCatalogRequest mode(@javax.annotation.Nonnull ModeEnum mode) {
+  public CreateNamespaceRequest parent(@javax.annotation.Nullable List<String> parent) {
+
+    this.parent = parent;
+    return this;
+  }
+
+  public CreateNamespaceRequest addParentItem(String parentItem) {
+    if (this.parent == null) {
+      this.parent = new ArrayList<>();
+    }
+    this.parent.add(parentItem);
+    return this;
+  }
+
+  /**
+   * Get parent
+   *
+   * @return parent
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_PARENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<String> getParent() {
+    return parent;
+  }
+
+  @JsonProperty(JSON_PROPERTY_PARENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setParent(@javax.annotation.Nullable List<String> parent) {
+    this.parent = parent;
+  }
+
+  public CreateNamespaceRequest mode(@javax.annotation.Nonnull ModeEnum mode) {
 
     this.mode = mode;
     return this;
@@ -130,13 +168,13 @@ public class CreateCatalogRequest {
     this.mode = mode;
   }
 
-  public CreateCatalogRequest options(@javax.annotation.Nullable Map<String, String> options) {
+  public CreateNamespaceRequest options(@javax.annotation.Nullable Map<String, String> options) {
 
     this.options = options;
     return this;
   }
 
-  public CreateCatalogRequest putOptionsItem(String key, String optionsItem) {
+  public CreateNamespaceRequest putOptionsItem(String key, String optionsItem) {
     if (this.options == null) {
       this.options = new HashMap<>();
     }
@@ -170,22 +208,24 @@ public class CreateCatalogRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateCatalogRequest createCatalogRequest = (CreateCatalogRequest) o;
-    return Objects.equals(this.name, createCatalogRequest.name)
-        && Objects.equals(this.mode, createCatalogRequest.mode)
-        && Objects.equals(this.options, createCatalogRequest.options);
+    CreateNamespaceRequest createNamespaceRequest = (CreateNamespaceRequest) o;
+    return Objects.equals(this.name, createNamespaceRequest.name)
+        && Objects.equals(this.parent, createNamespaceRequest.parent)
+        && Objects.equals(this.mode, createNamespaceRequest.mode)
+        && Objects.equals(this.options, createNamespaceRequest.options);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, options);
+    return Objects.hash(name, parent, mode, options);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateCatalogRequest {\n");
+    sb.append("class CreateNamespaceRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    options: ").append(toIndentedString(options)).append("\n");
     sb.append("}");
@@ -246,6 +286,27 @@ public class CreateCatalogRequest {
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);
+      }
+    }
+
+    // add `parent` to the URL query string
+    if (getParent() != null) {
+      for (int i = 0; i < getParent().size(); i++) {
+        try {
+          joiner.add(
+              String.format(
+                  "%sparent%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
+                  URLEncoder.encode(String.valueOf(getParent().get(i)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 

@@ -21,30 +21,34 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/** CreateCatalogResponse */
+/** GetNamespaceResponse */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
-public class CreateCatalogResponse {
+public class GetNamespaceResponse {
 
   private String name;
 
+  @Valid private List<String> parent = new ArrayList<>();
+
   @Valid private Map<String, String> properties = new HashMap<>();
 
-  public CreateCatalogResponse() {
+  public GetNamespaceResponse() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public CreateCatalogResponse(String name) {
+  public GetNamespaceResponse(String name) {
     this.name = name;
   }
 
-  public CreateCatalogResponse name(String name) {
+  public GetNamespaceResponse name(String name) {
     this.name = name;
     return this;
   }
@@ -65,12 +69,40 @@ public class CreateCatalogResponse {
     this.name = name;
   }
 
-  public CreateCatalogResponse properties(Map<String, String> properties) {
+  public GetNamespaceResponse parent(List<String> parent) {
+    this.parent = parent;
+    return this;
+  }
+
+  public GetNamespaceResponse addParentItem(String parentItem) {
+    if (this.parent == null) {
+      this.parent = new ArrayList<>();
+    }
+    this.parent.add(parentItem);
+    return this;
+  }
+
+  /**
+   * Get parent
+   *
+   * @return parent
+   */
+  @Schema(name = "parent", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("parent")
+  public List<String> getParent() {
+    return parent;
+  }
+
+  public void setParent(List<String> parent) {
+    this.parent = parent;
+  }
+
+  public GetNamespaceResponse properties(Map<String, String> properties) {
     this.properties = properties;
     return this;
   }
 
-  public CreateCatalogResponse putPropertiesItem(String key, String propertiesItem) {
+  public GetNamespaceResponse putPropertiesItem(String key, String propertiesItem) {
     if (this.properties == null) {
       this.properties = new HashMap<>();
     }
@@ -79,14 +111,17 @@ public class CreateCatalogResponse {
   }
 
   /**
-   * Properties stored on the catalog, if supported by the server.
+   * Properties stored on the namespace, if supported by the server. If the server does not support
+   * namespace properties, it should return null for this field. If namespace properties are
+   * supported, but none are set, it should return an empty object.
    *
    * @return properties
    */
   @Schema(
       name = "properties",
-      example = "{created_at=1452120468}",
-      description = "Properties stored on the catalog, if supported by the server.",
+      example = "{owner=Ralph, created_at=1452120468}",
+      description =
+          "Properties stored on the namespace, if supported by the server. If the server does not support namespace properties, it should return null for this field. If namespace properties are supported, but none are set, it should return an empty object.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("properties")
   public Map<String, String> getProperties() {
@@ -105,21 +140,23 @@ public class CreateCatalogResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateCatalogResponse createCatalogResponse = (CreateCatalogResponse) o;
-    return Objects.equals(this.name, createCatalogResponse.name)
-        && Objects.equals(this.properties, createCatalogResponse.properties);
+    GetNamespaceResponse getNamespaceResponse = (GetNamespaceResponse) o;
+    return Objects.equals(this.name, getNamespaceResponse.name)
+        && Objects.equals(this.parent, getNamespaceResponse.parent)
+        && Objects.equals(this.properties, getNamespaceResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, properties);
+    return Objects.hash(name, parent, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateCatalogResponse {\n");
+    sb.append("class GetNamespaceResponse {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();

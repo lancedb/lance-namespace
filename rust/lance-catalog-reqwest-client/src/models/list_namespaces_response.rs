@@ -11,35 +11,20 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// ErrorResponse : JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ErrorResponse {
-    /// a URI identifier that categorizes the error
-    #[serde(rename = "type")]
-    pub r#type: String,
-    /// a brief, human-readable message about the error
-    #[serde(rename = "title", skip_serializing_if = "Option::is_none")]
-    pub title: Option<String>,
-    /// HTTP response code, (if present) it must match the actual HTTP code returned by the service
-    #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
-    pub status: Option<i32>,
-    /// a human-readable explanation of the error
-    #[serde(rename = "detail", skip_serializing_if = "Option::is_none")]
-    pub detail: Option<String>,
-    /// a URI that identifies the specific occurrence of the error
-    #[serde(rename = "instance", skip_serializing_if = "Option::is_none")]
-    pub instance: Option<String>,
+pub struct ListNamespacesResponse {
+    #[serde(rename = "namespaces")]
+    pub namespaces: Vec<String>,
+    /// An opaque token that allows pagination for list APIs (e.g. ListNamespaces). For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available. After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request. Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.
+    #[serde(rename = "nextPageToken", skip_serializing_if = "Option::is_none")]
+    pub next_page_token: Option<String>,
 }
 
-impl ErrorResponse {
-    /// JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)
-    pub fn new(r#type: String) -> ErrorResponse {
-        ErrorResponse {
-            r#type,
-            title: None,
-            status: None,
-            detail: None,
-            instance: None,
+impl ListNamespacesResponse {
+    pub fn new(namespaces: Vec<String>) -> ListNamespacesResponse {
+        ListNamespacesResponse {
+            namespaces,
+            next_page_token: None,
         }
     }
 }

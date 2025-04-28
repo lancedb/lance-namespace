@@ -17,7 +17,7 @@ clean-java-apache-client:
 
 gen-java-apache-client: clean-java-apache-client
 	openapi-generator-cli generate \
-	  -i ../spec/rest-catalog.yaml \
+	  -i ../spec/rest.yaml \
 	  -g java \
 	  -o lance-catalog-apache-client \
 	  --ignore-file-override=.apache-client-ignore \
@@ -36,7 +36,7 @@ clean-java-springboot-server:
 
 gen-java-springboot-server: clean-java-springboot-server
 	openapi-generator-cli generate \
-	  -i ../spec/rest-catalog.yaml \
+	  -i ../spec/rest.yaml \
 	  -g spring \
       -o lance-catalog-springboot-server \
       --additional-properties=groupId=com.lancedb,artifactId=lance-catalog-springboot-server,artifactVersion=$(VERSION),parentGroupId=com.lancedb,parentArtifactId=lance-catalog-root,parentVersion=$(VERSION),parentRelativePath=pom.xml,library=spring-boot,interfaceOnly=true,useOptional=true,openApiNullable=false,java8=true,apiPackage=com.lancedb.lance.catalog.server.springboot.api,modelPackage=com.lancedb.lance.catalog.server.springboot.model,useTags=true,skipDefaultInterface=false,hideGenerationTimestamp=true,licenseName=Apache-2.0,licenseUrl=https://www.apache.org/licenses/LICENSE-2.0.txt

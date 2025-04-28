@@ -4,17 +4,17 @@ All URIs are relative to *http://localhost:2333*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**getTable**](TableApi.md#getTable) | **GET** /v1/tables/{table} | Get a table from the catalog |
-| [**registerTable**](TableApi.md#registerTable) | **POST** /v1/table/register | Register an existing table in the given catalog.  |
+| [**getTable**](TableApi.md#getTable) | **GET** /v1/tables/{table} | Get a table from the namespace |
+| [**registerTable**](TableApi.md#registerTable) | **POST** /v1/table/register | Register a table to a namespace |
 | [**tableExists**](TableApi.md#tableExists) | **HEAD** /v1/tables/{table} | Check if a table exists |
 
 
 
 ## getTable
 
-> GetTableResponse getTable(table, tableDelimiter)
+> GetTableResponse getTable(table, delimiter)
 
-Get a table from the catalog
+Get a table from the namespace
 
 Get a table&#39;s detailed information. 
 
@@ -34,10 +34,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         TableApi apiInstance = new TableApi(defaultClient);
-        String table = "table_example"; // String | An identifier of the table
-        String tableDelimiter = "."; // String | The delimiter used by the table identifier
+        String table = "table_example"; // String | A string identifier of the table
+        String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
         try {
-            GetTableResponse result = apiInstance.getTable(table, tableDelimiter);
+            GetTableResponse result = apiInstance.getTable(table, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#getTable");
@@ -55,8 +55,8 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **table** | **String**| An identifier of the table | |
-| **tableDelimiter** | **String**| The delimiter used by the table identifier | [optional] [default to .] |
+| **table** | **String**| A string identifier of the table | |
+| **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
 
 ### Return type
 
@@ -88,7 +88,9 @@ No authorization required
 
 > GetTableResponse registerTable(registerTableRequest)
 
-Register an existing table in the given catalog. 
+Register a table to a namespace
+
+Register an existing table at a given storage location to a namespace. 
 
 ### Example
 
@@ -157,11 +159,11 @@ No authorization required
 
 ## tableExists
 
-> tableExists(table, tableDelimiter)
+> tableExists(table, delimiter)
 
 Check if a table exists
 
-Check if a table exists.
+Check if a table exists. This API should behave exactly like the GetTable API, except it does not contain a body. 
 
 ### Example
 
@@ -179,10 +181,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         TableApi apiInstance = new TableApi(defaultClient);
-        String table = "table_example"; // String | An identifier of the table
-        String tableDelimiter = "."; // String | The delimiter used by the table identifier
+        String table = "table_example"; // String | A string identifier of the table
+        String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
         try {
-            apiInstance.tableExists(table, tableDelimiter);
+            apiInstance.tableExists(table, delimiter);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#tableExists");
             System.err.println("Status code: " + e.getCode());
@@ -199,8 +201,8 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **table** | **String**| An identifier of the table | |
-| **tableDelimiter** | **String**| The delimiter used by the table identifier | [optional] [default to .] |
+| **table** | **String**| A string identifier of the table | |
+| **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
 
 ### Return type
 

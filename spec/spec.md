@@ -1,75 +1,94 @@
-# Lance Catalog Specification
+# Lance Namespace Specification
 
-**Lance Catalog Specification** is an open specification on top of the storage-based Lance open table and data format 
+**Lance Namespace Specification** is an open specification on top of the storage-based Lance data format 
 to standardize access to a collection of Lance tables (a.k.a. Lance datasets).
-It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc.
+It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc.
 should store and use Lance tables, as well as how ML/AI tools and analytics compute engines
 (will together be called _"tools"_ in this document) should integrate with Lance tables.
 
 ## Concepts
 
-### Definition
+### Namespace Definition
 
-A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables.
-It can either contain a collection of tables, or a collection of Lance catalogs recursively.
-It is designed to encapsulates concepts like namespace, metastore, database, schema, etc.
-that could appear in other similar systems,
-so that it can better integrate with any system with any type of object hierarchy.
+A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables.
+It can either contain a collection of tables, or a collection of Lance namespaces recursively.
+It is designed to encapsulates concepts including namespace, metastore, database, namespace, schema, etc.
+that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy.
 
-Here is an example layout of a Lance catalog:
+Here is an example layout of a Lance namespace:
 
-![Lance catalog layout](./catalog-layout.png)
+![Lance namespace layout](./layout.png)
 
-### Terminologies
+### Parent & Child
 
-We will use the example above to introduce some commonly used terminologies:
+We use the term **parent** and **child** to describe relationship between 2 objects.
+If namespace A directly contains B, then A is the parent namespace of B, i.e. B is a child of A.
+For examples:
 
-- **Root catalog** `cat1` contains 3 **child catalogs** `cat2`, `cat3` and `cat4`
-- Catalog `cat2` contains a child catalog `cat5`. Conversely, `cat2` is the **parent catalog** of `cat5`.
-- Catalog `cat3` contains a table `t2`
-- Catalog `cat4` contains 2 tables `t3` and `t4`
-- Catalog `cat5` contains a table `t1`
+- Namespace `ns1` contains 3 **child namespaces** `ns2`, `ns3` and `ns4`, i.e. `ns1` is the **parent namespace** of `ns2`, `ns3` and `ns4`.
+- Namespace `ns2` contains a **child namespace** `ns5`. i.e. `ns2` is the **parent namespace** of `ns5`.
+- Namespace `ns3` contains a **child table** `t2`, i.e. `t2` belongs to **parent namespace** `ns3`.
 
-### Name and Identifier
+### Root Namespace
 
-The **name** of any object under the root catalog must be unique within the parent object. 
+A root namespace is a namespace that has no parent.
+In the example layout, `ns1` is a root namespace.
 
-Use the same catalog example as above, we have:
+### Object Name
+
+The **name** of an object is a string that uniquely identifies the object within the namespace it belongs to.
+The name of any object must be unique among all other objects that share the same parent namespace.
+For examples:
  
-- `cat2`, `cat3` and `cat4` are unique names under `cat1`
-- `t3` and `t4` are unique names under `cat4`
+- `cat2`, `cat3` and `cat4` are all unique names under `cat1`
+- `t3` and `t4` are both unique names under `cat4`
 
-The **identifier** of an object under the root catalog is a string that 
-uniquely identifies the object among all objects in the root catalog.
-it is the list of names of all objects starting under (not including) the root catalog.
-The dot (`.`) symbol is typically used as the delimiter to join all the names to form a string identifier, 
+### Object Identifier
+
+The **identifier** of an object uniquely identifies the object within the root namespace it belongs to.
+The identifier of any object must be unique among all other objects that share the same root namespace.
+
+Based on the uniqueness property of an object name, 
+an object identifier is the list of object names starting from (not including) the root namespace to the object itself.
+This is also called the **list identifier**.
+For examples:
+
+- the list identifier of `cat5` is `[cat2, cat5]`
+- the list identifier of `t1` is `[cat2, cat5, t1]`
+
+The dot (`.`) symbol is typically used as the delimiter to join all the names to form an **string identifier**, 
 but other symbols could also be used if dot is used in the object name.
+For examples:
 
-Use the same catalog example as above, we have:
+- the string identifier of `cat5` is `cat2.cat5`
+- the string identifier of `t1` is `cat2.cat5.t1`
+- the string identifier of `t3` is `cat4$t3` when using delimiter `$`
 
-- the identifier of `t1` is `[cat2, cat5, t1]` in list form or `cat2.cat5.t1` in string form
-- the identifier of `cat5` is `cat2.cat5` in string form
-- the identifier of `t3` is `cat4$t3` in string form when using delimiter `$`
+## Name and Identifier for Root Namespace
 
-The root catalog itself technically does not have a fixed name or identifier.
-It is typically assigned by users through some configuration when used in a tool.
-For example, a Lance catalog can be called `cat1` in Ray, but `cat2` in Apache Spark,
-but they are both configured to connect to the same server with URI `https://mylancecatalog.com`.
+The root namespace itself has no name and identifier.
+When represented in code, its name and string identifier is represented by an empty or null string,
+and its list identifier is represented by an empty or null list.
 
-## Catalog Types
+The actual name and identifier of the root namespace is typically 
+assigned by users through some configuration when used in a tool.
+For example, a root namespace can be called `cat1` in Ray, but `cat2` in Apache Spark,
+but they are both configured to connect to the same server with URI `https://mylancenamespace.com`.
 
-There are 2 types of Lance catalogs: directory catalog and REST catalog.
+## Namespace Types
 
-### Lance Directory Catalog
+There are 2 types of Lance namespaces: directory and REST.
 
-**Lance directory catalog** is a lightweight and simple Lance catalog that only contains a list of tables.
+### Lance Directory Namespace
+
+**Lance directory namespace** is a lightweight and simple Lance namespace that only contains a list of tables.
 People can easily get started with creating and using Lance tables directly on top of any 
-local or remote storage system with a Lance directory catalog.
+local or remote storage system with a Lance directory namespace.
 
-The directory catalog maps to a directory on storage.
-A Lance table corresponds to a subdirectory in the directory.
-We call such a subdirectories **Table Directory**.
-Consider the following example directory layout:
+A directory namespace maps to a directory on storage, we call such directory a **namespace directory**.
+A Lance table corresponds to a subdirectory in the namespace directory.
+We call such a subdirectories **table directory**.
+Consider the following example namespace directory layout:
 
 ```
 .
@@ -89,8 +108,9 @@ Consider the following example directory layout:
     └── table3
 ```
 
-This describes a Lance directory catalog at `/my/dir1/` that contains tables `table1`, `table2`, `table3`
-sitting at table directories `/my/dirs/table1`, `/my/dirs/table2`, `/my/dirs/table3` respectively.
+This describes a Lance directory namespace with the namespace directory at `/my/dir1/`.
+It contains tables `table1`, `table2`, `table3` sitting at table directories 
+`/my/dirs/table1`, `/my/dirs/table2`, `/my/dirs/table3` respectively.
 
 #### Directory Path
 
@@ -103,73 +123,74 @@ There are 3 ways to specify a directory path:
 
 #### Table Existence
 
-A table exists in a Lance directory catalog if a table directory of the specific name exists.
+A table exists in a Lance directory namespace if a table directory of the specific name exists.
 This is true even if the directory is empty or the contents in the directory does not follow the Lance table format spec.
 For such cases, an operation that lists all tables in the directory should show the specific table,
 and an operation that checks if a table exists should return true.
 However, an operation that loads the Lance table metadata should fail with error 
 indicating the content in the folder is not compliant with the Lance table format spec.
 
-### Lance REST Catalog
+### Lance REST Namespace
 
-In an enterprise environment, typically there is a requirement to store tables in a catalog service 
+In an enterprise environment, typically there is a requirement to store tables in a metadata service 
 such as Apache Hive MetaStore, Apache Gravitino, Unity Catalog, etc. 
 for more advanced governance features around access control, auditing, lineage tracking, etc.
-**Lance REST catalog** is an OpenAPI protocol that enables reading, writing and managing Lance tables
-by connecting those catalog services or building a custom catalog server in a standardized way.
-The detailed OpenAPI specification content can be found in [rest-catalog.yaml](./rest-catalog.yaml).
+**Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables
+by connecting those metadata services or building a custom metadata server in a standardized way.
+The detailed OpenAPI specification content can be found in [rest.yaml](./rest.yaml).
 
-#### Catalog Server and Adapter
+#### Namespace Server and Adapter
 
-Any REST HTTP server that implements this OpenAPI protocol is called a **Lance Catalog Server**.
-If the main purpose of this server is to be a proxy on top of an existing catalog service,
-converting back and forth between Lance REST API models and native API models of the catalog service,
-then this Lance catalog server is called a **Lance Catalog Adapter**.
+Any REST HTTP server that implements this OpenAPI protocol is called a **Lance Namespace Server**.
+If the main purpose of this server is to be a proxy on top of an existing metadata service,
+converting back and forth between Lance REST API models and native API models of the metadata service,
+then this Lance namespace server is called a **Lance Namespace Adapter**.
 
-#### Relationship with Lance Table on Storage
+#### Server and Storage
 
-This section defines the possible relationships between a Lance table definition in a REST catalog and
-the corresponding Lance table sitting in some storage system.
-A catalog can choose to support one or multiple types of relationships when integrating with the REST protocol.
+Under the REST protocol, a Lance table exists both in the storage and the server.
+There are 2 possible ways to manage a Lance table under such setting.
+A Lance namespace server can choose to support one or both ways.
 
-##### Catalog Managed Table
+##### Server Managed Table
 
-A catalog managed Lance table is a table that is fully managed by a catalog.
-The catalog must contain information about the latest version of the Lance table.
-Any modifications to the table must happen through the catalog.
-If a user directly modifies the underlying table in the storage bypassing catalog,
-the catalog must not reflect the changes in the table to the catalog users.
+A server managed Lance table is a table that is fully managed by the Lance namespace server.
+The server must maintain information about the latest version of the Lance table.
+Any modifications to the table must happen through the server.
+If a user directly modifies the underlying table in the storage bypassing server,
+the server must not reflect the changes in the table to the namespace users.
 
-This mode ensures the catalog service is aware of all activities in the table,
+This mode ensures the namespace service is aware of all activities in the table,
 and can thus fully enforce any governance and management features for the table. 
 
 ##### Storage Managed Table
 
-A storage managed Lance table is a table that is fully managed by the storage with a metadata definition in catalog.
-The catalog only contains information about the table directory location.
+A storage managed Lance table is a table that is fully managed by the storage 
+with a metadata definition in the Lance namespace server.
+The server only contains information about the table directory location.
 It is expected that a tool finds the latest version of the Lance table based on the contents 
 in the table directory according to the Lance format specification.
 A modification to the table can happen either directly against the storage,
-or happen as a request to the catalog, where the catalog is responsible for applying the corresponding
-change to the underlying storage according to the ance format specification.
+or happen as a request to the server, where the server is responsible for applying the corresponding
+change to the underlying storage according to the Lance format specification.
 
 This mode is more flexible for real world ML/AI workflows 
-but the catalog loses full visibility and control over the actions performed against the table,
+but the server loses full visibility and control over the actions performed against the table,
 so it will be harder to enforce any governance and management features for storage managed tables.
 
 ## Tool Integration Guidelines
 
-The following are guidelines for tools to integrate with Lance catalogs.
+The following are guidelines for tools to integrate with Lance namespaces.
 Note that these are recommendations rather than hard requirements.
 The goal of these guidelines is to offer a consistent user experience across different tools.
 
 ### Configurations
 
 We recommend tools to offer the following configurations in some form or shape 
-for users to configure connection to a Lance catalog:
+for users to configure connection to a Lance namespace:
 
-| Config Key | Description                                                                                 | Required?                   | 
-|------------|---------------------------------------------------------------------------------------------|-----------------------------|
-| type       | The type of the catalog, either `dir` for Lance directory, or `rest` for Lance REST Catalog | Yes                         |
-| path       | The path to the Lance directory catalog                                                     | Yes for `dir` catalog type  | 
-| uri        | The HTTP URI for the Lance REST Catalog                                                     | Yes for `rest` catalog type |
+| Config Key | Description                                                                                     | Required?                     | 
+|------------|-------------------------------------------------------------------------------------------------|-------------------------------|
+| type       | The type of the namespace, either `dir` for Lance directory, or `rest` for Lance REST Namespace | Yes                           |
+| path       | The path to the Lance directory namespace                                                       | Yes for `dir` namespace type  | 
+| uri        | The HTTP URI for the Lance REST Namespace                                                       | Yes for `rest` namespace type |

@@ -1,13 +1,13 @@
 openapi: 3.1.1
 info:
   description: |
-    **Lance Catalog Specification** is an open specification on top of the storage-based Lance open table and data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _"tools"_ in this document) should integrate with Lance tables.
-    A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance catalogs recursively. It is designed to encapsulates concepts like namespace, metastore, database, schema, etc. that could appear in other similar systems, so that it can better integrate with any system with any type of object hierarchy.
-    In an enterprise environment, typically there is a requirement to store tables in a catalog service  such as Apache Hive MetaStore, Apache Gravitino, Unity Catalog, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST catalog** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those catalog services or building a custom catalog server in a standardized way.
+    **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _"tools"_ in this document) should integrate with Lance tables.
+    A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, namespace, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy.
+    In an enterprise environment, typically there is a requirement to store tables in a metadata service  such as Apache Hive MetaStore, Apache Gravitino, Unity Namespace, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way. The detailed OpenAPI specification content can be found in [rest.yaml](./rest.yaml).
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  title: Lance REST Catalog Specification
+  title: Lance REST Namespace Specification
   version: 0.0.1
 servers:
 - description: Generic server URL with all parts configurable
@@ -34,17 +34,19 @@ security:
 - OAuth2: []
 - BearerAuth: []
 paths:
-  /v1/catalogs:
+  /v1/namespaces:
     get:
-      operationId: ListCatalogs
+      description: |
+        List all child namespace names of the root namespace or a given parent namespace.
+      operationId: ListNamespaces
       parameters:
       - $ref: '#/components/parameters/pageToken'
       - $ref: '#/components/parameters/pageSize'
-      - $ref: '#/components/parameters/parentCatalog'
-      - $ref: '#/components/parameters/parentCatalogDelimiter'
+      - $ref: '#/components/parameters/parent'
+      - $ref: '#/components/parameters/delimiter'
       responses:
         "200":
-          $ref: '#/components/responses/ListCatalogsResponse'
+          $ref: '#/components/responses/ListNamespacesResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
@@ -57,29 +59,29 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: |
-        List all direct child catalogs of the root catalog.
+      summary: List namespaces
       tags:
-      - Catalog
+      - Namespace
       x-accepts:
       - application/json
-    parameters:
-    - $ref: '#/components/parameters/parentCatalog'
-    - $ref: '#/components/parameters/parentCatalogDelimiter'
     post:
-      operationId: CreateCatalog
-      parameters:
-      - $ref: '#/components/parameters/parentCatalog'
-      - $ref: '#/components/parameters/parentCatalogDelimiter'
+      description: |
+        Create a new namespace.
+        A namespace can manage either a collection of child namespaces, or a collection of tables.
+        There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:
+          * CREATE: the operation fails with 400.
+          * EXIST_OK: the operation succeeds and the existing namespace is kept.
+          * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created.
+      operationId: CreateNamespace
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCatalogRequest'
+              $ref: '#/components/schemas/CreateNamespaceRequest'
         required: true
       responses:
         "200":
-          $ref: '#/components/responses/CreateCatalogResponse'
+          $ref: '#/components/responses/GetNamespaceResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
@@ -94,22 +96,20 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: |
-        Create a new catalog. A catalog can manage either a collection of child catalogs, or a collection of tables. There are three modes when trying to create a catalog to differentiate the behavior when a catalog of the same name already exists:
-          * CREATE: the operation fails with 400.
-          * EXIST_OK: the operation succeeds and the existing catalog is kept.
-          * OVERWRITE: the existing catalog is dropped and a new empty catalog with this name is created.
+      summary: Create a new namespace
       tags:
-      - Catalog
+      - Namespace
       x-content-type: application/json
       x-accepts:
       - application/json
-  /v1/catalogs/{catalog}:
+  /v1/namespaces/{namespace}:
     delete:
-      operationId: DropCatalog
+      description: |
+        Drop a namespace. The namespace must be empty.
+      operationId: DropNamespace
       parameters:
-      - $ref: '#/components/parameters/catalog'
-      - $ref: '#/components/parameters/catalogDelimiter'
+      - $ref: '#/components/parameters/namespace'
+      - $ref: '#/components/parameters/delimiter'
       responses:
         "204":
           description: "Success, no content"
@@ -127,20 +127,21 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: Drop a catalog. The catalog must be empty.
+      summary: Drop a namespace
       tags:
-      - Catalog
+      - Namespace
       x-accepts:
       - application/json
     get:
-      description: Return a detailed information for a given catalog
-      operationId: GetCatalog
+      description: |
+        Return the detailed information for a given namespace
+      operationId: GetNamespace
       parameters:
-      - $ref: '#/components/parameters/catalog'
-      - $ref: '#/components/parameters/catalogDelimiter'
+      - $ref: '#/components/parameters/namespace'
+      - $ref: '#/components/parameters/delimiter'
       responses:
         "200":
-          $ref: '#/components/responses/GetCatalogResponse'
+          $ref: '#/components/responses/GetNamespaceResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
@@ -153,17 +154,19 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: Get information about a catalog
+      summary: Get information about a namespace
       tags:
-      - Catalog
+      - Namespace
       x-accepts:
       - application/json
     head:
-      description: Check if a catalog exists. The response does not contain a body.
-      operationId: CatalogExists
+      description: |
+        Check if a namespace exists.
+        This API should behave exactly like the GetNamespace API, except it does not contain a body.
+      operationId: NamespaceExists
       parameters:
-      - $ref: '#/components/parameters/catalog'
-      - $ref: '#/components/parameters/catalogDelimiter'
+      - $ref: '#/components/parameters/namespace'
+      - $ref: '#/components/parameters/delimiter'
       responses:
         "200":
           description: "Success, no content"
@@ -179,16 +182,18 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: Check if a catalog exists
+      summary: Check if a namespace exists
       tags:
-      - Catalog
+      - Namespace
       x-accepts:
       - application/json
     parameters:
-    - $ref: '#/components/parameters/catalog'
-    - $ref: '#/components/parameters/catalogDelimiter'
+    - $ref: '#/components/parameters/namespace'
+    - $ref: '#/components/parameters/delimiter'
   /v1/table/register:
     post:
+      description: |
+        Register an existing table at a given storage location to a namespace.
       operationId: RegisterTable
       requestBody:
         content:
@@ -213,8 +218,7 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: |
-        Register an existing table in the given catalog.
+      summary: Register a table to a namespace
       tags:
       - Table
       x-content-type: application/json
@@ -227,7 +231,7 @@ paths:
       operationId: GetTable
       parameters:
       - $ref: '#/components/parameters/table'
-      - $ref: '#/components/parameters/tableDelimiter'
+      - $ref: '#/components/parameters/delimiter'
       responses:
         "200":
           $ref: '#/components/responses/GetTableResponse'
@@ -243,17 +247,19 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: Get a table from the catalog
+      summary: Get a table from the namespace
       tags:
       - Table
       x-accepts:
       - application/json
     head:
-      description: Check if a table exists.
+      description: |
+        Check if a table exists.
+        This API should behave exactly like the GetTable API, except it does not contain a body.
       operationId: TableExists
       parameters:
       - $ref: '#/components/parameters/table'
-      - $ref: '#/components/parameters/tableDelimiter'
+      - $ref: '#/components/parameters/delimiter'
       responses:
         "200":
           description: "Success, no content"
@@ -276,55 +282,37 @@ paths:
       - application/json
     parameters:
     - $ref: '#/components/parameters/table'
-    - $ref: '#/components/parameters/tableDelimiter'
+    - $ref: '#/components/parameters/delimiter'
 components:
   examples:
-    ListCatalogsEmptyExample:
-      summary: An empty list of catalogs
+    ListNamespacesEmptyExample:
+      summary: An empty list of namespaces
       value:
-        catalogs: []
-    ListCatalogsNonEmptyExample:
-      summary: A non-empty list of catalogs
+        namespaces: []
+    ListNamespacesNonEmptyExample:
+      summary: A non-empty list of namespaces
       value:
-        catalogs:
+        namespaces:
         - accounting
         - credits
   parameters:
-    catalog:
-      description: An identifier of the catalog.
+    namespace:
+      description: A string identifier of the namespace.
       explode: false
       in: path
-      name: catalog
+      name: namespace
       required: true
       schema:
-        $ref: '#/components/schemas/StringIdentifier'
+        type: string
       style: simple
-    catalogDelimiter:
-      description: The delimiter used by the catalog identifier string
+    parent:
+      description: A string identifier of the parent namespace.
       explode: true
       in: query
-      name: catalogDelimiter
+      name: parent
       required: false
       schema:
-        $ref: '#/components/schemas/Delimiter'
-      style: form
-    parentCatalog:
-      description: An identifier of the parent catalog.
-      explode: true
-      in: query
-      name: parentCatalog
-      required: false
-      schema:
-        $ref: '#/components/schemas/StringIdentifier'
-      style: form
-    parentCatalogDelimiter:
-      description: The delimiter used by the parent catalog identifier
-      explode: true
-      in: query
-      name: parentCatalogDelimiter
-      required: false
-      schema:
-        $ref: '#/components/schemas/Delimiter'
+        type: string
       style: form
     pageToken:
       allowEmptyValue: true
@@ -347,55 +335,42 @@ components:
         type: integer
       style: form
     table:
-      description: An identifier of the table
+      description: A string identifier of the table
       explode: false
       in: path
       name: table
       required: true
       schema:
-        $ref: '#/components/schemas/StringIdentifier'
+        type: string
       style: simple
-    tableDelimiter:
-      description: The delimiter used by the table identifier
+    delimiter:
+      description: The delimiter for the identifier used in the context
       explode: true
       in: query
-      name: tableDelimiter
+      name: delimiter
       required: false
       schema:
-        $ref: '#/components/schemas/Delimiter'
+        type: string
       style: form
   responses:
-    CreateCatalogResponse:
-      content:
-        application/json:
-          example:
-            name: ns1
-            properties:
-              created_at: "1452120468"
-          schema:
-            $ref: '#/components/schemas/CreateCatalogResponse'
-      description: "Represents a successful call to create a catalog. Returns the\
-        \ catalog created, as well as any properties that were stored for the catalog,\
-        \ including those the server might have added. Implementations are not required\
-        \ to support catalog properties."
-    ListCatalogsResponse:
+    ListNamespacesResponse:
       content:
         application/json:
           examples:
             NonEmptyResponse:
-              $ref: '#/components/examples/ListCatalogsNonEmptyExample'
+              $ref: '#/components/examples/ListNamespacesNonEmptyExample'
             EmptyResponse:
-              $ref: '#/components/examples/ListCatalogsEmptyExample'
+              $ref: '#/components/examples/ListNamespacesEmptyExample'
           schema:
-            $ref: '#/components/schemas/ListCatalogsResponse'
-      description: A list of catalogs
-    GetCatalogResponse:
+            $ref: '#/components/schemas/ListNamespacesResponse'
+      description: A list of namespaces
+    GetNamespaceResponse:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/GetCatalogResponse'
-      description: "Returns a catalog, as well as any properties stored on the catalog\
-        \ if catalog properties are supported by the server."
+            $ref: '#/components/schemas/GetNamespaceResponse'
+      description: "Returns a namespace, as well as any properties stored on the namespace\
+        \ if namespace properties are supported by the server."
     GetTableResponse:
       content:
         application/json:
@@ -410,7 +385,7 @@ components:
             title: Malformed request
             status: 400
             detail: ""
-            instance: /v1/catalogs
+            instance: /v1/namespaces
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       description: "Indicates a bad request error. It could be caused by an unexpected\
@@ -425,7 +400,7 @@ components:
             title: No valid authentication credentials for the operation
             status: 401
             detail: ""
-            instance: /v1/catalogs
+            instance: /v1/namespaces
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       description: Unauthorized. The request lacks valid authentication credentials
@@ -438,7 +413,7 @@ components:
             title: Not authorized to make this request
             status: 403
             detail: ""
-            instance: /v1/catalogs
+            instance: /v1/namespaces
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       description: Forbidden. Authenticated user does not have the necessary permissions.
@@ -450,7 +425,7 @@ components:
             title: Not found Error
             status: 404
             detail: ""
-            instance: "/v1/catalogs/{catalog}"
+            instance: "/v1/namespaces/{namespace}"
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       description: A server-side problem that means can not find the specified resource.
@@ -462,7 +437,7 @@ components:
             title: The server does not support this operation
             status: 406
             detail: ""
-            instance: /v1/catalogs
+            instance: /v1/namespaces
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       description: Not Acceptable / Unsupported Operation. The server does not support
@@ -472,10 +447,10 @@ components:
         application/json:
           example:
             type: /errors/conflict
-            title: The catalog has been concurrently modified
+            title: The namespace has been concurrently modified
             status: 409
             detail: ""
-            instance: "/v1/catalogs/{catalog}"
+            instance: "/v1/namespaces/{namespace}"
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       description: The request conflicts with the current state of the target resource.
@@ -487,7 +462,7 @@ components:
             title: Slow down
             status: 503
             detail: ""
-            instance: /v1/catalogs
+            instance: /v1/namespaces
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       description: The service is not ready to handle the request. The client should
@@ -501,7 +476,7 @@ components:
             title: Internal Server Error
             status: 500
             detail: ""
-            instance: /v1/catalogs
+            instance: /v1/namespaces
           schema:
             $ref: '#/components/schemas/ErrorResponse'
       description: A server-side problem that might not be addressable from the client
@@ -542,30 +517,22 @@ components:
           type: string
       required:
       - type
-    StringIdentifier:
-      description: |
-        An identifier string that follows the Lance Catalog Specification
-      type: string
-    ListIdentifier:
-      description: |
-        An identifier expressed as a list of object names
-      items:
-        type: string
-      type: array
-    Delimiter:
-      default: "."
-      description: |
-        A delimiter used in an identifier.
-      type: string
-    CreateCatalogRequest:
+    CreateNamespaceRequest:
       example:
         mode: CREATE
+        parent:
+        - parent
+        - parent
         name: name
         options:
           key: options
       properties:
         name:
           type: string
+        parent:
+          items:
+            type: string
+          type: array
         mode:
           enum:
           - CREATE
@@ -578,32 +545,14 @@ components:
       required:
       - mode
       - name
-    CreateCatalogResponse:
+    ListNamespacesResponse:
       example:
-        name: name
-        properties:
-          created_at: "1452120468"
-      properties:
-        name:
-          type: string
-        properties:
-          additionalProperties:
-            type: string
-          default: {}
-          description: "Properties stored on the catalog, if supported by the server."
-          example:
-            created_at: "1452120468"
-      required:
-      - name
-    ListCatalogsResponse:
-      example:
-        catalogs:
-        - accounting
-        - accounting
         nextPageToken: nextPageToken
+        namespaces:
+        - accounting
+        - accounting
       properties:
-        catalogs:
-          description: An array of child catalog names in the catalog.
+        namespaces:
           items:
             example: accounting
             type: string
@@ -611,40 +560,47 @@ components:
           uniqueItems: true
         nextPageToken:
           description: |-
-            An opaque token that allows pagination for list APIs (e.g. ListCatalogs).
+            An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
             For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available.
             After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request.
             Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.
           type: string
           nullable: true
       required:
-      - catalogs
-    GetCatalogResponse:
+      - namespaces
+    GetNamespaceResponse:
       example:
-        catalog: catalog
+        parent:
+        - parent
+        - parent
+        name: name
         properties:
           owner: Ralph
           created_at: "1452120468"
       properties:
-        catalog:
+        name:
           type: string
+        parent:
+          items:
+            type: string
+          type: array
         properties:
           additionalProperties:
             type: string
           default: {}
-          description: "Properties stored on the catalog, if supported by the server.\
-            \ If the server does not support catalog properties, it should return\
-            \ null for this field. If catalog properties are supported, but none are\
-            \ set, it should return an empty object."
+          description: "Properties stored on the namespace, if supported by the server.\
+            \ If the server does not support namespace properties, it should return\
+            \ null for this field. If namespace properties are supported, but none\
+            \ are set, it should return an empty object."
           example:
             owner: Ralph
             created_at: "1452120468"
           nullable: true
       required:
-      - catalog
+      - name
     PageToken:
       description: |-
-        An opaque token that allows pagination for list APIs (e.g. ListCatalogs).
+        An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
         For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available.
         After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request.
         Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.
@@ -652,43 +608,37 @@ components:
       nullable: true
     RegisterTableRequest:
       example:
-        catalog:
-        - catalog
-        - catalog
         name: name
+        namespace:
+        - namespace
+        - namespace
         location: location
       properties:
         name:
           type: string
-        catalog:
-          description: |
-            An identifier expressed as a list of object names
+        namespace:
           items:
             type: string
           type: array
         location:
           type: string
       required:
-      - catalog
       - location
       - name
+      - namespace
     GetTableResponse:
-      description: |
-        Result used when a table is successfully loaded.
       example:
-        catalog:
-        - catalog
-        - catalog
         name: name
+        namespace:
+        - namespace
+        - namespace
         location: location
         properties:
           key: properties
       properties:
         name:
           type: string
-        catalog:
-          description: |
-            An identifier expressed as a list of object names
+        namespace:
           items:
             type: string
           type: array
@@ -698,7 +648,7 @@ components:
           additionalProperties:
             type: string
       required:
-      - catalog
       - location
       - name
+      - namespace
 

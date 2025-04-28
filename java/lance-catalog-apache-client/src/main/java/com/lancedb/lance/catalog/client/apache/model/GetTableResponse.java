@@ -26,10 +26,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** Result used when a table is successfully loaded. */
+/** GetTableResponse */
 @JsonPropertyOrder({
   GetTableResponse.JSON_PROPERTY_NAME,
-  GetTableResponse.JSON_PROPERTY_CATALOG,
+  GetTableResponse.JSON_PROPERTY_NAMESPACE,
   GetTableResponse.JSON_PROPERTY_LOCATION,
   GetTableResponse.JSON_PROPERTY_PROPERTIES
 })
@@ -40,8 +40,8 @@ public class GetTableResponse {
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nonnull private String name;
 
-  public static final String JSON_PROPERTY_CATALOG = "catalog";
-  @javax.annotation.Nonnull private List<String> catalog = new ArrayList<>();
+  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
+  @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
 
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nonnull private String location;
@@ -75,36 +75,36 @@ public class GetTableResponse {
     this.name = name;
   }
 
-  public GetTableResponse catalog(@javax.annotation.Nonnull List<String> catalog) {
+  public GetTableResponse namespace(@javax.annotation.Nonnull List<String> namespace) {
 
-    this.catalog = catalog;
+    this.namespace = namespace;
     return this;
   }
 
-  public GetTableResponse addCatalogItem(String catalogItem) {
-    if (this.catalog == null) {
-      this.catalog = new ArrayList<>();
+  public GetTableResponse addNamespaceItem(String namespaceItem) {
+    if (this.namespace == null) {
+      this.namespace = new ArrayList<>();
     }
-    this.catalog.add(catalogItem);
+    this.namespace.add(namespaceItem);
     return this;
   }
 
   /**
-   * An identifier expressed as a list of object names
+   * Get namespace
    *
-   * @return catalog
+   * @return namespace
    */
   @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_CATALOG)
+  @JsonProperty(JSON_PROPERTY_NAMESPACE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public List<String> getCatalog() {
-    return catalog;
+  public List<String> getNamespace() {
+    return namespace;
   }
 
-  @JsonProperty(JSON_PROPERTY_CATALOG)
+  @JsonProperty(JSON_PROPERTY_NAMESPACE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setCatalog(@javax.annotation.Nonnull List<String> catalog) {
-    this.catalog = catalog;
+  public void setNamespace(@javax.annotation.Nonnull List<String> namespace) {
+    this.namespace = namespace;
   }
 
   public GetTableResponse location(@javax.annotation.Nonnull String location) {
@@ -173,14 +173,14 @@ public class GetTableResponse {
     }
     GetTableResponse getTableResponse = (GetTableResponse) o;
     return Objects.equals(this.name, getTableResponse.name)
-        && Objects.equals(this.catalog, getTableResponse.catalog)
+        && Objects.equals(this.namespace, getTableResponse.namespace)
         && Objects.equals(this.location, getTableResponse.location)
         && Objects.equals(this.properties, getTableResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, catalog, location, properties);
+    return Objects.hash(name, namespace, location, properties);
   }
 
   @Override
@@ -188,7 +188,7 @@ public class GetTableResponse {
     StringBuilder sb = new StringBuilder();
     sb.append("class GetTableResponse {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    catalog: ").append(toIndentedString(catalog)).append("\n");
+    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
@@ -252,19 +252,19 @@ public class GetTableResponse {
       }
     }
 
-    // add `catalog` to the URL query string
-    if (getCatalog() != null) {
-      for (int i = 0; i < getCatalog().size(); i++) {
+    // add `namespace` to the URL query string
+    if (getNamespace() != null) {
+      for (int i = 0; i < getNamespace().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%scatalog%s%s=%s",
+                  "%snamespace%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getCatalog().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

@@ -1,7 +1,7 @@
 /*
- * Lance REST Catalog Specification
+ * Lance REST Namespace Specification
  *
- * **Lance Catalog Specification** is an open specification on top of the storage-based Lance open table and data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables. A Lance catalog is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance catalogs recursively. It is designed to encapsulates concepts like namespace, metastore, database, schema, etc. that could appear in other similar systems, so that it can better integrate with any system with any type of object hierarchy. In an enterprise environment, typically there is a requirement to store tables in a catalog service  such as Apache Hive MetaStore, Apache Gravitino, Unity Catalog, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST catalog** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those catalog services or building a custom catalog server in a standardized way. 
+ * **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables. A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, namespace, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy. In an enterprise environment, typically there is a requirement to store tables in a metadata service  such as Apache Hive MetaStore, Apache Gravitino, Unity Namespace, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way. The detailed OpenAPI specification content can be found in [rest.yaml](./rest.yaml). 
  *
  * The version of the OpenAPI document: 0.0.1
  * 
@@ -57,16 +57,16 @@ pub enum TableExistsError {
 
 
 /// Get a table's detailed information. 
-pub async fn get_table(configuration: &configuration::Configuration, table: &str, table_delimiter: Option<&str>) -> Result<models::GetTableResponse, Error<GetTableError>> {
+pub async fn get_table(configuration: &configuration::Configuration, table: &str, delimiter: Option<&str>) -> Result<models::GetTableResponse, Error<GetTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_table = table;
-    let p_table_delimiter = table_delimiter;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/tables/{table}", configuration.base_path, table=crate::apis::urlencode(p_table));
     let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
 
-    if let Some(ref param_value) = p_table_delimiter {
-        req_builder = req_builder.query(&[("tableDelimiter", &param_value.to_string())]);
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
     }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
@@ -97,6 +97,7 @@ pub async fn get_table(configuration: &configuration::Configuration, table: &str
     }
 }
 
+/// Register an existing table at a given storage location to a namespace. 
 pub async fn register_table(configuration: &configuration::Configuration, register_table_request: models::RegisterTableRequest) -> Result<models::GetTableResponse, Error<RegisterTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_register_table_request = register_table_request;
@@ -134,17 +135,17 @@ pub async fn register_table(configuration: &configuration::Configuration, regist
     }
 }
 
-/// Check if a table exists.
-pub async fn table_exists(configuration: &configuration::Configuration, table: &str, table_delimiter: Option<&str>) -> Result<(), Error<TableExistsError>> {
+/// Check if a table exists. This API should behave exactly like the GetTable API, except it does not contain a body. 
+pub async fn table_exists(configuration: &configuration::Configuration, table: &str, delimiter: Option<&str>) -> Result<(), Error<TableExistsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_table = table;
-    let p_table_delimiter = table_delimiter;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/tables/{table}", configuration.base_path, table=crate::apis::urlencode(p_table));
     let mut req_builder = configuration.client.request(reqwest::Method::HEAD, &uri_str);
 
-    if let Some(ref param_value) = p_table_delimiter {
-        req_builder = req_builder.query(&[("tableDelimiter", &param_value.to_string())]);
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
     }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());

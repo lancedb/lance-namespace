@@ -6,6 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **str** |  | 
+**parent** | **List[str]** |  | [optional] 
 **mode** | **str** |  | 
 **options** | **Dict[str, str]** |  | [optional] 
 

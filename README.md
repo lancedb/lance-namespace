@@ -1,10 +1,9 @@
-# Lance Catalog
+# Lance Namespace Specification
 
-**Lance Catalog** is an open specification on top of the storage-based Lance open table and data format
-to standardize access to a collection of Lance tables.
-It describes how a catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc.
-should store and use Lance tables, as well as how ML/AI tools and analytics compute engines
-should integrate with Lance.
+**Lance Namespace Specification** is an open specification on top of the storage-based Lance data format
+to standardize access to a collection of Lance tables (a.k.a. Lance datasets).
+It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc.
+should store and use Lance tables, as well as how ML/AI tools and analytics compute engines should integrate with Lance tables.
 
 ## Repository structure
 

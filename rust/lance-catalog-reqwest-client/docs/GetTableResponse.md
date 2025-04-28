@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **String** |  | 
-**catalog** | **Vec<String>** | An identifier expressed as a list of object names  | 
+**namespace** | **Vec<String>** |  | 
 **location** | **String** |  | 
 **properties** | Option<**std::collections::HashMap<String, String>**> |  | [optional]
 
