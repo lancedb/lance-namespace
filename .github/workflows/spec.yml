@@ -46,7 +46,7 @@ jobs:
           java-version: 11
           cache: "maven"
       - name: Install openapi-generator
-        run: pip install --user openapi-generator-cli
+        run: pip install -r requirements.txt
       - name: Codegen
         run: | 
           make clean
