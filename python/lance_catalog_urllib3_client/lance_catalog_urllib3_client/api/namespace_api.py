@@ -16,12 +16,13 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field, StrictStr, field_validator
 from typing import Optional
 from typing_extensions import Annotated
 from lance_catalog_urllib3_client.models.create_namespace_request import CreateNamespaceRequest
 from lance_catalog_urllib3_client.models.create_namespace_response import CreateNamespaceResponse
 from lance_catalog_urllib3_client.models.get_namespace_response import GetNamespaceResponse
+from lance_catalog_urllib3_client.models.get_transaction_response import GetTransactionResponse
 from lance_catalog_urllib3_client.models.list_namespaces_response import ListNamespacesResponse
 
 from lance_catalog_urllib3_client.api_client import ApiClient, RequestSerialized
@@ -337,6 +338,8 @@ class NamespaceApi:
     def drop_namespace(
         self,
         ns: Annotated[StrictStr, Field(description="The name of the namespace.")],
+        mode: Annotated[Optional[StrictStr], Field(description="The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. FAIL (default): the server must return 400 indicating the namespace to drop does not exist. SKIP: the server must return 204 indicating the drop operation has succeeded. ")] = None,
+        behavior: Annotated[Optional[StrictStr], Field(description="The behavior for dropping a namespace. RESTRICT (default): the namespace should not contain any table when drop is initiated. If tables are found, the server should return error and not drop the namespace. CASCADE: all tables in the namespace are dropped before the namespace is dropped. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -349,12 +352,17 @@ class NamespaceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> GetTransactionResponse:
         """Drop a namespace from the catalog. Namespace must be empty.
 
+        Drop a namespace from the catalog. If the operation is completed immediately, the server should respond with 204. If the operation is long running, the server should respond with 202 to provide a transaction that the client can use to track namespace drop progress. 
 
         :param ns: The name of the namespace. (required)
         :type ns: str
+        :param mode: The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. FAIL (default): the server must return 400 indicating the namespace to drop does not exist. SKIP: the server must return 204 indicating the drop operation has succeeded. 
+        :type mode: str
+        :param behavior: The behavior for dropping a namespace. RESTRICT (default): the namespace should not contain any table when drop is initiated. If tables are found, the server should return error and not drop the namespace. CASCADE: all tables in the namespace are dropped before the namespace is dropped. 
+        :type behavior: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -379,6 +387,8 @@ class NamespaceApi:
 
         _param = self._drop_namespace_serialize(
             ns=ns,
+            mode=mode,
+            behavior=behavior,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -386,6 +396,7 @@ class NamespaceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
+            '202': "GetTransactionResponse",
             '204': None,
             '400': "ErrorResponse",
             '401': "ErrorResponse",
@@ -410,6 +421,8 @@ class NamespaceApi:
     def drop_namespace_with_http_info(
         self,
         ns: Annotated[StrictStr, Field(description="The name of the namespace.")],
+        mode: Annotated[Optional[StrictStr], Field(description="The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. FAIL (default): the server must return 400 indicating the namespace to drop does not exist. SKIP: the server must return 204 indicating the drop operation has succeeded. ")] = None,
+        behavior: Annotated[Optional[StrictStr], Field(description="The behavior for dropping a namespace. RESTRICT (default): the namespace should not contain any table when drop is initiated. If tables are found, the server should return error and not drop the namespace. CASCADE: all tables in the namespace are dropped before the namespace is dropped. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -422,12 +435,17 @@ class NamespaceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[GetTransactionResponse]:
         """Drop a namespace from the catalog. Namespace must be empty.
 
+        Drop a namespace from the catalog. If the operation is completed immediately, the server should respond with 204. If the operation is long running, the server should respond with 202 to provide a transaction that the client can use to track namespace drop progress. 
 
         :param ns: The name of the namespace. (required)
         :type ns: str
+        :param mode: The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. FAIL (default): the server must return 400 indicating the namespace to drop does not exist. SKIP: the server must return 204 indicating the drop operation has succeeded. 
+        :type mode: str
+        :param behavior: The behavior for dropping a namespace. RESTRICT (default): the namespace should not contain any table when drop is initiated. If tables are found, the server should return error and not drop the namespace. CASCADE: all tables in the namespace are dropped before the namespace is dropped. 
+        :type behavior: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -452,6 +470,8 @@ class NamespaceApi:
 
         _param = self._drop_namespace_serialize(
             ns=ns,
+            mode=mode,
+            behavior=behavior,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -459,6 +479,7 @@ class NamespaceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
+            '202': "GetTransactionResponse",
             '204': None,
             '400': "ErrorResponse",
             '401': "ErrorResponse",
@@ -483,6 +504,8 @@ class NamespaceApi:
     def drop_namespace_without_preload_content(
         self,
         ns: Annotated[StrictStr, Field(description="The name of the namespace.")],
+        mode: Annotated[Optional[StrictStr], Field(description="The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. FAIL (default): the server must return 400 indicating the namespace to drop does not exist. SKIP: the server must return 204 indicating the drop operation has succeeded. ")] = None,
+        behavior: Annotated[Optional[StrictStr], Field(description="The behavior for dropping a namespace. RESTRICT (default): the namespace should not contain any table when drop is initiated. If tables are found, the server should return error and not drop the namespace. CASCADE: all tables in the namespace are dropped before the namespace is dropped. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -498,9 +521,14 @@ class NamespaceApi:
     ) -> RESTResponseType:
         """Drop a namespace from the catalog. Namespace must be empty.
 
+        Drop a namespace from the catalog. If the operation is completed immediately, the server should respond with 204. If the operation is long running, the server should respond with 202 to provide a transaction that the client can use to track namespace drop progress. 
 
         :param ns: The name of the namespace. (required)
         :type ns: str
+        :param mode: The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. FAIL (default): the server must return 400 indicating the namespace to drop does not exist. SKIP: the server must return 204 indicating the drop operation has succeeded. 
+        :type mode: str
+        :param behavior: The behavior for dropping a namespace. RESTRICT (default): the namespace should not contain any table when drop is initiated. If tables are found, the server should return error and not drop the namespace. CASCADE: all tables in the namespace are dropped before the namespace is dropped. 
+        :type behavior: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -525,6 +553,8 @@ class NamespaceApi:
 
         _param = self._drop_namespace_serialize(
             ns=ns,
+            mode=mode,
+            behavior=behavior,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -532,6 +562,7 @@ class NamespaceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
+            '202': "GetTransactionResponse",
             '204': None,
             '400': "ErrorResponse",
             '401': "ErrorResponse",
@@ -551,6 +582,8 @@ class NamespaceApi:
     def _drop_namespace_serialize(
         self,
         ns,
+        mode,
+        behavior,
         _request_auth,
         _content_type,
         _headers,
@@ -575,6 +608,14 @@ class NamespaceApi:
         if ns is not None:
             _path_params['ns'] = ns
         # process the query parameters
+        if mode is not None:
+            
+            _query_params.append(('mode', mode))
+            
+        if behavior is not None:
+            
+            _query_params.append(('behavior', behavior))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter

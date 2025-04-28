@@ -19,6 +19,7 @@ __version__ = "0.0.1"
 # import apis into sdk package
 from lance_catalog_urllib3_client.api.namespace_api import NamespaceApi
 from lance_catalog_urllib3_client.api.table_api import TableApi
+from lance_catalog_urllib3_client.api.transaction_api import TransactionApi
 
 # import ApiClient
 from lance_catalog_urllib3_client.api_response import ApiResponse
@@ -32,10 +33,17 @@ from lance_catalog_urllib3_client.exceptions import ApiAttributeError
 from lance_catalog_urllib3_client.exceptions import ApiException
 
 # import models into sdk package
+from lance_catalog_urllib3_client.models.alter_transaction_action import AlterTransactionAction
+from lance_catalog_urllib3_client.models.alter_transaction_request import AlterTransactionRequest
+from lance_catalog_urllib3_client.models.alter_transaction_set_property import AlterTransactionSetProperty
+from lance_catalog_urllib3_client.models.alter_transaction_set_status import AlterTransactionSetStatus
+from lance_catalog_urllib3_client.models.alter_transaction_unset_property import AlterTransactionUnsetProperty
 from lance_catalog_urllib3_client.models.create_namespace_request import CreateNamespaceRequest
 from lance_catalog_urllib3_client.models.create_namespace_response import CreateNamespaceResponse
 from lance_catalog_urllib3_client.models.error_response import ErrorResponse
 from lance_catalog_urllib3_client.models.get_namespace_response import GetNamespaceResponse
 from lance_catalog_urllib3_client.models.get_table_response import GetTableResponse
+from lance_catalog_urllib3_client.models.get_transaction_response import GetTransactionResponse
 from lance_catalog_urllib3_client.models.list_namespaces_response import ListNamespacesResponse
 from lance_catalog_urllib3_client.models.register_table_request import RegisterTableRequest
+from lance_catalog_urllib3_client.models.transaction_status import TransactionStatus

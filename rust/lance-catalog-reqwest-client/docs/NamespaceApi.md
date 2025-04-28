@@ -42,8 +42,10 @@ No authorization required
 
 ## drop_namespace
 
-> drop_namespace(ns)
+> models::GetTransactionResponse drop_namespace(ns, mode, behavior)
 Drop a namespace from the catalog. Namespace must be empty.
+
+Drop a namespace from the catalog. If the operation is completed immediately, the server should respond with 204. If the operation is long running, the server should respond with 202 to provide a transaction that the client can use to track namespace drop progress. 
 
 ### Parameters
 
@@ -51,10 +53,12 @@ Drop a namespace from the catalog. Namespace must be empty.
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **ns** | **String** | The name of the namespace. | [required] |
+**mode** | Option<**String**> | The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. FAIL (default): the server must return 400 indicating the namespace to drop does not exist. SKIP: the server must return 204 indicating the drop operation has succeeded.  |  |
+**behavior** | Option<**String**> | The behavior for dropping a namespace. RESTRICT (default): the namespace should not contain any table when drop is initiated. If tables are found, the server should return error and not drop the namespace. CASCADE: all tables in the namespace are dropped before the namespace is dropped.  |  |
 
 ### Return type
 
- (empty response body)
+[**models::GetTransactionResponse**](GetTransactionResponse.md)
 
 ### Authorization
 
