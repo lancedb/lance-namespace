@@ -32,7 +32,7 @@ import java.util.StringJoiner;
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    comments = "Generator version: 7.13.0")
+    comments = "Generator version: 7.12.0")
 public class ErrorResponse {
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull private String type;

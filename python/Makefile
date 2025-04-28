@@ -35,6 +35,7 @@ gen-python-urllib3-client: clean-python-urllib3-client
 
 build-python-urllib3-client: gen-python-urllib3-client
 	cd lance_catalog_urllib3_client; \
+		poetry install; \
 		poetry run pytest
 
 clean: clean-python-urllib3-client

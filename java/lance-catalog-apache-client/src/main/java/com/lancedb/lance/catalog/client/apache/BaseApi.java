@@ -20,7 +20,7 @@ import java.util.Map;
 
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    comments = "Generator version: 7.13.0")
+    comments = "Generator version: 7.12.0")
 public abstract class BaseApi {
 
   protected ApiClient apiClient;
