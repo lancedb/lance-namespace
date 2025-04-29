@@ -12,7 +12,7 @@ should store and use Lance tables, as well as how ML/AI tools and analytics comp
 
 A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables.
 It can either contain a collection of tables, or a collection of Lance namespaces recursively.
-It is designed to encapsulates concepts including namespace, metastore, database, namespace, schema, etc.
+It is designed to encapsulates concepts including namespace, catalog, metastore, database, schema, etc.
 that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy.
 
 Here is an example layout of a Lance namespace:
@@ -25,9 +25,8 @@ We use the term **parent** and **child** to describe relationship between 2 obje
 If namespace A directly contains B, then A is the parent namespace of B, i.e. B is a child of A.
 For examples:
 
-- Namespace `ns1` contains 3 **child namespaces** `ns2`, `ns3` and `ns4`, i.e. `ns1` is the **parent namespace** of `ns2`, `ns3` and `ns4`.
-- Namespace `ns2` contains a **child namespace** `ns5`. i.e. `ns2` is the **parent namespace** of `ns5`.
-- Namespace `ns3` contains a **child table** `t2`, i.e. `t2` belongs to **parent namespace** `ns3`.
+- Namespace `ns1` contains a **child namespace** `ns4`. i.e. `ns1` is the **parent namespace** of `ns4`.
+- Namespace `ns2` contains a **child table** `t2`, i.e. `t2` belongs to **parent namespace** `ns2`.
 
 ### Root Namespace
 
@@ -40,7 +39,7 @@ The **name** of an object is a string that uniquely identifies the object within
 The name of any object must be unique among all other objects that share the same parent namespace.
 For examples:
  
-- `cat2`, `cat3` and `cat4` are all unique names under `cat1`
+- `cat2`, `cat3` and `cat4` are all unique names under the root namespace
 - `t3` and `t4` are both unique names under `cat4`
 
 ### Object Identifier
@@ -66,14 +65,14 @@ For examples:
 
 ### Name and Identifier for Root Namespace
 
-The root namespace itself has no name and identifier.
+The root namespace itself has no name or identifier.
 When represented in code, its name and string identifier is represented by an empty or null string,
 and its list identifier is represented by an empty or null list.
 
 The actual name and identifier of the root namespace is typically 
 assigned by users through some configuration when used in a tool.
-For example, a root namespace can be called `cat1` in Ray, but `cat2` in Apache Spark,
-but they are both configured to connect to the same server with URI `https://mylancenamespace.com`.
+For example, a root namespace can be called `cat1` in Ray, but called `cat2` in Apache Spark,
+and they are both configured to connect to the same root namespace.
 
 ## Namespace Types
 

@@ -27,7 +27,7 @@ info:
     
     A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables.
     It can either contain a collection of tables, or a collection of Lance namespaces recursively.
-    It is designed to encapsulates concepts including namespace, metastore, database, namespace, schema, etc.
+    It is designed to encapsulates concepts including namespace, catalog, metastore, database, schema, etc.
     that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy.
     
     In an enterprise environment, typically there is a requirement to store tables in a metadata service 
