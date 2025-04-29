@@ -31,7 +31,8 @@ For examples:
 ### Root Namespace
 
 A root namespace is a namespace that has no parent.
-In the example layout, `ns1` is a root namespace.
+The root namespace is assumed to always exist and is ready to be connected to by a tool to explore objects in the namespace.
+The lifecycle management (e.g. creation, deletion) of the root namespace is out of scope of this specification.
 
 ### Object Name
 
