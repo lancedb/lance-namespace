@@ -7,13 +7,13 @@ should store and use Lance tables, as well as how ML/AI tools and analytics comp
 
 ## Repository structure
 
-| Directory                                                                      | Description                                         |
-|--------------------------------------------------------------------------------|-----------------------------------------------------|
-| [spec](./spec)                                                                 | Lance Catalog OpenAPI specification                 |
-| [rust/lance-namespace-reqwest-client](./rust/lance-namespace-reqwest-client)       | Generated Rust reqwest client for Lance Catalog     |
-| [python/lance_catalog_urllib3_client](./python/lance_catalog_urllib3_client)   | Generated Python urllib3 client for Lance Catalog   |
-| [java/lance-namespace-apache-client](./java/lance-namespace-apache-client)         | Generated Java Apache HTTP client for Lance Catalog |
-| [java/lance-namespace-springboot-server](./java/lance-namespace-springboot-server) | Generated Java SpringBoot server for Lance          |
+| Directory                                                                          | Description                                                |
+|------------------------------------------------------------------------------------|------------------------------------------------------------|
+| [spec](./spec)                                                                     | Lance Namespace Specification                              |
+| [rust/lance-namespace-reqwest-client](./rust/lance-namespace-reqwest-client)       | Generated Rust reqwest client for Lance REST Namespace     |
+| [python/lance_namespace_urllib3_client](./python/lance_catalog_urllib3_client)     | Generated Python urllib3 client for Lance REST Namespace   |
+| [java/lance-namespace-apache-client](./java/lance-namespace-apache-client)         | Generated Java Apache HTTP client for Lance REST Namespace |
+| [java/lance-namespace-springboot-server](./java/lance-namespace-springboot-server) | Generated Java SpringBoot server for Lance REST Namespace  |
 
 ## Development Guide
 
@@ -31,69 +31,30 @@ source .env/bin/activate
 pip install -r requirements.txt
 ```
 
-### Develop Rust
+### Install Poetry for Python
 
-```bash
-cd rust
-
-# clean all existing generated modules
-make clean
-
-# clean, and then generate all clients and servers
-make gen 
-
-# clean and generate the rust reqwest client
-make gen-rust-reqwest-client
-
-# clean, generate and build all clients and servers
-make build
-```
-
-### Develop Python
-
-We use [poetry](https://python-poetry.org/) for managing dependency of Python modules.
-If you are already in a virtual environment for [OpenAPI Generator](#install-openapi-generator),
-you can just run the following to install poetry in the same environment:
+If you want to build the entire project, or develop python specifically, 
+you need to install [poetry](https://python-poetry.org/).
+To quickly install it in your virtual environment:
 
 ```bash
 pip install -r python/requirements.txt
 ```
 
-To run codegen and build actions:
+### Build
 
-```bash
-cd python
+There are 3 commands that is available at top level as well as inside each language folder:
 
-# clean all existing generated modules
-make clean
+- `make clean`: remove all codegen modules
+- `make gen`: codegen and lint all modules (depends on `clean`)
+- `make build`: build all modules (depends on `gen`)
 
-# clean, and then generate all clients and servers
-make gen 
+You can also run `make <command>-<language>` to only run the command in the specific language, for example:
 
-# clean and generate the python urllib3 client
-make gen-python-urllib3-client
+- `make gen-python`: codegen and lint all Python modules 
+- `make build-rust`: build all Rust modules
 
-# clean, generate and build all clients and servers
-make build
-```
+You can also run `make <command>-<language>-<module>` inside a language folder to run the command against a specific module, for example:
 
-### Develop Java
-
-```bash
-cd java
-
-# clean all existing generated modules
-make clean
-
-# clean, and then generate all clients and servers
-make gen 
-
-# clean and generate the Java Apache client
-make gen-java-apache-client
-
-# clean and generate the Java Spring Boot server
-make gen-java-springboot-server
-
-# clean, generate and build all clients and servers
-make build
-```
+- `make gen-rust-reqwest-client`: codegen and lint the Rust reqwest client module
+- `make build-java-springboot-server`: build the Java Spring Boot server module
