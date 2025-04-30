@@ -91,8 +91,8 @@ jobs:
         run: |
           source ../../venv/bin/activate
           maturin develop
-      - name: Test lance_catalog_urllib3_client with Python ${{ matrix.python-version }}
-        working-directory: lance-namespace/python/lance_catalog_urllib3_client
+      - name: Test lance_namespace_urllib3_client with Python ${{ matrix.python-version }}
+        working-directory: lance-namespace/python/lance_namespace_urllib3_client
         run: |
           source ../../../venv/bin/activate
           poetry install
