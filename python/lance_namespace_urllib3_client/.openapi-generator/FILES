@@ -1,7 +1,6 @@
 .github/workflows/python.yml
 .gitignore
 .gitlab-ci.yml
-.openapi-generator-ignore
 .travis.yml
 README.md
 docs/CreateNamespaceRequest.md
@@ -36,12 +35,4 @@ setup.cfg
 setup.py
 test-requirements.txt
 test/__init__.py
-test/test_create_namespace_request.py
-test/test_error_response.py
-test/test_get_namespace_response.py
-test/test_get_table_response.py
-test/test_list_namespaces_response.py
-test/test_namespace_api.py
-test/test_register_table_request.py
-test/test_table_api.py
 tox.ini
