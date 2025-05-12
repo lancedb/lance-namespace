@@ -11,7 +11,7 @@ should store and use Lance tables, as well as how ML/AI tools and analytics comp
 |------------------------------------------------------------------------------------|------------------------------------------------------------|
 | [spec](./spec)                                                                     | Lance Namespace Specification                              |
 | [rust/lance-namespace-reqwest-client](./rust/lance-namespace-reqwest-client)       | Generated Rust reqwest client for Lance REST Namespace     |
-| [python/lance_namespace_urllib3_client](./python/lance_catalog_urllib3_client)     | Generated Python urllib3 client for Lance REST Namespace   |
+| [python/lance_namespace_urllib3_client](./python/lance_namespace_urllib3_client)   | Generated Python urllib3 client for Lance REST Namespace   |
 | [java/lance-namespace-apache-client](./java/lance-namespace-apache-client)         | Generated Java Apache HTTP client for Lance REST Namespace |
 | [java/lance-namespace-springboot-server](./java/lance-namespace-springboot-server) | Generated Java SpringBoot server for Lance REST Namespace  |
 
@@ -20,7 +20,7 @@ should store and use Lance tables, as well as how ML/AI tools and analytics comp
 ### Install OpenAPI Generator
 
 We use [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator)
-to generate various clients and servers for the catalog specification.
+to generate various clients and servers for the namespace specification.
 We recommend installing the tool through [pip](https://pypi.org/project/openapi-generator-cli/)
 for consistent experience across platforms.
 First time setup of virtual environment and installation:
