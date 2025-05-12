@@ -4,7 +4,7 @@ Lance REST Namespace Specification
 
 - API version: 0.0.1
 
-- Generator version: 7.12.0
+- Generator version: 7.13.0
 
 **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables.
 A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, catalog, metastore, database, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy.
@@ -77,10 +77,10 @@ Please follow the [installation](#installation) instruction and execute the foll
 
 ```java
 
-import com.lancedb.lance.catalog.client.apache.*;
-import com.lancedb.lance.catalog.client.apache.auth.*;
-import com.lancedb.lance.catalog.client.apache.model.*;
-import com.lancedb.lance.catalog.client.apache.api.NamespaceApi;
+import com.lancedb.lance.namespace.client.apache.*;
+import com.lancedb.lance.namespace.client.apache.auth.*;
+import com.lancedb.lance.namespace.client.apache.model.*;
+import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
 
 public class NamespaceApiExample {
 

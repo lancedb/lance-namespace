@@ -24,11 +24,11 @@ Create a new namespace. A namespace can manage either a collection of child name
 
 ```java
 // Import classes:
-import com.lancedb.lance.catalog.client.apache.ApiClient;
-import com.lancedb.lance.catalog.client.apache.ApiException;
-import com.lancedb.lance.catalog.client.apache.Configuration;
-import com.lancedb.lance.catalog.client.apache.models.*;
-import com.lancedb.lance.catalog.client.apache.api.NamespaceApi;
+import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.client.apache.ApiException;
+import com.lancedb.lance.namespace.client.apache.Configuration;
+import com.lancedb.lance.namespace.client.apache.models.*;
+import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -97,11 +97,11 @@ Drop a namespace. The namespace must be empty.
 
 ```java
 // Import classes:
-import com.lancedb.lance.catalog.client.apache.ApiClient;
-import com.lancedb.lance.catalog.client.apache.ApiException;
-import com.lancedb.lance.catalog.client.apache.Configuration;
-import com.lancedb.lance.catalog.client.apache.models.*;
-import com.lancedb.lance.catalog.client.apache.api.NamespaceApi;
+import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.client.apache.ApiException;
+import com.lancedb.lance.namespace.client.apache.Configuration;
+import com.lancedb.lance.namespace.client.apache.models.*;
+import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -171,11 +171,11 @@ Return the detailed information for a given namespace
 
 ```java
 // Import classes:
-import com.lancedb.lance.catalog.client.apache.ApiClient;
-import com.lancedb.lance.catalog.client.apache.ApiException;
-import com.lancedb.lance.catalog.client.apache.Configuration;
-import com.lancedb.lance.catalog.client.apache.models.*;
-import com.lancedb.lance.catalog.client.apache.api.NamespaceApi;
+import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.client.apache.ApiException;
+import com.lancedb.lance.namespace.client.apache.Configuration;
+import com.lancedb.lance.namespace.client.apache.models.*;
+import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -245,11 +245,11 @@ List all child namespace names of the root namespace or a given parent namespace
 
 ```java
 // Import classes:
-import com.lancedb.lance.catalog.client.apache.ApiClient;
-import com.lancedb.lance.catalog.client.apache.ApiException;
-import com.lancedb.lance.catalog.client.apache.Configuration;
-import com.lancedb.lance.catalog.client.apache.models.*;
-import com.lancedb.lance.catalog.client.apache.api.NamespaceApi;
+import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.client.apache.ApiException;
+import com.lancedb.lance.namespace.client.apache.Configuration;
+import com.lancedb.lance.namespace.client.apache.models.*;
+import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -323,11 +323,11 @@ Check if a namespace exists. This API should behave exactly like the GetNamespac
 
 ```java
 // Import classes:
-import com.lancedb.lance.catalog.client.apache.ApiClient;
-import com.lancedb.lance.catalog.client.apache.ApiException;
-import com.lancedb.lance.catalog.client.apache.Configuration;
-import com.lancedb.lance.catalog.client.apache.models.*;
-import com.lancedb.lance.catalog.client.apache.api.NamespaceApi;
+import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.client.apache.ApiException;
+import com.lancedb.lance.namespace.client.apache.Configuration;
+import com.lancedb.lance.namespace.client.apache.models.*;
+import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
 
 public class Example {
     public static void main(String[] args) {

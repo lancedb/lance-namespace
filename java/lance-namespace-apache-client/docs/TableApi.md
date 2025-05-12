@@ -22,11 +22,11 @@ Get a table&#39;s detailed information under a specified namespace.
 
 ```java
 // Import classes:
-import com.lancedb.lance.catalog.client.apache.ApiClient;
-import com.lancedb.lance.catalog.client.apache.ApiException;
-import com.lancedb.lance.catalog.client.apache.Configuration;
-import com.lancedb.lance.catalog.client.apache.models.*;
-import com.lancedb.lance.catalog.client.apache.api.TableApi;
+import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.client.apache.ApiException;
+import com.lancedb.lance.namespace.client.apache.Configuration;
+import com.lancedb.lance.namespace.client.apache.models.*;
+import com.lancedb.lance.namespace.client.apache.api.TableApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -96,11 +96,11 @@ Register an existing table at a given storage location to a namespace.
 
 ```java
 // Import classes:
-import com.lancedb.lance.catalog.client.apache.ApiClient;
-import com.lancedb.lance.catalog.client.apache.ApiException;
-import com.lancedb.lance.catalog.client.apache.Configuration;
-import com.lancedb.lance.catalog.client.apache.models.*;
-import com.lancedb.lance.catalog.client.apache.api.TableApi;
+import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.client.apache.ApiException;
+import com.lancedb.lance.namespace.client.apache.Configuration;
+import com.lancedb.lance.namespace.client.apache.models.*;
+import com.lancedb.lance.namespace.client.apache.api.TableApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -169,11 +169,11 @@ Check if a table exists. This API should behave exactly like the GetTable API, e
 
 ```java
 // Import classes:
-import com.lancedb.lance.catalog.client.apache.ApiClient;
-import com.lancedb.lance.catalog.client.apache.ApiException;
-import com.lancedb.lance.catalog.client.apache.Configuration;
-import com.lancedb.lance.catalog.client.apache.models.*;
-import com.lancedb.lance.catalog.client.apache.api.TableApi;
+import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.client.apache.ApiException;
+import com.lancedb.lance.namespace.client.apache.Configuration;
+import com.lancedb.lance.namespace.client.apache.models.*;
+import com.lancedb.lance.namespace.client.apache.api.TableApi;
 
 public class Example {
     public static void main(String[] args) {

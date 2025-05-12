@@ -21,7 +21,7 @@ gen-java-apache-client: clean-java-apache-client
 	  -g java \
 	  -o lance-namespace-apache-client \
 	  --ignore-file-override=.apache-client-ignore \
-	  --additional-properties=groupId=com.lancedb,artifactId=lance-namespace-apache-client,artifactVersion=$(VERSION),parentGroupId=com.lancedb,parentArtifactId=lance-namespace-root,parentVersion=$(VERSION),parentRelativePath=pom.xml,library=apache-httpclient,apiPackage=com.lancedb.lance.catalog.client.apache.api,modelPackage=com.lancedb.lance.catalog.client.apache.model,hideGenerationTimestamp=true,licenseName=Apache-2.0,licenseUrl=https://www.apache.org/licenses/LICENSE-2.0.txt
+	  --additional-properties=groupId=com.lancedb,artifactId=lance-namespace-apache-client,artifactVersion=$(VERSION),parentGroupId=com.lancedb,parentArtifactId=lance-namespace-root,parentVersion=$(VERSION),parentRelativePath=pom.xml,library=apache-httpclient,apiPackage=com.lancedb.lance.namespace.client.apache.api,modelPackage=com.lancedb.lance.namespace.client.apache.model,hideGenerationTimestamp=true,licenseName=Apache-2.0,licenseUrl=https://www.apache.org/licenses/LICENSE-2.0.txt
 	sed -i -e 's#<junit-version>5.10.2</junit-version>#<junit-version>5.8.2</junit-version>#g' lance-namespace-apache-client/pom.xml
 	rm -f lance-namespace-apache-client/pom.xml-e
 
@@ -39,7 +39,7 @@ gen-java-springboot-server: clean-java-springboot-server
 	  -i ../spec/rest.yaml \
 	  -g spring \
       -o lance-namespace-springboot-server \
-      --additional-properties=groupId=com.lancedb,artifactId=lance-namespace-springboot-server,artifactVersion=$(VERSION),parentGroupId=com.lancedb,parentArtifactId=lance-namespace-root,parentVersion=$(VERSION),parentRelativePath=pom.xml,library=spring-boot,interfaceOnly=true,useOptional=true,openApiNullable=false,java8=true,apiPackage=com.lancedb.lance.catalog.server.springboot.api,modelPackage=com.lancedb.lance.catalog.server.springboot.model,useTags=true,skipDefaultInterface=false,hideGenerationTimestamp=true,licenseName=Apache-2.0,licenseUrl=https://www.apache.org/licenses/LICENSE-2.0.txt
+      --additional-properties=groupId=com.lancedb,artifactId=lance-namespace-springboot-server,artifactVersion=$(VERSION),parentGroupId=com.lancedb,parentArtifactId=lance-namespace-root,parentVersion=$(VERSION),parentRelativePath=pom.xml,library=spring-boot,interfaceOnly=true,useOptional=true,openApiNullable=false,java8=true,apiPackage=com.lancedb.lance.namespace.server.springboot.api,modelPackage=com.lancedb.lance.namespace.server.springboot.model,useTags=true,skipDefaultInterface=false,hideGenerationTimestamp=true,licenseName=Apache-2.0,licenseUrl=https://www.apache.org/licenses/LICENSE-2.0.txt
 
 lint-java-springboot-server: gen-java-apache-client gen-java-springboot-server
 	./mvnw spotless:apply -pl lance-namespace-springboot-server -am
