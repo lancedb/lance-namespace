@@ -32,7 +32,7 @@ import java.util.StringJoiner;
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    comments = "Generator version: 7.13.0")
+    comments = "Generator version: 7.12.0")
 public class ListNamespacesResponse {
   public static final String JSON_PROPERTY_NAMESPACES = "namespaces";
   @javax.annotation.Nonnull private Set<String> namespaces = new LinkedHashSet<>();

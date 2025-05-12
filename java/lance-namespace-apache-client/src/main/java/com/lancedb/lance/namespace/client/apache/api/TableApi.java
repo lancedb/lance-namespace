@@ -32,7 +32,7 @@ import java.util.StringJoiner;
 
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    comments = "Generator version: 7.13.0")
+    comments = "Generator version: 7.12.0")
 public class TableApi extends BaseApi {
 
   public TableApi() {
@@ -52,9 +52,7 @@ public class TableApi extends BaseApi {
    * @return GetTableResponse
    * @throws ApiException if fails to make API call
    */
-  public GetTableResponse getTable(
-      @javax.annotation.Nonnull String table, @javax.annotation.Nullable String delimiter)
-      throws ApiException {
+  public GetTableResponse getTable(String table, String delimiter) throws ApiException {
     return this.getTable(table, delimiter, Collections.emptyMap());
   }
 
@@ -69,10 +67,7 @@ public class TableApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public GetTableResponse getTable(
-      @javax.annotation.Nonnull String table,
-      @javax.annotation.Nullable String delimiter,
-      Map<String, String> additionalHeaders)
-      throws ApiException {
+      String table, String delimiter, Map<String, String> additionalHeaders) throws ApiException {
     Object localVarPostBody = null;
 
     // verify the required parameter 'table' is set
@@ -133,8 +128,8 @@ public class TableApi extends BaseApi {
    * @return GetTableResponse
    * @throws ApiException if fails to make API call
    */
-  public GetTableResponse registerTable(
-      @javax.annotation.Nonnull RegisterTableRequest registerTableRequest) throws ApiException {
+  public GetTableResponse registerTable(RegisterTableRequest registerTableRequest)
+      throws ApiException {
     return this.registerTable(registerTableRequest, Collections.emptyMap());
   }
 
@@ -148,8 +143,7 @@ public class TableApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public GetTableResponse registerTable(
-      @javax.annotation.Nonnull RegisterTableRequest registerTableRequest,
-      Map<String, String> additionalHeaders)
+      RegisterTableRequest registerTableRequest, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = registerTableRequest;
 
@@ -205,9 +199,7 @@ public class TableApi extends BaseApi {
    * @param delimiter The delimiter for the identifier used in the context (optional)
    * @throws ApiException if fails to make API call
    */
-  public void tableExists(
-      @javax.annotation.Nonnull String table, @javax.annotation.Nullable String delimiter)
-      throws ApiException {
+  public void tableExists(String table, String delimiter) throws ApiException {
     this.tableExists(table, delimiter, Collections.emptyMap());
   }
 
@@ -220,10 +212,7 @@ public class TableApi extends BaseApi {
    * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void tableExists(
-      @javax.annotation.Nonnull String table,
-      @javax.annotation.Nullable String delimiter,
-      Map<String, String> additionalHeaders)
+  public void tableExists(String table, String delimiter, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
 

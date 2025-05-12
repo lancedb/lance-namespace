@@ -29,7 +29,7 @@ import java.util.Objects;
         "JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.13.0")
+    comments = "Generator version: 7.12.0")
 public class ErrorResponse {
 
   private String type;

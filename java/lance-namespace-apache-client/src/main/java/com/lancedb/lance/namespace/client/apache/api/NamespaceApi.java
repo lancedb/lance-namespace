@@ -33,7 +33,7 @@ import java.util.StringJoiner;
 
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
-    comments = "Generator version: 7.13.0")
+    comments = "Generator version: 7.12.0")
 public class NamespaceApi extends BaseApi {
 
   public NamespaceApi() {
@@ -56,8 +56,8 @@ public class NamespaceApi extends BaseApi {
    * @return GetNamespaceResponse
    * @throws ApiException if fails to make API call
    */
-  public GetNamespaceResponse createNamespace(
-      @javax.annotation.Nonnull CreateNamespaceRequest createNamespaceRequest) throws ApiException {
+  public GetNamespaceResponse createNamespace(CreateNamespaceRequest createNamespaceRequest)
+      throws ApiException {
     return this.createNamespace(createNamespaceRequest, Collections.emptyMap());
   }
 
@@ -75,8 +75,7 @@ public class NamespaceApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public GetNamespaceResponse createNamespace(
-      @javax.annotation.Nonnull CreateNamespaceRequest createNamespaceRequest,
-      Map<String, String> additionalHeaders)
+      CreateNamespaceRequest createNamespaceRequest, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = createNamespaceRequest;
 
@@ -133,9 +132,7 @@ public class NamespaceApi extends BaseApi {
    * @param delimiter The delimiter for the identifier used in the context (optional)
    * @throws ApiException if fails to make API call
    */
-  public void dropNamespace(
-      @javax.annotation.Nonnull String ns, @javax.annotation.Nullable String delimiter)
-      throws ApiException {
+  public void dropNamespace(String ns, String delimiter) throws ApiException {
     this.dropNamespace(ns, delimiter, Collections.emptyMap());
   }
 
@@ -147,10 +144,7 @@ public class NamespaceApi extends BaseApi {
    * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void dropNamespace(
-      @javax.annotation.Nonnull String ns,
-      @javax.annotation.Nullable String delimiter,
-      Map<String, String> additionalHeaders)
+  public void dropNamespace(String ns, String delimiter, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
 
@@ -210,9 +204,7 @@ public class NamespaceApi extends BaseApi {
    * @return GetNamespaceResponse
    * @throws ApiException if fails to make API call
    */
-  public GetNamespaceResponse getNamespace(
-      @javax.annotation.Nonnull String ns, @javax.annotation.Nullable String delimiter)
-      throws ApiException {
+  public GetNamespaceResponse getNamespace(String ns, String delimiter) throws ApiException {
     return this.getNamespace(ns, delimiter, Collections.emptyMap());
   }
 
@@ -226,10 +218,7 @@ public class NamespaceApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public GetNamespaceResponse getNamespace(
-      @javax.annotation.Nonnull String ns,
-      @javax.annotation.Nullable String delimiter,
-      Map<String, String> additionalHeaders)
-      throws ApiException {
+      String ns, String delimiter, Map<String, String> additionalHeaders) throws ApiException {
     Object localVarPostBody = null;
 
     // verify the required parameter 'ns' is set
@@ -295,11 +284,7 @@ public class NamespaceApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public ListNamespacesResponse listNamespaces(
-      @javax.annotation.Nullable String pageToken,
-      @javax.annotation.Nullable Integer pageSize,
-      @javax.annotation.Nullable String parent,
-      @javax.annotation.Nullable String delimiter)
-      throws ApiException {
+      String pageToken, Integer pageSize, String parent, String delimiter) throws ApiException {
     return this.listNamespaces(pageToken, pageSize, parent, delimiter, Collections.emptyMap());
   }
 
@@ -317,10 +302,10 @@ public class NamespaceApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public ListNamespacesResponse listNamespaces(
-      @javax.annotation.Nullable String pageToken,
-      @javax.annotation.Nullable Integer pageSize,
-      @javax.annotation.Nullable String parent,
-      @javax.annotation.Nullable String delimiter,
+      String pageToken,
+      Integer pageSize,
+      String parent,
+      String delimiter,
       Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
@@ -378,9 +363,7 @@ public class NamespaceApi extends BaseApi {
    * @param delimiter The delimiter for the identifier used in the context (optional)
    * @throws ApiException if fails to make API call
    */
-  public void namespaceExists(
-      @javax.annotation.Nonnull String ns, @javax.annotation.Nullable String delimiter)
-      throws ApiException {
+  public void namespaceExists(String ns, String delimiter) throws ApiException {
     this.namespaceExists(ns, delimiter, Collections.emptyMap());
   }
 
@@ -393,10 +376,7 @@ public class NamespaceApi extends BaseApi {
    * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void namespaceExists(
-      @javax.annotation.Nonnull String ns,
-      @javax.annotation.Nullable String delimiter,
-      Map<String, String> additionalHeaders)
+  public void namespaceExists(String ns, String delimiter, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
 
