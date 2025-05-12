@@ -11,7 +11,7 @@
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
-    <description>Lance Catalog</description>
+    <description>Lance Namespace</description>
     <url>https://lancedb.github.io/lance-namespace</url>
 
     <licenses>

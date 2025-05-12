@@ -1,11 +1,11 @@
 # Rust API client for lance-namespace-reqwest-client
 
-**Lance Catalog** is an OpenAPI specification on top of the storage-based Lance format.
+**Lance Namespace** is an OpenAPI specification on top of the storage-based Lance format.
 It provides an integration point for catalog service like Apache Hive MetaStore (HMS), Apache Gravitino, etc.
-to store and use Lance tables. To integrate, the catalog service implements a **Lance Catalog Adapter**,
-which is a REST server that converts the Lance catalog requests to native requests against the catalog service.
-Different tools can integrate with Lance Catalog using the generated OpenAPI clients in various languages,
-and invoke operations in Lance Catalog to read, write and manage Lance tables in the integrated catalog services.
+to store and use Lance tables. To integrate, the namespace service implements a **Lance Namespace Adapter**,
+which is a REST server that converts the Lance namespace requests to native requests against the catalog service.
+Different tools can integrate with Lance Namespace using the generated OpenAPI clients in various languages,
+and invoke operations in Lance Namespace to read, write and manage Lance tables in the integrated catalog services.
 
 
 

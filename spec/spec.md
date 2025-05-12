@@ -12,7 +12,7 @@ should store and use Lance tables, as well as how ML/AI tools and analytics comp
 
 A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables.
 It can either contain a collection of tables, or a collection of Lance namespaces recursively.
-It is designed to encapsulates concepts including namespace, catalog, metastore, database, schema, etc.
+It is designed to encapsulates concepts including namespace, metastore, database, schema, etc.
 that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy.
 
 Here is an example layout of a Lance namespace:
