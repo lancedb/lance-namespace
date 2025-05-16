@@ -19,8 +19,12 @@ import com.lancedb.lance.namespace.client.apache.BaseApi;
 import com.lancedb.lance.namespace.client.apache.Configuration;
 import com.lancedb.lance.namespace.client.apache.Pair;
 import com.lancedb.lance.namespace.client.apache.model.CreateNamespaceRequest;
+import com.lancedb.lance.namespace.client.apache.model.DropNamespaceRequest;
+import com.lancedb.lance.namespace.client.apache.model.GetNamespaceRequest;
 import com.lancedb.lance.namespace.client.apache.model.GetNamespaceResponse;
+import com.lancedb.lance.namespace.client.apache.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.client.apache.model.ListNamespacesResponse;
+import com.lancedb.lance.namespace.client.apache.model.NamespaceExistsRequest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -87,7 +91,7 @@ public class NamespaceApi extends BaseApi {
     }
 
     // create path and map variables
-    String localVarPath = "/v1/namespaces";
+    String localVarPath = "/CreateNamespace";
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -128,36 +132,35 @@ public class NamespaceApi extends BaseApi {
   /**
    * Drop a namespace Drop a namespace. The namespace must be empty.
    *
-   * @param ns A string identifier of the namespace. (required)
-   * @param delimiter The delimiter for the identifier used in the context (optional)
+   * @param dropNamespaceRequest (required)
+   * @return Object
    * @throws ApiException if fails to make API call
    */
-  public void dropNamespace(String ns, String delimiter) throws ApiException {
-    this.dropNamespace(ns, delimiter, Collections.emptyMap());
+  public Object dropNamespace(DropNamespaceRequest dropNamespaceRequest) throws ApiException {
+    return this.dropNamespace(dropNamespaceRequest, Collections.emptyMap());
   }
 
   /**
    * Drop a namespace Drop a namespace. The namespace must be empty.
    *
-   * @param ns A string identifier of the namespace. (required)
-   * @param delimiter The delimiter for the identifier used in the context (optional)
+   * @param dropNamespaceRequest (required)
    * @param additionalHeaders additionalHeaders for this call
+   * @return Object
    * @throws ApiException if fails to make API call
    */
-  public void dropNamespace(String ns, String delimiter, Map<String, String> additionalHeaders)
+  public Object dropNamespace(
+      DropNamespaceRequest dropNamespaceRequest, Map<String, String> additionalHeaders)
       throws ApiException {
-    Object localVarPostBody = null;
+    Object localVarPostBody = dropNamespaceRequest;
 
-    // verify the required parameter 'ns' is set
-    if (ns == null) {
-      throw new ApiException(400, "Missing the required parameter 'ns' when calling dropNamespace");
+    // verify the required parameter 'dropNamespaceRequest' is set
+    if (dropNamespaceRequest == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'dropNamespaceRequest' when calling dropNamespace");
     }
 
     // create path and map variables
-    String localVarPath =
-        "/v1/namespaces/{ns}"
-            .replaceAll(
-                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)));
+    String localVarPath = "/DropNamespace";
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -167,22 +170,20 @@ public class NamespaceApi extends BaseApi {
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
-
     localVarHeaderParams.putAll(additionalHeaders);
 
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {};
-
+    final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
     String[] localVarAuthNames = new String[] {};
 
-    apiClient.invokeAPI(
+    TypeReference<Object> localVarReturnType = new TypeReference<Object>() {};
+    return apiClient.invokeAPI(
         localVarPath,
-        "DELETE",
+        "POST",
         localVarQueryParams,
         localVarCollectionQueryParams,
         localVarQueryStringJoiner.toString(),
@@ -193,44 +194,42 @@ public class NamespaceApi extends BaseApi {
         localVarAccept,
         localVarContentType,
         localVarAuthNames,
-        null);
+        localVarReturnType);
   }
 
   /**
    * Get information about a namespace Return the detailed information for a given namespace
    *
-   * @param ns A string identifier of the namespace. (required)
-   * @param delimiter The delimiter for the identifier used in the context (optional)
+   * @param getNamespaceRequest (required)
    * @return GetNamespaceResponse
    * @throws ApiException if fails to make API call
    */
-  public GetNamespaceResponse getNamespace(String ns, String delimiter) throws ApiException {
-    return this.getNamespace(ns, delimiter, Collections.emptyMap());
+  public GetNamespaceResponse getNamespace(GetNamespaceRequest getNamespaceRequest)
+      throws ApiException {
+    return this.getNamespace(getNamespaceRequest, Collections.emptyMap());
   }
 
   /**
    * Get information about a namespace Return the detailed information for a given namespace
    *
-   * @param ns A string identifier of the namespace. (required)
-   * @param delimiter The delimiter for the identifier used in the context (optional)
+   * @param getNamespaceRequest (required)
    * @param additionalHeaders additionalHeaders for this call
    * @return GetNamespaceResponse
    * @throws ApiException if fails to make API call
    */
   public GetNamespaceResponse getNamespace(
-      String ns, String delimiter, Map<String, String> additionalHeaders) throws ApiException {
-    Object localVarPostBody = null;
+      GetNamespaceRequest getNamespaceRequest, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = getNamespaceRequest;
 
-    // verify the required parameter 'ns' is set
-    if (ns == null) {
-      throw new ApiException(400, "Missing the required parameter 'ns' when calling getNamespace");
+    // verify the required parameter 'getNamespaceRequest' is set
+    if (getNamespaceRequest == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'getNamespaceRequest' when calling getNamespace");
     }
 
     // create path and map variables
-    String localVarPath =
-        "/v1/namespaces/{ns}"
-            .replaceAll(
-                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)));
+    String localVarPath = "/GetNamespace";
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -240,15 +239,12 @@ public class NamespaceApi extends BaseApi {
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
-
     localVarHeaderParams.putAll(additionalHeaders);
 
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {};
-
+    final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
     String[] localVarAuthNames = new String[] {};
@@ -257,7 +253,7 @@ public class NamespaceApi extends BaseApi {
         new TypeReference<GetNamespaceResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
-        "GET",
+        "POST",
         localVarQueryParams,
         localVarCollectionQueryParams,
         localVarQueryStringJoiner.toString(),
@@ -275,43 +271,38 @@ public class NamespaceApi extends BaseApi {
    * List namespaces List all child namespace names of the root namespace or a given parent
    * namespace.
    *
-   * @param pageToken (optional)
-   * @param pageSize An inclusive upper bound of the number of results that a client will receive.
-   *     (optional)
-   * @param parent A string identifier of the parent namespace. (optional)
-   * @param delimiter The delimiter for the identifier used in the context (optional)
+   * @param listNamespacesRequest (required)
    * @return ListNamespacesResponse
    * @throws ApiException if fails to make API call
    */
-  public ListNamespacesResponse listNamespaces(
-      String pageToken, Integer pageSize, String parent, String delimiter) throws ApiException {
-    return this.listNamespaces(pageToken, pageSize, parent, delimiter, Collections.emptyMap());
+  public ListNamespacesResponse listNamespaces(ListNamespacesRequest listNamespacesRequest)
+      throws ApiException {
+    return this.listNamespaces(listNamespacesRequest, Collections.emptyMap());
   }
 
   /**
    * List namespaces List all child namespace names of the root namespace or a given parent
    * namespace.
    *
-   * @param pageToken (optional)
-   * @param pageSize An inclusive upper bound of the number of results that a client will receive.
-   *     (optional)
-   * @param parent A string identifier of the parent namespace. (optional)
-   * @param delimiter The delimiter for the identifier used in the context (optional)
+   * @param listNamespacesRequest (required)
    * @param additionalHeaders additionalHeaders for this call
    * @return ListNamespacesResponse
    * @throws ApiException if fails to make API call
    */
   public ListNamespacesResponse listNamespaces(
-      String pageToken,
-      Integer pageSize,
-      String parent,
-      String delimiter,
-      Map<String, String> additionalHeaders)
+      ListNamespacesRequest listNamespacesRequest, Map<String, String> additionalHeaders)
       throws ApiException {
-    Object localVarPostBody = null;
+    Object localVarPostBody = listNamespacesRequest;
+
+    // verify the required parameter 'listNamespacesRequest' is set
+    if (listNamespacesRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'listNamespacesRequest' when calling listNamespaces");
+    }
 
     // create path and map variables
-    String localVarPath = "/v1/namespaces";
+    String localVarPath = "/ListNamespaces";
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -321,18 +312,12 @@ public class NamespaceApi extends BaseApi {
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarQueryParams.addAll(apiClient.parameterToPair("pageToken", pageToken));
-    localVarQueryParams.addAll(apiClient.parameterToPair("pageSize", pageSize));
-    localVarQueryParams.addAll(apiClient.parameterToPair("parent", parent));
-    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
-
     localVarHeaderParams.putAll(additionalHeaders);
 
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {};
-
+    final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
     String[] localVarAuthNames = new String[] {};
@@ -341,7 +326,7 @@ public class NamespaceApi extends BaseApi {
         new TypeReference<ListNamespacesResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
-        "GET",
+        "POST",
         localVarQueryParams,
         localVarCollectionQueryParams,
         localVarQueryStringJoiner.toString(),
@@ -356,41 +341,38 @@ public class NamespaceApi extends BaseApi {
   }
 
   /**
-   * Check if a namespace exists Check if a namespace exists. This API should behave exactly like
-   * the GetNamespace API, except it does not contain a body.
+   * Check if a namespace exists Check if a namespace exists.
    *
-   * @param ns A string identifier of the namespace. (required)
-   * @param delimiter The delimiter for the identifier used in the context (optional)
+   * @param namespaceExistsRequest (required)
+   * @return Object
    * @throws ApiException if fails to make API call
    */
-  public void namespaceExists(String ns, String delimiter) throws ApiException {
-    this.namespaceExists(ns, delimiter, Collections.emptyMap());
+  public Object namespaceExists(NamespaceExistsRequest namespaceExistsRequest) throws ApiException {
+    return this.namespaceExists(namespaceExistsRequest, Collections.emptyMap());
   }
 
   /**
-   * Check if a namespace exists Check if a namespace exists. This API should behave exactly like
-   * the GetNamespace API, except it does not contain a body.
+   * Check if a namespace exists Check if a namespace exists.
    *
-   * @param ns A string identifier of the namespace. (required)
-   * @param delimiter The delimiter for the identifier used in the context (optional)
+   * @param namespaceExistsRequest (required)
    * @param additionalHeaders additionalHeaders for this call
+   * @return Object
    * @throws ApiException if fails to make API call
    */
-  public void namespaceExists(String ns, String delimiter, Map<String, String> additionalHeaders)
+  public Object namespaceExists(
+      NamespaceExistsRequest namespaceExistsRequest, Map<String, String> additionalHeaders)
       throws ApiException {
-    Object localVarPostBody = null;
+    Object localVarPostBody = namespaceExistsRequest;
 
-    // verify the required parameter 'ns' is set
-    if (ns == null) {
+    // verify the required parameter 'namespaceExistsRequest' is set
+    if (namespaceExistsRequest == null) {
       throw new ApiException(
-          400, "Missing the required parameter 'ns' when calling namespaceExists");
+          400,
+          "Missing the required parameter 'namespaceExistsRequest' when calling namespaceExists");
     }
 
     // create path and map variables
-    String localVarPath =
-        "/v1/namespaces/{ns}"
-            .replaceAll(
-                "\\{" + "ns" + "\\}", apiClient.escapeString(apiClient.parameterToString(ns)));
+    String localVarPath = "/NamespaceExists";
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -400,22 +382,20 @@ public class NamespaceApi extends BaseApi {
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
-
     localVarHeaderParams.putAll(additionalHeaders);
 
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {};
-
+    final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
     String[] localVarAuthNames = new String[] {};
 
-    apiClient.invokeAPI(
+    TypeReference<Object> localVarReturnType = new TypeReference<Object>() {};
+    return apiClient.invokeAPI(
         localVarPath,
-        "HEAD",
+        "POST",
         localVarQueryParams,
         localVarCollectionQueryParams,
         localVarQueryStringJoiner.toString(),
@@ -426,7 +406,7 @@ public class NamespaceApi extends BaseApi {
         localVarAccept,
         localVarContentType,
         localVarAuthNames,
-        null);
+        localVarReturnType);
   }
 
   @Override
@@ -450,8 +430,7 @@ public class NamespaceApi extends BaseApi {
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {};
-
+    final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
     String[] localVarAuthNames = new String[] {};

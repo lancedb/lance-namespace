@@ -6,9 +6,9 @@ Lance REST Namespace Specification
 
 - Generator version: 7.12.0
 
-**Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables.
+**Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables.
 A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy.
-In an enterprise environment, typically there is a requirement to store tables in a metadata service  such as Apache Hive MetaStore, Apache Gravitino, Unity Namespace, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way. The detailed OpenAPI specification content can be found in [rest.yaml](./rest.yaml).
+In an enterprise environment, typically there is a requirement to store tables in a metadata service  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way.
 
 
 
@@ -111,24 +111,31 @@ All URIs are relative to *http://localhost:2333*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*NamespaceApi* | [**createNamespace**](docs/NamespaceApi.md#createNamespace) | **POST** /v1/namespaces | Create a new namespace
-*NamespaceApi* | [**dropNamespace**](docs/NamespaceApi.md#dropNamespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace
-*NamespaceApi* | [**getNamespace**](docs/NamespaceApi.md#getNamespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
-*NamespaceApi* | [**listNamespaces**](docs/NamespaceApi.md#listNamespaces) | **GET** /v1/namespaces | List namespaces
-*NamespaceApi* | [**namespaceExists**](docs/NamespaceApi.md#namespaceExists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists
-*TableApi* | [**getTable**](docs/TableApi.md#getTable) | **GET** /v1/tables/{table} | Get a table from the namespace
-*TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /v1/table/register | Register a table to a namespace
-*TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **HEAD** /v1/tables/{table} | Check if a table exists
+*NamespaceApi* | [**createNamespace**](docs/NamespaceApi.md#createNamespace) | **POST** /CreateNamespace | Create a new namespace
+*NamespaceApi* | [**dropNamespace**](docs/NamespaceApi.md#dropNamespace) | **POST** /DropNamespace | Drop a namespace
+*NamespaceApi* | [**getNamespace**](docs/NamespaceApi.md#getNamespace) | **POST** /GetNamespace | Get information about a namespace
+*NamespaceApi* | [**listNamespaces**](docs/NamespaceApi.md#listNamespaces) | **POST** /ListNamespaces | List namespaces
+*NamespaceApi* | [**namespaceExists**](docs/NamespaceApi.md#namespaceExists) | **POST** /NamespaceExists | Check if a namespace exists
+*TableApi* | [**getTable**](docs/TableApi.md#getTable) | **POST** /GetTable | Get a table from the namespace
+*TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /RegisterTable | Register a table to a namespace
+*TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **POST** /TableExists | Check if a table exists
 
 
 ## Documentation for Models
 
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
+ - [DropNamespaceRequest](docs/DropNamespaceRequest.md)
  - [ErrorResponse](docs/ErrorResponse.md)
+ - [GetNamespaceRequest](docs/GetNamespaceRequest.md)
  - [GetNamespaceResponse](docs/GetNamespaceResponse.md)
+ - [GetTableRequest](docs/GetTableRequest.md)
  - [GetTableResponse](docs/GetTableResponse.md)
+ - [ListNamespacesRequest](docs/ListNamespacesRequest.md)
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
+ - [NamespaceExistsRequest](docs/NamespaceExistsRequest.md)
  - [RegisterTableRequest](docs/RegisterTableRequest.md)
+ - [RegisterTableResponse](docs/RegisterTableResponse.md)
+ - [TableExistsRequest](docs/TableExistsRequest.md)
 
 
 <a id="documentation-for-authorization"></a>

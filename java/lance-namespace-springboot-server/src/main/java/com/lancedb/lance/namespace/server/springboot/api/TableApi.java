@@ -14,12 +14,14 @@
 package com.lancedb.lance.namespace.server.springboot.api;
 
 import com.lancedb.lance.namespace.server.springboot.model.ErrorResponse;
+import com.lancedb.lance.namespace.server.springboot.model.GetTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.GetTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.RegisterTableRequest;
+import com.lancedb.lance.namespace.server.springboot.model.RegisterTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.TableExistsRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -49,11 +51,10 @@ public interface TableApi {
   }
 
   /**
-   * GET /v1/tables/{table} : Get a table from the namespace Get a table&#39;s detailed information
-   * under a specified namespace.
+   * POST /GetTable : Get a table from the namespace Get a table&#39;s detailed information under a
+   * specified namespace.
    *
-   * @param table A string identifier of the table (required)
-   * @param delimiter The delimiter for the identifier used in the context (optional)
+   * @param getTableRequest (required)
    * @return Table properties result when loading a table (status code 200) or Indicates a bad
    *     request error. It could be caused by an unexpected request body format or other forms of
    *     request validation failure, such as invalid json. Usually serves application/json content,
@@ -135,24 +136,13 @@ public interface TableApi {
             })
       })
   @RequestMapping(
-      method = RequestMethod.GET,
-      value = "/v1/tables/{table}",
-      produces = {"application/json"})
+      method = RequestMethod.POST,
+      value = "/GetTable",
+      produces = {"application/json"},
+      consumes = {"application/json"})
   default ResponseEntity<GetTableResponse> getTable(
-      @Parameter(
-              name = "table",
-              description = "A string identifier of the table",
-              required = true,
-              in = ParameterIn.PATH)
-          @PathVariable("table")
-          String table,
-      @Parameter(
-              name = "delimiter",
-              description = "The delimiter for the identifier used in the context",
-              in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "delimiter", required = false)
-          Optional<String> delimiter) {
+      @Parameter(name = "GetTableRequest", description = "", required = true) @Valid @RequestBody
+          GetTableRequest getTableRequest) {
     getRequest()
         .ifPresent(
             request -> {
@@ -205,11 +195,11 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/table/register : Register a table to a namespace Register an existing table at a given
+   * POST /RegisterTable : Register a table to a namespace Register an existing table at a given
    * storage location to a namespace.
    *
    * @param registerTableRequest (required)
-   * @return Table properties result when loading a table (status code 200) or Indicates a bad
+   * @return Table properties result when registering a table (status code 200) or Indicates a bad
    *     request error. It could be caused by an unexpected request body format or other forms of
    *     request validation failure, such as invalid json. Usually serves application/json content,
    *     although in some cases simple text/plain content might be returned by the server&#39;s
@@ -231,11 +221,11 @@ public interface TableApi {
       responses = {
         @ApiResponse(
             responseCode = "200",
-            description = "Table properties result when loading a table",
+            description = "Table properties result when registering a table",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = GetTableResponse.class))
+                  schema = @Schema(implementation = RegisterTableResponse.class))
             }),
         @ApiResponse(
             responseCode = "400",
@@ -301,10 +291,10 @@ public interface TableApi {
       })
   @RequestMapping(
       method = RequestMethod.POST,
-      value = "/v1/table/register",
+      value = "/RegisterTable",
       produces = {"application/json"},
       consumes = {"application/json"})
-  default ResponseEntity<GetTableResponse> registerTable(
+  default ResponseEntity<RegisterTableResponse> registerTable(
       @Parameter(name = "RegisterTableRequest", description = "", required = true)
           @Valid
           @RequestBody
@@ -367,23 +357,22 @@ public interface TableApi {
   }
 
   /**
-   * HEAD /v1/tables/{table} : Check if a table exists Check if a table exists. This API should
-   * behave exactly like the GetTable API, except it does not contain a body.
+   * POST /TableExists : Check if a table exists Check if a table exists. This API should behave
+   * exactly like the GetTable API, except it does not contain a body.
    *
-   * @param table A string identifier of the table (required)
-   * @param delimiter The delimiter for the identifier used in the context (optional)
-   * @return Success, no content (status code 200) or Indicates a bad request error. It could be
-   *     caused by an unexpected request body format or other forms of request validation failure,
-   *     such as invalid json. Usually serves application/json content, although in some cases
-   *     simple text/plain content might be returned by the server&#39;s middleware. (status code
-   *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
-   *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   * @param tableExistsRequest (required)
+   * @return Result of checking if a table exists (status code 200) or Indicates a bad request
+   *     error. It could be caused by an unexpected request body format or other forms of request
+   *     validation failure, such as invalid json. Usually serves application/json content, although
+   *     in some cases simple text/plain content might be returned by the server&#39;s middleware.
+   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
+   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
+   *     necessary permissions. (status code 403) or A server-side problem that means can not find
+   *     the specified resource. (status code 404) or The service is not ready to handle the
+   *     request. The client should wait and retry. The service may additionally send a Retry-After
+   *     header to indicate when to retry. (status code 503) or A server-side problem that might not
+   *     be addressable from the client side. Used for server 5xx errors without more specific
+   *     documentation in individual routes. (status code 5XX)
    */
   @Operation(
       operationId = "tableExists",
@@ -392,7 +381,14 @@ public interface TableApi {
           "Check if a table exists. This API should behave exactly like the GetTable API, except it does not contain a body. ",
       tags = {"Table"},
       responses = {
-        @ApiResponse(responseCode = "200", description = "Success, no content"),
+        @ApiResponse(
+            responseCode = "200",
+            description = "Result of checking if a table exists",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Object.class))
+            }),
         @ApiResponse(
             responseCode = "400",
             description =
@@ -447,24 +443,13 @@ public interface TableApi {
             })
       })
   @RequestMapping(
-      method = RequestMethod.HEAD,
-      value = "/v1/tables/{table}",
-      produces = {"application/json"})
-  default ResponseEntity<Void> tableExists(
-      @Parameter(
-              name = "table",
-              description = "A string identifier of the table",
-              required = true,
-              in = ParameterIn.PATH)
-          @PathVariable("table")
-          String table,
-      @Parameter(
-              name = "delimiter",
-              description = "The delimiter for the identifier used in the context",
-              in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "delimiter", required = false)
-          Optional<String> delimiter) {
+      method = RequestMethod.POST,
+      value = "/TableExists",
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  default ResponseEntity<Object> tableExists(
+      @Parameter(name = "TableExistsRequest", description = "", required = true) @Valid @RequestBody
+          TableExistsRequest tableExistsRequest) {
     getRequest()
         .ifPresent(
             request -> {

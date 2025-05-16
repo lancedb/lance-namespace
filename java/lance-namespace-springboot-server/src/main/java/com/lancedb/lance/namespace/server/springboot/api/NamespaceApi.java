@@ -14,13 +14,16 @@
 package com.lancedb.lance.namespace.server.springboot.api;
 
 import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceRequest;
+import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.server.springboot.model.ErrorResponse;
+import com.lancedb.lance.namespace.server.springboot.model.GetNamespaceRequest;
 import com.lancedb.lance.namespace.server.springboot.model.GetNamespaceResponse;
+import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
+import com.lancedb.lance.namespace.server.springboot.model.NamespaceExistsRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -50,7 +53,7 @@ public interface NamespaceApi {
   }
 
   /**
-   * POST /v1/namespaces : Create a new namespace Create a new namespace. A namespace can manage
+   * POST /CreateNamespace : Create a new namespace Create a new namespace. A namespace can manage
    * either a collection of child namespaces, or a collection of tables. There are three modes when
    * trying to create a namespace, to differentiate the behavior when a namespace of the same name
    * already exists: * CREATE: the operation fails with 400. * EXIST_OK: the operation succeeds and
@@ -153,7 +156,7 @@ public interface NamespaceApi {
       })
   @RequestMapping(
       method = RequestMethod.POST,
-      value = "/v1/namespaces",
+      value = "/CreateNamespace",
       produces = {"application/json"},
       consumes = {"application/json"})
   default ResponseEntity<GetNamespaceResponse> createNamespace(
@@ -219,23 +222,22 @@ public interface NamespaceApi {
   }
 
   /**
-   * DELETE /v1/namespaces/{ns} : Drop a namespace Drop a namespace. The namespace must be empty.
+   * POST /DropNamespace : Drop a namespace Drop a namespace. The namespace must be empty.
    *
-   * @param ns A string identifier of the namespace. (required)
-   * @param delimiter The delimiter for the identifier used in the context (optional)
-   * @return Success, no content (status code 204) or Indicates a bad request error. It could be
-   *     caused by an unexpected request body format or other forms of request validation failure,
-   *     such as invalid json. Usually serves application/json content, although in some cases
-   *     simple text/plain content might be returned by the server&#39;s middleware. (status code
-   *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
-   *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The request conflicts with the current state of the target resource.
-   *     (status code 409) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   * @param dropNamespaceRequest (required)
+   * @return Result of dropping a namespace (status code 200) or Indicates a bad request error. It
+   *     could be caused by an unexpected request body format or other forms of request validation
+   *     failure, such as invalid json. Usually serves application/json content, although in some
+   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
+   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
+   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
+   *     permissions. (status code 403) or A server-side problem that means can not find the
+   *     specified resource. (status code 404) or The request conflicts with the current state of
+   *     the target resource. (status code 409) or The service is not ready to handle the request.
+   *     The client should wait and retry. The service may additionally send a Retry-After header to
+   *     indicate when to retry. (status code 503) or A server-side problem that might not be
+   *     addressable from the client side. Used for server 5xx errors without more specific
+   *     documentation in individual routes. (status code 5XX)
    */
   @Operation(
       operationId = "dropNamespace",
@@ -243,7 +245,14 @@ public interface NamespaceApi {
       description = "Drop a namespace. The namespace must be empty. ",
       tags = {"Namespace"},
       responses = {
-        @ApiResponse(responseCode = "204", description = "Success, no content"),
+        @ApiResponse(
+            responseCode = "200",
+            description = "Result of dropping a namespace",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Object.class))
+            }),
         @ApiResponse(
             responseCode = "400",
             description =
@@ -306,24 +315,15 @@ public interface NamespaceApi {
             })
       })
   @RequestMapping(
-      method = RequestMethod.DELETE,
-      value = "/v1/namespaces/{ns}",
-      produces = {"application/json"})
-  default ResponseEntity<Void> dropNamespace(
-      @Parameter(
-              name = "ns",
-              description = "A string identifier of the namespace.",
-              required = true,
-              in = ParameterIn.PATH)
-          @PathVariable("ns")
-          String ns,
-      @Parameter(
-              name = "delimiter",
-              description = "The delimiter for the identifier used in the context",
-              in = ParameterIn.QUERY)
+      method = RequestMethod.POST,
+      value = "/DropNamespace",
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  default ResponseEntity<Object> dropNamespace(
+      @Parameter(name = "DropNamespaceRequest", description = "", required = true)
           @Valid
-          @RequestParam(value = "delimiter", required = false)
-          Optional<String> delimiter) {
+          @RequestBody
+          DropNamespaceRequest dropNamespaceRequest) {
     getRequest()
         .ifPresent(
             request -> {
@@ -376,11 +376,10 @@ public interface NamespaceApi {
   }
 
   /**
-   * GET /v1/namespaces/{ns} : Get information about a namespace Return the detailed information for
-   * a given namespace
+   * POST /GetNamespace : Get information about a namespace Return the detailed information for a
+   * given namespace
    *
-   * @param ns A string identifier of the namespace. (required)
-   * @param delimiter The delimiter for the identifier used in the context (optional)
+   * @param getNamespaceRequest (required)
    * @return Returns a namespace, as well as any properties stored on the namespace if namespace
    *     properties are supported by the server. (status code 200) or Indicates a bad request error.
    *     It could be caused by an unexpected request body format or other forms of request
@@ -464,24 +463,15 @@ public interface NamespaceApi {
             })
       })
   @RequestMapping(
-      method = RequestMethod.GET,
-      value = "/v1/namespaces/{ns}",
-      produces = {"application/json"})
+      method = RequestMethod.POST,
+      value = "/GetNamespace",
+      produces = {"application/json"},
+      consumes = {"application/json"})
   default ResponseEntity<GetNamespaceResponse> getNamespace(
-      @Parameter(
-              name = "ns",
-              description = "A string identifier of the namespace.",
-              required = true,
-              in = ParameterIn.PATH)
-          @PathVariable("ns")
-          String ns,
-      @Parameter(
-              name = "delimiter",
-              description = "The delimiter for the identifier used in the context",
-              in = ParameterIn.QUERY)
+      @Parameter(name = "GetNamespaceRequest", description = "", required = true)
           @Valid
-          @RequestParam(value = "delimiter", required = false)
-          Optional<String> delimiter) {
+          @RequestBody
+          GetNamespaceRequest getNamespaceRequest) {
     getRequest()
         .ifPresent(
             request -> {
@@ -534,14 +524,10 @@ public interface NamespaceApi {
   }
 
   /**
-   * GET /v1/namespaces : List namespaces List all child namespace names of the root namespace or a
-   * given parent namespace.
+   * POST /ListNamespaces : List namespaces List all child namespace names of the root namespace or
+   * a given parent namespace.
    *
-   * @param pageToken (optional)
-   * @param pageSize An inclusive upper bound of the number of results that a client will receive.
-   *     (optional)
-   * @param parent A string identifier of the parent namespace. (optional)
-   * @param delimiter The delimiter for the identifier used in the context (optional)
+   * @param listNamespacesRequest (required)
    * @return A list of namespaces (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
    *     such as invalid json. Usually serves application/json content, although in some cases
@@ -625,36 +611,15 @@ public interface NamespaceApi {
             })
       })
   @RequestMapping(
-      method = RequestMethod.GET,
-      value = "/v1/namespaces",
-      produces = {"application/json"})
+      method = RequestMethod.POST,
+      value = "/ListNamespaces",
+      produces = {"application/json"},
+      consumes = {"application/json"})
   default ResponseEntity<ListNamespacesResponse> listNamespaces(
-      @Parameter(name = "pageToken", description = "", in = ParameterIn.QUERY)
+      @Parameter(name = "ListNamespacesRequest", description = "", required = true)
           @Valid
-          @RequestParam(value = "pageToken", required = false)
-          Optional<String> pageToken,
-      @Parameter(
-              name = "pageSize",
-              description =
-                  "An inclusive upper bound of the number of results that a client will receive.",
-              in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "pageSize", required = false)
-          Optional<@Min(1) Integer> pageSize,
-      @Parameter(
-              name = "parent",
-              description = "A string identifier of the parent namespace.",
-              in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "parent", required = false)
-          Optional<String> parent,
-      @Parameter(
-              name = "delimiter",
-              description = "The delimiter for the identifier used in the context",
-              in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "delimiter", required = false)
-          Optional<String> delimiter) {
+          @RequestBody
+          ListNamespacesRequest listNamespacesRequest) {
     getRequest()
         .ifPresent(
             request -> {
@@ -707,32 +672,36 @@ public interface NamespaceApi {
   }
 
   /**
-   * HEAD /v1/namespaces/{ns} : Check if a namespace exists Check if a namespace exists. This API
-   * should behave exactly like the GetNamespace API, except it does not contain a body.
+   * POST /NamespaceExists : Check if a namespace exists Check if a namespace exists.
    *
-   * @param ns A string identifier of the namespace. (required)
-   * @param delimiter The delimiter for the identifier used in the context (optional)
-   * @return Success, no content (status code 200) or Indicates a bad request error. It could be
-   *     caused by an unexpected request body format or other forms of request validation failure,
-   *     such as invalid json. Usually serves application/json content, although in some cases
-   *     simple text/plain content might be returned by the server&#39;s middleware. (status code
-   *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
-   *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   * @param namespaceExistsRequest (required)
+   * @return Result of checking if a namespace exists (status code 200) or Indicates a bad request
+   *     error. It could be caused by an unexpected request body format or other forms of request
+   *     validation failure, such as invalid json. Usually serves application/json content, although
+   *     in some cases simple text/plain content might be returned by the server&#39;s middleware.
+   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
+   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
+   *     necessary permissions. (status code 403) or A server-side problem that means can not find
+   *     the specified resource. (status code 404) or The service is not ready to handle the
+   *     request. The client should wait and retry. The service may additionally send a Retry-After
+   *     header to indicate when to retry. (status code 503) or A server-side problem that might not
+   *     be addressable from the client side. Used for server 5xx errors without more specific
+   *     documentation in individual routes. (status code 5XX)
    */
   @Operation(
       operationId = "namespaceExists",
       summary = "Check if a namespace exists",
-      description =
-          "Check if a namespace exists. This API should behave exactly like the GetNamespace API, except it does not contain a body. ",
+      description = "Check if a namespace exists. ",
       tags = {"Namespace"},
       responses = {
-        @ApiResponse(responseCode = "200", description = "Success, no content"),
+        @ApiResponse(
+            responseCode = "200",
+            description = "Result of checking if a namespace exists",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Object.class))
+            }),
         @ApiResponse(
             responseCode = "400",
             description =
@@ -787,24 +756,15 @@ public interface NamespaceApi {
             })
       })
   @RequestMapping(
-      method = RequestMethod.HEAD,
-      value = "/v1/namespaces/{ns}",
-      produces = {"application/json"})
-  default ResponseEntity<Void> namespaceExists(
-      @Parameter(
-              name = "ns",
-              description = "A string identifier of the namespace.",
-              required = true,
-              in = ParameterIn.PATH)
-          @PathVariable("ns")
-          String ns,
-      @Parameter(
-              name = "delimiter",
-              description = "The delimiter for the identifier used in the context",
-              in = ParameterIn.QUERY)
+      method = RequestMethod.POST,
+      value = "/NamespaceExists",
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  default ResponseEntity<Object> namespaceExists(
+      @Parameter(name = "NamespaceExistsRequest", description = "", required = true)
           @Valid
-          @RequestParam(value = "delimiter", required = false)
-          Optional<String> delimiter) {
+          @RequestBody
+          NamespaceExistsRequest namespaceExistsRequest) {
     getRequest()
         .ifPresent(
             request -> {

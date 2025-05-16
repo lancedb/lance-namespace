@@ -1,7 +1,7 @@
 /*
  * Lance REST Namespace Specification
  *
- * **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables. A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy. In an enterprise environment, typically there is a requirement to store tables in a metadata service  such as Apache Hive MetaStore, Apache Gravitino, Unity Namespace, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way. The detailed OpenAPI specification content can be found in [rest.yaml](./rest.yaml). 
+ * **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables. A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy. In an enterprise environment, typically there is a requirement to store tables in a metadata service  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way. 
  *
  * The version of the OpenAPI document: 0.0.1
  * 
@@ -88,7 +88,7 @@ pub async fn create_namespace(configuration: &configuration::Configuration, crea
     // add a prefix to parameters to efficiently prevent name collisions
     let p_create_namespace_request = create_namespace_request;
 
-    let uri_str = format!("{}/v1/namespaces", configuration.base_path);
+    let uri_str = format!("{}/CreateNamespace", configuration.base_path);
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
     if let Some(ref user_agent) = configuration.user_agent {
@@ -122,28 +122,36 @@ pub async fn create_namespace(configuration: &configuration::Configuration, crea
 }
 
 /// Drop a namespace. The namespace must be empty. 
-pub async fn drop_namespace(configuration: &configuration::Configuration, ns: &str, delimiter: Option<&str>) -> Result<(), Error<DropNamespaceError>> {
+pub async fn drop_namespace(configuration: &configuration::Configuration, drop_namespace_request: models::DropNamespaceRequest) -> Result<serde_json::Value, Error<DropNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_ns = ns;
-    let p_delimiter = delimiter;
+    let p_drop_namespace_request = drop_namespace_request;
 
-    let uri_str = format!("{}/v1/namespaces/{ns}", configuration.base_path, ns=crate::apis::urlencode(p_ns));
-    let mut req_builder = configuration.client.request(reqwest::Method::DELETE, &uri_str);
+    let uri_str = format!("{}/DropNamespace", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
-    if let Some(ref param_value) = p_delimiter {
-        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
-    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    req_builder = req_builder.json(&p_drop_namespace_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
 
     let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
 
     if !status.is_client_error() && !status.is_server_error() {
-        Ok(())
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `serde_json::Value`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `serde_json::Value`")))),
+        }
     } else {
         let content = resp.text().await?;
         let entity: Option<DropNamespaceError> = serde_json::from_str(&content).ok();
@@ -152,20 +160,17 @@ pub async fn drop_namespace(configuration: &configuration::Configuration, ns: &s
 }
 
 /// Return the detailed information for a given namespace 
-pub async fn get_namespace(configuration: &configuration::Configuration, ns: &str, delimiter: Option<&str>) -> Result<models::GetNamespaceResponse, Error<GetNamespaceError>> {
+pub async fn get_namespace(configuration: &configuration::Configuration, get_namespace_request: models::GetNamespaceRequest) -> Result<models::GetNamespaceResponse, Error<GetNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_ns = ns;
-    let p_delimiter = delimiter;
+    let p_get_namespace_request = get_namespace_request;
 
-    let uri_str = format!("{}/v1/namespaces/{ns}", configuration.base_path, ns=crate::apis::urlencode(p_ns));
-    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+    let uri_str = format!("{}/GetNamespace", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
-    if let Some(ref param_value) = p_delimiter {
-        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
-    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    req_builder = req_builder.json(&p_get_namespace_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
@@ -193,31 +198,17 @@ pub async fn get_namespace(configuration: &configuration::Configuration, ns: &st
 }
 
 /// List all child namespace names of the root namespace or a given parent namespace. 
-pub async fn list_namespaces(configuration: &configuration::Configuration, page_token: Option<&str>, page_size: Option<i32>, parent: Option<&str>, delimiter: Option<&str>) -> Result<models::ListNamespacesResponse, Error<ListNamespacesError>> {
+pub async fn list_namespaces(configuration: &configuration::Configuration, list_namespaces_request: models::ListNamespacesRequest) -> Result<models::ListNamespacesResponse, Error<ListNamespacesError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_page_token = page_token;
-    let p_page_size = page_size;
-    let p_parent = parent;
-    let p_delimiter = delimiter;
+    let p_list_namespaces_request = list_namespaces_request;
 
-    let uri_str = format!("{}/v1/namespaces", configuration.base_path);
-    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+    let uri_str = format!("{}/ListNamespaces", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
-    if let Some(ref param_value) = p_page_token {
-        req_builder = req_builder.query(&[("pageToken", &param_value.to_string())]);
-    }
-    if let Some(ref param_value) = p_page_size {
-        req_builder = req_builder.query(&[("pageSize", &param_value.to_string())]);
-    }
-    if let Some(ref param_value) = p_parent {
-        req_builder = req_builder.query(&[("parent", &param_value.to_string())]);
-    }
-    if let Some(ref param_value) = p_delimiter {
-        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
-    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    req_builder = req_builder.json(&p_list_namespaces_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
@@ -244,29 +235,37 @@ pub async fn list_namespaces(configuration: &configuration::Configuration, page_
     }
 }
 
-/// Check if a namespace exists. This API should behave exactly like the GetNamespace API, except it does not contain a body. 
-pub async fn namespace_exists(configuration: &configuration::Configuration, ns: &str, delimiter: Option<&str>) -> Result<(), Error<NamespaceExistsError>> {
+/// Check if a namespace exists. 
+pub async fn namespace_exists(configuration: &configuration::Configuration, namespace_exists_request: models::NamespaceExistsRequest) -> Result<serde_json::Value, Error<NamespaceExistsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_ns = ns;
-    let p_delimiter = delimiter;
+    let p_namespace_exists_request = namespace_exists_request;
 
-    let uri_str = format!("{}/v1/namespaces/{ns}", configuration.base_path, ns=crate::apis::urlencode(p_ns));
-    let mut req_builder = configuration.client.request(reqwest::Method::HEAD, &uri_str);
+    let uri_str = format!("{}/NamespaceExists", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
-    if let Some(ref param_value) = p_delimiter {
-        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
-    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    req_builder = req_builder.json(&p_namespace_exists_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
 
     let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
 
     if !status.is_client_error() && !status.is_server_error() {
-        Ok(())
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `serde_json::Value`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `serde_json::Value`")))),
+        }
     } else {
         let content = resp.text().await?;
         let entity: Option<NamespaceExistsError> = serde_json::from_str(&content).ok();

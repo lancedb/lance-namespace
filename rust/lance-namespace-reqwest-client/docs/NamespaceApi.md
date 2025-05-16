@@ -4,11 +4,11 @@ All URIs are relative to *http://localhost:2333*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create_namespace**](NamespaceApi.md#create_namespace) | **POST** /v1/namespaces | Create a new namespace
-[**drop_namespace**](NamespaceApi.md#drop_namespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace
-[**get_namespace**](NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
-[**list_namespaces**](NamespaceApi.md#list_namespaces) | **GET** /v1/namespaces | List namespaces
-[**namespace_exists**](NamespaceApi.md#namespace_exists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists
+[**create_namespace**](NamespaceApi.md#create_namespace) | **POST** /CreateNamespace | Create a new namespace
+[**drop_namespace**](NamespaceApi.md#drop_namespace) | **POST** /DropNamespace | Drop a namespace
+[**get_namespace**](NamespaceApi.md#get_namespace) | **POST** /GetNamespace | Get information about a namespace
+[**list_namespaces**](NamespaceApi.md#list_namespaces) | **POST** /ListNamespaces | List namespaces
+[**namespace_exists**](NamespaceApi.md#namespace_exists) | **POST** /NamespaceExists | Check if a namespace exists
 
 
 
@@ -44,7 +44,7 @@ No authorization required
 
 ## drop_namespace
 
-> drop_namespace(ns, delimiter)
+> serde_json::Value drop_namespace(drop_namespace_request)
 Drop a namespace
 
 Drop a namespace. The namespace must be empty. 
@@ -54,12 +54,11 @@ Drop a namespace. The namespace must be empty.
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**ns** | **String** | A string identifier of the namespace. | [required] |
-**delimiter** | Option<**String**> | The delimiter for the identifier used in the context |  |
+**drop_namespace_request** | [**DropNamespaceRequest**](DropNamespaceRequest.md) |  | [required] |
 
 ### Return type
 
- (empty response body)
+[**serde_json::Value**](serde_json::Value.md)
 
 ### Authorization
 
@@ -67,7 +66,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -75,7 +74,7 @@ No authorization required
 
 ## get_namespace
 
-> models::GetNamespaceResponse get_namespace(ns, delimiter)
+> models::GetNamespaceResponse get_namespace(get_namespace_request)
 Get information about a namespace
 
 Return the detailed information for a given namespace 
@@ -85,8 +84,7 @@ Return the detailed information for a given namespace
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**ns** | **String** | A string identifier of the namespace. | [required] |
-**delimiter** | Option<**String**> | The delimiter for the identifier used in the context |  |
+**get_namespace_request** | [**GetNamespaceRequest**](GetNamespaceRequest.md) |  | [required] |
 
 ### Return type
 
@@ -98,7 +96,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -106,7 +104,7 @@ No authorization required
 
 ## list_namespaces
 
-> models::ListNamespacesResponse list_namespaces(page_token, page_size, parent, delimiter)
+> models::ListNamespacesResponse list_namespaces(list_namespaces_request)
 List namespaces
 
 List all child namespace names of the root namespace or a given parent namespace. 
@@ -116,10 +114,7 @@ List all child namespace names of the root namespace or a given parent namespace
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**page_token** | Option<**String**> |  |  |
-**page_size** | Option<**i32**> | An inclusive upper bound of the number of results that a client will receive. |  |
-**parent** | Option<**String**> | A string identifier of the parent namespace. |  |
-**delimiter** | Option<**String**> | The delimiter for the identifier used in the context |  |
+**list_namespaces_request** | [**ListNamespacesRequest**](ListNamespacesRequest.md) |  | [required] |
 
 ### Return type
 
@@ -131,7 +126,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -139,22 +134,21 @@ No authorization required
 
 ## namespace_exists
 
-> namespace_exists(ns, delimiter)
+> serde_json::Value namespace_exists(namespace_exists_request)
 Check if a namespace exists
 
-Check if a namespace exists. This API should behave exactly like the GetNamespace API, except it does not contain a body. 
+Check if a namespace exists. 
 
 ### Parameters
 
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**ns** | **String** | A string identifier of the namespace. | [required] |
-**delimiter** | Option<**String**> | The delimiter for the identifier used in the context |  |
+**namespace_exists_request** | [**NamespaceExistsRequest**](NamespaceExistsRequest.md) |  | [required] |
 
 ### Return type
 
- (empty response body)
+[**serde_json::Value**](serde_json::Value.md)
 
 ### Authorization
 
@@ -162,7 +156,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

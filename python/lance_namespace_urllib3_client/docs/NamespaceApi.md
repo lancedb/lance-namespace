@@ -4,11 +4,11 @@ All URIs are relative to *http://localhost:2333*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create_namespace**](NamespaceApi.md#create_namespace) | **POST** /v1/namespaces | Create a new namespace
-[**drop_namespace**](NamespaceApi.md#drop_namespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace
-[**get_namespace**](NamespaceApi.md#get_namespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace
-[**list_namespaces**](NamespaceApi.md#list_namespaces) | **GET** /v1/namespaces | List namespaces
-[**namespace_exists**](NamespaceApi.md#namespace_exists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists
+[**create_namespace**](NamespaceApi.md#create_namespace) | **POST** /CreateNamespace | Create a new namespace
+[**drop_namespace**](NamespaceApi.md#drop_namespace) | **POST** /DropNamespace | Drop a namespace
+[**get_namespace**](NamespaceApi.md#get_namespace) | **POST** /GetNamespace | Get information about a namespace
+[**list_namespaces**](NamespaceApi.md#list_namespaces) | **POST** /ListNamespaces | List namespaces
+[**namespace_exists**](NamespaceApi.md#namespace_exists) | **POST** /NamespaceExists | Check if a namespace exists
 
 
 # **create_namespace**
@@ -94,7 +94,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **drop_namespace**
-> drop_namespace(ns, delimiter=delimiter)
+> object drop_namespace(drop_namespace_request)
 
 Drop a namespace
 
@@ -106,6 +106,7 @@ Drop a namespace. The namespace must be empty.
 
 ```python
 import lance_namespace_urllib3_client
+from lance_namespace_urllib3_client.models.drop_namespace_request import DropNamespaceRequest
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
 
@@ -120,12 +121,13 @@ configuration = lance_namespace_urllib3_client.Configuration(
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.NamespaceApi(api_client)
-    ns = 'ns_example' # str | A string identifier of the namespace.
-    delimiter = 'delimiter_example' # str | The delimiter for the identifier used in the context (optional)
+    drop_namespace_request = lance_namespace_urllib3_client.DropNamespaceRequest() # DropNamespaceRequest | 
 
     try:
         # Drop a namespace
-        api_instance.drop_namespace(ns, delimiter=delimiter)
+        api_response = api_instance.drop_namespace(drop_namespace_request)
+        print("The response of NamespaceApi->drop_namespace:\n")
+        pprint(api_response)
     except Exception as e:
         print("Exception when calling NamespaceApi->drop_namespace: %s\n" % e)
 ```
@@ -137,12 +139,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **ns** | **str**| A string identifier of the namespace. | 
- **delimiter** | **str**| The delimiter for the identifier used in the context | [optional] 
+ **drop_namespace_request** | [**DropNamespaceRequest**](DropNamespaceRequest.md)|  | 
 
 ### Return type
 
-void (empty response body)
+**object**
 
 ### Authorization
 
@@ -150,14 +151,14 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 ### HTTP response details
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**204** | Success, no content |  -  |
+**200** | Result of dropping a namespace |  -  |
 **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -169,7 +170,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_namespace**
-> GetNamespaceResponse get_namespace(ns, delimiter=delimiter)
+> GetNamespaceResponse get_namespace(get_namespace_request)
 
 Get information about a namespace
 
@@ -181,6 +182,7 @@ Return the detailed information for a given namespace
 
 ```python
 import lance_namespace_urllib3_client
+from lance_namespace_urllib3_client.models.get_namespace_request import GetNamespaceRequest
 from lance_namespace_urllib3_client.models.get_namespace_response import GetNamespaceResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
@@ -196,12 +198,11 @@ configuration = lance_namespace_urllib3_client.Configuration(
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.NamespaceApi(api_client)
-    ns = 'ns_example' # str | A string identifier of the namespace.
-    delimiter = 'delimiter_example' # str | The delimiter for the identifier used in the context (optional)
+    get_namespace_request = lance_namespace_urllib3_client.GetNamespaceRequest() # GetNamespaceRequest | 
 
     try:
         # Get information about a namespace
-        api_response = api_instance.get_namespace(ns, delimiter=delimiter)
+        api_response = api_instance.get_namespace(get_namespace_request)
         print("The response of NamespaceApi->get_namespace:\n")
         pprint(api_response)
     except Exception as e:
@@ -215,8 +216,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **ns** | **str**| A string identifier of the namespace. | 
- **delimiter** | **str**| The delimiter for the identifier used in the context | [optional] 
+ **get_namespace_request** | [**GetNamespaceRequest**](GetNamespaceRequest.md)|  | 
 
 ### Return type
 
@@ -228,7 +228,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 ### HTTP response details
@@ -246,7 +246,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_namespaces**
-> ListNamespacesResponse list_namespaces(page_token=page_token, page_size=page_size, parent=parent, delimiter=delimiter)
+> ListNamespacesResponse list_namespaces(list_namespaces_request)
 
 List namespaces
 
@@ -258,6 +258,7 @@ List all child namespace names of the root namespace or a given parent namespace
 
 ```python
 import lance_namespace_urllib3_client
+from lance_namespace_urllib3_client.models.list_namespaces_request import ListNamespacesRequest
 from lance_namespace_urllib3_client.models.list_namespaces_response import ListNamespacesResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
@@ -273,14 +274,11 @@ configuration = lance_namespace_urllib3_client.Configuration(
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.NamespaceApi(api_client)
-    page_token = 'page_token_example' # str |  (optional)
-    page_size = 56 # int | An inclusive upper bound of the number of results that a client will receive. (optional)
-    parent = 'parent_example' # str | A string identifier of the parent namespace. (optional)
-    delimiter = 'delimiter_example' # str | The delimiter for the identifier used in the context (optional)
+    list_namespaces_request = lance_namespace_urllib3_client.ListNamespacesRequest() # ListNamespacesRequest | 
 
     try:
         # List namespaces
-        api_response = api_instance.list_namespaces(page_token=page_token, page_size=page_size, parent=parent, delimiter=delimiter)
+        api_response = api_instance.list_namespaces(list_namespaces_request)
         print("The response of NamespaceApi->list_namespaces:\n")
         pprint(api_response)
     except Exception as e:
@@ -294,10 +292,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page_token** | **str**|  | [optional] 
- **page_size** | **int**| An inclusive upper bound of the number of results that a client will receive. | [optional] 
- **parent** | **str**| A string identifier of the parent namespace. | [optional] 
- **delimiter** | **str**| The delimiter for the identifier used in the context | [optional] 
+ **list_namespaces_request** | [**ListNamespacesRequest**](ListNamespacesRequest.md)|  | 
 
 ### Return type
 
@@ -309,7 +304,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 ### HTTP response details
@@ -327,12 +322,11 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **namespace_exists**
-> namespace_exists(ns, delimiter=delimiter)
+> object namespace_exists(namespace_exists_request)
 
 Check if a namespace exists
 
 Check if a namespace exists.
-This API should behave exactly like the GetNamespace API, except it does not contain a body.
 
 
 ### Example
@@ -340,6 +334,7 @@ This API should behave exactly like the GetNamespace API, except it does not con
 
 ```python
 import lance_namespace_urllib3_client
+from lance_namespace_urllib3_client.models.namespace_exists_request import NamespaceExistsRequest
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
 
@@ -354,12 +349,13 @@ configuration = lance_namespace_urllib3_client.Configuration(
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.NamespaceApi(api_client)
-    ns = 'ns_example' # str | A string identifier of the namespace.
-    delimiter = 'delimiter_example' # str | The delimiter for the identifier used in the context (optional)
+    namespace_exists_request = lance_namespace_urllib3_client.NamespaceExistsRequest() # NamespaceExistsRequest | 
 
     try:
         # Check if a namespace exists
-        api_instance.namespace_exists(ns, delimiter=delimiter)
+        api_response = api_instance.namespace_exists(namespace_exists_request)
+        print("The response of NamespaceApi->namespace_exists:\n")
+        pprint(api_response)
     except Exception as e:
         print("Exception when calling NamespaceApi->namespace_exists: %s\n" % e)
 ```
@@ -371,12 +367,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **ns** | **str**| A string identifier of the namespace. | 
- **delimiter** | **str**| The delimiter for the identifier used in the context | [optional] 
+ **namespace_exists_request** | [**NamespaceExistsRequest**](NamespaceExistsRequest.md)|  | 
 
 ### Return type
 
-void (empty response body)
+**object**
 
 ### Authorization
 
@@ -384,14 +379,14 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 ### HTTP response details
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Success, no content |  -  |
+**200** | Result of checking if a namespace exists |  -  |
 **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |

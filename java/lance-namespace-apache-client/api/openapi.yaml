@@ -1,9 +1,9 @@
 openapi: 3.1.1
 info:
   description: |
-    **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _"tools"_ in this document) should integrate with Lance tables.
+    **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _"tools"_ in this document) should integrate with Lance tables.
     A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy.
-    In an enterprise environment, typically there is a requirement to store tables in a metadata service  such as Apache Hive MetaStore, Apache Gravitino, Unity Namespace, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way. The detailed OpenAPI specification content can be found in [rest.yaml](./rest.yaml).
+    In an enterprise environment, typically there is a requirement to store tables in a metadata service  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -34,36 +34,7 @@ security:
 - OAuth2: []
 - BearerAuth: []
 paths:
-  /v1/namespaces:
-    get:
-      description: |
-        List all child namespace names of the root namespace or a given parent namespace.
-      operationId: ListNamespaces
-      parameters:
-      - $ref: '#/components/parameters/pageToken'
-      - $ref: '#/components/parameters/pageSize'
-      - $ref: '#/components/parameters/parent'
-      - $ref: '#/components/parameters/delimiter'
-      responses:
-        "200":
-          $ref: '#/components/responses/ListNamespacesResponse'
-        "400":
-          $ref: '#/components/responses/BadRequestErrorResponse'
-        "401":
-          $ref: '#/components/responses/UnauthorizedErrorResponse'
-        "403":
-          $ref: '#/components/responses/ForbiddenErrorResponse'
-        "406":
-          $ref: '#/components/responses/UnsupportedOperationErrorResponse'
-        "503":
-          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
-        "5XX":
-          $ref: '#/components/responses/ServerErrorResponse'
-      summary: List namespaces
-      tags:
-      - Namespace
-      x-accepts:
-      - application/json
+  /CreateNamespace:
     post:
       description: |
         Create a new namespace.
@@ -102,43 +73,49 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
-  /v1/namespaces/{ns}:
-    delete:
+  /ListNamespaces:
+    post:
       description: |
-        Drop a namespace. The namespace must be empty.
-      operationId: DropNamespace
-      parameters:
-      - $ref: '#/components/parameters/namespace'
-      - $ref: '#/components/parameters/delimiter'
+        List all child namespace names of the root namespace or a given parent namespace.
+      operationId: ListNamespaces
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListNamespacesRequest'
+        required: true
       responses:
-        "204":
-          description: "Success, no content"
+        "200":
+          $ref: '#/components/responses/ListNamespacesResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         "403":
           $ref: '#/components/responses/ForbiddenErrorResponse'
-        "404":
-          $ref: '#/components/responses/NotFoundErrorResponse'
-        "409":
-          $ref: '#/components/responses/ConflictErrorResponse'
+        "406":
+          $ref: '#/components/responses/UnsupportedOperationErrorResponse'
         "503":
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: Drop a namespace
+      summary: List namespaces
       tags:
       - Namespace
+      x-content-type: application/json
       x-accepts:
       - application/json
-    get:
+  /GetNamespace:
+    post:
       description: |
         Return the detailed information for a given namespace
       operationId: GetNamespace
-      parameters:
-      - $ref: '#/components/parameters/namespace'
-      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetNamespaceRequest'
+        required: true
       responses:
         "200":
           $ref: '#/components/responses/GetNamespaceResponse'
@@ -157,19 +134,57 @@ paths:
       summary: Get information about a namespace
       tags:
       - Namespace
+      x-content-type: application/json
       x-accepts:
       - application/json
-    head:
+  /DropNamespace:
+    post:
       description: |
-        Check if a namespace exists.
-        This API should behave exactly like the GetNamespace API, except it does not contain a body.
-      operationId: NamespaceExists
-      parameters:
-      - $ref: '#/components/parameters/namespace'
-      - $ref: '#/components/parameters/delimiter'
+        Drop a namespace. The namespace must be empty.
+      operationId: DropNamespace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DropNamespaceRequest'
+        required: true
       responses:
         "200":
-          description: "Success, no content"
+          $ref: '#/components/responses/DropNamespaceResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "409":
+          $ref: '#/components/responses/ConflictErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Drop a namespace
+      tags:
+      - Namespace
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /NamespaceExists:
+    post:
+      description: |
+        Check if a namespace exists.
+      operationId: NamespaceExists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NamespaceExistsRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/NamespaceExistsResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
@@ -185,12 +200,10 @@ paths:
       summary: Check if a namespace exists
       tags:
       - Namespace
+      x-content-type: application/json
       x-accepts:
       - application/json
-    parameters:
-    - $ref: '#/components/parameters/namespace'
-    - $ref: '#/components/parameters/delimiter'
-  /v1/table/register:
+  /RegisterTable:
     post:
       description: |
         Register an existing table at a given storage location to a namespace.
@@ -203,7 +216,7 @@ paths:
         required: true
       responses:
         "200":
-          $ref: '#/components/responses/GetTableResponse'
+          $ref: '#/components/responses/RegisterTableResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
@@ -224,14 +237,17 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
-  /v1/tables/{table}:
-    get:
+  /GetTable:
+    post:
       description: |
         Get a table's detailed information under a specified namespace.
       operationId: GetTable
-      parameters:
-      - $ref: '#/components/parameters/table'
-      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetTableRequest'
+        required: true
       responses:
         "200":
           $ref: '#/components/responses/GetTableResponse'
@@ -250,19 +266,24 @@ paths:
       summary: Get a table from the namespace
       tags:
       - Table
+      x-content-type: application/json
       x-accepts:
       - application/json
-    head:
+  /TableExists:
+    post:
       description: |
         Check if a table exists.
         This API should behave exactly like the GetTable API, except it does not contain a body.
       operationId: TableExists
-      parameters:
-      - $ref: '#/components/parameters/table'
-      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TableExistsRequest'
+        required: true
       responses:
         "200":
-          description: "Success, no content"
+          $ref: '#/components/responses/TableExistsResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
@@ -278,11 +299,9 @@ paths:
       summary: Check if a table exists
       tags:
       - Table
+      x-content-type: application/json
       x-accepts:
       - application/json
-    parameters:
-    - $ref: '#/components/parameters/table'
-    - $ref: '#/components/parameters/delimiter'
 components:
   examples:
     ListNamespacesEmptyExample:
@@ -295,63 +314,6 @@ components:
         namespaces:
         - accounting
         - credits
-  parameters:
-    namespace:
-      description: A string identifier of the namespace.
-      explode: false
-      in: path
-      name: ns
-      required: true
-      schema:
-        type: string
-      style: simple
-    parent:
-      description: A string identifier of the parent namespace.
-      explode: true
-      in: query
-      name: parent
-      required: false
-      schema:
-        type: string
-      style: form
-    pageToken:
-      allowEmptyValue: true
-      explode: true
-      in: query
-      name: pageToken
-      required: false
-      schema:
-        $ref: '#/components/schemas/PageToken'
-      style: form
-    pageSize:
-      description: An inclusive upper bound of the number of results that a client
-        will receive.
-      explode: true
-      in: query
-      name: pageSize
-      required: false
-      schema:
-        minimum: 1
-        type: integer
-      style: form
-    table:
-      description: A string identifier of the table
-      explode: false
-      in: path
-      name: table
-      required: true
-      schema:
-        type: string
-      style: simple
-    delimiter:
-      description: The delimiter for the identifier used in the context
-      explode: true
-      in: query
-      name: delimiter
-      required: false
-      schema:
-        type: string
-      style: form
   responses:
     ListNamespacesResponse:
       content:
@@ -371,12 +333,36 @@ components:
             $ref: '#/components/schemas/GetNamespaceResponse'
       description: "Returns a namespace, as well as any properties stored on the namespace\
         \ if namespace properties are supported by the server."
+    DropNamespaceResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DropNamespaceResponse'
+      description: Result of dropping a namespace
+    NamespaceExistsResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NamespaceExistsResponse'
+      description: Result of checking if a namespace exists
     GetTableResponse:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/GetTableResponse'
       description: Table properties result when loading a table
+    RegisterTableResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisterTableResponse'
+      description: Table properties result when registering a table
+    TableExistsResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TableExistsResponse'
+      description: Result of checking if a table exists
     BadRequestErrorResponse:
       content:
         application/json:
@@ -545,6 +531,31 @@ components:
       required:
       - mode
       - name
+    ListNamespacesRequest:
+      example:
+        parent:
+        - parent
+        - parent
+        pageSize: 0
+        pageToken: pageToken
+      properties:
+        parent:
+          items:
+            type: string
+          type: array
+        pageToken:
+          description: |-
+            An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
+            For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available.
+            After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request.
+            Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.
+          type: string
+          nullable: true
+        pageSize:
+          description: An inclusive upper bound of the number of results that a client
+            will receive.
+          type: integer
+          nullable: true
     ListNamespacesResponse:
       example:
         nextPageToken: nextPageToken
@@ -568,6 +579,21 @@ components:
           nullable: true
       required:
       - namespaces
+    GetNamespaceRequest:
+      example:
+        parent:
+        - parent
+        - parent
+        name: name
+      properties:
+        name:
+          type: string
+        parent:
+          items:
+            type: string
+          type: array
+      required:
+      - name
     GetNamespaceResponse:
       example:
         parent:
@@ -598,6 +624,40 @@ components:
           nullable: true
       required:
       - name
+    DropNamespaceRequest:
+      example:
+        parent:
+        - parent
+        - parent
+        name: name
+      properties:
+        name:
+          type: string
+        parent:
+          items:
+            type: string
+          type: array
+      required:
+      - name
+    DropNamespaceResponse:
+      type: object
+    NamespaceExistsRequest:
+      example:
+        parent:
+        - parent
+        - parent
+        name: name
+      properties:
+        name:
+          type: string
+        parent:
+          items:
+            type: string
+          type: array
+      required:
+      - name
+    NamespaceExistsResponse:
+      type: object
     PageToken:
       description: |-
         An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
@@ -605,6 +665,11 @@ components:
         After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request.
         Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.
       type: string
+      nullable: true
+    PageSize:
+      description: An inclusive upper bound of the number of results that a client
+        will receive.
+      type: integer
       nullable: true
     RegisterTableRequest:
       example:
@@ -624,6 +689,47 @@ components:
           type: string
       required:
       - location
+      - name
+      - namespace
+    RegisterTableResponse:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+        location: location
+        properties:
+          key: properties
+      properties:
+        name:
+          type: string
+        namespace:
+          items:
+            type: string
+          type: array
+        location:
+          type: string
+        properties:
+          additionalProperties:
+            type: string
+      required:
+      - location
+      - name
+      - namespace
+    GetTableRequest:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+      properties:
+        name:
+          type: string
+        namespace:
+          items:
+            type: string
+          type: array
+      required:
       - name
       - namespace
     GetTableResponse:
@@ -651,4 +757,22 @@ components:
       - location
       - name
       - namespace
+    TableExistsRequest:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+      properties:
+        name:
+          type: string
+        namespace:
+          items:
+            type: string
+          type: array
+      required:
+      - name
+      - namespace
+    TableExistsResponse:
+      type: object
 

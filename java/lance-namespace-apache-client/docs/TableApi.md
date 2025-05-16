@@ -4,15 +4,15 @@ All URIs are relative to *http://localhost:2333*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**getTable**](TableApi.md#getTable) | **GET** /v1/tables/{table} | Get a table from the namespace |
-| [**registerTable**](TableApi.md#registerTable) | **POST** /v1/table/register | Register a table to a namespace |
-| [**tableExists**](TableApi.md#tableExists) | **HEAD** /v1/tables/{table} | Check if a table exists |
+| [**getTable**](TableApi.md#getTable) | **POST** /GetTable | Get a table from the namespace |
+| [**registerTable**](TableApi.md#registerTable) | **POST** /RegisterTable | Register a table to a namespace |
+| [**tableExists**](TableApi.md#tableExists) | **POST** /TableExists | Check if a table exists |
 
 
 
 ## getTable
 
-> GetTableResponse getTable(table, delimiter)
+> GetTableResponse getTable(getTableRequest)
 
 Get a table from the namespace
 
@@ -34,10 +34,9 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         TableApi apiInstance = new TableApi(defaultClient);
-        String table = "table_example"; // String | A string identifier of the table
-        String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
+        GetTableRequest getTableRequest = new GetTableRequest(); // GetTableRequest | 
         try {
-            GetTableResponse result = apiInstance.getTable(table, delimiter);
+            GetTableResponse result = apiInstance.getTable(getTableRequest);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#getTable");
@@ -55,8 +54,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **table** | **String**| A string identifier of the table | |
-| **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
+| **getTableRequest** | [**GetTableRequest**](GetTableRequest.md)|  | |
 
 ### Return type
 
@@ -68,7 +66,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 
@@ -86,7 +84,7 @@ No authorization required
 
 ## registerTable
 
-> GetTableResponse registerTable(registerTableRequest)
+> RegisterTableResponse registerTable(registerTableRequest)
 
 Register a table to a namespace
 
@@ -110,7 +108,7 @@ public class Example {
         TableApi apiInstance = new TableApi(defaultClient);
         RegisterTableRequest registerTableRequest = new RegisterTableRequest(); // RegisterTableRequest | 
         try {
-            GetTableResponse result = apiInstance.registerTable(registerTableRequest);
+            RegisterTableResponse result = apiInstance.registerTable(registerTableRequest);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#registerTable");
@@ -132,7 +130,7 @@ public class Example {
 
 ### Return type
 
-[**GetTableResponse**](GetTableResponse.md)
+[**RegisterTableResponse**](RegisterTableResponse.md)
 
 ### Authorization
 
@@ -147,7 +145,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Table properties result when loading a table |  -  |
+| **200** | Table properties result when registering a table |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -159,7 +157,7 @@ No authorization required
 
 ## tableExists
 
-> tableExists(table, delimiter)
+> Object tableExists(tableExistsRequest)
 
 Check if a table exists
 
@@ -181,10 +179,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         TableApi apiInstance = new TableApi(defaultClient);
-        String table = "table_example"; // String | A string identifier of the table
-        String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
+        TableExistsRequest tableExistsRequest = new TableExistsRequest(); // TableExistsRequest | 
         try {
-            apiInstance.tableExists(table, delimiter);
+            Object result = apiInstance.tableExists(tableExistsRequest);
+            System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#tableExists");
             System.err.println("Status code: " + e.getCode());
@@ -201,12 +199,11 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **table** | **String**| A string identifier of the table | |
-| **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
+| **tableExistsRequest** | [**TableExistsRequest**](TableExistsRequest.md)|  | |
 
 ### Return type
 
-null (empty response body)
+**Object**
 
 ### Authorization
 
@@ -214,14 +211,14 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Success, no content |  -  |
+| **200** | Result of checking if a table exists |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |

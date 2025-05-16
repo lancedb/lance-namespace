@@ -2,7 +2,7 @@
 
 **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format
 to standardize access to a collection of Lance tables (a.k.a. Lance datasets).
-It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc.
+It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc.
 should store and use Lance tables, as well as how ML/AI tools and analytics compute engines should integrate with Lance tables.
 
 ## Repository structure
@@ -33,7 +33,7 @@ pip install -r requirements.txt
 
 ### Install Poetry for Python
 
-If you want to build the entire project, or develop python specifically, 
+If you want to build the entire project, or develop python specifically,
 you need to install [poetry](https://python-poetry.org/).
 To quickly install it in your virtual environment:
 
@@ -51,7 +51,7 @@ There are 3 commands that is available at top level as well as inside each langu
 
 You can also run `make <command>-<language>` to only run the command in the specific language, for example:
 
-- `make gen-python`: codegen and lint all Python modules 
+- `make gen-python`: codegen and lint all Python modules
 - `make build-rust`: build all Rust modules
 
 You can also run `make <command>-<language>-<module>` inside a language folder to run the command against a specific module, for example:

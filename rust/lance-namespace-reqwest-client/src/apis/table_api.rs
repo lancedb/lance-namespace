@@ -1,7 +1,7 @@
 /*
  * Lance REST Namespace Specification
  *
- * **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Namespace, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables. A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy. In an enterprise environment, typically there is a requirement to store tables in a metadata service  such as Apache Hive MetaStore, Apache Gravitino, Unity Namespace, etc.  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way. The detailed OpenAPI specification content can be found in [rest.yaml](./rest.yaml). 
+ * **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables. A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy. In an enterprise environment, typically there is a requirement to store tables in a metadata service  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way. 
  *
  * The version of the OpenAPI document: 0.0.1
  * 
@@ -57,20 +57,17 @@ pub enum TableExistsError {
 
 
 /// Get a table's detailed information under a specified namespace. 
-pub async fn get_table(configuration: &configuration::Configuration, table: &str, delimiter: Option<&str>) -> Result<models::GetTableResponse, Error<GetTableError>> {
+pub async fn get_table(configuration: &configuration::Configuration, get_table_request: models::GetTableRequest) -> Result<models::GetTableResponse, Error<GetTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_table = table;
-    let p_delimiter = delimiter;
+    let p_get_table_request = get_table_request;
 
-    let uri_str = format!("{}/v1/tables/{table}", configuration.base_path, table=crate::apis::urlencode(p_table));
-    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+    let uri_str = format!("{}/GetTable", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
-    if let Some(ref param_value) = p_delimiter {
-        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
-    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    req_builder = req_builder.json(&p_get_table_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
@@ -98,11 +95,11 @@ pub async fn get_table(configuration: &configuration::Configuration, table: &str
 }
 
 /// Register an existing table at a given storage location to a namespace. 
-pub async fn register_table(configuration: &configuration::Configuration, register_table_request: models::RegisterTableRequest) -> Result<models::GetTableResponse, Error<RegisterTableError>> {
+pub async fn register_table(configuration: &configuration::Configuration, register_table_request: models::RegisterTableRequest) -> Result<models::RegisterTableResponse, Error<RegisterTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_register_table_request = register_table_request;
 
-    let uri_str = format!("{}/v1/table/register", configuration.base_path);
+    let uri_str = format!("{}/RegisterTable", configuration.base_path);
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
     if let Some(ref user_agent) = configuration.user_agent {
@@ -125,8 +122,8 @@ pub async fn register_table(configuration: &configuration::Configuration, regist
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetTableResponse`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetTableResponse`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::RegisterTableResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::RegisterTableResponse`")))),
         }
     } else {
         let content = resp.text().await?;
@@ -136,28 +133,36 @@ pub async fn register_table(configuration: &configuration::Configuration, regist
 }
 
 /// Check if a table exists. This API should behave exactly like the GetTable API, except it does not contain a body. 
-pub async fn table_exists(configuration: &configuration::Configuration, table: &str, delimiter: Option<&str>) -> Result<(), Error<TableExistsError>> {
+pub async fn table_exists(configuration: &configuration::Configuration, table_exists_request: models::TableExistsRequest) -> Result<serde_json::Value, Error<TableExistsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_table = table;
-    let p_delimiter = delimiter;
+    let p_table_exists_request = table_exists_request;
 
-    let uri_str = format!("{}/v1/tables/{table}", configuration.base_path, table=crate::apis::urlencode(p_table));
-    let mut req_builder = configuration.client.request(reqwest::Method::HEAD, &uri_str);
+    let uri_str = format!("{}/TableExists", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
-    if let Some(ref param_value) = p_delimiter {
-        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
-    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    req_builder = req_builder.json(&p_table_exists_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
 
     let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
 
     if !status.is_client_error() && !status.is_server_error() {
-        Ok(())
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `serde_json::Value`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `serde_json::Value`")))),
+        }
     } else {
         let content = resp.text().await?;
         let entity: Option<TableExistsError> = serde_json::from_str(&content).ok();

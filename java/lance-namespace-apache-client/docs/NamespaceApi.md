@@ -4,11 +4,11 @@ All URIs are relative to *http://localhost:2333*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**createNamespace**](NamespaceApi.md#createNamespace) | **POST** /v1/namespaces | Create a new namespace |
-| [**dropNamespace**](NamespaceApi.md#dropNamespace) | **DELETE** /v1/namespaces/{ns} | Drop a namespace |
-| [**getNamespace**](NamespaceApi.md#getNamespace) | **GET** /v1/namespaces/{ns} | Get information about a namespace |
-| [**listNamespaces**](NamespaceApi.md#listNamespaces) | **GET** /v1/namespaces | List namespaces |
-| [**namespaceExists**](NamespaceApi.md#namespaceExists) | **HEAD** /v1/namespaces/{ns} | Check if a namespace exists |
+| [**createNamespace**](NamespaceApi.md#createNamespace) | **POST** /CreateNamespace | Create a new namespace |
+| [**dropNamespace**](NamespaceApi.md#dropNamespace) | **POST** /DropNamespace | Drop a namespace |
+| [**getNamespace**](NamespaceApi.md#getNamespace) | **POST** /GetNamespace | Get information about a namespace |
+| [**listNamespaces**](NamespaceApi.md#listNamespaces) | **POST** /ListNamespaces | List namespaces |
+| [**namespaceExists**](NamespaceApi.md#namespaceExists) | **POST** /NamespaceExists | Check if a namespace exists |
 
 
 
@@ -87,7 +87,7 @@ No authorization required
 
 ## dropNamespace
 
-> dropNamespace(ns, delimiter)
+> Object dropNamespace(dropNamespaceRequest)
 
 Drop a namespace
 
@@ -109,10 +109,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
-        String ns = "ns_example"; // String | A string identifier of the namespace.
-        String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
+        DropNamespaceRequest dropNamespaceRequest = new DropNamespaceRequest(); // DropNamespaceRequest | 
         try {
-            apiInstance.dropNamespace(ns, delimiter);
+            Object result = apiInstance.dropNamespace(dropNamespaceRequest);
+            System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#dropNamespace");
             System.err.println("Status code: " + e.getCode());
@@ -129,12 +129,11 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **ns** | **String**| A string identifier of the namespace. | |
-| **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
+| **dropNamespaceRequest** | [**DropNamespaceRequest**](DropNamespaceRequest.md)|  | |
 
 ### Return type
 
-null (empty response body)
+**Object**
 
 ### Authorization
 
@@ -142,14 +141,14 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **204** | Success, no content |  -  |
+| **200** | Result of dropping a namespace |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -161,7 +160,7 @@ No authorization required
 
 ## getNamespace
 
-> GetNamespaceResponse getNamespace(ns, delimiter)
+> GetNamespaceResponse getNamespace(getNamespaceRequest)
 
 Get information about a namespace
 
@@ -183,10 +182,9 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
-        String ns = "ns_example"; // String | A string identifier of the namespace.
-        String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
+        GetNamespaceRequest getNamespaceRequest = new GetNamespaceRequest(); // GetNamespaceRequest | 
         try {
-            GetNamespaceResponse result = apiInstance.getNamespace(ns, delimiter);
+            GetNamespaceResponse result = apiInstance.getNamespace(getNamespaceRequest);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#getNamespace");
@@ -204,8 +202,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **ns** | **String**| A string identifier of the namespace. | |
-| **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
+| **getNamespaceRequest** | [**GetNamespaceRequest**](GetNamespaceRequest.md)|  | |
 
 ### Return type
 
@@ -217,7 +214,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 
@@ -235,7 +232,7 @@ No authorization required
 
 ## listNamespaces
 
-> ListNamespacesResponse listNamespaces(pageToken, pageSize, parent, delimiter)
+> ListNamespacesResponse listNamespaces(listNamespacesRequest)
 
 List namespaces
 
@@ -257,12 +254,9 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
-        String pageToken = "pageToken_example"; // String | 
-        Integer pageSize = 56; // Integer | An inclusive upper bound of the number of results that a client will receive.
-        String parent = "parent_example"; // String | A string identifier of the parent namespace.
-        String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
+        ListNamespacesRequest listNamespacesRequest = new ListNamespacesRequest(); // ListNamespacesRequest | 
         try {
-            ListNamespacesResponse result = apiInstance.listNamespaces(pageToken, pageSize, parent, delimiter);
+            ListNamespacesResponse result = apiInstance.listNamespaces(listNamespacesRequest);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#listNamespaces");
@@ -280,10 +274,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **pageToken** | **String**|  | [optional] |
-| **pageSize** | **Integer**| An inclusive upper bound of the number of results that a client will receive. | [optional] |
-| **parent** | **String**| A string identifier of the parent namespace. | [optional] |
-| **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
+| **listNamespacesRequest** | [**ListNamespacesRequest**](ListNamespacesRequest.md)|  | |
 
 ### Return type
 
@@ -295,7 +286,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 
@@ -313,11 +304,11 @@ No authorization required
 
 ## namespaceExists
 
-> namespaceExists(ns, delimiter)
+> Object namespaceExists(namespaceExistsRequest)
 
 Check if a namespace exists
 
-Check if a namespace exists. This API should behave exactly like the GetNamespace API, except it does not contain a body. 
+Check if a namespace exists. 
 
 ### Example
 
@@ -335,10 +326,10 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
-        String ns = "ns_example"; // String | A string identifier of the namespace.
-        String delimiter = "delimiter_example"; // String | The delimiter for the identifier used in the context
+        NamespaceExistsRequest namespaceExistsRequest = new NamespaceExistsRequest(); // NamespaceExistsRequest | 
         try {
-            apiInstance.namespaceExists(ns, delimiter);
+            Object result = apiInstance.namespaceExists(namespaceExistsRequest);
+            System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#namespaceExists");
             System.err.println("Status code: " + e.getCode());
@@ -355,12 +346,11 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **ns** | **String**| A string identifier of the namespace. | |
-| **delimiter** | **String**| The delimiter for the identifier used in the context | [optional] |
+| **namespaceExistsRequest** | [**NamespaceExistsRequest**](NamespaceExistsRequest.md)|  | |
 
 ### Return type
 
-null (empty response body)
+**Object**
 
 ### Authorization
 
@@ -368,14 +358,14 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Success, no content |  -  |
+| **200** | Result of checking if a namespace exists |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
