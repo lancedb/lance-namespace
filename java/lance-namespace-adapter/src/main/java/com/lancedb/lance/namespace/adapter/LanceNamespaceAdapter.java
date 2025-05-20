@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
- * Bootstrap class for Lance Namespace Server. This class starts the Spring Boot application and
+ * Bootstrap class for Lance Namespace Adapter. This class starts the Spring Boot application and
  * configures component scanning to include both the adapter and server-core components.
  */
 @SpringBootApplication
