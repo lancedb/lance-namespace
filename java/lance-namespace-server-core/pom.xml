@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.lancedb</groupId>
+        <artifactId>lance-namespace-root</artifactId>
+        <version>0.0.1</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>lance-namespace-server-core</artifactId>
+    <name>${project.artifactId}</name>
+    <description>Lance Namespace server core library</description>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.lancedb</groupId>
+            <artifactId>lance-namespace-client-core</artifactId>
+            <version>${lance-namespace.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lancedb</groupId>
+            <artifactId>lance-namespace-springboot-server</artifactId>
+            <version>${lance-namespace.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+        </plugins>
+    </build>
+    <profiles>
+    </profiles>
+</project>

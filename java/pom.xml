@@ -46,6 +46,7 @@
     </distributionManagement>
 
     <properties>
+        <lance-namespace.version>0.0.1</lance-namespace.version>
         <springboot.version>2.7.18</springboot.version>
         <junit-version>5.8.2</junit-version>
 
@@ -78,6 +79,8 @@
     <modules>
         <module>lance-namespace-apache-client</module>
         <module>lance-namespace-springboot-server</module>
+        <module>lance-namespace-client-core</module>
+        <module>lance-namespace-server-core</module>
     </modules>
 
     <dependencyManagement>
