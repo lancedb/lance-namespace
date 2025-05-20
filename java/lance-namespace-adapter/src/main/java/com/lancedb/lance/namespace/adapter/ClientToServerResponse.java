@@ -1,0 +1,56 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.lancedb.lance.namespace.adapter;
+
+import com.lancedb.lance.namespace.server.springboot.model.GetNamespaceResponse;
+import com.lancedb.lance.namespace.server.springboot.model.GetTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
+import com.lancedb.lance.namespace.server.springboot.model.RegisterTableResponse;
+
+public class ClientToServerResponse {
+
+  public static GetNamespaceResponse getNamespace(
+      com.lancedb.lance.namespace.client.apache.model.GetNamespaceResponse response) {
+    GetNamespaceResponse converted = new GetNamespaceResponse();
+    converted.setParent(response.getParent());
+    converted.setProperties(response.getProperties());
+    converted.setName(response.getName());
+    return converted;
+  }
+
+  public static ListNamespacesResponse listNamespaces(
+      com.lancedb.lance.namespace.client.apache.model.ListNamespacesResponse response) {
+    ListNamespacesResponse converted = new ListNamespacesResponse();
+    converted.setNamespaces(response.getNamespaces());
+    return converted;
+  }
+
+  public static GetTableResponse getTable(
+      com.lancedb.lance.namespace.client.apache.model.GetTableResponse response) {
+    GetTableResponse converted = new GetTableResponse();
+    converted.setNamespace(response.getNamespace());
+    converted.setName(response.getName());
+    converted.setProperties(response.getProperties());
+    return converted;
+  }
+
+  public static RegisterTableResponse registerTable(
+      com.lancedb.lance.namespace.client.apache.model.RegisterTableResponse response) {
+    RegisterTableResponse converted = new RegisterTableResponse();
+    converted.setNamespace(response.getNamespace());
+    converted.setName(response.getName());
+    converted.setProperties(response.getProperties());
+    return converted;
+  }
+}
