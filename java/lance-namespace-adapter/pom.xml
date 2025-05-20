@@ -44,6 +44,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.4.5</version>
                 <configuration>
                     <mainClass>com.lancedb.lance.namespace.adapter.LanceNamespaceAdapter</mainClass>
                     <layout>JAR</layout>
