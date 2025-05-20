@@ -55,8 +55,7 @@ public class NamespaceController implements NamespaceApi {
       GetNamespaceRequest getNamespaceRequest) {
     return ResponseEntity.ok(
         ClientToServerResponse.getNamespace(
-            delegate.getNamespace(
-                ServerToClientRequest.getNamespace(getNamespaceRequest))));
+            delegate.getNamespace(ServerToClientRequest.getNamespace(getNamespaceRequest))));
   }
 
   @Override
@@ -64,14 +63,12 @@ public class NamespaceController implements NamespaceApi {
       ListNamespacesRequest listNamespacesRequest) {
     return ResponseEntity.ok(
         ClientToServerResponse.listNamespaces(
-            delegate.listNamespaces(
-                ServerToClientRequest.listNamespaces(listNamespacesRequest))));
+            delegate.listNamespaces(ServerToClientRequest.listNamespaces(listNamespacesRequest))));
   }
 
   @Override
   public ResponseEntity<Object> namespaceExists(NamespaceExistsRequest namespaceExistsRequest) {
-    delegate.namespaceExists(
-        ServerToClientRequest.namespaceExists(namespaceExistsRequest));
+    delegate.namespaceExists(ServerToClientRequest.namespaceExists(namespaceExistsRequest));
     return ResponseEntity.ok().build();
   }
 }

@@ -37,8 +37,7 @@ public class TableController implements TableApi {
   public ResponseEntity<GetTableResponse> getTable(GetTableRequest getTableRequest) {
     return ResponseEntity.ok(
         ClientToServerResponse.getTable(
-            delegate.getTable(
-                ServerToClientRequest.getTable(getTableRequest))));
+            delegate.getTable(ServerToClientRequest.getTable(getTableRequest))));
   }
 
   @Override
@@ -46,14 +45,12 @@ public class TableController implements TableApi {
       RegisterTableRequest registerTableRequest) {
     return ResponseEntity.ok(
         ClientToServerResponse.registerTable(
-            delegate.registerTable(
-                ServerToClientRequest.registerTable(registerTableRequest))));
+            delegate.registerTable(ServerToClientRequest.registerTable(registerTableRequest))));
   }
 
   @Override
   public ResponseEntity<Object> tableExists(TableExistsRequest tableExistsRequest) {
-    boolean exists = delegate.tableExists(
-        ServerToClientRequest.tableExists(tableExistsRequest));
-    return ResponseEntity.ok(exists);
+    delegate.tableExists(ServerToClientRequest.tableExists(tableExistsRequest));
+    return ResponseEntity.ok().build();
   }
 }

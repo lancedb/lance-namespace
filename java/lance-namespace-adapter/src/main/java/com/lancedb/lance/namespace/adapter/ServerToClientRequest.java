@@ -75,7 +75,7 @@ public class ServerToClientRequest {
     RegisterTableRequest converted = new RegisterTableRequest();
     converted.setNamespace(request.getNamespace());
     converted.setName(request.getName());
-    converted.setOptions(request.getOptions());
+    converted.setLocation(request.getLocation());
     return converted;
   }
 
