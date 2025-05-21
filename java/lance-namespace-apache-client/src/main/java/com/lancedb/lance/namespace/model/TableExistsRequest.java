@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.client.apache.model;
+package com.lancedb.lance.namespace.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,24 +24,24 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** DropNamespaceRequest */
+/** TableExistsRequest */
 @JsonPropertyOrder({
-  DropNamespaceRequest.JSON_PROPERTY_NAME,
-  DropNamespaceRequest.JSON_PROPERTY_PARENT
+  TableExistsRequest.JSON_PROPERTY_NAME,
+  TableExistsRequest.JSON_PROPERTY_NAMESPACE
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class DropNamespaceRequest {
+public class TableExistsRequest {
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nonnull private String name;
 
-  public static final String JSON_PROPERTY_PARENT = "parent";
-  @javax.annotation.Nullable private List<String> parent = new ArrayList<>();
+  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
+  @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
 
-  public DropNamespaceRequest() {}
+  public TableExistsRequest() {}
 
-  public DropNamespaceRequest name(@javax.annotation.Nonnull String name) {
+  public TableExistsRequest name(@javax.annotation.Nonnull String name) {
 
     this.name = name;
     return this;
@@ -65,36 +65,36 @@ public class DropNamespaceRequest {
     this.name = name;
   }
 
-  public DropNamespaceRequest parent(@javax.annotation.Nullable List<String> parent) {
+  public TableExistsRequest namespace(@javax.annotation.Nonnull List<String> namespace) {
 
-    this.parent = parent;
+    this.namespace = namespace;
     return this;
   }
 
-  public DropNamespaceRequest addParentItem(String parentItem) {
-    if (this.parent == null) {
-      this.parent = new ArrayList<>();
+  public TableExistsRequest addNamespaceItem(String namespaceItem) {
+    if (this.namespace == null) {
+      this.namespace = new ArrayList<>();
     }
-    this.parent.add(parentItem);
+    this.namespace.add(namespaceItem);
     return this;
   }
 
   /**
-   * Get parent
+   * Get namespace
    *
-   * @return parent
+   * @return namespace
    */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_PARENT)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getParent() {
-    return parent;
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public List<String> getNamespace() {
+    return namespace;
   }
 
-  @JsonProperty(JSON_PROPERTY_PARENT)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setParent(@javax.annotation.Nullable List<String> parent) {
-    this.parent = parent;
+  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setNamespace(@javax.annotation.Nonnull List<String> namespace) {
+    this.namespace = namespace;
   }
 
   @Override
@@ -105,22 +105,22 @@ public class DropNamespaceRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    DropNamespaceRequest dropNamespaceRequest = (DropNamespaceRequest) o;
-    return Objects.equals(this.name, dropNamespaceRequest.name)
-        && Objects.equals(this.parent, dropNamespaceRequest.parent);
+    TableExistsRequest tableExistsRequest = (TableExistsRequest) o;
+    return Objects.equals(this.name, tableExistsRequest.name)
+        && Objects.equals(this.namespace, tableExistsRequest.namespace);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent);
+    return Objects.hash(name, namespace);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class DropNamespaceRequest {\n");
+    sb.append("class TableExistsRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
+    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -182,19 +182,19 @@ public class DropNamespaceRequest {
       }
     }
 
-    // add `parent` to the URL query string
-    if (getParent() != null) {
-      for (int i = 0; i < getParent().size(); i++) {
+    // add `namespace` to the URL query string
+    if (getNamespace() != null) {
+      for (int i = 0; i < getNamespace().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%sparent%s%s=%s",
+                  "%snamespace%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getParent().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

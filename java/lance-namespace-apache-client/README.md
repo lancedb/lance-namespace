@@ -79,7 +79,7 @@ Please follow the [installation](#installation) instruction and execute the foll
 
 import com.lancedb.lance.namespace.client.apache.*;
 import com.lancedb.lance.namespace.client.apache.auth.*;
-import com.lancedb.lance.namespace.client.apache.model.*;
+import com.lancedb.lance.namespace.model.*;
 import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
 
 public class NamespaceApiExample {

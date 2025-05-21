@@ -18,14 +18,14 @@ import com.lancedb.lance.namespace.client.apache.ApiException;
 import com.lancedb.lance.namespace.client.apache.BaseApi;
 import com.lancedb.lance.namespace.client.apache.Configuration;
 import com.lancedb.lance.namespace.client.apache.Pair;
-import com.lancedb.lance.namespace.client.apache.model.CreateNamespaceRequest;
-import com.lancedb.lance.namespace.client.apache.model.DropNamespaceRequest;
-import com.lancedb.lance.namespace.client.apache.model.GetNamespaceRequest;
-import com.lancedb.lance.namespace.client.apache.model.GetNamespaceResponse;
-import com.lancedb.lance.namespace.client.apache.model.ListNamespacesRequest;
-import com.lancedb.lance.namespace.client.apache.model.ListNamespacesResponse;
-import com.lancedb.lance.namespace.client.apache.model.NamespaceExistsRequest;
-import com.lancedb.lance.namespace.client.apache.model.NamespaceExistsResponse;
+import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
+import com.lancedb.lance.namespace.model.DropNamespaceRequest;
+import com.lancedb.lance.namespace.model.GetNamespaceRequest;
+import com.lancedb.lance.namespace.model.GetNamespaceResponse;
+import com.lancedb.lance.namespace.model.ListNamespacesRequest;
+import com.lancedb.lance.namespace.model.ListNamespacesResponse;
+import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
+import com.lancedb.lance.namespace.model.NamespaceExistsResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 

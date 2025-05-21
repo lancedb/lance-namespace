@@ -18,12 +18,12 @@ import com.lancedb.lance.namespace.client.apache.ApiException;
 import com.lancedb.lance.namespace.client.apache.BaseApi;
 import com.lancedb.lance.namespace.client.apache.Configuration;
 import com.lancedb.lance.namespace.client.apache.Pair;
-import com.lancedb.lance.namespace.client.apache.model.GetTableRequest;
-import com.lancedb.lance.namespace.client.apache.model.GetTableResponse;
-import com.lancedb.lance.namespace.client.apache.model.RegisterTableRequest;
-import com.lancedb.lance.namespace.client.apache.model.RegisterTableResponse;
-import com.lancedb.lance.namespace.client.apache.model.TableExistsRequest;
-import com.lancedb.lance.namespace.client.apache.model.TableExistsResponse;
+import com.lancedb.lance.namespace.model.GetTableRequest;
+import com.lancedb.lance.namespace.model.GetTableResponse;
+import com.lancedb.lance.namespace.model.RegisterTableRequest;
+import com.lancedb.lance.namespace.model.RegisterTableResponse;
+import com.lancedb.lance.namespace.model.TableExistsRequest;
+import com.lancedb.lance.namespace.model.TableExistsResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 

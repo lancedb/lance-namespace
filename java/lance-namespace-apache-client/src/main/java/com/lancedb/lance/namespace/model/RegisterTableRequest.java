@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.client.apache.model;
+package com.lancedb.lance.namespace.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,24 +24,28 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** TableExistsRequest */
+/** RegisterTableRequest */
 @JsonPropertyOrder({
-  TableExistsRequest.JSON_PROPERTY_NAME,
-  TableExistsRequest.JSON_PROPERTY_NAMESPACE
+  RegisterTableRequest.JSON_PROPERTY_NAME,
+  RegisterTableRequest.JSON_PROPERTY_NAMESPACE,
+  RegisterTableRequest.JSON_PROPERTY_LOCATION
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class TableExistsRequest {
+public class RegisterTableRequest {
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nonnull private String name;
 
   public static final String JSON_PROPERTY_NAMESPACE = "namespace";
   @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
 
-  public TableExistsRequest() {}
+  public static final String JSON_PROPERTY_LOCATION = "location";
+  @javax.annotation.Nonnull private String location;
 
-  public TableExistsRequest name(@javax.annotation.Nonnull String name) {
+  public RegisterTableRequest() {}
+
+  public RegisterTableRequest name(@javax.annotation.Nonnull String name) {
 
     this.name = name;
     return this;
@@ -65,13 +69,13 @@ public class TableExistsRequest {
     this.name = name;
   }
 
-  public TableExistsRequest namespace(@javax.annotation.Nonnull List<String> namespace) {
+  public RegisterTableRequest namespace(@javax.annotation.Nonnull List<String> namespace) {
 
     this.namespace = namespace;
     return this;
   }
 
-  public TableExistsRequest addNamespaceItem(String namespaceItem) {
+  public RegisterTableRequest addNamespaceItem(String namespaceItem) {
     if (this.namespace == null) {
       this.namespace = new ArrayList<>();
     }
@@ -97,6 +101,30 @@ public class TableExistsRequest {
     this.namespace = namespace;
   }
 
+  public RegisterTableRequest location(@javax.annotation.Nonnull String location) {
+
+    this.location = location;
+    return this;
+  }
+
+  /**
+   * Get location
+   *
+   * @return location
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_LOCATION)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public String getLocation() {
+    return location;
+  }
+
+  @JsonProperty(JSON_PROPERTY_LOCATION)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setLocation(@javax.annotation.Nonnull String location) {
+    this.location = location;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -105,22 +133,24 @@ public class TableExistsRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    TableExistsRequest tableExistsRequest = (TableExistsRequest) o;
-    return Objects.equals(this.name, tableExistsRequest.name)
-        && Objects.equals(this.namespace, tableExistsRequest.namespace);
+    RegisterTableRequest registerTableRequest = (RegisterTableRequest) o;
+    return Objects.equals(this.name, registerTableRequest.name)
+        && Objects.equals(this.namespace, registerTableRequest.namespace)
+        && Objects.equals(this.location, registerTableRequest.location);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace);
+    return Objects.hash(name, namespace, location);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class TableExistsRequest {\n");
+    sb.append("class RegisterTableRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -200,6 +230,22 @@ public class TableExistsRequest {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
+      }
+    }
+
+    // add `location` to the URL query string
+    if (getLocation() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%slocation%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getLocation()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
       }
     }
 

@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.client.apache.model;
+package com.lancedb.lance.namespace.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,28 +24,24 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** RegisterTableRequest */
+/** NamespaceExistsRequest */
 @JsonPropertyOrder({
-  RegisterTableRequest.JSON_PROPERTY_NAME,
-  RegisterTableRequest.JSON_PROPERTY_NAMESPACE,
-  RegisterTableRequest.JSON_PROPERTY_LOCATION
+  NamespaceExistsRequest.JSON_PROPERTY_NAME,
+  NamespaceExistsRequest.JSON_PROPERTY_PARENT
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class RegisterTableRequest {
+public class NamespaceExistsRequest {
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nonnull private String name;
 
-  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
+  public static final String JSON_PROPERTY_PARENT = "parent";
+  @javax.annotation.Nullable private List<String> parent = new ArrayList<>();
 
-  public static final String JSON_PROPERTY_LOCATION = "location";
-  @javax.annotation.Nonnull private String location;
+  public NamespaceExistsRequest() {}
 
-  public RegisterTableRequest() {}
-
-  public RegisterTableRequest name(@javax.annotation.Nonnull String name) {
+  public NamespaceExistsRequest name(@javax.annotation.Nonnull String name) {
 
     this.name = name;
     return this;
@@ -69,60 +65,36 @@ public class RegisterTableRequest {
     this.name = name;
   }
 
-  public RegisterTableRequest namespace(@javax.annotation.Nonnull List<String> namespace) {
+  public NamespaceExistsRequest parent(@javax.annotation.Nullable List<String> parent) {
 
-    this.namespace = namespace;
+    this.parent = parent;
     return this;
   }
 
-  public RegisterTableRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public NamespaceExistsRequest addParentItem(String parentItem) {
+    if (this.parent == null) {
+      this.parent = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.parent.add(parentItem);
     return this;
   }
 
   /**
-   * Get namespace
+   * Get parent
    *
-   * @return namespace
+   * @return parent
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public List<String> getNamespace() {
-    return namespace;
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_PARENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<String> getParent() {
+    return parent;
   }
 
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setNamespace(@javax.annotation.Nonnull List<String> namespace) {
-    this.namespace = namespace;
-  }
-
-  public RegisterTableRequest location(@javax.annotation.Nonnull String location) {
-
-    this.location = location;
-    return this;
-  }
-
-  /**
-   * Get location
-   *
-   * @return location
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getLocation() {
-    return location;
-  }
-
-  @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setLocation(@javax.annotation.Nonnull String location) {
-    this.location = location;
+  @JsonProperty(JSON_PROPERTY_PARENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setParent(@javax.annotation.Nullable List<String> parent) {
+    this.parent = parent;
   }
 
   @Override
@@ -133,24 +105,22 @@ public class RegisterTableRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    RegisterTableRequest registerTableRequest = (RegisterTableRequest) o;
-    return Objects.equals(this.name, registerTableRequest.name)
-        && Objects.equals(this.namespace, registerTableRequest.namespace)
-        && Objects.equals(this.location, registerTableRequest.location);
+    NamespaceExistsRequest namespaceExistsRequest = (NamespaceExistsRequest) o;
+    return Objects.equals(this.name, namespaceExistsRequest.name)
+        && Objects.equals(this.parent, namespaceExistsRequest.parent);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, location);
+    return Objects.hash(name, parent);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class RegisterTableRequest {\n");
+    sb.append("class NamespaceExistsRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
-    sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -212,40 +182,24 @@ public class RegisterTableRequest {
       }
     }
 
-    // add `namespace` to the URL query string
-    if (getNamespace() != null) {
-      for (int i = 0; i < getNamespace().size(); i++) {
+    // add `parent` to the URL query string
+    if (getParent() != null) {
+      for (int i = 0; i < getParent().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%snamespace%s%s=%s",
+                  "%sparent%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getParent().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
-      }
-    }
-
-    // add `location` to the URL query string
-    if (getLocation() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%slocation%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getLocation()), "UTF-8")
-                    .replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
       }
     }
 

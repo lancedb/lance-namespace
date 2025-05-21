@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.client.apache.model;
+package com.lancedb.lance.namespace.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,34 +20,28 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** GetNamespaceResponse */
+/** GetNamespaceRequest */
 @JsonPropertyOrder({
-  GetNamespaceResponse.JSON_PROPERTY_NAME,
-  GetNamespaceResponse.JSON_PROPERTY_PARENT,
-  GetNamespaceResponse.JSON_PROPERTY_PROPERTIES
+  GetNamespaceRequest.JSON_PROPERTY_NAME,
+  GetNamespaceRequest.JSON_PROPERTY_PARENT
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class GetNamespaceResponse {
+public class GetNamespaceRequest {
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nonnull private String name;
 
   public static final String JSON_PROPERTY_PARENT = "parent";
   @javax.annotation.Nullable private List<String> parent = new ArrayList<>();
 
-  public static final String JSON_PROPERTY_PROPERTIES = "properties";
-  @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
+  public GetNamespaceRequest() {}
 
-  public GetNamespaceResponse() {}
-
-  public GetNamespaceResponse name(@javax.annotation.Nonnull String name) {
+  public GetNamespaceRequest name(@javax.annotation.Nonnull String name) {
 
     this.name = name;
     return this;
@@ -71,13 +65,13 @@ public class GetNamespaceResponse {
     this.name = name;
   }
 
-  public GetNamespaceResponse parent(@javax.annotation.Nullable List<String> parent) {
+  public GetNamespaceRequest parent(@javax.annotation.Nullable List<String> parent) {
 
     this.parent = parent;
     return this;
   }
 
-  public GetNamespaceResponse addParentItem(String parentItem) {
+  public GetNamespaceRequest addParentItem(String parentItem) {
     if (this.parent == null) {
       this.parent = new ArrayList<>();
     }
@@ -103,41 +97,6 @@ public class GetNamespaceResponse {
     this.parent = parent;
   }
 
-  public GetNamespaceResponse properties(
-      @javax.annotation.Nullable Map<String, String> properties) {
-
-    this.properties = properties;
-    return this;
-  }
-
-  public GetNamespaceResponse putPropertiesItem(String key, String propertiesItem) {
-    if (this.properties == null) {
-      this.properties = new HashMap<>();
-    }
-    this.properties.put(key, propertiesItem);
-    return this;
-  }
-
-  /**
-   * Properties stored on the namespace, if supported by the server. If the server does not support
-   * namespace properties, it should return null for this field. If namespace properties are
-   * supported, but none are set, it should return an empty object.
-   *
-   * @return properties
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_PROPERTIES)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Map<String, String> getProperties() {
-    return properties;
-  }
-
-  @JsonProperty(JSON_PROPERTY_PROPERTIES)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setProperties(@javax.annotation.Nullable Map<String, String> properties) {
-    this.properties = properties;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -146,24 +105,22 @@ public class GetNamespaceResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    GetNamespaceResponse getNamespaceResponse = (GetNamespaceResponse) o;
-    return Objects.equals(this.name, getNamespaceResponse.name)
-        && Objects.equals(this.parent, getNamespaceResponse.parent)
-        && Objects.equals(this.properties, getNamespaceResponse.properties);
+    GetNamespaceRequest getNamespaceRequest = (GetNamespaceRequest) o;
+    return Objects.equals(this.name, getNamespaceRequest.name)
+        && Objects.equals(this.parent, getNamespaceRequest.parent);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent, properties);
+    return Objects.hash(name, parent);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class GetNamespaceResponse {\n");
+    sb.append("class GetNamespaceRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
-    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -238,28 +195,6 @@ public class GetNamespaceResponse {
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
                   URLEncoder.encode(String.valueOf(getParent().get(i)), "UTF-8")
-                      .replaceAll("\\+", "%20")));
-        } catch (UnsupportedEncodingException e) {
-          // Should never happen, UTF-8 is always supported
-          throw new RuntimeException(e);
-        }
-      }
-    }
-
-    // add `properties` to the URL query string
-    if (getProperties() != null) {
-      for (String _key : getProperties().keySet()) {
-        try {
-          joiner.add(
-              String.format(
-                  "%sproperties%s%s=%s",
-                  prefix,
-                  suffix,
-                  "".equals(suffix)
-                      ? ""
-                      : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
-                  getProperties().get(_key),
-                  URLEncoder.encode(String.valueOf(getProperties().get(_key)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

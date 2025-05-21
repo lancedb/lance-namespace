@@ -11,73 +11,75 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.client.apache.model;
+package com.lancedb.lance.namespace.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.StringJoiner;
 
-/** ListNamespacesResponse */
+/** ListNamespacesRequest */
 @JsonPropertyOrder({
-  ListNamespacesResponse.JSON_PROPERTY_NAMESPACES,
-  ListNamespacesResponse.JSON_PROPERTY_NEXT_PAGE_TOKEN
+  ListNamespacesRequest.JSON_PROPERTY_PARENT,
+  ListNamespacesRequest.JSON_PROPERTY_PAGE_TOKEN,
+  ListNamespacesRequest.JSON_PROPERTY_PAGE_SIZE
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class ListNamespacesResponse {
-  public static final String JSON_PROPERTY_NAMESPACES = "namespaces";
-  @javax.annotation.Nonnull private Set<String> namespaces = new LinkedHashSet<>();
+public class ListNamespacesRequest {
+  public static final String JSON_PROPERTY_PARENT = "parent";
+  @javax.annotation.Nullable private List<String> parent = new ArrayList<>();
 
-  public static final String JSON_PROPERTY_NEXT_PAGE_TOKEN = "nextPageToken";
-  @javax.annotation.Nullable private String nextPageToken;
+  public static final String JSON_PROPERTY_PAGE_TOKEN = "pageToken";
+  @javax.annotation.Nullable private String pageToken;
 
-  public ListNamespacesResponse() {}
+  public static final String JSON_PROPERTY_PAGE_SIZE = "pageSize";
+  @javax.annotation.Nullable private Integer pageSize;
 
-  public ListNamespacesResponse namespaces(@javax.annotation.Nonnull Set<String> namespaces) {
+  public ListNamespacesRequest() {}
 
-    this.namespaces = namespaces;
+  public ListNamespacesRequest parent(@javax.annotation.Nullable List<String> parent) {
+
+    this.parent = parent;
     return this;
   }
 
-  public ListNamespacesResponse addNamespacesItem(String namespacesItem) {
-    if (this.namespaces == null) {
-      this.namespaces = new LinkedHashSet<>();
+  public ListNamespacesRequest addParentItem(String parentItem) {
+    if (this.parent == null) {
+      this.parent = new ArrayList<>();
     }
-    this.namespaces.add(namespacesItem);
+    this.parent.add(parentItem);
     return this;
   }
 
   /**
-   * Get namespaces
+   * Get parent
    *
-   * @return namespaces
+   * @return parent
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAMESPACES)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public Set<String> getNamespaces() {
-    return namespaces;
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_PARENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<String> getParent() {
+    return parent;
   }
 
-  @JsonDeserialize(as = LinkedHashSet.class)
-  @JsonProperty(JSON_PROPERTY_NAMESPACES)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setNamespaces(@javax.annotation.Nonnull Set<String> namespaces) {
-    this.namespaces = namespaces;
+  @JsonProperty(JSON_PROPERTY_PARENT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setParent(@javax.annotation.Nullable List<String> parent) {
+    this.parent = parent;
   }
 
-  public ListNamespacesResponse nextPageToken(@javax.annotation.Nullable String nextPageToken) {
+  public ListNamespacesRequest pageToken(@javax.annotation.Nullable String pageToken) {
 
-    this.nextPageToken = nextPageToken;
+    this.pageToken = pageToken;
     return this;
   }
 
@@ -91,19 +93,43 @@ public class ListNamespacesResponse {
    * Clients must interpret either &#x60;null&#x60;, missing value or empty string value of
    * &#x60;nextPageToken&#x60; from a server response as the end of the listing results.
    *
-   * @return nextPageToken
+   * @return pageToken
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NEXT_PAGE_TOKEN)
+  @JsonProperty(JSON_PROPERTY_PAGE_TOKEN)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getNextPageToken() {
-    return nextPageToken;
+  public String getPageToken() {
+    return pageToken;
   }
 
-  @JsonProperty(JSON_PROPERTY_NEXT_PAGE_TOKEN)
+  @JsonProperty(JSON_PROPERTY_PAGE_TOKEN)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setNextPageToken(@javax.annotation.Nullable String nextPageToken) {
-    this.nextPageToken = nextPageToken;
+  public void setPageToken(@javax.annotation.Nullable String pageToken) {
+    this.pageToken = pageToken;
+  }
+
+  public ListNamespacesRequest pageSize(@javax.annotation.Nullable Integer pageSize) {
+
+    this.pageSize = pageSize;
+    return this;
+  }
+
+  /**
+   * An inclusive upper bound of the number of results that a client will receive.
+   *
+   * @return pageSize
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_PAGE_SIZE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getPageSize() {
+    return pageSize;
+  }
+
+  @JsonProperty(JSON_PROPERTY_PAGE_SIZE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setPageSize(@javax.annotation.Nullable Integer pageSize) {
+    this.pageSize = pageSize;
   }
 
   @Override
@@ -114,22 +140,24 @@ public class ListNamespacesResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ListNamespacesResponse listNamespacesResponse = (ListNamespacesResponse) o;
-    return Objects.equals(this.namespaces, listNamespacesResponse.namespaces)
-        && Objects.equals(this.nextPageToken, listNamespacesResponse.nextPageToken);
+    ListNamespacesRequest listNamespacesRequest = (ListNamespacesRequest) o;
+    return Objects.equals(this.parent, listNamespacesRequest.parent)
+        && Objects.equals(this.pageToken, listNamespacesRequest.pageToken)
+        && Objects.equals(this.pageSize, listNamespacesRequest.pageSize);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(namespaces, nextPageToken);
+    return Objects.hash(parent, pageToken, pageSize);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ListNamespacesResponse {\n");
-    sb.append("    namespaces: ").append(toIndentedString(namespaces)).append("\n");
-    sb.append("    nextPageToken: ").append(toIndentedString(nextPageToken)).append("\n");
+    sb.append("class ListNamespacesRequest {\n");
+    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
+    sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
+    sb.append("    pageSize: ").append(toIndentedString(pageSize)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -176,37 +204,52 @@ public class ListNamespacesResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `namespaces` to the URL query string
-    if (getNamespaces() != null) {
-      int i = 0;
-      for (String _item : getNamespaces()) {
+    // add `parent` to the URL query string
+    if (getParent() != null) {
+      for (int i = 0; i < getParent().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%snamespaces%s%s=%s",
+                  "%sparent%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(_item), "UTF-8").replaceAll("\\+", "%20")));
+                  URLEncoder.encode(String.valueOf(getParent().get(i)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
       }
-      i++;
     }
 
-    // add `nextPageToken` to the URL query string
-    if (getNextPageToken() != null) {
+    // add `pageToken` to the URL query string
+    if (getPageToken() != null) {
       try {
         joiner.add(
             String.format(
-                "%snextPageToken%s=%s",
+                "%spageToken%s=%s",
                 prefix,
                 suffix,
-                URLEncoder.encode(String.valueOf(getNextPageToken()), "UTF-8")
+                URLEncoder.encode(String.valueOf(getPageToken()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `pageSize` to the URL query string
+    if (getPageSize() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%spageSize%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getPageSize()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported

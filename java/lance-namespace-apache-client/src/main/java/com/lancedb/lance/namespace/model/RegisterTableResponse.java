@@ -11,13 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.client.apache.model;
+package com.lancedb.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -28,67 +26,32 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** CreateNamespaceRequest */
+/** RegisterTableResponse */
 @JsonPropertyOrder({
-  CreateNamespaceRequest.JSON_PROPERTY_NAME,
-  CreateNamespaceRequest.JSON_PROPERTY_PARENT,
-  CreateNamespaceRequest.JSON_PROPERTY_MODE,
-  CreateNamespaceRequest.JSON_PROPERTY_OPTIONS
+  RegisterTableResponse.JSON_PROPERTY_NAME,
+  RegisterTableResponse.JSON_PROPERTY_NAMESPACE,
+  RegisterTableResponse.JSON_PROPERTY_LOCATION,
+  RegisterTableResponse.JSON_PROPERTY_PROPERTIES
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class CreateNamespaceRequest {
+public class RegisterTableResponse {
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nonnull private String name;
 
-  public static final String JSON_PROPERTY_PARENT = "parent";
-  @javax.annotation.Nullable private List<String> parent = new ArrayList<>();
+  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
+  @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
 
-  /** Gets or Sets mode */
-  public enum ModeEnum {
-    CREATE(String.valueOf("CREATE")),
+  public static final String JSON_PROPERTY_LOCATION = "location";
+  @javax.annotation.Nonnull private String location;
 
-    EXIST_OK(String.valueOf("EXIST_OK")),
+  public static final String JSON_PROPERTY_PROPERTIES = "properties";
+  @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
-    OVERWRITE(String.valueOf("OVERWRITE"));
+  public RegisterTableResponse() {}
 
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  public static final String JSON_PROPERTY_MODE = "mode";
-  @javax.annotation.Nonnull private ModeEnum mode;
-
-  public static final String JSON_PROPERTY_OPTIONS = "options";
-  @javax.annotation.Nullable private Map<String, String> options = new HashMap<>();
-
-  public CreateNamespaceRequest() {}
-
-  public CreateNamespaceRequest name(@javax.annotation.Nonnull String name) {
+  public RegisterTableResponse name(@javax.annotation.Nonnull String name) {
 
     this.name = name;
     return this;
@@ -112,92 +75,93 @@ public class CreateNamespaceRequest {
     this.name = name;
   }
 
-  public CreateNamespaceRequest parent(@javax.annotation.Nullable List<String> parent) {
+  public RegisterTableResponse namespace(@javax.annotation.Nonnull List<String> namespace) {
 
-    this.parent = parent;
+    this.namespace = namespace;
     return this;
   }
 
-  public CreateNamespaceRequest addParentItem(String parentItem) {
-    if (this.parent == null) {
-      this.parent = new ArrayList<>();
+  public RegisterTableResponse addNamespaceItem(String namespaceItem) {
+    if (this.namespace == null) {
+      this.namespace = new ArrayList<>();
     }
-    this.parent.add(parentItem);
+    this.namespace.add(namespaceItem);
     return this;
   }
 
   /**
-   * Get parent
+   * Get namespace
    *
-   * @return parent
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_PARENT)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getParent() {
-    return parent;
-  }
-
-  @JsonProperty(JSON_PROPERTY_PARENT)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setParent(@javax.annotation.Nullable List<String> parent) {
-    this.parent = parent;
-  }
-
-  public CreateNamespaceRequest mode(@javax.annotation.Nonnull ModeEnum mode) {
-
-    this.mode = mode;
-    return this;
-  }
-
-  /**
-   * Get mode
-   *
-   * @return mode
+   * @return namespace
    */
   @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_MODE)
+  @JsonProperty(JSON_PROPERTY_NAMESPACE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public ModeEnum getMode() {
-    return mode;
+  public List<String> getNamespace() {
+    return namespace;
   }
 
-  @JsonProperty(JSON_PROPERTY_MODE)
+  @JsonProperty(JSON_PROPERTY_NAMESPACE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setMode(@javax.annotation.Nonnull ModeEnum mode) {
-    this.mode = mode;
+  public void setNamespace(@javax.annotation.Nonnull List<String> namespace) {
+    this.namespace = namespace;
   }
 
-  public CreateNamespaceRequest options(@javax.annotation.Nullable Map<String, String> options) {
+  public RegisterTableResponse location(@javax.annotation.Nonnull String location) {
 
-    this.options = options;
-    return this;
-  }
-
-  public CreateNamespaceRequest putOptionsItem(String key, String optionsItem) {
-    if (this.options == null) {
-      this.options = new HashMap<>();
-    }
-    this.options.put(key, optionsItem);
+    this.location = location;
     return this;
   }
 
   /**
-   * Get options
+   * Get location
    *
-   * @return options
+   * @return location
    */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_OPTIONS)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Map<String, String> getOptions() {
-    return options;
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_LOCATION)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public String getLocation() {
+    return location;
   }
 
-  @JsonProperty(JSON_PROPERTY_OPTIONS)
+  @JsonProperty(JSON_PROPERTY_LOCATION)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setLocation(@javax.annotation.Nonnull String location) {
+    this.location = location;
+  }
+
+  public RegisterTableResponse properties(
+      @javax.annotation.Nullable Map<String, String> properties) {
+
+    this.properties = properties;
+    return this;
+  }
+
+  public RegisterTableResponse putPropertiesItem(String key, String propertiesItem) {
+    if (this.properties == null) {
+      this.properties = new HashMap<>();
+    }
+    this.properties.put(key, propertiesItem);
+    return this;
+  }
+
+  /**
+   * Get properties
+   *
+   * @return properties
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_PROPERTIES)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setOptions(@javax.annotation.Nullable Map<String, String> options) {
-    this.options = options;
+  public Map<String, String> getProperties() {
+    return properties;
+  }
+
+  @JsonProperty(JSON_PROPERTY_PROPERTIES)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setProperties(@javax.annotation.Nullable Map<String, String> properties) {
+    this.properties = properties;
   }
 
   @Override
@@ -208,26 +172,26 @@ public class CreateNamespaceRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateNamespaceRequest createNamespaceRequest = (CreateNamespaceRequest) o;
-    return Objects.equals(this.name, createNamespaceRequest.name)
-        && Objects.equals(this.parent, createNamespaceRequest.parent)
-        && Objects.equals(this.mode, createNamespaceRequest.mode)
-        && Objects.equals(this.options, createNamespaceRequest.options);
+    RegisterTableResponse registerTableResponse = (RegisterTableResponse) o;
+    return Objects.equals(this.name, registerTableResponse.name)
+        && Objects.equals(this.namespace, registerTableResponse.namespace)
+        && Objects.equals(this.location, registerTableResponse.location)
+        && Objects.equals(this.properties, registerTableResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent, mode, options);
+    return Objects.hash(name, namespace, location, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateNamespaceRequest {\n");
+    sb.append("class RegisterTableResponse {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
-    sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
-    sb.append("    options: ").append(toIndentedString(options)).append("\n");
+    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -289,19 +253,19 @@ public class CreateNamespaceRequest {
       }
     }
 
-    // add `parent` to the URL query string
-    if (getParent() != null) {
-      for (int i = 0; i < getParent().size(); i++) {
+    // add `namespace` to the URL query string
+    if (getNamespace() != null) {
+      for (int i = 0; i < getNamespace().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%sparent%s%s=%s",
+                  "%snamespace%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getParent().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported
@@ -310,35 +274,36 @@ public class CreateNamespaceRequest {
       }
     }
 
-    // add `mode` to the URL query string
-    if (getMode() != null) {
+    // add `location` to the URL query string
+    if (getLocation() != null) {
       try {
         joiner.add(
             String.format(
-                "%smode%s=%s",
+                "%slocation%s=%s",
                 prefix,
                 suffix,
-                URLEncoder.encode(String.valueOf(getMode()), "UTF-8").replaceAll("\\+", "%20")));
+                URLEncoder.encode(String.valueOf(getLocation()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);
       }
     }
 
-    // add `options` to the URL query string
-    if (getOptions() != null) {
-      for (String _key : getOptions().keySet()) {
+    // add `properties` to the URL query string
+    if (getProperties() != null) {
+      for (String _key : getProperties().keySet()) {
         try {
           joiner.add(
               String.format(
-                  "%soptions%s%s=%s",
+                  "%sproperties%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
-                  getOptions().get(_key),
-                  URLEncoder.encode(String.valueOf(getOptions().get(_key)), "UTF-8")
+                  getProperties().get(_key),
+                  URLEncoder.encode(String.valueOf(getProperties().get(_key)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported
