@@ -236,7 +236,7 @@ pub async fn list_namespaces(configuration: &configuration::Configuration, list_
 }
 
 /// Check if a namespace exists. 
-pub async fn namespace_exists(configuration: &configuration::Configuration, namespace_exists_request: models::NamespaceExistsRequest) -> Result<serde_json::Value, Error<NamespaceExistsError>> {
+pub async fn namespace_exists(configuration: &configuration::Configuration, namespace_exists_request: models::NamespaceExistsRequest) -> Result<models::NamespaceExistsResponse, Error<NamespaceExistsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_namespace_exists_request = namespace_exists_request;
 
@@ -263,8 +263,8 @@ pub async fn namespace_exists(configuration: &configuration::Configuration, name
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `serde_json::Value`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `serde_json::Value`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::NamespaceExistsResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::NamespaceExistsResponse`")))),
         }
     } else {
         let content = resp.text().await?;

@@ -133,7 +133,7 @@ pub async fn register_table(configuration: &configuration::Configuration, regist
 }
 
 /// Check if a table exists. This API should behave exactly like the GetTable API, except it does not contain a body. 
-pub async fn table_exists(configuration: &configuration::Configuration, table_exists_request: models::TableExistsRequest) -> Result<serde_json::Value, Error<TableExistsError>> {
+pub async fn table_exists(configuration: &configuration::Configuration, table_exists_request: models::TableExistsRequest) -> Result<models::TableExistsResponse, Error<TableExistsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_table_exists_request = table_exists_request;
 
@@ -160,8 +160,8 @@ pub async fn table_exists(configuration: &configuration::Configuration, table_ex
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `serde_json::Value`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `serde_json::Value`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::TableExistsResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::TableExistsResponse`")))),
         }
     } else {
         let content = resp.text().await?;

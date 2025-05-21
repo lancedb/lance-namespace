@@ -16,12 +16,12 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from typing import Any, Dict
 from lance_namespace_urllib3_client.models.get_table_request import GetTableRequest
 from lance_namespace_urllib3_client.models.get_table_response import GetTableResponse
 from lance_namespace_urllib3_client.models.register_table_request import RegisterTableRequest
 from lance_namespace_urllib3_client.models.register_table_response import RegisterTableResponse
 from lance_namespace_urllib3_client.models.table_exists_request import TableExistsRequest
+from lance_namespace_urllib3_client.models.table_exists_response import TableExistsResponse
 
 from lance_namespace_urllib3_client.api_client import ApiClient, RequestSerialized
 from lance_namespace_urllib3_client.api_response import ApiResponse
@@ -642,7 +642,7 @@ class TableApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> object:
+    ) -> TableExistsResponse:
         """Check if a table exists
 
         Check if a table exists. This API should behave exactly like the GetTable API, except it does not contain a body. 
@@ -680,7 +680,7 @@ class TableApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '200': "TableExistsResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -715,7 +715,7 @@ class TableApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[object]:
+    ) -> ApiResponse[TableExistsResponse]:
         """Check if a table exists
 
         Check if a table exists. This API should behave exactly like the GetTable API, except it does not contain a body. 
@@ -753,7 +753,7 @@ class TableApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '200': "TableExistsResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -826,7 +826,7 @@ class TableApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '200': "TableExistsResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",

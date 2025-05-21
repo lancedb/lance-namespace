@@ -72,7 +72,7 @@ No authorization required
 
 ## table_exists
 
-> serde_json::Value table_exists(table_exists_request)
+> models::TableExistsResponse table_exists(table_exists_request)
 Check if a table exists
 
 Check if a table exists. This API should behave exactly like the GetTable API, except it does not contain a body. 
@@ -86,7 +86,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**serde_json::Value**](serde_json::Value.md)
+[**models::TableExistsResponse**](TableExistsResponse.md)
 
 ### Authorization
 

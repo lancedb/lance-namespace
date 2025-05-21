@@ -25,6 +25,7 @@ import com.lancedb.lance.namespace.client.apache.model.GetNamespaceResponse;
 import com.lancedb.lance.namespace.client.apache.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.client.apache.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.client.apache.model.NamespaceExistsRequest;
+import com.lancedb.lance.namespace.client.apache.model.NamespaceExistsResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -344,10 +345,11 @@ public class NamespaceApi extends BaseApi {
    * Check if a namespace exists Check if a namespace exists.
    *
    * @param namespaceExistsRequest (required)
-   * @return Object
+   * @return NamespaceExistsResponse
    * @throws ApiException if fails to make API call
    */
-  public Object namespaceExists(NamespaceExistsRequest namespaceExistsRequest) throws ApiException {
+  public NamespaceExistsResponse namespaceExists(NamespaceExistsRequest namespaceExistsRequest)
+      throws ApiException {
     return this.namespaceExists(namespaceExistsRequest, Collections.emptyMap());
   }
 
@@ -356,10 +358,10 @@ public class NamespaceApi extends BaseApi {
    *
    * @param namespaceExistsRequest (required)
    * @param additionalHeaders additionalHeaders for this call
-   * @return Object
+   * @return NamespaceExistsResponse
    * @throws ApiException if fails to make API call
    */
-  public Object namespaceExists(
+  public NamespaceExistsResponse namespaceExists(
       NamespaceExistsRequest namespaceExistsRequest, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = namespaceExistsRequest;
@@ -392,7 +394,8 @@ public class NamespaceApi extends BaseApi {
 
     String[] localVarAuthNames = new String[] {};
 
-    TypeReference<Object> localVarReturnType = new TypeReference<Object>() {};
+    TypeReference<NamespaceExistsResponse> localVarReturnType =
+        new TypeReference<NamespaceExistsResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

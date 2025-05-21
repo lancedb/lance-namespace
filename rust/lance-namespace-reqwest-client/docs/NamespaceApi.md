@@ -134,7 +134,7 @@ No authorization required
 
 ## namespace_exists
 
-> serde_json::Value namespace_exists(namespace_exists_request)
+> models::NamespaceExistsResponse namespace_exists(namespace_exists_request)
 Check if a namespace exists
 
 Check if a namespace exists. 
@@ -148,7 +148,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**serde_json::Value**](serde_json::Value.md)
+[**models::NamespaceExistsResponse**](NamespaceExistsResponse.md)
 
 ### Authorization
 

@@ -322,7 +322,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **namespace_exists**
-> object namespace_exists(namespace_exists_request)
+> NamespaceExistsResponse namespace_exists(namespace_exists_request)
 
 Check if a namespace exists
 
@@ -335,6 +335,7 @@ Check if a namespace exists.
 ```python
 import lance_namespace_urllib3_client
 from lance_namespace_urllib3_client.models.namespace_exists_request import NamespaceExistsRequest
+from lance_namespace_urllib3_client.models.namespace_exists_response import NamespaceExistsResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
 
@@ -371,7 +372,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**object**
+[**NamespaceExistsResponse**](NamespaceExistsResponse.md)
 
 ### Authorization
 

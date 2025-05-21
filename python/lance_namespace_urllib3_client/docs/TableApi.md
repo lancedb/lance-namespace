@@ -163,7 +163,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **table_exists**
-> object table_exists(table_exists_request)
+> TableExistsResponse table_exists(table_exists_request)
 
 Check if a table exists
 
@@ -177,6 +177,7 @@ This API should behave exactly like the GetTable API, except it does not contain
 ```python
 import lance_namespace_urllib3_client
 from lance_namespace_urllib3_client.models.table_exists_request import TableExistsRequest
+from lance_namespace_urllib3_client.models.table_exists_response import TableExistsResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
 
@@ -213,7 +214,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**object**
+[**TableExistsResponse**](TableExistsResponse.md)
 
 ### Authorization
 

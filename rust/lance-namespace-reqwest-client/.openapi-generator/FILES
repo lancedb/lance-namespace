@@ -13,10 +13,12 @@ docs/ListNamespacesRequest.md
 docs/ListNamespacesResponse.md
 docs/NamespaceApi.md
 docs/NamespaceExistsRequest.md
+docs/NamespaceExistsResponse.md
 docs/RegisterTableRequest.md
 docs/RegisterTableResponse.md
 docs/TableApi.md
 docs/TableExistsRequest.md
+docs/TableExistsResponse.md
 git_push.sh
 src/apis/configuration.rs
 src/apis/mod.rs
@@ -34,6 +36,8 @@ src/models/list_namespaces_request.rs
 src/models/list_namespaces_response.rs
 src/models/mod.rs
 src/models/namespace_exists_request.rs
+src/models/namespace_exists_response.rs
 src/models/register_table_request.rs
 src/models/register_table_response.rs
 src/models/table_exists_request.rs
+src/models/table_exists_response.rs

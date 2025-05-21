@@ -24,6 +24,7 @@ from lance_namespace_urllib3_client.models.get_namespace_response import GetName
 from lance_namespace_urllib3_client.models.list_namespaces_request import ListNamespacesRequest
 from lance_namespace_urllib3_client.models.list_namespaces_response import ListNamespacesResponse
 from lance_namespace_urllib3_client.models.namespace_exists_request import NamespaceExistsRequest
+from lance_namespace_urllib3_client.models.namespace_exists_response import NamespaceExistsResponse
 
 from lance_namespace_urllib3_client.api_client import ApiClient, RequestSerialized
 from lance_namespace_urllib3_client.api_response import ApiResponse
@@ -1229,7 +1230,7 @@ class NamespaceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> object:
+    ) -> NamespaceExistsResponse:
         """Check if a namespace exists
 
         Check if a namespace exists. 
@@ -1267,7 +1268,7 @@ class NamespaceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '200': "NamespaceExistsResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -1302,7 +1303,7 @@ class NamespaceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[object]:
+    ) -> ApiResponse[NamespaceExistsResponse]:
         """Check if a namespace exists
 
         Check if a namespace exists. 
@@ -1340,7 +1341,7 @@ class NamespaceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '200': "NamespaceExistsResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -1413,7 +1414,7 @@ class NamespaceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '200': "NamespaceExistsResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",

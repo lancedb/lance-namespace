@@ -133,9 +133,11 @@ Class | Method | HTTP request | Description
  - [ListNamespacesRequest](docs/ListNamespacesRequest.md)
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
  - [NamespaceExistsRequest](docs/NamespaceExistsRequest.md)
+ - [NamespaceExistsResponse](docs/NamespaceExistsResponse.md)
  - [RegisterTableRequest](docs/RegisterTableRequest.md)
  - [RegisterTableResponse](docs/RegisterTableResponse.md)
  - [TableExistsRequest](docs/TableExistsRequest.md)
+ - [TableExistsResponse](docs/TableExistsResponse.md)
 
 
 <a id="documentation-for-authorization"></a>

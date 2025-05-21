@@ -1,6 +1,5 @@
 # coding: utf-8
 
-# flake8: noqa
 """
     Lance REST Namespace Specification
 
@@ -13,19 +12,41 @@
 """  # noqa: E501
 
 
-# import models into model package
-from lance_namespace_urllib3_client.models.create_namespace_request import CreateNamespaceRequest
-from lance_namespace_urllib3_client.models.drop_namespace_request import DropNamespaceRequest
-from lance_namespace_urllib3_client.models.error_response import ErrorResponse
-from lance_namespace_urllib3_client.models.get_namespace_request import GetNamespaceRequest
-from lance_namespace_urllib3_client.models.get_namespace_response import GetNamespaceResponse
-from lance_namespace_urllib3_client.models.get_table_request import GetTableRequest
-from lance_namespace_urllib3_client.models.get_table_response import GetTableResponse
-from lance_namespace_urllib3_client.models.list_namespaces_request import ListNamespacesRequest
-from lance_namespace_urllib3_client.models.list_namespaces_response import ListNamespacesResponse
-from lance_namespace_urllib3_client.models.namespace_exists_request import NamespaceExistsRequest
-from lance_namespace_urllib3_client.models.namespace_exists_response import NamespaceExistsResponse
-from lance_namespace_urllib3_client.models.register_table_request import RegisterTableRequest
-from lance_namespace_urllib3_client.models.register_table_response import RegisterTableResponse
-from lance_namespace_urllib3_client.models.table_exists_request import TableExistsRequest
+import unittest
+
 from lance_namespace_urllib3_client.models.table_exists_response import TableExistsResponse
+
+class TestTableExistsResponse(unittest.TestCase):
+    """TableExistsResponse unit test stubs"""
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def make_instance(self, include_optional) -> TableExistsResponse:
+        """Test TableExistsResponse
+            include_optional is a boolean, when False only required
+            params are included, when True both required and
+            optional params are included """
+        # uncomment below to create an instance of `TableExistsResponse`
+        """
+        model = TableExistsResponse()
+        if include_optional:
+            return TableExistsResponse(
+                exists = True
+            )
+        else:
+            return TableExistsResponse(
+                exists = True,
+        )
+        """
+
+    def testTableExistsResponse(self):
+        """Test TableExistsResponse"""
+        # inst_req_only = self.make_instance(include_optional=False)
+        # inst_req_and_optional = self.make_instance(include_optional=True)
+
+if __name__ == '__main__':
+    unittest.main()

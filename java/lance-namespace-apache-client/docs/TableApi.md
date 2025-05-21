@@ -157,7 +157,7 @@ No authorization required
 
 ## tableExists
 
-> Object tableExists(tableExistsRequest)
+> TableExistsResponse tableExists(tableExistsRequest)
 
 Check if a table exists
 
@@ -181,7 +181,7 @@ public class Example {
         TableApi apiInstance = new TableApi(defaultClient);
         TableExistsRequest tableExistsRequest = new TableExistsRequest(); // TableExistsRequest | 
         try {
-            Object result = apiInstance.tableExists(tableExistsRequest);
+            TableExistsResponse result = apiInstance.tableExists(tableExistsRequest);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#tableExists");
@@ -203,7 +203,7 @@ public class Example {
 
 ### Return type
 
-**Object**
+[**TableExistsResponse**](TableExistsResponse.md)
 
 ### Authorization
 

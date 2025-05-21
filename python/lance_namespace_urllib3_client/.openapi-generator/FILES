@@ -14,10 +14,12 @@ docs/ListNamespacesRequest.md
 docs/ListNamespacesResponse.md
 docs/NamespaceApi.md
 docs/NamespaceExistsRequest.md
+docs/NamespaceExistsResponse.md
 docs/RegisterTableRequest.md
 docs/RegisterTableResponse.md
 docs/TableApi.md
 docs/TableExistsRequest.md
+docs/TableExistsResponse.md
 git_push.sh
 lance_namespace_urllib3_client/__init__.py
 lance_namespace_urllib3_client/api/__init__.py
@@ -38,9 +40,11 @@ lance_namespace_urllib3_client/models/get_table_response.py
 lance_namespace_urllib3_client/models/list_namespaces_request.py
 lance_namespace_urllib3_client/models/list_namespaces_response.py
 lance_namespace_urllib3_client/models/namespace_exists_request.py
+lance_namespace_urllib3_client/models/namespace_exists_response.py
 lance_namespace_urllib3_client/models/register_table_request.py
 lance_namespace_urllib3_client/models/register_table_response.py
 lance_namespace_urllib3_client/models/table_exists_request.py
+lance_namespace_urllib3_client/models/table_exists_response.py
 lance_namespace_urllib3_client/py.typed
 lance_namespace_urllib3_client/rest.py
 pyproject.toml

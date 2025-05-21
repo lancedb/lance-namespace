@@ -657,7 +657,13 @@ components:
       required:
       - name
     NamespaceExistsResponse:
-      type: object
+      example:
+        exists: true
+      properties:
+        exists:
+          type: boolean
+      required:
+      - exists
     PageToken:
       description: |-
         An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
@@ -774,5 +780,11 @@ components:
       - name
       - namespace
     TableExistsResponse:
-      type: object
+      example:
+        exists: true
+      properties:
+        exists:
+          type: boolean
+      required:
+      - exists
 

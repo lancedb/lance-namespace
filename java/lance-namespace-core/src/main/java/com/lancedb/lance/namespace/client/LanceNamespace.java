@@ -22,10 +22,13 @@ import com.lancedb.lance.namespace.client.apache.model.GetTableResponse;
 import com.lancedb.lance.namespace.client.apache.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.client.apache.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.client.apache.model.NamespaceExistsRequest;
+import com.lancedb.lance.namespace.client.apache.model.NamespaceExistsResponse;
 import com.lancedb.lance.namespace.client.apache.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.client.apache.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.client.apache.model.TableExistsRequest;
+import com.lancedb.lance.namespace.client.apache.model.TableExistsResponse;
 
+/** TODO: add documentation */
 public interface LanceNamespace {
 
   ListNamespacesResponse listNamespaces(ListNamespacesRequest request);
@@ -36,11 +39,11 @@ public interface LanceNamespace {
 
   void dropNamespace(DropNamespaceRequest request);
 
-  void namespaceExists(NamespaceExistsRequest request);
+  NamespaceExistsResponse namespaceExists(NamespaceExistsRequest request);
 
   GetTableResponse getTable(GetTableRequest request);
 
   RegisterTableResponse registerTable(RegisterTableRequest request);
 
-  void tableExists(TableExistsRequest request);
+  TableExistsResponse tableExists(TableExistsRequest request);
 }

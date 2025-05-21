@@ -16,7 +16,9 @@ package com.lancedb.lance.namespace.adapter;
 import com.lancedb.lance.namespace.server.springboot.model.GetNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.GetTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
+import com.lancedb.lance.namespace.server.springboot.model.NamespaceExistsResponse;
 import com.lancedb.lance.namespace.server.springboot.model.RegisterTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.TableExistsResponse;
 
 public class ClientToServerResponse {
 
@@ -36,6 +38,13 @@ public class ClientToServerResponse {
     return converted;
   }
 
+  public static NamespaceExistsResponse namespaceExists(
+      com.lancedb.lance.namespace.client.apache.model.NamespaceExistsResponse response) {
+    NamespaceExistsResponse converted = new NamespaceExistsResponse();
+    converted.setExists(response.getExists());
+    return converted;
+  }
+
   public static GetTableResponse getTable(
       com.lancedb.lance.namespace.client.apache.model.GetTableResponse response) {
     GetTableResponse converted = new GetTableResponse();
@@ -51,6 +60,13 @@ public class ClientToServerResponse {
     converted.setNamespace(response.getNamespace());
     converted.setName(response.getName());
     converted.setProperties(response.getProperties());
+    return converted;
+  }
+
+  public static TableExistsResponse tableExists(
+      com.lancedb.lance.namespace.client.apache.model.TableExistsResponse response) {
+    TableExistsResponse converted = new TableExistsResponse();
+    converted.setExists(response.getExists());
     return converted;
   }
 }

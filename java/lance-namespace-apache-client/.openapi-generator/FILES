@@ -12,10 +12,12 @@ docs/ListNamespacesRequest.md
 docs/ListNamespacesResponse.md
 docs/NamespaceApi.md
 docs/NamespaceExistsRequest.md
+docs/NamespaceExistsResponse.md
 docs/RegisterTableRequest.md
 docs/RegisterTableResponse.md
 docs/TableApi.md
 docs/TableExistsRequest.md
+docs/TableExistsResponse.md
 pom.xml
 src/main/AndroidManifest.xml
 src/main/java/com/lancedb/lance/namespace/client/apache/ApiClient.java
@@ -44,6 +46,8 @@ src/main/java/com/lancedb/lance/namespace/client/apache/model/GetTableResponse.j
 src/main/java/com/lancedb/lance/namespace/client/apache/model/ListNamespacesRequest.java
 src/main/java/com/lancedb/lance/namespace/client/apache/model/ListNamespacesResponse.java
 src/main/java/com/lancedb/lance/namespace/client/apache/model/NamespaceExistsRequest.java
+src/main/java/com/lancedb/lance/namespace/client/apache/model/NamespaceExistsResponse.java
 src/main/java/com/lancedb/lance/namespace/client/apache/model/RegisterTableRequest.java
 src/main/java/com/lancedb/lance/namespace/client/apache/model/RegisterTableResponse.java
 src/main/java/com/lancedb/lance/namespace/client/apache/model/TableExistsRequest.java
+src/main/java/com/lancedb/lance/namespace/client/apache/model/TableExistsResponse.java

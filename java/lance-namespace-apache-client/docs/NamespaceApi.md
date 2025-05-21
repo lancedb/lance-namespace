@@ -304,7 +304,7 @@ No authorization required
 
 ## namespaceExists
 
-> Object namespaceExists(namespaceExistsRequest)
+> NamespaceExistsResponse namespaceExists(namespaceExistsRequest)
 
 Check if a namespace exists
 
@@ -328,7 +328,7 @@ public class Example {
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
         NamespaceExistsRequest namespaceExistsRequest = new NamespaceExistsRequest(); // NamespaceExistsRequest | 
         try {
-            Object result = apiInstance.namespaceExists(namespaceExistsRequest);
+            NamespaceExistsResponse result = apiInstance.namespaceExists(namespaceExistsRequest);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#namespaceExists");
@@ -350,7 +350,7 @@ public class Example {
 
 ### Return type
 
-**Object**
+[**NamespaceExistsResponse**](NamespaceExistsResponse.md)
 
 ### Authorization
 

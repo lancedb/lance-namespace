@@ -453,6 +453,11 @@ components:
 
     NamespaceExistsResponse:
       type: object
+      required:
+        - exists
+      properties:
+        exists:
+          type: boolean
 
     PageToken:
       description:
@@ -559,6 +564,11 @@ components:
 
     TableExistsResponse:
       type: object
+      required:
+        - exists
+      properties:
+        exists:
+          type: boolean
 
   responses:
     ListNamespacesResponse:

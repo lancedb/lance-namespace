@@ -14,6 +14,8 @@ src/main/java/com/lancedb/lance/namespace/server/springboot/model/GetTableRespon
 src/main/java/com/lancedb/lance/namespace/server/springboot/model/ListNamespacesRequest.java
 src/main/java/com/lancedb/lance/namespace/server/springboot/model/ListNamespacesResponse.java
 src/main/java/com/lancedb/lance/namespace/server/springboot/model/NamespaceExistsRequest.java
+src/main/java/com/lancedb/lance/namespace/server/springboot/model/NamespaceExistsResponse.java
 src/main/java/com/lancedb/lance/namespace/server/springboot/model/RegisterTableRequest.java
 src/main/java/com/lancedb/lance/namespace/server/springboot/model/RegisterTableResponse.java
 src/main/java/com/lancedb/lance/namespace/server/springboot/model/TableExistsRequest.java
+src/main/java/com/lancedb/lance/namespace/server/springboot/model/TableExistsResponse.java

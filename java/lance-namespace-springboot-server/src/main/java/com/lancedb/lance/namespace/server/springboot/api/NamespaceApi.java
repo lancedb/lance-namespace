@@ -21,6 +21,7 @@ import com.lancedb.lance.namespace.server.springboot.model.GetNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.server.springboot.model.NamespaceExistsRequest;
+import com.lancedb.lance.namespace.server.springboot.model.NamespaceExistsResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -700,7 +701,7 @@ public interface NamespaceApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = Object.class))
+                  schema = @Schema(implementation = NamespaceExistsResponse.class))
             }),
         @ApiResponse(
             responseCode = "400",
@@ -760,7 +761,7 @@ public interface NamespaceApi {
       value = "/NamespaceExists",
       produces = {"application/json"},
       consumes = {"application/json"})
-  default ResponseEntity<Object> namespaceExists(
+  default ResponseEntity<NamespaceExistsResponse> namespaceExists(
       @Parameter(name = "NamespaceExistsRequest", description = "", required = true)
           @Valid
           @RequestBody
@@ -769,6 +770,11 @@ public interface NamespaceApi {
         .ifPresent(
             request -> {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString = "{ \"exists\" : true }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
                       "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";

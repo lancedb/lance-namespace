@@ -26,9 +26,11 @@ import com.lancedb.lance.namespace.client.apache.model.GetTableResponse;
 import com.lancedb.lance.namespace.client.apache.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.client.apache.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.client.apache.model.NamespaceExistsRequest;
+import com.lancedb.lance.namespace.client.apache.model.NamespaceExistsResponse;
 import com.lancedb.lance.namespace.client.apache.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.client.apache.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.client.apache.model.TableExistsRequest;
+import com.lancedb.lance.namespace.client.apache.model.TableExistsResponse;
 
 public class LanceRestNamespace implements LanceNamespace {
 
@@ -78,9 +80,9 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public void namespaceExists(NamespaceExistsRequest request) {
+  public NamespaceExistsResponse namespaceExists(NamespaceExistsRequest request) {
     try {
-      namespaceApi.namespaceExists(request);
+      return namespaceApi.namespaceExists(request);
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
@@ -105,9 +107,9 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public void tableExists(TableExistsRequest request) {
+  public TableExistsResponse tableExists(TableExistsRequest request) {
     try {
-      tableApi.tableExists(request);
+      return tableApi.tableExists(request);
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }

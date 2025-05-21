@@ -23,6 +23,7 @@ import com.lancedb.lance.namespace.client.apache.model.GetTableResponse;
 import com.lancedb.lance.namespace.client.apache.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.client.apache.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.client.apache.model.TableExistsRequest;
+import com.lancedb.lance.namespace.client.apache.model.TableExistsResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -192,10 +193,11 @@ public class TableApi extends BaseApi {
    * GetTable API, except it does not contain a body.
    *
    * @param tableExistsRequest (required)
-   * @return Object
+   * @return TableExistsResponse
    * @throws ApiException if fails to make API call
    */
-  public Object tableExists(TableExistsRequest tableExistsRequest) throws ApiException {
+  public TableExistsResponse tableExists(TableExistsRequest tableExistsRequest)
+      throws ApiException {
     return this.tableExists(tableExistsRequest, Collections.emptyMap());
   }
 
@@ -205,10 +207,10 @@ public class TableApi extends BaseApi {
    *
    * @param tableExistsRequest (required)
    * @param additionalHeaders additionalHeaders for this call
-   * @return Object
+   * @return TableExistsResponse
    * @throws ApiException if fails to make API call
    */
-  public Object tableExists(
+  public TableExistsResponse tableExists(
       TableExistsRequest tableExistsRequest, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = tableExistsRequest;
@@ -240,7 +242,8 @@ public class TableApi extends BaseApi {
 
     String[] localVarAuthNames = new String[] {};
 
-    TypeReference<Object> localVarReturnType = new TypeReference<Object>() {};
+    TypeReference<TableExistsResponse> localVarReturnType =
+        new TypeReference<TableExistsResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

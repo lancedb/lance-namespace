@@ -20,6 +20,7 @@ import com.lancedb.lance.namespace.server.springboot.model.GetTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.TableExistsRequest;
+import com.lancedb.lance.namespace.server.springboot.model.TableExistsResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -49,8 +50,9 @@ public class TableController implements TableApi {
   }
 
   @Override
-  public ResponseEntity<Object> tableExists(TableExistsRequest tableExistsRequest) {
-    delegate.tableExists(ServerToClientRequest.tableExists(tableExistsRequest));
-    return ResponseEntity.ok().build();
+  public ResponseEntity<TableExistsResponse> tableExists(TableExistsRequest tableExistsRequest) {
+    return ResponseEntity.ok(
+        ClientToServerResponse.tableExists(
+            delegate.tableExists(ServerToClientRequest.tableExists(tableExistsRequest))));
   }
 }
