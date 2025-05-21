@@ -41,7 +41,7 @@ public class ClientToServerResponse {
   }
 
   public static CreateNamespaceResponse createNamespace(
-      com.lancedb.lance.namespace.client.apache.model.CreateNamespaceResponse response) {
+      com.lancedb.lance.namespace.model.CreateNamespaceResponse response) {
     CreateNamespaceResponse converted = new CreateNamespaceResponse();
     converted.setParent(response.getParent());
     converted.setProperties(response.getProperties());
@@ -50,7 +50,7 @@ public class ClientToServerResponse {
   }
 
   public static DropNamespaceResponse dropNamespace(
-      com.lancedb.lance.namespace.client.apache.model.DropNamespaceResponse response) {
+      com.lancedb.lance.namespace.model.DropNamespaceResponse response) {
     DropNamespaceResponse converted = new DropNamespaceResponse();
     converted.setParent(response.getParent());
     converted.setProperties(response.getProperties());
