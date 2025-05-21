@@ -84,7 +84,7 @@ pub enum NamespaceExistsError {
 
 
 /// Create a new namespace. A namespace can manage either a collection of child namespaces, or a collection of tables. There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
-pub async fn create_namespace(configuration: &configuration::Configuration, create_namespace_request: models::CreateNamespaceRequest) -> Result<models::GetNamespaceResponse, Error<CreateNamespaceError>> {
+pub async fn create_namespace(configuration: &configuration::Configuration, create_namespace_request: models::CreateNamespaceRequest) -> Result<models::CreateNamespaceResponse, Error<CreateNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_create_namespace_request = create_namespace_request;
 
@@ -111,8 +111,8 @@ pub async fn create_namespace(configuration: &configuration::Configuration, crea
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetNamespaceResponse`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetNamespaceResponse`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::CreateNamespaceResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::CreateNamespaceResponse`")))),
         }
     } else {
         let content = resp.text().await?;
@@ -122,7 +122,7 @@ pub async fn create_namespace(configuration: &configuration::Configuration, crea
 }
 
 /// Drop a namespace. The namespace must be empty. 
-pub async fn drop_namespace(configuration: &configuration::Configuration, drop_namespace_request: models::DropNamespaceRequest) -> Result<serde_json::Value, Error<DropNamespaceError>> {
+pub async fn drop_namespace(configuration: &configuration::Configuration, drop_namespace_request: models::DropNamespaceRequest) -> Result<models::DropNamespaceResponse, Error<DropNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_drop_namespace_request = drop_namespace_request;
 
@@ -149,8 +149,8 @@ pub async fn drop_namespace(configuration: &configuration::Configuration, drop_n
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `serde_json::Value`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `serde_json::Value`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::DropNamespaceResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::DropNamespaceResponse`")))),
         }
     } else {
         let content = resp.text().await?;

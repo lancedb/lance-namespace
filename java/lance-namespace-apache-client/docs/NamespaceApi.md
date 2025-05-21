@@ -14,7 +14,7 @@ All URIs are relative to *http://localhost:2333*
 
 ## createNamespace
 
-> GetNamespaceResponse createNamespace(createNamespaceRequest)
+> CreateNamespaceResponse createNamespace(createNamespaceRequest)
 
 Create a new namespace
 
@@ -38,7 +38,7 @@ public class Example {
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
         CreateNamespaceRequest createNamespaceRequest = new CreateNamespaceRequest(); // CreateNamespaceRequest | 
         try {
-            GetNamespaceResponse result = apiInstance.createNamespace(createNamespaceRequest);
+            CreateNamespaceResponse result = apiInstance.createNamespace(createNamespaceRequest);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#createNamespace");
@@ -60,7 +60,7 @@ public class Example {
 
 ### Return type
 
-[**GetNamespaceResponse**](GetNamespaceResponse.md)
+[**CreateNamespaceResponse**](CreateNamespaceResponse.md)
 
 ### Authorization
 
@@ -75,7 +75,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns a namespace, as well as any properties stored on the namespace if namespace properties are supported by the server. |  -  |
+| **200** | Result of creating a namespace |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -87,7 +87,7 @@ No authorization required
 
 ## dropNamespace
 
-> Object dropNamespace(dropNamespaceRequest)
+> DropNamespaceResponse dropNamespace(dropNamespaceRequest)
 
 Drop a namespace
 
@@ -111,7 +111,7 @@ public class Example {
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
         DropNamespaceRequest dropNamespaceRequest = new DropNamespaceRequest(); // DropNamespaceRequest | 
         try {
-            Object result = apiInstance.dropNamespace(dropNamespaceRequest);
+            DropNamespaceResponse result = apiInstance.dropNamespace(dropNamespaceRequest);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#dropNamespace");
@@ -133,7 +133,7 @@ public class Example {
 
 ### Return type
 
-**Object**
+[**DropNamespaceResponse**](DropNamespaceResponse.md)
 
 ### Authorization
 

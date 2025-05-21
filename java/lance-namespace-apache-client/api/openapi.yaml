@@ -52,7 +52,7 @@ paths:
         required: true
       responses:
         "200":
-          $ref: '#/components/responses/GetNamespaceResponse'
+          $ref: '#/components/responses/CreateNamespaceResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
@@ -333,6 +333,12 @@ components:
             $ref: '#/components/schemas/GetNamespaceResponse'
       description: "Returns a namespace, as well as any properties stored on the namespace\
         \ if namespace properties are supported by the server."
+    CreateNamespaceResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateNamespaceResponse'
+      description: Result of creating a namespace
     DropNamespaceResponse:
       content:
         application/json:
@@ -531,6 +537,26 @@ components:
       required:
       - mode
       - name
+    CreateNamespaceResponse:
+      example:
+        parent:
+        - parent
+        - parent
+        name: name
+        properties:
+          key: properties
+      properties:
+        name:
+          type: string
+        parent:
+          items:
+            type: string
+          type: array
+        properties:
+          additionalProperties:
+            type: string
+      required:
+      - name
     ListNamespacesRequest:
       example:
         parent:
@@ -640,7 +666,23 @@ components:
       required:
       - name
     DropNamespaceResponse:
-      type: object
+      example:
+        parent:
+        - parent
+        - parent
+        name: name
+        properties:
+          key: properties
+      properties:
+        name:
+          type: string
+        parent:
+          items:
+            type: string
+          type: array
+        properties:
+          additionalProperties:
+            type: string
     NamespaceExistsRequest:
       example:
         parent:

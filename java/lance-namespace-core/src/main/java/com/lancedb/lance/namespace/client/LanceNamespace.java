@@ -35,9 +35,9 @@ public interface LanceNamespace {
 
   GetNamespaceResponse getNamespace(GetNamespaceRequest request);
 
-  GetNamespaceResponse createNamespace(CreateNamespaceRequest request);
+  CreateNamespaceResponse createNamespace(CreateNamespaceRequest request);
 
-  void dropNamespace(DropNamespaceRequest request);
+  DropNamespaceResponse dropNamespace(DropNamespaceRequest request);
 
   NamespaceExistsResponse namespaceExists(NamespaceExistsRequest request);
 

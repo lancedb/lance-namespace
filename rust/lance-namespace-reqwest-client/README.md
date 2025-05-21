@@ -42,7 +42,9 @@ Class | Method | HTTP request | Description
 ## Documentation For Models
 
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
+ - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
  - [DropNamespaceRequest](docs/DropNamespaceRequest.md)
+ - [DropNamespaceResponse](docs/DropNamespaceResponse.md)
  - [ErrorResponse](docs/ErrorResponse.md)
  - [GetNamespaceRequest](docs/GetNamespaceRequest.md)
  - [GetNamespaceResponse](docs/GetNamespaceResponse.md)

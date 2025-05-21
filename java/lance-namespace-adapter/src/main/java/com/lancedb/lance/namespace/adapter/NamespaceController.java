@@ -16,7 +16,9 @@ package com.lancedb.lance.namespace.adapter;
 import com.lancedb.lance.namespace.client.LanceNamespace;
 import com.lancedb.lance.namespace.server.springboot.api.NamespaceApi;
 import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceRequest;
+import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceRequest;
+import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.GetNamespaceRequest;
 import com.lancedb.lance.namespace.server.springboot.model.GetNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesRequest;
@@ -37,18 +39,20 @@ public class NamespaceController implements NamespaceApi {
   }
 
   @Override
-  public ResponseEntity<GetNamespaceResponse> createNamespace(
+  public ResponseEntity<CreateNamespaceResponse> createNamespace(
       CreateNamespaceRequest createNamespaceRequest) {
     return ResponseEntity.ok(
-        ClientToServerResponse.getNamespace(
+        ClientToServerResponse.createNamespace(
             delegate.createNamespace(
                 ServerToClientRequest.createNamespace(createNamespaceRequest))));
   }
 
   @Override
-  public ResponseEntity<Object> dropNamespace(DropNamespaceRequest dropNamespaceRequest) {
-    delegate.dropNamespace(ServerToClientRequest.dropNamespace(dropNamespaceRequest));
-    return ResponseEntity.ok().build();
+  public ResponseEntity<DropNamespaceResponse> dropNamespace(
+      DropNamespaceRequest dropNamespaceRequest) {
+    return ResponseEntity.ok(
+        ClientToServerResponse.dropNamespace(
+            delegate.dropNamespace(ServerToClientRequest.dropNamespace(dropNamespaceRequest))));
   }
 
   @Override

@@ -12,7 +12,7 @@ Method | HTTP request | Description
 
 
 # **create_namespace**
-> GetNamespaceResponse create_namespace(create_namespace_request)
+> CreateNamespaceResponse create_namespace(create_namespace_request)
 
 Create a new namespace
 
@@ -30,7 +30,7 @@ There are three modes when trying to create a namespace, to differentiate the be
 ```python
 import lance_namespace_urllib3_client
 from lance_namespace_urllib3_client.models.create_namespace_request import CreateNamespaceRequest
-from lance_namespace_urllib3_client.models.get_namespace_response import GetNamespaceResponse
+from lance_namespace_urllib3_client.models.create_namespace_response import CreateNamespaceResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
 
@@ -67,7 +67,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**GetNamespaceResponse**](GetNamespaceResponse.md)
+[**CreateNamespaceResponse**](CreateNamespaceResponse.md)
 
 ### Authorization
 
@@ -82,7 +82,7 @@ No authorization required
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Returns a namespace, as well as any properties stored on the namespace if namespace properties are supported by the server. |  -  |
+**200** | Result of creating a namespace |  -  |
 **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -94,7 +94,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **drop_namespace**
-> object drop_namespace(drop_namespace_request)
+> DropNamespaceResponse drop_namespace(drop_namespace_request)
 
 Drop a namespace
 
@@ -107,6 +107,7 @@ Drop a namespace. The namespace must be empty.
 ```python
 import lance_namespace_urllib3_client
 from lance_namespace_urllib3_client.models.drop_namespace_request import DropNamespaceRequest
+from lance_namespace_urllib3_client.models.drop_namespace_response import DropNamespaceResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
 
@@ -143,7 +144,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**object**
+[**DropNamespaceResponse**](DropNamespaceResponse.md)
 
 ### Authorization
 

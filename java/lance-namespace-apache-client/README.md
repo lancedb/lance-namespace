@@ -91,7 +91,7 @@ public class NamespaceApiExample {
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
         CreateNamespaceRequest createNamespaceRequest = new CreateNamespaceRequest(); // CreateNamespaceRequest | 
         try {
-            GetNamespaceResponse result = apiInstance.createNamespace(createNamespaceRequest);
+            CreateNamespaceResponse result = apiInstance.createNamespace(createNamespaceRequest);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#createNamespace");
@@ -124,7 +124,9 @@ Class | Method | HTTP request | Description
 ## Documentation for Models
 
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
+ - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
  - [DropNamespaceRequest](docs/DropNamespaceRequest.md)
+ - [DropNamespaceResponse](docs/DropNamespaceResponse.md)
  - [ErrorResponse](docs/ErrorResponse.md)
  - [GetNamespaceRequest](docs/GetNamespaceRequest.md)
  - [GetNamespaceResponse](docs/GetNamespaceResponse.md)

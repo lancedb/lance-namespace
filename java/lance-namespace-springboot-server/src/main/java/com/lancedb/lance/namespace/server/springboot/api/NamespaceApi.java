@@ -14,7 +14,9 @@
 package com.lancedb.lance.namespace.server.springboot.api;
 
 import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceRequest;
+import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceRequest;
+import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ErrorResponse;
 import com.lancedb.lance.namespace.server.springboot.model.GetNamespaceRequest;
 import com.lancedb.lance.namespace.server.springboot.model.GetNamespaceResponse;
@@ -62,20 +64,19 @@ public interface NamespaceApi {
    * namespace with this name is created.
    *
    * @param createNamespaceRequest (required)
-   * @return Returns a namespace, as well as any properties stored on the namespace if namespace
-   *     properties are supported by the server. (status code 200) or Indicates a bad request error.
-   *     It could be caused by an unexpected request body format or other forms of request
-   *     validation failure, such as invalid json. Usually serves application/json content, although
-   *     in some cases simple text/plain content might be returned by the server&#39;s middleware.
-   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
-   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
-   *     necessary permissions. (status code 403) or Not Acceptable / Unsupported Operation. The
-   *     server does not support this operation. (status code 406) or The request conflicts with the
-   *     current state of the target resource. (status code 409) or The service is not ready to
-   *     handle the request. The client should wait and retry. The service may additionally send a
-   *     Retry-After header to indicate when to retry. (status code 503) or A server-side problem
-   *     that might not be addressable from the client side. Used for server 5xx errors without more
-   *     specific documentation in individual routes. (status code 5XX)
+   * @return Result of creating a namespace (status code 200) or Indicates a bad request error. It
+   *     could be caused by an unexpected request body format or other forms of request validation
+   *     failure, such as invalid json. Usually serves application/json content, although in some
+   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
+   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
+   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
+   *     permissions. (status code 403) or Not Acceptable / Unsupported Operation. The server does
+   *     not support this operation. (status code 406) or The request conflicts with the current
+   *     state of the target resource. (status code 409) or The service is not ready to handle the
+   *     request. The client should wait and retry. The service may additionally send a Retry-After
+   *     header to indicate when to retry. (status code 503) or A server-side problem that might not
+   *     be addressable from the client side. Used for server 5xx errors without more specific
+   *     documentation in individual routes. (status code 5XX)
    */
   @Operation(
       operationId = "createNamespace",
@@ -86,12 +87,11 @@ public interface NamespaceApi {
       responses = {
         @ApiResponse(
             responseCode = "200",
-            description =
-                "Returns a namespace, as well as any properties stored on the namespace if namespace properties are supported by the server.",
+            description = "Result of creating a namespace",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = GetNamespaceResponse.class))
+                  schema = @Schema(implementation = CreateNamespaceResponse.class))
             }),
         @ApiResponse(
             responseCode = "400",
@@ -160,7 +160,7 @@ public interface NamespaceApi {
       value = "/CreateNamespace",
       produces = {"application/json"},
       consumes = {"application/json"})
-  default ResponseEntity<GetNamespaceResponse> createNamespace(
+  default ResponseEntity<CreateNamespaceResponse> createNamespace(
       @Parameter(name = "CreateNamespaceRequest", description = "", required = true)
           @Valid
           @RequestBody
@@ -171,7 +171,7 @@ public interface NamespaceApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"parent\" : [ \"parent\", \"parent\" ], \"name\" : \"name\", \"properties\" : { \"owner\" : \"Ralph\", \"created_at\" : \"1452120468\" } }";
+                      "{ \"parent\" : [ \"parent\", \"parent\" ], \"name\" : \"name\", \"properties\" : { \"key\" : \"properties\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -252,7 +252,7 @@ public interface NamespaceApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = Object.class))
+                  schema = @Schema(implementation = DropNamespaceResponse.class))
             }),
         @ApiResponse(
             responseCode = "400",
@@ -320,7 +320,7 @@ public interface NamespaceApi {
       value = "/DropNamespace",
       produces = {"application/json"},
       consumes = {"application/json"})
-  default ResponseEntity<Object> dropNamespace(
+  default ResponseEntity<DropNamespaceResponse> dropNamespace(
       @Parameter(name = "DropNamespaceRequest", description = "", required = true)
           @Valid
           @RequestBody
@@ -329,6 +329,12 @@ public interface NamespaceApi {
         .ifPresent(
             request -> {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"parent\" : [ \"parent\", \"parent\" ], \"name\" : \"name\", \"properties\" : { \"key\" : \"properties\" } }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
                       "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";

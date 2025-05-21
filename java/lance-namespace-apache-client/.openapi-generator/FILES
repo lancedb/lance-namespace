@@ -2,7 +2,9 @@
 README.md
 api/openapi.yaml
 docs/CreateNamespaceRequest.md
+docs/CreateNamespaceResponse.md
 docs/DropNamespaceRequest.md
+docs/DropNamespaceResponse.md
 docs/ErrorResponse.md
 docs/GetNamespaceRequest.md
 docs/GetNamespaceResponse.md
@@ -37,7 +39,9 @@ src/main/java/com/lancedb/lance/namespace/client/apache/auth/Authentication.java
 src/main/java/com/lancedb/lance/namespace/client/apache/auth/HttpBasicAuth.java
 src/main/java/com/lancedb/lance/namespace/client/apache/auth/HttpBearerAuth.java
 src/main/java/com/lancedb/lance/namespace/model/CreateNamespaceRequest.java
+src/main/java/com/lancedb/lance/namespace/model/CreateNamespaceResponse.java
 src/main/java/com/lancedb/lance/namespace/model/DropNamespaceRequest.java
+src/main/java/com/lancedb/lance/namespace/model/DropNamespaceResponse.java
 src/main/java/com/lancedb/lance/namespace/model/ErrorResponse.java
 src/main/java/com/lancedb/lance/namespace/model/GetNamespaceRequest.java
 src/main/java/com/lancedb/lance/namespace/model/GetNamespaceResponse.java

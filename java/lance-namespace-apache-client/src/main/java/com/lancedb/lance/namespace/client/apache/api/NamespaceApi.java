@@ -19,7 +19,9 @@ import com.lancedb.lance.namespace.client.apache.BaseApi;
 import com.lancedb.lance.namespace.client.apache.Configuration;
 import com.lancedb.lance.namespace.client.apache.Pair;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
+import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
+import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.GetNamespaceRequest;
 import com.lancedb.lance.namespace.model.GetNamespaceResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
@@ -58,10 +60,10 @@ public class NamespaceApi extends BaseApi {
    * with this name is created.
    *
    * @param createNamespaceRequest (required)
-   * @return GetNamespaceResponse
+   * @return CreateNamespaceResponse
    * @throws ApiException if fails to make API call
    */
-  public GetNamespaceResponse createNamespace(CreateNamespaceRequest createNamespaceRequest)
+  public CreateNamespaceResponse createNamespace(CreateNamespaceRequest createNamespaceRequest)
       throws ApiException {
     return this.createNamespace(createNamespaceRequest, Collections.emptyMap());
   }
@@ -76,10 +78,10 @@ public class NamespaceApi extends BaseApi {
    *
    * @param createNamespaceRequest (required)
    * @param additionalHeaders additionalHeaders for this call
-   * @return GetNamespaceResponse
+   * @return CreateNamespaceResponse
    * @throws ApiException if fails to make API call
    */
-  public GetNamespaceResponse createNamespace(
+  public CreateNamespaceResponse createNamespace(
       CreateNamespaceRequest createNamespaceRequest, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = createNamespaceRequest;
@@ -112,8 +114,8 @@ public class NamespaceApi extends BaseApi {
 
     String[] localVarAuthNames = new String[] {};
 
-    TypeReference<GetNamespaceResponse> localVarReturnType =
-        new TypeReference<GetNamespaceResponse>() {};
+    TypeReference<CreateNamespaceResponse> localVarReturnType =
+        new TypeReference<CreateNamespaceResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",
@@ -134,10 +136,11 @@ public class NamespaceApi extends BaseApi {
    * Drop a namespace Drop a namespace. The namespace must be empty.
    *
    * @param dropNamespaceRequest (required)
-   * @return Object
+   * @return DropNamespaceResponse
    * @throws ApiException if fails to make API call
    */
-  public Object dropNamespace(DropNamespaceRequest dropNamespaceRequest) throws ApiException {
+  public DropNamespaceResponse dropNamespace(DropNamespaceRequest dropNamespaceRequest)
+      throws ApiException {
     return this.dropNamespace(dropNamespaceRequest, Collections.emptyMap());
   }
 
@@ -146,10 +149,10 @@ public class NamespaceApi extends BaseApi {
    *
    * @param dropNamespaceRequest (required)
    * @param additionalHeaders additionalHeaders for this call
-   * @return Object
+   * @return DropNamespaceResponse
    * @throws ApiException if fails to make API call
    */
-  public Object dropNamespace(
+  public DropNamespaceResponse dropNamespace(
       DropNamespaceRequest dropNamespaceRequest, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = dropNamespaceRequest;
@@ -181,7 +184,8 @@ public class NamespaceApi extends BaseApi {
 
     String[] localVarAuthNames = new String[] {};
 
-    TypeReference<Object> localVarReturnType = new TypeReference<Object>() {};
+    TypeReference<DropNamespaceResponse> localVarReturnType =
+        new TypeReference<DropNamespaceResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

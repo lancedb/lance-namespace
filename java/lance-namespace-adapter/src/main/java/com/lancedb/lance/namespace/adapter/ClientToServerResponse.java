@@ -13,6 +13,8 @@
  */
 package com.lancedb.lance.namespace.adapter;
 
+import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.GetNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.GetTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
@@ -35,6 +37,24 @@ public class ClientToServerResponse {
       com.lancedb.lance.namespace.model.ListNamespacesResponse response) {
     ListNamespacesResponse converted = new ListNamespacesResponse();
     converted.setNamespaces(response.getNamespaces());
+    return converted;
+  }
+
+  public static CreateNamespaceResponse createNamespace(
+      com.lancedb.lance.namespace.client.apache.model.CreateNamespaceResponse response) {
+    CreateNamespaceResponse converted = new CreateNamespaceResponse();
+    converted.setParent(response.getParent());
+    converted.setProperties(response.getProperties());
+    converted.setName(response.getName());
+    return converted;
+  }
+
+  public static DropNamespaceResponse dropNamespace(
+      com.lancedb.lance.namespace.client.apache.model.DropNamespaceResponse response) {
+    DropNamespaceResponse converted = new DropNamespaceResponse();
+    converted.setParent(response.getParent());
+    converted.setProperties(response.getProperties());
+    converted.setName(response.getName());
     return converted;
   }
 

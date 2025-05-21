@@ -1,7 +1,11 @@
 pub mod create_namespace_request;
 pub use self::create_namespace_request::CreateNamespaceRequest;
+pub mod create_namespace_response;
+pub use self::create_namespace_response::CreateNamespaceResponse;
 pub mod drop_namespace_request;
 pub use self::drop_namespace_request::DropNamespaceRequest;
+pub mod drop_namespace_response;
+pub use self::drop_namespace_response::DropNamespaceResponse;
 pub mod error_response;
 pub use self::error_response::ErrorResponse;
 pub mod get_namespace_request;

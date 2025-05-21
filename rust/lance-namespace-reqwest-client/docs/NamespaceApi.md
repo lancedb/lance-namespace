@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 ## create_namespace
 
-> models::GetNamespaceResponse create_namespace(create_namespace_request)
+> models::CreateNamespaceResponse create_namespace(create_namespace_request)
 Create a new namespace
 
 Create a new namespace. A namespace can manage either a collection of child namespaces, or a collection of tables. There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
@@ -28,7 +28,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::GetNamespaceResponse**](GetNamespaceResponse.md)
+[**models::CreateNamespaceResponse**](CreateNamespaceResponse.md)
 
 ### Authorization
 
@@ -44,7 +44,7 @@ No authorization required
 
 ## drop_namespace
 
-> serde_json::Value drop_namespace(drop_namespace_request)
+> models::DropNamespaceResponse drop_namespace(drop_namespace_request)
 Drop a namespace
 
 Drop a namespace. The namespace must be empty. 
@@ -58,7 +58,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**serde_json::Value**](serde_json::Value.md)
+[**models::DropNamespaceResponse**](DropNamespaceResponse.md)
 
 ### Authorization
 

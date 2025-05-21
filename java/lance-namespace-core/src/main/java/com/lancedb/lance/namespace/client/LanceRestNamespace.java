@@ -43,7 +43,7 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public GetNamespaceResponse createNamespace(CreateNamespaceRequest request) {
+  public CreateNamespaceResponse createNamespace(CreateNamespaceRequest request) {
     try {
       return namespaceApi.createNamespace(request);
     } catch (ApiException e) {
@@ -71,9 +71,9 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public void dropNamespace(DropNamespaceRequest request) {
+  public DropNamespaceResponse dropNamespace(DropNamespaceRequest request) {
     try {
-      namespaceApi.dropNamespace(request);
+      return namespaceApi.dropNamespace(request);
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }

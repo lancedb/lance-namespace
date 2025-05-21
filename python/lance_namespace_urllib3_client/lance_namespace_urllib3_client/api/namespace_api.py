@@ -16,9 +16,10 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from typing import Any, Dict
 from lance_namespace_urllib3_client.models.create_namespace_request import CreateNamespaceRequest
+from lance_namespace_urllib3_client.models.create_namespace_response import CreateNamespaceResponse
 from lance_namespace_urllib3_client.models.drop_namespace_request import DropNamespaceRequest
+from lance_namespace_urllib3_client.models.drop_namespace_response import DropNamespaceResponse
 from lance_namespace_urllib3_client.models.get_namespace_request import GetNamespaceRequest
 from lance_namespace_urllib3_client.models.get_namespace_response import GetNamespaceResponse
 from lance_namespace_urllib3_client.models.list_namespaces_request import ListNamespacesRequest
@@ -60,7 +61,7 @@ class NamespaceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetNamespaceResponse:
+    ) -> CreateNamespaceResponse:
         """Create a new namespace
 
         Create a new namespace. A namespace can manage either a collection of child namespaces, or a collection of tables. There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
@@ -98,7 +99,7 @@ class NamespaceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetNamespaceResponse",
+            '200': "CreateNamespaceResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -134,7 +135,7 @@ class NamespaceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetNamespaceResponse]:
+    ) -> ApiResponse[CreateNamespaceResponse]:
         """Create a new namespace
 
         Create a new namespace. A namespace can manage either a collection of child namespaces, or a collection of tables. There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
@@ -172,7 +173,7 @@ class NamespaceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetNamespaceResponse",
+            '200': "CreateNamespaceResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -246,7 +247,7 @@ class NamespaceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetNamespaceResponse",
+            '200': "CreateNamespaceResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -354,7 +355,7 @@ class NamespaceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> object:
+    ) -> DropNamespaceResponse:
         """Drop a namespace
 
         Drop a namespace. The namespace must be empty. 
@@ -392,7 +393,7 @@ class NamespaceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '200': "DropNamespaceResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -428,7 +429,7 @@ class NamespaceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[object]:
+    ) -> ApiResponse[DropNamespaceResponse]:
         """Drop a namespace
 
         Drop a namespace. The namespace must be empty. 
@@ -466,7 +467,7 @@ class NamespaceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '200': "DropNamespaceResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -540,7 +541,7 @@ class NamespaceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '200': "DropNamespaceResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",

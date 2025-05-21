@@ -84,7 +84,7 @@ paths:
               $ref: '#/components/schemas/CreateNamespaceRequest'
       responses:
         200:
-          $ref: '#/components/responses/GetNamespaceResponse'
+          $ref: '#/components/responses/CreateNamespaceResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -363,6 +363,22 @@ components:
           additionalProperties:
             type: string
 
+    CreateNamespaceResponse:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        parent:
+          type: array
+          items:
+            type: string
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+
     ListNamespacesRequest:
       type: object
       properties:
@@ -438,6 +454,17 @@ components:
 
     DropNamespaceResponse:
       type: object
+      properties:
+        name:
+          type: string
+        parent:
+          type: array
+          items:
+            type: string
+        properties:
+          type: object
+          additionalProperties:
+            type: string
 
     NamespaceExistsRequest:
       type: object
@@ -591,6 +618,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/GetNamespaceResponse'
+
+    CreateNamespaceResponse:
+      description:
+        Result of creating a namespace
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateNamespaceResponse'
 
     DropNamespaceResponse:
       description:
