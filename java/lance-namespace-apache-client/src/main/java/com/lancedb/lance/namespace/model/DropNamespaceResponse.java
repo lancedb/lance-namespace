@@ -30,7 +30,8 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({
   DropNamespaceResponse.JSON_PROPERTY_NAME,
   DropNamespaceResponse.JSON_PROPERTY_PARENT,
-  DropNamespaceResponse.JSON_PROPERTY_PROPERTIES
+  DropNamespaceResponse.JSON_PROPERTY_PROPERTIES,
+  DropNamespaceResponse.JSON_PROPERTY_TRANSACTION_ID
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -44,6 +45,9 @@ public class DropNamespaceResponse {
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
+
+  public static final String JSON_PROPERTY_TRANSACTION_ID = "transactionId";
+  @javax.annotation.Nullable private String transactionId;
 
   public DropNamespaceResponse() {}
 
@@ -136,6 +140,30 @@ public class DropNamespaceResponse {
     this.properties = properties;
   }
 
+  public DropNamespaceResponse transactionId(@javax.annotation.Nullable String transactionId) {
+
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * If present, indicating the operation is long running and should be tracked using GetTransaction
+   *
+   * @return transactionId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTransactionId(@javax.annotation.Nullable String transactionId) {
+    this.transactionId = transactionId;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -147,12 +175,13 @@ public class DropNamespaceResponse {
     DropNamespaceResponse dropNamespaceResponse = (DropNamespaceResponse) o;
     return Objects.equals(this.name, dropNamespaceResponse.name)
         && Objects.equals(this.parent, dropNamespaceResponse.parent)
-        && Objects.equals(this.properties, dropNamespaceResponse.properties);
+        && Objects.equals(this.properties, dropNamespaceResponse.properties)
+        && Objects.equals(this.transactionId, dropNamespaceResponse.transactionId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent, properties);
+    return Objects.hash(name, parent, properties, transactionId);
   }
 
   @Override
@@ -162,6 +191,7 @@ public class DropNamespaceResponse {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -263,6 +293,22 @@ public class DropNamespaceResponse {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
+      }
+    }
+
+    // add `transactionId` to the URL query string
+    if (getTransactionId() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%stransactionId%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getTransactionId()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
       }
     }
 

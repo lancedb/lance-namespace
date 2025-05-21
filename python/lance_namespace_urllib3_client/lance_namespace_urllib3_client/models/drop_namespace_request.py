@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,7 +28,29 @@ class DropNamespaceRequest(BaseModel):
     """ # noqa: E501
     name: StrictStr
     parent: Optional[List[StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["name", "parent"]
+    mode: Optional[StrictStr] = Field(default=None, description="The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. - FAIL (default): the server must return 400 indicating the namespace to drop does not exist. - SKIP: the server must return 204 indicating the drop operation has succeeded. ")
+    behavior: Optional[StrictStr] = Field(default=None, description="The behavior for dropping a namespace. - RESTRICT (default): the namespace should not contain any table or child namespace when drop is initiated.     If tables are found, the server should return error and not drop the namespace. - CASCADE: all tables and child namespaces in the namespace are dropped before the namespace is dropped. ")
+    __properties: ClassVar[List[str]] = ["name", "parent", "mode", "behavior"]
+
+    @field_validator('mode')
+    def mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['SKIP', 'FAIL']):
+            raise ValueError("must be one of enum values ('SKIP', 'FAIL')")
+        return value
+
+    @field_validator('behavior')
+    def behavior_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['RESTRICT', 'CASCADE']):
+            raise ValueError("must be one of enum values ('RESTRICT', 'CASCADE')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -82,7 +104,9 @@ class DropNamespaceRequest(BaseModel):
 
         _obj = cls.model_validate({
             "name": obj.get("name"),
-            "parent": obj.get("parent")
+            "parent": obj.get("parent"),
+            "mode": obj.get("mode"),
+            "behavior": obj.get("behavior")
         })
         return _obj
 

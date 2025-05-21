@@ -331,7 +331,7 @@ public interface NamespaceApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"parent\" : [ \"parent\", \"parent\" ], \"name\" : \"name\", \"properties\" : { \"key\" : \"properties\" } }";
+                      "{ \"parent\" : [ \"parent\", \"parent\" ], \"name\" : \"name\", \"properties\" : { \"key\" : \"properties\" }, \"transactionId\" : \"transactionId\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }

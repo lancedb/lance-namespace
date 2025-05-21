@@ -17,6 +17,12 @@ pub struct DropNamespaceRequest {
     pub name: String,
     #[serde(rename = "parent", skip_serializing_if = "Option::is_none")]
     pub parent: Option<Vec<String>>,
+    /// The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. - FAIL (default): the server must return 400 indicating the namespace to drop does not exist. - SKIP: the server must return 204 indicating the drop operation has succeeded. 
+    #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
+    pub mode: Option<Mode>,
+    /// The behavior for dropping a namespace. - RESTRICT (default): the namespace should not contain any table or child namespace when drop is initiated.     If tables are found, the server should return error and not drop the namespace. - CASCADE: all tables and child namespaces in the namespace are dropped before the namespace is dropped. 
+    #[serde(rename = "behavior", skip_serializing_if = "Option::is_none")]
+    pub behavior: Option<Behavior>,
 }
 
 impl DropNamespaceRequest {
@@ -24,7 +30,37 @@ impl DropNamespaceRequest {
         DropNamespaceRequest {
             name,
             parent: None,
+            mode: None,
+            behavior: None,
         }
+    }
+}
+/// The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. - FAIL (default): the server must return 400 indicating the namespace to drop does not exist. - SKIP: the server must return 204 indicating the drop operation has succeeded. 
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum Mode {
+    #[serde(rename = "SKIP")]
+    Skip,
+    #[serde(rename = "FAIL")]
+    Fail,
+}
+
+impl Default for Mode {
+    fn default() -> Mode {
+        Self::Skip
+    }
+}
+/// The behavior for dropping a namespace. - RESTRICT (default): the namespace should not contain any table or child namespace when drop is initiated.     If tables are found, the server should return error and not drop the namespace. - CASCADE: all tables and child namespaces in the namespace are dropped before the namespace is dropped. 
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum Behavior {
+    #[serde(rename = "RESTRICT")]
+    Restrict,
+    #[serde(rename = "CASCADE")]
+    Cascade,
+}
+
+impl Default for Behavior {
+    fn default() -> Behavior {
+        Self::Restrict
     }
 }
 

@@ -302,6 +302,69 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /GetTransaction:
+    post:
+      description: Return a detailed information for a given transaction
+      operationId: GetTransaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetTransactionRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/GetTransactionResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Get information about a transaction
+      tags:
+      - Transaction
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /AlterTransaction:
+    post:
+      operationId: AlterTransaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlterTransactionRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/AlterTransactionResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "409":
+          $ref: '#/components/responses/ConflictErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Alter information of a transaction.
+      tags:
+      - Transaction
+      x-content-type: application/json
+      x-accepts:
+      - application/json
 components:
   examples:
     ListNamespacesEmptyExample:
@@ -369,6 +432,18 @@ components:
           schema:
             $ref: '#/components/schemas/TableExistsResponse'
       description: Result of checking if a table exists
+    GetTransactionResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetTransactionResponse'
+      description: Response of GetTransaction
+    AlterTransactionResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AlterTransactionResponse'
+      description: Response of AlterTransaction
     BadRequestErrorResponse:
       content:
         application/json:
@@ -652,10 +727,12 @@ components:
       - name
     DropNamespaceRequest:
       example:
+        mode: SKIP
         parent:
         - parent
         - parent
         name: name
+        behavior: RESTRICT
       properties:
         name:
           type: string
@@ -663,6 +740,22 @@ components:
           items:
             type: string
           type: array
+        mode:
+          description: |
+            The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. - FAIL (default): the server must return 400 indicating the namespace to drop does not exist. - SKIP: the server must return 204 indicating the drop operation has succeeded.
+          enum:
+          - SKIP
+          - FAIL
+          type: string
+        behavior:
+          description: |
+            The behavior for dropping a namespace. - RESTRICT (default): the namespace should not contain any table or child namespace when drop is initiated.
+                If tables are found, the server should return error and not drop the namespace.
+            - CASCADE: all tables and child namespaces in the namespace are dropped before the namespace is dropped.
+          enum:
+          - RESTRICT
+          - CASCADE
+          type: string
       required:
       - name
     DropNamespaceResponse:
@@ -673,6 +766,7 @@ components:
         name: name
         properties:
           key: properties
+        transactionId: transactionId
       properties:
         name:
           type: string
@@ -683,6 +777,10 @@ components:
         properties:
           additionalProperties:
             type: string
+        transactionId:
+          description: |
+            If present, indicating the operation is long running and should be tracked using GetTransaction
+          type: string
     NamespaceExistsRequest:
       example:
         parent:
@@ -829,4 +927,132 @@ components:
           type: boolean
       required:
       - exists
+    TransactionStatus:
+      enum:
+      - QUEUED
+      - RUNNING
+      - SUCCEEDED
+      - FAILED
+      - CANCELED
+      type: string
+    GetTransactionRequest:
+      example:
+        id: id
+      properties:
+        id:
+          type: string
+      required:
+      - id
+    GetTransactionResponse:
+      example:
+        id: id
+        properties:
+          key: properties
+        status: QUEUED
+      properties:
+        id:
+          type: string
+        status:
+          $ref: '#/components/schemas/TransactionStatus'
+        properties:
+          additionalProperties:
+            type: string
+      required:
+      - id
+      - status
+    AlterTransactionSetStatus:
+      example:
+        type: SetStatus
+        status: QUEUED
+      properties:
+        type:
+          default: SetStatus
+          pattern: ^SetStatus$
+          type: string
+        status:
+          $ref: '#/components/schemas/TransactionStatus'
+      required:
+      - type
+    AlterTransactionSetProperty:
+      properties:
+        type:
+          default: SetProperty
+          pattern: ^SetProperty$
+          type: string
+        key:
+          type: string
+        value:
+          type: string
+        mode:
+          description: |
+            The behavior if the property key already exists. - OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value and skip setting the provided value
+          enum:
+          - OVERWRITE
+          - FAIL
+          - SKIP
+          type: string
+      required:
+      - type
+    AlterTransactionUnsetProperty:
+      properties:
+        type:
+          default: UnsetProperty
+          pattern: ^UnsetProperty$
+          type: string
+        key:
+          type: string
+        mode:
+          description: |
+            The behavior if the property key to unset does not exist. - SKIP (default): skip the property to unset - FAIL: fail the entire operation
+          enum:
+          - SKIP
+          - FAIL
+          type: string
+      required:
+      - type
+    AlterTransactionAction:
+      discriminator:
+        mapping:
+          SetStatus: '#/components/schemas/AlterTransactionSetStatus'
+          SetProperty: '#/components/schemas/AlterTransactionSetProperty'
+          UnsetProperty: '#/components/schemas/AlterTransactionUnsetProperty'
+        propertyName: type
+      oneOf:
+      - $ref: '#/components/schemas/AlterTransactionSetStatus'
+      - $ref: '#/components/schemas/AlterTransactionSetProperty'
+      - $ref: '#/components/schemas/AlterTransactionUnsetProperty'
+    AlterTransactionRequest:
+      description: |
+        Alter a transaction with a list of actions. The server should either succeed and apply all actions, or fail and apply no action.
+      example:
+        actions:
+        - type: SetStatus
+          status: QUEUED
+        - type: SetStatus
+          status: QUEUED
+      properties:
+        actions:
+          items:
+            $ref: '#/components/schemas/AlterTransactionAction'
+          minItems: 1
+          type: array
+      required:
+      - actions
+    AlterTransactionResponse:
+      example:
+        id: id
+        properties:
+          key: properties
+        status: QUEUED
+      properties:
+        id:
+          type: string
+        status:
+          $ref: '#/components/schemas/TransactionStatus'
+        properties:
+          additionalProperties:
+            type: string
+      required:
+      - id
+      - status
 

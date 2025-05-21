@@ -39,6 +39,8 @@ public class DropNamespaceResponse {
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
+  private String transactionId;
+
   public DropNamespaceResponse name(String name) {
     this.name = name;
     return this;
@@ -115,6 +117,30 @@ public class DropNamespaceResponse {
     this.properties = properties;
   }
 
+  public DropNamespaceResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * If present, indicating the operation is long running and should be tracked using GetTransaction
+   *
+   * @return transactionId
+   */
+  @Schema(
+      name = "transactionId",
+      description =
+          "If present, indicating the operation is long running and should be tracked using GetTransaction ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("transactionId")
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -126,12 +152,13 @@ public class DropNamespaceResponse {
     DropNamespaceResponse dropNamespaceResponse = (DropNamespaceResponse) o;
     return Objects.equals(this.name, dropNamespaceResponse.name)
         && Objects.equals(this.parent, dropNamespaceResponse.parent)
-        && Objects.equals(this.properties, dropNamespaceResponse.properties);
+        && Objects.equals(this.properties, dropNamespaceResponse.properties)
+        && Objects.equals(this.transactionId, dropNamespaceResponse.transactionId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent, properties);
+    return Objects.hash(name, parent, properties, transactionId);
   }
 
   @Override
@@ -141,6 +168,7 @@ public class DropNamespaceResponse {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

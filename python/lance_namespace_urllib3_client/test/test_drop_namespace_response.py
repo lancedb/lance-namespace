@@ -35,6 +35,7 @@ class TestDropNamespaceResponse(unittest.TestCase):
         model = DropNamespaceResponse()
         if include_optional:
             return DropNamespaceResponse(
+<<<<<<< HEAD
                 name = '',
                 parent = [
                     ''
@@ -42,6 +43,9 @@ class TestDropNamespaceResponse(unittest.TestCase):
                 properties = {
                     'key' : ''
                     }
+=======
+                transaction_id = ''
+>>>>>>> f63f89f (spec: support drop namespace cascade with transaction API)
             )
         else:
             return DropNamespaceResponse(
