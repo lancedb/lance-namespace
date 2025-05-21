@@ -13,14 +13,14 @@
  */
 package com.lancedb.lance.namespace.adapter;
 
-import com.lancedb.lance.namespace.client.apache.model.CreateNamespaceRequest;
-import com.lancedb.lance.namespace.client.apache.model.DropNamespaceRequest;
-import com.lancedb.lance.namespace.client.apache.model.GetNamespaceRequest;
-import com.lancedb.lance.namespace.client.apache.model.GetTableRequest;
-import com.lancedb.lance.namespace.client.apache.model.ListNamespacesRequest;
-import com.lancedb.lance.namespace.client.apache.model.NamespaceExistsRequest;
-import com.lancedb.lance.namespace.client.apache.model.RegisterTableRequest;
-import com.lancedb.lance.namespace.client.apache.model.TableExistsRequest;
+import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
+import com.lancedb.lance.namespace.model.DropNamespaceRequest;
+import com.lancedb.lance.namespace.model.GetNamespaceRequest;
+import com.lancedb.lance.namespace.model.GetTableRequest;
+import com.lancedb.lance.namespace.model.ListNamespacesRequest;
+import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
+import com.lancedb.lance.namespace.model.RegisterTableRequest;
+import com.lancedb.lance.namespace.model.TableExistsRequest;
 
 public class ServerToClientRequest {
 

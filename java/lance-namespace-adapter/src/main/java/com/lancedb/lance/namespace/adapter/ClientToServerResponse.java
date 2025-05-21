@@ -23,7 +23,7 @@ import com.lancedb.lance.namespace.server.springboot.model.TableExistsResponse;
 public class ClientToServerResponse {
 
   public static GetNamespaceResponse getNamespace(
-      com.lancedb.lance.namespace.client.apache.model.GetNamespaceResponse response) {
+      com.lancedb.lance.namespace.model.GetNamespaceResponse response) {
     GetNamespaceResponse converted = new GetNamespaceResponse();
     converted.setParent(response.getParent());
     converted.setProperties(response.getProperties());
@@ -32,21 +32,21 @@ public class ClientToServerResponse {
   }
 
   public static ListNamespacesResponse listNamespaces(
-      com.lancedb.lance.namespace.client.apache.model.ListNamespacesResponse response) {
+      com.lancedb.lance.namespace.model.ListNamespacesResponse response) {
     ListNamespacesResponse converted = new ListNamespacesResponse();
     converted.setNamespaces(response.getNamespaces());
     return converted;
   }
 
   public static NamespaceExistsResponse namespaceExists(
-      com.lancedb.lance.namespace.client.apache.model.NamespaceExistsResponse response) {
+      com.lancedb.lance.namespace.model.NamespaceExistsResponse response) {
     NamespaceExistsResponse converted = new NamespaceExistsResponse();
     converted.setExists(response.getExists());
     return converted;
   }
 
   public static GetTableResponse getTable(
-      com.lancedb.lance.namespace.client.apache.model.GetTableResponse response) {
+      com.lancedb.lance.namespace.model.GetTableResponse response) {
     GetTableResponse converted = new GetTableResponse();
     converted.setNamespace(response.getNamespace());
     converted.setName(response.getName());
@@ -55,7 +55,7 @@ public class ClientToServerResponse {
   }
 
   public static RegisterTableResponse registerTable(
-      com.lancedb.lance.namespace.client.apache.model.RegisterTableResponse response) {
+      com.lancedb.lance.namespace.model.RegisterTableResponse response) {
     RegisterTableResponse converted = new RegisterTableResponse();
     converted.setNamespace(response.getNamespace());
     converted.setName(response.getName());
@@ -64,7 +64,7 @@ public class ClientToServerResponse {
   }
 
   public static TableExistsResponse tableExists(
-      com.lancedb.lance.namespace.client.apache.model.TableExistsResponse response) {
+      com.lancedb.lance.namespace.model.TableExistsResponse response) {
     TableExistsResponse converted = new TableExistsResponse();
     converted.setExists(response.getExists());
     return converted;

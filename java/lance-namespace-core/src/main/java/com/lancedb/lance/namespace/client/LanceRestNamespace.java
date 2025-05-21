@@ -17,20 +17,20 @@ import com.lancedb.lance.namespace.client.apache.ApiClient;
 import com.lancedb.lance.namespace.client.apache.ApiException;
 import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
 import com.lancedb.lance.namespace.client.apache.api.TableApi;
-import com.lancedb.lance.namespace.client.apache.model.CreateNamespaceRequest;
-import com.lancedb.lance.namespace.client.apache.model.DropNamespaceRequest;
-import com.lancedb.lance.namespace.client.apache.model.GetNamespaceRequest;
-import com.lancedb.lance.namespace.client.apache.model.GetNamespaceResponse;
-import com.lancedb.lance.namespace.client.apache.model.GetTableRequest;
-import com.lancedb.lance.namespace.client.apache.model.GetTableResponse;
-import com.lancedb.lance.namespace.client.apache.model.ListNamespacesRequest;
-import com.lancedb.lance.namespace.client.apache.model.ListNamespacesResponse;
-import com.lancedb.lance.namespace.client.apache.model.NamespaceExistsRequest;
-import com.lancedb.lance.namespace.client.apache.model.NamespaceExistsResponse;
-import com.lancedb.lance.namespace.client.apache.model.RegisterTableRequest;
-import com.lancedb.lance.namespace.client.apache.model.RegisterTableResponse;
-import com.lancedb.lance.namespace.client.apache.model.TableExistsRequest;
-import com.lancedb.lance.namespace.client.apache.model.TableExistsResponse;
+import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
+import com.lancedb.lance.namespace.model.DropNamespaceRequest;
+import com.lancedb.lance.namespace.model.GetNamespaceRequest;
+import com.lancedb.lance.namespace.model.GetNamespaceResponse;
+import com.lancedb.lance.namespace.model.GetTableRequest;
+import com.lancedb.lance.namespace.model.GetTableResponse;
+import com.lancedb.lance.namespace.model.ListNamespacesRequest;
+import com.lancedb.lance.namespace.model.ListNamespacesResponse;
+import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
+import com.lancedb.lance.namespace.model.NamespaceExistsResponse;
+import com.lancedb.lance.namespace.model.RegisterTableRequest;
+import com.lancedb.lance.namespace.model.RegisterTableResponse;
+import com.lancedb.lance.namespace.model.TableExistsRequest;
+import com.lancedb.lance.namespace.model.TableExistsResponse;
 
 public class LanceRestNamespace implements LanceNamespace {
 
