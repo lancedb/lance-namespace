@@ -41,7 +41,8 @@ class TestDropNamespaceResponse(unittest.TestCase):
                     ],
                 properties = {
                     'key' : ''
-                    }
+                    },
+                transaction_id = ''
             )
         else:
             return DropNamespaceResponse(

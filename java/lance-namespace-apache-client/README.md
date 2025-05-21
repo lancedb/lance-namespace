@@ -119,10 +119,18 @@ Class | Method | HTTP request | Description
 *TableApi* | [**getTable**](docs/TableApi.md#getTable) | **POST** /GetTable | Get a table from the namespace
 *TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /RegisterTable | Register a table to a namespace
 *TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **POST** /TableExists | Check if a table exists
+*TransactionApi* | [**alterTransaction**](docs/TransactionApi.md#alterTransaction) | **POST** /AlterTransaction | Alter information of a transaction.
+*TransactionApi* | [**getTransaction**](docs/TransactionApi.md#getTransaction) | **POST** /GetTransaction | Get information about a transaction
 
 
 ## Documentation for Models
 
+ - [AlterTransactionAction](docs/AlterTransactionAction.md)
+ - [AlterTransactionRequest](docs/AlterTransactionRequest.md)
+ - [AlterTransactionResponse](docs/AlterTransactionResponse.md)
+ - [AlterTransactionSetProperty](docs/AlterTransactionSetProperty.md)
+ - [AlterTransactionSetStatus](docs/AlterTransactionSetStatus.md)
+ - [AlterTransactionUnsetProperty](docs/AlterTransactionUnsetProperty.md)
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
  - [DropNamespaceRequest](docs/DropNamespaceRequest.md)
@@ -132,6 +140,8 @@ Class | Method | HTTP request | Description
  - [GetNamespaceResponse](docs/GetNamespaceResponse.md)
  - [GetTableRequest](docs/GetTableRequest.md)
  - [GetTableResponse](docs/GetTableResponse.md)
+ - [GetTransactionRequest](docs/GetTransactionRequest.md)
+ - [GetTransactionResponse](docs/GetTransactionResponse.md)
  - [ListNamespacesRequest](docs/ListNamespacesRequest.md)
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
  - [NamespaceExistsRequest](docs/NamespaceExistsRequest.md)
@@ -140,6 +150,7 @@ Class | Method | HTTP request | Description
  - [RegisterTableResponse](docs/RegisterTableResponse.md)
  - [TableExistsRequest](docs/TableExistsRequest.md)
  - [TableExistsResponse](docs/TableExistsResponse.md)
+ - [TransactionStatus](docs/TransactionStatus.md)
 
 
 <a id="documentation-for-authorization"></a>

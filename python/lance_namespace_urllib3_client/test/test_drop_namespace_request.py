@@ -38,7 +38,9 @@ class TestDropNamespaceRequest(unittest.TestCase):
                 name = '',
                 parent = [
                     ''
-                    ]
+                    ],
+                mode = 'SKIP',
+                behavior = 'RESTRICT'
             )
         else:
             return DropNamespaceRequest(

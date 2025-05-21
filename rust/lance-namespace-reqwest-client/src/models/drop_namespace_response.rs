@@ -19,6 +19,9 @@ pub struct DropNamespaceResponse {
     pub parent: Option<Vec<String>>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
+    /// If present, indicating the operation is long running and should be tracked using GetTransaction 
+    #[serde(rename = "transactionId", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
 }
 
 impl DropNamespaceResponse {
@@ -27,6 +30,7 @@ impl DropNamespaceResponse {
             name: None,
             parent: None,
             properties: None,
+            transaction_id: None,
         }
     }
 }
