@@ -14,7 +14,9 @@
 package com.lancedb.lance.namespace.adapter;
 
 import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DropTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.GetNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.GetTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
@@ -87,6 +89,27 @@ public class ClientToServerResponse {
       com.lancedb.lance.namespace.model.TableExistsResponse response) {
     TableExistsResponse converted = new TableExistsResponse();
     converted.setExists(response.getExists());
+    return converted;
+  }
+
+  public static DropTableResponse dropTable(
+      com.lancedb.lance.namespace.model.DropTableResponse response) {
+    DropTableResponse converted = new DropTableResponse();
+    converted.setName(response.getName());
+    converted.setNamespace(response.getNamespace());
+    converted.setLocation(response.getLocation());
+    converted.setProperties(response.getProperties());
+    converted.setTransactionId(response.getTransactionId());
+    return converted;
+  }
+
+  public static DeregisterTableResponse deregisterTable(
+      com.lancedb.lance.namespace.model.DeregisterTableResponse response) {
+    DeregisterTableResponse converted = new DeregisterTableResponse();
+    converted.setName(response.getName());
+    converted.setNamespace(response.getNamespace());
+    converted.setLocation(response.getLocation());
+    converted.setProperties(response.getProperties());
     return converted;
   }
 }

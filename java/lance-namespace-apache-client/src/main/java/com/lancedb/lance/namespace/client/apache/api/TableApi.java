@@ -18,6 +18,10 @@ import com.lancedb.lance.namespace.client.apache.ApiException;
 import com.lancedb.lance.namespace.client.apache.BaseApi;
 import com.lancedb.lance.namespace.client.apache.Configuration;
 import com.lancedb.lance.namespace.client.apache.Pair;
+import com.lancedb.lance.namespace.model.DeregisterTableRequest;
+import com.lancedb.lance.namespace.model.DeregisterTableResponse;
+import com.lancedb.lance.namespace.model.DropTableRequest;
+import com.lancedb.lance.namespace.model.DropTableResponse;
 import com.lancedb.lance.namespace.model.GetTableRequest;
 import com.lancedb.lance.namespace.model.GetTableResponse;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
@@ -45,6 +49,151 @@ public class TableApi extends BaseApi {
 
   public TableApi(ApiClient apiClient) {
     super(apiClient);
+  }
+
+  /**
+   * Deregister a table from its namespace Deregister a table from its namespace. The table content
+   * remains available in the storage.
+   *
+   * @param deregisterTableRequest (required)
+   * @return DeregisterTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public DeregisterTableResponse deregisterTable(DeregisterTableRequest deregisterTableRequest)
+      throws ApiException {
+    return this.deregisterTable(deregisterTableRequest, Collections.emptyMap());
+  }
+
+  /**
+   * Deregister a table from its namespace Deregister a table from its namespace. The table content
+   * remains available in the storage.
+   *
+   * @param deregisterTableRequest (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return DeregisterTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public DeregisterTableResponse deregisterTable(
+      DeregisterTableRequest deregisterTableRequest, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = deregisterTableRequest;
+
+    // verify the required parameter 'deregisterTableRequest' is set
+    if (deregisterTableRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'deregisterTableRequest' when calling deregisterTable");
+    }
+
+    // create path and map variables
+    String localVarPath = "/DeregisterTable";
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<DeregisterTableResponse> localVarReturnType =
+        new TypeReference<DeregisterTableResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Drop a table from its namespace Drop a table from its namespace and delete its data. If the
+   * table and its data can be immediately deleted, return information of the deleted table.
+   * Otherwise, return a transaction ID that client can use to track deletion progress.
+   *
+   * @param dropTableRequest (required)
+   * @return DropTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public DropTableResponse dropTable(DropTableRequest dropTableRequest) throws ApiException {
+    return this.dropTable(dropTableRequest, Collections.emptyMap());
+  }
+
+  /**
+   * Drop a table from its namespace Drop a table from its namespace and delete its data. If the
+   * table and its data can be immediately deleted, return information of the deleted table.
+   * Otherwise, return a transaction ID that client can use to track deletion progress.
+   *
+   * @param dropTableRequest (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return DropTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public DropTableResponse dropTable(
+      DropTableRequest dropTableRequest, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = dropTableRequest;
+
+    // verify the required parameter 'dropTableRequest' is set
+    if (dropTableRequest == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'dropTableRequest' when calling dropTable");
+    }
+
+    // create path and map variables
+    String localVarPath = "/DropTable";
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<DropTableResponse> localVarReturnType = new TypeReference<DropTableResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
   }
 
   /**

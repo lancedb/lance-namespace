@@ -19,8 +19,12 @@ import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
 import com.lancedb.lance.namespace.client.apache.api.TableApi;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
+import com.lancedb.lance.namespace.model.DeregisterTableRequest;
+import com.lancedb.lance.namespace.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
+import com.lancedb.lance.namespace.model.DropTableRequest;
+import com.lancedb.lance.namespace.model.DropTableResponse;
 import com.lancedb.lance.namespace.model.GetNamespaceRequest;
 import com.lancedb.lance.namespace.model.GetNamespaceResponse;
 import com.lancedb.lance.namespace.model.GetTableRequest;
@@ -112,6 +116,24 @@ public class LanceRestNamespace implements LanceNamespace {
   public TableExistsResponse tableExists(TableExistsRequest request) {
     try {
       return tableApi.tableExists(request);
+    } catch (ApiException e) {
+      throw new LanceNamespaceException(e);
+    }
+  }
+
+  @Override
+  public DeregisterTableResponse deregisterTable(DeregisterTableRequest request) {
+    try {
+      return tableApi.deregisterTable(request);
+    } catch (ApiException e) {
+      throw new LanceNamespaceException(e);
+    }
+  }
+
+  @Override
+  public DropTableResponse dropTable(DropTableRequest request) {
+    try {
+      return tableApi.dropTable(request);
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
