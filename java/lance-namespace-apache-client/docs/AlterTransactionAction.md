@@ -2,25 +2,15 @@
 
 # AlterTransactionAction
 
+A single action that could be performed to alter a transaction. This action holds the model definition for all types of specific actions models, this is to minimize difference and compatibility issue across codegen in different languages. When used, only one of the actions should be non-null for each action. If you would like to perform multiple actions, set a list of actions in the AlterTransactionRequest. 
 
 ## Properties
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**type** | **String** |  |  |
-|**status** | **TransactionStatus** |  |  [optional] |
-|**key** | **String** |  |  [optional] |
-|**value** | **String** |  |  [optional] |
-|**mode** | [**ModeEnum**](#ModeEnum) | The behavior if the property key to unset does not exist. - SKIP (default): skip the property to unset - FAIL: fail the entire operation  |  [optional] |
-
-
-
-## Enum: ModeEnum
-
-| Name | Value |
-|---- | -----|
-| SKIP | &quot;SKIP&quot; |
-| FAIL | &quot;FAIL&quot; |
+|**setStatusAction** | [**AlterTransactionSetStatus**](AlterTransactionSetStatus.md) |  |  [optional] |
+|**setPropertyAction** | [**AlterTransactionSetProperty**](AlterTransactionSetProperty.md) |  |  [optional] |
+|**unsetPropertyAction** | [**AlterTransactionUnsetProperty**](AlterTransactionUnsetProperty.md) |  |  [optional] |
 
 
 

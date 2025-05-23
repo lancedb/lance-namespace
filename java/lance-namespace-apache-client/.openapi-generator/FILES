@@ -25,11 +25,13 @@ docs/NamespaceExistsRequest.md
 docs/NamespaceExistsResponse.md
 docs/RegisterTableRequest.md
 docs/RegisterTableResponse.md
+docs/SetPropertyMode.md
 docs/TableApi.md
 docs/TableExistsRequest.md
 docs/TableExistsResponse.md
 docs/TransactionApi.md
 docs/TransactionStatus.md
+docs/UnsetPropertyMode.md
 pom.xml
 src/main/AndroidManifest.xml
 src/main/java/com/lancedb/lance/namespace/client/apache/ApiClient.java
@@ -72,6 +74,8 @@ src/main/java/com/lancedb/lance/namespace/model/NamespaceExistsRequest.java
 src/main/java/com/lancedb/lance/namespace/model/NamespaceExistsResponse.java
 src/main/java/com/lancedb/lance/namespace/model/RegisterTableRequest.java
 src/main/java/com/lancedb/lance/namespace/model/RegisterTableResponse.java
+src/main/java/com/lancedb/lance/namespace/model/SetPropertyMode.java
 src/main/java/com/lancedb/lance/namespace/model/TableExistsRequest.java
 src/main/java/com/lancedb/lance/namespace/model/TableExistsResponse.java
 src/main/java/com/lancedb/lance/namespace/model/TransactionStatus.java
+src/main/java/com/lancedb/lance/namespace/model/UnsetPropertyMode.java

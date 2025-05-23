@@ -962,74 +962,89 @@ components:
       - status
     AlterTransactionSetStatus:
       example:
-        type: SetStatus
         status: QUEUED
       properties:
-        type:
-          default: SetStatus
-          pattern: ^SetStatus$
-          type: string
         status:
           $ref: '#/components/schemas/TransactionStatus'
-      required:
-      - type
     AlterTransactionSetProperty:
+      example:
+        mode: OVERWRITE
+        value: value
+        key: key
       properties:
-        type:
-          default: SetProperty
-          pattern: ^SetProperty$
-          type: string
         key:
           type: string
         value:
           type: string
         mode:
-          description: |
-            The behavior if the property key already exists. - OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value and skip setting the provided value
-          enum:
-          - OVERWRITE
-          - FAIL
-          - SKIP
-          type: string
-      required:
-      - type
+          $ref: '#/components/schemas/SetPropertyMode'
+    SetPropertyMode:
+      description: |
+        The behavior if the property key already exists. - OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value and skip setting the provided value
+      enum:
+      - OVERWRITE
+      - FAIL
+      - SKIP
+      type: string
     AlterTransactionUnsetProperty:
+      example:
+        mode: SKIP
+        key: key
       properties:
-        type:
-          default: UnsetProperty
-          pattern: ^UnsetProperty$
-          type: string
         key:
           type: string
         mode:
-          description: |
-            The behavior if the property key to unset does not exist. - SKIP (default): skip the property to unset - FAIL: fail the entire operation
-          enum:
-          - SKIP
-          - FAIL
-          type: string
-      required:
-      - type
+          $ref: '#/components/schemas/UnsetPropertyMode'
+    UnsetPropertyMode:
+      description: |
+        The behavior if the property key to unset does not exist. - SKIP (default): skip the property to unset - FAIL: fail the entire operation
+      enum:
+      - SKIP
+      - FAIL
+      type: string
     AlterTransactionAction:
-      discriminator:
-        mapping:
-          SetStatus: '#/components/schemas/AlterTransactionSetStatus'
-          SetProperty: '#/components/schemas/AlterTransactionSetProperty'
-          UnsetProperty: '#/components/schemas/AlterTransactionUnsetProperty'
-        propertyName: type
-      oneOf:
-      - $ref: '#/components/schemas/AlterTransactionSetStatus'
-      - $ref: '#/components/schemas/AlterTransactionSetProperty'
-      - $ref: '#/components/schemas/AlterTransactionUnsetProperty'
+      description: |
+        A single action that could be performed to alter a transaction. This action holds the model definition for all types of specific actions models, this is to minimize difference and compatibility issue across codegen in different languages. When used, only one of the actions should be non-null for each action. If you would like to perform multiple actions, set a list of actions in the AlterTransactionRequest.
+      example:
+        setStatusAction:
+          status: QUEUED
+        unsetPropertyAction:
+          mode: SKIP
+          key: key
+        setPropertyAction:
+          mode: OVERWRITE
+          value: value
+          key: key
+      properties:
+        setStatusAction:
+          $ref: '#/components/schemas/AlterTransactionSetStatus'
+        setPropertyAction:
+          $ref: '#/components/schemas/AlterTransactionSetProperty'
+        unsetPropertyAction:
+          $ref: '#/components/schemas/AlterTransactionUnsetProperty'
     AlterTransactionRequest:
       description: |
         Alter a transaction with a list of actions. The server should either succeed and apply all actions, or fail and apply no action.
       example:
         actions:
-        - type: SetStatus
-          status: QUEUED
-        - type: SetStatus
-          status: QUEUED
+        - setStatusAction:
+            status: QUEUED
+          unsetPropertyAction:
+            mode: SKIP
+            key: key
+          setPropertyAction:
+            mode: OVERWRITE
+            value: value
+            key: key
+        - setStatusAction:
+            status: QUEUED
+          unsetPropertyAction:
+            mode: SKIP
+            key: key
+          setPropertyAction:
+            mode: OVERWRITE
+            value: value
+            key: key
       properties:
         actions:
           items:

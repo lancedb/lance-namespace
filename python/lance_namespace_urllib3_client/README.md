@@ -125,9 +125,11 @@ Class | Method | HTTP request | Description
  - [NamespaceExistsResponse](docs/NamespaceExistsResponse.md)
  - [RegisterTableRequest](docs/RegisterTableRequest.md)
  - [RegisterTableResponse](docs/RegisterTableResponse.md)
+ - [SetPropertyMode](docs/SetPropertyMode.md)
  - [TableExistsRequest](docs/TableExistsRequest.md)
  - [TableExistsResponse](docs/TableExistsResponse.md)
  - [TransactionStatus](docs/TransactionStatus.md)
+ - [UnsetPropertyMode](docs/UnsetPropertyMode.md)
 
 
 <a id="documentation-for-authorization"></a>

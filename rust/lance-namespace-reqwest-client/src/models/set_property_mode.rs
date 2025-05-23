@@ -11,17 +11,32 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct AlterTransactionSetStatus {
-    #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
-    pub status: Option<models::TransactionStatus>,
+/// SetPropertyMode : The behavior if the property key already exists. - OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value and skip setting the provided value 
+/// The behavior if the property key already exists. - OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value and skip setting the provided value 
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum SetPropertyMode {
+    #[serde(rename = "OVERWRITE")]
+    Overwrite,
+    #[serde(rename = "FAIL")]
+    Fail,
+    #[serde(rename = "SKIP")]
+    Skip,
+
 }
 
-impl AlterTransactionSetStatus {
-    pub fn new() -> AlterTransactionSetStatus {
-        AlterTransactionSetStatus {
-            status: None,
+impl std::fmt::Display for SetPropertyMode {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Self::Overwrite => write!(f, "OVERWRITE"),
+            Self::Fail => write!(f, "FAIL"),
+            Self::Skip => write!(f, "SKIP"),
         }
+    }
+}
+
+impl Default for SetPropertyMode {
+    fn default() -> SetPropertyMode {
+        Self::Overwrite
     }
 }
 

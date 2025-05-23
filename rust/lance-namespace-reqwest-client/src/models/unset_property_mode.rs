@@ -11,17 +11,29 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct AlterTransactionSetStatus {
-    #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
-    pub status: Option<models::TransactionStatus>,
+/// UnsetPropertyMode : The behavior if the property key to unset does not exist. - SKIP (default): skip the property to unset - FAIL: fail the entire operation 
+/// The behavior if the property key to unset does not exist. - SKIP (default): skip the property to unset - FAIL: fail the entire operation 
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum UnsetPropertyMode {
+    #[serde(rename = "SKIP")]
+    Skip,
+    #[serde(rename = "FAIL")]
+    Fail,
+
 }
 
-impl AlterTransactionSetStatus {
-    pub fn new() -> AlterTransactionSetStatus {
-        AlterTransactionSetStatus {
-            status: None,
+impl std::fmt::Display for UnsetPropertyMode {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Self::Skip => write!(f, "SKIP"),
+            Self::Fail => write!(f, "FAIL"),
         }
+    }
+}
+
+impl Default for UnsetPropertyMode {
+    fn default() -> UnsetPropertyMode {
+        Self::Skip
     }
 }
 

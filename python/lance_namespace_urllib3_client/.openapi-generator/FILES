@@ -27,11 +27,13 @@ docs/NamespaceExistsRequest.md
 docs/NamespaceExistsResponse.md
 docs/RegisterTableRequest.md
 docs/RegisterTableResponse.md
+docs/SetPropertyMode.md
 docs/TableApi.md
 docs/TableExistsRequest.md
 docs/TableExistsResponse.md
 docs/TransactionApi.md
 docs/TransactionStatus.md
+docs/UnsetPropertyMode.md
 git_push.sh
 lance_namespace_urllib3_client/__init__.py
 lance_namespace_urllib3_client/api/__init__.py
@@ -66,9 +68,11 @@ lance_namespace_urllib3_client/models/namespace_exists_request.py
 lance_namespace_urllib3_client/models/namespace_exists_response.py
 lance_namespace_urllib3_client/models/register_table_request.py
 lance_namespace_urllib3_client/models/register_table_response.py
+lance_namespace_urllib3_client/models/set_property_mode.py
 lance_namespace_urllib3_client/models/table_exists_request.py
 lance_namespace_urllib3_client/models/table_exists_response.py
 lance_namespace_urllib3_client/models/transaction_status.py
+lance_namespace_urllib3_client/models/unset_property_mode.py
 lance_namespace_urllib3_client/py.typed
 lance_namespace_urllib3_client/rest.py
 pyproject.toml

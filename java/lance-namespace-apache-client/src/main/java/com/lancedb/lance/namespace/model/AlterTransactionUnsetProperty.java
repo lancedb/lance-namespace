@@ -13,11 +13,9 @@
  */
 package com.lancedb.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -26,7 +24,6 @@ import java.util.StringJoiner;
 
 /** AlterTransactionUnsetProperty */
 @JsonPropertyOrder({
-  AlterTransactionUnsetProperty.JSON_PROPERTY_TYPE,
   AlterTransactionUnsetProperty.JSON_PROPERTY_KEY,
   AlterTransactionUnsetProperty.JSON_PROPERTY_MODE
 })
@@ -34,76 +31,13 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class AlterTransactionUnsetProperty {
-  public static final String JSON_PROPERTY_TYPE = "type";
-  @javax.annotation.Nonnull private String type = "UnsetProperty";
-
   public static final String JSON_PROPERTY_KEY = "key";
   @javax.annotation.Nullable private String key;
 
-  /**
-   * The behavior if the property key to unset does not exist. - SKIP (default): skip the property
-   * to unset - FAIL: fail the entire operation
-   */
-  public enum ModeEnum {
-    SKIP(String.valueOf("SKIP")),
-
-    FAIL(String.valueOf("FAIL"));
-
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
   public static final String JSON_PROPERTY_MODE = "mode";
-  @javax.annotation.Nullable private ModeEnum mode;
+  @javax.annotation.Nullable private UnsetPropertyMode mode;
 
   public AlterTransactionUnsetProperty() {}
-
-  public AlterTransactionUnsetProperty type(@javax.annotation.Nonnull String type) {
-
-    this.type = type;
-    return this;
-  }
-
-  /**
-   * Get type
-   *
-   * @return type
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_TYPE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getType() {
-    return type;
-  }
-
-  @JsonProperty(JSON_PROPERTY_TYPE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull String type) {
-    this.type = type;
-  }
 
   public AlterTransactionUnsetProperty key(@javax.annotation.Nullable String key) {
 
@@ -129,28 +63,27 @@ public class AlterTransactionUnsetProperty {
     this.key = key;
   }
 
-  public AlterTransactionUnsetProperty mode(@javax.annotation.Nullable ModeEnum mode) {
+  public AlterTransactionUnsetProperty mode(@javax.annotation.Nullable UnsetPropertyMode mode) {
 
     this.mode = mode;
     return this;
   }
 
   /**
-   * The behavior if the property key to unset does not exist. - SKIP (default): skip the property
-   * to unset - FAIL: fail the entire operation
+   * Get mode
    *
    * @return mode
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public ModeEnum getMode() {
+  public UnsetPropertyMode getMode() {
     return mode;
   }
 
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMode(@javax.annotation.Nullable ModeEnum mode) {
+  public void setMode(@javax.annotation.Nullable UnsetPropertyMode mode) {
     this.mode = mode;
   }
 
@@ -163,21 +96,19 @@ public class AlterTransactionUnsetProperty {
       return false;
     }
     AlterTransactionUnsetProperty alterTransactionUnsetProperty = (AlterTransactionUnsetProperty) o;
-    return Objects.equals(this.type, alterTransactionUnsetProperty.type)
-        && Objects.equals(this.key, alterTransactionUnsetProperty.key)
+    return Objects.equals(this.key, alterTransactionUnsetProperty.key)
         && Objects.equals(this.mode, alterTransactionUnsetProperty.mode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, key, mode);
+    return Objects.hash(key, mode);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTransactionUnsetProperty {\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    key: ").append(toIndentedString(key)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("}");
@@ -225,21 +156,6 @@ public class AlterTransactionUnsetProperty {
     }
 
     StringJoiner joiner = new StringJoiner("&");
-
-    // add `type` to the URL query string
-    if (getType() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%stype%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getType()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
 
     // add `key` to the URL query string
     if (getKey() != null) {

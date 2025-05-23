@@ -5,9 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **str** |  | [default to 'UnsetProperty']
 **key** | **str** |  | [optional] 
-**mode** | **str** | The behavior if the property key to unset does not exist. - SKIP (default): skip the property to unset - FAIL: fail the entire operation  | [optional] 
+**mode** | [**UnsetPropertyMode**](UnsetPropertyMode.md) |  | [optional] 
 
 ## Example
 

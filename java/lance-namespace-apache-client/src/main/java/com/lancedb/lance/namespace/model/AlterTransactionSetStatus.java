@@ -23,45 +23,15 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /** AlterTransactionSetStatus */
-@JsonPropertyOrder({
-  AlterTransactionSetStatus.JSON_PROPERTY_TYPE,
-  AlterTransactionSetStatus.JSON_PROPERTY_STATUS
-})
+@JsonPropertyOrder({AlterTransactionSetStatus.JSON_PROPERTY_STATUS})
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class AlterTransactionSetStatus {
-  public static final String JSON_PROPERTY_TYPE = "type";
-  @javax.annotation.Nonnull private String type = "SetStatus";
-
   public static final String JSON_PROPERTY_STATUS = "status";
   @javax.annotation.Nullable private TransactionStatus status;
 
   public AlterTransactionSetStatus() {}
-
-  public AlterTransactionSetStatus type(@javax.annotation.Nonnull String type) {
-
-    this.type = type;
-    return this;
-  }
-
-  /**
-   * Get type
-   *
-   * @return type
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_TYPE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getType() {
-    return type;
-  }
-
-  @JsonProperty(JSON_PROPERTY_TYPE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull String type) {
-    this.type = type;
-  }
 
   public AlterTransactionSetStatus status(@javax.annotation.Nullable TransactionStatus status) {
 
@@ -96,20 +66,18 @@ public class AlterTransactionSetStatus {
       return false;
     }
     AlterTransactionSetStatus alterTransactionSetStatus = (AlterTransactionSetStatus) o;
-    return Objects.equals(this.type, alterTransactionSetStatus.type)
-        && Objects.equals(this.status, alterTransactionSetStatus.status);
+    return Objects.equals(this.status, alterTransactionSetStatus.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, status);
+    return Objects.hash(status);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTransactionSetStatus {\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -156,21 +124,6 @@ public class AlterTransactionSetStatus {
     }
 
     StringJoiner joiner = new StringJoiner("&");
-
-    // add `type` to the URL query string
-    if (getType() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%stype%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getType()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
 
     // add `status` to the URL query string
     if (getStatus() != null) {

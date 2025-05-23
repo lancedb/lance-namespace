@@ -1,15 +1,14 @@
 # AlterTransactionAction
 
+A single action that could be performed to alter a transaction. This action holds the model definition for all types of specific actions models, this is to minimize difference and compatibility issue across codegen in different languages. When used, only one of the actions should be non-null for each action. If you would like to perform multiple actions, set a list of actions in the AlterTransactionRequest. 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **str** |  | [default to 'UnsetProperty']
-**status** | [**TransactionStatus**](TransactionStatus.md) |  | [optional] 
-**key** | **str** |  | [optional] 
-**value** | **str** |  | [optional] 
-**mode** | **str** | The behavior if the property key to unset does not exist. - SKIP (default): skip the property to unset - FAIL: fail the entire operation  | [optional] 
+**set_status_action** | [**AlterTransactionSetStatus**](AlterTransactionSetStatus.md) |  | [optional] 
+**set_property_action** | [**AlterTransactionSetProperty**](AlterTransactionSetProperty.md) |  | [optional] 
+**unset_property_action** | [**AlterTransactionUnsetProperty**](AlterTransactionUnsetProperty.md) |  | [optional] 
 
 ## Example
 

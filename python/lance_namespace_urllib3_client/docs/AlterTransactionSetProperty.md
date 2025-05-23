@@ -5,10 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **str** |  | [default to 'SetProperty']
 **key** | **str** |  | [optional] 
 **value** | **str** |  | [optional] 
-**mode** | **str** | The behavior if the property key already exists. - OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value and skip setting the provided value  | [optional] 
+**mode** | [**SetPropertyMode**](SetPropertyMode.md) |  | [optional] 
 
 ## Example
 

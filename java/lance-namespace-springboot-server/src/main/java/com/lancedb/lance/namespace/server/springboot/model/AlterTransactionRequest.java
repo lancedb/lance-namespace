@@ -38,18 +38,18 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class AlterTransactionRequest {
 
-  @Valid private List<AlterTransactionAction> actions = new ArrayList<>();
+  @Valid private List<@Valid AlterTransactionAction> actions = new ArrayList<>();
 
   public AlterTransactionRequest() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public AlterTransactionRequest(List<AlterTransactionAction> actions) {
+  public AlterTransactionRequest(List<@Valid AlterTransactionAction> actions) {
     this.actions = actions;
   }
 
-  public AlterTransactionRequest actions(List<AlterTransactionAction> actions) {
+  public AlterTransactionRequest actions(List<@Valid AlterTransactionAction> actions) {
     this.actions = actions;
     return this;
   }
@@ -72,11 +72,11 @@ public class AlterTransactionRequest {
   @Size(min = 1)
   @Schema(name = "actions", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("actions")
-  public List<AlterTransactionAction> getActions() {
+  public List<@Valid AlterTransactionAction> getActions() {
     return actions;
   }
 
-  public void setActions(List<AlterTransactionAction> actions) {
+  public void setActions(List<@Valid AlterTransactionAction> actions) {
     this.actions = actions;
   }
 
