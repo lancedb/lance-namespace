@@ -35,14 +35,12 @@ class TestAlterTransactionSetProperty(unittest.TestCase):
         model = AlterTransactionSetProperty()
         if include_optional:
             return AlterTransactionSetProperty(
-                type = 'SetProperty',
                 key = '',
                 value = '',
                 mode = 'OVERWRITE'
             )
         else:
             return AlterTransactionSetProperty(
-                type = 'SetProperty',
         )
         """
 

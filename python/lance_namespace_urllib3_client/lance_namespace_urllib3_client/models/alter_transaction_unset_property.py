@@ -17,9 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from typing_extensions import Annotated
+from lance_namespace_urllib3_client.models.unset_property_mode import UnsetPropertyMode
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,27 +27,9 @@ class AlterTransactionUnsetProperty(BaseModel):
     """
     AlterTransactionUnsetProperty
     """ # noqa: E501
-    type: Annotated[str, Field(strict=True)]
     key: Optional[StrictStr] = None
-    mode: Optional[StrictStr] = Field(default=None, description="The behavior if the property key to unset does not exist. - SKIP (default): skip the property to unset - FAIL: fail the entire operation ")
-    __properties: ClassVar[List[str]] = ["type", "key", "mode"]
-
-    @field_validator('type')
-    def type_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if not re.match(r"^UnsetProperty$", value):
-            raise ValueError(r"must validate the regular expression /^UnsetProperty$/")
-        return value
-
-    @field_validator('mode')
-    def mode_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['SKIP', 'FAIL']):
-            raise ValueError("must be one of enum values ('SKIP', 'FAIL')")
-        return value
+    mode: Optional[UnsetPropertyMode] = None
+    __properties: ClassVar[List[str]] = ["key", "mode"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -100,7 +82,6 @@ class AlterTransactionUnsetProperty(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "type": obj.get("type") if obj.get("type") is not None else 'UnsetProperty',
             "key": obj.get("key"),
             "mode": obj.get("mode")
         })

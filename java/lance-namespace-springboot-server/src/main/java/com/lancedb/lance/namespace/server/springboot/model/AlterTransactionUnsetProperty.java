@@ -13,12 +13,11 @@
  */
 package com.lancedb.lance.namespace.server.springboot.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.annotation.Generated;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
@@ -28,80 +27,11 @@ import java.util.Objects;
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
-public class AlterTransactionUnsetProperty implements AlterTransactionAction {
-
-  private String type = "UnsetProperty";
+public class AlterTransactionUnsetProperty {
 
   private String key;
 
-  /**
-   * The behavior if the property key to unset does not exist. - SKIP (default): skip the property
-   * to unset - FAIL: fail the entire operation
-   */
-  public enum ModeEnum {
-    SKIP("SKIP"),
-
-    FAIL("FAIL");
-
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private ModeEnum mode;
-
-  public AlterTransactionUnsetProperty() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public AlterTransactionUnsetProperty(String type) {
-    this.type = type;
-  }
-
-  public AlterTransactionUnsetProperty type(String type) {
-    this.type = type;
-    return this;
-  }
-
-  /**
-   * Get type
-   *
-   * @return type
-   */
-  @NotNull
-  @Pattern(regexp = "^UnsetProperty$")
-  @Schema(name = "type", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("type")
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
+  private UnsetPropertyMode mode;
 
   public AlterTransactionUnsetProperty key(String key) {
     this.key = key;
@@ -123,28 +53,24 @@ public class AlterTransactionUnsetProperty implements AlterTransactionAction {
     this.key = key;
   }
 
-  public AlterTransactionUnsetProperty mode(ModeEnum mode) {
+  public AlterTransactionUnsetProperty mode(UnsetPropertyMode mode) {
     this.mode = mode;
     return this;
   }
 
   /**
-   * The behavior if the property key to unset does not exist. - SKIP (default): skip the property
-   * to unset - FAIL: fail the entire operation
+   * Get mode
    *
    * @return mode
    */
-  @Schema(
-      name = "mode",
-      description =
-          "The behavior if the property key to unset does not exist. - SKIP (default): skip the property to unset - FAIL: fail the entire operation ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Valid
+  @Schema(name = "mode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
-  public ModeEnum getMode() {
+  public UnsetPropertyMode getMode() {
     return mode;
   }
 
-  public void setMode(ModeEnum mode) {
+  public void setMode(UnsetPropertyMode mode) {
     this.mode = mode;
   }
 
@@ -157,21 +83,19 @@ public class AlterTransactionUnsetProperty implements AlterTransactionAction {
       return false;
     }
     AlterTransactionUnsetProperty alterTransactionUnsetProperty = (AlterTransactionUnsetProperty) o;
-    return Objects.equals(this.type, alterTransactionUnsetProperty.type)
-        && Objects.equals(this.key, alterTransactionUnsetProperty.key)
+    return Objects.equals(this.key, alterTransactionUnsetProperty.key)
         && Objects.equals(this.mode, alterTransactionUnsetProperty.mode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, key, mode);
+    return Objects.hash(key, mode);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTransactionUnsetProperty {\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    key: ").append(toIndentedString(key)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("}");

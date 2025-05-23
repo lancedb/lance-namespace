@@ -17,9 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from typing_extensions import Annotated
+from lance_namespace_urllib3_client.models.set_property_mode import SetPropertyMode
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,28 +27,10 @@ class AlterTransactionSetProperty(BaseModel):
     """
     AlterTransactionSetProperty
     """ # noqa: E501
-    type: Annotated[str, Field(strict=True)]
     key: Optional[StrictStr] = None
     value: Optional[StrictStr] = None
-    mode: Optional[StrictStr] = Field(default=None, description="The behavior if the property key already exists. - OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value and skip setting the provided value ")
-    __properties: ClassVar[List[str]] = ["type", "key", "value", "mode"]
-
-    @field_validator('type')
-    def type_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if not re.match(r"^SetProperty$", value):
-            raise ValueError(r"must validate the regular expression /^SetProperty$/")
-        return value
-
-    @field_validator('mode')
-    def mode_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['OVERWRITE', 'FAIL', 'SKIP']):
-            raise ValueError("must be one of enum values ('OVERWRITE', 'FAIL', 'SKIP')")
-        return value
+    mode: Optional[SetPropertyMode] = None
+    __properties: ClassVar[List[str]] = ["key", "value", "mode"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -101,7 +83,6 @@ class AlterTransactionSetProperty(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "type": obj.get("type") if obj.get("type") is not None else 'SetProperty',
             "key": obj.get("key"),
             "value": obj.get("value"),
             "mode": obj.get("mode")

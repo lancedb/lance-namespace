@@ -12,40 +12,26 @@
 """  # noqa: E501
 
 
-import unittest
+from __future__ import annotations
+import json
+from enum import Enum
+from typing_extensions import Self
 
-from lance_namespace_urllib3_client.models.alter_transaction_set_status import AlterTransactionSetStatus
 
-class TestAlterTransactionSetStatus(unittest.TestCase):
-    """AlterTransactionSetStatus unit test stubs"""
+class UnsetPropertyMode(str, Enum):
+    """
+    The behavior if the property key to unset does not exist. - SKIP (default): skip the property to unset - FAIL: fail the entire operation 
+    """
 
-    def setUp(self):
-        pass
+    """
+    allowed enum values
+    """
+    SKIP = 'SKIP'
+    FAIL = 'FAIL'
 
-    def tearDown(self):
-        pass
+    @classmethod
+    def from_json(cls, json_str: str) -> Self:
+        """Create an instance of UnsetPropertyMode from a JSON string"""
+        return cls(json.loads(json_str))
 
-    def make_instance(self, include_optional) -> AlterTransactionSetStatus:
-        """Test AlterTransactionSetStatus
-            include_optional is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
-        # uncomment below to create an instance of `AlterTransactionSetStatus`
-        """
-        model = AlterTransactionSetStatus()
-        if include_optional:
-            return AlterTransactionSetStatus(
-                status = 'QUEUED'
-            )
-        else:
-            return AlterTransactionSetStatus(
-        )
-        """
 
-    def testAlterTransactionSetStatus(self):
-        """Test AlterTransactionSetStatus"""
-        # inst_req_only = self.make_instance(include_optional=False)
-        # inst_req_and_optional = self.make_instance(include_optional=True)
-
-if __name__ == '__main__':
-    unittest.main()

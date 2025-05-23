@@ -11,35 +11,25 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "type")]
-pub enum AlterTransactionAction {
-    #[serde(rename="SetStatus")]
-    SetStatus(Box<models::AlterTransactionSetStatus>),
-    #[serde(rename="SetProperty")]
-    SetProperty(Box<models::AlterTransactionSetProperty>),
-    #[serde(rename="UnsetProperty")]
-    UnsetProperty(Box<models::AlterTransactionUnsetProperty>),
+/// AlterTransactionAction : A single action that could be performed to alter a transaction. This action holds the model definition for all types of specific actions models, this is to minimize difference and compatibility issue across codegen in different languages. When used, only one of the actions should be non-null for each action. If you would like to perform multiple actions, set a list of actions in the AlterTransactionRequest. 
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct AlterTransactionAction {
+    #[serde(rename = "setStatusAction", skip_serializing_if = "Option::is_none")]
+    pub set_status_action: Option<Box<models::AlterTransactionSetStatus>>,
+    #[serde(rename = "setPropertyAction", skip_serializing_if = "Option::is_none")]
+    pub set_property_action: Option<Box<models::AlterTransactionSetProperty>>,
+    #[serde(rename = "unsetPropertyAction", skip_serializing_if = "Option::is_none")]
+    pub unset_property_action: Option<Box<models::AlterTransactionUnsetProperty>>,
 }
 
-impl Default for AlterTransactionAction {
-    fn default() -> Self {
-        Self::SetStatus(Default::default())
-    }
-}
-
-/// The behavior if the property key to unset does not exist. - SKIP (default): skip the property to unset - FAIL: fail the entire operation 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Mode {
-    #[serde(rename = "SKIP")]
-    Skip,
-    #[serde(rename = "FAIL")]
-    Fail,
-}
-
-impl Default for Mode {
-    fn default() -> Mode {
-        Self::Skip
+impl AlterTransactionAction {
+    /// A single action that could be performed to alter a transaction. This action holds the model definition for all types of specific actions models, this is to minimize difference and compatibility issue across codegen in different languages. When used, only one of the actions should be non-null for each action. If you would like to perform multiple actions, set a list of actions in the AlterTransactionRequest. 
+    pub fn new() -> AlterTransactionAction {
+        AlterTransactionAction {
+            set_status_action: None,
+            set_property_action: None,
+            unset_property_action: None,
+        }
     }
 }
 

@@ -13,14 +13,23 @@
  */
 package com.lancedb.lance.namespace.adapter;
 
+import com.lancedb.lance.namespace.model.AlterTransactionAction;
+import com.lancedb.lance.namespace.model.AlterTransactionRequest;
+import com.lancedb.lance.namespace.model.AlterTransactionSetProperty;
+import com.lancedb.lance.namespace.model.AlterTransactionSetStatus;
+import com.lancedb.lance.namespace.model.AlterTransactionUnsetProperty;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.GetNamespaceRequest;
 import com.lancedb.lance.namespace.model.GetTableRequest;
+import com.lancedb.lance.namespace.model.GetTransactionRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
+import com.lancedb.lance.namespace.model.SetPropertyMode;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
+import com.lancedb.lance.namespace.model.TransactionStatus;
+import com.lancedb.lance.namespace.model.UnsetPropertyMode;
 
 public class ServerToClientRequest {
 
@@ -38,6 +47,9 @@ public class ServerToClientRequest {
       com.lancedb.lance.namespace.server.springboot.model.DropNamespaceRequest request) {
     DropNamespaceRequest converted = new DropNamespaceRequest();
     converted.setName(request.getName());
+    converted.setParent(request.getParent());
+    converted.setMode(DropNamespaceRequest.ModeEnum.valueOf(request.getMode().name()));
+    converted.setBehavior(DropNamespaceRequest.BehaviorEnum.valueOf(request.getBehavior().name()));
     return converted;
   }
 
@@ -85,5 +97,56 @@ public class ServerToClientRequest {
     converted.setNamespace(request.getNamespace());
     converted.setName(request.getName());
     return converted;
+  }
+
+  public static GetTransactionRequest getTransaction(
+      com.lancedb.lance.namespace.server.springboot.model.GetTransactionRequest request) {
+    GetTransactionRequest converted = new GetTransactionRequest();
+    converted.setId(request.getId());
+    return converted;
+  }
+
+  public static AlterTransactionRequest alterTransaction(
+      com.lancedb.lance.namespace.server.springboot.model.AlterTransactionRequest request) {
+    AlterTransactionRequest converted = new AlterTransactionRequest();
+    converted.setActions(
+        request.getActions().stream()
+            .map(ServerToClientRequest::transactionAction)
+            .collect(java.util.stream.Collectors.toList()));
+    return converted;
+  }
+
+  public static AlterTransactionAction transactionAction(
+      com.lancedb.lance.namespace.server.springboot.model.AlterTransactionAction action) {
+
+    AlterTransactionAction converted = new AlterTransactionAction();
+
+    if (action.getSetStatusAction() != null) {
+      AlterTransactionSetStatus setStatus = new AlterTransactionSetStatus();
+      setStatus.setStatus(
+          TransactionStatus.valueOf(action.getSetStatusAction().getStatus().name()));
+      converted.setSetStatusAction(setStatus);
+      return converted;
+    }
+
+    if (action.getSetPropertyAction() != null) {
+      AlterTransactionSetProperty setProperty = new AlterTransactionSetProperty();
+      setProperty.setKey(action.getSetPropertyAction().getKey());
+      setProperty.setValue(action.getSetPropertyAction().getValue());
+      setProperty.setMode(SetPropertyMode.valueOf(action.getSetPropertyAction().getMode().name()));
+      converted.setSetPropertyAction(setProperty);
+      return converted;
+    }
+
+    if (action.getUnsetPropertyAction() != null) {
+      AlterTransactionUnsetProperty unsetProperty = new AlterTransactionUnsetProperty();
+      unsetProperty.setKey(action.getUnsetPropertyAction().getKey());
+      unsetProperty.setMode(
+          UnsetPropertyMode.valueOf(action.getUnsetPropertyAction().getMode().name()));
+      converted.setUnsetPropertyAction(unsetProperty);
+      return converted;
+    }
+
+    throw new IllegalArgumentException("Unexpected action: " + action);
   }
 }

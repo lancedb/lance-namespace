@@ -13,11 +13,9 @@
  */
 package com.lancedb.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -26,7 +24,6 @@ import java.util.StringJoiner;
 
 /** AlterTransactionSetProperty */
 @JsonPropertyOrder({
-  AlterTransactionSetProperty.JSON_PROPERTY_TYPE,
   AlterTransactionSetProperty.JSON_PROPERTY_KEY,
   AlterTransactionSetProperty.JSON_PROPERTY_VALUE,
   AlterTransactionSetProperty.JSON_PROPERTY_MODE
@@ -35,82 +32,16 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class AlterTransactionSetProperty {
-  public static final String JSON_PROPERTY_TYPE = "type";
-  @javax.annotation.Nonnull private String type = "SetProperty";
-
   public static final String JSON_PROPERTY_KEY = "key";
   @javax.annotation.Nullable private String key;
 
   public static final String JSON_PROPERTY_VALUE = "value";
   @javax.annotation.Nullable private String value;
 
-  /**
-   * The behavior if the property key already exists. - OVERWRITE (default): overwrite the existing
-   * value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value
-   * and skip setting the provided value
-   */
-  public enum ModeEnum {
-    OVERWRITE(String.valueOf("OVERWRITE")),
-
-    FAIL(String.valueOf("FAIL")),
-
-    SKIP(String.valueOf("SKIP"));
-
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
   public static final String JSON_PROPERTY_MODE = "mode";
-  @javax.annotation.Nullable private ModeEnum mode;
+  @javax.annotation.Nullable private SetPropertyMode mode;
 
   public AlterTransactionSetProperty() {}
-
-  public AlterTransactionSetProperty type(@javax.annotation.Nonnull String type) {
-
-    this.type = type;
-    return this;
-  }
-
-  /**
-   * Get type
-   *
-   * @return type
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_TYPE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getType() {
-    return type;
-  }
-
-  @JsonProperty(JSON_PROPERTY_TYPE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull String type) {
-    this.type = type;
-  }
 
   public AlterTransactionSetProperty key(@javax.annotation.Nullable String key) {
 
@@ -160,29 +91,27 @@ public class AlterTransactionSetProperty {
     this.value = value;
   }
 
-  public AlterTransactionSetProperty mode(@javax.annotation.Nullable ModeEnum mode) {
+  public AlterTransactionSetProperty mode(@javax.annotation.Nullable SetPropertyMode mode) {
 
     this.mode = mode;
     return this;
   }
 
   /**
-   * The behavior if the property key already exists. - OVERWRITE (default): overwrite the existing
-   * value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value
-   * and skip setting the provided value
+   * Get mode
    *
    * @return mode
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public ModeEnum getMode() {
+  public SetPropertyMode getMode() {
     return mode;
   }
 
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMode(@javax.annotation.Nullable ModeEnum mode) {
+  public void setMode(@javax.annotation.Nullable SetPropertyMode mode) {
     this.mode = mode;
   }
 
@@ -195,22 +124,20 @@ public class AlterTransactionSetProperty {
       return false;
     }
     AlterTransactionSetProperty alterTransactionSetProperty = (AlterTransactionSetProperty) o;
-    return Objects.equals(this.type, alterTransactionSetProperty.type)
-        && Objects.equals(this.key, alterTransactionSetProperty.key)
+    return Objects.equals(this.key, alterTransactionSetProperty.key)
         && Objects.equals(this.value, alterTransactionSetProperty.value)
         && Objects.equals(this.mode, alterTransactionSetProperty.mode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, key, value, mode);
+    return Objects.hash(key, value, mode);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTransactionSetProperty {\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    key: ").append(toIndentedString(key)).append("\n");
     sb.append("    value: ").append(toIndentedString(value)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
@@ -259,21 +186,6 @@ public class AlterTransactionSetProperty {
     }
 
     StringJoiner joiner = new StringJoiner("&");
-
-    // add `type` to the URL query string
-    if (getType() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%stype%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getType()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
 
     // add `key` to the URL query string
     if (getKey() != null) {

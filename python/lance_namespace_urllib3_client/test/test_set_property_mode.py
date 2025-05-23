@@ -14,10 +14,10 @@
 
 import unittest
 
-from lance_namespace_urllib3_client.models.alter_transaction_action import AlterTransactionAction
+from lance_namespace_urllib3_client.models.set_property_mode import SetPropertyMode
 
-class TestAlterTransactionAction(unittest.TestCase):
-    """AlterTransactionAction unit test stubs"""
+class TestSetPropertyMode(unittest.TestCase):
+    """SetPropertyMode unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,35 +25,9 @@ class TestAlterTransactionAction(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> AlterTransactionAction:
-        """Test AlterTransactionAction
-            include_optional is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
-        # uncomment below to create an instance of `AlterTransactionAction`
-        """
-        model = AlterTransactionAction()
-        if include_optional:
-            return AlterTransactionAction(
-                set_status_action = lance_namespace_urllib3_client.models.alter_transaction_set_status.AlterTransactionSetStatus(
-                    status = 'QUEUED', ),
-                set_property_action = lance_namespace_urllib3_client.models.alter_transaction_set_property.AlterTransactionSetProperty(
-                    key = '', 
-                    value = '', 
-                    mode = 'OVERWRITE', ),
-                unset_property_action = lance_namespace_urllib3_client.models.alter_transaction_unset_property.AlterTransactionUnsetProperty(
-                    key = '', 
-                    mode = 'SKIP', )
-            )
-        else:
-            return AlterTransactionAction(
-        )
-        """
-
-    def testAlterTransactionAction(self):
-        """Test AlterTransactionAction"""
-        # inst_req_only = self.make_instance(include_optional=False)
-        # inst_req_and_optional = self.make_instance(include_optional=True)
+    def testSetPropertyMode(self):
+        """Test SetPropertyMode"""
+        # inst = SetPropertyMode()
 
 if __name__ == '__main__':
     unittest.main()

@@ -13,41 +13,21 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AlterTransactionSetProperty {
-    #[serde(rename = "type")]
-    pub r#type: String,
     #[serde(rename = "key", skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
     #[serde(rename = "value", skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
-    /// The behavior if the property key already exists. - OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value and skip setting the provided value 
     #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
-    pub mode: Option<Mode>,
+    pub mode: Option<models::SetPropertyMode>,
 }
 
 impl AlterTransactionSetProperty {
-    pub fn new(r#type: String) -> AlterTransactionSetProperty {
+    pub fn new() -> AlterTransactionSetProperty {
         AlterTransactionSetProperty {
-            r#type,
             key: None,
             value: None,
             mode: None,
         }
-    }
-}
-/// The behavior if the property key already exists. - OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value and skip setting the provided value 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Mode {
-    #[serde(rename = "OVERWRITE")]
-    Overwrite,
-    #[serde(rename = "FAIL")]
-    Fail,
-    #[serde(rename = "SKIP")]
-    Skip,
-}
-
-impl Default for Mode {
-    fn default() -> Mode {
-        Self::Overwrite
     }
 }
 

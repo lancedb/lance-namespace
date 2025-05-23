@@ -27,42 +27,9 @@ import java.util.Objects;
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
-public class AlterTransactionSetStatus implements AlterTransactionAction {
-
-  private String type = "SetStatus";
+public class AlterTransactionSetStatus {
 
   private TransactionStatus status;
-
-  public AlterTransactionSetStatus() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public AlterTransactionSetStatus(String type) {
-    this.type = type;
-  }
-
-  public AlterTransactionSetStatus type(String type) {
-    this.type = type;
-    return this;
-  }
-
-  /**
-   * Get type
-   *
-   * @return type
-   */
-  @NotNull
-  @Pattern(regexp = "^SetStatus$")
-  @Schema(name = "type", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("type")
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
 
   public AlterTransactionSetStatus status(TransactionStatus status) {
     this.status = status;
@@ -94,20 +61,18 @@ public class AlterTransactionSetStatus implements AlterTransactionAction {
       return false;
     }
     AlterTransactionSetStatus alterTransactionSetStatus = (AlterTransactionSetStatus) o;
-    return Objects.equals(this.type, alterTransactionSetStatus.type)
-        && Objects.equals(this.status, alterTransactionSetStatus.status);
+    return Objects.equals(this.status, alterTransactionSetStatus.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, status);
+    return Objects.hash(status);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTransactionSetStatus {\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -13,12 +13,11 @@
  */
 package com.lancedb.lance.namespace.server.springboot.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.annotation.Generated;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
@@ -28,85 +27,13 @@ import java.util.Objects;
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
-public class AlterTransactionSetProperty implements AlterTransactionAction {
-
-  private String type = "SetProperty";
+public class AlterTransactionSetProperty {
 
   private String key;
 
   private String value;
 
-  /**
-   * The behavior if the property key already exists. - OVERWRITE (default): overwrite the existing
-   * value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value
-   * and skip setting the provided value
-   */
-  public enum ModeEnum {
-    OVERWRITE("OVERWRITE"),
-
-    FAIL("FAIL"),
-
-    SKIP("SKIP");
-
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private ModeEnum mode;
-
-  public AlterTransactionSetProperty() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public AlterTransactionSetProperty(String type) {
-    this.type = type;
-  }
-
-  public AlterTransactionSetProperty type(String type) {
-    this.type = type;
-    return this;
-  }
-
-  /**
-   * Get type
-   *
-   * @return type
-   */
-  @NotNull
-  @Pattern(regexp = "^SetProperty$")
-  @Schema(name = "type", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("type")
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
+  private SetPropertyMode mode;
 
   public AlterTransactionSetProperty key(String key) {
     this.key = key;
@@ -148,29 +75,24 @@ public class AlterTransactionSetProperty implements AlterTransactionAction {
     this.value = value;
   }
 
-  public AlterTransactionSetProperty mode(ModeEnum mode) {
+  public AlterTransactionSetProperty mode(SetPropertyMode mode) {
     this.mode = mode;
     return this;
   }
 
   /**
-   * The behavior if the property key already exists. - OVERWRITE (default): overwrite the existing
-   * value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value
-   * and skip setting the provided value
+   * Get mode
    *
    * @return mode
    */
-  @Schema(
-      name = "mode",
-      description =
-          "The behavior if the property key already exists. - OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value and skip setting the provided value ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Valid
+  @Schema(name = "mode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
-  public ModeEnum getMode() {
+  public SetPropertyMode getMode() {
     return mode;
   }
 
-  public void setMode(ModeEnum mode) {
+  public void setMode(SetPropertyMode mode) {
     this.mode = mode;
   }
 
@@ -183,22 +105,20 @@ public class AlterTransactionSetProperty implements AlterTransactionAction {
       return false;
     }
     AlterTransactionSetProperty alterTransactionSetProperty = (AlterTransactionSetProperty) o;
-    return Objects.equals(this.type, alterTransactionSetProperty.type)
-        && Objects.equals(this.key, alterTransactionSetProperty.key)
+    return Objects.equals(this.key, alterTransactionSetProperty.key)
         && Objects.equals(this.value, alterTransactionSetProperty.value)
         && Objects.equals(this.mode, alterTransactionSetProperty.mode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, key, value, mode);
+    return Objects.hash(key, value, mode);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTransactionSetProperty {\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    key: ").append(toIndentedString(key)).append("\n");
     sb.append("    value: ").append(toIndentedString(value)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");

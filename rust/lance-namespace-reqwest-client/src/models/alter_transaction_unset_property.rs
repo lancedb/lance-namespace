@@ -13,36 +13,18 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AlterTransactionUnsetProperty {
-    #[serde(rename = "type")]
-    pub r#type: String,
     #[serde(rename = "key", skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
-    /// The behavior if the property key to unset does not exist. - SKIP (default): skip the property to unset - FAIL: fail the entire operation 
     #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
-    pub mode: Option<Mode>,
+    pub mode: Option<models::UnsetPropertyMode>,
 }
 
 impl AlterTransactionUnsetProperty {
-    pub fn new(r#type: String) -> AlterTransactionUnsetProperty {
+    pub fn new() -> AlterTransactionUnsetProperty {
         AlterTransactionUnsetProperty {
-            r#type,
             key: None,
             mode: None,
         }
-    }
-}
-/// The behavior if the property key to unset does not exist. - SKIP (default): skip the property to unset - FAIL: fail the entire operation 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Mode {
-    #[serde(rename = "SKIP")]
-    Skip,
-    #[serde(rename = "FAIL")]
-    Fail,
-}
-
-impl Default for Mode {
-    fn default() -> Mode {
-        Self::Skip
     }
 }
 
