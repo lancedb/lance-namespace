@@ -17,8 +17,12 @@ import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.AlterTransactionResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
+import com.lancedb.lance.namespace.model.DeregisterTableRequest;
+import com.lancedb.lance.namespace.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
+import com.lancedb.lance.namespace.model.DropTableRequest;
+import com.lancedb.lance.namespace.model.DropTableResponse;
 import com.lancedb.lance.namespace.model.GetNamespaceRequest;
 import com.lancedb.lance.namespace.model.GetNamespaceResponse;
 import com.lancedb.lance.namespace.model.GetTableRequest;
@@ -52,6 +56,10 @@ public interface LanceNamespace {
   RegisterTableResponse registerTable(RegisterTableRequest request);
 
   TableExistsResponse tableExists(TableExistsRequest request);
+
+  DropTableResponse dropTable(DropTableRequest request);
+
+  DeregisterTableResponse deregisterTable(DeregisterTableRequest request);
 
   GetTransactionResponse getTransaction(GetTransactionRequest request);
 

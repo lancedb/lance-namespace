@@ -4,10 +4,164 @@ All URIs are relative to *http://localhost:2333*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**deregister_table**](TableApi.md#deregister_table) | **POST** /DeregisterTable | Deregister a table from its namespace
+[**drop_table**](TableApi.md#drop_table) | **POST** /DropTable | Drop a table from its namespace
 [**get_table**](TableApi.md#get_table) | **POST** /GetTable | Get a table from the namespace
 [**register_table**](TableApi.md#register_table) | **POST** /RegisterTable | Register a table to a namespace
 [**table_exists**](TableApi.md#table_exists) | **POST** /TableExists | Check if a table exists
 
+
+# **deregister_table**
+> DeregisterTableResponse deregister_table(deregister_table_request)
+
+Deregister a table from its namespace
+
+Deregister a table from its namespace. The table content remains available in the storage.
+
+
+### Example
+
+
+```python
+import lance_namespace_urllib3_client
+from lance_namespace_urllib3_client.models.deregister_table_request import DeregisterTableRequest
+from lance_namespace_urllib3_client.models.deregister_table_response import DeregisterTableResponse
+from lance_namespace_urllib3_client.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to http://localhost:2333
+# See configuration.py for a list of all supported configuration parameters.
+configuration = lance_namespace_urllib3_client.Configuration(
+    host = "http://localhost:2333"
+)
+
+
+# Enter a context with an instance of the API client
+with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = lance_namespace_urllib3_client.TableApi(api_client)
+    deregister_table_request = lance_namespace_urllib3_client.DeregisterTableRequest() # DeregisterTableRequest | 
+
+    try:
+        # Deregister a table from its namespace
+        api_response = api_instance.deregister_table(deregister_table_request)
+        print("The response of TableApi->deregister_table:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling TableApi->deregister_table: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **deregister_table_request** | [**DeregisterTableRequest**](DeregisterTableRequest.md)|  | 
+
+### Return type
+
+[**DeregisterTableResponse**](DeregisterTableResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Response of DeregisterTable |  -  |
+**400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+**401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
+**403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
+**404** | A server-side problem that means can not find the specified resource. |  -  |
+**503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
+**5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **drop_table**
+> DropTableResponse drop_table(drop_table_request)
+
+Drop a table from its namespace
+
+Drop a table from its namespace and delete its data. If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress.
+
+
+### Example
+
+
+```python
+import lance_namespace_urllib3_client
+from lance_namespace_urllib3_client.models.drop_table_request import DropTableRequest
+from lance_namespace_urllib3_client.models.drop_table_response import DropTableResponse
+from lance_namespace_urllib3_client.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to http://localhost:2333
+# See configuration.py for a list of all supported configuration parameters.
+configuration = lance_namespace_urllib3_client.Configuration(
+    host = "http://localhost:2333"
+)
+
+
+# Enter a context with an instance of the API client
+with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = lance_namespace_urllib3_client.TableApi(api_client)
+    drop_table_request = lance_namespace_urllib3_client.DropTableRequest() # DropTableRequest | 
+
+    try:
+        # Drop a table from its namespace
+        api_response = api_instance.drop_table(drop_table_request)
+        print("The response of TableApi->drop_table:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling TableApi->drop_table: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **drop_table_request** | [**DropTableRequest**](DropTableRequest.md)|  | 
+
+### Return type
+
+[**DropTableResponse**](DropTableResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Response of DropTable |  -  |
+**400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+**401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
+**403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
+**404** | A server-side problem that means can not find the specified resource. |  -  |
+**503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
+**5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_table**
 > GetTableResponse get_table(get_table_request)

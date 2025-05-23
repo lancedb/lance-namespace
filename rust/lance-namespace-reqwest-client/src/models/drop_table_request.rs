@@ -12,18 +12,18 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct AlterTransactionResponse {
-    #[serde(rename = "id")]
-    pub id: String,
-    #[serde(rename = "status")]
-    pub status: models::TransactionStatus,
+pub struct DropTableRequest {
+    #[serde(rename = "name")]
+    pub name: String,
+    #[serde(rename = "namespace", skip_serializing_if = "Option::is_none")]
+    pub namespace: Option<Vec<String>>,
 }
 
-impl AlterTransactionResponse {
-    pub fn new(id: String, status: models::TransactionStatus) -> AlterTransactionResponse {
-        AlterTransactionResponse {
-            id,
-            status,
+impl DropTableRequest {
+    pub fn new(name: String) -> DropTableRequest {
+        DropTableRequest {
+            name,
+            namespace: None,
         }
     }
 }

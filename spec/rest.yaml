@@ -366,6 +366,66 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /DropTable:
+    post:
+      tags: [ Table ]
+      summary: Drop a table from its namespace
+      operationId: DropTable
+      description: >
+        Drop a table from its namespace and delete its data.
+        If the table and its data can be immediately deleted, return information of the deleted table.
+        Otherwise, return a transaction ID that client can use to track deletion progress.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DropTableRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/DropTableResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /DeregisterTable:
+    post:
+      tags: [ Table ]
+      summary: Deregister a table from its namespace
+      operationId: DeregisterTable
+      description: >
+        Deregister a table from its namespace. The table content remains available in the storage.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeregisterTableRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/DeregisterTableResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
 components:
   schemas:
     ErrorResponse:
@@ -795,6 +855,60 @@ components:
           type: string
         status:
           $ref: '#/components/schemas/TransactionStatus'
+
+    DropTableRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        namespace:
+          type: array
+          items:
+            type: string
+
+    DropTableResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        namespace:
+          type: array
+          items:
+            type: string
+        location:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+        transactionId:
+          type: string
+
+    DeregisterTableRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        namespace:
+          type: array
+          items:
+            type: string
+
+    DeregisterTableResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        namespace:
+          type: array
+          items:
+            type: string
+        location:
+          type: string
         properties:
           type: object
           additionalProperties:
@@ -881,6 +995,22 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/AlterTransactionResponse'
+
+    DropTableResponse:
+      description:
+        Response of DropTable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DropTableResponse'
+
+    DeregisterTableResponse:
+      description:
+        Response of DeregisterTable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeregisterTableResponse'
 
     # Error Responses
 

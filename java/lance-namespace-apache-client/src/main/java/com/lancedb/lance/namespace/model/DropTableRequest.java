@@ -19,72 +19,79 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** AlterTransactionResponse */
-@JsonPropertyOrder({
-  AlterTransactionResponse.JSON_PROPERTY_ID,
-  AlterTransactionResponse.JSON_PROPERTY_STATUS
-})
+/** DropTableRequest */
+@JsonPropertyOrder({DropTableRequest.JSON_PROPERTY_NAME, DropTableRequest.JSON_PROPERTY_NAMESPACE})
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class AlterTransactionResponse {
-  public static final String JSON_PROPERTY_ID = "id";
-  @javax.annotation.Nonnull private String id;
+public class DropTableRequest {
+  public static final String JSON_PROPERTY_NAME = "name";
+  @javax.annotation.Nonnull private String name;
 
-  public static final String JSON_PROPERTY_STATUS = "status";
-  @javax.annotation.Nonnull private TransactionStatus status;
+  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
+  @javax.annotation.Nullable private List<String> namespace = new ArrayList<>();
 
-  public AlterTransactionResponse() {}
+  public DropTableRequest() {}
 
-  public AlterTransactionResponse id(@javax.annotation.Nonnull String id) {
+  public DropTableRequest name(@javax.annotation.Nonnull String name) {
 
-    this.id = id;
+    this.name = name;
     return this;
   }
 
   /**
-   * Get id
+   * Get name
    *
-   * @return id
+   * @return name
    */
   @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_ID)
+  @JsonProperty(JSON_PROPERTY_NAME)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getId() {
-    return id;
+  public String getName() {
+    return name;
   }
 
-  @JsonProperty(JSON_PROPERTY_ID)
+  @JsonProperty(JSON_PROPERTY_NAME)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setId(@javax.annotation.Nonnull String id) {
-    this.id = id;
+  public void setName(@javax.annotation.Nonnull String name) {
+    this.name = name;
   }
 
-  public AlterTransactionResponse status(@javax.annotation.Nonnull TransactionStatus status) {
+  public DropTableRequest namespace(@javax.annotation.Nullable List<String> namespace) {
 
-    this.status = status;
+    this.namespace = namespace;
+    return this;
+  }
+
+  public DropTableRequest addNamespaceItem(String namespaceItem) {
+    if (this.namespace == null) {
+      this.namespace = new ArrayList<>();
+    }
+    this.namespace.add(namespaceItem);
     return this;
   }
 
   /**
-   * Get status
+   * Get namespace
    *
-   * @return status
+   * @return namespace
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_STATUS)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public TransactionStatus getStatus() {
-    return status;
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<String> getNamespace() {
+    return namespace;
   }
 
-  @JsonProperty(JSON_PROPERTY_STATUS)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setStatus(@javax.annotation.Nonnull TransactionStatus status) {
-    this.status = status;
+  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNamespace(@javax.annotation.Nullable List<String> namespace) {
+    this.namespace = namespace;
   }
 
   @Override
@@ -95,22 +102,22 @@ public class AlterTransactionResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AlterTransactionResponse alterTransactionResponse = (AlterTransactionResponse) o;
-    return Objects.equals(this.id, alterTransactionResponse.id)
-        && Objects.equals(this.status, alterTransactionResponse.status);
+    DropTableRequest dropTableRequest = (DropTableRequest) o;
+    return Objects.equals(this.name, dropTableRequest.name)
+        && Objects.equals(this.namespace, dropTableRequest.namespace);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, status);
+    return Objects.hash(name, namespace);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class AlterTransactionResponse {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("class DropTableRequest {\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -157,33 +164,39 @@ public class AlterTransactionResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `id` to the URL query string
-    if (getId() != null) {
+    // add `name` to the URL query string
+    if (getName() != null) {
       try {
         joiner.add(
             String.format(
-                "%sid%s=%s",
+                "%sname%s=%s",
                 prefix,
                 suffix,
-                URLEncoder.encode(String.valueOf(getId()), "UTF-8").replaceAll("\\+", "%20")));
+                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);
       }
     }
 
-    // add `status` to the URL query string
-    if (getStatus() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sstatus%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getStatus()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
+    // add `namespace` to the URL query string
+    if (getNamespace() != null) {
+      for (int i = 0; i < getNamespace().size(); i++) {
+        try {
+          joiner.add(
+              String.format(
+                  "%snamespace%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
+                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 

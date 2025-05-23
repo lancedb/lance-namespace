@@ -15,6 +15,10 @@ package com.lancedb.lance.namespace.adapter;
 
 import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.server.springboot.api.TableApi;
+import com.lancedb.lance.namespace.server.springboot.model.DeregisterTableRequest;
+import com.lancedb.lance.namespace.server.springboot.model.DeregisterTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DropTableRequest;
+import com.lancedb.lance.namespace.server.springboot.model.DropTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.GetTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.GetTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.RegisterTableRequest;
@@ -54,5 +58,21 @@ public class TableController implements TableApi {
     return ResponseEntity.ok(
         ClientToServerResponse.tableExists(
             delegate.tableExists(ServerToClientRequest.tableExists(tableExistsRequest))));
+  }
+
+  @Override
+  public ResponseEntity<DropTableResponse> dropTable(DropTableRequest dropTableRequest) {
+    return ResponseEntity.ok(
+        ClientToServerResponse.dropTable(
+            delegate.dropTable(ServerToClientRequest.dropTable(dropTableRequest))));
+  }
+
+  @Override
+  public ResponseEntity<DeregisterTableResponse> deregisterTable(
+      DeregisterTableRequest deregisterTableRequest) {
+    return ResponseEntity.ok(
+        ClientToServerResponse.deregisterTable(
+            delegate.deregisterTable(
+                ServerToClientRequest.deregisterTable(deregisterTableRequest))));
   }
 }

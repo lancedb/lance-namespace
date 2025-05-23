@@ -21,69 +21,76 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-/** AlterTransactionResponse */
+/** DropTableRequest */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
-public class AlterTransactionResponse {
+public class DropTableRequest {
 
-  private String id;
+  private String name;
 
-  private TransactionStatus status;
+  @Valid private List<String> namespace = new ArrayList<>();
 
-  public AlterTransactionResponse() {
+  public DropTableRequest() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public AlterTransactionResponse(String id, TransactionStatus status) {
-    this.id = id;
-    this.status = status;
+  public DropTableRequest(String name) {
+    this.name = name;
   }
 
-  public AlterTransactionResponse id(String id) {
-    this.id = id;
+  public DropTableRequest name(String name) {
+    this.name = name;
     return this;
   }
 
   /**
-   * Get id
+   * Get name
    *
-   * @return id
+   * @return name
    */
   @NotNull
-  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("id")
-  public String getId() {
-    return id;
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("name")
+  public String getName() {
+    return name;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setName(String name) {
+    this.name = name;
   }
 
-  public AlterTransactionResponse status(TransactionStatus status) {
-    this.status = status;
+  public DropTableRequest namespace(List<String> namespace) {
+    this.namespace = namespace;
+    return this;
+  }
+
+  public DropTableRequest addNamespaceItem(String namespaceItem) {
+    if (this.namespace == null) {
+      this.namespace = new ArrayList<>();
+    }
+    this.namespace.add(namespaceItem);
     return this;
   }
 
   /**
-   * Get status
+   * Get namespace
    *
-   * @return status
+   * @return namespace
    */
-  @NotNull
-  @Valid
-  @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("status")
-  public TransactionStatus getStatus() {
-    return status;
+  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("namespace")
+  public List<String> getNamespace() {
+    return namespace;
   }
 
-  public void setStatus(TransactionStatus status) {
-    this.status = status;
+  public void setNamespace(List<String> namespace) {
+    this.namespace = namespace;
   }
 
   @Override
@@ -94,22 +101,22 @@ public class AlterTransactionResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AlterTransactionResponse alterTransactionResponse = (AlterTransactionResponse) o;
-    return Objects.equals(this.id, alterTransactionResponse.id)
-        && Objects.equals(this.status, alterTransactionResponse.status);
+    DropTableRequest dropTableRequest = (DropTableRequest) o;
+    return Objects.equals(this.name, dropTableRequest.name)
+        && Objects.equals(this.namespace, dropTableRequest.namespace);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, status);
+    return Objects.hash(name, namespace);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class AlterTransactionResponse {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("class DropTableRequest {\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("}");
     return sb.toString();
   }

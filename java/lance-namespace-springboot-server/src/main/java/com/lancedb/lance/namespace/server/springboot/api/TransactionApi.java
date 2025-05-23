@@ -156,8 +156,7 @@ public interface TransactionApi {
             request -> {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"id\" : \"id\", \"properties\" : { \"key\" : \"properties\" }, \"status\" : \"QUEUED\" }";
+                  String exampleString = "{ \"id\" : \"id\", \"status\" : \"QUEUED\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }

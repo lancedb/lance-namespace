@@ -18,18 +18,17 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List
-from lance_namespace_urllib3_client.models.transaction_status import TransactionStatus
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class AlterTransactionResponse(BaseModel):
+class DropTableRequest(BaseModel):
     """
-    AlterTransactionResponse
+    DropTableRequest
     """ # noqa: E501
-    id: StrictStr
-    status: TransactionStatus
-    __properties: ClassVar[List[str]] = ["id", "status"]
+    name: StrictStr
+    namespace: Optional[List[StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["name", "namespace"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +48,7 @@ class AlterTransactionResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of AlterTransactionResponse from a JSON string"""
+        """Create an instance of DropTableRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,7 +73,7 @@ class AlterTransactionResponse(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of AlterTransactionResponse from a dict"""
+        """Create an instance of DropTableRequest from a dict"""
         if obj is None:
             return None
 
@@ -82,8 +81,8 @@ class AlterTransactionResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "status": obj.get("status")
+            "name": obj.get("name"),
+            "namespace": obj.get("namespace")
         })
         return _obj
 

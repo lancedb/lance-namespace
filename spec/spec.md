@@ -95,6 +95,8 @@ The Lance Namespace Specification defines a list of operations that can be perfo
 | RegisterTable    | Register an existing table at a given storage location to a namespace                                              |
 | AlterTable       | Alter information of a Lance table                                                                                 |
 | DropTable        | Drop a table from its namespace                                                                                    |
+| DropTable        | Drop a table from its namespace, also delete its data                                                              |
+| DeregisterTable  | Deregister a table from its namespace, table content is kept unchanged in storage                                  |
 | GetTransaction   | Describe information of a transaction                                                                              |
 | AlterTransaction | Alter information of a transaction                                                                                 |
 

@@ -12,18 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct AlterTransactionResponse {
-    #[serde(rename = "id")]
-    pub id: String,
-    #[serde(rename = "status")]
-    pub status: models::TransactionStatus,
+pub struct DropTableResponse {
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "namespace", skip_serializing_if = "Option::is_none")]
+    pub namespace: Option<Vec<String>>,
+    #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
+    pub location: Option<String>,
+    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
+    pub properties: Option<std::collections::HashMap<String, String>>,
+    #[serde(rename = "transactionId", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
 }
 
-impl AlterTransactionResponse {
-    pub fn new(id: String, status: models::TransactionStatus) -> AlterTransactionResponse {
-        AlterTransactionResponse {
-            id,
-            status,
+impl DropTableResponse {
+    pub fn new() -> DropTableResponse {
+        DropTableResponse {
+            name: None,
+            namespace: None,
+            location: None,
+            properties: None,
+            transaction_id: None,
         }
     }
 }

@@ -7,7 +7,6 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **str** |  | 
 **status** | [**TransactionStatus**](TransactionStatus.md) |  | 
-**properties** | **Dict[str, str]** |  | [optional] 
 
 ## Example
 

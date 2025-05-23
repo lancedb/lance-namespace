@@ -93,6 +93,8 @@ Class | Method | HTTP request | Description
 *NamespaceApi* | [**get_namespace**](docs/NamespaceApi.md#get_namespace) | **POST** /GetNamespace | Get information about a namespace
 *NamespaceApi* | [**list_namespaces**](docs/NamespaceApi.md#list_namespaces) | **POST** /ListNamespaces | List namespaces
 *NamespaceApi* | [**namespace_exists**](docs/NamespaceApi.md#namespace_exists) | **POST** /NamespaceExists | Check if a namespace exists
+*TableApi* | [**deregister_table**](docs/TableApi.md#deregister_table) | **POST** /DeregisterTable | Deregister a table from its namespace
+*TableApi* | [**drop_table**](docs/TableApi.md#drop_table) | **POST** /DropTable | Drop a table from its namespace
 *TableApi* | [**get_table**](docs/TableApi.md#get_table) | **POST** /GetTable | Get a table from the namespace
 *TableApi* | [**register_table**](docs/TableApi.md#register_table) | **POST** /RegisterTable | Register a table to a namespace
 *TableApi* | [**table_exists**](docs/TableApi.md#table_exists) | **POST** /TableExists | Check if a table exists
@@ -110,8 +112,12 @@ Class | Method | HTTP request | Description
  - [AlterTransactionUnsetProperty](docs/AlterTransactionUnsetProperty.md)
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
+ - [DeregisterTableRequest](docs/DeregisterTableRequest.md)
+ - [DeregisterTableResponse](docs/DeregisterTableResponse.md)
  - [DropNamespaceRequest](docs/DropNamespaceRequest.md)
  - [DropNamespaceResponse](docs/DropNamespaceResponse.md)
+ - [DropTableRequest](docs/DropTableRequest.md)
+ - [DropTableResponse](docs/DropTableResponse.md)
  - [ErrorResponse](docs/ErrorResponse.md)
  - [GetNamespaceRequest](docs/GetNamespaceRequest.md)
  - [GetNamespaceResponse](docs/GetNamespaceResponse.md)

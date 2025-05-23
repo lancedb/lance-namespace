@@ -365,6 +365,70 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /DropTable:
+    post:
+      description: |
+        Drop a table from its namespace and delete its data. If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress.
+      operationId: DropTable
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DropTableRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/DropTableResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Drop a table from its namespace
+      tags:
+      - Table
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /DeregisterTable:
+    post:
+      description: |
+        Deregister a table from its namespace. The table content remains available in the storage.
+      operationId: DeregisterTable
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeregisterTableRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/DeregisterTableResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Deregister a table from its namespace
+      tags:
+      - Table
+      x-content-type: application/json
+      x-accepts:
+      - application/json
 components:
   examples:
     ListNamespacesEmptyExample:
@@ -444,6 +508,18 @@ components:
           schema:
             $ref: '#/components/schemas/AlterTransactionResponse'
       description: Response of AlterTransaction
+    DropTableResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DropTableResponse'
+      description: Response of DropTable
+    DeregisterTableResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeregisterTableResponse'
+      description: Response of DeregisterTable
     BadRequestErrorResponse:
       content:
         application/json:
@@ -1056,18 +1132,88 @@ components:
     AlterTransactionResponse:
       example:
         id: id
-        properties:
-          key: properties
         status: QUEUED
       properties:
         id:
           type: string
         status:
           $ref: '#/components/schemas/TransactionStatus'
-        properties:
-          additionalProperties:
-            type: string
       required:
       - id
       - status
+    DropTableRequest:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+      properties:
+        name:
+          type: string
+        namespace:
+          items:
+            type: string
+          type: array
+      required:
+      - name
+    DropTableResponse:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+        location: location
+        properties:
+          key: properties
+        transactionId: transactionId
+      properties:
+        name:
+          type: string
+        namespace:
+          items:
+            type: string
+          type: array
+        location:
+          type: string
+        properties:
+          additionalProperties:
+            type: string
+        transactionId:
+          type: string
+    DeregisterTableRequest:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+      properties:
+        name:
+          type: string
+        namespace:
+          items:
+            type: string
+          type: array
+      required:
+      - name
+    DeregisterTableResponse:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+        location: location
+        properties:
+          key: properties
+      properties:
+        name:
+          type: string
+        namespace:
+          items:
+            type: string
+          type: array
+        location:
+          type: string
+        properties:
+          additionalProperties:
+            type: string
 

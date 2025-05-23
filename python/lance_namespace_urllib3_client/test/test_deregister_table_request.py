@@ -14,53 +14,42 @@
 
 import unittest
 
-from lance_namespace_urllib3_client.api.table_api import TableApi
+from lance_namespace_urllib3_client.models.deregister_table_request import DeregisterTableRequest
 
+class TestDeregisterTableRequest(unittest.TestCase):
+    """DeregisterTableRequest unit test stubs"""
 
-class TestTableApi(unittest.TestCase):
-    """TableApi unit test stubs"""
-
-    def setUp(self) -> None:
-        self.api = TableApi()
-
-    def tearDown(self) -> None:
+    def setUp(self):
         pass
 
-    def test_deregister_table(self) -> None:
-        """Test case for deregister_table
+    def tearDown(self):
+        pass
 
-        Deregister a table from its namespace
+    def make_instance(self, include_optional) -> DeregisterTableRequest:
+        """Test DeregisterTableRequest
+            include_optional is a boolean, when False only required
+            params are included, when True both required and
+            optional params are included """
+        # uncomment below to create an instance of `DeregisterTableRequest`
         """
-        pass
-
-    def test_drop_table(self) -> None:
-        """Test case for drop_table
-
-        Drop a table from its namespace
+        model = DeregisterTableRequest()
+        if include_optional:
+            return DeregisterTableRequest(
+                name = '',
+                namespace = [
+                    ''
+                    ]
+            )
+        else:
+            return DeregisterTableRequest(
+                name = '',
+        )
         """
-        pass
 
-    def test_get_table(self) -> None:
-        """Test case for get_table
-
-        Get a table from the namespace
-        """
-        pass
-
-    def test_register_table(self) -> None:
-        """Test case for register_table
-
-        Register a table to a namespace
-        """
-        pass
-
-    def test_table_exists(self) -> None:
-        """Test case for table_exists
-
-        Check if a table exists
-        """
-        pass
-
+    def testDeregisterTableRequest(self):
+        """Test DeregisterTableRequest"""
+        # inst_req_only = self.make_instance(include_optional=False)
+        # inst_req_and_optional = self.make_instance(include_optional=True)
 
 if __name__ == '__main__':
     unittest.main()

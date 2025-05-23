@@ -1,14 +1,14 @@
 
 
-# AlterTransactionResponse
+# DeregisterTableRequest
 
 
 ## Properties
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**id** | **String** |  |  |
-|**status** | **TransactionStatus** |  |  |
+|**name** | **String** |  |  |
+|**namespace** | **List&lt;String&gt;** |  |  [optional] |
 
 
 
