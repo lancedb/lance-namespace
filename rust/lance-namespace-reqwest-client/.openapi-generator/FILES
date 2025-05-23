@@ -4,8 +4,12 @@ Cargo.toml
 README.md
 docs/CreateNamespaceRequest.md
 docs/CreateNamespaceResponse.md
+docs/DeregisterTableRequest.md
+docs/DeregisterTableResponse.md
 docs/DropNamespaceRequest.md
 docs/DropNamespaceResponse.md
+docs/DropTableRequest.md
+docs/DropTableResponse.md
 docs/ErrorResponse.md
 docs/GetNamespaceRequest.md
 docs/GetNamespaceResponse.md
@@ -29,8 +33,12 @@ src/apis/table_api.rs
 src/lib.rs
 src/models/create_namespace_request.rs
 src/models/create_namespace_response.rs
+src/models/deregister_table_request.rs
+src/models/deregister_table_response.rs
 src/models/drop_namespace_request.rs
 src/models/drop_namespace_response.rs
+src/models/drop_table_request.rs
+src/models/drop_table_response.rs
 src/models/error_response.rs
 src/models/get_namespace_request.rs
 src/models/get_namespace_response.rs

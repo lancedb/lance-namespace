@@ -14,7 +14,9 @@
 package com.lancedb.lance.namespace.adapter;
 
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
+import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
+import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.GetNamespaceRequest;
 import com.lancedb.lance.namespace.model.GetTableRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
@@ -84,6 +86,22 @@ public class ServerToClientRequest {
     TableExistsRequest converted = new TableExistsRequest();
     converted.setNamespace(request.getNamespace());
     converted.setName(request.getName());
+    return converted;
+  }
+
+  public static DropTableRequest dropTable(
+      com.lancedb.lance.namespace.server.springboot.model.DropTableRequest request) {
+    DropTableRequest converted = new DropTableRequest();
+    converted.setName(request.getName());
+    converted.setNamespace(request.getNamespace());
+    return converted;
+  }
+
+  public static DeregisterTableRequest deregisterTable(
+      com.lancedb.lance.namespace.server.springboot.model.DeregisterTableRequest request) {
+    DeregisterTableRequest converted = new DeregisterTableRequest();
+    converted.setName(request.getName());
+    converted.setNamespace(request.getNamespace());
     return converted;
   }
 }
