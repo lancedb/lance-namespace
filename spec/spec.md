@@ -79,22 +79,24 @@ and they are both configured to connect to the same root namespace.
 
 The Lance Namespace Specification defines a list of operations that can be performed against any Lance namespace:
 
-| Operation ID    | Description                                                                                                        |
-|-----------------|--------------------------------------------------------------------------------------------------------------------|
-| ListOperations  | List the operations that are supported by this Lance namespace                                                     |
-| ListNamespaces  | List the names of child namespaces in the parent namespace, or root namespace if parent namespace is not specified |
-| NamespaceExists | Check if a namespace exists                                                                                        |
-| GetNamespace    | Describe information of a namespace                                                                                |
-| CreateNamespace | Create a new namespace under a parent namespace, or root namespace if parent namespace is not specified            |
-| AlterNamespace  | Alter information of a namespace                                                                                   |
-| DropNamespace   | Drop a namespace from its a parent namespace, or root namespace if parent namespace is not specified               |
-| ListTables      | List the names of tables in a namespace                                                                            |
-| TableExists     | Check if a table exists                                                                                            |
-| GetTable        | Describe information of a Lance table in the namespace                                                             |
-| CreateTable     | Create a new Lance table under a namespace                                                                         |
-| RegisterTable   | Register an existing table at a given storage location to a namespace                                              |
-| AlterTable      | Alter information of a Lance table                                                                                 |
-| DropTable       | Drop a table from its namespace                                                                                    |
+| Operation ID     | Description                                                                                                        |
+|------------------|--------------------------------------------------------------------------------------------------------------------|
+| ListOperations   | List the operations that are supported by this Lance namespace                                                     |
+| ListNamespaces   | List the names of child namespaces in the parent namespace, or root namespace if parent namespace is not specified |
+| NamespaceExists  | Check if a namespace exists                                                                                        |
+| GetNamespace     | Describe information of a namespace                                                                                |
+| CreateNamespace  | Create a new namespace under a parent namespace, or root namespace if parent namespace is not specified            |
+| AlterNamespace   | Alter information of a namespace                                                                                   |
+| DropNamespace    | Drop a namespace from its a parent namespace, or root namespace if parent namespace is not specified               |
+| ListTables       | List the names of tables in a namespace                                                                            |
+| TableExists      | Check if a table exists                                                                                            |
+| GetTable         | Describe information of a Lance table in the namespace                                                             |
+| CreateTable      | Create a new Lance table under a namespace                                                                         |
+| RegisterTable    | Register an existing table at a given storage location to a namespace                                              |
+| AlterTable       | Alter information of a Lance table                                                                                 |
+| DropTable        | Drop a table from its namespace                                                                                    |
+| GetTransaction   | Describe information of a transaction                                                                              |
+| AlterTransaction | Alter information of a transaction                                                                                 |
 
 ### Operation Versioning
 

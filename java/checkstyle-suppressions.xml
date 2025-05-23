@@ -8,4 +8,5 @@
     <!-- Generated Apache client server configuration having a method with name 'URL' -->
     <suppress checks="MethodName" files="lance-namespace-apache-client/src/main/java/com/lancedb/lance/namespace/client/apache/ServerConfiguration.java"/>
     <suppress checks="LineLength" files="lance-namespace-springboot-server/src/main/java/com/lancedb/lance/namespace/server/springboot/*"/>
+    <suppress checks="RedundantModifier" files="lance-namespace-springboot-server/src/main/java/com/lancedb/lance/namespace/server/springboot/*"/>
 </suppressions>
