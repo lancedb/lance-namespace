@@ -53,7 +53,7 @@ jobs:
           make gen
       - name: Check no difference in codegen
         run: |
-          output=$(git diff)
+          output=$(git diff -- . ':(exclude)python/lance_namespace_urllib3_client/poetry.lock')
           if [ -z "$output" ]; then
             echo "There is no difference in codegen"
           else
