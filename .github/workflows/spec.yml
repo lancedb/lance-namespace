@@ -50,7 +50,7 @@ jobs:
       - name: Codegen
         run: | 
           make clean
-          make build
+          make gen
       - name: Check no difference in codegen
         run: |
           output=$(git diff)
