@@ -21,6 +21,11 @@ gen-rust-reqwest-client: clean-rust-reqwest-client
 	  -g rust \
 	  -o lance-namespace-reqwest-client \
 	  --additional-properties=packageName=lance-namespace-reqwest-client,packageVersion=$(VERSION),asyncApi=true,library=reqwest
+	rm -rf lance-namespace-reqwest-client/.openapi-generator-ignore
+	rm -rf lance-namespace-reqwest-client/.openapi-generator
+	rm -rf lance-namespace-reqwest-client/.gitignore
+	rm -rf lance-namespace-reqwest-client/.travis.yml
+	rm -rf lance-namespace-reqwest-client/git_push.sh
 
 build-rust-reqwest-client: gen-rust-reqwest-client
 	cargo test
