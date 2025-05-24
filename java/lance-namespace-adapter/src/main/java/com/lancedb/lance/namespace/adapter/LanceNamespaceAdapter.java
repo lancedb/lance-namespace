@@ -13,7 +13,7 @@
  */
 package com.lancedb.lance.namespace.adapter;
 
-import com.lancedb.lance.namespace.client.LanceNamespace;
+import com.lancedb.lance.namespace.LanceNamespace;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -51,8 +51,16 @@ lint-java-springboot-server: gen-java-apache-client gen-java-springboot-server
 build-java-springboot-server: gen-java-springboot-server lint-java-springboot-server
 	./mvnw install -pl lance-namespace-springboot-server -am
 
+build-java-core:
+	./mvnw spotless:apply -pl lance-namespace-core -am
+	./mvnw spotless:apply -pl lance-namespace-core -am
+
+build-java-adapter:
+	./mvnw spotless:apply -pl lance-namespace-adapter -am
+	./mvnw spotless:apply -pl lance-namespace-adapter -am
+
 clean: clean-java-apache-client clean-java-springboot-server
 
 gen: gen-java-apache-client gen-java-springboot-server lint-java-apache-client lint-java-springboot-server
 
-build: build-java-apache-client build-java-springboot-server
+build: build-java-apache-client build-java-springboot-server build-java-core build-java-adapter

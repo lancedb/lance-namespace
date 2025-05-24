@@ -13,7 +13,7 @@
  */
 package com.lancedb.lance.namespace.adapter;
 
-import com.lancedb.lance.namespace.client.LanceNamespace;
+import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.server.springboot.api.NamespaceApi;
 import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceResponse;

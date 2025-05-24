@@ -13,7 +13,7 @@
  */
 package com.lancedb.lance.namespace.adapter;
 
-import com.lancedb.lance.namespace.client.LanceNamespace;
+import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.server.springboot.api.TableApi;
 import com.lancedb.lance.namespace.server.springboot.model.GetTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.GetTableResponse;
