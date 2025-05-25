@@ -1,1 +1,2 @@
+openapi-spec-validator==0.7.1
 openapi-generator-cli==7.12.0

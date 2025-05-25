@@ -41,6 +41,13 @@ To quickly install it in your virtual environment:
 pip install -r python/requirements.txt
 ```
 
+### Lint
+To ensure the OpenAPI definition is valid, you can use the lint command to check it.
+
+```bash
+make lint
+```
+
 ### Build
 
 There are 3 commands that is available at top level as well as inside each language folder:
