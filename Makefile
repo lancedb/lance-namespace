@@ -42,6 +42,6 @@ build-java:
 
 clean: clean-rust clean-python clean-java
 
-gen: gen-rust gen-python gen-java
+gen: lint gen-rust gen-python gen-java
 
 build: build-rust build-python build-java
