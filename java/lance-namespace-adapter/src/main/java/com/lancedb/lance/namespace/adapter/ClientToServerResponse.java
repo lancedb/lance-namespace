@@ -16,11 +16,11 @@ package com.lancedb.lance.namespace.adapter;
 import com.lancedb.lance.namespace.server.springboot.model.AlterTransactionResponse;
 import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DeregisterTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeNamespaceResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTransactionResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropTableResponse;
-import com.lancedb.lance.namespace.server.springboot.model.GetNamespaceResponse;
-import com.lancedb.lance.namespace.server.springboot.model.GetTableResponse;
-import com.lancedb.lance.namespace.server.springboot.model.GetTransactionResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.server.springboot.model.NamespaceExistsResponse;
 import com.lancedb.lance.namespace.server.springboot.model.RegisterTableResponse;
@@ -29,9 +29,9 @@ import com.lancedb.lance.namespace.server.springboot.model.TransactionStatus;
 
 public class ClientToServerResponse {
 
-  public static GetNamespaceResponse getNamespace(
-      com.lancedb.lance.namespace.model.GetNamespaceResponse response) {
-    GetNamespaceResponse converted = new GetNamespaceResponse();
+  public static DescribeNamespaceResponse describeNamespace(
+      com.lancedb.lance.namespace.model.DescribeNamespaceResponse response) {
+    DescribeNamespaceResponse converted = new DescribeNamespaceResponse();
     converted.setParent(response.getParent());
     converted.setProperties(response.getProperties());
     converted.setName(response.getName());
@@ -71,9 +71,9 @@ public class ClientToServerResponse {
     return converted;
   }
 
-  public static GetTableResponse getTable(
-      com.lancedb.lance.namespace.model.GetTableResponse response) {
-    GetTableResponse converted = new GetTableResponse();
+  public static DescribeTableResponse describeTable(
+      com.lancedb.lance.namespace.model.DescribeTableResponse response) {
+    DescribeTableResponse converted = new DescribeTableResponse();
     converted.setNamespace(response.getNamespace());
     converted.setName(response.getName());
     converted.setProperties(response.getProperties());
@@ -117,9 +117,9 @@ public class ClientToServerResponse {
     return converted;
   }
 
-  public static GetTransactionResponse getTransaction(
-      com.lancedb.lance.namespace.model.GetTransactionResponse response) {
-    GetTransactionResponse converted = new GetTransactionResponse();
+  public static DescribeTransactionResponse describeTransaction(
+      com.lancedb.lance.namespace.model.DescribeTransactionResponse response) {
+    DescribeTransactionResponse converted = new DescribeTransactionResponse();
     converted.setId(response.getId());
     converted.setStatus(TransactionStatus.valueOf(response.getStatus().name()));
     converted.setProperties(response.getProperties());

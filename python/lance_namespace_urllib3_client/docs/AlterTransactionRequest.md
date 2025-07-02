@@ -6,6 +6,7 @@ Alter a transaction with a list of actions. The server should either succeed and
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**id** | **str** |  | 
 **actions** | [**List[AlterTransactionAction]**](AlterTransactionAction.md) |  | 
 
 ## Example

@@ -28,10 +28,10 @@ pub enum DeregisterTableError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`drop_table`]
+/// struct for typed errors of method [`describe_table`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum DropTableError {
+pub enum DescribeTableError {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
@@ -41,10 +41,10 @@ pub enum DropTableError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`get_table`]
+/// struct for typed errors of method [`drop_table`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetTableError {
+pub enum DropTableError {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
@@ -83,13 +83,18 @@ pub enum TableExistsError {
 
 
 /// Deregister a table from its namespace. The table content remains available in the storage. 
-pub async fn deregister_table(configuration: &configuration::Configuration, deregister_table_request: models::DeregisterTableRequest) -> Result<models::DeregisterTableResponse, Error<DeregisterTableError>> {
+pub async fn deregister_table(configuration: &configuration::Configuration, id: &str, deregister_table_request: models::DeregisterTableRequest, delimiter: Option<&str>) -> Result<models::DeregisterTableResponse, Error<DeregisterTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
     let p_deregister_table_request = deregister_table_request;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/DeregisterTable", configuration.base_path);
+    let uri_str = format!("{}/v1/table/{id}/deregister", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -120,14 +125,62 @@ pub async fn deregister_table(configuration: &configuration::Configuration, dere
     }
 }
 
-/// Drop a table from its namespace and delete its data. If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. 
-pub async fn drop_table(configuration: &configuration::Configuration, drop_table_request: models::DropTableRequest) -> Result<models::DropTableResponse, Error<DropTableError>> {
+/// Get a table's detailed information under a specified namespace. 
+pub async fn describe_table(configuration: &configuration::Configuration, id: &str, describe_table_request: models::DescribeTableRequest, delimiter: Option<&str>) -> Result<models::DescribeTableResponse, Error<DescribeTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_drop_table_request = drop_table_request;
+    let p_id = id;
+    let p_describe_table_request = describe_table_request;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/DropTable", configuration.base_path);
+    let uri_str = format!("{}/v1/table/{id}/describe", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    req_builder = req_builder.json(&p_describe_table_request);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::DescribeTableResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::DescribeTableResponse`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<DescribeTableError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+/// Drop a table from its namespace and delete its data. If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. 
+pub async fn drop_table(configuration: &configuration::Configuration, id: &str, drop_table_request: models::DropTableRequest, delimiter: Option<&str>) -> Result<models::DropTableResponse, Error<DropTableError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
+    let p_drop_table_request = drop_table_request;
+    let p_delimiter = delimiter;
+
+    let uri_str = format!("{}/v1/table/{id}/drop", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -158,52 +211,19 @@ pub async fn drop_table(configuration: &configuration::Configuration, drop_table
     }
 }
 
-/// Get a table's detailed information under a specified namespace. 
-pub async fn get_table(configuration: &configuration::Configuration, get_table_request: models::GetTableRequest) -> Result<models::GetTableResponse, Error<GetTableError>> {
-    // add a prefix to parameters to efficiently prevent name collisions
-    let p_get_table_request = get_table_request;
-
-    let uri_str = format!("{}/GetTable", configuration.base_path);
-    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
-
-    if let Some(ref user_agent) = configuration.user_agent {
-        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
-    }
-    req_builder = req_builder.json(&p_get_table_request);
-
-    let req = req_builder.build()?;
-    let resp = configuration.client.execute(req).await?;
-
-    let status = resp.status();
-    let content_type = resp
-        .headers()
-        .get("content-type")
-        .and_then(|v| v.to_str().ok())
-        .unwrap_or("application/octet-stream");
-    let content_type = super::ContentType::from(content_type);
-
-    if !status.is_client_error() && !status.is_server_error() {
-        let content = resp.text().await?;
-        match content_type {
-            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetTableResponse`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetTableResponse`")))),
-        }
-    } else {
-        let content = resp.text().await?;
-        let entity: Option<GetTableError> = serde_json::from_str(&content).ok();
-        Err(Error::ResponseError(ResponseContent { status, content, entity }))
-    }
-}
-
 /// Register an existing table at a given storage location to a namespace. 
-pub async fn register_table(configuration: &configuration::Configuration, register_table_request: models::RegisterTableRequest) -> Result<models::RegisterTableResponse, Error<RegisterTableError>> {
+pub async fn register_table(configuration: &configuration::Configuration, id: &str, register_table_request: models::RegisterTableRequest, delimiter: Option<&str>) -> Result<models::RegisterTableResponse, Error<RegisterTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
     let p_register_table_request = register_table_request;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/RegisterTable", configuration.base_path);
+    let uri_str = format!("{}/v1/table/{id}/register", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -235,13 +255,18 @@ pub async fn register_table(configuration: &configuration::Configuration, regist
 }
 
 /// Check if a table exists. This API should behave exactly like the GetTable API, except it does not contain a body. 
-pub async fn table_exists(configuration: &configuration::Configuration, table_exists_request: models::TableExistsRequest) -> Result<models::TableExistsResponse, Error<TableExistsError>> {
+pub async fn table_exists(configuration: &configuration::Configuration, id: &str, table_exists_request: models::TableExistsRequest, delimiter: Option<&str>) -> Result<models::TableExistsResponse, Error<TableExistsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
     let p_table_exists_request = table_exists_request;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/TableExists", configuration.base_path);
+    let uri_str = format!("{}/v1/table/{id}/exists", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }

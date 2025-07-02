@@ -34,7 +34,10 @@ security:
 - OAuth2: []
 - BearerAuth: []
 paths:
-  /CreateNamespace:
+  /v1/namespace/{id}/create:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: |
         Create a new namespace.
@@ -44,6 +47,9 @@ paths:
           * EXIST_OK: the operation succeeds and the existing namespace is kept.
           * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created.
       operationId: CreateNamespace
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
@@ -73,11 +79,17 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
-  /ListNamespaces:
+  /v1/namespace/{id}/list:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: |
         List all child namespace names of the root namespace or a given parent namespace.
       operationId: ListNamespaces
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
@@ -105,20 +117,26 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
-  /GetNamespace:
+  /v1/namespace/{id}/describe:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: |
         Return the detailed information for a given namespace
-      operationId: GetNamespace
+      operationId: DescribeNamespace
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GetNamespaceRequest'
+              $ref: '#/components/schemas/DescribeNamespaceRequest'
         required: true
       responses:
         "200":
-          $ref: '#/components/responses/GetNamespaceResponse'
+          $ref: '#/components/responses/DescribeNamespaceResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
@@ -131,17 +149,23 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: Get information about a namespace
+      summary: Describe information about a namespace
       tags:
       - Namespace
       x-content-type: application/json
       x-accepts:
       - application/json
-  /DropNamespace:
+  /v1/namespace/{id}/drop:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: |
         Drop a namespace. The namespace must be empty.
       operationId: DropNamespace
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
@@ -171,11 +195,17 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
-  /NamespaceExists:
+  /v1/namespace/{id}/exists:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: |
         Check if a namespace exists.
       operationId: NamespaceExists
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
@@ -203,11 +233,17 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
-  /RegisterTable:
+  /v1/table/{id}/register:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: |
         Register an existing table at a given storage location to a namespace.
       operationId: RegisterTable
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
@@ -237,20 +273,26 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
-  /GetTable:
+  /v1/table/{id}/describe:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: |
         Get a table's detailed information under a specified namespace.
-      operationId: GetTable
+      operationId: DescribeTable
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GetTableRequest'
+              $ref: '#/components/schemas/DescribeTableRequest'
         required: true
       responses:
         "200":
-          $ref: '#/components/responses/GetTableResponse'
+          $ref: '#/components/responses/DescribeTableResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
@@ -263,18 +305,24 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: Get a table from the namespace
+      summary: Describe a table from the namespace
       tags:
       - Table
       x-content-type: application/json
       x-accepts:
       - application/json
-  /TableExists:
+  /v1/table/{id}/exists:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: |
         Check if a table exists.
         This API should behave exactly like the GetTable API, except it does not contain a body.
       operationId: TableExists
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
@@ -302,19 +350,25 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
-  /GetTransaction:
+  /v1/transaction/{id}/describe:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: Return a detailed information for a given transaction
-      operationId: GetTransaction
+      operationId: DescribeTransaction
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GetTransactionRequest'
+              $ref: '#/components/schemas/DescribeTransactionRequest'
         required: true
       responses:
         "200":
-          $ref: '#/components/responses/GetTransactionResponse'
+          $ref: '#/components/responses/DescribeTransactionResponse'
         "400":
           $ref: '#/components/responses/BadRequestErrorResponse'
         "401":
@@ -327,15 +381,21 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         "5XX":
           $ref: '#/components/responses/ServerErrorResponse'
-      summary: Get information about a transaction
+      summary: Describe information about a transaction
       tags:
       - Transaction
       x-content-type: application/json
       x-accepts:
       - application/json
-  /AlterTransaction:
+  /v1/transaction/{id}/alter:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       operationId: AlterTransaction
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
@@ -365,11 +425,17 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
-  /DropTable:
+  /v1/table/{id}/drop:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: |
         Drop a table from its namespace and delete its data. If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress.
       operationId: DropTable
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
@@ -397,11 +463,17 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
-  /DeregisterTable:
+  /v1/table/{id}/deregister:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: |
         Deregister a table from its namespace. The table content remains available in the storage.
       operationId: DeregisterTable
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
@@ -441,6 +513,27 @@ components:
         namespaces:
         - accounting
         - credits
+  parameters:
+    id:
+      description: |
+        `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+      style: simple
+    delimiter:
+      description: |
+        An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.
+      explode: true
+      in: query
+      name: delimiter
+      required: false
+      schema:
+        $ref: '#/components/schemas/PageToken'
+      style: form
   responses:
     ListNamespacesResponse:
       content:
@@ -453,11 +546,11 @@ components:
           schema:
             $ref: '#/components/schemas/ListNamespacesResponse'
       description: A list of namespaces
-    GetNamespaceResponse:
+    DescribeNamespaceResponse:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/GetNamespaceResponse'
+            $ref: '#/components/schemas/DescribeNamespaceResponse'
       description: "Returns a namespace, as well as any properties stored on the namespace\
         \ if namespace properties are supported by the server."
     CreateNamespaceResponse:
@@ -478,11 +571,11 @@ components:
           schema:
             $ref: '#/components/schemas/NamespaceExistsResponse'
       description: Result of checking if a namespace exists
-    GetTableResponse:
+    DescribeTableResponse:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/GetTableResponse'
+            $ref: '#/components/schemas/DescribeTableResponse'
       description: Table properties result when loading a table
     RegisterTableResponse:
       content:
@@ -496,11 +589,11 @@ components:
           schema:
             $ref: '#/components/schemas/TableExistsResponse'
       description: Result of checking if a table exists
-    GetTransactionResponse:
+    DescribeTransactionResponse:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/GetTransactionResponse'
+            $ref: '#/components/schemas/DescribeTransactionResponse'
       description: Response of GetTransaction
     AlterTransactionResponse:
       content:
@@ -756,7 +849,7 @@ components:
           nullable: true
       required:
       - namespaces
-    GetNamespaceRequest:
+    DescribeNamespaceRequest:
       example:
         parent:
         - parent
@@ -771,7 +864,7 @@ components:
           type: array
       required:
       - name
-    GetNamespaceResponse:
+    DescribeNamespaceResponse:
       example:
         parent:
         - parent
@@ -938,7 +1031,7 @@ components:
       - location
       - name
       - namespace
-    GetTableRequest:
+    DescribeTableRequest:
       example:
         name: name
         namespace:
@@ -954,7 +1047,7 @@ components:
       required:
       - name
       - namespace
-    GetTableResponse:
+    DescribeTableResponse:
       example:
         name: name
         namespace:
@@ -1011,7 +1104,7 @@ components:
       - FAILED
       - CANCELED
       type: string
-    GetTransactionRequest:
+    DescribeTransactionRequest:
       example:
         id: id
       properties:
@@ -1019,7 +1112,7 @@ components:
           type: string
       required:
       - id
-    GetTransactionResponse:
+    DescribeTransactionResponse:
       example:
         id: id
         properties:
@@ -1102,6 +1195,7 @@ components:
       description: |
         Alter a transaction with a list of actions. The server should either succeed and apply all actions, or fail and apply no action.
       example:
+        id: id
         actions:
         - setStatusAction:
             status: QUEUED
@@ -1122,6 +1216,8 @@ components:
             value: value
             key: key
       properties:
+        id:
+          type: string
         actions:
           items:
             $ref: '#/components/schemas/AlterTransactionAction'
@@ -1129,6 +1225,7 @@ components:
           type: array
       required:
       - actions
+      - id
     AlterTransactionResponse:
       example:
         id: id

@@ -15,12 +15,13 @@ package com.lancedb.lance.namespace.server.springboot.api;
 
 import com.lancedb.lance.namespace.server.springboot.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.server.springboot.model.AlterTransactionResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTransactionRequest;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTransactionResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ErrorResponse;
-import com.lancedb.lance.namespace.server.springboot.model.GetTransactionRequest;
-import com.lancedb.lance.namespace.server.springboot.model.GetTransactionResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -50,9 +51,16 @@ public interface TransactionApi {
   }
 
   /**
-   * POST /AlterTransaction : Alter information of a transaction.
+   * POST /v1/transaction/{id}/alter : Alter information of a transaction.
    *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
    * @param alterTransactionRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return Response of AlterTransaction (status code 200) or Indicates a bad request error. It
    *     could be caused by an unexpected request body format or other forms of request validation
    *     failure, such as invalid json. Usually serves application/json content, although in some
@@ -143,14 +151,30 @@ public interface TransactionApi {
       })
   @RequestMapping(
       method = RequestMethod.POST,
-      value = "/AlterTransaction",
+      value = "/v1/transaction/{id}/alter",
       produces = {"application/json"},
       consumes = {"application/json"})
   default ResponseEntity<AlterTransactionResponse> alterTransaction(
+      @Parameter(
+              name = "id",
+              description =
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+              required = true,
+              in = ParameterIn.PATH)
+          @PathVariable("id")
+          String id,
       @Parameter(name = "AlterTransactionRequest", description = "", required = true)
           @Valid
           @RequestBody
-          AlterTransactionRequest alterTransactionRequest) {
+          AlterTransactionRequest alterTransactionRequest,
+      @Parameter(
+              name = "delimiter",
+              description =
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter) {
     getRequest()
         .ifPresent(
             request -> {
@@ -208,10 +232,17 @@ public interface TransactionApi {
   }
 
   /**
-   * POST /GetTransaction : Get information about a transaction Return a detailed information for a
-   * given transaction
+   * POST /v1/transaction/{id}/describe : Describe information about a transaction Return a detailed
+   * information for a given transaction
    *
-   * @param getTransactionRequest (required)
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param describeTransactionRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return Response of GetTransaction (status code 200) or Indicates a bad request error. It could
    *     be caused by an unexpected request body format or other forms of request validation
    *     failure, such as invalid json. Usually serves application/json content, although in some
@@ -226,8 +257,8 @@ public interface TransactionApi {
    *     documentation in individual routes. (status code 5XX)
    */
   @Operation(
-      operationId = "getTransaction",
-      summary = "Get information about a transaction",
+      operationId = "describeTransaction",
+      summary = "Describe information about a transaction",
       description = "Return a detailed information for a given transaction",
       tags = {"Transaction"},
       responses = {
@@ -237,7 +268,7 @@ public interface TransactionApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = GetTransactionResponse.class))
+                  schema = @Schema(implementation = DescribeTransactionResponse.class))
             }),
         @ApiResponse(
             responseCode = "400",
@@ -294,14 +325,30 @@ public interface TransactionApi {
       })
   @RequestMapping(
       method = RequestMethod.POST,
-      value = "/GetTransaction",
+      value = "/v1/transaction/{id}/describe",
       produces = {"application/json"},
       consumes = {"application/json"})
-  default ResponseEntity<GetTransactionResponse> getTransaction(
-      @Parameter(name = "GetTransactionRequest", description = "", required = true)
+  default ResponseEntity<DescribeTransactionResponse> describeTransaction(
+      @Parameter(
+              name = "id",
+              description =
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+              required = true,
+              in = ParameterIn.PATH)
+          @PathVariable("id")
+          String id,
+      @Parameter(name = "DescribeTransactionRequest", description = "", required = true)
           @Valid
           @RequestBody
-          GetTransactionRequest getTransactionRequest) {
+          DescribeTransactionRequest describeTransactionRequest,
+      @Parameter(
+              name = "delimiter",
+              description =
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter) {
     getRequest()
         .ifPresent(
             request -> {

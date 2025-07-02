@@ -4,15 +4,15 @@ All URIs are relative to *http://localhost:2333*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create_namespace**](NamespaceApi.md#create_namespace) | **POST** /CreateNamespace | Create a new namespace
-[**drop_namespace**](NamespaceApi.md#drop_namespace) | **POST** /DropNamespace | Drop a namespace
-[**get_namespace**](NamespaceApi.md#get_namespace) | **POST** /GetNamespace | Get information about a namespace
-[**list_namespaces**](NamespaceApi.md#list_namespaces) | **POST** /ListNamespaces | List namespaces
-[**namespace_exists**](NamespaceApi.md#namespace_exists) | **POST** /NamespaceExists | Check if a namespace exists
+[**create_namespace**](NamespaceApi.md#create_namespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
+[**describe_namespace**](NamespaceApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace
+[**drop_namespace**](NamespaceApi.md#drop_namespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace
+[**list_namespaces**](NamespaceApi.md#list_namespaces) | **POST** /v1/namespace/{id}/list | List namespaces
+[**namespace_exists**](NamespaceApi.md#namespace_exists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
 
 
 # **create_namespace**
-> CreateNamespaceResponse create_namespace(create_namespace_request)
+> CreateNamespaceResponse create_namespace(id, create_namespace_request, delimiter=delimiter)
 
 Create a new namespace
 
@@ -45,11 +45,13 @@ configuration = lance_namespace_urllib3_client.Configuration(
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.NamespaceApi(api_client)
+    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     create_namespace_request = lance_namespace_urllib3_client.CreateNamespaceRequest() # CreateNamespaceRequest | 
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # Create a new namespace
-        api_response = api_instance.create_namespace(create_namespace_request)
+        api_response = api_instance.create_namespace(id, create_namespace_request, delimiter=delimiter)
         print("The response of NamespaceApi->create_namespace:\n")
         pprint(api_response)
     except Exception as e:
@@ -63,7 +65,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **create_namespace_request** | [**CreateNamespaceRequest**](CreateNamespaceRequest.md)|  | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 
@@ -93,8 +97,88 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **describe_namespace**
+> DescribeNamespaceResponse describe_namespace(id, describe_namespace_request, delimiter=delimiter)
+
+Describe information about a namespace
+
+Return the detailed information for a given namespace
+
+
+### Example
+
+
+```python
+import lance_namespace_urllib3_client
+from lance_namespace_urllib3_client.models.describe_namespace_request import DescribeNamespaceRequest
+from lance_namespace_urllib3_client.models.describe_namespace_response import DescribeNamespaceResponse
+from lance_namespace_urllib3_client.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to http://localhost:2333
+# See configuration.py for a list of all supported configuration parameters.
+configuration = lance_namespace_urllib3_client.Configuration(
+    host = "http://localhost:2333"
+)
+
+
+# Enter a context with an instance of the API client
+with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = lance_namespace_urllib3_client.NamespaceApi(api_client)
+    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
+    describe_namespace_request = lance_namespace_urllib3_client.DescribeNamespaceRequest() # DescribeNamespaceRequest | 
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
+
+    try:
+        # Describe information about a namespace
+        api_response = api_instance.describe_namespace(id, describe_namespace_request, delimiter=delimiter)
+        print("The response of NamespaceApi->describe_namespace:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling NamespaceApi->describe_namespace: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
+ **describe_namespace_request** | [**DescribeNamespaceRequest**](DescribeNamespaceRequest.md)|  | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
+
+### Return type
+
+[**DescribeNamespaceResponse**](DescribeNamespaceResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Returns a namespace, as well as any properties stored on the namespace if namespace properties are supported by the server. |  -  |
+**400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+**401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
+**403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
+**404** | A server-side problem that means can not find the specified resource. |  -  |
+**503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
+**5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **drop_namespace**
-> DropNamespaceResponse drop_namespace(drop_namespace_request)
+> DropNamespaceResponse drop_namespace(id, drop_namespace_request, delimiter=delimiter)
 
 Drop a namespace
 
@@ -122,11 +206,13 @@ configuration = lance_namespace_urllib3_client.Configuration(
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.NamespaceApi(api_client)
+    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     drop_namespace_request = lance_namespace_urllib3_client.DropNamespaceRequest() # DropNamespaceRequest | 
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # Drop a namespace
-        api_response = api_instance.drop_namespace(drop_namespace_request)
+        api_response = api_instance.drop_namespace(id, drop_namespace_request, delimiter=delimiter)
         print("The response of NamespaceApi->drop_namespace:\n")
         pprint(api_response)
     except Exception as e:
@@ -140,7 +226,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **drop_namespace_request** | [**DropNamespaceRequest**](DropNamespaceRequest.md)|  | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 
@@ -170,84 +258,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_namespace**
-> GetNamespaceResponse get_namespace(get_namespace_request)
-
-Get information about a namespace
-
-Return the detailed information for a given namespace
-
-
-### Example
-
-
-```python
-import lance_namespace_urllib3_client
-from lance_namespace_urllib3_client.models.get_namespace_request import GetNamespaceRequest
-from lance_namespace_urllib3_client.models.get_namespace_response import GetNamespaceResponse
-from lance_namespace_urllib3_client.rest import ApiException
-from pprint import pprint
-
-# Defining the host is optional and defaults to http://localhost:2333
-# See configuration.py for a list of all supported configuration parameters.
-configuration = lance_namespace_urllib3_client.Configuration(
-    host = "http://localhost:2333"
-)
-
-
-# Enter a context with an instance of the API client
-with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
-    # Create an instance of the API class
-    api_instance = lance_namespace_urllib3_client.NamespaceApi(api_client)
-    get_namespace_request = lance_namespace_urllib3_client.GetNamespaceRequest() # GetNamespaceRequest | 
-
-    try:
-        # Get information about a namespace
-        api_response = api_instance.get_namespace(get_namespace_request)
-        print("The response of NamespaceApi->get_namespace:\n")
-        pprint(api_response)
-    except Exception as e:
-        print("Exception when calling NamespaceApi->get_namespace: %s\n" % e)
-```
-
-
-
-### Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **get_namespace_request** | [**GetNamespaceRequest**](GetNamespaceRequest.md)|  | 
-
-### Return type
-
-[**GetNamespaceResponse**](GetNamespaceResponse.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Returns a namespace, as well as any properties stored on the namespace if namespace properties are supported by the server. |  -  |
-**400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
-**401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
-**403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-**404** | A server-side problem that means can not find the specified resource. |  -  |
-**503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-**5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
 # **list_namespaces**
-> ListNamespacesResponse list_namespaces(list_namespaces_request)
+> ListNamespacesResponse list_namespaces(id, list_namespaces_request, delimiter=delimiter)
 
 List namespaces
 
@@ -275,11 +287,13 @@ configuration = lance_namespace_urllib3_client.Configuration(
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.NamespaceApi(api_client)
+    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     list_namespaces_request = lance_namespace_urllib3_client.ListNamespacesRequest() # ListNamespacesRequest | 
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # List namespaces
-        api_response = api_instance.list_namespaces(list_namespaces_request)
+        api_response = api_instance.list_namespaces(id, list_namespaces_request, delimiter=delimiter)
         print("The response of NamespaceApi->list_namespaces:\n")
         pprint(api_response)
     except Exception as e:
@@ -293,7 +307,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **list_namespaces_request** | [**ListNamespacesRequest**](ListNamespacesRequest.md)|  | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 
@@ -323,7 +339,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **namespace_exists**
-> NamespaceExistsResponse namespace_exists(namespace_exists_request)
+> NamespaceExistsResponse namespace_exists(id, namespace_exists_request, delimiter=delimiter)
 
 Check if a namespace exists
 
@@ -351,11 +367,13 @@ configuration = lance_namespace_urllib3_client.Configuration(
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.NamespaceApi(api_client)
+    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     namespace_exists_request = lance_namespace_urllib3_client.NamespaceExistsRequest() # NamespaceExistsRequest | 
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # Check if a namespace exists
-        api_response = api_instance.namespace_exists(namespace_exists_request)
+        api_response = api_instance.namespace_exists(id, namespace_exists_request, delimiter=delimiter)
         print("The response of NamespaceApi->namespace_exists:\n")
         pprint(api_response)
     except Exception as e:
@@ -369,7 +387,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **namespace_exists_request** | [**NamespaceExistsRequest**](NamespaceExistsRequest.md)|  | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 

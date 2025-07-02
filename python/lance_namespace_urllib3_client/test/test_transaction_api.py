@@ -33,10 +33,10 @@ class TestTransactionApi(unittest.TestCase):
         """
         pass
 
-    def test_get_transaction(self) -> None:
-        """Test case for get_transaction
+    def test_describe_transaction(self) -> None:
+        """Test case for describe_transaction
 
-        Get information about a transaction
+        Describe information about a transaction
         """
         pass
 

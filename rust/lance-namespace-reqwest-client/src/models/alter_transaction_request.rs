@@ -14,14 +14,17 @@ use serde::{Deserialize, Serialize};
 /// AlterTransactionRequest : Alter a transaction with a list of actions. The server should either succeed and apply all actions, or fail and apply no action. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AlterTransactionRequest {
+    #[serde(rename = "id")]
+    pub id: String,
     #[serde(rename = "actions")]
     pub actions: Vec<models::AlterTransactionAction>,
 }
 
 impl AlterTransactionRequest {
     /// Alter a transaction with a list of actions. The server should either succeed and apply all actions, or fail and apply no action. 
-    pub fn new(actions: Vec<models::AlterTransactionAction>) -> AlterTransactionRequest {
+    pub fn new(id: String, actions: Vec<models::AlterTransactionAction>) -> AlterTransactionRequest {
         AlterTransactionRequest {
+            id,
             actions,
         }
     }

@@ -17,6 +17,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,15 +28,45 @@ import java.util.StringJoiner;
  * Alter a transaction with a list of actions. The server should either succeed and apply all
  * actions, or fail and apply no action.
  */
-@JsonPropertyOrder({AlterTransactionRequest.JSON_PROPERTY_ACTIONS})
+@JsonPropertyOrder({
+  AlterTransactionRequest.JSON_PROPERTY_ID,
+  AlterTransactionRequest.JSON_PROPERTY_ACTIONS
+})
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class AlterTransactionRequest {
+  public static final String JSON_PROPERTY_ID = "id";
+  @javax.annotation.Nonnull private String id;
+
   public static final String JSON_PROPERTY_ACTIONS = "actions";
   @javax.annotation.Nonnull private List<AlterTransactionAction> actions = new ArrayList<>();
 
   public AlterTransactionRequest() {}
+
+  public AlterTransactionRequest id(@javax.annotation.Nonnull String id) {
+
+    this.id = id;
+    return this;
+  }
+
+  /**
+   * Get id
+   *
+   * @return id
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public String getId() {
+    return id;
+  }
+
+  @JsonProperty(JSON_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setId(@javax.annotation.Nonnull String id) {
+    this.id = id;
+  }
 
   public AlterTransactionRequest actions(
       @javax.annotation.Nonnull List<AlterTransactionAction> actions) {
@@ -78,18 +110,20 @@ public class AlterTransactionRequest {
       return false;
     }
     AlterTransactionRequest alterTransactionRequest = (AlterTransactionRequest) o;
-    return Objects.equals(this.actions, alterTransactionRequest.actions);
+    return Objects.equals(this.id, alterTransactionRequest.id)
+        && Objects.equals(this.actions, alterTransactionRequest.actions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(actions);
+    return Objects.hash(id, actions);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTransactionRequest {\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    actions: ").append(toIndentedString(actions)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -136,6 +170,21 @@ public class AlterTransactionRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `id` to the URL query string
+    if (getId() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sid%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getId()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
 
     // add `actions` to the URL query string
     if (getActions() != null) {

@@ -24,16 +24,16 @@ import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableResponse;
+import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
+import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
+import com.lancedb.lance.namespace.model.DescribeTableRequest;
+import com.lancedb.lance.namespace.model.DescribeTableResponse;
+import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
+import com.lancedb.lance.namespace.model.DescribeTransactionResponse;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
-import com.lancedb.lance.namespace.model.GetNamespaceRequest;
-import com.lancedb.lance.namespace.model.GetNamespaceResponse;
-import com.lancedb.lance.namespace.model.GetTableRequest;
-import com.lancedb.lance.namespace.model.GetTableResponse;
-import com.lancedb.lance.namespace.model.GetTransactionRequest;
-import com.lancedb.lance.namespace.model.GetTransactionResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
@@ -43,22 +43,30 @@ import com.lancedb.lance.namespace.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
 import com.lancedb.lance.namespace.model.TableExistsResponse;
 
+import java.util.Map;
+
 public class LanceRestNamespace implements LanceNamespace {
 
   private final NamespaceApi namespaceApi;
   private final TableApi tableApi;
   private final TransactionApi transactionApi;
+  private final RestConfig config;
 
-  public LanceRestNamespace(ApiClient client) {
+  public LanceRestNamespace(ApiClient client, Map<String, String> config) {
     this.namespaceApi = new NamespaceApi(client);
     this.tableApi = new TableApi(client);
     this.transactionApi = new TransactionApi(client);
+    this.config = new RestConfig(config);
   }
 
   @Override
   public CreateNamespaceResponse createNamespace(CreateNamespaceRequest request) {
     try {
-      return namespaceApi.createNamespace(request);
+      return namespaceApi.createNamespace(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.delimiter(),
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
@@ -68,16 +76,24 @@ public class LanceRestNamespace implements LanceNamespace {
   public ListNamespacesResponse listNamespaces(ListNamespacesRequest request) {
     try {
       // TODO: add pagination
-      return namespaceApi.listNamespaces(request);
+      return namespaceApi.listNamespaces(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.delimiter(),
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
   }
 
   @Override
-  public GetNamespaceResponse getNamespace(GetNamespaceRequest request) {
+  public DescribeNamespaceResponse describeNamespace(DescribeNamespaceRequest request) {
     try {
-      return namespaceApi.getNamespace(request);
+      return namespaceApi.describeNamespace(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.delimiter(),
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
@@ -86,7 +102,11 @@ public class LanceRestNamespace implements LanceNamespace {
   @Override
   public DropNamespaceResponse dropNamespace(DropNamespaceRequest request) {
     try {
-      return namespaceApi.dropNamespace(request);
+      return namespaceApi.dropNamespace(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.delimiter(),
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
@@ -95,16 +115,24 @@ public class LanceRestNamespace implements LanceNamespace {
   @Override
   public NamespaceExistsResponse namespaceExists(NamespaceExistsRequest request) {
     try {
-      return namespaceApi.namespaceExists(request);
+      return namespaceApi.namespaceExists(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.delimiter(),
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
   }
 
   @Override
-  public GetTableResponse getTable(GetTableRequest request) {
+  public DescribeTableResponse describeTable(DescribeTableRequest request) {
     try {
-      return tableApi.getTable(request);
+      return tableApi.describeTable(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.delimiter(),
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
@@ -113,7 +141,11 @@ public class LanceRestNamespace implements LanceNamespace {
   @Override
   public RegisterTableResponse registerTable(RegisterTableRequest request) {
     try {
-      return tableApi.registerTable(request);
+      return tableApi.registerTable(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.delimiter(),
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
@@ -122,7 +154,11 @@ public class LanceRestNamespace implements LanceNamespace {
   @Override
   public TableExistsResponse tableExists(TableExistsRequest request) {
     try {
-      return tableApi.tableExists(request);
+      return tableApi.tableExists(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.delimiter(),
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
@@ -131,7 +167,11 @@ public class LanceRestNamespace implements LanceNamespace {
   @Override
   public DeregisterTableResponse deregisterTable(DeregisterTableRequest request) {
     try {
-      return tableApi.deregisterTable(request);
+      return tableApi.deregisterTable(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.delimiter(),
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
@@ -140,7 +180,11 @@ public class LanceRestNamespace implements LanceNamespace {
   @Override
   public DropTableResponse dropTable(DropTableRequest request) {
     try {
-      return tableApi.dropTable(request);
+      return tableApi.dropTable(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.delimiter(),
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
@@ -149,16 +193,24 @@ public class LanceRestNamespace implements LanceNamespace {
   @Override
   public AlterTransactionResponse alterTransaction(AlterTransactionRequest request) {
     try {
-      return transactionApi.alterTransaction(request);
+      return transactionApi.alterTransaction(
+          ObjectIdentifiers.stringFrom(request),
+          request,
+          config.delimiter(),
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
   }
 
   @Override
-  public GetTransactionResponse getTransaction(GetTransactionRequest request) {
+  public DescribeTransactionResponse describeTransaction(DescribeTransactionRequest request) {
     try {
-      return transactionApi.getTransaction(request);
+      return transactionApi.describeTransaction(
+          ObjectIdentifiers.stringFrom(request),
+          request,
+          config.delimiter(),
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }

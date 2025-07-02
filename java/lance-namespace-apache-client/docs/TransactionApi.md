@@ -4,14 +4,14 @@ All URIs are relative to *http://localhost:2333*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**alterTransaction**](TransactionApi.md#alterTransaction) | **POST** /AlterTransaction | Alter information of a transaction. |
-| [**getTransaction**](TransactionApi.md#getTransaction) | **POST** /GetTransaction | Get information about a transaction |
+| [**alterTransaction**](TransactionApi.md#alterTransaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction. |
+| [**describeTransaction**](TransactionApi.md#describeTransaction) | **POST** /v1/transaction/{id}/describe | Describe information about a transaction |
 
 
 
 ## alterTransaction
 
-> AlterTransactionResponse alterTransaction(alterTransactionRequest)
+> AlterTransactionResponse alterTransaction(id, alterTransactionRequest, delimiter)
 
 Alter information of a transaction.
 
@@ -31,9 +31,11 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         TransactionApi apiInstance = new TransactionApi(defaultClient);
+        String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         AlterTransactionRequest alterTransactionRequest = new AlterTransactionRequest(); // AlterTransactionRequest | 
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         try {
-            AlterTransactionResponse result = apiInstance.alterTransaction(alterTransactionRequest);
+            AlterTransactionResponse result = apiInstance.alterTransaction(id, alterTransactionRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TransactionApi#alterTransaction");
@@ -51,7 +53,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
+| **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **alterTransactionRequest** | [**AlterTransactionRequest**](AlterTransactionRequest.md)|  | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 
 ### Return type
 
@@ -80,11 +84,11 @@ No authorization required
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
 
-## getTransaction
+## describeTransaction
 
-> GetTransactionResponse getTransaction(getTransactionRequest)
+> DescribeTransactionResponse describeTransaction(id, describeTransactionRequest, delimiter)
 
-Get information about a transaction
+Describe information about a transaction
 
 Return a detailed information for a given transaction
 
@@ -104,12 +108,14 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         TransactionApi apiInstance = new TransactionApi(defaultClient);
-        GetTransactionRequest getTransactionRequest = new GetTransactionRequest(); // GetTransactionRequest | 
+        String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
+        DescribeTransactionRequest describeTransactionRequest = new DescribeTransactionRequest(); // DescribeTransactionRequest | 
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         try {
-            GetTransactionResponse result = apiInstance.getTransaction(getTransactionRequest);
+            DescribeTransactionResponse result = apiInstance.describeTransaction(id, describeTransactionRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling TransactionApi#getTransaction");
+            System.err.println("Exception when calling TransactionApi#describeTransaction");
             System.err.println("Status code: " + e.getCode());
             System.err.println("Reason: " + e.getResponseBody());
             System.err.println("Response headers: " + e.getResponseHeaders());
@@ -124,11 +130,13 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **getTransactionRequest** | [**GetTransactionRequest**](GetTransactionRequest.md)|  | |
+| **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
+| **describeTransactionRequest** | [**DescribeTransactionRequest**](DescribeTransactionRequest.md)|  | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 
 ### Return type
 
-[**GetTransactionResponse**](GetTransactionResponse.md)
+[**DescribeTransactionResponse**](DescribeTransactionResponse.md)
 
 ### Authorization
 

@@ -4,17 +4,17 @@ All URIs are relative to *http://localhost:2333*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**deregisterTable**](TableApi.md#deregisterTable) | **POST** /DeregisterTable | Deregister a table from its namespace |
-| [**dropTable**](TableApi.md#dropTable) | **POST** /DropTable | Drop a table from its namespace |
-| [**getTable**](TableApi.md#getTable) | **POST** /GetTable | Get a table from the namespace |
-| [**registerTable**](TableApi.md#registerTable) | **POST** /RegisterTable | Register a table to a namespace |
-| [**tableExists**](TableApi.md#tableExists) | **POST** /TableExists | Check if a table exists |
+| [**deregisterTable**](TableApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace |
+| [**describeTable**](TableApi.md#describeTable) | **POST** /v1/table/{id}/describe | Describe a table from the namespace |
+| [**dropTable**](TableApi.md#dropTable) | **POST** /v1/table/{id}/drop | Drop a table from its namespace |
+| [**registerTable**](TableApi.md#registerTable) | **POST** /v1/table/{id}/register | Register a table to a namespace |
+| [**tableExists**](TableApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists |
 
 
 
 ## deregisterTable
 
-> DeregisterTableResponse deregisterTable(deregisterTableRequest)
+> DeregisterTableResponse deregisterTable(id, deregisterTableRequest, delimiter)
 
 Deregister a table from its namespace
 
@@ -36,9 +36,11 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         TableApi apiInstance = new TableApi(defaultClient);
+        String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         DeregisterTableRequest deregisterTableRequest = new DeregisterTableRequest(); // DeregisterTableRequest | 
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         try {
-            DeregisterTableResponse result = apiInstance.deregisterTable(deregisterTableRequest);
+            DeregisterTableResponse result = apiInstance.deregisterTable(id, deregisterTableRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#deregisterTable");
@@ -56,7 +58,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
+| **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **deregisterTableRequest** | [**DeregisterTableRequest**](DeregisterTableRequest.md)|  | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 
 ### Return type
 
@@ -84,9 +88,85 @@ No authorization required
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
 
+## describeTable
+
+> DescribeTableResponse describeTable(id, describeTableRequest, delimiter)
+
+Describe a table from the namespace
+
+Get a table&#39;s detailed information under a specified namespace. 
+
+### Example
+
+```java
+// Import classes:
+import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.client.apache.ApiException;
+import com.lancedb.lance.namespace.client.apache.Configuration;
+import com.lancedb.lance.namespace.client.apache.models.*;
+import com.lancedb.lance.namespace.client.apache.api.TableApi;
+
+public class Example {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        defaultClient.setBasePath("http://localhost:2333");
+
+        TableApi apiInstance = new TableApi(defaultClient);
+        String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
+        DescribeTableRequest describeTableRequest = new DescribeTableRequest(); // DescribeTableRequest | 
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        try {
+            DescribeTableResponse result = apiInstance.describeTable(id, describeTableRequest, delimiter);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling TableApi#describeTable");
+            System.err.println("Status code: " + e.getCode());
+            System.err.println("Reason: " + e.getResponseBody());
+            System.err.println("Response headers: " + e.getResponseHeaders());
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
+| **describeTableRequest** | [**DescribeTableRequest**](DescribeTableRequest.md)|  | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
+
+### Return type
+
+[**DescribeTableResponse**](DescribeTableResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Table properties result when loading a table |  -  |
+| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
+| **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
+| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
+| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+
+
 ## dropTable
 
-> DropTableResponse dropTable(dropTableRequest)
+> DropTableResponse dropTable(id, dropTableRequest, delimiter)
 
 Drop a table from its namespace
 
@@ -108,9 +188,11 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         TableApi apiInstance = new TableApi(defaultClient);
+        String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         DropTableRequest dropTableRequest = new DropTableRequest(); // DropTableRequest | 
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         try {
-            DropTableResponse result = apiInstance.dropTable(dropTableRequest);
+            DropTableResponse result = apiInstance.dropTable(id, dropTableRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#dropTable");
@@ -128,7 +210,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
+| **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **dropTableRequest** | [**DropTableRequest**](DropTableRequest.md)|  | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 
 ### Return type
 
@@ -156,81 +240,9 @@ No authorization required
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
 
-## getTable
-
-> GetTableResponse getTable(getTableRequest)
-
-Get a table from the namespace
-
-Get a table&#39;s detailed information under a specified namespace. 
-
-### Example
-
-```java
-// Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.TableApi;
-
-public class Example {
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        defaultClient.setBasePath("http://localhost:2333");
-
-        TableApi apiInstance = new TableApi(defaultClient);
-        GetTableRequest getTableRequest = new GetTableRequest(); // GetTableRequest | 
-        try {
-            GetTableResponse result = apiInstance.getTable(getTableRequest);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling TableApi#getTable");
-            System.err.println("Status code: " + e.getCode());
-            System.err.println("Reason: " + e.getResponseBody());
-            System.err.println("Response headers: " + e.getResponseHeaders());
-            e.printStackTrace();
-        }
-    }
-}
-```
-
-### Parameters
-
-
-| Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **getTableRequest** | [**GetTableRequest**](GetTableRequest.md)|  | |
-
-### Return type
-
-[**GetTableResponse**](GetTableResponse.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Table properties result when loading a table |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
-| **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
-| **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
-| **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
-
-
 ## registerTable
 
-> RegisterTableResponse registerTable(registerTableRequest)
+> RegisterTableResponse registerTable(id, registerTableRequest, delimiter)
 
 Register a table to a namespace
 
@@ -252,9 +264,11 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         TableApi apiInstance = new TableApi(defaultClient);
+        String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         RegisterTableRequest registerTableRequest = new RegisterTableRequest(); // RegisterTableRequest | 
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         try {
-            RegisterTableResponse result = apiInstance.registerTable(registerTableRequest);
+            RegisterTableResponse result = apiInstance.registerTable(id, registerTableRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#registerTable");
@@ -272,7 +286,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
+| **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **registerTableRequest** | [**RegisterTableRequest**](RegisterTableRequest.md)|  | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 
 ### Return type
 
@@ -303,7 +319,7 @@ No authorization required
 
 ## tableExists
 
-> TableExistsResponse tableExists(tableExistsRequest)
+> TableExistsResponse tableExists(id, tableExistsRequest, delimiter)
 
 Check if a table exists
 
@@ -325,9 +341,11 @@ public class Example {
         defaultClient.setBasePath("http://localhost:2333");
 
         TableApi apiInstance = new TableApi(defaultClient);
+        String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         TableExistsRequest tableExistsRequest = new TableExistsRequest(); // TableExistsRequest | 
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         try {
-            TableExistsResponse result = apiInstance.tableExists(tableExistsRequest);
+            TableExistsResponse result = apiInstance.tableExists(id, tableExistsRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#tableExists");
@@ -345,7 +363,9 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
+| **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **tableExistsRequest** | [**TableExistsRequest**](TableExistsRequest.md)|  | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 
 ### Return type
 

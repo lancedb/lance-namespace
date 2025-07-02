@@ -4,14 +4,14 @@ All URIs are relative to *http://localhost:2333*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**alter_transaction**](TransactionApi.md#alter_transaction) | **POST** /AlterTransaction | Alter information of a transaction.
-[**get_transaction**](TransactionApi.md#get_transaction) | **POST** /GetTransaction | Get information about a transaction
+[**alter_transaction**](TransactionApi.md#alter_transaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
+[**describe_transaction**](TransactionApi.md#describe_transaction) | **POST** /v1/transaction/{id}/describe | Describe information about a transaction
 
 
 
 ## alter_transaction
 
-> models::AlterTransactionResponse alter_transaction(alter_transaction_request)
+> models::AlterTransactionResponse alter_transaction(id, alter_transaction_request, delimiter)
 Alter information of a transaction.
 
 ### Parameters
@@ -19,7 +19,9 @@ Alter information of a transaction.
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
 **alter_transaction_request** | [**AlterTransactionRequest**](AlterTransactionRequest.md) |  | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
 
 ### Return type
 
@@ -37,10 +39,10 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
-## get_transaction
+## describe_transaction
 
-> models::GetTransactionResponse get_transaction(get_transaction_request)
-Get information about a transaction
+> models::DescribeTransactionResponse describe_transaction(id, describe_transaction_request, delimiter)
+Describe information about a transaction
 
 Return a detailed information for a given transaction
 
@@ -49,11 +51,13 @@ Return a detailed information for a given transaction
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**get_transaction_request** | [**GetTransactionRequest**](GetTransactionRequest.md) |  | [required] |
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**describe_transaction_request** | [**DescribeTransactionRequest**](DescribeTransactionRequest.md) |  | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
 
 ### Return type
 
-[**models::GetTransactionResponse**](GetTransactionResponse.md)
+[**models::DescribeTransactionResponse**](DescribeTransactionResponse.md)
 
 ### Authorization
 

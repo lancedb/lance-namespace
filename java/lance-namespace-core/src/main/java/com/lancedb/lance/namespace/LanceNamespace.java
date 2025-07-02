@@ -19,16 +19,16 @@ import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableResponse;
+import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
+import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
+import com.lancedb.lance.namespace.model.DescribeTableRequest;
+import com.lancedb.lance.namespace.model.DescribeTableResponse;
+import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
+import com.lancedb.lance.namespace.model.DescribeTransactionResponse;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
-import com.lancedb.lance.namespace.model.GetNamespaceRequest;
-import com.lancedb.lance.namespace.model.GetNamespaceResponse;
-import com.lancedb.lance.namespace.model.GetTableRequest;
-import com.lancedb.lance.namespace.model.GetTableResponse;
-import com.lancedb.lance.namespace.model.GetTransactionRequest;
-import com.lancedb.lance.namespace.model.GetTransactionResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
@@ -43,7 +43,7 @@ public interface LanceNamespace {
 
   ListNamespacesResponse listNamespaces(ListNamespacesRequest request);
 
-  GetNamespaceResponse getNamespace(GetNamespaceRequest request);
+  DescribeNamespaceResponse describeNamespace(DescribeNamespaceRequest request);
 
   CreateNamespaceResponse createNamespace(CreateNamespaceRequest request);
 
@@ -51,7 +51,7 @@ public interface LanceNamespace {
 
   NamespaceExistsResponse namespaceExists(NamespaceExistsRequest request);
 
-  GetTableResponse getTable(GetTableRequest request);
+  DescribeTableResponse describeTable(DescribeTableRequest request);
 
   RegisterTableResponse registerTable(RegisterTableRequest request);
 
@@ -61,7 +61,7 @@ public interface LanceNamespace {
 
   DeregisterTableResponse deregisterTable(DeregisterTableRequest request);
 
-  GetTransactionResponse getTransaction(GetTransactionRequest request);
+  DescribeTransactionResponse describeTransaction(DescribeTransactionRequest request);
 
   AlterTransactionResponse alterTransaction(AlterTransactionRequest request);
 }

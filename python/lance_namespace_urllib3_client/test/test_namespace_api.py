@@ -33,17 +33,17 @@ class TestNamespaceApi(unittest.TestCase):
         """
         pass
 
+    def test_describe_namespace(self) -> None:
+        """Test case for describe_namespace
+
+        Describe information about a namespace
+        """
+        pass
+
     def test_drop_namespace(self) -> None:
         """Test case for drop_namespace
 
         Drop a namespace
-        """
-        pass
-
-    def test_get_namespace(self) -> None:
-        """Test case for get_namespace
-
-        Get information about a namespace
         """
         pass
 

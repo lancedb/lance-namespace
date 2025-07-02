@@ -20,11 +20,11 @@ import com.lancedb.lance.namespace.model.AlterTransactionSetStatus;
 import com.lancedb.lance.namespace.model.AlterTransactionUnsetProperty;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
+import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
+import com.lancedb.lance.namespace.model.DescribeTableRequest;
+import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropTableRequest;
-import com.lancedb.lance.namespace.model.GetNamespaceRequest;
-import com.lancedb.lance.namespace.model.GetTableRequest;
-import com.lancedb.lance.namespace.model.GetTransactionRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
@@ -55,9 +55,9 @@ public class ServerToClientRequest {
     return converted;
   }
 
-  public static GetNamespaceRequest getNamespace(
-      com.lancedb.lance.namespace.server.springboot.model.GetNamespaceRequest request) {
-    GetNamespaceRequest converted = new GetNamespaceRequest();
+  public static DescribeNamespaceRequest describeNamespace(
+      com.lancedb.lance.namespace.server.springboot.model.DescribeNamespaceRequest request) {
+    DescribeNamespaceRequest converted = new DescribeNamespaceRequest();
     converted.setName(request.getName());
     return converted;
   }
@@ -76,9 +76,9 @@ public class ServerToClientRequest {
     return converted;
   }
 
-  public static GetTableRequest getTable(
-      com.lancedb.lance.namespace.server.springboot.model.GetTableRequest request) {
-    GetTableRequest converted = new GetTableRequest();
+  public static DescribeTableRequest describeTable(
+      com.lancedb.lance.namespace.server.springboot.model.DescribeTableRequest request) {
+    DescribeTableRequest converted = new DescribeTableRequest();
     converted.setNamespace(request.getNamespace());
     converted.setName(request.getName());
     return converted;
@@ -117,9 +117,9 @@ public class ServerToClientRequest {
     return converted;
   }
 
-  public static GetTransactionRequest getTransaction(
-      com.lancedb.lance.namespace.server.springboot.model.GetTransactionRequest request) {
-    GetTransactionRequest converted = new GetTransactionRequest();
+  public static DescribeTransactionRequest describeTransaction(
+      com.lancedb.lance.namespace.server.springboot.model.DescribeTransactionRequest request) {
+    DescribeTransactionRequest converted = new DescribeTransactionRequest();
     converted.setId(request.getId());
     return converted;
   }
@@ -127,6 +127,7 @@ public class ServerToClientRequest {
   public static AlterTransactionRequest alterTransaction(
       com.lancedb.lance.namespace.server.springboot.model.AlterTransactionRequest request) {
     AlterTransactionRequest converted = new AlterTransactionRequest();
+    converted.setId(request.getId());
     converted.setActions(
         request.getActions().stream()
             .map(ServerToClientRequest::transactionAction)

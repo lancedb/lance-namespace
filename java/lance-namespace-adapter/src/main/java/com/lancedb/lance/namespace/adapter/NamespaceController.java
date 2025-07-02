@@ -17,10 +17,10 @@ import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.server.springboot.api.NamespaceApi;
 import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeNamespaceRequest;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceResponse;
-import com.lancedb.lance.namespace.server.springboot.model.GetNamespaceRequest;
-import com.lancedb.lance.namespace.server.springboot.model.GetNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.server.springboot.model.NamespaceExistsRequest;
@@ -28,6 +28,8 @@ import com.lancedb.lance.namespace.server.springboot.model.NamespaceExistsRespon
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+
+import java.util.Optional;
 
 @Controller
 public class NamespaceController implements NamespaceApi {
@@ -40,7 +42,7 @@ public class NamespaceController implements NamespaceApi {
 
   @Override
   public ResponseEntity<CreateNamespaceResponse> createNamespace(
-      CreateNamespaceRequest createNamespaceRequest) {
+      String id, CreateNamespaceRequest createNamespaceRequest, Optional<String> delimiter) {
     return ResponseEntity.ok(
         ClientToServerResponse.createNamespace(
             delegate.createNamespace(
@@ -49,23 +51,24 @@ public class NamespaceController implements NamespaceApi {
 
   @Override
   public ResponseEntity<DropNamespaceResponse> dropNamespace(
-      DropNamespaceRequest dropNamespaceRequest) {
+      String id, DropNamespaceRequest dropNamespaceRequest, Optional<String> delimiter) {
     return ResponseEntity.ok(
         ClientToServerResponse.dropNamespace(
             delegate.dropNamespace(ServerToClientRequest.dropNamespace(dropNamespaceRequest))));
   }
 
   @Override
-  public ResponseEntity<GetNamespaceResponse> getNamespace(
-      GetNamespaceRequest getNamespaceRequest) {
+  public ResponseEntity<DescribeNamespaceResponse> describeNamespace(
+      String id, DescribeNamespaceRequest describeNamespaceRequest, Optional<String> delimiter) {
     return ResponseEntity.ok(
-        ClientToServerResponse.getNamespace(
-            delegate.getNamespace(ServerToClientRequest.getNamespace(getNamespaceRequest))));
+        ClientToServerResponse.describeNamespace(
+            delegate.describeNamespace(
+                ServerToClientRequest.describeNamespace(describeNamespaceRequest))));
   }
 
   @Override
   public ResponseEntity<ListNamespacesResponse> listNamespaces(
-      ListNamespacesRequest listNamespacesRequest) {
+      String id, ListNamespacesRequest listNamespacesRequest, Optional<String> delimiter) {
     return ResponseEntity.ok(
         ClientToServerResponse.listNamespaces(
             delegate.listNamespaces(ServerToClientRequest.listNamespaces(listNamespacesRequest))));
@@ -73,7 +76,7 @@ public class NamespaceController implements NamespaceApi {
 
   @Override
   public ResponseEntity<NamespaceExistsResponse> namespaceExists(
-      NamespaceExistsRequest namespaceExistsRequest) {
+      String id, NamespaceExistsRequest namespaceExistsRequest, Optional<String> delimiter) {
     return ResponseEntity.ok(
         ClientToServerResponse.namespaceExists(
             delegate.namespaceExists(

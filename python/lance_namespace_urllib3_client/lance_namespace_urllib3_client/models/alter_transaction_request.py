@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.alter_transaction_action import AlterTransactionAction
@@ -28,8 +28,9 @@ class AlterTransactionRequest(BaseModel):
     """
     Alter a transaction with a list of actions. The server should either succeed and apply all actions, or fail and apply no action. 
     """ # noqa: E501
+    id: StrictStr
     actions: Annotated[List[AlterTransactionAction], Field(min_length=1)]
-    __properties: ClassVar[List[str]] = ["actions"]
+    __properties: ClassVar[List[str]] = ["id", "actions"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,6 +90,7 @@ class AlterTransactionRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "id": obj.get("id"),
             "actions": [AlterTransactionAction.from_dict(_item) for _item in obj["actions"]] if obj.get("actions") is not None else None
         })
         return _obj

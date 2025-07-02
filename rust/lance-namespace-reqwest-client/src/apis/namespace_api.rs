@@ -29,6 +29,19 @@ pub enum CreateNamespaceError {
     UnknownValue(serde_json::Value),
 }
 
+/// struct for typed errors of method [`describe_namespace`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum DescribeNamespaceError {
+    Status400(models::ErrorResponse),
+    Status401(models::ErrorResponse),
+    Status403(models::ErrorResponse),
+    Status404(models::ErrorResponse),
+    Status503(models::ErrorResponse),
+    Status5XX(models::ErrorResponse),
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`drop_namespace`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -38,19 +51,6 @@ pub enum DropNamespaceError {
     Status403(models::ErrorResponse),
     Status404(models::ErrorResponse),
     Status409(models::ErrorResponse),
-    Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
-    UnknownValue(serde_json::Value),
-}
-
-/// struct for typed errors of method [`get_namespace`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum GetNamespaceError {
-    Status400(models::ErrorResponse),
-    Status401(models::ErrorResponse),
-    Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
     Status503(models::ErrorResponse),
     Status5XX(models::ErrorResponse),
     UnknownValue(serde_json::Value),
@@ -84,13 +84,18 @@ pub enum NamespaceExistsError {
 
 
 /// Create a new namespace. A namespace can manage either a collection of child namespaces, or a collection of tables. There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
-pub async fn create_namespace(configuration: &configuration::Configuration, create_namespace_request: models::CreateNamespaceRequest) -> Result<models::CreateNamespaceResponse, Error<CreateNamespaceError>> {
+pub async fn create_namespace(configuration: &configuration::Configuration, id: &str, create_namespace_request: models::CreateNamespaceRequest, delimiter: Option<&str>) -> Result<models::CreateNamespaceResponse, Error<CreateNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
     let p_create_namespace_request = create_namespace_request;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/CreateNamespace", configuration.base_path);
+    let uri_str = format!("{}/v1/namespace/{id}/create", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -121,14 +126,62 @@ pub async fn create_namespace(configuration: &configuration::Configuration, crea
     }
 }
 
-/// Drop a namespace. The namespace must be empty. 
-pub async fn drop_namespace(configuration: &configuration::Configuration, drop_namespace_request: models::DropNamespaceRequest) -> Result<models::DropNamespaceResponse, Error<DropNamespaceError>> {
+/// Return the detailed information for a given namespace 
+pub async fn describe_namespace(configuration: &configuration::Configuration, id: &str, describe_namespace_request: models::DescribeNamespaceRequest, delimiter: Option<&str>) -> Result<models::DescribeNamespaceResponse, Error<DescribeNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_drop_namespace_request = drop_namespace_request;
+    let p_id = id;
+    let p_describe_namespace_request = describe_namespace_request;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/DropNamespace", configuration.base_path);
+    let uri_str = format!("{}/v1/namespace/{id}/describe", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    req_builder = req_builder.json(&p_describe_namespace_request);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::DescribeNamespaceResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::DescribeNamespaceResponse`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<DescribeNamespaceError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+/// Drop a namespace. The namespace must be empty. 
+pub async fn drop_namespace(configuration: &configuration::Configuration, id: &str, drop_namespace_request: models::DropNamespaceRequest, delimiter: Option<&str>) -> Result<models::DropNamespaceResponse, Error<DropNamespaceError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
+    let p_drop_namespace_request = drop_namespace_request;
+    let p_delimiter = delimiter;
+
+    let uri_str = format!("{}/v1/namespace/{id}/drop", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -159,52 +212,19 @@ pub async fn drop_namespace(configuration: &configuration::Configuration, drop_n
     }
 }
 
-/// Return the detailed information for a given namespace 
-pub async fn get_namespace(configuration: &configuration::Configuration, get_namespace_request: models::GetNamespaceRequest) -> Result<models::GetNamespaceResponse, Error<GetNamespaceError>> {
-    // add a prefix to parameters to efficiently prevent name collisions
-    let p_get_namespace_request = get_namespace_request;
-
-    let uri_str = format!("{}/GetNamespace", configuration.base_path);
-    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
-
-    if let Some(ref user_agent) = configuration.user_agent {
-        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
-    }
-    req_builder = req_builder.json(&p_get_namespace_request);
-
-    let req = req_builder.build()?;
-    let resp = configuration.client.execute(req).await?;
-
-    let status = resp.status();
-    let content_type = resp
-        .headers()
-        .get("content-type")
-        .and_then(|v| v.to_str().ok())
-        .unwrap_or("application/octet-stream");
-    let content_type = super::ContentType::from(content_type);
-
-    if !status.is_client_error() && !status.is_server_error() {
-        let content = resp.text().await?;
-        match content_type {
-            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetNamespaceResponse`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetNamespaceResponse`")))),
-        }
-    } else {
-        let content = resp.text().await?;
-        let entity: Option<GetNamespaceError> = serde_json::from_str(&content).ok();
-        Err(Error::ResponseError(ResponseContent { status, content, entity }))
-    }
-}
-
 /// List all child namespace names of the root namespace or a given parent namespace. 
-pub async fn list_namespaces(configuration: &configuration::Configuration, list_namespaces_request: models::ListNamespacesRequest) -> Result<models::ListNamespacesResponse, Error<ListNamespacesError>> {
+pub async fn list_namespaces(configuration: &configuration::Configuration, id: &str, list_namespaces_request: models::ListNamespacesRequest, delimiter: Option<&str>) -> Result<models::ListNamespacesResponse, Error<ListNamespacesError>> {
     // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
     let p_list_namespaces_request = list_namespaces_request;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/ListNamespaces", configuration.base_path);
+    let uri_str = format!("{}/v1/namespace/{id}/list", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -236,13 +256,18 @@ pub async fn list_namespaces(configuration: &configuration::Configuration, list_
 }
 
 /// Check if a namespace exists. 
-pub async fn namespace_exists(configuration: &configuration::Configuration, namespace_exists_request: models::NamespaceExistsRequest) -> Result<models::NamespaceExistsResponse, Error<NamespaceExistsError>> {
+pub async fn namespace_exists(configuration: &configuration::Configuration, id: &str, namespace_exists_request: models::NamespaceExistsRequest, delimiter: Option<&str>) -> Result<models::NamespaceExistsResponse, Error<NamespaceExistsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
     let p_namespace_exists_request = namespace_exists_request;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/NamespaceExists", configuration.base_path);
+    let uri_str = format!("{}/v1/namespace/{id}/exists", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }

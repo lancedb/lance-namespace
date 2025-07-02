@@ -4,12 +4,12 @@ All URIs are relative to *http://localhost:2333*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**alter_transaction**](TransactionApi.md#alter_transaction) | **POST** /AlterTransaction | Alter information of a transaction.
-[**get_transaction**](TransactionApi.md#get_transaction) | **POST** /GetTransaction | Get information about a transaction
+[**alter_transaction**](TransactionApi.md#alter_transaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
+[**describe_transaction**](TransactionApi.md#describe_transaction) | **POST** /v1/transaction/{id}/describe | Describe information about a transaction
 
 
 # **alter_transaction**
-> AlterTransactionResponse alter_transaction(alter_transaction_request)
+> AlterTransactionResponse alter_transaction(id, alter_transaction_request, delimiter=delimiter)
 
 Alter information of a transaction.
 
@@ -34,11 +34,13 @@ configuration = lance_namespace_urllib3_client.Configuration(
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.TransactionApi(api_client)
+    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     alter_transaction_request = lance_namespace_urllib3_client.AlterTransactionRequest() # AlterTransactionRequest | 
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # Alter information of a transaction.
-        api_response = api_instance.alter_transaction(alter_transaction_request)
+        api_response = api_instance.alter_transaction(id, alter_transaction_request, delimiter=delimiter)
         print("The response of TransactionApi->alter_transaction:\n")
         pprint(api_response)
     except Exception as e:
@@ -52,7 +54,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **alter_transaction_request** | [**AlterTransactionRequest**](AlterTransactionRequest.md)|  | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 
@@ -82,10 +86,10 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_transaction**
-> GetTransactionResponse get_transaction(get_transaction_request)
+# **describe_transaction**
+> DescribeTransactionResponse describe_transaction(id, describe_transaction_request, delimiter=delimiter)
 
-Get information about a transaction
+Describe information about a transaction
 
 Return a detailed information for a given transaction
 
@@ -94,8 +98,8 @@ Return a detailed information for a given transaction
 
 ```python
 import lance_namespace_urllib3_client
-from lance_namespace_urllib3_client.models.get_transaction_request import GetTransactionRequest
-from lance_namespace_urllib3_client.models.get_transaction_response import GetTransactionResponse
+from lance_namespace_urllib3_client.models.describe_transaction_request import DescribeTransactionRequest
+from lance_namespace_urllib3_client.models.describe_transaction_response import DescribeTransactionResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
 
@@ -110,15 +114,17 @@ configuration = lance_namespace_urllib3_client.Configuration(
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.TransactionApi(api_client)
-    get_transaction_request = lance_namespace_urllib3_client.GetTransactionRequest() # GetTransactionRequest | 
+    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
+    describe_transaction_request = lance_namespace_urllib3_client.DescribeTransactionRequest() # DescribeTransactionRequest | 
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
-        # Get information about a transaction
-        api_response = api_instance.get_transaction(get_transaction_request)
-        print("The response of TransactionApi->get_transaction:\n")
+        # Describe information about a transaction
+        api_response = api_instance.describe_transaction(id, describe_transaction_request, delimiter=delimiter)
+        print("The response of TransactionApi->describe_transaction:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling TransactionApi->get_transaction: %s\n" % e)
+        print("Exception when calling TransactionApi->describe_transaction: %s\n" % e)
 ```
 
 
@@ -128,11 +134,13 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **get_transaction_request** | [**GetTransactionRequest**](GetTransactionRequest.md)|  | 
+ **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
+ **describe_transaction_request** | [**DescribeTransactionRequest**](DescribeTransactionRequest.md)|  | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 
-[**GetTransactionResponse**](GetTransactionResponse.md)
+[**DescribeTransactionResponse**](DescribeTransactionResponse.md)
 
 ### Authorization
 

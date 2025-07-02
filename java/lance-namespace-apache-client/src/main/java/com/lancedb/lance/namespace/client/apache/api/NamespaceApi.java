@@ -20,10 +20,10 @@ import com.lancedb.lance.namespace.client.apache.Configuration;
 import com.lancedb.lance.namespace.client.apache.Pair;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
+import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
+import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
-import com.lancedb.lance.namespace.model.GetNamespaceRequest;
-import com.lancedb.lance.namespace.model.GetNamespaceResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
@@ -59,13 +59,21 @@ public class NamespaceApi extends BaseApi {
    * namespace is kept. * OVERWRITE: the existing namespace is dropped and a new empty namespace
    * with this name is created.
    *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
    * @param createNamespaceRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return CreateNamespaceResponse
    * @throws ApiException if fails to make API call
    */
-  public CreateNamespaceResponse createNamespace(CreateNamespaceRequest createNamespaceRequest)
+  public CreateNamespaceResponse createNamespace(
+      String id, CreateNamespaceRequest createNamespaceRequest, String delimiter)
       throws ApiException {
-    return this.createNamespace(createNamespaceRequest, Collections.emptyMap());
+    return this.createNamespace(id, createNamespaceRequest, delimiter, Collections.emptyMap());
   }
 
   /**
@@ -76,15 +84,31 @@ public class NamespaceApi extends BaseApi {
    * namespace is kept. * OVERWRITE: the existing namespace is dropped and a new empty namespace
    * with this name is created.
    *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
    * @param createNamespaceRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return CreateNamespaceResponse
    * @throws ApiException if fails to make API call
    */
   public CreateNamespaceResponse createNamespace(
-      CreateNamespaceRequest createNamespaceRequest, Map<String, String> additionalHeaders)
+      String id,
+      CreateNamespaceRequest createNamespaceRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = createNamespaceRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling createNamespace");
+    }
 
     // verify the required parameter 'createNamespaceRequest' is set
     if (createNamespaceRequest == null) {
@@ -94,7 +118,10 @@ public class NamespaceApi extends BaseApi {
     }
 
     // create path and map variables
-    String localVarPath = "/CreateNamespace";
+    String localVarPath =
+        "/v1/namespace/{id}/create"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -103,6 +130,8 @@ public class NamespaceApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -133,38 +162,66 @@ public class NamespaceApi extends BaseApi {
   }
 
   /**
-   * Drop a namespace Drop a namespace. The namespace must be empty.
+   * Describe information about a namespace Return the detailed information for a given namespace
    *
-   * @param dropNamespaceRequest (required)
-   * @return DropNamespaceResponse
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param describeNamespaceRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @return DescribeNamespaceResponse
    * @throws ApiException if fails to make API call
    */
-  public DropNamespaceResponse dropNamespace(DropNamespaceRequest dropNamespaceRequest)
+  public DescribeNamespaceResponse describeNamespace(
+      String id, DescribeNamespaceRequest describeNamespaceRequest, String delimiter)
       throws ApiException {
-    return this.dropNamespace(dropNamespaceRequest, Collections.emptyMap());
+    return this.describeNamespace(id, describeNamespaceRequest, delimiter, Collections.emptyMap());
   }
 
   /**
-   * Drop a namespace Drop a namespace. The namespace must be empty.
+   * Describe information about a namespace Return the detailed information for a given namespace
    *
-   * @param dropNamespaceRequest (required)
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param describeNamespaceRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param additionalHeaders additionalHeaders for this call
-   * @return DropNamespaceResponse
+   * @return DescribeNamespaceResponse
    * @throws ApiException if fails to make API call
    */
-  public DropNamespaceResponse dropNamespace(
-      DropNamespaceRequest dropNamespaceRequest, Map<String, String> additionalHeaders)
+  public DescribeNamespaceResponse describeNamespace(
+      String id,
+      DescribeNamespaceRequest describeNamespaceRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
       throws ApiException {
-    Object localVarPostBody = dropNamespaceRequest;
+    Object localVarPostBody = describeNamespaceRequest;
 
-    // verify the required parameter 'dropNamespaceRequest' is set
-    if (dropNamespaceRequest == null) {
+    // verify the required parameter 'id' is set
+    if (id == null) {
       throw new ApiException(
-          400, "Missing the required parameter 'dropNamespaceRequest' when calling dropNamespace");
+          400, "Missing the required parameter 'id' when calling describeNamespace");
+    }
+
+    // verify the required parameter 'describeNamespaceRequest' is set
+    if (describeNamespaceRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'describeNamespaceRequest' when calling describeNamespace");
     }
 
     // create path and map variables
-    String localVarPath = "/DropNamespace";
+    String localVarPath =
+        "/v1/namespace/{id}/describe"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -173,6 +230,105 @@ public class NamespaceApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<DescribeNamespaceResponse> localVarReturnType =
+        new TypeReference<DescribeNamespaceResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Drop a namespace Drop a namespace. The namespace must be empty.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param dropNamespaceRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @return DropNamespaceResponse
+   * @throws ApiException if fails to make API call
+   */
+  public DropNamespaceResponse dropNamespace(
+      String id, DropNamespaceRequest dropNamespaceRequest, String delimiter) throws ApiException {
+    return this.dropNamespace(id, dropNamespaceRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Drop a namespace Drop a namespace. The namespace must be empty.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param dropNamespaceRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return DropNamespaceResponse
+   * @throws ApiException if fails to make API call
+   */
+  public DropNamespaceResponse dropNamespace(
+      String id,
+      DropNamespaceRequest dropNamespaceRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = dropNamespaceRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling dropNamespace");
+    }
+
+    // verify the required parameter 'dropNamespaceRequest' is set
+    if (dropNamespaceRequest == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'dropNamespaceRequest' when calling dropNamespace");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/namespace/{id}/drop"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -203,101 +359,55 @@ public class NamespaceApi extends BaseApi {
   }
 
   /**
-   * Get information about a namespace Return the detailed information for a given namespace
-   *
-   * @param getNamespaceRequest (required)
-   * @return GetNamespaceResponse
-   * @throws ApiException if fails to make API call
-   */
-  public GetNamespaceResponse getNamespace(GetNamespaceRequest getNamespaceRequest)
-      throws ApiException {
-    return this.getNamespace(getNamespaceRequest, Collections.emptyMap());
-  }
-
-  /**
-   * Get information about a namespace Return the detailed information for a given namespace
-   *
-   * @param getNamespaceRequest (required)
-   * @param additionalHeaders additionalHeaders for this call
-   * @return GetNamespaceResponse
-   * @throws ApiException if fails to make API call
-   */
-  public GetNamespaceResponse getNamespace(
-      GetNamespaceRequest getNamespaceRequest, Map<String, String> additionalHeaders)
-      throws ApiException {
-    Object localVarPostBody = getNamespaceRequest;
-
-    // verify the required parameter 'getNamespaceRequest' is set
-    if (getNamespaceRequest == null) {
-      throw new ApiException(
-          400, "Missing the required parameter 'getNamespaceRequest' when calling getNamespace");
-    }
-
-    // create path and map variables
-    String localVarPath = "/GetNamespace";
-
-    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-    String localVarQueryParameterBaseName;
-    List<Pair> localVarQueryParams = new ArrayList<Pair>();
-    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-    Map<String, String> localVarCookieParams = new HashMap<String, String>();
-    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-    localVarHeaderParams.putAll(additionalHeaders);
-
-    final String[] localVarAccepts = {"application/json"};
-    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-    final String[] localVarContentTypes = {"application/json"};
-    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-    String[] localVarAuthNames = new String[] {};
-
-    TypeReference<GetNamespaceResponse> localVarReturnType =
-        new TypeReference<GetNamespaceResponse>() {};
-    return apiClient.invokeAPI(
-        localVarPath,
-        "POST",
-        localVarQueryParams,
-        localVarCollectionQueryParams,
-        localVarQueryStringJoiner.toString(),
-        localVarPostBody,
-        localVarHeaderParams,
-        localVarCookieParams,
-        localVarFormParams,
-        localVarAccept,
-        localVarContentType,
-        localVarAuthNames,
-        localVarReturnType);
-  }
-
-  /**
    * List namespaces List all child namespace names of the root namespace or a given parent
    * namespace.
    *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
    * @param listNamespacesRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return ListNamespacesResponse
    * @throws ApiException if fails to make API call
    */
-  public ListNamespacesResponse listNamespaces(ListNamespacesRequest listNamespacesRequest)
+  public ListNamespacesResponse listNamespaces(
+      String id, ListNamespacesRequest listNamespacesRequest, String delimiter)
       throws ApiException {
-    return this.listNamespaces(listNamespacesRequest, Collections.emptyMap());
+    return this.listNamespaces(id, listNamespacesRequest, delimiter, Collections.emptyMap());
   }
 
   /**
    * List namespaces List all child namespace names of the root namespace or a given parent
    * namespace.
    *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
    * @param listNamespacesRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return ListNamespacesResponse
    * @throws ApiException if fails to make API call
    */
   public ListNamespacesResponse listNamespaces(
-      ListNamespacesRequest listNamespacesRequest, Map<String, String> additionalHeaders)
+      String id,
+      ListNamespacesRequest listNamespacesRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = listNamespacesRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling listNamespaces");
+    }
 
     // verify the required parameter 'listNamespacesRequest' is set
     if (listNamespacesRequest == null) {
@@ -307,7 +417,10 @@ public class NamespaceApi extends BaseApi {
     }
 
     // create path and map variables
-    String localVarPath = "/ListNamespaces";
+    String localVarPath =
+        "/v1/namespace/{id}/list"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -316,6 +429,8 @@ public class NamespaceApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -348,27 +463,51 @@ public class NamespaceApi extends BaseApi {
   /**
    * Check if a namespace exists Check if a namespace exists.
    *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
    * @param namespaceExistsRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return NamespaceExistsResponse
    * @throws ApiException if fails to make API call
    */
-  public NamespaceExistsResponse namespaceExists(NamespaceExistsRequest namespaceExistsRequest)
+  public NamespaceExistsResponse namespaceExists(
+      String id, NamespaceExistsRequest namespaceExistsRequest, String delimiter)
       throws ApiException {
-    return this.namespaceExists(namespaceExistsRequest, Collections.emptyMap());
+    return this.namespaceExists(id, namespaceExistsRequest, delimiter, Collections.emptyMap());
   }
 
   /**
    * Check if a namespace exists Check if a namespace exists.
    *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
    * @param namespaceExistsRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return NamespaceExistsResponse
    * @throws ApiException if fails to make API call
    */
   public NamespaceExistsResponse namespaceExists(
-      NamespaceExistsRequest namespaceExistsRequest, Map<String, String> additionalHeaders)
+      String id,
+      NamespaceExistsRequest namespaceExistsRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = namespaceExistsRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling namespaceExists");
+    }
 
     // verify the required parameter 'namespaceExistsRequest' is set
     if (namespaceExistsRequest == null) {
@@ -378,7 +517,10 @@ public class NamespaceApi extends BaseApi {
     }
 
     // create path and map variables
-    String localVarPath = "/NamespaceExists";
+    String localVarPath =
+        "/v1/namespace/{id}/exists"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -387,6 +529,8 @@ public class NamespaceApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 

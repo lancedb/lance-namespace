@@ -89,9 +89,11 @@ public class NamespaceApiExample {
         defaultClient.setBasePath("http://localhost:2333");
         
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
+        String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         CreateNamespaceRequest createNamespaceRequest = new CreateNamespaceRequest(); // CreateNamespaceRequest | 
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         try {
-            CreateNamespaceResponse result = apiInstance.createNamespace(createNamespaceRequest);
+            CreateNamespaceResponse result = apiInstance.createNamespace(id, createNamespaceRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#createNamespace");
@@ -111,18 +113,18 @@ All URIs are relative to *http://localhost:2333*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*NamespaceApi* | [**createNamespace**](docs/NamespaceApi.md#createNamespace) | **POST** /CreateNamespace | Create a new namespace
-*NamespaceApi* | [**dropNamespace**](docs/NamespaceApi.md#dropNamespace) | **POST** /DropNamespace | Drop a namespace
-*NamespaceApi* | [**getNamespace**](docs/NamespaceApi.md#getNamespace) | **POST** /GetNamespace | Get information about a namespace
-*NamespaceApi* | [**listNamespaces**](docs/NamespaceApi.md#listNamespaces) | **POST** /ListNamespaces | List namespaces
-*NamespaceApi* | [**namespaceExists**](docs/NamespaceApi.md#namespaceExists) | **POST** /NamespaceExists | Check if a namespace exists
-*TableApi* | [**deregisterTable**](docs/TableApi.md#deregisterTable) | **POST** /DeregisterTable | Deregister a table from its namespace
-*TableApi* | [**dropTable**](docs/TableApi.md#dropTable) | **POST** /DropTable | Drop a table from its namespace
-*TableApi* | [**getTable**](docs/TableApi.md#getTable) | **POST** /GetTable | Get a table from the namespace
-*TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /RegisterTable | Register a table to a namespace
-*TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **POST** /TableExists | Check if a table exists
-*TransactionApi* | [**alterTransaction**](docs/TransactionApi.md#alterTransaction) | **POST** /AlterTransaction | Alter information of a transaction.
-*TransactionApi* | [**getTransaction**](docs/TransactionApi.md#getTransaction) | **POST** /GetTransaction | Get information about a transaction
+*NamespaceApi* | [**createNamespace**](docs/NamespaceApi.md#createNamespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
+*NamespaceApi* | [**describeNamespace**](docs/NamespaceApi.md#describeNamespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace
+*NamespaceApi* | [**dropNamespace**](docs/NamespaceApi.md#dropNamespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace
+*NamespaceApi* | [**listNamespaces**](docs/NamespaceApi.md#listNamespaces) | **POST** /v1/namespace/{id}/list | List namespaces
+*NamespaceApi* | [**namespaceExists**](docs/NamespaceApi.md#namespaceExists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
+*TableApi* | [**deregisterTable**](docs/TableApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
+*TableApi* | [**describeTable**](docs/TableApi.md#describeTable) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
+*TableApi* | [**dropTable**](docs/TableApi.md#dropTable) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
+*TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /v1/table/{id}/register | Register a table to a namespace
+*TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists
+*TransactionApi* | [**alterTransaction**](docs/TransactionApi.md#alterTransaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
+*TransactionApi* | [**describeTransaction**](docs/TransactionApi.md#describeTransaction) | **POST** /v1/transaction/{id}/describe | Describe information about a transaction
 
 
 ## Documentation for Models
@@ -137,17 +139,17 @@ Class | Method | HTTP request | Description
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
  - [DeregisterTableRequest](docs/DeregisterTableRequest.md)
  - [DeregisterTableResponse](docs/DeregisterTableResponse.md)
+ - [DescribeNamespaceRequest](docs/DescribeNamespaceRequest.md)
+ - [DescribeNamespaceResponse](docs/DescribeNamespaceResponse.md)
+ - [DescribeTableRequest](docs/DescribeTableRequest.md)
+ - [DescribeTableResponse](docs/DescribeTableResponse.md)
+ - [DescribeTransactionRequest](docs/DescribeTransactionRequest.md)
+ - [DescribeTransactionResponse](docs/DescribeTransactionResponse.md)
  - [DropNamespaceRequest](docs/DropNamespaceRequest.md)
  - [DropNamespaceResponse](docs/DropNamespaceResponse.md)
  - [DropTableRequest](docs/DropTableRequest.md)
  - [DropTableResponse](docs/DropTableResponse.md)
  - [ErrorResponse](docs/ErrorResponse.md)
- - [GetNamespaceRequest](docs/GetNamespaceRequest.md)
- - [GetNamespaceResponse](docs/GetNamespaceResponse.md)
- - [GetTableRequest](docs/GetTableRequest.md)
- - [GetTableResponse](docs/GetTableResponse.md)
- - [GetTransactionRequest](docs/GetTransactionRequest.md)
- - [GetTransactionResponse](docs/GetTransactionResponse.md)
  - [ListNamespacesRequest](docs/ListNamespacesRequest.md)
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
  - [NamespaceExistsRequest](docs/NamespaceExistsRequest.md)

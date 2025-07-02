@@ -29,18 +29,18 @@ All URIs are relative to *http://localhost:2333*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*NamespaceApi* | [**create_namespace**](docs/NamespaceApi.md#create_namespace) | **POST** /CreateNamespace | Create a new namespace
-*NamespaceApi* | [**drop_namespace**](docs/NamespaceApi.md#drop_namespace) | **POST** /DropNamespace | Drop a namespace
-*NamespaceApi* | [**get_namespace**](docs/NamespaceApi.md#get_namespace) | **POST** /GetNamespace | Get information about a namespace
-*NamespaceApi* | [**list_namespaces**](docs/NamespaceApi.md#list_namespaces) | **POST** /ListNamespaces | List namespaces
-*NamespaceApi* | [**namespace_exists**](docs/NamespaceApi.md#namespace_exists) | **POST** /NamespaceExists | Check if a namespace exists
-*TableApi* | [**deregister_table**](docs/TableApi.md#deregister_table) | **POST** /DeregisterTable | Deregister a table from its namespace
-*TableApi* | [**drop_table**](docs/TableApi.md#drop_table) | **POST** /DropTable | Drop a table from its namespace
-*TableApi* | [**get_table**](docs/TableApi.md#get_table) | **POST** /GetTable | Get a table from the namespace
-*TableApi* | [**register_table**](docs/TableApi.md#register_table) | **POST** /RegisterTable | Register a table to a namespace
-*TableApi* | [**table_exists**](docs/TableApi.md#table_exists) | **POST** /TableExists | Check if a table exists
-*TransactionApi* | [**alter_transaction**](docs/TransactionApi.md#alter_transaction) | **POST** /AlterTransaction | Alter information of a transaction.
-*TransactionApi* | [**get_transaction**](docs/TransactionApi.md#get_transaction) | **POST** /GetTransaction | Get information about a transaction
+*NamespaceApi* | [**create_namespace**](docs/NamespaceApi.md#create_namespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
+*NamespaceApi* | [**describe_namespace**](docs/NamespaceApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace
+*NamespaceApi* | [**drop_namespace**](docs/NamespaceApi.md#drop_namespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace
+*NamespaceApi* | [**list_namespaces**](docs/NamespaceApi.md#list_namespaces) | **POST** /v1/namespace/{id}/list | List namespaces
+*NamespaceApi* | [**namespace_exists**](docs/NamespaceApi.md#namespace_exists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
+*TableApi* | [**deregister_table**](docs/TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
+*TableApi* | [**describe_table**](docs/TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
+*TableApi* | [**drop_table**](docs/TableApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
+*TableApi* | [**register_table**](docs/TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
+*TableApi* | [**table_exists**](docs/TableApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
+*TransactionApi* | [**alter_transaction**](docs/TransactionApi.md#alter_transaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
+*TransactionApi* | [**describe_transaction**](docs/TransactionApi.md#describe_transaction) | **POST** /v1/transaction/{id}/describe | Describe information about a transaction
 
 
 ## Documentation For Models
@@ -55,17 +55,17 @@ Class | Method | HTTP request | Description
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
  - [DeregisterTableRequest](docs/DeregisterTableRequest.md)
  - [DeregisterTableResponse](docs/DeregisterTableResponse.md)
+ - [DescribeNamespaceRequest](docs/DescribeNamespaceRequest.md)
+ - [DescribeNamespaceResponse](docs/DescribeNamespaceResponse.md)
+ - [DescribeTableRequest](docs/DescribeTableRequest.md)
+ - [DescribeTableResponse](docs/DescribeTableResponse.md)
+ - [DescribeTransactionRequest](docs/DescribeTransactionRequest.md)
+ - [DescribeTransactionResponse](docs/DescribeTransactionResponse.md)
  - [DropNamespaceRequest](docs/DropNamespaceRequest.md)
  - [DropNamespaceResponse](docs/DropNamespaceResponse.md)
  - [DropTableRequest](docs/DropTableRequest.md)
  - [DropTableResponse](docs/DropTableResponse.md)
  - [ErrorResponse](docs/ErrorResponse.md)
- - [GetNamespaceRequest](docs/GetNamespaceRequest.md)
- - [GetNamespaceResponse](docs/GetNamespaceResponse.md)
- - [GetTableRequest](docs/GetTableRequest.md)
- - [GetTableResponse](docs/GetTableResponse.md)
- - [GetTransactionRequest](docs/GetTransactionRequest.md)
- - [GetTransactionResponse](docs/GetTransactionResponse.md)
  - [ListNamespacesRequest](docs/ListNamespacesRequest.md)
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
  - [NamespaceExistsRequest](docs/NamespaceExistsRequest.md)

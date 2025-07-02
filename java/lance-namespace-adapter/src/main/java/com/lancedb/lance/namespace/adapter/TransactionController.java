@@ -17,11 +17,13 @@ import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.server.springboot.api.TransactionApi;
 import com.lancedb.lance.namespace.server.springboot.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.server.springboot.model.AlterTransactionResponse;
-import com.lancedb.lance.namespace.server.springboot.model.GetTransactionRequest;
-import com.lancedb.lance.namespace.server.springboot.model.GetTransactionResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTransactionRequest;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTransactionResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+
+import java.util.Optional;
 
 @Controller
 public class TransactionController implements TransactionApi {
@@ -33,15 +35,16 @@ public class TransactionController implements TransactionApi {
   }
 
   @Override
-  public ResponseEntity<GetTransactionResponse> getTransaction(GetTransactionRequest request) {
+  public ResponseEntity<DescribeTransactionResponse> describeTransaction(
+      String id, DescribeTransactionRequest request, Optional<String> delimiter) {
     return ResponseEntity.ok(
-        ClientToServerResponse.getTransaction(
-            delegate.getTransaction(ServerToClientRequest.getTransaction(request))));
+        ClientToServerResponse.describeTransaction(
+            delegate.describeTransaction(ServerToClientRequest.describeTransaction(request))));
   }
 
   @Override
   public ResponseEntity<AlterTransactionResponse> alterTransaction(
-      AlterTransactionRequest request) {
+      String id, AlterTransactionRequest request, Optional<String> delimiter) {
     return ResponseEntity.ok(
         ClientToServerResponse.alterTransaction(
             delegate.alterTransaction(ServerToClientRequest.alterTransaction(request))));

@@ -16,12 +16,15 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
+from pydantic import Field, StrictStr
+from typing import Optional
+from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.create_namespace_request import CreateNamespaceRequest
 from lance_namespace_urllib3_client.models.create_namespace_response import CreateNamespaceResponse
+from lance_namespace_urllib3_client.models.describe_namespace_request import DescribeNamespaceRequest
+from lance_namespace_urllib3_client.models.describe_namespace_response import DescribeNamespaceResponse
 from lance_namespace_urllib3_client.models.drop_namespace_request import DropNamespaceRequest
 from lance_namespace_urllib3_client.models.drop_namespace_response import DropNamespaceResponse
-from lance_namespace_urllib3_client.models.get_namespace_request import GetNamespaceRequest
-from lance_namespace_urllib3_client.models.get_namespace_response import GetNamespaceResponse
 from lance_namespace_urllib3_client.models.list_namespaces_request import ListNamespacesRequest
 from lance_namespace_urllib3_client.models.list_namespaces_response import ListNamespacesResponse
 from lance_namespace_urllib3_client.models.namespace_exists_request import NamespaceExistsRequest
@@ -48,7 +51,9 @@ class NamespaceApi:
     @validate_call
     def create_namespace(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         create_namespace_request: CreateNamespaceRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -66,8 +71,12 @@ class NamespaceApi:
 
         Create a new namespace. A namespace can manage either a collection of child namespaces, or a collection of tables. There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param create_namespace_request: (required)
         :type create_namespace_request: CreateNamespaceRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -91,7 +100,9 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._create_namespace_serialize(
+            id=id,
             create_namespace_request=create_namespace_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -122,7 +133,9 @@ class NamespaceApi:
     @validate_call
     def create_namespace_with_http_info(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         create_namespace_request: CreateNamespaceRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -140,8 +153,12 @@ class NamespaceApi:
 
         Create a new namespace. A namespace can manage either a collection of child namespaces, or a collection of tables. There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param create_namespace_request: (required)
         :type create_namespace_request: CreateNamespaceRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -165,7 +182,9 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._create_namespace_serialize(
+            id=id,
             create_namespace_request=create_namespace_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -196,7 +215,9 @@ class NamespaceApi:
     @validate_call
     def create_namespace_without_preload_content(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         create_namespace_request: CreateNamespaceRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -214,8 +235,12 @@ class NamespaceApi:
 
         Create a new namespace. A namespace can manage either a collection of child namespaces, or a collection of tables. There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param create_namespace_request: (required)
         :type create_namespace_request: CreateNamespaceRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -239,7 +264,9 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._create_namespace_serialize(
+            id=id,
             create_namespace_request=create_namespace_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -265,7 +292,9 @@ class NamespaceApi:
 
     def _create_namespace_serialize(
         self,
+        id,
         create_namespace_request,
+        delimiter,
         _request_auth,
         _content_type,
         _headers,
@@ -287,7 +316,13 @@ class NamespaceApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
         # process the query parameters
+        if delimiter is not None:
+            
+            _query_params.append(('delimiter', delimiter))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -323,7 +358,330 @@ class NamespaceApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/CreateNamespace',
+            resource_path='/v1/namespace/{id}/create',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def describe_namespace(
+        self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
+        describe_namespace_request: DescribeNamespaceRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> DescribeNamespaceResponse:
+        """Describe information about a namespace
+
+        Return the detailed information for a given namespace 
+
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param describe_namespace_request: (required)
+        :type describe_namespace_request: DescribeNamespaceRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._describe_namespace_serialize(
+            id=id,
+            describe_namespace_request=describe_namespace_request,
+            delimiter=delimiter,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "DescribeNamespaceResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def describe_namespace_with_http_info(
+        self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
+        describe_namespace_request: DescribeNamespaceRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[DescribeNamespaceResponse]:
+        """Describe information about a namespace
+
+        Return the detailed information for a given namespace 
+
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param describe_namespace_request: (required)
+        :type describe_namespace_request: DescribeNamespaceRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._describe_namespace_serialize(
+            id=id,
+            describe_namespace_request=describe_namespace_request,
+            delimiter=delimiter,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "DescribeNamespaceResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def describe_namespace_without_preload_content(
+        self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
+        describe_namespace_request: DescribeNamespaceRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Describe information about a namespace
+
+        Return the detailed information for a given namespace 
+
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param describe_namespace_request: (required)
+        :type describe_namespace_request: DescribeNamespaceRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._describe_namespace_serialize(
+            id=id,
+            describe_namespace_request=describe_namespace_request,
+            delimiter=delimiter,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "DescribeNamespaceResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _describe_namespace_serialize(
+        self,
+        id,
+        describe_namespace_request,
+        delimiter,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
+        # process the query parameters
+        if delimiter is not None:
+            
+            _query_params.append(('delimiter', delimiter))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if describe_namespace_request is not None:
+            _body_params = describe_namespace_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/v1/namespace/{id}/describe',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -342,7 +700,9 @@ class NamespaceApi:
     @validate_call
     def drop_namespace(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         drop_namespace_request: DropNamespaceRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -360,8 +720,12 @@ class NamespaceApi:
 
         Drop a namespace. The namespace must be empty. 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param drop_namespace_request: (required)
         :type drop_namespace_request: DropNamespaceRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -385,7 +749,9 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._drop_namespace_serialize(
+            id=id,
             drop_namespace_request=drop_namespace_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -416,7 +782,9 @@ class NamespaceApi:
     @validate_call
     def drop_namespace_with_http_info(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         drop_namespace_request: DropNamespaceRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -434,8 +802,12 @@ class NamespaceApi:
 
         Drop a namespace. The namespace must be empty. 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param drop_namespace_request: (required)
         :type drop_namespace_request: DropNamespaceRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -459,7 +831,9 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._drop_namespace_serialize(
+            id=id,
             drop_namespace_request=drop_namespace_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -490,7 +864,9 @@ class NamespaceApi:
     @validate_call
     def drop_namespace_without_preload_content(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         drop_namespace_request: DropNamespaceRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -508,8 +884,12 @@ class NamespaceApi:
 
         Drop a namespace. The namespace must be empty. 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param drop_namespace_request: (required)
         :type drop_namespace_request: DropNamespaceRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -533,7 +913,9 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._drop_namespace_serialize(
+            id=id,
             drop_namespace_request=drop_namespace_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -559,7 +941,9 @@ class NamespaceApi:
 
     def _drop_namespace_serialize(
         self,
+        id,
         drop_namespace_request,
+        delimiter,
         _request_auth,
         _content_type,
         _headers,
@@ -581,7 +965,13 @@ class NamespaceApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
         # process the query parameters
+        if delimiter is not None:
+            
+            _query_params.append(('delimiter', delimiter))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -617,298 +1007,7 @@ class NamespaceApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/DropNamespace',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def get_namespace(
-        self,
-        get_namespace_request: GetNamespaceRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetNamespaceResponse:
-        """Get information about a namespace
-
-        Return the detailed information for a given namespace 
-
-        :param get_namespace_request: (required)
-        :type get_namespace_request: GetNamespaceRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._get_namespace_serialize(
-            get_namespace_request=get_namespace_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetNamespaceResponse",
-            '400': "ErrorResponse",
-            '401': "ErrorResponse",
-            '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def get_namespace_with_http_info(
-        self,
-        get_namespace_request: GetNamespaceRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetNamespaceResponse]:
-        """Get information about a namespace
-
-        Return the detailed information for a given namespace 
-
-        :param get_namespace_request: (required)
-        :type get_namespace_request: GetNamespaceRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._get_namespace_serialize(
-            get_namespace_request=get_namespace_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetNamespaceResponse",
-            '400': "ErrorResponse",
-            '401': "ErrorResponse",
-            '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def get_namespace_without_preload_content(
-        self,
-        get_namespace_request: GetNamespaceRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Get information about a namespace
-
-        Return the detailed information for a given namespace 
-
-        :param get_namespace_request: (required)
-        :type get_namespace_request: GetNamespaceRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._get_namespace_serialize(
-            get_namespace_request=get_namespace_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetNamespaceResponse",
-            '400': "ErrorResponse",
-            '401': "ErrorResponse",
-            '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_namespace_serialize(
-        self,
-        get_namespace_request,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if get_namespace_request is not None:
-            _body_params = get_namespace_request
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/GetNamespace',
+            resource_path='/v1/namespace/{id}/drop',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -927,7 +1026,9 @@ class NamespaceApi:
     @validate_call
     def list_namespaces(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         list_namespaces_request: ListNamespacesRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -945,8 +1046,12 @@ class NamespaceApi:
 
         List all child namespace names of the root namespace or a given parent namespace. 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param list_namespaces_request: (required)
         :type list_namespaces_request: ListNamespacesRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -970,7 +1075,9 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._list_namespaces_serialize(
+            id=id,
             list_namespaces_request=list_namespaces_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1000,7 +1107,9 @@ class NamespaceApi:
     @validate_call
     def list_namespaces_with_http_info(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         list_namespaces_request: ListNamespacesRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1018,8 +1127,12 @@ class NamespaceApi:
 
         List all child namespace names of the root namespace or a given parent namespace. 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param list_namespaces_request: (required)
         :type list_namespaces_request: ListNamespacesRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1043,7 +1156,9 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._list_namespaces_serialize(
+            id=id,
             list_namespaces_request=list_namespaces_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1073,7 +1188,9 @@ class NamespaceApi:
     @validate_call
     def list_namespaces_without_preload_content(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         list_namespaces_request: ListNamespacesRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1091,8 +1208,12 @@ class NamespaceApi:
 
         List all child namespace names of the root namespace or a given parent namespace. 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param list_namespaces_request: (required)
         :type list_namespaces_request: ListNamespacesRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1116,7 +1237,9 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._list_namespaces_serialize(
+            id=id,
             list_namespaces_request=list_namespaces_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1141,7 +1264,9 @@ class NamespaceApi:
 
     def _list_namespaces_serialize(
         self,
+        id,
         list_namespaces_request,
+        delimiter,
         _request_auth,
         _content_type,
         _headers,
@@ -1163,7 +1288,13 @@ class NamespaceApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
         # process the query parameters
+        if delimiter is not None:
+            
+            _query_params.append(('delimiter', delimiter))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -1199,7 +1330,7 @@ class NamespaceApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/ListNamespaces',
+            resource_path='/v1/namespace/{id}/list',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1218,7 +1349,9 @@ class NamespaceApi:
     @validate_call
     def namespace_exists(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         namespace_exists_request: NamespaceExistsRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1236,8 +1369,12 @@ class NamespaceApi:
 
         Check if a namespace exists. 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param namespace_exists_request: (required)
         :type namespace_exists_request: NamespaceExistsRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1261,7 +1398,9 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._namespace_exists_serialize(
+            id=id,
             namespace_exists_request=namespace_exists_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1291,7 +1430,9 @@ class NamespaceApi:
     @validate_call
     def namespace_exists_with_http_info(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         namespace_exists_request: NamespaceExistsRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1309,8 +1450,12 @@ class NamespaceApi:
 
         Check if a namespace exists. 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param namespace_exists_request: (required)
         :type namespace_exists_request: NamespaceExistsRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1334,7 +1479,9 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._namespace_exists_serialize(
+            id=id,
             namespace_exists_request=namespace_exists_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1364,7 +1511,9 @@ class NamespaceApi:
     @validate_call
     def namespace_exists_without_preload_content(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         namespace_exists_request: NamespaceExistsRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1382,8 +1531,12 @@ class NamespaceApi:
 
         Check if a namespace exists. 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param namespace_exists_request: (required)
         :type namespace_exists_request: NamespaceExistsRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1407,7 +1560,9 @@ class NamespaceApi:
         """ # noqa: E501
 
         _param = self._namespace_exists_serialize(
+            id=id,
             namespace_exists_request=namespace_exists_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1432,7 +1587,9 @@ class NamespaceApi:
 
     def _namespace_exists_serialize(
         self,
+        id,
         namespace_exists_request,
+        delimiter,
         _request_auth,
         _content_type,
         _headers,
@@ -1454,7 +1611,13 @@ class NamespaceApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
         # process the query parameters
+        if delimiter is not None:
+            
+            _query_params.append(('delimiter', delimiter))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -1490,7 +1653,7 @@ class NamespaceApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/NamespaceExists',
+            resource_path='/v1/namespace/{id}/exists',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

@@ -16,10 +16,13 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
+from pydantic import Field, StrictStr
+from typing import Optional
+from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.alter_transaction_request import AlterTransactionRequest
 from lance_namespace_urllib3_client.models.alter_transaction_response import AlterTransactionResponse
-from lance_namespace_urllib3_client.models.get_transaction_request import GetTransactionRequest
-from lance_namespace_urllib3_client.models.get_transaction_response import GetTransactionResponse
+from lance_namespace_urllib3_client.models.describe_transaction_request import DescribeTransactionRequest
+from lance_namespace_urllib3_client.models.describe_transaction_response import DescribeTransactionResponse
 
 from lance_namespace_urllib3_client.api_client import ApiClient, RequestSerialized
 from lance_namespace_urllib3_client.api_response import ApiResponse
@@ -42,7 +45,9 @@ class TransactionApi:
     @validate_call
     def alter_transaction(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         alter_transaction_request: AlterTransactionRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -59,8 +64,12 @@ class TransactionApi:
         """Alter information of a transaction.
 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param alter_transaction_request: (required)
         :type alter_transaction_request: AlterTransactionRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -84,7 +93,9 @@ class TransactionApi:
         """ # noqa: E501
 
         _param = self._alter_transaction_serialize(
+            id=id,
             alter_transaction_request=alter_transaction_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -115,7 +126,9 @@ class TransactionApi:
     @validate_call
     def alter_transaction_with_http_info(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         alter_transaction_request: AlterTransactionRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -132,8 +145,12 @@ class TransactionApi:
         """Alter information of a transaction.
 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param alter_transaction_request: (required)
         :type alter_transaction_request: AlterTransactionRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -157,7 +174,9 @@ class TransactionApi:
         """ # noqa: E501
 
         _param = self._alter_transaction_serialize(
+            id=id,
             alter_transaction_request=alter_transaction_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -188,7 +207,9 @@ class TransactionApi:
     @validate_call
     def alter_transaction_without_preload_content(
         self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         alter_transaction_request: AlterTransactionRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -205,8 +226,12 @@ class TransactionApi:
         """Alter information of a transaction.
 
 
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
         :param alter_transaction_request: (required)
         :type alter_transaction_request: AlterTransactionRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -230,7 +255,9 @@ class TransactionApi:
         """ # noqa: E501
 
         _param = self._alter_transaction_serialize(
+            id=id,
             alter_transaction_request=alter_transaction_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -256,7 +283,9 @@ class TransactionApi:
 
     def _alter_transaction_serialize(
         self,
+        id,
         alter_transaction_request,
+        delimiter,
         _request_auth,
         _content_type,
         _headers,
@@ -278,7 +307,13 @@ class TransactionApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
         # process the query parameters
+        if delimiter is not None:
+            
+            _query_params.append(('delimiter', delimiter))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -314,7 +349,7 @@ class TransactionApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/AlterTransaction',
+            resource_path='/v1/transaction/{id}/alter',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -331,9 +366,11 @@ class TransactionApi:
 
 
     @validate_call
-    def get_transaction(
+    def describe_transaction(
         self,
-        get_transaction_request: GetTransactionRequest,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
+        describe_transaction_request: DescribeTransactionRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -346,13 +383,17 @@ class TransactionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetTransactionResponse:
-        """Get information about a transaction
+    ) -> DescribeTransactionResponse:
+        """Describe information about a transaction
 
         Return a detailed information for a given transaction
 
-        :param get_transaction_request: (required)
-        :type get_transaction_request: GetTransactionRequest
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param describe_transaction_request: (required)
+        :type describe_transaction_request: DescribeTransactionRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -375,8 +416,10 @@ class TransactionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_transaction_serialize(
-            get_transaction_request=get_transaction_request,
+        _param = self._describe_transaction_serialize(
+            id=id,
+            describe_transaction_request=describe_transaction_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -384,7 +427,7 @@ class TransactionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetTransactionResponse",
+            '200': "DescribeTransactionResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -404,9 +447,11 @@ class TransactionApi:
 
 
     @validate_call
-    def get_transaction_with_http_info(
+    def describe_transaction_with_http_info(
         self,
-        get_transaction_request: GetTransactionRequest,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
+        describe_transaction_request: DescribeTransactionRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -419,13 +464,17 @@ class TransactionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetTransactionResponse]:
-        """Get information about a transaction
+    ) -> ApiResponse[DescribeTransactionResponse]:
+        """Describe information about a transaction
 
         Return a detailed information for a given transaction
 
-        :param get_transaction_request: (required)
-        :type get_transaction_request: GetTransactionRequest
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param describe_transaction_request: (required)
+        :type describe_transaction_request: DescribeTransactionRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -448,8 +497,10 @@ class TransactionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_transaction_serialize(
-            get_transaction_request=get_transaction_request,
+        _param = self._describe_transaction_serialize(
+            id=id,
+            describe_transaction_request=describe_transaction_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -457,7 +508,7 @@ class TransactionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetTransactionResponse",
+            '200': "DescribeTransactionResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -477,9 +528,11 @@ class TransactionApi:
 
 
     @validate_call
-    def get_transaction_without_preload_content(
+    def describe_transaction_without_preload_content(
         self,
-        get_transaction_request: GetTransactionRequest,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
+        describe_transaction_request: DescribeTransactionRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -493,12 +546,16 @@ class TransactionApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get information about a transaction
+        """Describe information about a transaction
 
         Return a detailed information for a given transaction
 
-        :param get_transaction_request: (required)
-        :type get_transaction_request: GetTransactionRequest
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param describe_transaction_request: (required)
+        :type describe_transaction_request: DescribeTransactionRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -521,8 +578,10 @@ class TransactionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_transaction_serialize(
-            get_transaction_request=get_transaction_request,
+        _param = self._describe_transaction_serialize(
+            id=id,
+            describe_transaction_request=describe_transaction_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -530,7 +589,7 @@ class TransactionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetTransactionResponse",
+            '200': "DescribeTransactionResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -545,9 +604,11 @@ class TransactionApi:
         return response_data.response
 
 
-    def _get_transaction_serialize(
+    def _describe_transaction_serialize(
         self,
-        get_transaction_request,
+        id,
+        describe_transaction_request,
+        delimiter,
         _request_auth,
         _content_type,
         _headers,
@@ -569,12 +630,18 @@ class TransactionApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
         # process the query parameters
+        if delimiter is not None:
+            
+            _query_params.append(('delimiter', delimiter))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if get_transaction_request is not None:
-            _body_params = get_transaction_request
+        if describe_transaction_request is not None:
+            _body_params = describe_transaction_request
 
 
         # set the HTTP header `Accept`
@@ -605,7 +672,7 @@ class TransactionApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/GetTransaction',
+            resource_path='/v1/transaction/{id}/describe',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

@@ -20,8 +20,8 @@ import com.lancedb.lance.namespace.client.apache.Configuration;
 import com.lancedb.lance.namespace.client.apache.Pair;
 import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.AlterTransactionResponse;
-import com.lancedb.lance.namespace.model.GetTransactionRequest;
-import com.lancedb.lance.namespace.model.GetTransactionResponse;
+import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
+import com.lancedb.lance.namespace.model.DescribeTransactionResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -48,27 +48,51 @@ public class TransactionApi extends BaseApi {
   /**
    * Alter information of a transaction.
    *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
    * @param alterTransactionRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return AlterTransactionResponse
    * @throws ApiException if fails to make API call
    */
-  public AlterTransactionResponse alterTransaction(AlterTransactionRequest alterTransactionRequest)
+  public AlterTransactionResponse alterTransaction(
+      String id, AlterTransactionRequest alterTransactionRequest, String delimiter)
       throws ApiException {
-    return this.alterTransaction(alterTransactionRequest, Collections.emptyMap());
+    return this.alterTransaction(id, alterTransactionRequest, delimiter, Collections.emptyMap());
   }
 
   /**
    * Alter information of a transaction.
    *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
    * @param alterTransactionRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return AlterTransactionResponse
    * @throws ApiException if fails to make API call
    */
   public AlterTransactionResponse alterTransaction(
-      AlterTransactionRequest alterTransactionRequest, Map<String, String> additionalHeaders)
+      String id,
+      AlterTransactionRequest alterTransactionRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = alterTransactionRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling alterTransaction");
+    }
 
     // verify the required parameter 'alterTransactionRequest' is set
     if (alterTransactionRequest == null) {
@@ -78,7 +102,10 @@ public class TransactionApi extends BaseApi {
     }
 
     // create path and map variables
-    String localVarPath = "/AlterTransaction";
+    String localVarPath =
+        "/v1/transaction/{id}/alter"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -87,6 +114,8 @@ public class TransactionApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -117,39 +146,67 @@ public class TransactionApi extends BaseApi {
   }
 
   /**
-   * Get information about a transaction Return a detailed information for a given transaction
+   * Describe information about a transaction Return a detailed information for a given transaction
    *
-   * @param getTransactionRequest (required)
-   * @return GetTransactionResponse
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param describeTransactionRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @return DescribeTransactionResponse
    * @throws ApiException if fails to make API call
    */
-  public GetTransactionResponse getTransaction(GetTransactionRequest getTransactionRequest)
+  public DescribeTransactionResponse describeTransaction(
+      String id, DescribeTransactionRequest describeTransactionRequest, String delimiter)
       throws ApiException {
-    return this.getTransaction(getTransactionRequest, Collections.emptyMap());
+    return this.describeTransaction(
+        id, describeTransactionRequest, delimiter, Collections.emptyMap());
   }
 
   /**
-   * Get information about a transaction Return a detailed information for a given transaction
+   * Describe information about a transaction Return a detailed information for a given transaction
    *
-   * @param getTransactionRequest (required)
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param describeTransactionRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param additionalHeaders additionalHeaders for this call
-   * @return GetTransactionResponse
+   * @return DescribeTransactionResponse
    * @throws ApiException if fails to make API call
    */
-  public GetTransactionResponse getTransaction(
-      GetTransactionRequest getTransactionRequest, Map<String, String> additionalHeaders)
+  public DescribeTransactionResponse describeTransaction(
+      String id,
+      DescribeTransactionRequest describeTransactionRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
       throws ApiException {
-    Object localVarPostBody = getTransactionRequest;
+    Object localVarPostBody = describeTransactionRequest;
 
-    // verify the required parameter 'getTransactionRequest' is set
-    if (getTransactionRequest == null) {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling describeTransaction");
+    }
+
+    // verify the required parameter 'describeTransactionRequest' is set
+    if (describeTransactionRequest == null) {
       throw new ApiException(
           400,
-          "Missing the required parameter 'getTransactionRequest' when calling getTransaction");
+          "Missing the required parameter 'describeTransactionRequest' when calling describeTransaction");
     }
 
     // create path and map variables
-    String localVarPath = "/GetTransaction";
+    String localVarPath =
+        "/v1/transaction/{id}/describe"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -158,6 +215,8 @@ public class TransactionApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -169,8 +228,8 @@ public class TransactionApi extends BaseApi {
 
     String[] localVarAuthNames = new String[] {};
 
-    TypeReference<GetTransactionResponse> localVarReturnType =
-        new TypeReference<GetTransactionResponse>() {};
+    TypeReference<DescribeTransactionResponse> localVarReturnType =
+        new TypeReference<DescribeTransactionResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

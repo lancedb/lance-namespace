@@ -29,10 +29,10 @@ pub enum AlterTransactionError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`get_transaction`]
+/// struct for typed errors of method [`describe_transaction`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum GetTransactionError {
+pub enum DescribeTransactionError {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
@@ -43,13 +43,18 @@ pub enum GetTransactionError {
 }
 
 
-pub async fn alter_transaction(configuration: &configuration::Configuration, alter_transaction_request: models::AlterTransactionRequest) -> Result<models::AlterTransactionResponse, Error<AlterTransactionError>> {
+pub async fn alter_transaction(configuration: &configuration::Configuration, id: &str, alter_transaction_request: models::AlterTransactionRequest, delimiter: Option<&str>) -> Result<models::AlterTransactionResponse, Error<AlterTransactionError>> {
     // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
     let p_alter_transaction_request = alter_transaction_request;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/AlterTransaction", configuration.base_path);
+    let uri_str = format!("{}/v1/transaction/{id}/alter", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -81,17 +86,22 @@ pub async fn alter_transaction(configuration: &configuration::Configuration, alt
 }
 
 /// Return a detailed information for a given transaction
-pub async fn get_transaction(configuration: &configuration::Configuration, get_transaction_request: models::GetTransactionRequest) -> Result<models::GetTransactionResponse, Error<GetTransactionError>> {
+pub async fn describe_transaction(configuration: &configuration::Configuration, id: &str, describe_transaction_request: models::DescribeTransactionRequest, delimiter: Option<&str>) -> Result<models::DescribeTransactionResponse, Error<DescribeTransactionError>> {
     // add a prefix to parameters to efficiently prevent name collisions
-    let p_get_transaction_request = get_transaction_request;
+    let p_id = id;
+    let p_describe_transaction_request = describe_transaction_request;
+    let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/GetTransaction", configuration.base_path);
+    let uri_str = format!("{}/v1/transaction/{id}/describe", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    req_builder = req_builder.json(&p_get_transaction_request);
+    req_builder = req_builder.json(&p_describe_transaction_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
@@ -108,12 +118,12 @@ pub async fn get_transaction(configuration: &configuration::Configuration, get_t
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::GetTransactionResponse`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::GetTransactionResponse`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::DescribeTransactionResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::DescribeTransactionResponse`")))),
         }
     } else {
         let content = resp.text().await?;
-        let entity: Option<GetTransactionError> = serde_json::from_str(&content).ok();
+        let entity: Option<DescribeTransactionError> = serde_json::from_str(&content).ok();
         Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
