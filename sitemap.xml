@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://lancedb.github.io/lance-namespace/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://lancedb.github.io/lance-namespace/contributing/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://lancedb.github.io/lance-namespace/spec/spec/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://lancedb.github.io/lance-namespace/spec/impls/dir/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://lancedb.github.io/lance-namespace/spec/impls/hive/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://lancedb.github.io/lance-namespace/spec/impls/overview/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://lancedb.github.io/lance-namespace/spec/impls/rest/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+</urlset>
