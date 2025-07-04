@@ -17,7 +17,7 @@ that frequently appear in other similar data systems to allow easy integration w
 
 Here is an example layout of a Lance namespace:
 
-![Lance namespace layout](./layout.png)
+![Lance namespace layout](layout.png)
 
 ### Parent & Child
 
@@ -108,7 +108,7 @@ for example `ListNamespacesV2`, `DescribeTableV3`, etc.
 ### Operation Request and Response Schema
 
 Each operation has a request and response.
-The request and response schema is defined using JSON schema in the `components/schemas` section of [rest.yaml](./rest.yaml).
+The request and response schema is defined using JSON schema in the `components/schemas` section of [rest.yaml](rest.yaml).
 
 ## Namespace Implementations
 
@@ -151,12 +151,6 @@ change to the underlying storage according to the Lance format specification.
 This mode is more flexible for real world ML/AI workflows
 but the implementation loses full visibility and control over the actions performed against the table,
 so it will be harder to enforce any governance and management features for storage managed tables.
-
-## Natively Supported Implementations
-
-A natively supported Lance namespace implementation is one that is maintained in this `lance-namespace` repository.
-Any implementation that is outside the repository is considered as a third-party implementation.
-See [impls folder](./impls) for all the natively supported Lance namespace implementations.
 
 ## Tool Integration Guidelines
 

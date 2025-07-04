@@ -23,7 +23,7 @@ on:
       - ready_for_review
       - reopened
     paths:
-      - spec/**
+      - docs/src/spec/**
       - python/**
       - .github/workflows/python.yml
 

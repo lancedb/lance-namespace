@@ -115,3 +115,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Docs
+docs/site
