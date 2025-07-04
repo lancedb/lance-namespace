@@ -11,7 +11,7 @@
 # limitations under the License.
 
 lint:
-	openapi-spec-validator --errors all spec/rest.yaml
+	openapi-spec-validator --errors all docs/src/spec/rest.yaml
 
 clean-rust:
 	cd rust; make clean

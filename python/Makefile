@@ -17,7 +17,7 @@ clean-python-urllib3-client:
 
 gen-python-urllib3-client: clean-python-urllib3-client
 	openapi-generator-cli generate \
-	  -i ../spec/rest.yaml \
+	  -i ../docs/src/spec/rest.yaml \
 	  -g python \
 	  -o lance_namespace_urllib3_client \
 	  --additional-properties=packageName=lance_namespace_urllib3_client,packageVersion=$(VERSION),library=urllib3 \

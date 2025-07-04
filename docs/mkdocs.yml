@@ -68,7 +68,7 @@ nav:
   - Introduction: index.md
   - Spec:
       - Text: spec/spec.md
-      - OpenAPI: https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/lancedb/lance-namespace/refs/heads/main/docs/src/spec/rest.yaml
+      - OpenAPI: https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/lancedb/lance-namespace/refs/heads/main/docs/src/docs/src/spec/rest.yaml
   - Native Implementations:
       - Overview: spec/impls/overview.md
       - Rest: spec/impls/rest.md
