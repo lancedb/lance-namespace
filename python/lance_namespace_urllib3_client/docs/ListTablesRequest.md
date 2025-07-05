@@ -1,4 +1,4 @@
-# ListNamespacesRequest
+# ListTablesRequest
 
 
 ## Properties
@@ -12,19 +12,19 @@ Name | Type | Description | Notes
 ## Example
 
 ```python
-from lance_namespace_urllib3_client.models.list_namespaces_request import ListNamespacesRequest
+from lance_namespace_urllib3_client.models.list_tables_request import ListTablesRequest
 
 # TODO update the JSON string below
 json = "{}"
-# create an instance of ListNamespacesRequest from a JSON string
-list_namespaces_request_instance = ListNamespacesRequest.from_json(json)
+# create an instance of ListTablesRequest from a JSON string
+list_tables_request_instance = ListTablesRequest.from_json(json)
 # print the JSON string representation of the object
-print(ListNamespacesRequest.to_json())
+print(ListTablesRequest.to_json())
 
 # convert the object into a dict
-list_namespaces_request_dict = list_namespaces_request_instance.to_dict()
-# create an instance of ListNamespacesRequest from a dict
-list_namespaces_request_from_dict = ListNamespacesRequest.from_dict(list_namespaces_request_dict)
+list_tables_request_dict = list_tables_request_instance.to_dict()
+# create an instance of ListTablesRequest from a dict
+list_tables_request_from_dict = ListTablesRequest.from_dict(list_tables_request_dict)
 ```
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

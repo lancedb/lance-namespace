@@ -273,6 +273,44 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/table/{id}/list:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
+    post:
+      description: |
+        List all child table names of the root namespace or a given parent namespace.
+      operationId: ListTables
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListTablesRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/ListTablesResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "406":
+          $ref: '#/components/responses/UnsupportedOperationErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: List tables
+      tags:
+      - Table
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/table/{id}/describe:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -571,6 +609,12 @@ components:
           schema:
             $ref: '#/components/schemas/NamespaceExistsResponse'
       description: Result of checking if a namespace exists
+    ListTablesResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListTablesResponse'
+      description: A list of tables
     DescribeTableResponse:
       content:
         application/json:
@@ -826,6 +870,8 @@ components:
             will receive.
           type: integer
           nullable: true
+      required:
+      - parent
     ListNamespacesResponse:
       example:
         nextPageToken: nextPageToken
@@ -1031,6 +1077,56 @@ components:
       - location
       - name
       - namespace
+    ListTablesRequest:
+      example:
+        parent:
+        - parent
+        - parent
+        pageSize: 0
+        pageToken: pageToken
+      properties:
+        parent:
+          items:
+            type: string
+          type: array
+        pageToken:
+          description: |-
+            An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
+            For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available.
+            After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request.
+            Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.
+          type: string
+          nullable: true
+        pageSize:
+          description: An inclusive upper bound of the number of results that a client
+            will receive.
+          type: integer
+          nullable: true
+      required:
+      - parent
+    ListTablesResponse:
+      example:
+        tables:
+        - cart
+        - cart
+        nextPageToken: nextPageToken
+      properties:
+        tables:
+          items:
+            example: cart
+            type: string
+          type: array
+          uniqueItems: true
+        nextPageToken:
+          description: |-
+            An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
+            For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available.
+            After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request.
+            Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.
+          type: string
+          nullable: true
+      required:
+      - tables
     DescribeTableRequest:
       example:
         name: name

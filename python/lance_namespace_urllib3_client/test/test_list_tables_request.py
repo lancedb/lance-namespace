@@ -14,60 +14,45 @@
 
 import unittest
 
-from lance_namespace_urllib3_client.api.table_api import TableApi
+from lance_namespace_urllib3_client.models.list_tables_request import ListTablesRequest
 
+class TestListTablesRequest(unittest.TestCase):
+    """ListTablesRequest unit test stubs"""
 
-class TestTableApi(unittest.TestCase):
-    """TableApi unit test stubs"""
-
-    def setUp(self) -> None:
-        self.api = TableApi()
-
-    def tearDown(self) -> None:
+    def setUp(self):
         pass
 
-    def test_deregister_table(self) -> None:
-        """Test case for deregister_table
+    def tearDown(self):
+        pass
 
-        Deregister a table from its namespace
+    def make_instance(self, include_optional) -> ListTablesRequest:
+        """Test ListTablesRequest
+            include_optional is a boolean, when False only required
+            params are included, when True both required and
+            optional params are included """
+        # uncomment below to create an instance of `ListTablesRequest`
         """
-        pass
-
-    def test_describe_table(self) -> None:
-        """Test case for describe_table
-
-        Describe a table from the namespace
+        model = ListTablesRequest()
+        if include_optional:
+            return ListTablesRequest(
+                parent = [
+                    ''
+                    ],
+                page_token = '',
+                page_size = 56
+            )
+        else:
+            return ListTablesRequest(
+                parent = [
+                    ''
+                    ],
+        )
         """
-        pass
 
-    def test_drop_table(self) -> None:
-        """Test case for drop_table
-
-        Drop a table from its namespace
-        """
-        pass
-
-    def test_list_tables(self) -> None:
-        """Test case for list_tables
-
-        List tables
-        """
-        pass
-
-    def test_register_table(self) -> None:
-        """Test case for register_table
-
-        Register a table to a namespace
-        """
-        pass
-
-    def test_table_exists(self) -> None:
-        """Test case for table_exists
-
-        Check if a table exists
-        """
-        pass
-
+    def testListTablesRequest(self):
+        """Test ListTablesRequest"""
+        # inst_req_only = self.make_instance(include_optional=False)
+        # inst_req_and_optional = self.make_instance(include_optional=True)
 
 if __name__ == '__main__':
     unittest.main()

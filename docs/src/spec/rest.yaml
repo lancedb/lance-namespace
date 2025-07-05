@@ -267,6 +267,38 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/table/{id}/list:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags: [ Table ]
+      summary: List tables
+      operationId: ListTables
+      description: >
+        List all child table names of the root namespace or a given parent namespace.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListTablesRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/ListTablesResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        406:
+          $ref: '#/components/responses/UnsupportedOperationErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
   /v1/table/{id}/describe:
     parameters:
       - $ref: '#/components/parameters/id'
@@ -554,6 +586,8 @@ components:
 
     ListNamespacesRequest:
       type: object
+      required:
+        - parent
       properties:
         parent:
           type: array
@@ -738,6 +772,34 @@ components:
           type: object
           additionalProperties:
             type: string
+
+    ListTablesRequest:
+      type: object
+      required:
+        - parent
+      properties:
+        parent:
+          type: array
+          items:
+            type: string
+        pageToken:
+          $ref: "#/components/schemas/PageToken"
+        pageSize:
+          $ref: "#/components/schemas/PageSize"
+
+    ListTablesResponse:
+      type: object
+      required:
+        - tables
+      properties:
+        tables:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            example: "cart"
+        nextPageToken:
+          $ref: "#/components/schemas/PageToken"
 
     DescribeTableRequest:
       type: object
@@ -1018,6 +1080,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/NamespaceExistsResponse'
+
+    ListTablesResponse:
+      description: A list of tables
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListTablesResponse'
 
     DescribeTableResponse:
       description: Table properties result when loading a table

@@ -1,4 +1,4 @@
-# ListNamespacesRequest
+# ListTablesRequest
 
 ## Properties
 

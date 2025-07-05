@@ -43,6 +43,9 @@ class TestListNamespacesRequest(unittest.TestCase):
             )
         else:
             return ListNamespacesRequest(
+                parent = [
+                    ''
+                    ],
         )
         """
 

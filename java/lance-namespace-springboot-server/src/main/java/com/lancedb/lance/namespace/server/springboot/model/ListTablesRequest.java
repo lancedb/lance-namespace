@@ -25,11 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/** ListNamespacesRequest */
+/** ListTablesRequest */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
-public class ListNamespacesRequest {
+public class ListTablesRequest {
 
   @Valid private List<String> parent = new ArrayList<>();
 
@@ -37,21 +37,21 @@ public class ListNamespacesRequest {
 
   private Integer pageSize;
 
-  public ListNamespacesRequest() {
+  public ListTablesRequest() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public ListNamespacesRequest(List<String> parent) {
+  public ListTablesRequest(List<String> parent) {
     this.parent = parent;
   }
 
-  public ListNamespacesRequest parent(List<String> parent) {
+  public ListTablesRequest parent(List<String> parent) {
     this.parent = parent;
     return this;
   }
 
-  public ListNamespacesRequest addParentItem(String parentItem) {
+  public ListTablesRequest addParentItem(String parentItem) {
     if (this.parent == null) {
       this.parent = new ArrayList<>();
     }
@@ -75,7 +75,7 @@ public class ListNamespacesRequest {
     this.parent = parent;
   }
 
-  public ListNamespacesRequest pageToken(String pageToken) {
+  public ListTablesRequest pageToken(String pageToken) {
     this.pageToken = pageToken;
     return this;
   }
@@ -106,7 +106,7 @@ public class ListNamespacesRequest {
     this.pageToken = pageToken;
   }
 
-  public ListNamespacesRequest pageSize(Integer pageSize) {
+  public ListTablesRequest pageSize(Integer pageSize) {
     this.pageSize = pageSize;
     return this;
   }
@@ -137,10 +137,10 @@ public class ListNamespacesRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ListNamespacesRequest listNamespacesRequest = (ListNamespacesRequest) o;
-    return Objects.equals(this.parent, listNamespacesRequest.parent)
-        && Objects.equals(this.pageToken, listNamespacesRequest.pageToken)
-        && Objects.equals(this.pageSize, listNamespacesRequest.pageSize);
+    ListTablesRequest listTablesRequest = (ListTablesRequest) o;
+    return Objects.equals(this.parent, listTablesRequest.parent)
+        && Objects.equals(this.pageToken, listTablesRequest.pageToken)
+        && Objects.equals(this.pageSize, listTablesRequest.pageSize);
   }
 
   @Override
@@ -151,7 +151,7 @@ public class ListNamespacesRequest {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ListNamespacesRequest {\n");
+    sb.append("class ListTablesRequest {\n");
     sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
     sb.append("    pageSize: ").append(toIndentedString(pageSize)).append("\n");
