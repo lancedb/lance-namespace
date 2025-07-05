@@ -67,11 +67,14 @@ extra:
 nav:
   - Introduction: index.md
   - Spec:
-      - Text: spec/spec.md
-      - OpenAPI: https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/lancedb/lance-namespace/refs/heads/main/docs/src/docs/src/spec/rest.yaml
+      - Concepts: spec/concepts.md
+      - Operations: spec/operations.md
+      - Implementations: spec/implementations.md
+      - Tool Integration: spec/tools.md
+      - OpenAPI: https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/lancedb/lance-namespace/refs/heads/main/docs/src/spec/rest.yaml
   - Native Implementations:
       - Overview: spec/impls/overview.md
-      - Rest: spec/impls/rest.md
+      - REST: spec/impls/rest.md
       - Directory: spec/impls/dir.md
       - Apache Hive MetaStore: spec/impls/hive.md
   - Contributing: contributing.md
