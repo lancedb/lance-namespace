@@ -4,7 +4,7 @@ In an enterprise environment, typically there is a requirement to store tables i
 for more advanced governance features around access control, auditing, lineage tracking, etc.
 **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables
 by connecting those metadata services or building a custom metadata server in a standardized way.
-The REST server definition can be found in the OpenAPI specification.
+The REST server definition can be found in the [OpenAPI specification](https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/lancedb/lance-namespace/refs/heads/main/docs/src/spec/rest.yaml).
 
 ## REST Routes
 
