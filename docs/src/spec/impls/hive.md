@@ -1,6 +1,6 @@
 # Lance Hive Namespace
 
-** Lance Hive Namespace** is an implementation using Apache Hive MetaStore (HMS).
+**Lance Hive Namespace** is an implementation using Apache Hive MetaStore (HMS).
 For more details about HMS, please read [HMS AdminManual 2.x](https://hive.apache.org/docs/latest/adminmanual-metastore-administration_27362076/) 
 and [HMS AdminManual 3.x](https://hive.apache.org/docs/latest/adminmanual-metastore-3-0-administration_75978150/). 
 
