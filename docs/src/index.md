@@ -11,20 +11,19 @@ should store and use Lance tables, as well as how ML/AI tools and analytics comp
 
 ## Why _Namespace_ not _Catalog_?
 
-There are many equivalent terms that provides a container concept in a database system,
-including _namespace_, _catalog_, _schema_, _database_, _metastore_, _metalake_, etc.
-Namespace and catalog are the 2 most popular terms used in modern lakehouse systems.
+There are many terms used to describe the concept of a container in database systems
+— such as _namespace_, _catalog_, _schema_, _database_, _metastore_, and _metalake_. 
+Among these, namespace and catalog have become the most prominent in modern lakehouse architectures.
 
-Between namespace and catalog, catalog typically implies at least a 2-level hierarchy, 
-such as `catalog -> database -> table` in Apache Hive MetaStore,
-and `catalog -> multi-level namespace -> table` in Apache Iceberg REST catalog.
+The term catalog typically implies a hierarchical structure with at least two levels. 
+For example, Apache Hive uses a catalog → database → table model, 
+while Apache Iceberg’s REST catalog adopts a catalog → multi-level namespace → table hierarchy.
 
-Lance is a format for ML and LLM use cases, and we observe a popularity for a 1-level hierarchy in the ML/AI community. 
-People commonly just use a simple directory to store datasets,
-and categorize them through mechanisms like tagging instead of organizing them into a fixed hierarchy.
+In contrast, the ML and AI communities tend to favor a flatter organizational model. 
+It’s common to store datasets in simple directories 
+and categorize them using flexible systems like tagging, rather than rigid hierarchies.
 
-To accommodate this architecture as a first-class citizen,
-we decide to use the term **_namespace_** to represent all container concepts including a catalog.
-By offering a multi-level namespace semantics on top of Lance through the Lance Namespace Specification, 
-we are able to flexibly model against any data categorization strategy,
-and allow users to store and manage Lance datasets in their system.
+To better support this usage pattern, Lance adopts the term **_namespace_** to represent all container concepts 
+— including what would traditionally be called a catalog. 
+With the **Lance Namespace Specification**, we provide a flexible, multi-level namespace abstraction 
+that allows users to structure and manage Lance datasets in ways that best align with their data organization strategies.
