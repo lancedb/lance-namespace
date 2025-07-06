@@ -76,4 +76,4 @@ because `t1` has 2 namespaces `ns1` and `ns4` before root, whereas `t2` has 1 na
 For a leveled namespace, the number of namespaces up to and including the root for any table 
 is referred to as the **number of levels**.
 For example, a [directory namespace](../impls/dir) is a 1-level namespace,
-and a [Hive namespace](../impls/hive) is a 2-level namespace.
+and a [Hive 2.x namespace](../impls/hive) is a 2-level namespace.
