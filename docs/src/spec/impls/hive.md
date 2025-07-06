@@ -6,8 +6,14 @@ and [HMS AdminManual 3.x](https://hive.apache.org/docs/latest/adminmanual-metast
 
 ## Namespace Mapping
 
-A HMS server can be viewed as the root Lance namespace, and a database in HMS maps to the first level Lance namespace
-to offer a 2-level Lance namespace as a whole.
+A HMS server can be viewed as the root Lance namespace.
+
+For HMS 2.x and below, a database in HMS maps to the first level Lance namespace
+to form a 2-level Lance namespace as a whole.
+
+For HMS 3.x and above, a catalog in HMS maps to the first level Lance namespace,
+and a database in HMS maps to the second level Lance namespace
+to form a 3-level Lance namespace as a whole.
 
 ## Table Definition
 
