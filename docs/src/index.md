@@ -1,8 +1,8 @@
-#
+# Introduction
 
 ![logo](./logo/wide.png)
 
-## Introduction
+## Lance Namespace Specification
 
 **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format
 to standardize access to a collection of Lance tables (a.k.a. Lance datasets).
