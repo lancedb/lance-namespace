@@ -20,8 +20,9 @@ to form a 3-level Lance namespace as a whole.
 A Lance table should appear as a [Table object](https://github.com/apache/hive/blob/branch-4.0/standalone-metastore/metastore-common/src/main/thrift/hive_metastore.thrift#L631) 
 in HMS with the following requirements:
 
-1. the [tableType](https://github.com/apache/hive/blob/branch-4.0/standalone-metastore/metastore-common/src/main/thrift/hive_metastore.thrift#L643) must be set as `EXTERNAL_TABLE` to indicate this is not a managed Hive table
-2. the [parameters](https://github.com/apache/hive/blob/branch-4.0/standalone-metastore/metastore-common/src/main/thrift/hive_metastore.thrift#L640) must follow:
+1. the [`tableType`](https://github.com/apache/hive/blob/branch-4.0/standalone-metastore/metastore-common/src/main/thrift/hive_metastore.thrift#L643) must be set as `EXTERNAL_TABLE` to indicate this is not a managed Hive table
+2. the [`location`](https://github.com/apache/hive/blob/branch-4.0/standalone-metastore/metastore-common/src/main/thrift/hive_metastore.thrift#L467) in [`storageDescriptor`](https://github.com/apache/hive/blob/branch-4.0/standalone-metastore/metastore-common/src/main/thrift/hive_metastore.thrift#L638) must point to the root location of the Lance table
+3. the [`parameters`](https://github.com/apache/hive/blob/branch-4.0/standalone-metastore/metastore-common/src/main/thrift/hive_metastore.thrift#L640) must follow:
     1. there is a key `table_type` set to `lance` (case insensitive)
     2. there is a key `managed_by` set to either `storage` or `impl` (case insensitive). If not set, default to `storage`
     3. there is a key `version` set to the latest numeric version number of the table. This field will only be respected if `managed_by=impl` 
