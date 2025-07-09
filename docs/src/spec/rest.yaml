@@ -21,8 +21,8 @@ info:
   description: >
     This OpenAPI specification is a part of the Lance namespace specification. It contains 2 parts:
     
-    The `components/schemas`, `components/responses`, `components/examples` sections are 
-    defining the request and response shape for each operation in the Lance Namespace.
+    The `components/schemas`, `components/responses`, `components/examples` sections define
+    the request and response shape for each operation in a Lance Namespace across all implementations.
     See https://lancedb.github.io/lance-namespace/spec/operations for more details.
     
     The `servers`, `security`, `paths`, `components/parameters` sections are for the 
