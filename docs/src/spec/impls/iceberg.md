@@ -24,9 +24,9 @@ with the following requirements:
     2. there is a key `managed_by` set to either `storage` or `impl` (case insensitive). If not set, default to `storage`
 3. the [`current-snapshot-id`](https://github.com/apache/iceberg/blob/apache-iceberg-1.9.0/open-api/rest-catalog-open-api.yaml#L2535) is set to the latest numeric version number of the table. This field will only be respected if `managed_by=impl`
 
-When a user performs a `LoadTable`(https://github.com/apache/iceberg/blob/apache-iceberg-1.9.0/open-api/rest-catalog-open-api.yaml#L923) API call to retrieve the table metadata, 
+When a user performs a [`LoadTable`](https://github.com/apache/iceberg/blob/apache-iceberg-1.9.0/open-api/rest-catalog-open-api.yaml#L923) API call to retrieve the table metadata, 
 the server must not return a [`metadata-location`](https://github.com/apache/iceberg/blob/apache-iceberg-1.9.0/open-api/rest-catalog-open-api.yaml#L3260)
-in the `LoadTableResponse`(https://github.com/apache/iceberg/blob/apache-iceberg-1.9.0/open-api/rest-catalog-open-api.yaml#L4669).
+in the [`LoadTableResponse`](https://github.com/apache/iceberg/blob/apache-iceberg-1.9.0/open-api/rest-catalog-open-api.yaml#L4669).
 
 ## Requirement for Implementation Managed Table
 
