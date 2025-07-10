@@ -61,7 +61,32 @@ public class LanceRestNamespaceManualTest {
     DescribeTableResponse response = namespace.describeTable(request);
     System.out.println("Table Description: " + response);
 
+    // Validate the important LanceDB fields
     assertNotNull(response, "Response should not be null");
+
+    // Validate LanceDB-specific fields
+    assertEquals(TEST_TABLE_NAME, response.getTable(), "Table name should match");
+    assertNotNull(response.getVersion(), "Version should not be null");
+    assertTrue(response.getVersion() > 0, "Version should be positive");
+
+    // Validate schema exists
+    assertNotNull(response.getSchema(), "Schema should not be null");
+
+    // Validate stats
+    assertNotNull(response.getStats(), "Stats should not be null");
+    assertTrue(
+        response.getStats().getNumFragments() >= 0, "Number of fragments should be non-negative");
+    assertTrue(
+        response.getStats().getNumDeletedRows() >= 0,
+        "Number of deleted rows should be non-negative");
+
+    System.out.println("✓ Table name: " + response.getTable());
+    System.out.println("✓ Version: " + response.getVersion());
+    System.out.println(
+        "✓ Schema fields count: " + (response.getSchema() != null ? "present" : "null"));
+    System.out.println("✓ Stats - Fragments: " + response.getStats().getNumFragments());
+    System.out.println("✓ Stats - Deleted rows: " + response.getStats().getNumDeletedRows());
+
     System.out.println("Test passed!");
   }
 
