@@ -17,8 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
+from lance_namespace_urllib3_client.models.table_basic_stats import TableBasicStats
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,7 +32,12 @@ class DescribeTableResponse(BaseModel):
     namespace: List[StrictStr]
     location: StrictStr
     properties: Optional[Dict[str, StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["name", "namespace", "location", "properties"]
+    var_schema: Dict[str, Any] = Field(alias="schema")
+    stats: TableBasicStats
+    table: StrictStr
+    table_uri: Optional[StrictStr] = Field(default=None, description="Table URI, optional")
+    version: Annotated[int, Field(strict=True, ge=0)]
+    __properties: ClassVar[List[str]] = ["name", "namespace", "location", "properties", "schema", "stats", "table", "table_uri", "version"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -71,6 +78,14 @@ class DescribeTableResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of stats
+        if self.stats:
+            _dict['stats'] = self.stats.to_dict()
+        # set to None if table_uri (nullable) is None
+        # and model_fields_set contains the field
+        if self.table_uri is None and "table_uri" in self.model_fields_set:
+            _dict['table_uri'] = None
+
         return _dict
 
     @classmethod
@@ -86,7 +101,12 @@ class DescribeTableResponse(BaseModel):
             "name": obj.get("name"),
             "namespace": obj.get("namespace"),
             "location": obj.get("location"),
-            "properties": obj.get("properties")
+            "properties": obj.get("properties"),
+            "schema": obj.get("schema"),
+            "stats": TableBasicStats.from_dict(obj["stats"]) if obj.get("stats") is not None else None,
+            "table": obj.get("table"),
+            "table_uri": obj.get("table_uri"),
+            "version": obj.get("version")
         })
         return _obj
 

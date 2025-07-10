@@ -13,13 +13,16 @@
  */
 package com.lancedb.lance.namespace.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +34,12 @@ import java.util.StringJoiner;
   DescribeTableResponse.JSON_PROPERTY_NAME,
   DescribeTableResponse.JSON_PROPERTY_NAMESPACE,
   DescribeTableResponse.JSON_PROPERTY_LOCATION,
-  DescribeTableResponse.JSON_PROPERTY_PROPERTIES
+  DescribeTableResponse.JSON_PROPERTY_PROPERTIES,
+  DescribeTableResponse.JSON_PROPERTY_SCHEMA,
+  DescribeTableResponse.JSON_PROPERTY_STATS,
+  DescribeTableResponse.JSON_PROPERTY_TABLE,
+  DescribeTableResponse.JSON_PROPERTY_TABLE_URI,
+  DescribeTableResponse.JSON_PROPERTY_VERSION
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -48,6 +56,23 @@ public class DescribeTableResponse {
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
+
+  public static final String JSON_PROPERTY_SCHEMA = "schema";
+  @javax.annotation.Nonnull private Object schema;
+
+  public static final String JSON_PROPERTY_STATS = "stats";
+  @javax.annotation.Nonnull private TableBasicStats stats;
+
+  public static final String JSON_PROPERTY_TABLE = "table";
+  @javax.annotation.Nonnull private String table;
+
+  public static final String JSON_PROPERTY_TABLE_URI = "table_uri";
+
+  @javax.annotation.Nullable
+  private JsonNullable<String> tableUri = JsonNullable.<String>undefined();
+
+  public static final String JSON_PROPERTY_VERSION = "version";
+  @javax.annotation.Nonnull private Long version;
 
   public DescribeTableResponse() {}
 
@@ -164,6 +189,134 @@ public class DescribeTableResponse {
     this.properties = properties;
   }
 
+  public DescribeTableResponse schema(@javax.annotation.Nonnull Object schema) {
+
+    this.schema = schema;
+    return this;
+  }
+
+  /**
+   * Get schema
+   *
+   * @return schema
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_SCHEMA)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public Object getSchema() {
+    return schema;
+  }
+
+  @JsonProperty(JSON_PROPERTY_SCHEMA)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setSchema(@javax.annotation.Nonnull Object schema) {
+    this.schema = schema;
+  }
+
+  public DescribeTableResponse stats(@javax.annotation.Nonnull TableBasicStats stats) {
+
+    this.stats = stats;
+    return this;
+  }
+
+  /**
+   * Get stats
+   *
+   * @return stats
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_STATS)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public TableBasicStats getStats() {
+    return stats;
+  }
+
+  @JsonProperty(JSON_PROPERTY_STATS)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setStats(@javax.annotation.Nonnull TableBasicStats stats) {
+    this.stats = stats;
+  }
+
+  public DescribeTableResponse table(@javax.annotation.Nonnull String table) {
+
+    this.table = table;
+    return this;
+  }
+
+  /**
+   * Get table
+   *
+   * @return table
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_TABLE)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public String getTable() {
+    return table;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TABLE)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setTable(@javax.annotation.Nonnull String table) {
+    this.table = table;
+  }
+
+  public DescribeTableResponse tableUri(@javax.annotation.Nullable String tableUri) {
+    this.tableUri = JsonNullable.<String>of(tableUri);
+
+    return this;
+  }
+
+  /**
+   * Table URI, optional
+   *
+   * @return tableUri
+   */
+  @javax.annotation.Nullable
+  @JsonIgnore
+  public String getTableUri() {
+    return tableUri.orElse(null);
+  }
+
+  @JsonProperty(JSON_PROPERTY_TABLE_URI)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public JsonNullable<String> getTableUri_JsonNullable() {
+    return tableUri;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TABLE_URI)
+  public void setTableUri_JsonNullable(JsonNullable<String> tableUri) {
+    this.tableUri = tableUri;
+  }
+
+  public void setTableUri(@javax.annotation.Nullable String tableUri) {
+    this.tableUri = JsonNullable.<String>of(tableUri);
+  }
+
+  public DescribeTableResponse version(@javax.annotation.Nonnull Long version) {
+
+    this.version = version;
+    return this;
+  }
+
+  /**
+   * Get version minimum: 0
+   *
+   * @return version
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_VERSION)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public Long getVersion() {
+    return version;
+  }
+
+  @JsonProperty(JSON_PROPERTY_VERSION)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setVersion(@javax.annotation.Nonnull Long version) {
+    this.version = version;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -176,12 +329,42 @@ public class DescribeTableResponse {
     return Objects.equals(this.name, describeTableResponse.name)
         && Objects.equals(this.namespace, describeTableResponse.namespace)
         && Objects.equals(this.location, describeTableResponse.location)
-        && Objects.equals(this.properties, describeTableResponse.properties);
+        && Objects.equals(this.properties, describeTableResponse.properties)
+        && Objects.equals(this.schema, describeTableResponse.schema)
+        && Objects.equals(this.stats, describeTableResponse.stats)
+        && Objects.equals(this.table, describeTableResponse.table)
+        && equalsNullable(this.tableUri, describeTableResponse.tableUri)
+        && Objects.equals(this.version, describeTableResponse.version);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b
+        || (a != null
+            && b != null
+            && a.isPresent()
+            && b.isPresent()
+            && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, location, properties);
+    return Objects.hash(
+        name,
+        namespace,
+        location,
+        properties,
+        schema,
+        stats,
+        table,
+        hashCodeNullable(tableUri),
+        version);
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[] {a.get()}) : 31;
   }
 
   @Override
@@ -192,6 +375,11 @@ public class DescribeTableResponse {
     sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
+    sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
+    sb.append("    stats: ").append(toIndentedString(stats)).append("\n");
+    sb.append("    table: ").append(toIndentedString(table)).append("\n");
+    sb.append("    tableUri: ").append(toIndentedString(tableUri)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -309,6 +497,72 @@ public class DescribeTableResponse {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
+      }
+    }
+
+    // add `schema` to the URL query string
+    if (getSchema() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sschema%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getSchema()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `stats` to the URL query string
+    if (getStats() != null) {
+      joiner.add(getStats().toUrlQueryString(prefix + "stats" + suffix));
+    }
+
+    // add `table` to the URL query string
+    if (getTable() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%stable%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getTable()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `table_uri` to the URL query string
+    if (getTableUri() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%stable_uri%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getTableUri()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `version` to the URL query string
+    if (getVersion() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sversion%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
       }
     }
 

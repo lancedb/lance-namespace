@@ -54,6 +54,8 @@ pub mod register_table_response;
 pub use self::register_table_response::RegisterTableResponse;
 pub mod set_property_mode;
 pub use self::set_property_mode::SetPropertyMode;
+pub mod table_basic_stats;
+pub use self::table_basic_stats::TableBasicStats;
 pub mod table_exists_request;
 pub use self::table_exists_request::TableExistsRequest;
 pub mod table_exists_response;

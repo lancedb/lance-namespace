@@ -12,40 +12,18 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct DescribeTableResponse {
-    #[serde(rename = "name")]
-    pub name: String,
-    #[serde(rename = "namespace")]
-    pub namespace: Vec<String>,
-    #[serde(rename = "location")]
-    pub location: String,
-    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
-    pub properties: Option<std::collections::HashMap<String, String>>,
-    #[serde(rename = "schema")]
-    pub schema: serde_json::Value,
-    #[serde(rename = "stats")]
-    pub stats: Box<models::TableBasicStats>,
-    #[serde(rename = "table")]
-    pub table: String,
-    /// Table URI, optional
-    #[serde(rename = "table_uri", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
-    pub table_uri: Option<Option<String>>,
-    #[serde(rename = "version")]
-    pub version: i64,
+pub struct TableBasicStats {
+    #[serde(rename = "num_deleted_rows")]
+    pub num_deleted_rows: i32,
+    #[serde(rename = "num_fragments")]
+    pub num_fragments: i32,
 }
 
-impl DescribeTableResponse {
-    pub fn new(name: String, namespace: Vec<String>, location: String, schema: serde_json::Value, stats: models::TableBasicStats, table: String, version: i64) -> DescribeTableResponse {
-        DescribeTableResponse {
-            name,
-            namespace,
-            location,
-            properties: None,
-            schema,
-            stats: Box::new(stats),
-            table,
-            table_uri: None,
-            version,
+impl TableBasicStats {
+    pub fn new(num_deleted_rows: i32, num_fragments: i32) -> TableBasicStats {
+        TableBasicStats {
+            num_deleted_rows,
+            num_fragments,
         }
     }
 }

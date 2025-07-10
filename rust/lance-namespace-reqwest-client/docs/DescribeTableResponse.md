@@ -8,6 +8,11 @@ Name | Type | Description | Notes
 **namespace** | **Vec<String>** |  | 
 **location** | **String** |  | 
 **properties** | Option<**std::collections::HashMap<String, String>**> |  | [optional]
+**schema** | [**serde_json::Value**](.md) |  | 
+**stats** | [**models::TableBasicStats**](TableBasicStats.md) |  | 
+**table** | **String** |  | 
+**table_uri** | Option<**String**> | Table URI, optional | [optional]
+**version** | **i64** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

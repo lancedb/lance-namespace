@@ -279,7 +279,7 @@ paths:
     - $ref: '#/components/parameters/delimiter'
     post:
       description: |
-        Get a table's detailed information under a specified namespace.
+        Get a table's detailed information under a specified namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
       operationId: DescribeTable
       parameters:
       - $ref: '#/components/parameters/id'
@@ -534,6 +534,33 @@ components:
       schema:
         $ref: '#/components/schemas/PageToken'
       style: form
+    x-lancedb-database:
+      description: Database name (used when host override is enabled)
+      explode: false
+      in: header
+      name: x-lancedb-database
+      required: false
+      schema:
+        nullable: true
+      style: simple
+    x-lancedb-database-prefix:
+      description: Database prefix for multi-tenant environments
+      explode: false
+      in: header
+      name: x-lancedb-database-prefix
+      required: false
+      schema:
+        nullable: true
+      style: simple
+    x-azure-storage-account-name:
+      description: Azure storage account name for Azure-backed databases
+      explode: false
+      in: header
+      name: x-azure-storage-account-name
+      required: false
+      schema:
+        nullable: true
+      style: simple
   responses:
     ListNamespacesResponse:
       content:
@@ -1037,6 +1064,8 @@ components:
         namespace:
         - namespace
         - namespace
+        version: 0
+        with_table_uri: true
       properties:
         name:
           type: string
@@ -1044,18 +1073,33 @@ components:
           items:
             type: string
           type: array
-      required:
-      - name
-      - namespace
+        version:
+          format: int64
+          minimum: 0
+          nullable: true
+          type: integer
+        with_table_uri:
+          description: |-
+            If set to `Some(true)`, returns Table URI as payload.
+            This flag should not be public in SaaS.
+          nullable: true
+          type: boolean
     DescribeTableResponse:
       example:
+        schema: "{}"
+        stats:
+          num_deleted_rows: 0
+          num_fragments: 0
+        table_uri: table_uri
         name: name
         namespace:
         - namespace
         - namespace
         location: location
+        version: 0
         properties:
           key: properties
+        table: table
       properties:
         name:
           type: string
@@ -1068,10 +1112,28 @@ components:
         properties:
           additionalProperties:
             type: string
+        schema:
+          type: object
+        stats:
+          $ref: '#/components/schemas/TableBasicStats'
+        table:
+          type: string
+        table_uri:
+          description: "Table URI, optional"
+          nullable: true
+          type: string
+        version:
+          format: int64
+          minimum: 0
+          type: integer
       required:
       - location
       - name
       - namespace
+      - schema
+      - stats
+      - table
+      - version
     TableExistsRequest:
       example:
         name: name
@@ -1313,4 +1375,18 @@ components:
         properties:
           additionalProperties:
             type: string
+    TableBasicStats:
+      example:
+        num_deleted_rows: 0
+        num_fragments: 0
+      properties:
+        num_deleted_rows:
+          minimum: 0
+          type: integer
+        num_fragments:
+          minimum: 0
+          type: integer
+      required:
+      - num_deleted_rows
+      - num_fragments
 

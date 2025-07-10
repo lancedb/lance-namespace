@@ -392,7 +392,7 @@ class TableApi:
     ) -> DescribeTableResponse:
         """Describe a table from the namespace
 
-        Get a table's detailed information under a specified namespace. 
+        Get a table's detailed information under a specified namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -473,7 +473,7 @@ class TableApi:
     ) -> ApiResponse[DescribeTableResponse]:
         """Describe a table from the namespace
 
-        Get a table's detailed information under a specified namespace. 
+        Get a table's detailed information under a specified namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -554,7 +554,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Describe a table from the namespace
 
-        Get a table's detailed information under a specified namespace. 
+        Get a table's detailed information under a specified namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str

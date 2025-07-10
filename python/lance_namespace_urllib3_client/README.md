@@ -134,6 +134,7 @@ Class | Method | HTTP request | Description
  - [RegisterTableRequest](docs/RegisterTableRequest.md)
  - [RegisterTableResponse](docs/RegisterTableResponse.md)
  - [SetPropertyMode](docs/SetPropertyMode.md)
+ - [TableBasicStats](docs/TableBasicStats.md)
  - [TableExistsRequest](docs/TableExistsRequest.md)
  - [TableExistsResponse](docs/TableExistsResponse.md)
  - [TransactionStatus](docs/TransactionStatus.md)

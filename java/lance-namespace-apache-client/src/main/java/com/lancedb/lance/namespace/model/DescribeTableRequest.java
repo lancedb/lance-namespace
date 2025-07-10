@@ -13,13 +13,16 @@
  */
 package com.lancedb.lance.namespace.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -27,21 +30,31 @@ import java.util.StringJoiner;
 /** DescribeTableRequest */
 @JsonPropertyOrder({
   DescribeTableRequest.JSON_PROPERTY_NAME,
-  DescribeTableRequest.JSON_PROPERTY_NAMESPACE
+  DescribeTableRequest.JSON_PROPERTY_NAMESPACE,
+  DescribeTableRequest.JSON_PROPERTY_VERSION,
+  DescribeTableRequest.JSON_PROPERTY_WITH_TABLE_URI
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DescribeTableRequest {
   public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nonnull private String name;
+  @javax.annotation.Nullable private String name;
 
   public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
+  @javax.annotation.Nullable private List<String> namespace = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_VERSION = "version";
+  @javax.annotation.Nullable private JsonNullable<Long> version = JsonNullable.<Long>undefined();
+
+  public static final String JSON_PROPERTY_WITH_TABLE_URI = "with_table_uri";
+
+  @javax.annotation.Nullable
+  private JsonNullable<Boolean> withTableUri = JsonNullable.<Boolean>undefined();
 
   public DescribeTableRequest() {}
 
-  public DescribeTableRequest name(@javax.annotation.Nonnull String name) {
+  public DescribeTableRequest name(@javax.annotation.Nullable String name) {
 
     this.name = name;
     return this;
@@ -52,20 +65,20 @@ public class DescribeTableRequest {
    *
    * @return name
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public String getName() {
     return name;
   }
 
   @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setName(@javax.annotation.Nonnull String name) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setName(@javax.annotation.Nullable String name) {
     this.name = name;
   }
 
-  public DescribeTableRequest namespace(@javax.annotation.Nonnull List<String> namespace) {
+  public DescribeTableRequest namespace(@javax.annotation.Nullable List<String> namespace) {
 
     this.namespace = namespace;
     return this;
@@ -84,17 +97,82 @@ public class DescribeTableRequest {
    *
    * @return namespace
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public List<String> getNamespace() {
     return namespace;
   }
 
   @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setNamespace(@javax.annotation.Nonnull List<String> namespace) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNamespace(@javax.annotation.Nullable List<String> namespace) {
     this.namespace = namespace;
+  }
+
+  public DescribeTableRequest version(@javax.annotation.Nullable Long version) {
+    this.version = JsonNullable.<Long>of(version);
+
+    return this;
+  }
+
+  /**
+   * Get version minimum: 0
+   *
+   * @return version
+   */
+  @javax.annotation.Nullable
+  @JsonIgnore
+  public Long getVersion() {
+    return version.orElse(null);
+  }
+
+  @JsonProperty(JSON_PROPERTY_VERSION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public JsonNullable<Long> getVersion_JsonNullable() {
+    return version;
+  }
+
+  @JsonProperty(JSON_PROPERTY_VERSION)
+  public void setVersion_JsonNullable(JsonNullable<Long> version) {
+    this.version = version;
+  }
+
+  public void setVersion(@javax.annotation.Nullable Long version) {
+    this.version = JsonNullable.<Long>of(version);
+  }
+
+  public DescribeTableRequest withTableUri(@javax.annotation.Nullable Boolean withTableUri) {
+    this.withTableUri = JsonNullable.<Boolean>of(withTableUri);
+
+    return this;
+  }
+
+  /**
+   * If set to &#x60;Some(true)&#x60;, returns Table URI as payload. This flag should not be public
+   * in SaaS.
+   *
+   * @return withTableUri
+   */
+  @javax.annotation.Nullable
+  @JsonIgnore
+  public Boolean getWithTableUri() {
+    return withTableUri.orElse(null);
+  }
+
+  @JsonProperty(JSON_PROPERTY_WITH_TABLE_URI)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public JsonNullable<Boolean> getWithTableUri_JsonNullable() {
+    return withTableUri;
+  }
+
+  @JsonProperty(JSON_PROPERTY_WITH_TABLE_URI)
+  public void setWithTableUri_JsonNullable(JsonNullable<Boolean> withTableUri) {
+    this.withTableUri = withTableUri;
+  }
+
+  public void setWithTableUri(@javax.annotation.Nullable Boolean withTableUri) {
+    this.withTableUri = JsonNullable.<Boolean>of(withTableUri);
   }
 
   @Override
@@ -107,12 +185,30 @@ public class DescribeTableRequest {
     }
     DescribeTableRequest describeTableRequest = (DescribeTableRequest) o;
     return Objects.equals(this.name, describeTableRequest.name)
-        && Objects.equals(this.namespace, describeTableRequest.namespace);
+        && Objects.equals(this.namespace, describeTableRequest.namespace)
+        && equalsNullable(this.version, describeTableRequest.version)
+        && equalsNullable(this.withTableUri, describeTableRequest.withTableUri);
+  }
+
+  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
+    return a == b
+        || (a != null
+            && b != null
+            && a.isPresent()
+            && b.isPresent()
+            && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace);
+    return Objects.hash(name, namespace, hashCodeNullable(version), hashCodeNullable(withTableUri));
+  }
+
+  private static <T> int hashCodeNullable(JsonNullable<T> a) {
+    if (a == null) {
+      return 1;
+    }
+    return a.isPresent() ? Arrays.deepHashCode(new Object[] {a.get()}) : 31;
   }
 
   @Override
@@ -121,6 +217,8 @@ public class DescribeTableRequest {
     sb.append("class DescribeTableRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    withTableUri: ").append(toIndentedString(withTableUri)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -200,6 +298,37 @@ public class DescribeTableRequest {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
+      }
+    }
+
+    // add `version` to the URL query string
+    if (getVersion() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sversion%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `with_table_uri` to the URL query string
+    if (getWithTableUri() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%swith_table_uri%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getWithTableUri()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
       }
     }
 

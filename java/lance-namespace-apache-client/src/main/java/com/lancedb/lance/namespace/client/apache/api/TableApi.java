@@ -155,7 +155,8 @@ public class TableApi extends BaseApi {
 
   /**
    * Describe a table from the namespace Get a table&#39;s detailed information under a specified
-   * namespace.
+   * namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format
+   * (with database in headers).
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -175,7 +176,8 @@ public class TableApi extends BaseApi {
 
   /**
    * Describe a table from the namespace Get a table&#39;s detailed information under a specified
-   * namespace.
+   * namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format
+   * (with database in headers).
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.

@@ -228,7 +228,8 @@ public interface TableApi {
 
   /**
    * POST /v1/table/{id}/describe : Describe a table from the namespace Get a table&#39;s detailed
-   * information under a specified namespace.
+   * information under a specified namespace. Supports both lance-namespace format (with namespace
+   * in body) and LanceDB format (with database in headers).
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -254,7 +255,8 @@ public interface TableApi {
   @Operation(
       operationId = "describeTable",
       summary = "Describe a table from the namespace",
-      description = "Get a table's detailed information under a specified namespace. ",
+      description =
+          "Get a table's detailed information under a specified namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). ",
       tags = {"Table"},
       responses = {
         @ApiResponse(
@@ -350,7 +352,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"name\" : \"name\", \"namespace\" : [ \"namespace\", \"namespace\" ], \"location\" : \"location\", \"properties\" : { \"key\" : \"properties\" } }";
+                      "{ \"schema\" : \"{}\", \"stats\" : { \"num_deleted_rows\" : 0, \"num_fragments\" : 0 }, \"table_uri\" : \"table_uri\", \"name\" : \"name\", \"namespace\" : [ \"namespace\", \"namespace\" ], \"location\" : \"location\", \"version\" : 0, \"properties\" : { \"key\" : \"properties\" }, \"table\" : \"table\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }

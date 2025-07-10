@@ -94,7 +94,7 @@ No authorization required
 
 Describe a table from the namespace
 
-Get a table&#39;s detailed information under a specified namespace. 
+Get a table&#39;s detailed information under a specified namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
 
 ### Example
 

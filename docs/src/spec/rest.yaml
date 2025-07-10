@@ -277,6 +277,7 @@ paths:
       operationId: DescribeTable
       description: >
         Get a table's detailed information under a specified namespace.
+        Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
       requestBody:
         required: true
         content:
@@ -483,6 +484,30 @@ components:
       required: false
       schema:
         $ref: '#/components/schemas/PageToken'
+    x-lancedb-database:
+      name: x-lancedb-database
+      description: Database name (used when host override is enabled)
+      in: header
+      required: false
+      schema:
+        type: string
+        nullable: true
+    x-lancedb-database-prefix:
+      name: x-lancedb-database-prefix
+      description: Database prefix for multi-tenant environments
+      in: header
+      required: false
+      schema:
+        type: string
+        nullable: true
+    x-azure-storage-account-name:
+      name: x-azure-storage-account-name
+      description: Azure storage account name for Azure-backed databases
+      in: header
+      required: false
+      schema:
+        type: string
+        nullable: true
   schemas:
     ErrorResponse:
       type: object
@@ -741,9 +766,6 @@ components:
 
     DescribeTableRequest:
       type: object
-      required:
-        - name
-        - namespace
       properties:
         name:
           type: string
@@ -752,12 +774,30 @@ components:
           items:
             type: string
 
+        version:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          minimum: 0
+        with_table_uri:
+          type:
+          - boolean
+          - 'null'
+          description: |-
+            If set to `Some(true)`, returns Table URI as payload.
+            This flag should not be public in SaaS.
+
     DescribeTableResponse:
       type: object
       required:
         - name
         - namespace
         - location
+        - table
+        - version
+        - schema
+        - stats
       properties:
         name:
           type: string
@@ -771,6 +811,21 @@ components:
           type: object
           additionalProperties:
             type: string
+        schema:
+          type: object
+        stats:
+          $ref: '#/components/schemas/TableBasicStats'
+        table:
+          type: string
+        table_uri:
+          type:
+          - string
+          - 'null'
+          description: Table URI, optional
+        version:
+          type: integer
+          format: int64
+          minimum: 0
 
     TableExistsRequest:
       type: object
@@ -972,6 +1027,19 @@ components:
           type: object
           additionalProperties:
             type: string
+
+    TableBasicStats:
+      type: object
+      required:
+      - num_deleted_rows
+      - num_fragments
+      properties:
+        num_deleted_rows:
+          type: integer
+          minimum: 0
+        num_fragments:
+          type: integer
+          minimum: 0
 
   responses:
     ListNamespacesResponse:

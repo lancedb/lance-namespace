@@ -125,7 +125,7 @@ pub async fn deregister_table(configuration: &configuration::Configuration, id: 
     }
 }
 
-/// Get a table's detailed information under a specified namespace. 
+/// Get a table's detailed information under a specified namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
 pub async fn describe_table(configuration: &configuration::Configuration, id: &str, describe_table_request: models::DescribeTableRequest, delimiter: Option<&str>) -> Result<models::DescribeTableResponse, Error<DescribeTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;

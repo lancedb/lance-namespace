@@ -41,15 +41,36 @@ public class DescribeTableResponse {
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
+  private Object schema;
+
+  private TableBasicStats stats;
+
+  private String table;
+
+  private String tableUri = null;
+
+  private Long version;
+
   public DescribeTableResponse() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public DescribeTableResponse(String name, List<String> namespace, String location) {
+  public DescribeTableResponse(
+      String name,
+      List<String> namespace,
+      String location,
+      Object schema,
+      TableBasicStats stats,
+      String table,
+      Long version) {
     this.name = name;
     this.namespace = namespace;
     this.location = location;
+    this.schema = schema;
+    this.stats = stats;
+    this.table = table;
+    this.version = version;
   }
 
   public DescribeTableResponse name(String name) {
@@ -151,6 +172,115 @@ public class DescribeTableResponse {
     this.properties = properties;
   }
 
+  public DescribeTableResponse schema(Object schema) {
+    this.schema = schema;
+    return this;
+  }
+
+  /**
+   * Get schema
+   *
+   * @return schema
+   */
+  @NotNull
+  @Schema(name = "schema", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("schema")
+  public Object getSchema() {
+    return schema;
+  }
+
+  public void setSchema(Object schema) {
+    this.schema = schema;
+  }
+
+  public DescribeTableResponse stats(TableBasicStats stats) {
+    this.stats = stats;
+    return this;
+  }
+
+  /**
+   * Get stats
+   *
+   * @return stats
+   */
+  @NotNull
+  @Valid
+  @Schema(name = "stats", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("stats")
+  public TableBasicStats getStats() {
+    return stats;
+  }
+
+  public void setStats(TableBasicStats stats) {
+    this.stats = stats;
+  }
+
+  public DescribeTableResponse table(String table) {
+    this.table = table;
+    return this;
+  }
+
+  /**
+   * Get table
+   *
+   * @return table
+   */
+  @NotNull
+  @Schema(name = "table", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("table")
+  public String getTable() {
+    return table;
+  }
+
+  public void setTable(String table) {
+    this.table = table;
+  }
+
+  public DescribeTableResponse tableUri(String tableUri) {
+    this.tableUri = tableUri;
+    return this;
+  }
+
+  /**
+   * Table URI, optional
+   *
+   * @return tableUri
+   */
+  @Schema(
+      name = "table_uri",
+      description = "Table URI, optional",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("table_uri")
+  public String getTableUri() {
+    return tableUri;
+  }
+
+  public void setTableUri(String tableUri) {
+    this.tableUri = tableUri;
+  }
+
+  public DescribeTableResponse version(Long version) {
+    this.version = version;
+    return this;
+  }
+
+  /**
+   * Get version minimum: 0
+   *
+   * @return version
+   */
+  @NotNull
+  @Min(0L)
+  @Schema(name = "version", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("version")
+  public Long getVersion() {
+    return version;
+  }
+
+  public void setVersion(Long version) {
+    this.version = version;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -163,12 +293,18 @@ public class DescribeTableResponse {
     return Objects.equals(this.name, describeTableResponse.name)
         && Objects.equals(this.namespace, describeTableResponse.namespace)
         && Objects.equals(this.location, describeTableResponse.location)
-        && Objects.equals(this.properties, describeTableResponse.properties);
+        && Objects.equals(this.properties, describeTableResponse.properties)
+        && Objects.equals(this.schema, describeTableResponse.schema)
+        && Objects.equals(this.stats, describeTableResponse.stats)
+        && Objects.equals(this.table, describeTableResponse.table)
+        && Objects.equals(this.tableUri, describeTableResponse.tableUri)
+        && Objects.equals(this.version, describeTableResponse.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, location, properties);
+    return Objects.hash(
+        name, namespace, location, properties, schema, stats, table, tableUri, version);
   }
 
   @Override
@@ -179,6 +315,11 @@ public class DescribeTableResponse {
     sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
+    sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
+    sb.append("    stats: ").append(toIndentedString(stats)).append("\n");
+    sb.append("    table: ").append(toIndentedString(table)).append("\n");
+    sb.append("    tableUri: ").append(toIndentedString(tableUri)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
     return sb.toString();
   }
