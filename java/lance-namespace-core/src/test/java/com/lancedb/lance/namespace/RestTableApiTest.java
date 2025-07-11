@@ -39,6 +39,7 @@ import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -55,7 +56,6 @@ public class RestTableApiTest {
   private static String REGION;
 
   // Test data
-  private static final String TEST_TABLE_NAME = "vectors2";
   private String testCreateTableName;
 
   private LanceRestNamespace namespace;
@@ -89,54 +89,6 @@ public class RestTableApiTest {
     // Generate unique table name for each test run
     testCreateTableName =
         "test_table_" + UUID.randomUUID().toString().replace("-", "_").substring(0, 8);
-  }
-
-  @Test
-  public void testDescribeTable() {
-    assumeTrue(
-        DATABASE != null && API_KEY != null,
-        "Skipping test: LANCEDB_DB and LANCEDB_API_KEY environment variables must be set");
-
-    System.out.println("=== Test: Describe Table ===");
-
-    DescribeTableRequest request = new DescribeTableRequest();
-    // Table name goes in URL path, not request body
-    // Database comes from headers automatically
-    // Optional LanceDB fields:
-    request.setName(TEST_TABLE_NAME);
-    request.setVersion(null); // Latest version
-    request.setWithTableUri(true); // Include table URI
-
-    DescribeTableResponse response = namespace.describeTable(request);
-    System.out.println("Table Description: " + response);
-
-    // Validate the important LanceDB fields
-    assertNotNull(response, "Response should not be null");
-
-    // Validate LanceDB-specific fields
-    assertEquals(TEST_TABLE_NAME, response.getTable(), "Table name should match");
-    assertNotNull(response.getVersion(), "Version should not be null");
-    assertTrue(response.getVersion() > 0, "Version should be positive");
-
-    // Validate schema exists
-    assertNotNull(response.getSchema(), "Schema should not be null");
-
-    // Validate stats
-    assertNotNull(response.getStats(), "Stats should not be null");
-    assertTrue(
-        response.getStats().getNumFragments() >= 0, "Number of fragments should be non-negative");
-    assertTrue(
-        response.getStats().getNumDeletedRows() >= 0,
-        "Number of deleted rows should be non-negative");
-
-    System.out.println("✓ Table name: " + response.getTable());
-    System.out.println("✓ Version: " + response.getVersion());
-    System.out.println(
-        "✓ Schema fields count: " + (response.getSchema() != null ? "present" : "null"));
-    System.out.println("✓ Stats - Fragments: " + response.getStats().getNumFragments());
-    System.out.println("✓ Stats - Deleted rows: " + response.getStats().getNumDeletedRows());
-
-    System.out.println("Test passed!");
   }
 
   @Test
@@ -240,10 +192,24 @@ public class RestTableApiTest {
 
       System.out.println("✓ Table verified via describe");
 
-      // Validate schema structure
-      Object schemaObj = describeResponse.getSchema();
-      assertNotNull(schemaObj, "Schema object should not be null");
-      System.out.println("✓ Schema: " + schemaObj);
+      // Validate schema structure and field names
+      JsonSchema responseSchema = describeResponse.getSchema();
+      assertNotNull(responseSchema, "Schema object should not be null");
+      assertNotNull(responseSchema.getFields(), "Schema fields should not be null");
+      assertEquals(3, responseSchema.getFields().size(), "Schema should have 3 fields");
+
+      // Validate field names match what we created
+      List<String> fieldNames =
+          responseSchema.getFields().stream()
+              .map(JsonField::getName)
+              .collect(java.util.stream.Collectors.toList());
+
+      assertTrue(fieldNames.contains("id"), "Schema should contain 'id' field");
+      assertTrue(fieldNames.contains("name"), "Schema should contain 'name' field");
+      assertTrue(fieldNames.contains("vector"), "Schema should contain 'vector' field");
+
+      System.out.println("✓ Schema has 3 fields: " + fieldNames);
+      System.out.println("✓ Field validation passed: id, name, vector fields found");
 
       // Validate version
       assertNotNull(describeResponse.getVersion(), "Version should not be null");
