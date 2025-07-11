@@ -35,15 +35,9 @@ public class DescribeTableRequest {
 
   @Valid private List<String> namespace = new ArrayList<>();
 
-  public DescribeTableRequest() {
-    super();
-  }
+  private Long version = null;
 
-  /** Constructor with only required parameters */
-  public DescribeTableRequest(String name, List<String> namespace) {
-    this.name = name;
-    this.namespace = namespace;
-  }
+  private Boolean withTableUri = null;
 
   public DescribeTableRequest name(String name) {
     this.name = name;
@@ -55,8 +49,7 @@ public class DescribeTableRequest {
    *
    * @return name
    */
-  @NotNull
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("name")
   public String getName() {
     return name;
@@ -84,8 +77,7 @@ public class DescribeTableRequest {
    *
    * @return namespace
    */
-  @NotNull
-  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("namespace")
   public List<String> getNamespace() {
     return namespace;
@@ -93,6 +85,51 @@ public class DescribeTableRequest {
 
   public void setNamespace(List<String> namespace) {
     this.namespace = namespace;
+  }
+
+  public DescribeTableRequest version(Long version) {
+    this.version = version;
+    return this;
+  }
+
+  /**
+   * Get version minimum: 0
+   *
+   * @return version
+   */
+  @Min(0L)
+  @Schema(name = "version", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("version")
+  public Long getVersion() {
+    return version;
+  }
+
+  public void setVersion(Long version) {
+    this.version = version;
+  }
+
+  public DescribeTableRequest withTableUri(Boolean withTableUri) {
+    this.withTableUri = withTableUri;
+    return this;
+  }
+
+  /**
+   * If set to `Some(true)`, returns Table URI as payload. This flag should not be public in SaaS.
+   *
+   * @return withTableUri
+   */
+  @Schema(
+      name = "with_table_uri",
+      description =
+          "If set to `Some(true)`, returns Table URI as payload. This flag should not be public in SaaS.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("with_table_uri")
+  public Boolean getWithTableUri() {
+    return withTableUri;
+  }
+
+  public void setWithTableUri(Boolean withTableUri) {
+    this.withTableUri = withTableUri;
   }
 
   @Override
@@ -105,12 +142,14 @@ public class DescribeTableRequest {
     }
     DescribeTableRequest describeTableRequest = (DescribeTableRequest) o;
     return Objects.equals(this.name, describeTableRequest.name)
-        && Objects.equals(this.namespace, describeTableRequest.namespace);
+        && Objects.equals(this.namespace, describeTableRequest.namespace)
+        && Objects.equals(this.version, describeTableRequest.version)
+        && Objects.equals(this.withTableUri, describeTableRequest.withTableUri);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace);
+    return Objects.hash(name, namespace, version, withTableUri);
   }
 
   @Override
@@ -119,6 +158,8 @@ public class DescribeTableRequest {
     sb.append("class DescribeTableRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    withTableUri: ").append(toIndentedString(withTableUri)).append("\n");
     sb.append("}");
     return sb.toString();
   }

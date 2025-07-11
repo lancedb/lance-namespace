@@ -52,7 +52,7 @@
 
         <spotless.skip>false</spotless.skip>
         <spotless.version>2.30.0</spotless.version>
-        <spotless.java.googlejavaformat.version>1.7</spotless.java.googlejavaformat.version>
+        <spotless.java.googlejavaformat.version>1.15.0</spotless.java.googlejavaformat.version>
         <!-- Please also update .scalafmt.conf when you change it here -->
         <spotless.scala.scalafmt.version>3.7.5</spotless.scala.scalafmt.version>
         <spotless.delimiter>package</spotless.delimiter>

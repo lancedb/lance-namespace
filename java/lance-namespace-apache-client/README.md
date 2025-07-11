@@ -118,6 +118,8 @@ Class | Method | HTTP request | Description
 *NamespaceApi* | [**dropNamespace**](docs/NamespaceApi.md#dropNamespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace
 *NamespaceApi* | [**listNamespaces**](docs/NamespaceApi.md#listNamespaces) | **POST** /v1/namespace/{id}/list | List namespaces
 *NamespaceApi* | [**namespaceExists**](docs/NamespaceApi.md#namespaceExists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
+*TableApi* | [**countRows**](docs/TableApi.md#countRows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
+*TableApi* | [**createTable**](docs/TableApi.md#createTable) | **POST** /v1/table/{id}/create | Create a table with the given name
 *TableApi* | [**deregisterTable**](docs/TableApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 *TableApi* | [**describeTable**](docs/TableApi.md#describeTable) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
 *TableApi* | [**dropTable**](docs/TableApi.md#dropTable) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
@@ -136,8 +138,10 @@ Class | Method | HTTP request | Description
  - [AlterTransactionSetProperty](docs/AlterTransactionSetProperty.md)
  - [AlterTransactionSetStatus](docs/AlterTransactionSetStatus.md)
  - [AlterTransactionUnsetProperty](docs/AlterTransactionUnsetProperty.md)
+ - [CountRowsRequest](docs/CountRowsRequest.md)
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
+ - [CreateTableResponse](docs/CreateTableResponse.md)
  - [DeregisterTableRequest](docs/DeregisterTableRequest.md)
  - [DeregisterTableResponse](docs/DeregisterTableResponse.md)
  - [DescribeNamespaceRequest](docs/DescribeNamespaceRequest.md)
@@ -151,6 +155,9 @@ Class | Method | HTTP request | Description
  - [DropTableRequest](docs/DropTableRequest.md)
  - [DropTableResponse](docs/DropTableResponse.md)
  - [ErrorResponse](docs/ErrorResponse.md)
+ - [JsonDataType](docs/JsonDataType.md)
+ - [JsonField](docs/JsonField.md)
+ - [JsonSchema](docs/JsonSchema.md)
  - [ListNamespacesRequest](docs/ListNamespacesRequest.md)
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
  - [ListTablesRequest](docs/ListTablesRequest.md)
@@ -160,6 +167,7 @@ Class | Method | HTTP request | Description
  - [RegisterTableRequest](docs/RegisterTableRequest.md)
  - [RegisterTableResponse](docs/RegisterTableResponse.md)
  - [SetPropertyMode](docs/SetPropertyMode.md)
+ - [TableBasicStats](docs/TableBasicStats.md)
  - [TableExistsRequest](docs/TableExistsRequest.md)
  - [TableExistsResponse](docs/TableExistsResponse.md)
  - [TransactionStatus](docs/TransactionStatus.md)

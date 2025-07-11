@@ -303,6 +303,7 @@ paths:
       operationId: DescribeTable
       description: >
         Get a table's detailed information under a specified namespace.
+        Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
       requestBody:
         required: true
         content:
@@ -312,6 +313,39 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/DescribeTableResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/table/{id}/count_rows:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags: [ Table ]
+      summary: Count rows in a table
+      operationId: CountRows
+      description: >
+        Count the number of rows in a table.
+        Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CountRowsRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/CountRowsResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -488,6 +522,40 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/table/{id}/create:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    post:
+      tags: [ Table ]
+      summary: Create a table with the given name
+      operationId: CreateTable
+      description: >
+        Create a new table in the namespace.
+        Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+      requestBody:
+        description: Arrow IPC data
+        content:
+          application/x-arrow-ipc:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        200:
+          $ref: '#/components/responses/CreateTableResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
 components:
   parameters:
     id:
@@ -509,6 +577,30 @@ components:
       required: false
       schema:
         $ref: '#/components/schemas/PageToken'
+    x-lancedb-database:
+      name: x-lancedb-database
+      description: Database name (used when host override is enabled)
+      in: header
+      required: false
+      schema:
+        type: string
+        nullable: true
+    x-lancedb-database-prefix:
+      name: x-lancedb-database-prefix
+      description: Database prefix for multi-tenant environments
+      in: header
+      required: false
+      schema:
+        type: string
+        nullable: true
+    x-azure-storage-account-name:
+      name: x-azure-storage-account-name
+      description: Azure storage account name for Azure-backed databases
+      in: header
+      required: false
+      schema:
+        type: string
+        nullable: true
   schemas:
     ErrorResponse:
       type: object
@@ -793,9 +885,6 @@ components:
 
     DescribeTableRequest:
       type: object
-      required:
-        - name
-        - namespace
       properties:
         name:
           type: string
@@ -804,7 +893,136 @@ components:
           items:
             type: string
 
+        version:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          minimum: 0
+        with_table_uri:
+          type:
+          - boolean
+          - 'null'
+          description: |-
+            If set to `Some(true)`, returns Table URI as payload.
+            This flag should not be public in SaaS.
+
     DescribeTableResponse:
+      type: object
+      required:
+        - name
+        - namespace
+        - location
+        - table
+        - version
+        - schema
+        - stats
+      properties:
+        name:
+          type: string
+        namespace:
+          type: array
+          items:
+            type: string
+        location:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+        schema:
+          $ref: '#/components/schemas/JsonSchema'
+        stats:
+          $ref: '#/components/schemas/TableBasicStats'
+        table:
+          type: string
+        table_uri:
+          type:
+          - string
+          - 'null'
+          description: Table URI, optional
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+
+    CountRowsRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        namespace:
+          type: array
+          items:
+            type: string
+
+    CountRowsResponse:
+      type: integer
+      format: int64
+      description: Response containing the count of rows. Serializes transparently as just the number for backward compatibility.
+      minimum: 0
+
+    JsonSchema:
+      type: object
+      description: JSON representation of a Apache Arrow [Schema].
+      required:
+      - fields
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/JsonField'
+        metadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+    JsonField:
+      type: object
+      description: JSON representation of an Apache Arrow [Field].
+      required:
+      - name
+      - type
+      - nullable
+      properties:
+        metadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        name:
+          type: string
+        nullable:
+          type: boolean
+        type:
+          $ref: '#/components/schemas/JsonDataType'
+    JsonDataType:
+      type: object
+      description: JSON representation of an Apache Arrow [DataType].
+      required:
+      - type
+      properties:
+        fields:
+          type: object
+        length:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+        type:
+          type: string
+
+    Binary:
+      type: string
+      format: binary
+
+    CreateTableResponse:
       type: object
       required:
         - name
@@ -1025,6 +1243,19 @@ components:
           additionalProperties:
             type: string
 
+    TableBasicStats:
+      type: object
+      required:
+      - num_deleted_rows
+      - num_fragments
+      properties:
+        num_deleted_rows:
+          type: integer
+          minimum: 0
+        num_fragments:
+          type: integer
+          minimum: 0
+
   responses:
     ListNamespacesResponse:
       description: A list of namespaces
@@ -1084,6 +1315,20 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/DescribeTableResponse'
+
+    CountRowsResponse:
+      description: Result of counting rows in a table
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CountRowsResponse'
+
+    CreateTableResponse:
+      description: Table properties result when creating a table
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateTableResponse'
 
     RegisterTableResponse:
       description: Table properties result when registering a table

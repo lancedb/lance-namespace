@@ -1,0 +1,296 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.lancedb.lance.namespace;
+
+import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.model.*;
+
+import org.apache.arrow.memory.BufferAllocator;
+import org.apache.arrow.memory.RootAllocator;
+import org.apache.arrow.vector.Float4Vector;
+import org.apache.arrow.vector.IntVector;
+import org.apache.arrow.vector.VarCharVector;
+import org.apache.arrow.vector.VectorSchemaRoot;
+import org.apache.arrow.vector.complex.FixedSizeListVector;
+import org.apache.arrow.vector.ipc.ArrowStreamWriter;
+import org.apache.arrow.vector.types.FloatingPointPrecision;
+import org.apache.arrow.vector.types.pojo.ArrowType;
+import org.apache.arrow.vector.types.pojo.Field;
+import org.apache.arrow.vector.types.pojo.FieldType;
+import org.apache.arrow.vector.types.pojo.Schema;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.channels.Channels;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
+/** Test for Lance REST Table API using environment variables for configuration */
+public class RestTableApiTest {
+
+  // Configuration from environment variables
+  private static String DATABASE;
+  private static String API_KEY;
+  private static String HOST_OVERRIDE;
+  private static String REGION;
+
+  // Test data
+  private String testCreateTableName;
+
+  private LanceRestNamespace namespace;
+  private BufferAllocator allocator;
+
+  @BeforeAll
+  public static void setUpClass() {
+    // Get configuration from environment variables
+    DATABASE = System.getenv("LANCEDB_DB");
+    API_KEY = System.getenv("LANCEDB_API_KEY");
+    HOST_OVERRIDE = System.getenv("LANCEDB_HOST_OVERRIDE");
+    REGION = System.getenv("LANCEDB_REGION");
+
+    // Default values if not set
+    if (REGION == null) {
+      REGION = "us-east-1";
+    }
+
+    if (DATABASE != null && API_KEY != null) {
+      System.out.println("Using configuration:");
+      System.out.println("  Database: " + DATABASE);
+      System.out.println("  Region: " + REGION);
+      System.out.println("  Host Override: " + (HOST_OVERRIDE != null ? HOST_OVERRIDE : "none"));
+    }
+  }
+
+  @BeforeEach
+  public void setUp() {
+    namespace = initializeClient();
+    allocator = new RootAllocator();
+    // Generate unique table name for each test run
+    testCreateTableName =
+        "test_table_" + UUID.randomUUID().toString().replace("-", "_").substring(0, 8);
+  }
+
+  @Test
+  public void testTableLifecycle() throws IOException {
+    assumeTrue(
+        DATABASE != null && API_KEY != null,
+        "Skipping test: LANCEDB_DB and LANCEDB_API_KEY environment variables must be set");
+
+    System.out.println("=== Test: Table Lifecycle ===");
+
+    // Create table with 3 rows using helper
+    System.out.println("\n--- Creating table ---");
+    CreateTableResponse createResponse = createTableHelper(testCreateTableName, 3);
+    assertNotNull(createResponse, "Create response should not be null");
+
+    // Test count rows
+    System.out.println("\n--- Testing count rows ---");
+    CountRowsRequest countRequest = new CountRowsRequest();
+    countRequest.setName(testCreateTableName);
+
+    Long countResponse = namespace.countRows(countRequest);
+    assertNotNull(countResponse, "Count rows response should not be null");
+    assertEquals(3, countResponse.longValue(), "Row count should match expected number");
+    System.out.println("✓ Count rows verified: " + countResponse);
+
+    // Test describe table
+    System.out.println("\n--- Testing describe table ---");
+    DescribeTableRequest describeRequest = new DescribeTableRequest();
+    describeRequest.setName(testCreateTableName);
+    describeRequest.setWithTableUri(true);
+
+    DescribeTableResponse describeResponse = namespace.describeTable(describeRequest);
+    assertNotNull(describeResponse, "Describe response should not be null");
+    assertEquals(
+        testCreateTableName, describeResponse.getTable(), "Table name should match in describe");
+    assertNotNull(describeResponse.getSchema(), "Schema should not be null");
+    assertNotNull(describeResponse.getStats(), "Stats should not be null");
+
+    // Verify schema
+    JsonSchema responseSchema = describeResponse.getSchema();
+    assertNotNull(responseSchema, "Schema object should not be null");
+    assertNotNull(responseSchema.getFields(), "Schema fields should not be null");
+    assertEquals(3, responseSchema.getFields().size(), "Schema should have 3 fields");
+
+    List<String> fieldNames =
+        responseSchema.getFields().stream()
+            .map(JsonField::getName)
+            .collect(java.util.stream.Collectors.toList());
+    assertTrue(fieldNames.contains("id"), "Schema should contain 'id' field");
+    assertTrue(fieldNames.contains("name"), "Schema should contain 'name' field");
+    assertTrue(fieldNames.contains("vector"), "Schema should contain 'vector' field");
+    System.out.println("✓ Table schema verified with fields: " + fieldNames);
+
+    // Verify version and stats
+    assertNotNull(describeResponse.getVersion(), "Version should not be null");
+    assertTrue(describeResponse.getVersion() >= 1, "Version should be at least 1 for new table");
+    assertTrue(
+        describeResponse.getStats().getNumFragments() >= 0,
+        "Number of fragments should be non-negative");
+    System.out.println("✓ Table version: " + describeResponse.getVersion());
+    System.out.println("✓ Table fragments: " + describeResponse.getStats().getNumFragments());
+
+    // Test drop table using helper
+    System.out.println("\n--- Testing drop table ---");
+    DropTableResponse dropResponse = dropTableHelper(testCreateTableName);
+    assertNotNull(dropResponse, "Drop table response should not be null");
+
+    // Verify table was dropped
+    System.out.println("\n--- Verifying table was dropped ---");
+    try {
+      DescribeTableRequest verifyDropRequest = new DescribeTableRequest();
+      verifyDropRequest.setName(testCreateTableName);
+      namespace.describeTable(verifyDropRequest);
+      fail("Expected exception when describing dropped table");
+    } catch (LanceNamespaceException e) {
+      assertEquals(404, e.getCode(), "Should get 404 error code for non-existent table");
+      System.out.println("✓ Confirmed table no longer exists (404 error code)");
+    }
+
+    System.out.println("\n✓ Table lifecycle test passed!");
+  }
+
+  /**
+   * Helper method to create a table with the specified number of rows
+   *
+   * @param tableName The name of the table to create
+   * @param numRows The number of rows to create in the table
+   * @return CreateTableResponse from the server
+   * @throws IOException if there's an error creating the table
+   */
+  private CreateTableResponse createTableHelper(String tableName, int numRows) throws IOException {
+    // Create Arrow schema
+    Field idField = new Field("id", FieldType.nullable(new ArrowType.Int(32, true)), null);
+    Field nameField = new Field("name", FieldType.nullable(new ArrowType.Utf8()), null);
+    Field vectorField =
+        new Field(
+            "vector",
+            FieldType.nullable(new ArrowType.FixedSizeList(128)),
+            Arrays.asList(
+                new Field(
+                    "item",
+                    FieldType.nullable(new ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE)),
+                    null)));
+
+    Schema schema = new Schema(Arrays.asList(idField, nameField, vectorField));
+
+    try (VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator)) {
+      IntVector idVector = (IntVector) root.getVector("id");
+      VarCharVector nameVector = (VarCharVector) root.getVector("name");
+      FixedSizeListVector vectorVector = (FixedSizeListVector) root.getVector("vector");
+
+      root.setRowCount(numRows);
+
+      // Sample names for test data
+      String[] names = {
+        "Alice", "Bob", "Charlie", "David", "Eve", "Frank", "Grace", "Henry", "Ivy", "Jack"
+      };
+
+      // Populate data for specified number of rows
+      for (int i = 0; i < numRows; i++) {
+        idVector.setSafe(i, i + 1);
+        nameVector.setSafe(i, names[i % names.length].getBytes(StandardCharsets.UTF_8));
+      }
+
+      // Populate vector field with dummy data
+      Float4Vector dataVector = (Float4Vector) vectorVector.getDataVector();
+      vectorVector.allocateNew();
+
+      // Create 128-dimensional vectors for each row
+      for (int row = 0; row < numRows; row++) {
+        vectorVector.setNotNull(row);
+        for (int dim = 0; dim < 128; dim++) {
+          int index = row * 128 + dim;
+          dataVector.setSafe(index, (float) (Math.random() * 10.0)); // Random values 0-10
+        }
+      }
+
+      // Mark vectors as populated
+      idVector.setValueCount(numRows);
+      nameVector.setValueCount(numRows);
+      dataVector.setValueCount(numRows * 128); // numRows * 128 dimensions
+      vectorVector.setValueCount(numRows);
+
+      // Serialize to Arrow IPC format
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      try (ArrowStreamWriter writer = new ArrowStreamWriter(root, null, Channels.newChannel(out))) {
+        writer.start();
+        writer.writeBatch();
+        writer.end();
+      }
+
+      byte[] arrowIpcData = out.toByteArray();
+      System.out.println("Arrow IPC data size: " + arrowIpcData.length + " bytes");
+
+      // Create table using Arrow IPC data
+      CreateTableResponse response = namespace.createTable(tableName, arrowIpcData);
+      System.out.println(
+          "✓ Table created successfully: " + tableName + " with " + numRows + " rows");
+
+      return response;
+    }
+  }
+
+  /**
+   * Helper method to drop a table
+   *
+   * @param tableName The name of the table to drop
+   * @return DropTableResponse from the server
+   */
+  private DropTableResponse dropTableHelper(String tableName) {
+    DropTableRequest dropRequest = new DropTableRequest();
+    dropRequest.setName(tableName);
+
+    DropTableResponse response = namespace.dropTable(dropRequest);
+    System.out.println("✓ Table dropped successfully: " + tableName);
+
+    return response;
+  }
+
+  private LanceRestNamespace initializeClient() {
+    Map<String, String> config = new HashMap<>();
+    config.put("headers.x-lancedb-database", DATABASE);
+    config.put("headers.x-api-key", API_KEY);
+
+    if (HOST_OVERRIDE != null) {
+      config.put("host_override", HOST_OVERRIDE);
+    }
+    config.put("region", REGION);
+
+    ApiClient apiClient = new ApiClient();
+
+    // Set base URL based on configuration
+    String baseUrl;
+    if (HOST_OVERRIDE != null) {
+      baseUrl = HOST_OVERRIDE;
+    } else {
+      baseUrl = String.format("https://%s.%s.api.lancedb.com", DATABASE, REGION);
+    }
+    apiClient.setBasePath(baseUrl);
+
+    System.out.println("Initialized client with base URL: " + baseUrl);
+
+    return new LanceRestNamespace(apiClient, config);
+  }
+}

@@ -21,15 +21,31 @@ pub struct DescribeTableResponse {
     pub location: String,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
+    #[serde(rename = "schema")]
+    pub schema: Box<models::JsonSchema>,
+    #[serde(rename = "stats")]
+    pub stats: Box<models::TableBasicStats>,
+    #[serde(rename = "table")]
+    pub table: String,
+    /// Table URI, optional
+    #[serde(rename = "table_uri", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub table_uri: Option<Option<String>>,
+    #[serde(rename = "version")]
+    pub version: i64,
 }
 
 impl DescribeTableResponse {
-    pub fn new(name: String, namespace: Vec<String>, location: String) -> DescribeTableResponse {
+    pub fn new(name: String, namespace: Vec<String>, location: String, schema: models::JsonSchema, stats: models::TableBasicStats, table: String, version: i64) -> DescribeTableResponse {
         DescribeTableResponse {
             name,
             namespace,
             location,
             properties: None,
+            schema: Box::new(schema),
+            stats: Box::new(stats),
+            table,
+            table_uri: None,
+            version,
         }
     }
 }

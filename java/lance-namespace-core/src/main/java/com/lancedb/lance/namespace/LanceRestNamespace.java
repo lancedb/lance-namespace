@@ -20,8 +20,10 @@ import com.lancedb.lance.namespace.client.apache.api.TableApi;
 import com.lancedb.lance.namespace.client.apache.api.TransactionApi;
 import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.AlterTransactionResponse;
+import com.lancedb.lance.namespace.model.CountRowsRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
+import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
@@ -133,6 +135,28 @@ public class LanceRestNamespace implements LanceNamespace {
           request,
           config.delimiter(),
           config.additionalHeaders());
+    } catch (ApiException e) {
+      throw new LanceNamespaceException(e);
+    }
+  }
+
+  @Override
+  public Long countRows(CountRowsRequest request) {
+    try {
+      return tableApi.countRows(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.delimiter(),
+          config.additionalHeaders());
+    } catch (ApiException e) {
+      throw new LanceNamespaceException(e);
+    }
+  }
+
+  @Override
+  public CreateTableResponse createTable(String tableName, byte[] arrowIpcData) {
+    try {
+      return tableApi.createTable(tableName, arrowIpcData, config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }

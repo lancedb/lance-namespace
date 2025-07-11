@@ -26,6 +26,20 @@ class TestTableApi(unittest.TestCase):
     def tearDown(self) -> None:
         pass
 
+    def test_count_rows(self) -> None:
+        """Test case for count_rows
+
+        Count rows in a table
+        """
+        pass
+
+    def test_create_table(self) -> None:
+        """Test case for create_table
+
+        Create a table with the given name
+        """
+        pass
+
     def test_deregister_table(self) -> None:
         """Test case for deregister_table
 
