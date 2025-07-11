@@ -43,7 +43,21 @@ class TestDescribeTableResponse(unittest.TestCase):
                 properties = {
                     'key' : ''
                     },
-                var_schema = None,
+                var_schema = lance_namespace_urllib3_client.models.json_schema.JsonSchema(
+                    fields = [
+                        lance_namespace_urllib3_client.models.json_field.JsonField(
+                            metadata = {
+                                'key' : ''
+                                }, 
+                            name = '', 
+                            nullable = True, 
+                            type = lance_namespace_urllib3_client.models.json_data_type.JsonDataType(
+                                length = 0, 
+                                type = '', ), )
+                        ], 
+                    metadata = {
+                        'key' : ''
+                        }, ),
                 stats = lance_namespace_urllib3_client.models.table_basic_stats.TableBasicStats(
                     num_deleted_rows = 0, 
                     num_fragments = 0, ),
@@ -58,7 +72,21 @@ class TestDescribeTableResponse(unittest.TestCase):
                     ''
                     ],
                 location = '',
-                var_schema = None,
+                var_schema = lance_namespace_urllib3_client.models.json_schema.JsonSchema(
+                    fields = [
+                        lance_namespace_urllib3_client.models.json_field.JsonField(
+                            metadata = {
+                                'key' : ''
+                                }, 
+                            name = '', 
+                            nullable = True, 
+                            type = lance_namespace_urllib3_client.models.json_data_type.JsonDataType(
+                                length = 0, 
+                                type = '', ), )
+                        ], 
+                    metadata = {
+                        'key' : ''
+                        }, ),
                 stats = lance_namespace_urllib3_client.models.table_basic_stats.TableBasicStats(
                     num_deleted_rows = 0, 
                     num_fragments = 0, ),

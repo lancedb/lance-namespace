@@ -846,7 +846,7 @@ components:
           additionalProperties:
             type: string
         schema:
-          type: object
+          $ref: '#/components/schemas/JsonSchema'
         stats:
           $ref: '#/components/schemas/TableBasicStats'
         table:
@@ -860,6 +860,61 @@ components:
           type: integer
           format: int64
           minimum: 0
+    JsonSchema:
+      type: object
+      description: JSON representation of a Apache Arrow [Schema].
+      required:
+      - fields
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/JsonField'
+        metadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+    JsonField:
+      type: object
+      description: JSON representation of an Apache Arrow [Field].
+      required:
+      - name
+      - type
+      - nullable
+      properties:
+        metadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        name:
+          type: string
+        nullable:
+          type: boolean
+        type:
+          $ref: '#/components/schemas/JsonDataType'
+    JsonDataType:
+      type: object
+      description: JSON representation of an Apache Arrow [DataType].
+      required:
+      - type
+      properties:
+        fields:
+          type: object
+        length:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+        type:
+          type: string
 
     Binary:
       type: string

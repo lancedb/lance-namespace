@@ -11,7 +11,7 @@
 |**namespace** | **List&lt;String&gt;** |  |  |
 |**location** | **String** |  |  |
 |**properties** | **Map&lt;String, String&gt;** |  |  [optional] |
-|**schema** | **Object** |  |  |
+|**schema** | [**JsonSchema**](JsonSchema.md) |  |  |
 |**stats** | [**TableBasicStats**](TableBasicStats.md) |  |  |
 |**table** | **String** |  |  |
 |**tableUri** | **String** | Table URI, optional |  [optional] |

@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from lance_namespace_urllib3_client.models.json_schema import JsonSchema
 from lance_namespace_urllib3_client.models.table_basic_stats import TableBasicStats
 from typing import Optional, Set
 from typing_extensions import Self
@@ -32,7 +33,7 @@ class DescribeTableResponse(BaseModel):
     namespace: List[StrictStr]
     location: StrictStr
     properties: Optional[Dict[str, StrictStr]] = None
-    var_schema: Dict[str, Any] = Field(alias="schema")
+    var_schema: JsonSchema = Field(alias="schema")
     stats: TableBasicStats
     table: StrictStr
     table_uri: Optional[StrictStr] = Field(default=None, description="Table URI, optional")
@@ -78,6 +79,9 @@ class DescribeTableResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of var_schema
+        if self.var_schema:
+            _dict['schema'] = self.var_schema.to_dict()
         # override the default output from pydantic by calling `to_dict()` of stats
         if self.stats:
             _dict['stats'] = self.stats.to_dict()
@@ -102,7 +106,7 @@ class DescribeTableResponse(BaseModel):
             "namespace": obj.get("namespace"),
             "location": obj.get("location"),
             "properties": obj.get("properties"),
-            "schema": obj.get("schema"),
+            "schema": JsonSchema.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
             "stats": TableBasicStats.from_dict(obj["stats"]) if obj.get("stats") is not None else None,
             "table": obj.get("table"),
             "table_uri": obj.get("table_uri"),

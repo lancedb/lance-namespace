@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **namespace** | **Vec<String>** |  | 
 **location** | **String** |  | 
 **properties** | Option<**std::collections::HashMap<String, String>**> |  | [optional]
-**schema** | [**serde_json::Value**](.md) |  | 
+**schema** | [**models::JsonSchema**](JsonSchema.md) |  | 
 **stats** | [**models::TableBasicStats**](TableBasicStats.md) |  | 
 **table** | **String** |  | 
 **table_uri** | Option<**String**> | Table URI, optional | [optional]

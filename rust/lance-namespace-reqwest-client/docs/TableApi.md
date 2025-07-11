@@ -15,7 +15,7 @@ Method | HTTP request | Description
 
 ## create_table
 
-> models::CreateTableResponse create_table(id, body, delimiter)
+> models::CreateTableResponse create_table(id, body)
 Create a table with the given name
 
 Create a new table in the namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
@@ -27,7 +27,6 @@ Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
 **body** | **std::path::PathBuf** | Arrow IPC data | [required] |
-**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
 
 ### Return type
 

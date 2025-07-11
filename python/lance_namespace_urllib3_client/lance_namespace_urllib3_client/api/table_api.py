@@ -54,7 +54,6 @@ class TableApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
-        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -76,8 +75,6 @@ class TableApi:
         :type id: str
         :param body: Arrow IPC data (required)
         :type body: bytearray
-        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
-        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -103,7 +100,6 @@ class TableApi:
         _param = self._create_table_serialize(
             id=id,
             body=body,
-            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -135,7 +131,6 @@ class TableApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
-        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -157,8 +152,6 @@ class TableApi:
         :type id: str
         :param body: Arrow IPC data (required)
         :type body: bytearray
-        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
-        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -184,7 +177,6 @@ class TableApi:
         _param = self._create_table_serialize(
             id=id,
             body=body,
-            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -216,7 +208,6 @@ class TableApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
-        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -238,8 +229,6 @@ class TableApi:
         :type id: str
         :param body: Arrow IPC data (required)
         :type body: bytearray
-        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
-        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -265,7 +254,6 @@ class TableApi:
         _param = self._create_table_serialize(
             id=id,
             body=body,
-            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -292,7 +280,6 @@ class TableApi:
         self,
         id,
         body,
-        delimiter,
         _request_auth,
         _content_type,
         _headers,
@@ -317,10 +304,6 @@ class TableApi:
         if id is not None:
             _path_params['id'] = id
         # process the query parameters
-        if delimiter is not None:
-            
-            _query_params.append(('delimiter', delimiter))
-            
         # process the header parameters
         # process the form parameters
         # process the body parameter

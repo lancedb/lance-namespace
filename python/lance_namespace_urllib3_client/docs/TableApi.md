@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 
 # **create_table**
-> CreateTableResponse create_table(id, body, delimiter=delimiter)
+> CreateTableResponse create_table(id, body)
 
 Create a table with the given name
 
@@ -42,11 +42,10 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     api_instance = lance_namespace_urllib3_client.TableApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     body = None # bytearray | Arrow IPC data
-    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # Create a table with the given name
-        api_response = api_instance.create_table(id, body, delimiter=delimiter)
+        api_response = api_instance.create_table(id, body)
         print("The response of TableApi->create_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -62,7 +61,6 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **body** | **bytearray**| Arrow IPC data | 
- **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 

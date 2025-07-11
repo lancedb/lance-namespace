@@ -22,7 +22,7 @@ pub struct DescribeTableResponse {
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "schema")]
-    pub schema: serde_json::Value,
+    pub schema: Box<models::JsonSchema>,
     #[serde(rename = "stats")]
     pub stats: Box<models::TableBasicStats>,
     #[serde(rename = "table")]
@@ -35,13 +35,13 @@ pub struct DescribeTableResponse {
 }
 
 impl DescribeTableResponse {
-    pub fn new(name: String, namespace: Vec<String>, location: String, schema: serde_json::Value, stats: models::TableBasicStats, table: String, version: i64) -> DescribeTableResponse {
+    pub fn new(name: String, namespace: Vec<String>, location: String, schema: models::JsonSchema, stats: models::TableBasicStats, table: String, version: i64) -> DescribeTableResponse {
         DescribeTableResponse {
             name,
             namespace,
             location,
             properties: None,
-            schema,
+            schema: Box::new(schema),
             stats: Box::new(stats),
             table,
             table_uri: None,

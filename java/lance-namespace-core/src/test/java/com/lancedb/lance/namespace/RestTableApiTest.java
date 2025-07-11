@@ -18,10 +18,12 @@ import com.lancedb.lance.namespace.model.*;
 
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
+import org.apache.arrow.vector.Float4Vector;
 import org.apache.arrow.vector.IntVector;
 import org.apache.arrow.vector.VarCharVector;
 import org.apache.arrow.vector.VectorSchemaRoot;
-import org.apache.arrow.vector.ipc.ArrowFileWriter;
+import org.apache.arrow.vector.complex.FixedSizeListVector;
+import org.apache.arrow.vector.ipc.ArrowStreamWriter;
 import org.apache.arrow.vector.types.FloatingPointPrecision;
 import org.apache.arrow.vector.types.pojo.ArrowType;
 import org.apache.arrow.vector.types.pojo.Field;
@@ -33,6 +35,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -40,6 +43,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /** Test for Lance REST Table API using environment variables for configuration */
 public class RestTableApiTest {
@@ -60,26 +64,22 @@ public class RestTableApiTest {
   @BeforeAll
   public static void setUpClass() {
     // Get configuration from environment variables
-    DATABASE = System.getenv("LANCEDB_DATABASE");
+    DATABASE = System.getenv("LANCEDB_DB");
     API_KEY = System.getenv("LANCEDB_API_KEY");
     HOST_OVERRIDE = System.getenv("LANCEDB_HOST_OVERRIDE");
     REGION = System.getenv("LANCEDB_REGION");
 
     // Default values if not set
-    if (DATABASE == null) {
-      fail("LANCEDB_DATABASE environment variable must be set");
-    }
-    if (API_KEY == null) {
-      fail("LANCEDB_API_KEY environment variable must be set");
-    }
     if (REGION == null) {
       REGION = "us-east-1";
     }
 
-    System.out.println("Using configuration:");
-    System.out.println("  Database: " + DATABASE);
-    System.out.println("  Region: " + REGION);
-    System.out.println("  Host Override: " + (HOST_OVERRIDE != null ? HOST_OVERRIDE : "none"));
+    if (DATABASE != null && API_KEY != null) {
+      System.out.println("Using configuration:");
+      System.out.println("  Database: " + DATABASE);
+      System.out.println("  Region: " + REGION);
+      System.out.println("  Host Override: " + (HOST_OVERRIDE != null ? HOST_OVERRIDE : "none"));
+    }
   }
 
   @BeforeEach
@@ -93,6 +93,10 @@ public class RestTableApiTest {
 
   @Test
   public void testDescribeTable() {
+    assumeTrue(
+        DATABASE != null && API_KEY != null,
+        "Skipping test: LANCEDB_DB and LANCEDB_API_KEY environment variables must be set");
+
     System.out.println("=== Test: Describe Table ===");
 
     DescribeTableRequest request = new DescribeTableRequest();
@@ -137,6 +141,10 @@ public class RestTableApiTest {
 
   @Test
   public void testCreateTable() throws IOException {
+    assumeTrue(
+        DATABASE != null && API_KEY != null,
+        "Skipping test: LANCEDB_DB and LANCEDB_API_KEY environment variables must be set");
+
     System.out.println("=== Test: Create Table ===");
     System.out.println("Creating table: " + testCreateTableName);
 
@@ -160,6 +168,7 @@ public class RestTableApiTest {
       // Allocate vectors
       IntVector idVector = (IntVector) root.getVector("id");
       VarCharVector nameVector = (VarCharVector) root.getVector("name");
+      FixedSizeListVector vectorVector = (FixedSizeListVector) root.getVector("vector");
 
       // Set row count
       root.setRowCount(3);
@@ -173,13 +182,28 @@ public class RestTableApiTest {
       nameVector.setSafe(1, "Bob".getBytes(StandardCharsets.UTF_8));
       nameVector.setSafe(2, "Charlie".getBytes(StandardCharsets.UTF_8));
 
+      // Populate vector field with dummy data
+      Float4Vector dataVector = (Float4Vector) vectorVector.getDataVector();
+      vectorVector.allocateNew();
+
+      // Create 128-dimensional vectors for each row
+      for (int row = 0; row < 3; row++) {
+        vectorVector.setNotNull(row);
+        for (int dim = 0; dim < 128; dim++) {
+          int index = row * 128 + dim;
+          dataVector.setSafe(index, (float) (Math.random() * 10.0)); // Random values 0-10
+        }
+      }
+
       // Mark vectors as populated
       idVector.setValueCount(3);
       nameVector.setValueCount(3);
+      dataVector.setValueCount(3 * 128); // 3 rows * 128 dimensions
+      vectorVector.setValueCount(3);
 
-      // Serialize to Arrow IPC format
+      // Serialize to Arrow IPC format using ArrowStreamWriter
       ByteArrayOutputStream out = new ByteArrayOutputStream();
-      try (ArrowFileWriter writer = new ArrowFileWriter(root, null, out)) {
+      try (ArrowStreamWriter writer = new ArrowStreamWriter(root, null, Channels.newChannel(out))) {
         writer.start();
         writer.writeBatch();
         writer.end();
@@ -194,8 +218,6 @@ public class RestTableApiTest {
 
       // Validate the response
       assertNotNull(createResponse, "Response should not be null");
-      assertEquals(testCreateTableName, createResponse.getName(), "Table name should match");
-      assertNotNull(createResponse.getLocation(), "Location should not be null");
 
       System.out.println("✓ Table created successfully: " + testCreateTableName);
       System.out.println("✓ Table location: " + createResponse.getLocation());

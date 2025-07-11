@@ -1130,7 +1130,26 @@ components:
           type: boolean
     DescribeTableResponse:
       example:
-        schema: "{}"
+        schema:
+          metadata:
+            key: metadata
+          fields:
+          - metadata:
+              key: metadata
+            nullable: true
+            name: name
+            type:
+              length: 0
+              fields: "{}"
+              type: type
+          - metadata:
+              key: metadata
+            nullable: true
+            name: name
+            type:
+              length: 0
+              fields: "{}"
+              type: type
         stats:
           num_deleted_rows: 0
           num_fragments: 0
@@ -1157,7 +1176,7 @@ components:
           additionalProperties:
             type: string
         schema:
-          type: object
+          $ref: '#/components/schemas/JsonSchema'
         stats:
           $ref: '#/components/schemas/TableBasicStats'
         table:
@@ -1178,6 +1197,80 @@ components:
       - stats
       - table
       - version
+    JsonSchema:
+      description: "JSON representation of a Apache Arrow [Schema]."
+      example:
+        metadata:
+          key: metadata
+        fields:
+        - metadata:
+            key: metadata
+          nullable: true
+          name: name
+          type:
+            length: 0
+            fields: "{}"
+            type: type
+        - metadata:
+            key: metadata
+          nullable: true
+          name: name
+          type:
+            length: 0
+            fields: "{}"
+            type: type
+      properties:
+        fields:
+          items:
+            $ref: '#/components/schemas/JsonField'
+          type: array
+        metadata:
+          additionalProperties:
+            type: string
+      required:
+      - fields
+    JsonField:
+      description: "JSON representation of an Apache Arrow [Field]."
+      example:
+        metadata:
+          key: metadata
+        nullable: true
+        name: name
+        type:
+          length: 0
+          fields: "{}"
+          type: type
+      properties:
+        metadata:
+          additionalProperties:
+            type: string
+        name:
+          type: string
+        nullable:
+          type: boolean
+        type:
+          $ref: '#/components/schemas/JsonDataType'
+      required:
+      - name
+      - nullable
+      - type
+    JsonDataType:
+      description: "JSON representation of an Apache Arrow [DataType]."
+      example:
+        length: 0
+        fields: "{}"
+        type: type
+      properties:
+        fields:
+          type: object
+        length:
+          minimum: 0
+          nullable: true
+          type: integer
+        type:
+          type: string
+      required:
+      - type
     Binary:
       format: binary
       type: string

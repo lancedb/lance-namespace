@@ -96,18 +96,14 @@ pub enum TableExistsError {
 
 
 /// Create a new table in the namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
-pub async fn create_table(configuration: &configuration::Configuration, id: &str, body: std::path::PathBuf, delimiter: Option<&str>) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
+pub async fn create_table(configuration: &configuration::Configuration, id: &str, body: std::path::PathBuf) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_body = body;
-    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/create", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
-    if let Some(ref param_value) = p_delimiter {
-        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
-    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }

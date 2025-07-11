@@ -41,7 +41,7 @@ public class DescribeTableResponse {
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
-  private Object schema;
+  private JsonSchema schema;
 
   private TableBasicStats stats;
 
@@ -60,7 +60,7 @@ public class DescribeTableResponse {
       String name,
       List<String> namespace,
       String location,
-      Object schema,
+      JsonSchema schema,
       TableBasicStats stats,
       String table,
       Long version) {
@@ -172,7 +172,7 @@ public class DescribeTableResponse {
     this.properties = properties;
   }
 
-  public DescribeTableResponse schema(Object schema) {
+  public DescribeTableResponse schema(JsonSchema schema) {
     this.schema = schema;
     return this;
   }
@@ -183,13 +183,14 @@ public class DescribeTableResponse {
    * @return schema
    */
   @NotNull
+  @Valid
   @Schema(name = "schema", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("schema")
-  public Object getSchema() {
+  public JsonSchema getSchema() {
     return schema;
   }
 
-  public void setSchema(Object schema) {
+  public void setSchema(JsonSchema schema) {
     this.schema = schema;
   }
 

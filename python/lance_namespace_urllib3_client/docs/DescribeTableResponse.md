@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **namespace** | **List[str]** |  | 
 **location** | **str** |  | 
 **properties** | **Dict[str, str]** |  | [optional] 
-**var_schema** | **object** |  | 
+**var_schema** | [**JsonSchema**](JsonSchema.md) |  | 
 **stats** | [**TableBasicStats**](TableBasicStats.md) |  | 
 **table** | **str** |  | 
 **table_uri** | **str** | Table URI, optional | [optional] 
