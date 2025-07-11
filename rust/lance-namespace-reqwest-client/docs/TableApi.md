@@ -10,6 +10,7 @@ Method | HTTP request | Description
 [**describe_table**](TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
 [**drop_table**](TableApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
 [**insert_table**](TableApi.md#insert_table) | **POST** /v1/table/{id}/insert | Insert records into a table
+[**query_table**](TableApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
 [**register_table**](TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
 [**table_exists**](TableApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
 
@@ -202,6 +203,37 @@ No authorization required
 
 - **Content-Type**: application/x-arrow-ipc
 - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## query_table
+
+> std::path::PathBuf query_table(id, query_request)
+Query a table
+
+Query a table with vector search and optional filtering. Returns results in Arrow IPC stream format. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**query_request** | [**QueryRequest**](QueryRequest.md) | Query request | [required] |
+
+### Return type
+
+[**std::path::PathBuf**](std::path::PathBuf.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/vnd.apache.arrow.stream, application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

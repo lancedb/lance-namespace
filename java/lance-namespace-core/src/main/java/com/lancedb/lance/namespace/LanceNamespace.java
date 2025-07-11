@@ -36,6 +36,7 @@ import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.NamespaceExistsResponse;
+import com.lancedb.lance.namespace.model.QueryRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
@@ -61,6 +62,8 @@ public interface LanceNamespace {
   CreateTableResponse createTable(String tableName, byte[] arrowIpcData);
 
   InsertTableResponse insertTable(String tableName, byte[] arrowIpcData, String mode);
+
+  byte[] queryTable(QueryRequest request);
 
   RegisterTableResponse registerTable(RegisterTableRequest request);
 

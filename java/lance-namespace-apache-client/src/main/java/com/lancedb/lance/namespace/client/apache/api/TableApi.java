@@ -27,6 +27,7 @@ import com.lancedb.lance.namespace.model.DescribeTableResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
 import com.lancedb.lance.namespace.model.InsertTableResponse;
+import com.lancedb.lance.namespace.model.QueryRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
@@ -618,6 +619,92 @@ public class TableApi extends BaseApi {
 
     TypeReference<InsertTableResponse> localVarReturnType =
         new TypeReference<InsertTableResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Query a table Query a table with vector search and optional filtering. Returns results in Arrow
+   * IPC stream format.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param queryRequest Query request (required)
+   * @return byte[]
+   * @throws ApiException if fails to make API call
+   */
+  public byte[] queryTable(String id, QueryRequest queryRequest) throws ApiException {
+    return this.queryTable(id, queryRequest, Collections.emptyMap());
+  }
+
+  /**
+   * Query a table Query a table with vector search and optional filtering. Returns results in Arrow
+   * IPC stream format.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param queryRequest Query request (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return byte[]
+   * @throws ApiException if fails to make API call
+   */
+  public byte[] queryTable(
+      String id, QueryRequest queryRequest, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = queryRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling queryTable");
+    }
+
+    // verify the required parameter 'queryRequest' is set
+    if (queryRequest == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'queryRequest' when calling queryTable");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/query"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/vnd.apache.arrow.stream", "application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<byte[]> localVarReturnType = new TypeReference<byte[]>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

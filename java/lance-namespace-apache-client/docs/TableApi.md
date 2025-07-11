@@ -10,6 +10,7 @@ All URIs are relative to *http://localhost:2333*
 | [**describeTable**](TableApi.md#describeTable) | **POST** /v1/table/{id}/describe | Describe a table from the namespace |
 | [**dropTable**](TableApi.md#dropTable) | **POST** /v1/table/{id}/drop | Drop a table from its namespace |
 | [**insertTable**](TableApi.md#insertTable) | **POST** /v1/table/{id}/insert | Insert records into a table |
+| [**queryTable**](TableApi.md#queryTable) | **POST** /v1/table/{id}/query | Query a table |
 | [**registerTable**](TableApi.md#registerTable) | **POST** /v1/table/{id}/register | Register a table to a namespace |
 | [**tableExists**](TableApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists |
 
@@ -461,6 +462,80 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Result of inserting records into a table |  -  |
+| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
+| **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
+| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
+| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+
+
+## queryTable
+
+> byte[] queryTable(id, queryRequest)
+
+Query a table
+
+Query a table with vector search and optional filtering. Returns results in Arrow IPC stream format. 
+
+### Example
+
+```java
+// Import classes:
+import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.client.apache.ApiException;
+import com.lancedb.lance.namespace.client.apache.Configuration;
+import com.lancedb.lance.namespace.client.apache.models.*;
+import com.lancedb.lance.namespace.client.apache.api.TableApi;
+
+public class Example {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        defaultClient.setBasePath("http://localhost:2333");
+
+        TableApi apiInstance = new TableApi(defaultClient);
+        String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
+        QueryRequest queryRequest = new QueryRequest(); // QueryRequest | Query request
+        try {
+            byte[] result = apiInstance.queryTable(id, queryRequest);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling TableApi#queryTable");
+            System.err.println("Status code: " + e.getCode());
+            System.err.println("Reason: " + e.getResponseBody());
+            System.err.println("Response headers: " + e.getResponseHeaders());
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
+| **queryRequest** | [**QueryRequest**](QueryRequest.md)| Query request | |
+
+### Return type
+
+**byte[]**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/vnd.apache.arrow.stream, application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Query results in Arrow IPC stream format |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |

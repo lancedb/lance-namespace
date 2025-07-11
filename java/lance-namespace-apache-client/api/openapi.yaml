@@ -295,6 +295,49 @@ paths:
       x-content-type: application/x-arrow-ipc
       x-accepts:
       - application/json
+  /v1/table/{id}/query:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    post:
+      description: |
+        Query a table with vector search and optional filtering. Returns results in Arrow IPC stream format.
+      operationId: QueryTable
+      parameters:
+      - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+        description: Query request
+        required: true
+      responses:
+        "200":
+          content:
+            application/vnd.apache.arrow.stream:
+              schema:
+                format: binary
+                type: string
+          description: Query results in Arrow IPC stream format
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Query a table
+      tags:
+      - Table
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      - application/vnd.apache.arrow.stream
   /v1/table/{id}/register:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -1338,6 +1381,96 @@ components:
           format: int64
           minimum: 0
           type: integer
+    QueryRequest:
+      example:
+        ef: 1
+        offset: 0
+        columns:
+        - columns
+        - columns
+        k: 1
+        version: 0
+        with_row_id: true
+        prefilter: true
+        filter: filter
+        refine_factor: 1
+        distance_type: l2
+        bypass_vector_index: true
+        nprobes: 1
+        name: name
+        namespace:
+        - namespace
+        - namespace
+        vector:
+        - 0.8008282
+        - 0.8008282
+      properties:
+        name:
+          type: string
+        namespace:
+          items:
+            type: string
+          type: array
+        vector:
+          description: Query vector for similarity search
+          items:
+            format: float
+            type: number
+          type: array
+        k:
+          description: Number of results to return
+          minimum: 1
+          type: integer
+        filter:
+          description: Optional SQL filter expression
+          type: string
+        columns:
+          description: Optional list of columns to return
+          items:
+            type: string
+          type: array
+        distance_type:
+          description: Distance metric to use
+          enum:
+          - l2
+          - cosine
+          - dot
+          type: string
+        prefilter:
+          description: Whether to apply filtering before vector search
+          type: boolean
+        bypass_vector_index:
+          description: Whether to bypass vector index
+          type: boolean
+        ef:
+          description: Search effort parameter for HNSW index
+          minimum: 1
+          type: integer
+        nprobes:
+          description: Number of probes for IVF index
+          minimum: 1
+          type: integer
+        refine_factor:
+          description: Refine factor for search
+          minimum: 1
+          type: integer
+        with_row_id:
+          description: Whether to include row ID in results
+          type: boolean
+        offset:
+          description: Number of results to skip
+          minimum: 0
+          type: integer
+        version:
+          description: Table version to query
+          format: int64
+          minimum: 0
+          type: integer
+      required:
+      - k
+      - name
+      - namespace
+      - vector
     JsonSchema:
       description: "JSON representation of a Apache Arrow [Schema]."
       example:

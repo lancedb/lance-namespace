@@ -68,6 +68,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_query_table(self) -> None:
+        """Test case for query_table
+
+        Query a table
+        """
+        pass
+
     def test_register_table(self) -> None:
         """Test case for register_table
 

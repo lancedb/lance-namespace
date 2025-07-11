@@ -93,6 +93,19 @@ pub enum InsertTableError {
     UnknownValue(serde_json::Value),
 }
 
+/// struct for typed errors of method [`query_table`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum QueryTableError {
+    Status400(models::ErrorResponse),
+    Status401(models::ErrorResponse),
+    Status403(models::ErrorResponse),
+    Status404(models::ErrorResponse),
+    Status503(models::ErrorResponse),
+    Status5XX(models::ErrorResponse),
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`register_table`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -371,6 +384,34 @@ pub async fn insert_table(configuration: &configuration::Configuration, id: &str
     } else {
         let content = resp.text().await?;
         let entity: Option<InsertTableError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+/// Query a table with vector search and optional filtering. Returns results in Arrow IPC stream format. 
+pub async fn query_table(configuration: &configuration::Configuration, id: &str, query_request: models::QueryRequest) -> Result<reqwest::Response, Error<QueryTableError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
+    let p_query_request = query_request;
+
+    let uri_str = format!("{}/v1/table/{id}/query", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    req_builder = req_builder.json(&p_query_request);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+
+    if !status.is_client_error() && !status.is_server_error() {
+        Ok(resp)
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<QueryTableError> = serde_json::from_str(&content).ok();
         Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }

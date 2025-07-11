@@ -277,6 +277,44 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/table/{id}/query:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    post:
+      tags: [ Table ]
+      summary: Query a table
+      operationId: QueryTable
+      description: >
+        Query a table with vector search and optional filtering.
+        Returns results in Arrow IPC stream format.
+      requestBody:
+        description: Query request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+        required: true
+      responses:
+        200:
+          description: Query results in Arrow IPC stream format
+          content:
+            application/vnd.apache.arrow.stream:
+              schema:
+                type: string
+                format: binary
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
   /v1/table/{id}/register:
     parameters:
       - $ref: '#/components/parameters/id'
@@ -962,6 +1000,73 @@ components:
           format: int64
           description: The version of the table after the insert
           minimum: 0
+
+    QueryRequest:
+      type: object
+      required:
+        - name
+        - namespace
+        - vector
+        - k
+      properties:
+        name:
+          type: string
+        namespace:
+          type: array
+          items:
+            type: string
+        vector:
+          type: array
+          items:
+            type: number
+            format: float
+          description: Query vector for similarity search
+        k:
+          type: integer
+          minimum: 1
+          description: Number of results to return
+        filter:
+          type: string
+          description: Optional SQL filter expression
+        columns:
+          type: array
+          items:
+            type: string
+          description: Optional list of columns to return
+        distance_type:
+          type: string
+          enum: ["l2", "cosine", "dot"]
+          description: Distance metric to use
+        prefilter:
+          type: boolean
+          description: Whether to apply filtering before vector search
+        bypass_vector_index:
+          type: boolean
+          description: Whether to bypass vector index
+        ef:
+          type: integer
+          minimum: 1
+          description: Search effort parameter for HNSW index
+        nprobes:
+          type: integer
+          minimum: 1
+          description: Number of probes for IVF index
+        refine_factor:
+          type: integer
+          minimum: 1
+          description: Refine factor for search
+        with_row_id:
+          type: boolean
+          description: Whether to include row ID in results
+        offset:
+          type: integer
+          minimum: 0
+          description: Number of results to skip
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Table version to query
 
     JsonSchema:
       type: object

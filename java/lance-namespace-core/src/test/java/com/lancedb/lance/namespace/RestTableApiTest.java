@@ -23,6 +23,7 @@ import org.apache.arrow.vector.IntVector;
 import org.apache.arrow.vector.VarCharVector;
 import org.apache.arrow.vector.VectorSchemaRoot;
 import org.apache.arrow.vector.complex.FixedSizeListVector;
+import org.apache.arrow.vector.ipc.ArrowFileReader;
 import org.apache.arrow.vector.ipc.ArrowStreamWriter;
 import org.apache.arrow.vector.types.FloatingPointPrecision;
 import org.apache.arrow.vector.types.pojo.ArrowType;
@@ -35,8 +36,11 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -398,6 +402,67 @@ public class RestTableApiTest {
     return response;
   }
 
+  @Test
+  public void testQueryTable() throws IOException {
+    assumeTrue(
+        DATABASE != null && API_KEY != null,
+        "Skipping test: LANCEDB_DB and LANCEDB_API_KEY environment variables must be set");
+    String queryTableName =
+        "test_query_table_" + UUID.randomUUID().toString().replace("-", "_").substring(0, 8);
+
+    CreateTableResponse createResponse = createTableHelper(queryTableName, 10);
+    assertNotNull(createResponse, "Create response should not be null");
+    QueryRequest queryRequest = new QueryRequest();
+    queryRequest.setName(queryTableName);
+    List<Float> queryVector = new ArrayList<>();
+    for (int i = 0; i < 128; i++) {
+      queryVector.add((float) (i % 10)); // Use pattern 0-9 repeating
+    }
+    queryRequest.setVector(queryVector);
+    queryRequest.setK(5); // Request top 5 results
+
+    List<String> columns = Arrays.asList("id", "name", "vector");
+    queryRequest.setColumns(columns);
+
+    byte[] queryResult;
+    queryResult = namespace.queryTable(queryRequest);
+    assertNotNull(queryResult, "Query result should not be null");
+
+    // Read and verify the Arrow IPC result
+    try (BufferAllocator verifyAllocator = new RootAllocator()) {
+      // Arrow file format - use ArrowFileReader
+      ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(queryResult);
+
+      try (ArrowFileReader reader = new ArrowFileReader(channel, verifyAllocator)) {
+
+        // Get schema
+        Schema resultSchema = reader.getVectorSchemaRoot().getSchema();
+        List<String> resultColumns = new ArrayList<>();
+        for (Field field : resultSchema.getFields()) {
+          resultColumns.add(field.getName());
+        }
+        System.out.println("Result columns: " + resultColumns);
+
+        // Verify columns
+        assertTrue(resultColumns.contains("id"), "Result should contain 'id' column");
+        assertTrue(resultColumns.contains("name"), "Result should contain 'name' column");
+
+        // Count total rows
+        int totalRows = 0;
+        for (int i = 0; i < reader.getRecordBlocks().size(); i++) {
+          reader.loadRecordBatch(reader.getRecordBlocks().get(i));
+          VectorSchemaRoot root = reader.getVectorSchemaRoot();
+          totalRows += root.getRowCount();
+        }
+
+        System.out.println("Query returned " + totalRows + " rows");
+        assertTrue(totalRows > 0, "Query should return at least some rows");
+      }
+    }
+    DropTableResponse dropResponse = dropTableHelper(queryTableName);
+    assertNotNull(dropResponse, "Drop table response should not be null");
+  }
+
   private LanceRestNamespace initializeClient() {
     Map<String, String> config = new HashMap<>();
     config.put("headers.x-lancedb-database", DATABASE);
@@ -422,5 +487,71 @@ public class RestTableApiTest {
     System.out.println("Initialized client with base URL: " + baseUrl);
 
     return new LanceRestNamespace(apiClient, config);
+  }
+
+  /** SeekableByteChannel implementation for reading Arrow file format from byte array */
+  private static class ByteArraySeekableByteChannel implements SeekableByteChannel {
+    private final byte[] data;
+    private long position = 0;
+    private boolean isOpen = true;
+
+    public ByteArraySeekableByteChannel(byte[] data) {
+      this.data = data;
+    }
+
+    @Override
+    public long position() throws IOException {
+      return position;
+    }
+
+    @Override
+    public SeekableByteChannel position(long newPosition) throws IOException {
+      if (newPosition < 0 || newPosition > data.length) {
+        throw new IOException("Invalid position: " + newPosition);
+      }
+      position = newPosition;
+      return this;
+    }
+
+    @Override
+    public long size() throws IOException {
+      return data.length;
+    }
+
+    @Override
+    public int read(ByteBuffer dst) throws IOException {
+      if (!isOpen) {
+        throw new IOException("Channel is closed");
+      }
+      int remaining = dst.remaining();
+      int available = (int) (data.length - position);
+      if (available <= 0) {
+        return -1;
+      }
+      int toRead = Math.min(remaining, available);
+      dst.put(data, (int) position, toRead);
+      position += toRead;
+      return toRead;
+    }
+
+    @Override
+    public int write(ByteBuffer src) throws IOException {
+      throw new UnsupportedOperationException("Read-only channel");
+    }
+
+    @Override
+    public SeekableByteChannel truncate(long size) throws IOException {
+      throw new UnsupportedOperationException("Read-only channel");
+    }
+
+    @Override
+    public boolean isOpen() {
+      return isOpen;
+    }
+
+    @Override
+    public void close() throws IOException {
+      isOpen = false;
+    }
   }
 }

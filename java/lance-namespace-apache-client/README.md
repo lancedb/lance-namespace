@@ -124,6 +124,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**describeTable**](docs/TableApi.md#describeTable) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
 *TableApi* | [**dropTable**](docs/TableApi.md#dropTable) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
 *TableApi* | [**insertTable**](docs/TableApi.md#insertTable) | **POST** /v1/table/{id}/insert | Insert records into a table
+*TableApi* | [**queryTable**](docs/TableApi.md#queryTable) | **POST** /v1/table/{id}/query | Query a table
 *TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /v1/table/{id}/register | Register a table to a namespace
 *TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists
 *TransactionApi* | [**alterTransaction**](docs/TransactionApi.md#alterTransaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
@@ -163,6 +164,7 @@ Class | Method | HTTP request | Description
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
  - [NamespaceExistsRequest](docs/NamespaceExistsRequest.md)
  - [NamespaceExistsResponse](docs/NamespaceExistsResponse.md)
+ - [QueryRequest](docs/QueryRequest.md)
  - [RegisterTableRequest](docs/RegisterTableRequest.md)
  - [RegisterTableResponse](docs/RegisterTableResponse.md)
  - [SetPropertyMode](docs/SetPropertyMode.md)

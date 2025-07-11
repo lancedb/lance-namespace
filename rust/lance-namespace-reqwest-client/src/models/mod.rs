@@ -60,6 +60,8 @@ pub mod namespace_exists_request;
 pub use self::namespace_exists_request::NamespaceExistsRequest;
 pub mod namespace_exists_response;
 pub use self::namespace_exists_response::NamespaceExistsResponse;
+pub mod query_request;
+pub use self::query_request::QueryRequest;
 pub mod register_table_request;
 pub use self::register_table_request::RegisterTableRequest;
 pub mod register_table_response;

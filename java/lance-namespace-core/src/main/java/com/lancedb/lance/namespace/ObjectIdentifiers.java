@@ -24,6 +24,7 @@ import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
+import com.lancedb.lance.namespace.model.QueryRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
 
@@ -148,6 +149,27 @@ public class ObjectIdentifiers {
   }
 
   public static List<String> listFrom(CountRowsRequest request) {
+    List<String> identifier = new ArrayList<>();
+    if (request.getNamespace() != null) {
+      identifier.addAll(request.getNamespace());
+    }
+    identifier.add(request.getName());
+    return identifier;
+  }
+
+  public static String stringFrom(QueryRequest request, String delimiter) {
+    StringBuilder builder = new StringBuilder();
+    if (request.getNamespace() != null) {
+      for (String part : request.getNamespace()) {
+        builder.append(part);
+        builder.append(delimiter);
+      }
+    }
+    builder.append(request.getName());
+    return builder.toString();
+  }
+
+  public static List<String> listFrom(QueryRequest request) {
     List<String> identifier = new ArrayList<>();
     if (request.getNamespace() != null) {
       identifier.addAll(request.getNamespace());
