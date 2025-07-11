@@ -224,6 +224,23 @@ public class RestTableApiTest {
       System.out.println(
           "✓ Stats - Deleted rows: " + describeResponse.getStats().getNumDeletedRows());
 
+      // Test count rows functionality
+      System.out.println("\n--- Testing count rows ---");
+      CountRowsRequest countRequest = new CountRowsRequest();
+      countRequest.setName(testCreateTableName);
+
+      Long countResponse = namespace.countRows(countRequest);
+      assertNotNull(countResponse, "Count rows response should not be null");
+
+      // We created 3 rows in the table
+      final int expectedRowCount = 3;
+      assertEquals(
+          expectedRowCount, countResponse.longValue(), "Row count should match expected number");
+
+      System.out.println("✓ Expected rows: " + expectedRowCount);
+      System.out.println("✓ Actual rows: " + countResponse);
+      System.out.println("✓ Count rows test passed!");
+
       System.out.println("\nTest passed!");
     }
   }

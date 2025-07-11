@@ -300,6 +300,39 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/table/{id}/count_rows:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags: [ Table ]
+      summary: Count rows in a table
+      operationId: CountRows
+      description: >
+        Count the number of rows in a table.
+        Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CountRowsRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/CountRowsResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
   /v1/table/{id}/exists:
     parameters:
       - $ref: '#/components/parameters/id'
@@ -860,6 +893,23 @@ components:
           type: integer
           format: int64
           minimum: 0
+
+    CountRowsRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        namespace:
+          type: array
+          items:
+            type: string
+
+    CountRowsResponse:
+      type: integer
+      format: int64
+      description: Response containing the count of rows. Serializes transparently as just the number for backward compatibility.
+      minimum: 0
+
     JsonSchema:
       type: object
       description: JSON representation of a Apache Arrow [Schema].
@@ -1206,6 +1256,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/DescribeTableResponse'
+
+    CountRowsResponse:
+      description: Result of counting rows in a table
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CountRowsResponse'
 
     CreateTableResponse:
       description: Table properties result when creating a table

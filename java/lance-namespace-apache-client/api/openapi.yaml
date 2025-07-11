@@ -311,6 +311,44 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/table/{id}/count_rows:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
+    post:
+      description: |
+        Count the number of rows in a table. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+      operationId: CountRows
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CountRowsRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/CountRowsResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Count rows in a table
+      tags:
+      - Table
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/table/{id}/exists:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -642,6 +680,12 @@ components:
           schema:
             $ref: '#/components/schemas/DescribeTableResponse'
       description: Table properties result when loading a table
+    CountRowsResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CountRowsResponse'
+      description: Result of counting rows in a table
     CreateTableResponse:
       content:
         application/json:
@@ -1197,6 +1241,25 @@ components:
       - stats
       - table
       - version
+    CountRowsRequest:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+      properties:
+        name:
+          type: string
+        namespace:
+          items:
+            type: string
+          type: array
+    CountRowsResponse:
+      description: Response containing the count of rows. Serializes transparently
+        as just the number for backward compatibility.
+      format: int64
+      minimum: 0
+      type: integer
     JsonSchema:
       description: "JSON representation of a Apache Arrow [Schema]."
       example:

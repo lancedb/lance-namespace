@@ -14,67 +14,41 @@
 
 import unittest
 
-from lance_namespace_urllib3_client.api.table_api import TableApi
+from lance_namespace_urllib3_client.models.count_rows_request import CountRowsRequest
 
+class TestCountRowsRequest(unittest.TestCase):
+    """CountRowsRequest unit test stubs"""
 
-class TestTableApi(unittest.TestCase):
-    """TableApi unit test stubs"""
-
-    def setUp(self) -> None:
-        self.api = TableApi()
-
-    def tearDown(self) -> None:
+    def setUp(self):
         pass
 
-    def test_count_rows(self) -> None:
-        """Test case for count_rows
+    def tearDown(self):
+        pass
 
-        Count rows in a table
+    def make_instance(self, include_optional) -> CountRowsRequest:
+        """Test CountRowsRequest
+            include_optional is a boolean, when False only required
+            params are included, when True both required and
+            optional params are included """
+        # uncomment below to create an instance of `CountRowsRequest`
         """
-        pass
-
-    def test_create_table(self) -> None:
-        """Test case for create_table
-
-        Create a table with the given name
+        model = CountRowsRequest()
+        if include_optional:
+            return CountRowsRequest(
+                name = '',
+                namespace = [
+                    ''
+                    ]
+            )
+        else:
+            return CountRowsRequest(
+        )
         """
-        pass
 
-    def test_deregister_table(self) -> None:
-        """Test case for deregister_table
-
-        Deregister a table from its namespace
-        """
-        pass
-
-    def test_describe_table(self) -> None:
-        """Test case for describe_table
-
-        Describe a table from the namespace
-        """
-        pass
-
-    def test_drop_table(self) -> None:
-        """Test case for drop_table
-
-        Drop a table from its namespace
-        """
-        pass
-
-    def test_register_table(self) -> None:
-        """Test case for register_table
-
-        Register a table to a namespace
-        """
-        pass
-
-    def test_table_exists(self) -> None:
-        """Test case for table_exists
-
-        Check if a table exists
-        """
-        pass
-
+    def testCountRowsRequest(self):
+        """Test CountRowsRequest"""
+        # inst_req_only = self.make_instance(include_optional=False)
+        # inst_req_and_optional = self.make_instance(include_optional=True)
 
 if __name__ == '__main__':
     unittest.main()
