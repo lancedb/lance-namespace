@@ -316,6 +316,43 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/table/{id}/delete:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    post:
+      tags: [ Table ]
+      summary: Delete rows from a table
+      operationId: DeleteFromTable
+      description: >
+        Delete rows from a table based on a SQL predicate.
+        Returns the number of rows that were deleted.
+      requestBody:
+        description: Delete request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteFromTableRequest'
+        required: true
+      responses:
+        200:
+          description: Delete successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteFromTableResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
   /v1/table/{id}/query:
     parameters:
       - $ref: '#/components/parameters/id'
@@ -1233,6 +1270,36 @@ components:
           format: int64
           description: Number of rows updated
           minimum: 0
+        version:
+          type: integer
+          format: int64
+          description: The commit version associated with the operation
+          minimum: 0
+
+    DeleteFromTableRequest:
+      type: object
+      required:
+        - name
+        - namespace
+        - predicate
+      properties:
+        name:
+          type: string
+          description: The table name
+        namespace:
+          type: array
+          items:
+            type: string
+          description: The namespace identifier
+        predicate:
+          type: string
+          description: SQL predicate to filter rows for deletion
+
+    DeleteFromTableResponse:
+      type: object
+      required:
+        - version
+      properties:
         version:
           type: integer
           format: int64

@@ -54,6 +54,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_delete_from_table(self) -> None:
+        """Test case for delete_from_table
+
+        Delete rows from a table
+        """
+        pass
+
     def test_deregister_table(self) -> None:
         """Test case for deregister_table
 

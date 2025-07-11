@@ -22,6 +22,8 @@ import com.lancedb.lance.namespace.model.CountRowsRequest;
 import com.lancedb.lance.namespace.model.CreateIndexRequest;
 import com.lancedb.lance.namespace.model.CreateIndexResponse;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
+import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
+import com.lancedb.lance.namespace.model.DeleteFromTableResponse;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
@@ -408,6 +410,98 @@ public class TableApi extends BaseApi {
 
     TypeReference<CreateTableResponse> localVarReturnType =
         new TypeReference<CreateTableResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Delete rows from a table Delete rows from a table based on a SQL predicate. Returns the number
+   * of rows that were deleted.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param deleteFromTableRequest Delete request (required)
+   * @return DeleteFromTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public DeleteFromTableResponse deleteFromTable(
+      String id, DeleteFromTableRequest deleteFromTableRequest) throws ApiException {
+    return this.deleteFromTable(id, deleteFromTableRequest, Collections.emptyMap());
+  }
+
+  /**
+   * Delete rows from a table Delete rows from a table based on a SQL predicate. Returns the number
+   * of rows that were deleted.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param deleteFromTableRequest Delete request (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return DeleteFromTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public DeleteFromTableResponse deleteFromTable(
+      String id,
+      DeleteFromTableRequest deleteFromTableRequest,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = deleteFromTableRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling deleteFromTable");
+    }
+
+    // verify the required parameter 'deleteFromTableRequest' is set
+    if (deleteFromTableRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'deleteFromTableRequest' when calling deleteFromTable");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/delete"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<DeleteFromTableResponse> localVarReturnType =
+        new TypeReference<DeleteFromTableResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

@@ -38,6 +38,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**create_index**](docs/TableApi.md#create_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
 *TableApi* | [**create_scalar_index**](docs/TableApi.md#create_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *TableApi* | [**create_table**](docs/TableApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
+*TableApi* | [**delete_from_table**](docs/TableApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
 *TableApi* | [**deregister_table**](docs/TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 *TableApi* | [**describe_table**](docs/TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
 *TableApi* | [**drop_table**](docs/TableApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
@@ -66,6 +67,8 @@ Class | Method | HTTP request | Description
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
  - [CreateTableResponse](docs/CreateTableResponse.md)
+ - [DeleteFromTableRequest](docs/DeleteFromTableRequest.md)
+ - [DeleteFromTableResponse](docs/DeleteFromTableResponse.md)
  - [DeregisterTableRequest](docs/DeregisterTableRequest.md)
  - [DeregisterTableResponse](docs/DeregisterTableResponse.md)
  - [DescribeNamespaceRequest](docs/DescribeNamespaceRequest.md)

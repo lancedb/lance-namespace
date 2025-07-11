@@ -21,6 +21,8 @@ import com.lancedb.lance.namespace.model.CreateIndexResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
+import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
+import com.lancedb.lance.namespace.model.DeleteFromTableResponse;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
@@ -72,6 +74,8 @@ public interface LanceNamespace {
   InsertTableResponse insertTable(String tableName, byte[] arrowIpcData, String mode);
 
   UpdateTableResponse updateTable(UpdateTableRequest request);
+
+  DeleteFromTableResponse deleteFromTable(DeleteFromTableRequest request);
 
   byte[] queryTable(QueryRequest request);
 

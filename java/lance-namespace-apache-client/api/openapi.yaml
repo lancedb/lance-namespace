@@ -336,6 +336,47 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/table/{id}/delete:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    post:
+      description: |
+        Delete rows from a table based on a SQL predicate. Returns the number of rows that were deleted.
+      operationId: DeleteFromTable
+      parameters:
+      - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteFromTableRequest'
+        description: Delete request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteFromTableResponse'
+          description: Delete successful
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Delete rows from a table
+      tags:
+      - Table
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/table/{id}/query:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -1657,6 +1698,40 @@ components:
           type: integer
       required:
       - updated_rows
+      - version
+    DeleteFromTableRequest:
+      example:
+        predicate: predicate
+        name: name
+        namespace:
+        - namespace
+        - namespace
+      properties:
+        name:
+          description: The table name
+          type: string
+        namespace:
+          description: The namespace identifier
+          items:
+            type: string
+          type: array
+        predicate:
+          description: SQL predicate to filter rows for deletion
+          type: string
+      required:
+      - name
+      - namespace
+      - predicate
+    DeleteFromTableResponse:
+      example:
+        version: 0
+      properties:
+        version:
+          description: The commit version associated with the operation
+          format: int64
+          minimum: 0
+          type: integer
+      required:
       - version
     QueryRequest:
       example:

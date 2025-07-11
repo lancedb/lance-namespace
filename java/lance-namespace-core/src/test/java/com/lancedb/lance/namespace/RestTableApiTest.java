@@ -742,6 +742,50 @@ public class RestTableApiTest {
     }
   }
 
+  @Test
+  public void testDeleteFromTable() throws IOException {
+    assumeTrue(
+        DATABASE != null && API_KEY != null,
+        "Skipping test: LANCEDB_DB and LANCEDB_API_KEY environment variables must be set");
+
+    System.out.println("\n=== Test: Delete From Table ===");
+    String deleteTableName = "test_delete_table_" + System.currentTimeMillis();
+
+    try {
+      // Step 1: Create table with 3 rows
+      System.out.println("\n--- Step 1: Creating table with 3 rows ---");
+      CreateTableResponse createResponse = createTableHelper(deleteTableName, 3);
+      assertNotNull(createResponse, "Create table response should not be null");
+
+      System.out.println("\n--- Step 2: Deleting row with id=1 ---");
+      DeleteFromTableRequest deleteRequest = new DeleteFromTableRequest();
+      deleteRequest.setName(deleteTableName);
+      deleteRequest.setPredicate("id = 1");
+
+      DeleteFromTableResponse deleteResponse = namespace.deleteFromTable(deleteRequest);
+      // Note that server didn't send back valid deletedRows info
+      assertEquals(2, deleteResponse.getVersion(), "Version should increment");
+
+      CountRowsRequest countRequest = new CountRowsRequest();
+      countRequest.setName(deleteTableName);
+      Long countResponse = namespace.countRows(countRequest);
+      assertEquals(2, countResponse.longValue());
+
+      System.out.println("\n--- Step 5: Deleting with complex predicate (id > 2) ---");
+      DeleteFromTableRequest complexDeleteRequest = new DeleteFromTableRequest();
+      complexDeleteRequest.setName(deleteTableName);
+      complexDeleteRequest.setPredicate("id > 2");
+
+      DeleteFromTableResponse complexDeleteResponse =
+          namespace.deleteFromTable(complexDeleteRequest);
+      assertEquals(3, deleteResponse.getVersion(), "Version should increment");
+      countResponse = namespace.countRows(countRequest);
+      assertEquals(1, countResponse.longValue());
+    } finally {
+      DropTableResponse dropResponse = dropTableHelper(deleteTableName);
+    }
+  }
+
   /** SeekableByteChannel implementation for reading Arrow file format from byte array */
   private static class ByteArraySeekableByteChannel implements SeekableByteChannel {
     private final byte[] data;

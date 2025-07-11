@@ -26,6 +26,8 @@ import com.lancedb.lance.namespace.model.CreateIndexResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
+import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
+import com.lancedb.lance.namespace.model.DeleteFromTableResponse;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
@@ -185,6 +187,18 @@ public class LanceRestNamespace implements LanceNamespace {
   public UpdateTableResponse updateTable(UpdateTableRequest request) {
     try {
       return tableApi.updateTable(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.additionalHeaders());
+    } catch (ApiException e) {
+      throw new LanceNamespaceException(e);
+    }
+  }
+
+  @Override
+  public DeleteFromTableResponse deleteFromTable(DeleteFromTableRequest request) {
+    try {
+      return tableApi.deleteFromTable(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           request,
           config.additionalHeaders());
