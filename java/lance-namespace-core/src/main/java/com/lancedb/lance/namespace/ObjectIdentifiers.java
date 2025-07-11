@@ -15,6 +15,7 @@ package com.lancedb.lance.namespace;
 
 import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.CountRowsRequest;
+import com.lancedb.lance.namespace.model.CreateIndexRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
@@ -170,6 +171,27 @@ public class ObjectIdentifiers {
   }
 
   public static List<String> listFrom(QueryRequest request) {
+    List<String> identifier = new ArrayList<>();
+    if (request.getNamespace() != null) {
+      identifier.addAll(request.getNamespace());
+    }
+    identifier.add(request.getName());
+    return identifier;
+  }
+
+  public static String stringFrom(CreateIndexRequest request, String delimiter) {
+    StringBuilder builder = new StringBuilder();
+    if (request.getNamespace() != null) {
+      for (String part : request.getNamespace()) {
+        builder.append(part);
+        builder.append(delimiter);
+      }
+    }
+    builder.append(request.getName());
+    return builder.toString();
+  }
+
+  public static List<String> listFrom(CreateIndexRequest request) {
     List<String> identifier = new ArrayList<>();
     if (request.getNamespace() != null) {
       identifier.addAll(request.getNamespace());

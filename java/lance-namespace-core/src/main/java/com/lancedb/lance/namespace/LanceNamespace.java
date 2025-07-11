@@ -16,6 +16,8 @@ package com.lancedb.lance.namespace;
 import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.AlterTransactionResponse;
 import com.lancedb.lance.namespace.model.CountRowsRequest;
+import com.lancedb.lance.namespace.model.CreateIndexRequest;
+import com.lancedb.lance.namespace.model.CreateIndexResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
@@ -64,6 +66,8 @@ public interface LanceNamespace {
   InsertTableResponse insertTable(String tableName, byte[] arrowIpcData, String mode);
 
   byte[] queryTable(QueryRequest request);
+
+  CreateIndexResponse createIndex(CreateIndexRequest request);
 
   RegisterTableResponse registerTable(RegisterTableRequest request);
 

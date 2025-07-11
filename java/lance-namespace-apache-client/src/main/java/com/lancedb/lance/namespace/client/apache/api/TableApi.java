@@ -19,6 +19,8 @@ import com.lancedb.lance.namespace.client.apache.BaseApi;
 import com.lancedb.lance.namespace.client.apache.Configuration;
 import com.lancedb.lance.namespace.client.apache.Pair;
 import com.lancedb.lance.namespace.model.CountRowsRequest;
+import com.lancedb.lance.namespace.model.CreateIndexRequest;
+import com.lancedb.lance.namespace.model.CreateIndexResponse;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableResponse;
@@ -137,6 +139,94 @@ public class TableApi extends BaseApi {
     String[] localVarAuthNames = new String[] {};
 
     TypeReference<Long> localVarReturnType = new TypeReference<Long>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Create an index on a table Create an index on a table column for faster search operations.
+   * Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param createIndexRequest Index creation request (required)
+   * @return CreateIndexResponse
+   * @throws ApiException if fails to make API call
+   */
+  public CreateIndexResponse createIndex(String id, CreateIndexRequest createIndexRequest)
+      throws ApiException {
+    return this.createIndex(id, createIndexRequest, Collections.emptyMap());
+  }
+
+  /**
+   * Create an index on a table Create an index on a table column for faster search operations.
+   * Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param createIndexRequest Index creation request (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return CreateIndexResponse
+   * @throws ApiException if fails to make API call
+   */
+  public CreateIndexResponse createIndex(
+      String id, CreateIndexRequest createIndexRequest, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = createIndexRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling createIndex");
+    }
+
+    // verify the required parameter 'createIndexRequest' is set
+    if (createIndexRequest == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'createIndexRequest' when calling createIndex");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/create_index"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<CreateIndexResponse> localVarReturnType =
+        new TypeReference<CreateIndexResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

@@ -5,6 +5,7 @@ All URIs are relative to *http://localhost:2333*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**count_rows**](TableApi.md#count_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
+[**create_index**](TableApi.md#create_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
 [**create_table**](TableApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 [**deregister_table**](TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 [**describe_table**](TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
@@ -35,6 +36,37 @@ Name | Type | Description  | Required | Notes
 ### Return type
 
 **i64**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## create_index
+
+> models::CreateIndexResponse create_index(id, create_index_request)
+Create an index on a table
+
+Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**create_index_request** | [**CreateIndexRequest**](CreateIndexRequest.md) | Index creation request | [required] |
+
+### Return type
+
+[**models::CreateIndexResponse**](CreateIndexResponse.md)
 
 ### Authorization
 

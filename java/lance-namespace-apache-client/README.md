@@ -119,6 +119,7 @@ Class | Method | HTTP request | Description
 *NamespaceApi* | [**listNamespaces**](docs/NamespaceApi.md#listNamespaces) | **POST** /v1/namespace/{id}/list | List namespaces
 *NamespaceApi* | [**namespaceExists**](docs/NamespaceApi.md#namespaceExists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
 *TableApi* | [**countRows**](docs/TableApi.md#countRows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
+*TableApi* | [**createIndex**](docs/TableApi.md#createIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
 *TableApi* | [**createTable**](docs/TableApi.md#createTable) | **POST** /v1/table/{id}/create | Create a table with the given name
 *TableApi* | [**deregisterTable**](docs/TableApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 *TableApi* | [**describeTable**](docs/TableApi.md#describeTable) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
@@ -140,6 +141,8 @@ Class | Method | HTTP request | Description
  - [AlterTransactionSetStatus](docs/AlterTransactionSetStatus.md)
  - [AlterTransactionUnsetProperty](docs/AlterTransactionUnsetProperty.md)
  - [CountRowsRequest](docs/CountRowsRequest.md)
+ - [CreateIndexRequest](docs/CreateIndexRequest.md)
+ - [CreateIndexResponse](docs/CreateIndexResponse.md)
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
  - [CreateTableResponse](docs/CreateTableResponse.md)

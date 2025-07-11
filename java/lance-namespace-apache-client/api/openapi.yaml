@@ -338,6 +338,47 @@ paths:
       x-accepts:
       - application/json
       - application/vnd.apache.arrow.stream
+  /v1/table/{id}/create_index:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    post:
+      description: |
+        Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes.
+      operationId: CreateIndex
+      parameters:
+      - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateIndexRequest'
+        description: Index creation request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateIndexResponse'
+          description: Index created successfully
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Create an index on a table
+      tags:
+      - Table
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/table/{id}/register:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -1471,6 +1512,105 @@ components:
       - name
       - namespace
       - vector
+    CreateIndexRequest:
+      example:
+        max_iterations: 1
+        num_sub_vectors: 1
+        sample_rate: 1
+        name: name
+        namespace:
+        - namespace
+        - namespace
+        column: column
+        metric_type: l2
+        num_partitions: 1
+        num_bits: 2
+        index_type: BTREE
+      properties:
+        name:
+          description: The table name
+          type: string
+        namespace:
+          description: The namespace identifier
+          items:
+            type: string
+          type: array
+        column:
+          description: Name of the column to create index on
+          type: string
+        index_type:
+          description: Type of index to create
+          enum:
+          - BTREE
+          - BITMAP
+          - LABEL_LIST
+          - IVF_FLAT
+          - IVF_HNSW_SQ
+          - IVF_PQ
+          - FTS
+          type: string
+        metric_type:
+          description: Distance metric type for vector indexes
+          enum:
+          - l2
+          - cosine
+          - dot
+          type: string
+        num_partitions:
+          description: Number of partitions for IVF indexes
+          minimum: 1
+          type: integer
+        num_sub_vectors:
+          description: Number of sub-vectors for PQ indexes
+          minimum: 1
+          type: integer
+        num_bits:
+          description: Number of bits for scalar quantization
+          maximum: 8
+          minimum: 1
+          type: integer
+        max_iterations:
+          description: Maximum iterations for index building
+          minimum: 1
+          type: integer
+        sample_rate:
+          description: Sample rate for index building
+          minimum: 1
+          type: integer
+      required:
+      - column
+      - index_type
+      - name
+      - namespace
+    CreateIndexResponse:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+        location: location
+        properties:
+          key: properties
+      properties:
+        name:
+          description: The table name
+          type: string
+        namespace:
+          description: The namespace identifier
+          items:
+            type: string
+          type: array
+        location:
+          description: Table location (usually empty)
+          type: string
+        properties:
+          additionalProperties:
+            type: string
+          description: Additional properties (usually empty)
+      required:
+      - location
+      - name
+      - namespace
     JsonSchema:
       description: "JSON representation of a Apache Arrow [Schema]."
       example:

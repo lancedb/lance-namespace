@@ -21,6 +21,8 @@ import com.lancedb.lance.namespace.client.apache.api.TransactionApi;
 import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.AlterTransactionResponse;
 import com.lancedb.lance.namespace.model.CountRowsRequest;
+import com.lancedb.lance.namespace.model.CreateIndexRequest;
+import com.lancedb.lance.namespace.model.CreateIndexResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
@@ -177,6 +179,18 @@ public class LanceRestNamespace implements LanceNamespace {
   public byte[] queryTable(QueryRequest request) {
     try {
       return tableApi.queryTable(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.additionalHeaders());
+    } catch (ApiException e) {
+      throw new LanceNamespaceException(e);
+    }
+  }
+
+  @Override
+  public CreateIndexResponse createIndex(CreateIndexRequest request) {
+    try {
+      return tableApi.createIndex(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           request,
           config.additionalHeaders());

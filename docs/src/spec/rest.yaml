@@ -315,6 +315,43 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/table/{id}/create_index:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    post:
+      tags: [ Table ]
+      summary: Create an index on a table
+      operationId: CreateIndex
+      description: >
+        Create an index on a table column for faster search operations.
+        Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes.
+      requestBody:
+        description: Index creation request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateIndexRequest'
+        required: true
+      responses:
+        200:
+          description: Index created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateIndexResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
   /v1/table/{id}/register:
     parameters:
       - $ref: '#/components/parameters/id'
@@ -1067,6 +1104,79 @@ components:
           format: int64
           minimum: 0
           description: Table version to query
+
+    CreateIndexRequest:
+      type: object
+      required:
+        - name
+        - namespace
+        - column
+        - index_type
+      properties:
+        name:
+          type: string
+          description: The table name
+        namespace:
+          type: array
+          items:
+            type: string
+          description: The namespace identifier
+        column:
+          type: string
+          description: Name of the column to create index on
+        index_type:
+          type: string
+          enum: ["BTREE", "BITMAP", "LABEL_LIST", "IVF_FLAT", "IVF_HNSW_SQ", "IVF_PQ", "FTS"]
+          description: Type of index to create
+        metric_type:
+          type: string
+          enum: ["l2", "cosine", "dot"]
+          description: Distance metric type for vector indexes
+        num_partitions:
+          type: integer
+          minimum: 1
+          description: Number of partitions for IVF indexes
+        num_sub_vectors:
+          type: integer
+          minimum: 1
+          description: Number of sub-vectors for PQ indexes
+        num_bits:
+          type: integer
+          minimum: 1
+          maximum: 8
+          description: Number of bits for scalar quantization
+        max_iterations:
+          type: integer
+          minimum: 1
+          description: Maximum iterations for index building
+        sample_rate:
+          type: integer
+          minimum: 1
+          description: Sample rate for index building
+
+    CreateIndexResponse:
+      type: object
+      required:
+        - name
+        - namespace
+        - location
+      properties:
+        name:
+          type: string
+          description: The table name
+        namespace:
+          type: array
+          items:
+            type: string
+          description: The namespace identifier
+        location:
+          type: string
+          description: Table location (usually empty)
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional properties (usually empty)
 
     JsonSchema:
       type: object
