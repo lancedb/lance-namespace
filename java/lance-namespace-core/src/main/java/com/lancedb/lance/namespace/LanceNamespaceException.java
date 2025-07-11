@@ -17,8 +17,21 @@ import com.lancedb.lance.namespace.client.apache.ApiException;
 
 public class LanceNamespaceException extends RuntimeException {
 
+  private final int code;
+  private final String responseBody;
+
   public LanceNamespaceException(ApiException e) {
     // TODO: properly parse into ErrorResponse model
     super(e.getResponseBody(), e);
+    this.code = e.getCode();
+    this.responseBody = e.getResponseBody();
+  }
+
+  public int getCode() {
+    return code;
+  }
+
+  public String getResponseBody() {
+    return responseBody;
   }
 }

@@ -92,14 +92,94 @@ public class RestTableApiTest {
   }
 
   @Test
-  public void testCreateTable() throws IOException {
+  public void testTableLifecycle() throws IOException {
     assumeTrue(
         DATABASE != null && API_KEY != null,
         "Skipping test: LANCEDB_DB and LANCEDB_API_KEY environment variables must be set");
 
-    System.out.println("=== Test: Create Table ===");
-    System.out.println("Creating table: " + testCreateTableName);
+    System.out.println("=== Test: Table Lifecycle ===");
 
+    // Create table with 3 rows using helper
+    System.out.println("\n--- Creating table ---");
+    CreateTableResponse createResponse = createTableHelper(testCreateTableName, 3);
+    assertNotNull(createResponse, "Create response should not be null");
+
+    // Test count rows
+    System.out.println("\n--- Testing count rows ---");
+    CountRowsRequest countRequest = new CountRowsRequest();
+    countRequest.setName(testCreateTableName);
+
+    Long countResponse = namespace.countRows(countRequest);
+    assertNotNull(countResponse, "Count rows response should not be null");
+    assertEquals(3, countResponse.longValue(), "Row count should match expected number");
+    System.out.println("✓ Count rows verified: " + countResponse);
+
+    // Test describe table
+    System.out.println("\n--- Testing describe table ---");
+    DescribeTableRequest describeRequest = new DescribeTableRequest();
+    describeRequest.setName(testCreateTableName);
+    describeRequest.setWithTableUri(true);
+
+    DescribeTableResponse describeResponse = namespace.describeTable(describeRequest);
+    assertNotNull(describeResponse, "Describe response should not be null");
+    assertEquals(
+        testCreateTableName, describeResponse.getTable(), "Table name should match in describe");
+    assertNotNull(describeResponse.getSchema(), "Schema should not be null");
+    assertNotNull(describeResponse.getStats(), "Stats should not be null");
+
+    // Verify schema
+    JsonSchema responseSchema = describeResponse.getSchema();
+    assertNotNull(responseSchema, "Schema object should not be null");
+    assertNotNull(responseSchema.getFields(), "Schema fields should not be null");
+    assertEquals(3, responseSchema.getFields().size(), "Schema should have 3 fields");
+
+    List<String> fieldNames =
+        responseSchema.getFields().stream()
+            .map(JsonField::getName)
+            .collect(java.util.stream.Collectors.toList());
+    assertTrue(fieldNames.contains("id"), "Schema should contain 'id' field");
+    assertTrue(fieldNames.contains("name"), "Schema should contain 'name' field");
+    assertTrue(fieldNames.contains("vector"), "Schema should contain 'vector' field");
+    System.out.println("✓ Table schema verified with fields: " + fieldNames);
+
+    // Verify version and stats
+    assertNotNull(describeResponse.getVersion(), "Version should not be null");
+    assertTrue(describeResponse.getVersion() >= 1, "Version should be at least 1 for new table");
+    assertTrue(
+        describeResponse.getStats().getNumFragments() >= 0,
+        "Number of fragments should be non-negative");
+    System.out.println("✓ Table version: " + describeResponse.getVersion());
+    System.out.println("✓ Table fragments: " + describeResponse.getStats().getNumFragments());
+
+    // Test drop table using helper
+    System.out.println("\n--- Testing drop table ---");
+    DropTableResponse dropResponse = dropTableHelper(testCreateTableName);
+    assertNotNull(dropResponse, "Drop table response should not be null");
+
+    // Verify table was dropped
+    System.out.println("\n--- Verifying table was dropped ---");
+    try {
+      DescribeTableRequest verifyDropRequest = new DescribeTableRequest();
+      verifyDropRequest.setName(testCreateTableName);
+      namespace.describeTable(verifyDropRequest);
+      fail("Expected exception when describing dropped table");
+    } catch (LanceNamespaceException e) {
+      assertEquals(404, e.getCode(), "Should get 404 error code for non-existent table");
+      System.out.println("✓ Confirmed table no longer exists (404 error code)");
+    }
+
+    System.out.println("\n✓ Table lifecycle test passed!");
+  }
+
+  /**
+   * Helper method to create a table with the specified number of rows
+   *
+   * @param tableName The name of the table to create
+   * @param numRows The number of rows to create in the table
+   * @return CreateTableResponse from the server
+   * @throws IOException if there's an error creating the table
+   */
+  private CreateTableResponse createTableHelper(String tableName, int numRows) throws IOException {
     // Create Arrow schema
     Field idField = new Field("id", FieldType.nullable(new ArrowType.Int(32, true)), null);
     Field nameField = new Field("name", FieldType.nullable(new ArrowType.Utf8()), null);
@@ -115,31 +195,30 @@ public class RestTableApiTest {
 
     Schema schema = new Schema(Arrays.asList(idField, nameField, vectorField));
 
-    // Create Arrow data
     try (VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator)) {
-      // Allocate vectors
       IntVector idVector = (IntVector) root.getVector("id");
       VarCharVector nameVector = (VarCharVector) root.getVector("name");
       FixedSizeListVector vectorVector = (FixedSizeListVector) root.getVector("vector");
 
-      // Set row count
-      root.setRowCount(3);
+      root.setRowCount(numRows);
 
-      // Populate data
-      idVector.setSafe(0, 1);
-      idVector.setSafe(1, 2);
-      idVector.setSafe(2, 3);
+      // Sample names for test data
+      String[] names = {
+        "Alice", "Bob", "Charlie", "David", "Eve", "Frank", "Grace", "Henry", "Ivy", "Jack"
+      };
 
-      nameVector.setSafe(0, "Alice".getBytes(StandardCharsets.UTF_8));
-      nameVector.setSafe(1, "Bob".getBytes(StandardCharsets.UTF_8));
-      nameVector.setSafe(2, "Charlie".getBytes(StandardCharsets.UTF_8));
+      // Populate data for specified number of rows
+      for (int i = 0; i < numRows; i++) {
+        idVector.setSafe(i, i + 1);
+        nameVector.setSafe(i, names[i % names.length].getBytes(StandardCharsets.UTF_8));
+      }
 
       // Populate vector field with dummy data
       Float4Vector dataVector = (Float4Vector) vectorVector.getDataVector();
       vectorVector.allocateNew();
 
       // Create 128-dimensional vectors for each row
-      for (int row = 0; row < 3; row++) {
+      for (int row = 0; row < numRows; row++) {
         vectorVector.setNotNull(row);
         for (int dim = 0; dim < 128; dim++) {
           int index = row * 128 + dim;
@@ -148,12 +227,12 @@ public class RestTableApiTest {
       }
 
       // Mark vectors as populated
-      idVector.setValueCount(3);
-      nameVector.setValueCount(3);
-      dataVector.setValueCount(3 * 128); // 3 rows * 128 dimensions
-      vectorVector.setValueCount(3);
+      idVector.setValueCount(numRows);
+      nameVector.setValueCount(numRows);
+      dataVector.setValueCount(numRows * 128); // numRows * 128 dimensions
+      vectorVector.setValueCount(numRows);
 
-      // Serialize to Arrow IPC format using ArrowStreamWriter
+      // Serialize to Arrow IPC format
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       try (ArrowStreamWriter writer = new ArrowStreamWriter(root, null, Channels.newChannel(out))) {
         writer.start();
@@ -165,84 +244,28 @@ public class RestTableApiTest {
       System.out.println("Arrow IPC data size: " + arrowIpcData.length + " bytes");
 
       // Create table using Arrow IPC data
-      CreateTableResponse createResponse = namespace.createTable(testCreateTableName, arrowIpcData);
-      System.out.println("Create Table Response: " + createResponse);
-
-      // Validate the response
-      assertNotNull(createResponse, "Response should not be null");
-
-      System.out.println("✓ Table created successfully: " + testCreateTableName);
-      System.out.println("✓ Table location: " + createResponse.getLocation());
-
-      // Verify table exists by describing it
-      System.out.println("\n--- Verifying table with describe ---");
-      DescribeTableRequest describeRequest = new DescribeTableRequest();
-      describeRequest.setName(testCreateTableName);
-      describeRequest.setWithTableUri(true);
-
-      DescribeTableResponse describeResponse = namespace.describeTable(describeRequest);
-      System.out.println("Describe response after create: " + describeResponse);
-
-      // Validate the table was created properly
-      assertNotNull(describeResponse, "Describe response should not be null");
-      assertEquals(
-          testCreateTableName, describeResponse.getTable(), "Table name should match in describe");
-      assertNotNull(describeResponse.getSchema(), "Schema should not be null");
-      assertNotNull(describeResponse.getStats(), "Stats should not be null");
-
-      System.out.println("✓ Table verified via describe");
-
-      // Validate schema structure and field names
-      JsonSchema responseSchema = describeResponse.getSchema();
-      assertNotNull(responseSchema, "Schema object should not be null");
-      assertNotNull(responseSchema.getFields(), "Schema fields should not be null");
-      assertEquals(3, responseSchema.getFields().size(), "Schema should have 3 fields");
-
-      // Validate field names match what we created
-      List<String> fieldNames =
-          responseSchema.getFields().stream()
-              .map(JsonField::getName)
-              .collect(java.util.stream.Collectors.toList());
-
-      assertTrue(fieldNames.contains("id"), "Schema should contain 'id' field");
-      assertTrue(fieldNames.contains("name"), "Schema should contain 'name' field");
-      assertTrue(fieldNames.contains("vector"), "Schema should contain 'vector' field");
-
-      System.out.println("✓ Schema has 3 fields: " + fieldNames);
-      System.out.println("✓ Field validation passed: id, name, vector fields found");
-
-      // Validate version
-      assertNotNull(describeResponse.getVersion(), "Version should not be null");
-      assertTrue(describeResponse.getVersion() >= 1, "Version should be at least 1 for new table");
-      System.out.println("✓ Table version: " + describeResponse.getVersion());
-
-      // Validate stats
-      assertTrue(
-          describeResponse.getStats().getNumFragments() >= 0,
-          "Number of fragments should be non-negative");
-      System.out.println("✓ Stats - Fragments: " + describeResponse.getStats().getNumFragments());
+      CreateTableResponse response = namespace.createTable(tableName, arrowIpcData);
       System.out.println(
-          "✓ Stats - Deleted rows: " + describeResponse.getStats().getNumDeletedRows());
+          "✓ Table created successfully: " + tableName + " with " + numRows + " rows");
 
-      // Test count rows functionality
-      System.out.println("\n--- Testing count rows ---");
-      CountRowsRequest countRequest = new CountRowsRequest();
-      countRequest.setName(testCreateTableName);
-
-      Long countResponse = namespace.countRows(countRequest);
-      assertNotNull(countResponse, "Count rows response should not be null");
-
-      // We created 3 rows in the table
-      final int expectedRowCount = 3;
-      assertEquals(
-          expectedRowCount, countResponse.longValue(), "Row count should match expected number");
-
-      System.out.println("✓ Expected rows: " + expectedRowCount);
-      System.out.println("✓ Actual rows: " + countResponse);
-      System.out.println("✓ Count rows test passed!");
-
-      System.out.println("\nTest passed!");
+      return response;
     }
+  }
+
+  /**
+   * Helper method to drop a table
+   *
+   * @param tableName The name of the table to drop
+   * @return DropTableResponse from the server
+   */
+  private DropTableResponse dropTableHelper(String tableName) {
+    DropTableRequest dropRequest = new DropTableRequest();
+    dropRequest.setName(tableName);
+
+    DropTableResponse response = namespace.dropTable(dropRequest);
+    System.out.println("✓ Table dropped successfully: " + tableName);
+
+    return response;
   }
 
   private LanceRestNamespace initializeClient() {
