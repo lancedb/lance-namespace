@@ -389,6 +389,43 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/table/{id}/index/list:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    post:
+      tags: [ Table ]
+      summary: List indices on a table
+      operationId: ListIndices
+      description: >
+        List all indices created on a table. Returns information about each index
+        including name, columns, status, and UUID.
+      requestBody:
+        description: Index list request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IndexListRequest'
+        required: true
+      responses:
+        200:
+          description: List of indices on the table
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndexListResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
   /v1/table/{id}/register:
     parameters:
       - $ref: '#/components/parameters/id'
@@ -1214,6 +1251,80 @@ components:
           additionalProperties:
             type: string
           description: Additional properties (usually empty)
+
+    IndexListRequest:
+      type: object
+      required:
+        - name
+        - namespace
+      properties:
+        name:
+          type: string
+          description: The table name
+        namespace:
+          type: array
+          items:
+            type: string
+          description: The namespace identifier
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+          nullable: true
+          description: Optional table version to list indexes from
+
+    IndexListResponse:
+      type: object
+      required:
+        - name
+        - namespace
+        - location
+        - indexes
+      properties:
+        name:
+          type: string
+          description: The table name
+        namespace:
+          type: array
+          items:
+            type: string
+          description: The namespace identifier
+        location:
+          type: string
+          description: Table location (usually empty)
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional properties (usually empty)
+        indexes:
+          type: array
+          items:
+            $ref: '#/components/schemas/IndexListItemResponse'
+          description: List of indexes on the table
+
+    IndexListItemResponse:
+      type: object
+      required:
+        - index_name
+        - index_uuid
+        - columns
+        - status
+      properties:
+        index_name:
+          type: string
+          description: Name of the index
+        index_uuid:
+          type: string
+          description: Unique identifier for the index
+        columns:
+          type: array
+          items:
+            type: string
+          description: Columns covered by this index
+        status:
+          type: string
+          description: Current status of the index
 
     JsonSchema:
       type: object

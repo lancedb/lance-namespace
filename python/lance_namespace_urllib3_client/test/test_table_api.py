@@ -82,6 +82,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_list_indices(self) -> None:
+        """Test case for list_indices
+
+        List indices on a table
+        """
+        pass
+
     def test_query_table(self) -> None:
         """Test case for query_table
 

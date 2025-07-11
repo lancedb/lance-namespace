@@ -420,6 +420,47 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/table/{id}/index/list:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    post:
+      description: |
+        List all indices created on a table. Returns information about each index including name, columns, status, and UUID.
+      operationId: ListIndices
+      parameters:
+      - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IndexListRequest'
+        description: Index list request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndexListResponse'
+          description: List of indices on the table
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: List indices on a table
+      tags:
+      - Table
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/table/{id}/register:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -1652,6 +1693,107 @@ components:
       - location
       - name
       - namespace
+    IndexListRequest:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+        version: 0
+      properties:
+        name:
+          description: The table name
+          type: string
+        namespace:
+          description: The namespace identifier
+          items:
+            type: string
+          type: array
+        version:
+          description: Optional table version to list indexes from
+          format: int64
+          minimum: 0
+          type: integer
+          nullable: true
+      required:
+      - name
+      - namespace
+    IndexListResponse:
+      example:
+        indexes:
+        - index_uuid: index_uuid
+          columns:
+          - columns
+          - columns
+          index_name: index_name
+          status: status
+        - index_uuid: index_uuid
+          columns:
+          - columns
+          - columns
+          index_name: index_name
+          status: status
+        name: name
+        namespace:
+        - namespace
+        - namespace
+        location: location
+        properties:
+          key: properties
+      properties:
+        name:
+          description: The table name
+          type: string
+        namespace:
+          description: The namespace identifier
+          items:
+            type: string
+          type: array
+        location:
+          description: Table location (usually empty)
+          type: string
+        properties:
+          additionalProperties:
+            type: string
+          description: Additional properties (usually empty)
+        indexes:
+          description: List of indexes on the table
+          items:
+            $ref: '#/components/schemas/IndexListItemResponse'
+          type: array
+      required:
+      - indexes
+      - location
+      - name
+      - namespace
+    IndexListItemResponse:
+      example:
+        index_uuid: index_uuid
+        columns:
+        - columns
+        - columns
+        index_name: index_name
+        status: status
+      properties:
+        index_name:
+          description: Name of the index
+          type: string
+        index_uuid:
+          description: Unique identifier for the index
+          type: string
+        columns:
+          description: Columns covered by this index
+          items:
+            type: string
+          type: array
+        status:
+          description: Current status of the index
+          type: string
+      required:
+      - columns
+      - index_name
+      - index_uuid
+      - status
     JsonSchema:
       description: "JSON representation of a Apache Arrow [Schema]."
       example:

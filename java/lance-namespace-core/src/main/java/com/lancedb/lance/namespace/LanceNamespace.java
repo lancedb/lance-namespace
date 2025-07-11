@@ -33,6 +33,8 @@ import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
+import com.lancedb.lance.namespace.model.IndexListRequest;
+import com.lancedb.lance.namespace.model.IndexListResponse;
 import com.lancedb.lance.namespace.model.InsertTableResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
@@ -70,6 +72,8 @@ public interface LanceNamespace {
   CreateIndexResponse createIndex(CreateIndexRequest request);
 
   CreateIndexResponse createScalarIndex(CreateIndexRequest request);
+
+  IndexListResponse listIndices(IndexListRequest request);
 
   RegisterTableResponse registerTable(RegisterTableRequest request);
 

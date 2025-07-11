@@ -28,6 +28,8 @@ import com.lancedb.lance.namespace.model.DescribeTableRequest;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
+import com.lancedb.lance.namespace.model.IndexListRequest;
+import com.lancedb.lance.namespace.model.IndexListResponse;
 import com.lancedb.lance.namespace.model.InsertTableResponse;
 import com.lancedb.lance.namespace.model.QueryRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
@@ -799,6 +801,93 @@ public class TableApi extends BaseApi {
 
     TypeReference<InsertTableResponse> localVarReturnType =
         new TypeReference<InsertTableResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * List indices on a table List all indices created on a table. Returns information about each
+   * index including name, columns, status, and UUID.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param indexListRequest Index list request (required)
+   * @return IndexListResponse
+   * @throws ApiException if fails to make API call
+   */
+  public IndexListResponse listIndices(String id, IndexListRequest indexListRequest)
+      throws ApiException {
+    return this.listIndices(id, indexListRequest, Collections.emptyMap());
+  }
+
+  /**
+   * List indices on a table List all indices created on a table. Returns information about each
+   * index including name, columns, status, and UUID.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param indexListRequest Index list request (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return IndexListResponse
+   * @throws ApiException if fails to make API call
+   */
+  public IndexListResponse listIndices(
+      String id, IndexListRequest indexListRequest, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = indexListRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling listIndices");
+    }
+
+    // verify the required parameter 'indexListRequest' is set
+    if (indexListRequest == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'indexListRequest' when calling listIndices");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/index/list"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<IndexListResponse> localVarReturnType = new TypeReference<IndexListResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

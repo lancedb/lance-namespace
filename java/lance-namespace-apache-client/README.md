@@ -126,6 +126,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**describeTable**](docs/TableApi.md#describeTable) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
 *TableApi* | [**dropTable**](docs/TableApi.md#dropTable) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
 *TableApi* | [**insertTable**](docs/TableApi.md#insertTable) | **POST** /v1/table/{id}/insert | Insert records into a table
+*TableApi* | [**listIndices**](docs/TableApi.md#listIndices) | **POST** /v1/table/{id}/index/list | List indices on a table
 *TableApi* | [**queryTable**](docs/TableApi.md#queryTable) | **POST** /v1/table/{id}/query | Query a table
 *TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /v1/table/{id}/register | Register a table to a namespace
 *TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists
@@ -160,6 +161,9 @@ Class | Method | HTTP request | Description
  - [DropTableRequest](docs/DropTableRequest.md)
  - [DropTableResponse](docs/DropTableResponse.md)
  - [ErrorResponse](docs/ErrorResponse.md)
+ - [IndexListItemResponse](docs/IndexListItemResponse.md)
+ - [IndexListRequest](docs/IndexListRequest.md)
+ - [IndexListResponse](docs/IndexListResponse.md)
  - [InsertTableResponse](docs/InsertTableResponse.md)
  - [JsonDataType](docs/JsonDataType.md)
  - [JsonField](docs/JsonField.md)

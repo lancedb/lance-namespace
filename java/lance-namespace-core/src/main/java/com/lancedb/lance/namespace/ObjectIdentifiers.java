@@ -23,6 +23,7 @@ import com.lancedb.lance.namespace.model.DescribeTableRequest;
 import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropTableRequest;
+import com.lancedb.lance.namespace.model.IndexListRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.QueryRequest;
@@ -287,6 +288,27 @@ public class ObjectIdentifiers {
     if (request.getParent() != null) {
       identifier.addAll(request.getParent());
     }
+    return identifier;
+  }
+
+  public static String stringFrom(IndexListRequest request, String delimiter) {
+    StringBuilder builder = new StringBuilder();
+    if (request.getNamespace() != null) {
+      for (String part : request.getNamespace()) {
+        builder.append(part);
+        builder.append(delimiter);
+      }
+    }
+    builder.append(request.getName());
+    return builder.toString();
+  }
+
+  public static List<String> listFrom(IndexListRequest request) {
+    List<String> identifier = new ArrayList<>();
+    if (request.getNamespace() != null) {
+      identifier.addAll(request.getNamespace());
+    }
+    identifier.add(request.getName());
     return identifier;
   }
 

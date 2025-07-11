@@ -143,7 +143,7 @@ public class RestTableApiTest {
             .collect(java.util.stream.Collectors.toList());
     assertTrue(fieldNames.contains("id"), "Schema should contain 'id' field");
     assertTrue(fieldNames.contains("name"), "Schema should contain 'name' field");
-    assertTrue(fieldNames.contains("vector"), "Schema should contain 'vector' field");
+    assertTrue(fieldNames.contains("embedding"), "Schema should contain 'embedding' field");
     System.out.println("✓ Table schema verified with fields: " + fieldNames);
 
     // Verify version and stats
@@ -196,9 +196,9 @@ public class RestTableApiTest {
     // Create Arrow schema
     Field idField = new Field("id", FieldType.nullable(new ArrowType.Int(32, true)), null);
     Field nameField = new Field("name", FieldType.nullable(new ArrowType.Utf8()), null);
-    Field vectorField =
+    Field embeddingField =
         new Field(
-            "vector",
+            "embedding",
             FieldType.nullable(new ArrowType.FixedSizeList(128)),
             Arrays.asList(
                 new Field(
@@ -206,12 +206,12 @@ public class RestTableApiTest {
                     FieldType.nullable(new ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE)),
                     null)));
 
-    Schema schema = new Schema(Arrays.asList(idField, nameField, vectorField));
+    Schema schema = new Schema(Arrays.asList(idField, nameField, embeddingField));
 
     try (VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator)) {
       IntVector idVector = (IntVector) root.getVector("id");
       VarCharVector nameVector = (VarCharVector) root.getVector("name");
-      FixedSizeListVector vectorVector = (FixedSizeListVector) root.getVector("vector");
+      FixedSizeListVector vectorVector = (FixedSizeListVector) root.getVector("embedding");
 
       root.setRowCount(numRows);
 
@@ -297,7 +297,7 @@ public class RestTableApiTest {
     Field nameField = new Field("name", FieldType.nullable(new ArrowType.Utf8()), null);
     Field vectorField =
         new Field(
-            "vector",
+            "embedding",
             FieldType.nullable(new ArrowType.FixedSizeList(128)),
             Arrays.asList(
                 new Field(
@@ -310,7 +310,7 @@ public class RestTableApiTest {
     try (VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator)) {
       IntVector idVector = (IntVector) root.getVector("id");
       VarCharVector nameVector = (VarCharVector) root.getVector("name");
-      FixedSizeListVector vectorVector = (FixedSizeListVector) root.getVector("vector");
+      FixedSizeListVector vectorVector = (FixedSizeListVector) root.getVector("embedding");
 
       root.setRowCount(numRows);
 
@@ -421,7 +421,7 @@ public class RestTableApiTest {
     queryRequest.setVector(queryVector);
     queryRequest.setK(5); // Request top 5 results
 
-    List<String> columns = Arrays.asList("id", "name", "vector");
+    List<String> columns = Arrays.asList("id", "name", "embedding");
     queryRequest.setColumns(columns);
 
     byte[] queryResult;
@@ -503,22 +503,69 @@ public class RestTableApiTest {
     CreateTableResponse createResponse = createTableHelper(indexTableName, 300);
     assertNotNull(createResponse, "Create table response should not be null");
 
-    // Step 2: Create vector index
-    System.out.println("\n--- Step 2: Creating vector index ---");
-    CreateIndexRequest indexRequest = new CreateIndexRequest();
-    indexRequest.setName(indexTableName);
-    indexRequest.setColumn("vector");
-    indexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.IVF_PQ);
-    indexRequest.setMetricType(CreateIndexRequest.MetricTypeEnum.L2);
-    indexRequest.setNumPartitions(10);
-    indexRequest.setNumSubVectors(16);
+    try {
+      // Step 2: List indices before creating index (should be empty)
+      System.out.println("\n--- Step 2: Listing indices before index creation ---");
+      IndexListRequest listRequestBefore = new IndexListRequest();
+      listRequestBefore.setName(indexTableName);
+      IndexListResponse listResponseBefore = namespace.listIndices(listRequestBefore);
+      assertNotNull(listResponseBefore, "List indices response should not be null");
+      assertNotNull(listResponseBefore.getIndexes(), "Indexes list should not be null");
+      assertEquals(
+          0, listResponseBefore.getIndexes().size(), "Should have no indices before creation");
+      System.out.println("✓ Confirmed no indices exist before creation");
 
-    CreateIndexResponse indexResponse = namespace.createIndex(indexRequest);
-    assertNotNull(indexResponse, "Create index response should not be null");
+      // Step 3: Create vector index
+      System.out.println("\n--- Step 3: Creating vector index ---");
+      CreateIndexRequest indexRequest = new CreateIndexRequest();
+      indexRequest.setName(indexTableName);
+      indexRequest.setColumn("embedding");
+      indexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.IVF_PQ);
+      indexRequest.setMetricType(CreateIndexRequest.MetricTypeEnum.L2);
+
+      CreateIndexResponse indexResponse = namespace.createIndex(indexRequest);
+      assertNotNull(indexResponse, "Create index response should not be null");
+      System.out.println("✓ Index creation request submitted successfully");
+
+      // Step 4: Wait for index creation completion (with timeout)
+      System.out.println("\n--- Step 4: Waiting for index creation to complete ---");
+      IndexListRequest listRequestAfter = new IndexListRequest();
+      listRequestAfter.setName(indexTableName);
+
+      boolean indexFound = false;
+      int attempts = 0;
+      int maxAttempts = 60; // 60 attempts = ~60 seconds with 1 second intervals
+
+      while (!indexFound && attempts < maxAttempts) {
+        attempts++;
+        try {
+          Thread.sleep(1000); // Wait 1 second between attempts
+
+          IndexListResponse listResponseAfter = namespace.listIndices(listRequestAfter);
+          assertNotNull(listResponseAfter, "List indices response should not be null");
+
+          if (listResponseAfter.getIndexes() != null && !listResponseAfter.getIndexes().isEmpty()) {
+            indexFound = true;
+            assertEquals(1, listResponseAfter.getIndexes().size(), "Should have exactly one index");
+            assertTrue(
+                listResponseAfter.getIndexes().get(0).getIndexName().equals("embedding_idx"));
+          } else {
+            System.out.println(
+                "⏳ Attempt " + attempts + "/" + maxAttempts + " - Index not ready yet...");
+          }
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+          fail("Test interrupted while waiting for index creation");
+        }
+      }
+      assertTrue(indexFound, "Index should be found after creation");
+    } finally {
+      DropTableResponse dropResponse = dropTableHelper(indexTableName);
+    }
   }
 
   @Test
-  public void testCreateScalarIndex() throws IOException {
+  public void testCreateScalarIndex() throws IOException, InterruptedException {
     assumeTrue(
         DATABASE != null && API_KEY != null,
         "Skipping test: LANCEDB_DB and LANCEDB_API_KEY environment variables must be set");
@@ -526,20 +573,70 @@ public class RestTableApiTest {
     System.out.println("\n=== Test: Create Scalar Index ===");
     String scalarIndexTableName = "test_scalar_index_table_" + System.currentTimeMillis();
 
-    // Step 1: Create table with 300 rows
-    System.out.println("\n--- Step 1: Creating table with 300 rows ---");
-    CreateTableResponse createResponse = createTableHelper(scalarIndexTableName, 300);
-    assertNotNull(createResponse, "Create table response should not be null");
+    try {
+      // Step 1: Create table with 300 rows
+      System.out.println("\n--- Step 1: Creating table with 300 rows ---");
+      CreateTableResponse createResponse = createTableHelper(scalarIndexTableName, 300);
+      assertNotNull(createResponse, "Create table response should not be null");
 
-    // Step 2: Create scalar index on name column
-    System.out.println("\n--- Step 2: Creating scalar index ---");
-    CreateIndexRequest scalarIndexRequest = new CreateIndexRequest();
-    scalarIndexRequest.setName(scalarIndexTableName);
-    scalarIndexRequest.setColumn("name");
-    scalarIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.BTREE);
+      // Step 2: List indices before creating index (should be empty)
+      System.out.println("\n--- Step 2: Listing indices before index creation ---");
+      IndexListRequest listRequestBefore = new IndexListRequest();
+      listRequestBefore.setName(scalarIndexTableName);
+      IndexListResponse listResponseBefore = namespace.listIndices(listRequestBefore);
+      assertNotNull(listResponseBefore, "List indices response should not be null");
+      assertNotNull(listResponseBefore.getIndexes(), "Indexes list should not be null");
+      assertEquals(
+          0, listResponseBefore.getIndexes().size(), "Should have no indices before creation");
+      System.out.println("✓ Confirmed no indices exist before creation");
 
-    CreateIndexResponse scalarIndexResponse = namespace.createScalarIndex(scalarIndexRequest);
-    assertNotNull(scalarIndexResponse, "Create scalar index response should not be null");
+      // Step 3: Create scalar index on name column
+      System.out.println("\n--- Step 3: Creating scalar index ---");
+      CreateIndexRequest scalarIndexRequest = new CreateIndexRequest();
+      scalarIndexRequest.setName(scalarIndexTableName);
+      scalarIndexRequest.setColumn("name");
+      scalarIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.BTREE);
+
+      CreateIndexResponse scalarIndexResponse = namespace.createScalarIndex(scalarIndexRequest);
+      assertNotNull(scalarIndexResponse, "Create scalar index response should not be null");
+
+      // Step 4: Wait for index creation completion (with timeout)
+      System.out.println("\n--- Step 4: Waiting for scalar index creation to complete ---");
+      IndexListRequest listRequestAfter = new IndexListRequest();
+      listRequestAfter.setName(scalarIndexTableName);
+
+      boolean indexFound = false;
+      int attempts = 0;
+      int maxAttempts = 60; // 60 attempts = ~60 seconds with 1 second intervals
+
+      while (!indexFound && attempts < maxAttempts) {
+        attempts++;
+        try {
+          Thread.sleep(1000); // Wait 1 second between attempts
+
+          IndexListResponse listResponseAfter = namespace.listIndices(listRequestAfter);
+          assertNotNull(listResponseAfter, "List indices response should not be null");
+
+          if (listResponseAfter.getIndexes() != null && !listResponseAfter.getIndexes().isEmpty()) {
+            indexFound = true;
+            assertEquals(1, listResponseAfter.getIndexes().size(), "Should have exactly one index");
+            assertTrue(
+                listResponseAfter.getIndexes().get(0).getColumns().contains("name"),
+                "Index should be on name column");
+          } else {
+            System.out.println(
+                "⏳ Attempt " + attempts + "/" + maxAttempts + " - Scalar index not ready yet...");
+          }
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+          fail("Test interrupted while waiting for scalar index creation");
+        }
+      }
+
+      assertTrue(indexFound, "Index should be found after creation");
+    } finally {
+      DropTableResponse dropResponse = dropTableHelper(scalarIndexTableName);
+    }
   }
 
   /** SeekableByteChannel implementation for reading Arrow file format from byte array */
