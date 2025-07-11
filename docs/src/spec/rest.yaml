@@ -463,6 +463,40 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/table/{id}/create:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    post:
+      tags: [ Table ]
+      summary: Create a table with the given name
+      operationId: CreateTable
+      description: >
+        Create a new table in the namespace.
+        Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+      requestBody:
+        description: Arrow IPC data
+        content:
+          application/x-arrow-ipc:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        200:
+          $ref: '#/components/responses/CreateTableResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
 components:
   parameters:
     id:
@@ -827,6 +861,30 @@ components:
           format: int64
           minimum: 0
 
+    Binary:
+      type: string
+      format: binary
+
+    CreateTableResponse:
+      type: object
+      required:
+        - name
+        - namespace
+        - location
+      properties:
+        name:
+          type: string
+        namespace:
+          type: array
+          items:
+            type: string
+        location:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+
     TableExistsRequest:
       type: object
       required:
@@ -1093,6 +1151,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/DescribeTableResponse'
+
+    CreateTableResponse:
+      description: Table properties result when creating a table
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateTableResponse'
 
     RegisterTableResponse:
       description: Table properties result when registering a table
