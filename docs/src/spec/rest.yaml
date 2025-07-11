@@ -425,6 +425,48 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
+  /v1/table/{id}/index/{index_name}/stats:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - name: index_name
+        in: path
+        description: Name of the index to get stats for
+        required: true
+        schema:
+          type: string
+    post:
+      tags: [ Table ]
+      summary: Get index statistics
+      operationId: GetIndexStats
+      description: >
+        Get statistics for a specific index on a table. Returns information about
+        the index type, distance type (for vector indices), and row counts.
+      requestBody:
+        description: Index stats request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IndexStatsRequest'
+        required: true
+      responses:
+        200:
+          description: Index statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndexStatsResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
 
   /v1/table/{id}/register:
     parameters:
@@ -1325,6 +1367,51 @@ components:
         status:
           type: string
           description: Current status of the index
+
+    IndexStatsRequest:
+      type: object
+      required:
+        - name
+        - namespace
+      properties:
+        name:
+          type: string
+          description: The table name
+        namespace:
+          type: array
+          items:
+            type: string
+          description: The namespace identifier
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+          nullable: true
+          description: Optional table version to get stats for
+
+    IndexStatsResponse:
+      type: object
+      properties:
+        distance_type:
+          type: string
+          nullable: true
+          description: Distance type for vector indexes
+        index_type:
+          type: string
+          nullable: true
+          description: Type of the index
+        num_indexed_rows:
+          type: integer
+          format: int64
+          minimum: 0
+          nullable: true
+          description: Number of indexed rows
+        num_unindexed_rows:
+          type: integer
+          format: int64
+          minimum: 0
+          nullable: true
+          description: Number of unindexed rows
 
     JsonSchema:
       type: object

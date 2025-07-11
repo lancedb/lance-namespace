@@ -40,6 +40,8 @@ import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
 import com.lancedb.lance.namespace.model.IndexListRequest;
 import com.lancedb.lance.namespace.model.IndexListResponse;
+import com.lancedb.lance.namespace.model.IndexStatsRequest;
+import com.lancedb.lance.namespace.model.IndexStatsResponse;
 import com.lancedb.lance.namespace.model.InsertTableResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
@@ -218,6 +220,19 @@ public class LanceRestNamespace implements LanceNamespace {
     try {
       return tableApi.listIndices(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.additionalHeaders());
+    } catch (ApiException e) {
+      throw new LanceNamespaceException(e);
+    }
+  }
+
+  @Override
+  public IndexStatsResponse getIndexStats(IndexStatsRequest request, String indexName) {
+    try {
+      return tableApi.getIndexStats(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          indexName,
           request,
           config.additionalHeaders());
     } catch (ApiException e) {

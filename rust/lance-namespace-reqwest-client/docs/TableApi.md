@@ -11,6 +11,7 @@ Method | HTTP request | Description
 [**deregister_table**](TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 [**describe_table**](TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
 [**drop_table**](TableApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
+[**get_index_stats**](TableApi.md#get_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
 [**insert_table**](TableApi.md#insert_table) | **POST** /v1/table/{id}/insert | Insert records into a table
 [**list_indices**](TableApi.md#list_indices) | **POST** /v1/table/{id}/index/list | List indices on a table
 [**query_table**](TableApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
@@ -227,6 +228,38 @@ Name | Type | Description  | Required | Notes
 ### Return type
 
 [**models::DropTableResponse**](DropTableResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## get_index_stats
+
+> models::IndexStatsResponse get_index_stats(id, index_name, index_stats_request)
+Get index statistics
+
+Get statistics for a specific index on a table. Returns information about the index type, distance type (for vector indices), and row counts. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**index_name** | **String** | Name of the index to get stats for | [required] |
+**index_stats_request** | [**IndexStatsRequest**](IndexStatsRequest.md) | Index stats request | [required] |
+
+### Return type
+
+[**models::IndexStatsResponse**](IndexStatsResponse.md)
 
 ### Authorization
 

@@ -461,6 +461,63 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/table/{id}/index/{index_name}/stats:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - description: Name of the index to get stats for
+      explode: false
+      in: path
+      name: index_name
+      required: true
+      schema:
+        type: string
+      style: simple
+    post:
+      description: |
+        Get statistics for a specific index on a table. Returns information about the index type, distance type (for vector indices), and row counts.
+      operationId: GetIndexStats
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - description: Name of the index to get stats for
+        explode: false
+        in: path
+        name: index_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IndexStatsRequest'
+        description: Index stats request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndexStatsResponse'
+          description: Index statistics
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Get index statistics
+      tags:
+      - Table
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/table/{id}/register:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -1794,6 +1851,58 @@ components:
       - index_name
       - index_uuid
       - status
+    IndexStatsRequest:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+        version: 0
+      properties:
+        name:
+          description: The table name
+          type: string
+        namespace:
+          description: The namespace identifier
+          items:
+            type: string
+          type: array
+        version:
+          description: Optional table version to get stats for
+          format: int64
+          minimum: 0
+          type: integer
+          nullable: true
+      required:
+      - name
+      - namespace
+    IndexStatsResponse:
+      example:
+        distance_type: distance_type
+        num_unindexed_rows: 0
+        num_indexed_rows: 0
+        index_type: index_type
+      properties:
+        distance_type:
+          description: Distance type for vector indexes
+          type: string
+          nullable: true
+        index_type:
+          description: Type of the index
+          type: string
+          nullable: true
+        num_indexed_rows:
+          description: Number of indexed rows
+          format: int64
+          minimum: 0
+          type: integer
+          nullable: true
+        num_unindexed_rows:
+          description: Number of unindexed rows
+          format: int64
+          minimum: 0
+          type: integer
+          nullable: true
     JsonSchema:
       description: "JSON representation of a Apache Arrow [Schema]."
       example:

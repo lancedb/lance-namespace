@@ -75,6 +75,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_get_index_stats(self) -> None:
+        """Test case for get_index_stats
+
+        Get index statistics
+        """
+        pass
+
     def test_insert_table(self) -> None:
         """Test case for insert_table
 

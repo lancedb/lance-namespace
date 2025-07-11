@@ -30,6 +30,8 @@ import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
 import com.lancedb.lance.namespace.model.IndexListRequest;
 import com.lancedb.lance.namespace.model.IndexListResponse;
+import com.lancedb.lance.namespace.model.IndexStatsRequest;
+import com.lancedb.lance.namespace.model.IndexStatsResponse;
 import com.lancedb.lance.namespace.model.InsertTableResponse;
 import com.lancedb.lance.namespace.model.QueryRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
@@ -707,6 +709,108 @@ public class TableApi extends BaseApi {
     String[] localVarAuthNames = new String[] {};
 
     TypeReference<DropTableResponse> localVarReturnType = new TypeReference<DropTableResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Get index statistics Get statistics for a specific index on a table. Returns information about
+   * the index type, distance type (for vector indices), and row counts.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param indexName Name of the index to get stats for (required)
+   * @param indexStatsRequest Index stats request (required)
+   * @return IndexStatsResponse
+   * @throws ApiException if fails to make API call
+   */
+  public IndexStatsResponse getIndexStats(
+      String id, String indexName, IndexStatsRequest indexStatsRequest) throws ApiException {
+    return this.getIndexStats(id, indexName, indexStatsRequest, Collections.emptyMap());
+  }
+
+  /**
+   * Get index statistics Get statistics for a specific index on a table. Returns information about
+   * the index type, distance type (for vector indices), and row counts.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param indexName Name of the index to get stats for (required)
+   * @param indexStatsRequest Index stats request (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return IndexStatsResponse
+   * @throws ApiException if fails to make API call
+   */
+  public IndexStatsResponse getIndexStats(
+      String id,
+      String indexName,
+      IndexStatsRequest indexStatsRequest,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = indexStatsRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling getIndexStats");
+    }
+
+    // verify the required parameter 'indexName' is set
+    if (indexName == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'indexName' when calling getIndexStats");
+    }
+
+    // verify the required parameter 'indexStatsRequest' is set
+    if (indexStatsRequest == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'indexStatsRequest' when calling getIndexStats");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/index/{index_name}/stats"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)))
+            .replaceAll(
+                "\\{" + "index_name" + "\\}",
+                apiClient.escapeString(apiClient.parameterToString(indexName)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<IndexStatsResponse> localVarReturnType =
+        new TypeReference<IndexStatsResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

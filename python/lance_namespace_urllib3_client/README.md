@@ -102,6 +102,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**deregister_table**](docs/TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 *TableApi* | [**describe_table**](docs/TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
 *TableApi* | [**drop_table**](docs/TableApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
+*TableApi* | [**get_index_stats**](docs/TableApi.md#get_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
 *TableApi* | [**insert_table**](docs/TableApi.md#insert_table) | **POST** /v1/table/{id}/insert | Insert records into a table
 *TableApi* | [**list_indices**](docs/TableApi.md#list_indices) | **POST** /v1/table/{id}/index/list | List indices on a table
 *TableApi* | [**query_table**](docs/TableApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
@@ -141,6 +142,8 @@ Class | Method | HTTP request | Description
  - [IndexListItemResponse](docs/IndexListItemResponse.md)
  - [IndexListRequest](docs/IndexListRequest.md)
  - [IndexListResponse](docs/IndexListResponse.md)
+ - [IndexStatsRequest](docs/IndexStatsRequest.md)
+ - [IndexStatsResponse](docs/IndexStatsResponse.md)
  - [InsertTableResponse](docs/InsertTableResponse.md)
  - [JsonDataType](docs/JsonDataType.md)
  - [JsonField](docs/JsonField.md)

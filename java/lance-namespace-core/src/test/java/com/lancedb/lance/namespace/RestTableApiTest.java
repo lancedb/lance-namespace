@@ -559,6 +559,18 @@ public class RestTableApiTest {
         }
       }
       assertTrue(indexFound, "Index should be found after creation");
+
+      // Step 5: Get index stats
+      System.out.println("\n--- Step 5: Getting index stats for embedding_idx ---");
+      IndexStatsRequest statsRequest = new IndexStatsRequest();
+      statsRequest.setName(indexTableName);
+
+      IndexStatsResponse statsResponse = namespace.getIndexStats(statsRequest, "embedding_idx");
+      assertNotNull(statsResponse, "Index stats response should not be null");
+      assertEquals("IVF_PQ", statsResponse.getIndexType());
+      assertEquals("l2", statsResponse.getDistanceType());
+      assertEquals(300, statsResponse.getNumIndexedRows().intValue());
+      assertEquals(0, statsResponse.getNumUnindexedRows().intValue());
     } finally {
       DropTableResponse dropResponse = dropTableHelper(indexTableName);
     }
@@ -595,7 +607,7 @@ public class RestTableApiTest {
       CreateIndexRequest scalarIndexRequest = new CreateIndexRequest();
       scalarIndexRequest.setName(scalarIndexTableName);
       scalarIndexRequest.setColumn("name");
-      scalarIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.BTREE);
+      scalarIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.BITMAP);
 
       CreateIndexResponse scalarIndexResponse = namespace.createScalarIndex(scalarIndexRequest);
       assertNotNull(scalarIndexResponse, "Create scalar index response should not be null");
@@ -634,6 +646,15 @@ public class RestTableApiTest {
       }
 
       assertTrue(indexFound, "Index should be found after creation");
+
+      IndexStatsRequest statsRequest = new IndexStatsRequest();
+      statsRequest.setName(scalarIndexTableName);
+
+      IndexStatsResponse statsResponse = namespace.getIndexStats(statsRequest, "name_idx");
+      assertNotNull(statsResponse, "Index stats response should not be null");
+      assertEquals("BITMAP", statsResponse.getIndexType());
+      assertEquals(300, statsResponse.getNumIndexedRows().intValue());
+      assertEquals(0, statsResponse.getNumUnindexedRows().intValue());
     } finally {
       DropTableResponse dropResponse = dropTableHelper(scalarIndexTableName);
     }
