@@ -6,6 +6,7 @@ All URIs are relative to *http://localhost:2333*
 |------------- | ------------- | -------------|
 | [**countRows**](TableApi.md#countRows) | **POST** /v1/table/{id}/count_rows | Count rows in a table |
 | [**createIndex**](TableApi.md#createIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table |
+| [**createScalarIndex**](TableApi.md#createScalarIndex) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table |
 | [**createTable**](TableApi.md#createTable) | **POST** /v1/table/{id}/create | Create a table with the given name |
 | [**deregisterTable**](TableApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace |
 | [**describeTable**](TableApi.md#describeTable) | **POST** /v1/table/{id}/describe | Describe a table from the namespace |
@@ -159,6 +160,80 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Index created successfully |  -  |
+| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
+| **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
+| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
+| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+
+
+## createScalarIndex
+
+> CreateIndexResponse createScalarIndex(id, createIndexRequest)
+
+Create a scalar index on a table
+
+Create a scalar index on a table column for faster search operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST). 
+
+### Example
+
+```java
+// Import classes:
+import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.client.apache.ApiException;
+import com.lancedb.lance.namespace.client.apache.Configuration;
+import com.lancedb.lance.namespace.client.apache.models.*;
+import com.lancedb.lance.namespace.client.apache.api.TableApi;
+
+public class Example {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        defaultClient.setBasePath("http://localhost:2333");
+
+        TableApi apiInstance = new TableApi(defaultClient);
+        String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
+        CreateIndexRequest createIndexRequest = new CreateIndexRequest(); // CreateIndexRequest | Scalar index creation request
+        try {
+            CreateIndexResponse result = apiInstance.createScalarIndex(id, createIndexRequest);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling TableApi#createScalarIndex");
+            System.err.println("Status code: " + e.getCode());
+            System.err.println("Reason: " + e.getResponseBody());
+            System.err.println("Response headers: " + e.getResponseHeaders());
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
+| **createIndexRequest** | [**CreateIndexRequest**](CreateIndexRequest.md)| Scalar index creation request | |
+
+### Return type
+
+[**CreateIndexResponse**](CreateIndexResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Scalar index created successfully |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |

@@ -517,6 +517,31 @@ public class RestTableApiTest {
     assertNotNull(indexResponse, "Create index response should not be null");
   }
 
+  @Test
+  public void testCreateScalarIndex() throws IOException {
+    assumeTrue(
+        DATABASE != null && API_KEY != null,
+        "Skipping test: LANCEDB_DB and LANCEDB_API_KEY environment variables must be set");
+
+    System.out.println("\n=== Test: Create Scalar Index ===");
+    String scalarIndexTableName = "test_scalar_index_table_" + System.currentTimeMillis();
+
+    // Step 1: Create table with 300 rows
+    System.out.println("\n--- Step 1: Creating table with 300 rows ---");
+    CreateTableResponse createResponse = createTableHelper(scalarIndexTableName, 300);
+    assertNotNull(createResponse, "Create table response should not be null");
+
+    // Step 2: Create scalar index on name column
+    System.out.println("\n--- Step 2: Creating scalar index ---");
+    CreateIndexRequest scalarIndexRequest = new CreateIndexRequest();
+    scalarIndexRequest.setName(scalarIndexTableName);
+    scalarIndexRequest.setColumn("name");
+    scalarIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.BTREE);
+
+    CreateIndexResponse scalarIndexResponse = namespace.createScalarIndex(scalarIndexRequest);
+    assertNotNull(scalarIndexResponse, "Create scalar index response should not be null");
+  }
+
   /** SeekableByteChannel implementation for reading Arrow file format from byte array */
   private static class ByteArraySeekableByteChannel implements SeekableByteChannel {
     private final byte[] data;

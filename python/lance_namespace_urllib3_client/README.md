@@ -97,6 +97,7 @@ Class | Method | HTTP request | Description
 *NamespaceApi* | [**namespace_exists**](docs/NamespaceApi.md#namespace_exists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
 *TableApi* | [**count_rows**](docs/TableApi.md#count_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
 *TableApi* | [**create_index**](docs/TableApi.md#create_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
+*TableApi* | [**create_scalar_index**](docs/TableApi.md#create_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *TableApi* | [**create_table**](docs/TableApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 *TableApi* | [**deregister_table**](docs/TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 *TableApi* | [**describe_table**](docs/TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace

@@ -379,6 +379,47 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/table/{id}/create_scalar_index:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    post:
+      description: |
+        Create a scalar index on a table column for faster search operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST).
+      operationId: CreateScalarIndex
+      parameters:
+      - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateIndexRequest'
+        description: Scalar index creation request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateIndexResponse'
+          description: Scalar index created successfully
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Create a scalar index on a table
+      tags:
+      - Table
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/table/{id}/register:
     parameters:
     - $ref: '#/components/parameters/id'

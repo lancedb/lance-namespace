@@ -200,6 +200,18 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
+  public CreateIndexResponse createScalarIndex(CreateIndexRequest request) {
+    try {
+      return tableApi.createScalarIndex(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.additionalHeaders());
+    } catch (ApiException e) {
+      throw new LanceNamespaceException(e);
+    }
+  }
+
+  @Override
   public RegisterTableResponse registerTable(RegisterTableRequest request) {
     try {
       return tableApi.registerTable(

@@ -69,6 +69,8 @@ public interface LanceNamespace {
 
   CreateIndexResponse createIndex(CreateIndexRequest request);
 
+  CreateIndexResponse createScalarIndex(CreateIndexRequest request);
+
   RegisterTableResponse registerTable(RegisterTableRequest request);
 
   TableExistsResponse tableExists(TableExistsRequest request);
