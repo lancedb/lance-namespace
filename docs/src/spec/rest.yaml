@@ -233,6 +233,50 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/table/{id}/insert:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - name: mode
+        in: query
+        description: 'Insert mode: "append" (default) or "overwrite"'
+        required: false
+        schema:
+          type: string
+          enum:
+            - append
+            - overwrite
+          default: append
+    post:
+      tags: [ Table ]
+      summary: Insert records into a table
+      operationId: InsertTable
+      description: >
+        Insert new records into an existing table using Arrow IPC format.
+        Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+      requestBody:
+        description: Arrow IPC data
+        content:
+          application/x-arrow-ipc:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        200:
+          $ref: '#/components/responses/InsertTableResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
   /v1/table/{id}/register:
     parameters:
       - $ref: '#/components/parameters/id'
@@ -909,6 +953,15 @@ components:
       format: int64
       description: Response containing the count of rows. Serializes transparently as just the number for backward compatibility.
       minimum: 0
+    InsertTableResponse:
+      type: object
+      description: Response from inserting records into a table
+      properties:
+        version:
+          type: integer
+          format: int64
+          description: The version of the table after the insert
+          minimum: 0
 
     JsonSchema:
       type: object
@@ -1270,6 +1323,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/CreateTableResponse'
+
+    InsertTableResponse:
+      description: Result of inserting records into a table
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InsertTableResponse'
 
     RegisterTableResponse:
       description: Table properties result when registering a table

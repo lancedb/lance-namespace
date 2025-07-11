@@ -36,6 +36,7 @@ import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
+import com.lancedb.lance.namespace.model.InsertTableResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
@@ -157,6 +158,15 @@ public class LanceRestNamespace implements LanceNamespace {
   public CreateTableResponse createTable(String tableName, byte[] arrowIpcData) {
     try {
       return tableApi.createTable(tableName, arrowIpcData, config.additionalHeaders());
+    } catch (ApiException e) {
+      throw new LanceNamespaceException(e);
+    }
+  }
+
+  @Override
+  public InsertTableResponse insertTable(String tableName, byte[] arrowIpcData, String mode) {
+    try {
+      return tableApi.insertTable(tableName, arrowIpcData, mode, config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }

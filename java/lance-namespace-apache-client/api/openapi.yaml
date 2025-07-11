@@ -233,6 +233,68 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/table/{id}/insert:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - description: "Insert mode: \"append\" (default) or \"overwrite\""
+      explode: true
+      in: query
+      name: mode
+      required: false
+      schema:
+        default: append
+        enum:
+        - append
+        - overwrite
+        type: string
+      style: form
+    post:
+      description: |
+        Insert new records into an existing table using Arrow IPC format. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+      operationId: InsertTable
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - description: "Insert mode: \"append\" (default) or \"overwrite\""
+        explode: true
+        in: query
+        name: mode
+        required: false
+        schema:
+          default: append
+          enum:
+          - append
+          - overwrite
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/x-arrow-ipc:
+            schema:
+              format: binary
+              type: string
+        description: Arrow IPC data
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/InsertTableResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Insert records into a table
+      tags:
+      - Table
+      x-content-type: application/x-arrow-ipc
+      x-accepts:
+      - application/json
   /v1/table/{id}/register:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -692,6 +754,12 @@ components:
           schema:
             $ref: '#/components/schemas/CreateTableResponse'
       description: Table properties result when creating a table
+    InsertTableResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InsertTableResponse'
+      description: Result of inserting records into a table
     RegisterTableResponse:
       content:
         application/json:
@@ -1260,6 +1328,16 @@ components:
       format: int64
       minimum: 0
       type: integer
+    InsertTableResponse:
+      description: Response from inserting records into a table
+      example:
+        version: 0
+      properties:
+        version:
+          description: The version of the table after the insert
+          format: int64
+          minimum: 0
+          type: integer
     JsonSchema:
       description: "JSON representation of a Apache Arrow [Schema]."
       example:

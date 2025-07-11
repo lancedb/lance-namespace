@@ -44,6 +44,8 @@ pub mod drop_table_response;
 pub use self::drop_table_response::DropTableResponse;
 pub mod error_response;
 pub use self::error_response::ErrorResponse;
+pub mod insert_table_response;
+pub use self::insert_table_response::InsertTableResponse;
 pub mod json_data_type;
 pub use self::json_data_type::JsonDataType;
 pub mod json_field;

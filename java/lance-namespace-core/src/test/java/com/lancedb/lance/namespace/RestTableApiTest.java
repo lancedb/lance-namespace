@@ -151,6 +151,15 @@ public class RestTableApiTest {
     System.out.println("✓ Table version: " + describeResponse.getVersion());
     System.out.println("✓ Table fragments: " + describeResponse.getStats().getNumFragments());
 
+    // Test insert table
+    System.out.println("\n--- Testing insert table ---");
+    // Insert 2 more rows (total should be 5)
+    InsertTableResponse insertResponse = insertHelper(testCreateTableName, 2, "append", 5);
+
+    // Insert 3 more rows (total should be 8)
+    System.out.println("\n--- Testing second insert ---");
+    InsertTableResponse secondInsertResponse = insertHelper(testCreateTableName, 3, "append", 8);
+
     // Test drop table using helper
     System.out.println("\n--- Testing drop table ---");
     DropTableResponse dropResponse = dropTableHelper(testCreateTableName);
@@ -264,6 +273,127 @@ public class RestTableApiTest {
 
     DropTableResponse response = namespace.dropTable(dropRequest);
     System.out.println("✓ Table dropped successfully: " + tableName);
+
+    return response;
+  }
+
+  /**
+   * Helper method to insert data into a table
+   *
+   * @param tableName The name of the table to insert into
+   * @param numRows The number of rows to insert
+   * @param mode The insert mode ("append" or "overwrite")
+   * @return InsertTableResponse from the server
+   * @throws IOException if there's an error creating the Arrow data
+   */
+  private InsertTableResponse insertTableHelper(String tableName, int numRows, String mode)
+      throws IOException {
+    // Create Arrow schema (same as createTableHelper)
+    Field idField = new Field("id", FieldType.nullable(new ArrowType.Int(32, true)), null);
+    Field nameField = new Field("name", FieldType.nullable(new ArrowType.Utf8()), null);
+    Field vectorField =
+        new Field(
+            "vector",
+            FieldType.nullable(new ArrowType.FixedSizeList(128)),
+            Arrays.asList(
+                new Field(
+                    "item",
+                    FieldType.nullable(new ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE)),
+                    null)));
+
+    Schema schema = new Schema(Arrays.asList(idField, nameField, vectorField));
+
+    try (VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator)) {
+      IntVector idVector = (IntVector) root.getVector("id");
+      VarCharVector nameVector = (VarCharVector) root.getVector("name");
+      FixedSizeListVector vectorVector = (FixedSizeListVector) root.getVector("vector");
+
+      root.setRowCount(numRows);
+
+      // Sample names for test data
+      String[] names = {
+        "Liam", "Emma", "Noah", "Olivia", "William", "Ava", "James", "Isabella", "Logan", "Sophia"
+      };
+
+      // Populate data for specified number of rows
+      // Start IDs from 1000 to differentiate from initial data
+      for (int i = 0; i < numRows; i++) {
+        idVector.setSafe(i, 1000 + i);
+        nameVector.setSafe(i, names[i % names.length].getBytes(StandardCharsets.UTF_8));
+      }
+
+      // Populate vector field with dummy data
+      Float4Vector dataVector = (Float4Vector) vectorVector.getDataVector();
+      vectorVector.allocateNew();
+
+      // Create 128-dimensional vectors for each row
+      for (int row = 0; row < numRows; row++) {
+        vectorVector.setNotNull(row);
+        for (int dim = 0; dim < 128; dim++) {
+          int index = row * 128 + dim;
+          dataVector.setSafe(index, (float) (Math.random() * 10.0)); // Random values 0-10
+        }
+      }
+
+      // Mark vectors as populated
+      idVector.setValueCount(numRows);
+      nameVector.setValueCount(numRows);
+      dataVector.setValueCount(numRows * 128); // numRows * 128 dimensions
+      vectorVector.setValueCount(numRows);
+
+      // Serialize to Arrow IPC format
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      try (ArrowStreamWriter writer = new ArrowStreamWriter(root, null, Channels.newChannel(out))) {
+        writer.start();
+        writer.writeBatch();
+        writer.end();
+      }
+
+      byte[] arrowIpcData = out.toByteArray();
+      System.out.println("Arrow IPC data size for insert: " + arrowIpcData.length + " bytes");
+
+      // Insert data using Arrow IPC data
+      InsertTableResponse response = namespace.insertTable(tableName, arrowIpcData, mode);
+      System.out.println(
+          "✓ Data inserted successfully: "
+              + tableName
+              + " with "
+              + numRows
+              + " rows ("
+              + mode
+              + " mode)");
+
+      return response;
+    }
+  }
+
+  /**
+   * Helper method to insert data and verify the operation
+   *
+   * @param tableName The name of the table to insert into
+   * @param numRows The number of rows to insert
+   * @param mode The insert mode ("append" or "overwrite")
+   * @param expectedTotalRows The expected total row count after insert
+   * @return InsertTableResponse from the server
+   * @throws IOException if there's an error creating the Arrow data
+   */
+  private InsertTableResponse insertHelper(
+      String tableName, int numRows, String mode, long expectedTotalRows) throws IOException {
+    // Insert data
+    InsertTableResponse response = insertTableHelper(tableName, numRows, mode);
+    assertNotNull(response, "Insert response should not be null");
+    assertNotNull(response.getVersion(), "Insert response version should not be null");
+    System.out.println("✓ Inserted " + numRows + " rows, new version: " + response.getVersion());
+
+    // Verify row count
+    CountRowsRequest countRequest = new CountRowsRequest();
+    countRequest.setName(tableName);
+    Long actualCount = namespace.countRows(countRequest);
+    assertEquals(
+        expectedTotalRows,
+        actualCount.longValue(),
+        "Row count should be " + expectedTotalRows + " after insert");
+    System.out.println("✓ Verified row count: " + actualCount);
 
     return response;
   }

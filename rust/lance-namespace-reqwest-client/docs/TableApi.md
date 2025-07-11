@@ -9,6 +9,7 @@ Method | HTTP request | Description
 [**deregister_table**](TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 [**describe_table**](TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
 [**drop_table**](TableApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
+[**insert_table**](TableApi.md#insert_table) | **POST** /v1/table/{id}/insert | Insert records into a table
 [**register_table**](TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
 [**table_exists**](TableApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
 
@@ -168,6 +169,38 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## insert_table
+
+> models::InsertTableResponse insert_table(id, body, mode)
+Insert records into a table
+
+Insert new records into an existing table using Arrow IPC format. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**body** | **std::path::PathBuf** | Arrow IPC data | [required] |
+**mode** | Option<**String**> | Insert mode: \"append\" (default) or \"overwrite\" |  |[default to append]
+
+### Return type
+
+[**models::InsertTableResponse**](InsertTableResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/x-arrow-ipc
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

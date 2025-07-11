@@ -39,6 +39,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**deregister_table**](docs/TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 *TableApi* | [**describe_table**](docs/TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
 *TableApi* | [**drop_table**](docs/TableApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
+*TableApi* | [**insert_table**](docs/TableApi.md#insert_table) | **POST** /v1/table/{id}/insert | Insert records into a table
 *TableApi* | [**register_table**](docs/TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
 *TableApi* | [**table_exists**](docs/TableApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
 *TransactionApi* | [**alter_transaction**](docs/TransactionApi.md#alter_transaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
@@ -70,6 +71,7 @@ Class | Method | HTTP request | Description
  - [DropTableRequest](docs/DropTableRequest.md)
  - [DropTableResponse](docs/DropTableResponse.md)
  - [ErrorResponse](docs/ErrorResponse.md)
+ - [InsertTableResponse](docs/InsertTableResponse.md)
  - [JsonDataType](docs/JsonDataType.md)
  - [JsonField](docs/JsonField.md)
  - [JsonSchema](docs/JsonSchema.md)

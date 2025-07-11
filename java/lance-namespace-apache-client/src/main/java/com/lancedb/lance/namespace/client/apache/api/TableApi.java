@@ -26,6 +26,7 @@ import com.lancedb.lance.namespace.model.DescribeTableRequest;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
+import com.lancedb.lance.namespace.model.InsertTableResponse;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
@@ -523,6 +524,100 @@ public class TableApi extends BaseApi {
     String[] localVarAuthNames = new String[] {};
 
     TypeReference<DropTableResponse> localVarReturnType = new TypeReference<DropTableResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Insert records into a table Insert new records into an existing table using Arrow IPC format.
+   * Supports both lance-namespace format (with namespace in body) and LanceDB format (with database
+   * in headers).
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param body Arrow IPC data (required)
+   * @param mode Insert mode: \&quot;append\&quot; (default) or \&quot;overwrite\&quot; (optional,
+   *     default to append)
+   * @return InsertTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public InsertTableResponse insertTable(String id, byte[] body, String mode) throws ApiException {
+    return this.insertTable(id, body, mode, Collections.emptyMap());
+  }
+
+  /**
+   * Insert records into a table Insert new records into an existing table using Arrow IPC format.
+   * Supports both lance-namespace format (with namespace in body) and LanceDB format (with database
+   * in headers).
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param body Arrow IPC data (required)
+   * @param mode Insert mode: \&quot;append\&quot; (default) or \&quot;overwrite\&quot; (optional,
+   *     default to append)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return InsertTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public InsertTableResponse insertTable(
+      String id, byte[] body, String mode, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = body;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling insertTable");
+    }
+
+    // verify the required parameter 'body' is set
+    if (body == null) {
+      throw new ApiException(400, "Missing the required parameter 'body' when calling insertTable");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/insert"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("mode", mode));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/x-arrow-ipc"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<InsertTableResponse> localVarReturnType =
+        new TypeReference<InsertTableResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",
