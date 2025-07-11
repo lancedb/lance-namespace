@@ -131,6 +131,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**queryTable**](docs/TableApi.md#queryTable) | **POST** /v1/table/{id}/query | Query a table
 *TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /v1/table/{id}/register | Register a table to a namespace
 *TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists
+*TableApi* | [**updateTable**](docs/TableApi.md#updateTable) | **POST** /v1/table/{id}/update | Update rows in a table
 *TransactionApi* | [**alterTransaction**](docs/TransactionApi.md#alterTransaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
 *TransactionApi* | [**describeTransaction**](docs/TransactionApi.md#describeTransaction) | **POST** /v1/transaction/{id}/describe | Describe information about a transaction
 
@@ -184,6 +185,8 @@ Class | Method | HTTP request | Description
  - [TableExistsResponse](docs/TableExistsResponse.md)
  - [TransactionStatus](docs/TransactionStatus.md)
  - [UnsetPropertyMode](docs/UnsetPropertyMode.md)
+ - [UpdateTableRequest](docs/UpdateTableRequest.md)
+ - [UpdateTableResponse](docs/UpdateTableResponse.md)
 
 
 <a id="documentation-for-authorization"></a>

@@ -47,6 +47,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**query_table**](docs/TableApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
 *TableApi* | [**register_table**](docs/TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
 *TableApi* | [**table_exists**](docs/TableApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
+*TableApi* | [**update_table**](docs/TableApi.md#update_table) | **POST** /v1/table/{id}/update | Update rows in a table
 *TransactionApi* | [**alter_transaction**](docs/TransactionApi.md#alter_transaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
 *TransactionApi* | [**describe_transaction**](docs/TransactionApi.md#describe_transaction) | **POST** /v1/transaction/{id}/describe | Describe information about a transaction
 
@@ -100,6 +101,8 @@ Class | Method | HTTP request | Description
  - [TableExistsResponse](docs/TableExistsResponse.md)
  - [TransactionStatus](docs/TransactionStatus.md)
  - [UnsetPropertyMode](docs/UnsetPropertyMode.md)
+ - [UpdateTableRequest](docs/UpdateTableRequest.md)
+ - [UpdateTableResponse](docs/UpdateTableResponse.md)
 
 
 To get access to the crate's generated documentation, use:

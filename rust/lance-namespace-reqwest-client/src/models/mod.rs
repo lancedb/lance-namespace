@@ -92,3 +92,7 @@ pub mod transaction_status;
 pub use self::transaction_status::TransactionStatus;
 pub mod unset_property_mode;
 pub use self::unset_property_mode::UnsetPropertyMode;
+pub mod update_table_request;
+pub use self::update_table_request::UpdateTableRequest;
+pub mod update_table_response;
+pub use self::update_table_response::UpdateTableResponse;

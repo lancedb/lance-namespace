@@ -17,6 +17,7 @@ Method | HTTP request | Description
 [**query_table**](TableApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
 [**register_table**](TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
 [**table_exists**](TableApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
+[**update_table**](TableApi.md#update_table) | **POST** /v1/table/{id}/update | Update rows in a table
 
 
 
@@ -418,6 +419,37 @@ Name | Type | Description  | Required | Notes
 ### Return type
 
 [**models::TableExistsResponse**](TableExistsResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## update_table
+
+> models::UpdateTableResponse update_table(id, update_table_request)
+Update rows in a table
+
+Update existing rows in a table using SQL expressions. Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**update_table_request** | [**UpdateTableRequest**](UpdateTableRequest.md) | Update request | [required] |
+
+### Return type
+
+[**models::UpdateTableResponse**](UpdateTableResponse.md)
 
 ### Authorization
 

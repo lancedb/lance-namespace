@@ -38,6 +38,8 @@ import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
 import com.lancedb.lance.namespace.model.TableExistsResponse;
+import com.lancedb.lance.namespace.model.UpdateTableRequest;
+import com.lancedb.lance.namespace.model.UpdateTableResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -1276,6 +1278,96 @@ public class TableApi extends BaseApi {
 
     TypeReference<TableExistsResponse> localVarReturnType =
         new TypeReference<TableExistsResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Update rows in a table Update existing rows in a table using SQL expressions. Each update
+   * consists of a column name and an SQL expression that will be evaluated against the current
+   * row&#39;s value. Optionally, a predicate can be provided to filter which rows to update.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param updateTableRequest Update request (required)
+   * @return UpdateTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public UpdateTableResponse updateTable(String id, UpdateTableRequest updateTableRequest)
+      throws ApiException {
+    return this.updateTable(id, updateTableRequest, Collections.emptyMap());
+  }
+
+  /**
+   * Update rows in a table Update existing rows in a table using SQL expressions. Each update
+   * consists of a column name and an SQL expression that will be evaluated against the current
+   * row&#39;s value. Optionally, a predicate can be provided to filter which rows to update.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param updateTableRequest Update request (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return UpdateTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public UpdateTableResponse updateTable(
+      String id, UpdateTableRequest updateTableRequest, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = updateTableRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling updateTable");
+    }
+
+    // verify the required parameter 'updateTableRequest' is set
+    if (updateTableRequest == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'updateTableRequest' when calling updateTable");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/update"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<UpdateTableResponse> localVarReturnType =
+        new TypeReference<UpdateTableResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

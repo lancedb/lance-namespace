@@ -42,6 +42,7 @@ import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -657,6 +658,87 @@ public class RestTableApiTest {
       assertEquals(0, statsResponse.getNumUnindexedRows().intValue());
     } finally {
       DropTableResponse dropResponse = dropTableHelper(scalarIndexTableName);
+    }
+  }
+
+  @Test
+  public void testUpdateTable() throws IOException {
+    assumeTrue(
+        DATABASE != null && API_KEY != null,
+        "Skipping test: LANCEDB_DB and LANCEDB_API_KEY environment variables must be set");
+
+    System.out.println("\n=== Test: Update Table ===");
+    String updateTableName = "test_update_table_" + System.currentTimeMillis();
+
+    try {
+      CreateTableResponse createResponse = createTableHelper(updateTableName, 3);
+      assertNotNull(createResponse, "Create table response should not be null");
+      // Id: 1 2 3
+      System.out.println("\n--- Step 2: Updating all rows (id = id + 1) ---");
+      UpdateTableRequest updateRequest = new UpdateTableRequest();
+      updateRequest.setName(updateTableName);
+      updateRequest.setNamespace(new ArrayList<>());
+      List<List<String>> updates = new ArrayList<>();
+      updates.add(Arrays.asList("id", "id + 1"));
+      updateRequest.setUpdates(updates);
+      // Id: 2 3 4
+      UpdateTableResponse updateResponse = namespace.updateTable(updateRequest);
+      assertNotNull(updateResponse, "Update response should not be null");
+      assertEquals(3, updateResponse.getUpdatedRows().longValue(), "Should have updated 3 rows");
+
+      System.out.println("\n--- Step 3: Updating rows with predicate (id > 2) ---");
+      UpdateTableRequest predicateUpdateRequest = new UpdateTableRequest();
+      predicateUpdateRequest.setName(updateTableName);
+      predicateUpdateRequest.setNamespace(new ArrayList<>());
+      predicateUpdateRequest.setPredicate("id > 2");
+      List<List<String>> predicateUpdates = new ArrayList<>();
+      predicateUpdates.add(Arrays.asList("id", "id + 10"));
+      predicateUpdateRequest.setUpdates(predicateUpdates);
+      // Id: 2 13 14
+
+      UpdateTableResponse predicateUpdateResponse = namespace.updateTable(predicateUpdateRequest);
+      assertNotNull(predicateUpdateResponse, "Predicate update response should not be null");
+      assertEquals(
+          2, predicateUpdateResponse.getUpdatedRows().longValue(), "Should have updated 2 rows");
+
+      // Use query to verify final state
+      QueryRequest queryRequest = new QueryRequest();
+      queryRequest.setName(updateTableName);
+      queryRequest.setK(3);
+
+      List<String> columns = Arrays.asList("id");
+      queryRequest.setColumns(columns);
+
+      byte[] queryResult;
+      queryResult = namespace.queryTable(queryRequest);
+      assertNotNull(queryResult, "Query result should not be null");
+
+      try (BufferAllocator verifyAllocator = new RootAllocator()) {
+        ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(queryResult);
+
+        try (ArrowFileReader reader = new ArrowFileReader(channel, verifyAllocator)) {
+          List<Integer> idValues = new ArrayList<>();
+          for (int i = 0; i < reader.getRecordBlocks().size(); i++) {
+            reader.loadRecordBatch(reader.getRecordBlocks().get(i));
+            VectorSchemaRoot root = reader.getVectorSchemaRoot();
+            IntVector idVector = (IntVector) root.getVector("id");
+
+            // Extract ID values from this batch
+            for (int j = 0; j < root.getRowCount(); j++) {
+              if (!idVector.isNull(j)) {
+                idValues.add(idVector.get(j));
+              }
+            }
+          }
+
+          Collections.sort(idValues);
+          assertEquals(3, idValues.size(), "Should have exactly 3 rows");
+          assertEquals(
+              Arrays.asList(2, 13, 14), idValues, "ID values should be [2, 13, 14] after updates");
+        }
+      }
+    } finally {
+      DropTableResponse dropResponse = dropTableHelper(updateTableName);
     }
   }
 

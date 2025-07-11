@@ -52,6 +52,8 @@ import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
 import com.lancedb.lance.namespace.model.TableExistsResponse;
+import com.lancedb.lance.namespace.model.UpdateTableRequest;
+import com.lancedb.lance.namespace.model.UpdateTableResponse;
 
 import java.util.Map;
 
@@ -174,6 +176,18 @@ public class LanceRestNamespace implements LanceNamespace {
   public InsertTableResponse insertTable(String tableName, byte[] arrowIpcData, String mode) {
     try {
       return tableApi.insertTable(tableName, arrowIpcData, mode, config.additionalHeaders());
+    } catch (ApiException e) {
+      throw new LanceNamespaceException(e);
+    }
+  }
+
+  @Override
+  public UpdateTableResponse updateTable(UpdateTableRequest request) {
+    try {
+      return tableApi.updateTable(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }

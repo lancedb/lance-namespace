@@ -117,6 +117,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_update_table(self) -> None:
+        """Test case for update_table
+
+        Update rows in a table
+        """
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()

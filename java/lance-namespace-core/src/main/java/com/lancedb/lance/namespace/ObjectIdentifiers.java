@@ -30,6 +30,7 @@ import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.QueryRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
+import com.lancedb.lance.namespace.model.UpdateTableRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -346,6 +347,27 @@ public class ObjectIdentifiers {
   }
 
   public static List<String> listFrom(IndexStatsRequest request) {
+    List<String> identifier = new ArrayList<>();
+    if (request.getNamespace() != null) {
+      identifier.addAll(request.getNamespace());
+    }
+    identifier.add(request.getName());
+    return identifier;
+  }
+
+  public static String stringFrom(UpdateTableRequest request, String delimiter) {
+    StringBuilder builder = new StringBuilder();
+    if (request.getNamespace() != null) {
+      for (String part : request.getNamespace()) {
+        builder.append(part);
+        builder.append(delimiter);
+      }
+    }
+    builder.append(request.getName());
+    return builder.toString();
+  }
+
+  public static List<String> listFrom(UpdateTableRequest request) {
     List<String> identifier = new ArrayList<>();
     if (request.getNamespace() != null) {
       identifier.addAll(request.getNamespace());
