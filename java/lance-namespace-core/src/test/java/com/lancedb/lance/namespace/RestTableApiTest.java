@@ -778,7 +778,7 @@ public class RestTableApiTest {
 
       DeleteFromTableResponse complexDeleteResponse =
           namespace.deleteFromTable(complexDeleteRequest);
-      assertEquals(3, deleteResponse.getVersion(), "Version should increment");
+      assertEquals(3, complexDeleteResponse.getVersion(), "Version should increment");
       countResponse = namespace.countRows(countRequest);
       assertEquals(1, countResponse.longValue());
     } finally {
