@@ -277,6 +277,45 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/table/{id}/update:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    post:
+      tags: [ Table ]
+      summary: Update rows in a table
+      operationId: UpdateTable
+      description: >
+        Update existing rows in a table using SQL expressions.
+        Each update consists of a column name and an SQL expression that will be
+        evaluated against the current row's value. Optionally, a predicate can be
+        provided to filter which rows to update.
+      requestBody:
+        description: Update request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTableRequest'
+        required: true
+      responses:
+        200:
+          description: Update successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTableResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
   /v1/table/{id}/query:
     parameters:
       - $ref: '#/components/parameters/id'
@@ -1152,6 +1191,52 @@ components:
           type: integer
           format: int64
           description: The version of the table after the insert
+          minimum: 0
+
+    UpdateTableRequest:
+      type: object
+      required:
+        - name
+        - namespace
+        - updates
+      properties:
+        name:
+          type: string
+          description: The table name
+        namespace:
+          type: array
+          items:
+            type: string
+          description: The namespace identifier
+        predicate:
+          type: string
+          nullable: true
+          description: Optional SQL predicate to filter rows for update
+        updates:
+          type: array
+          items:
+            type: array
+            minItems: 2
+            maxItems: 2
+            items:
+              type: string
+          description: List of column updates as [column_name, expression] pairs
+
+    UpdateTableResponse:
+      type: object
+      required:
+        - updated_rows
+        - version
+      properties:
+        updated_rows:
+          type: integer
+          format: int64
+          description: Number of rows updated
+          minimum: 0
+        version:
+          type: integer
+          format: int64
+          description: The commit version associated with the operation
           minimum: 0
 
     QueryRequest:
