@@ -295,6 +295,96 @@ paths:
       x-content-type: application/x-arrow-ipc
       x-accepts:
       - application/json
+  /v1/table/{id}/merge_insert:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - description: Column name to use for matching rows (required)
+      explode: true
+      in: query
+      name: "on"
+      required: true
+      schema:
+        type: string
+      style: form
+    - description: Update all columns when rows match
+      explode: true
+      in: query
+      name: when_matched_update_all
+      required: false
+      schema:
+        default: false
+        type: boolean
+      style: form
+    - description: Insert all columns when rows don't match
+      explode: true
+      in: query
+      name: when_not_matched_insert_all
+      required: false
+      schema:
+        default: false
+        type: boolean
+      style: form
+    post:
+      description: |
+        Performs a merge insert (upsert) operation on a table. This operation updates existing rows based on a matching column and inserts new rows that don't match. Returns the number of rows inserted and updated.
+      operationId: MergeInsertTable
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - description: Column name to use for matching rows (required)
+        explode: true
+        in: query
+        name: "on"
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Update all columns when rows match
+        explode: true
+        in: query
+        name: when_matched_update_all
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - description: Insert all columns when rows don't match
+        explode: true
+        in: query
+        name: when_not_matched_insert_all
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      requestBody:
+        content:
+          application/x-arrow-ipc:
+            schema:
+              format: binary
+              type: string
+        description: Arrow IPC data containing the records to merge
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/MergeInsertTableResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Merge insert (upsert) records into a table
+      tags:
+      - Table
+      x-content-type: application/x-arrow-ipc
+      x-accepts:
+      - application/json
   /v1/table/{id}/update:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -1065,6 +1155,12 @@ components:
           schema:
             $ref: '#/components/schemas/InsertTableResponse'
       description: Result of inserting records into a table
+    MergeInsertTableResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MergeInsertTableResponse'
+      description: Result of merge insert operation
     RegisterTableResponse:
       content:
         application/json:
@@ -1640,6 +1736,47 @@ components:
       properties:
         version:
           description: The version of the table after the insert
+          format: int64
+          minimum: 0
+          type: integer
+    MergeInsertTableRequest:
+      properties:
+        name:
+          description: The table name
+          type: string
+        namespace:
+          description: The namespace identifier
+          items:
+            type: string
+          type: array
+      required:
+      - name
+      - namespace
+    MergeInsertTableResponse:
+      description: Response from merge insert operation
+      example:
+        num_inserted_rows: 0
+        num_updated_rows: 0
+        num_deleted_rows: 0
+        version: 0
+      properties:
+        num_updated_rows:
+          description: Number of rows updated
+          format: int64
+          minimum: 0
+          type: integer
+        num_inserted_rows:
+          description: Number of rows inserted
+          format: int64
+          minimum: 0
+          type: integer
+        num_deleted_rows:
+          description: Number of rows deleted (typically 0 for merge insert)
+          format: int64
+          minimum: 0
+          type: integer
+        version:
+          description: The commit version associated with the operation
           format: int64
           minimum: 0
           type: integer

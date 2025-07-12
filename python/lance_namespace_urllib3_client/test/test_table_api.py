@@ -103,6 +103,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_merge_insert_table(self) -> None:
+        """Test case for merge_insert_table
+
+        Merge insert (upsert) records into a table
+        """
+        pass
+
     def test_query_table(self) -> None:
         """Test case for query_table
 

@@ -158,6 +158,19 @@ pub enum ListIndicesError {
     UnknownValue(serde_json::Value),
 }
 
+/// struct for typed errors of method [`merge_insert_table`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum MergeInsertTableError {
+    Status400(models::ErrorResponse),
+    Status401(models::ErrorResponse),
+    Status403(models::ErrorResponse),
+    Status404(models::ErrorResponse),
+    Status503(models::ErrorResponse),
+    Status5XX(models::ErrorResponse),
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`query_table`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -658,6 +671,55 @@ pub async fn list_indices(configuration: &configuration::Configuration, id: &str
     } else {
         let content = resp.text().await?;
         let entity: Option<ListIndicesError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+/// Performs a merge insert (upsert) operation on a table. This operation updates existing rows based on a matching column and inserts new rows that don't match. Returns the number of rows inserted and updated. 
+pub async fn merge_insert_table(configuration: &configuration::Configuration, id: &str, on: &str, body: std::path::PathBuf, when_matched_update_all: Option<bool>, when_not_matched_insert_all: Option<bool>) -> Result<models::MergeInsertTableResponse, Error<MergeInsertTableError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
+    let p_on = on;
+    let p_body = body;
+    let p_when_matched_update_all = when_matched_update_all;
+    let p_when_not_matched_insert_all = when_not_matched_insert_all;
+
+    let uri_str = format!("{}/v1/table/{id}/merge_insert", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    req_builder = req_builder.query(&[("on", &p_on.to_string())]);
+    if let Some(ref param_value) = p_when_matched_update_all {
+        req_builder = req_builder.query(&[("when_matched_update_all", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_when_not_matched_insert_all {
+        req_builder = req_builder.query(&[("when_not_matched_insert_all", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    req_builder = req_builder.body(p_body);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::MergeInsertTableResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::MergeInsertTableResponse`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<MergeInsertTableError> = serde_json::from_str(&content).ok();
         Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }

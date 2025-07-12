@@ -47,6 +47,8 @@ import com.lancedb.lance.namespace.model.IndexStatsResponse;
 import com.lancedb.lance.namespace.model.InsertTableResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
+import com.lancedb.lance.namespace.model.MergeInsertTableRequest;
+import com.lancedb.lance.namespace.model.MergeInsertTableResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.NamespaceExistsResponse;
 import com.lancedb.lance.namespace.model.QueryRequest;
@@ -178,6 +180,26 @@ public class LanceRestNamespace implements LanceNamespace {
   public InsertTableResponse insertTable(String tableName, byte[] arrowIpcData, String mode) {
     try {
       return tableApi.insertTable(tableName, arrowIpcData, mode, config.additionalHeaders());
+    } catch (ApiException e) {
+      throw new LanceNamespaceException(e);
+    }
+  }
+
+  @Override
+  public MergeInsertTableResponse mergeInsertTable(
+      MergeInsertTableRequest request,
+      byte[] arrowIpcData,
+      String on,
+      Boolean whenMatchedUpdateAll,
+      Boolean whenNotMatchedInsertAll) {
+    try {
+      return tableApi.mergeInsertTable(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          on,
+          arrowIpcData,
+          whenMatchedUpdateAll,
+          whenNotMatchedInsertAll,
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }

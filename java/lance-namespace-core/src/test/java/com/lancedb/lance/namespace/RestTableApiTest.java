@@ -786,6 +786,166 @@ public class RestTableApiTest {
     }
   }
 
+  @Test
+  public void testMergeInsert() throws IOException {
+    assumeTrue(
+        DATABASE != null && API_KEY != null,
+        "Skipping test: LANCEDB_DB and LANCEDB_API_KEY environment variables must be set");
+
+    System.out.println("\n=== Test: Merge Insert (Upsert) ===");
+    String mergeTableName = "test_merge_table_" + System.currentTimeMillis();
+
+    try {
+      // Step 1: Create table with 3 rows
+      System.out.println("\n--- Step 1: Creating table with 3 rows ---");
+      CreateTableResponse createResponse = createTableHelper(mergeTableName, 3);
+      assertNotNull(createResponse, "Create table response should not be null");
+
+      // Verify initial data
+      CountRowsRequest countRequest = new CountRowsRequest();
+      countRequest.setName(mergeTableName);
+      Long initialCount = namespace.countRows(countRequest);
+      assertEquals(3, initialCount.longValue(), "Initial row count should be 3");
+
+      // Step 2: Merge insert with some matching and some new rows
+      System.out.println("\n--- Step 2: Merge insert with mixed rows ---");
+      // Create batch with rows: id=2,3,4 (2,3 exist, 4 is new)
+      String[] names = {"Bob Updated", "Charlie Updated", "David"};
+      Float4Vector[] vectors = new Float4Vector[3];
+
+      Schema schema =
+          new Schema(
+              Arrays.asList(
+                  new Field("id", FieldType.nullable(new ArrowType.Int(32, true)), null),
+                  new Field("name", FieldType.nullable(new ArrowType.Utf8()), null),
+                  new Field(
+                      "embedding",
+                      FieldType.nullable(new ArrowType.FixedSizeList(128)),
+                      Arrays.asList(
+                          new Field(
+                              "item",
+                              FieldType.nullable(
+                                  new ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE)),
+                              null)))));
+
+      try (VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator)) {
+        IntVector idVector = (IntVector) root.getVector("id");
+        VarCharVector nameVector = (VarCharVector) root.getVector("name");
+        FixedSizeListVector vectorVector = (FixedSizeListVector) root.getVector("embedding");
+
+        root.setRowCount(3);
+
+        // Set data for merge
+        int[] ids = {2, 3, 4};
+        for (int i = 0; i < 3; i++) {
+          idVector.setSafe(i, ids[i]);
+          nameVector.setSafe(i, names[i].getBytes(StandardCharsets.UTF_8));
+        }
+
+        // Populate vector field
+        Float4Vector dataVector = (Float4Vector) vectorVector.getDataVector();
+        vectorVector.allocateNew();
+
+        for (int row = 0; row < 3; row++) {
+          vectorVector.setNotNull(row);
+          for (int dim = 0; dim < 128; dim++) {
+            int index = row * 128 + dim;
+            dataVector.setSafe(index, (float) ((row + 2) * 10.0 + dim * 0.1));
+          }
+        }
+
+        idVector.setValueCount(3);
+        nameVector.setValueCount(3);
+        dataVector.setValueCount(3 * 128);
+        vectorVector.setValueCount(3);
+
+        // Serialize to Arrow IPC
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try (ArrowStreamWriter writer =
+            new ArrowStreamWriter(root, null, Channels.newChannel(out))) {
+          writer.start();
+          writer.writeBatch();
+          writer.end();
+        }
+
+        byte[] arrowIpcData = out.toByteArray();
+
+        // Perform merge insert
+        MergeInsertTableRequest mergeRequest = new MergeInsertTableRequest();
+        mergeRequest.setName(mergeTableName);
+
+        MergeInsertTableResponse mergeResponse =
+            namespace.mergeInsertTable(
+                mergeRequest,
+                arrowIpcData,
+                "id", // match on id column
+                true, // when_matched_update_all
+                true // when_not_matched_insert_all
+                );
+
+        assertNotNull(mergeResponse, "Merge response should not be null");
+        assertEquals(
+            2, mergeResponse.getNumUpdatedRows().longValue(), "Should have updated 2 rows");
+        assertEquals(
+            1, mergeResponse.getNumInsertedRows().longValue(), "Should have inserted 1 row");
+        System.out.println(
+            "✓ Merge insert completed: "
+                + mergeResponse.getNumUpdatedRows()
+                + " updated, "
+                + mergeResponse.getNumInsertedRows()
+                + " inserted");
+
+        // Verify final count
+        Long finalCount = namespace.countRows(countRequest);
+        assertEquals(4, finalCount.longValue(), "Final row count should be 4");
+
+        // Step 3: Verify the updates by querying the table
+        System.out.println("\n--- Step 3: Verifying merged data ---");
+        QueryRequest queryRequest = new QueryRequest();
+        queryRequest.setName(mergeTableName);
+        queryRequest.setK(4);
+        queryRequest.setColumns(Arrays.asList("id", "name"));
+
+        byte[] queryResult = namespace.queryTable(queryRequest);
+        assertNotNull(queryResult, "Query result should not be null");
+
+        // Read and verify the results
+        try (BufferAllocator verifyAllocator = new RootAllocator()) {
+          ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(queryResult);
+
+          try (ArrowFileReader reader = new ArrowFileReader(channel, verifyAllocator)) {
+            Map<Integer, String> idToName = new HashMap<>();
+
+            for (int i = 0; i < reader.getRecordBlocks().size(); i++) {
+              reader.loadRecordBatch(reader.getRecordBlocks().get(i));
+              VectorSchemaRoot resultRoot = reader.getVectorSchemaRoot();
+              IntVector resultIdVector = (IntVector) resultRoot.getVector("id");
+              VarCharVector resultNameVector = (VarCharVector) resultRoot.getVector("name");
+
+              for (int j = 0; j < resultRoot.getRowCount(); j++) {
+                if (!resultIdVector.isNull(j)) {
+                  int id = resultIdVector.get(j);
+                  String name = new String(resultNameVector.get(j), StandardCharsets.UTF_8);
+                  idToName.put(id, name);
+                }
+              }
+            }
+
+            // Verify the merged data
+            assertEquals(4, idToName.size(), "Should have 4 rows total");
+            assertEquals("Alice", idToName.get(1), "ID 1 should remain unchanged");
+            assertEquals("Bob Updated", idToName.get(2), "ID 2 should be updated");
+            assertEquals("Charlie Updated", idToName.get(3), "ID 3 should be updated");
+            assertEquals("David", idToName.get(4), "ID 4 should be new");
+            System.out.println("✓ Merge insert data verified successfully");
+          }
+        }
+      }
+    } finally {
+      DropTableResponse dropResponse = dropTableHelper(mergeTableName);
+    }
+  }
+
   /** SeekableByteChannel implementation for reading Arrow file format from byte array */
   private static class ByteArraySeekableByteChannel implements SeekableByteChannel {
     private final byte[] data;

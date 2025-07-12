@@ -277,6 +277,61 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/table/{id}/merge_insert:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - name: "on"
+        in: query
+        description: Column name to use for matching rows (required)
+        required: true
+        schema:
+          type: string
+      - name: "when_matched_update_all"
+        in: query
+        description: Update all columns when rows match
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: "when_not_matched_insert_all"
+        in: query
+        description: Insert all columns when rows don't match
+        required: false
+        schema:
+          type: boolean
+          default: false
+    post:
+      tags: [ Table ]
+      summary: Merge insert (upsert) records into a table
+      operationId: MergeInsertTable
+      description: >
+        Performs a merge insert (upsert) operation on a table. This operation updates existing rows
+        based on a matching column and inserts new rows that don't match.
+        Returns the number of rows inserted and updated.
+      requestBody:
+        description: Arrow IPC data containing the records to merge
+        content:
+          application/x-arrow-ipc:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        200:
+          $ref: '#/components/responses/MergeInsertTableResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
   /v1/table/{id}/update:
     parameters:
       - $ref: '#/components/parameters/id'
@@ -1230,6 +1285,46 @@ components:
           description: The version of the table after the insert
           minimum: 0
 
+    MergeInsertTableRequest:
+      type: object
+      required:
+        - name
+        - namespace
+      properties:
+        name:
+          type: string
+          description: The table name
+        namespace:
+          type: array
+          items:
+            type: string
+          description: The namespace identifier
+
+    MergeInsertTableResponse:
+      type: object
+      description: Response from merge insert operation
+      properties:
+        num_updated_rows:
+          type: integer
+          format: int64
+          description: Number of rows updated
+          minimum: 0
+        num_inserted_rows:
+          type: integer
+          format: int64
+          description: Number of rows inserted
+          minimum: 0
+        num_deleted_rows:
+          type: integer
+          format: int64
+          description: Number of rows deleted (typically 0 for merge insert)
+          minimum: 0
+        version:
+          type: integer
+          format: int64
+          description: The commit version associated with the operation
+          minimum: 0
+
     UpdateTableRequest:
       type: object
       required:
@@ -1932,6 +2027,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/InsertTableResponse'
+
+    MergeInsertTableResponse:
+      description: Result of merge insert operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MergeInsertTableResponse'
 
     RegisterTableResponse:
       description: Table properties result when registering a table

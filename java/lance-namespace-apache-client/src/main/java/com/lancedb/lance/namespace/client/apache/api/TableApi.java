@@ -35,6 +35,7 @@ import com.lancedb.lance.namespace.model.IndexListResponse;
 import com.lancedb.lance.namespace.model.IndexStatsRequest;
 import com.lancedb.lance.namespace.model.IndexStatsResponse;
 import com.lancedb.lance.namespace.model.InsertTableResponse;
+import com.lancedb.lance.namespace.model.MergeInsertTableResponse;
 import com.lancedb.lance.namespace.model.QueryRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableResponse;
@@ -1088,6 +1089,128 @@ public class TableApi extends BaseApi {
     String[] localVarAuthNames = new String[] {};
 
     TypeReference<IndexListResponse> localVarReturnType = new TypeReference<IndexListResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Merge insert (upsert) records into a table Performs a merge insert (upsert) operation on a
+   * table. This operation updates existing rows based on a matching column and inserts new rows
+   * that don&#39;t match. Returns the number of rows inserted and updated.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param on Column name to use for matching rows (required) (required)
+   * @param body Arrow IPC data containing the records to merge (required)
+   * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
+   * @param whenNotMatchedInsertAll Insert all columns when rows don&#39;t match (optional, default
+   *     to false)
+   * @return MergeInsertTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public MergeInsertTableResponse mergeInsertTable(
+      String id,
+      String on,
+      byte[] body,
+      Boolean whenMatchedUpdateAll,
+      Boolean whenNotMatchedInsertAll)
+      throws ApiException {
+    return this.mergeInsertTable(
+        id, on, body, whenMatchedUpdateAll, whenNotMatchedInsertAll, Collections.emptyMap());
+  }
+
+  /**
+   * Merge insert (upsert) records into a table Performs a merge insert (upsert) operation on a
+   * table. This operation updates existing rows based on a matching column and inserts new rows
+   * that don&#39;t match. Returns the number of rows inserted and updated.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param on Column name to use for matching rows (required) (required)
+   * @param body Arrow IPC data containing the records to merge (required)
+   * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
+   * @param whenNotMatchedInsertAll Insert all columns when rows don&#39;t match (optional, default
+   *     to false)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return MergeInsertTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public MergeInsertTableResponse mergeInsertTable(
+      String id,
+      String on,
+      byte[] body,
+      Boolean whenMatchedUpdateAll,
+      Boolean whenNotMatchedInsertAll,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = body;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling mergeInsertTable");
+    }
+
+    // verify the required parameter 'on' is set
+    if (on == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'on' when calling mergeInsertTable");
+    }
+
+    // verify the required parameter 'body' is set
+    if (body == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'body' when calling mergeInsertTable");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/merge_insert"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("on", on));
+    localVarQueryParams.addAll(
+        apiClient.parameterToPair("when_matched_update_all", whenMatchedUpdateAll));
+    localVarQueryParams.addAll(
+        apiClient.parameterToPair("when_not_matched_insert_all", whenNotMatchedInsertAll));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/x-arrow-ipc"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<MergeInsertTableResponse> localVarReturnType =
+        new TypeReference<MergeInsertTableResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

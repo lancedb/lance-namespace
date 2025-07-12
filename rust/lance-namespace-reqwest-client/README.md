@@ -45,6 +45,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**get_index_stats**](docs/TableApi.md#get_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
 *TableApi* | [**insert_table**](docs/TableApi.md#insert_table) | **POST** /v1/table/{id}/insert | Insert records into a table
 *TableApi* | [**list_indices**](docs/TableApi.md#list_indices) | **POST** /v1/table/{id}/index/list | List indices on a table
+*TableApi* | [**merge_insert_table**](docs/TableApi.md#merge_insert_table) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 *TableApi* | [**query_table**](docs/TableApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
 *TableApi* | [**register_table**](docs/TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
 *TableApi* | [**table_exists**](docs/TableApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
@@ -93,6 +94,8 @@ Class | Method | HTTP request | Description
  - [JsonSchema](docs/JsonSchema.md)
  - [ListNamespacesRequest](docs/ListNamespacesRequest.md)
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
+ - [MergeInsertTableRequest](docs/MergeInsertTableRequest.md)
+ - [MergeInsertTableResponse](docs/MergeInsertTableResponse.md)
  - [NamespaceExistsRequest](docs/NamespaceExistsRequest.md)
  - [NamespaceExistsResponse](docs/NamespaceExistsResponse.md)
  - [QueryRequest](docs/QueryRequest.md)

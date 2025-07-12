@@ -129,6 +129,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**getIndexStats**](docs/TableApi.md#getIndexStats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
 *TableApi* | [**insertTable**](docs/TableApi.md#insertTable) | **POST** /v1/table/{id}/insert | Insert records into a table
 *TableApi* | [**listIndices**](docs/TableApi.md#listIndices) | **POST** /v1/table/{id}/index/list | List indices on a table
+*TableApi* | [**mergeInsertTable**](docs/TableApi.md#mergeInsertTable) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 *TableApi* | [**queryTable**](docs/TableApi.md#queryTable) | **POST** /v1/table/{id}/query | Query a table
 *TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /v1/table/{id}/register | Register a table to a namespace
 *TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists
@@ -177,6 +178,8 @@ Class | Method | HTTP request | Description
  - [JsonSchema](docs/JsonSchema.md)
  - [ListNamespacesRequest](docs/ListNamespacesRequest.md)
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
+ - [MergeInsertTableRequest](docs/MergeInsertTableRequest.md)
+ - [MergeInsertTableResponse](docs/MergeInsertTableResponse.md)
  - [NamespaceExistsRequest](docs/NamespaceExistsRequest.md)
  - [NamespaceExistsResponse](docs/NamespaceExistsResponse.md)
  - [QueryRequest](docs/QueryRequest.md)
