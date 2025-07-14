@@ -15,6 +15,7 @@ Method | HTTP request | Description
 [**get_index_stats**](TableApi.md#get_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
 [**insert_table**](TableApi.md#insert_table) | **POST** /v1/table/{id}/insert | Insert records into a table
 [**list_indices**](TableApi.md#list_indices) | **POST** /v1/table/{id}/index/list | List indices on a table
+[**list_tables**](TableApi.md#list_tables) | **POST** /v1/table/{id}/list | List tables
 [**merge_insert_table**](TableApi.md#merge_insert_table) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 [**query_table**](TableApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
 [**register_table**](TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
@@ -357,6 +358,38 @@ Name | Type | Description  | Required | Notes
 ### Return type
 
 [**models::IndexListResponse**](IndexListResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## list_tables
+
+> models::ListTablesResponse list_tables(id, list_tables_request, delimiter)
+List tables
+
+List all child table names of the root namespace or a given parent namespace. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**list_tables_request** | [**ListTablesRequest**](ListTablesRequest.md) |  | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
+
+### Return type
+
+[**models::ListTablesResponse**](ListTablesResponse.md)
 
 ### Authorization
 

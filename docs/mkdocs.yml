@@ -77,5 +77,6 @@ nav:
       - REST: spec/impls/rest.md
       - Directory: spec/impls/dir.md
       - Apache Hive MetaStore: spec/impls/hive.md
+      - Apache Iceberg REST Catalog: spec/impls/iceberg.md
   - Contributing: contributing.md
   - Lance: https://lancedb.github.io/lance

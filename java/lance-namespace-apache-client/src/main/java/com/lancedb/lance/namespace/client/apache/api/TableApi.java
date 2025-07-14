@@ -35,6 +35,8 @@ import com.lancedb.lance.namespace.model.IndexListResponse;
 import com.lancedb.lance.namespace.model.IndexStatsRequest;
 import com.lancedb.lance.namespace.model.IndexStatsResponse;
 import com.lancedb.lance.namespace.model.InsertTableResponse;
+import com.lancedb.lance.namespace.model.ListTablesRequest;
+import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.MergeInsertTableResponse;
 import com.lancedb.lance.namespace.model.QueryRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
@@ -1089,6 +1091,103 @@ public class TableApi extends BaseApi {
     String[] localVarAuthNames = new String[] {};
 
     TypeReference<IndexListResponse> localVarReturnType = new TypeReference<IndexListResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * List tables List all child table names of the root namespace or a given parent namespace.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param listTablesRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @return ListTablesResponse
+   * @throws ApiException if fails to make API call
+   */
+  public ListTablesResponse listTables(
+      String id, ListTablesRequest listTablesRequest, String delimiter) throws ApiException {
+    return this.listTables(id, listTablesRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * List tables List all child table names of the root namespace or a given parent namespace.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param listTablesRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return ListTablesResponse
+   * @throws ApiException if fails to make API call
+   */
+  public ListTablesResponse listTables(
+      String id,
+      ListTablesRequest listTablesRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = listTablesRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling listTables");
+    }
+
+    // verify the required parameter 'listTablesRequest' is set
+    if (listTablesRequest == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'listTablesRequest' when calling listTables");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/list"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<ListTablesResponse> localVarReturnType =
+        new TypeReference<ListTablesResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

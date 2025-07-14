@@ -1,9 +1,9 @@
 openapi: 3.1.1
 info:
   description: |
-    **Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _"tools"_ in this document) should integrate with Lance tables.
-    A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy.
-    In an enterprise environment, typically there is a requirement to store tables in a metadata service  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way.
+    This OpenAPI specification is a part of the Lance namespace specification. It contains 2 parts:
+    The `components/schemas`, `components/responses`, `components/examples` sections define the request and response shape for each operation in a Lance Namespace across all implementations. See https://lancedb.github.io/lance-namespace/spec/operations for more details.
+    The `servers`, `security`, `paths`, `components/parameters` sections are for the  Lance REST Namespace implementation, which defines a complete REST server that can work with Lance datasets. See https://lancedb.github.io/lance-namespace/spec/impls/rest for more details.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -730,6 +730,44 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/table/{id}/list:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
+    post:
+      description: |
+        List all child table names of the root namespace or a given parent namespace.
+      operationId: ListTables
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListTablesRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/ListTablesResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "406":
+          $ref: '#/components/responses/UnsupportedOperationErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: List tables
+      tags:
+      - Table
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/table/{id}/describe:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -1131,6 +1169,12 @@ components:
           schema:
             $ref: '#/components/schemas/NamespaceExistsResponse'
       description: Result of checking if a namespace exists
+    ListTablesResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListTablesResponse'
+      description: A list of tables
     DescribeTableResponse:
       content:
         application/json:
@@ -1615,6 +1659,54 @@ components:
       - location
       - name
       - namespace
+    ListTablesRequest:
+      example:
+        parent:
+        - parent
+        - parent
+        pageSize: 0
+        pageToken: pageToken
+      properties:
+        parent:
+          items:
+            type: string
+          type: array
+        pageToken:
+          description: |-
+            An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
+            For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available.
+            After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request.
+            Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.
+          type: string
+          nullable: true
+        pageSize:
+          description: An inclusive upper bound of the number of results that a client
+            will receive.
+          type: integer
+          nullable: true
+    ListTablesResponse:
+      example:
+        tables:
+        - cart
+        - cart
+        nextPageToken: nextPageToken
+      properties:
+        tables:
+          items:
+            example: cart
+            type: string
+          type: array
+          uniqueItems: true
+        nextPageToken:
+          description: |-
+            An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
+            For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available.
+            After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request.
+            Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.
+          type: string
+          nullable: true
+      required:
+      - tables
     DescribeTableRequest:
       example:
         name: name

@@ -6,9 +6,9 @@ Lance REST Namespace Specification
 
 - Generator version: 7.12.0
 
-**Lance Namespace Specification** is an open specification on top of the storage-based Lance data format  to standardize access to a collection of Lance tables (a.k.a. Lance datasets). It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, as well as how ML/AI tools and analytics compute engines (will together be called _\"tools\"_ in this document) should integrate with Lance tables.
-A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables. It can either contain a collection of tables, or a collection of Lance namespaces recursively. It is designed to encapsulates concepts including namespace, metastore, database, schema, etc. that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy.
-In an enterprise environment, typically there is a requirement to store tables in a metadata service  for more advanced governance features around access control, auditing, lineage tracking, etc. **Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables by connecting those metadata services or building a custom metadata server in a standardized way.
+This OpenAPI specification is a part of the Lance namespace specification. It contains 2 parts:
+The `components/schemas`, `components/responses`, `components/examples` sections define the request and response shape for each operation in a Lance Namespace across all implementations. See https://lancedb.github.io/lance-namespace/spec/operations for more details.
+The `servers`, `security`, `paths`, `components/parameters` sections are for the  Lance REST Namespace implementation, which defines a complete REST server that can work with Lance datasets. See https://lancedb.github.io/lance-namespace/spec/impls/rest for more details.
 
 
 
@@ -129,6 +129,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**getIndexStats**](docs/TableApi.md#getIndexStats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
 *TableApi* | [**insertTable**](docs/TableApi.md#insertTable) | **POST** /v1/table/{id}/insert | Insert records into a table
 *TableApi* | [**listIndices**](docs/TableApi.md#listIndices) | **POST** /v1/table/{id}/index/list | List indices on a table
+*TableApi* | [**listTables**](docs/TableApi.md#listTables) | **POST** /v1/table/{id}/list | List tables
 *TableApi* | [**mergeInsertTable**](docs/TableApi.md#mergeInsertTable) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 *TableApi* | [**queryTable**](docs/TableApi.md#queryTable) | **POST** /v1/table/{id}/query | Query a table
 *TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /v1/table/{id}/register | Register a table to a namespace
@@ -178,6 +179,8 @@ Class | Method | HTTP request | Description
  - [JsonSchema](docs/JsonSchema.md)
  - [ListNamespacesRequest](docs/ListNamespacesRequest.md)
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
+ - [ListTablesRequest](docs/ListTablesRequest.md)
+ - [ListTablesResponse](docs/ListTablesResponse.md)
  - [MergeInsertTableRequest](docs/MergeInsertTableRequest.md)
  - [MergeInsertTableResponse](docs/MergeInsertTableResponse.md)
  - [NamespaceExistsRequest](docs/NamespaceExistsRequest.md)
