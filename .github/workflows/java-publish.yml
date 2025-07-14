@@ -42,8 +42,8 @@ jobs:
           distribution: temurin
           java-version: 8
           server-id: ossrh
-          server-username: ${{ secrets.SONATYPE_USER }}
-          server-password:  ${{ secrets.SONATYPE_TOKEN }}
+          server-username: SONATYPE_USER
+          server-password: SONATYPE_TOKEN
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
@@ -51,8 +51,6 @@ jobs:
         run: |
           echo "use-agent" >> ~/.gnupg/gpg.conf
           echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
-          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-          echo "RELOADAGENT" | gpg-connect-agent
           export GPG_TTY=$(tty)
 
       - name: Install openapi-generator-cli
