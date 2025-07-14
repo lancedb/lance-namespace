@@ -33,6 +33,9 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: java
     steps:
       - uses: actions/checkout@v4
       
@@ -53,15 +56,6 @@ jobs:
           echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
           export GPG_TTY=$(tty)
 
-      - name: Install openapi-generator-cli
-        run: |
-          npm install -g @openapitools/openapi-generator-cli@7.10.0
-          openapi-generator-cli version
-
-      - name: Generate code
-        working-directory: java
-        run: make gen
-
       - name: Set github
         run: |
           git config --global user.name "LanceDB Github Runner"
@@ -69,19 +63,16 @@ jobs:
 
       - name: Dry run
         if: github.event_name == 'pull_request'
-        working-directory: java
         run: |
           ./mvnw --batch-mode -DskipTests package
-        env:
-          SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
-          SONATYPE_TOKEN: ${{ secrets.SONATYPE_TOKEN }}
 
       - name: Publish with Java 8
-        if: |
-          (github.event_name == 'release' && github.event.action == 'released') ||
-          (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
-        working-directory: java
+        # if: |
+        #   (github.event_name == 'release' && github.event.action == 'released') ||
+        #   (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
         run: |
+          echo "use-agent" >> ~/.gnupg/gpg.conf
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
           export GPG_TTY=$(tty)
           ./mvnw --batch-mode -DskipTests -DpushChanges=false -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} deploy -P deploy-to-ossrh
         env:
