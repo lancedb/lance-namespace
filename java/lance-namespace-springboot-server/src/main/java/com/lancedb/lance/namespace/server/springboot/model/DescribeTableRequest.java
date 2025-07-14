@@ -37,8 +37,6 @@ public class DescribeTableRequest {
 
   private Long version = null;
 
-  private Boolean withTableUri = null;
-
   public DescribeTableRequest name(String name) {
     this.name = name;
     return this;
@@ -108,30 +106,6 @@ public class DescribeTableRequest {
     this.version = version;
   }
 
-  public DescribeTableRequest withTableUri(Boolean withTableUri) {
-    this.withTableUri = withTableUri;
-    return this;
-  }
-
-  /**
-   * If set to `Some(true)`, returns Table URI as payload. This flag should not be public in SaaS.
-   *
-   * @return withTableUri
-   */
-  @Schema(
-      name = "with_table_uri",
-      description =
-          "If set to `Some(true)`, returns Table URI as payload. This flag should not be public in SaaS.",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("with_table_uri")
-  public Boolean getWithTableUri() {
-    return withTableUri;
-  }
-
-  public void setWithTableUri(Boolean withTableUri) {
-    this.withTableUri = withTableUri;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -143,13 +117,12 @@ public class DescribeTableRequest {
     DescribeTableRequest describeTableRequest = (DescribeTableRequest) o;
     return Objects.equals(this.name, describeTableRequest.name)
         && Objects.equals(this.namespace, describeTableRequest.namespace)
-        && Objects.equals(this.version, describeTableRequest.version)
-        && Objects.equals(this.withTableUri, describeTableRequest.withTableUri);
+        && Objects.equals(this.version, describeTableRequest.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, version, withTableUri);
+    return Objects.hash(name, namespace, version);
   }
 
   @Override
@@ -159,7 +132,6 @@ public class DescribeTableRequest {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
-    sb.append("    withTableUri: ").append(toIndentedString(withTableUri)).append("\n");
     sb.append("}");
     return sb.toString();
   }

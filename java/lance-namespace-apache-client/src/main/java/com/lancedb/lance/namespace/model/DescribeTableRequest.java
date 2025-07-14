@@ -31,8 +31,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({
   DescribeTableRequest.JSON_PROPERTY_NAME,
   DescribeTableRequest.JSON_PROPERTY_NAMESPACE,
-  DescribeTableRequest.JSON_PROPERTY_VERSION,
-  DescribeTableRequest.JSON_PROPERTY_WITH_TABLE_URI
+  DescribeTableRequest.JSON_PROPERTY_VERSION
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -46,11 +45,6 @@ public class DescribeTableRequest {
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nullable private JsonNullable<Long> version = JsonNullable.<Long>undefined();
-
-  public static final String JSON_PROPERTY_WITH_TABLE_URI = "with_table_uri";
-
-  @javax.annotation.Nullable
-  private JsonNullable<Boolean> withTableUri = JsonNullable.<Boolean>undefined();
 
   public DescribeTableRequest() {}
 
@@ -142,39 +136,6 @@ public class DescribeTableRequest {
     this.version = JsonNullable.<Long>of(version);
   }
 
-  public DescribeTableRequest withTableUri(@javax.annotation.Nullable Boolean withTableUri) {
-    this.withTableUri = JsonNullable.<Boolean>of(withTableUri);
-
-    return this;
-  }
-
-  /**
-   * If set to &#x60;Some(true)&#x60;, returns Table URI as payload. This flag should not be public
-   * in SaaS.
-   *
-   * @return withTableUri
-   */
-  @javax.annotation.Nullable
-  @JsonIgnore
-  public Boolean getWithTableUri() {
-    return withTableUri.orElse(null);
-  }
-
-  @JsonProperty(JSON_PROPERTY_WITH_TABLE_URI)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Boolean> getWithTableUri_JsonNullable() {
-    return withTableUri;
-  }
-
-  @JsonProperty(JSON_PROPERTY_WITH_TABLE_URI)
-  public void setWithTableUri_JsonNullable(JsonNullable<Boolean> withTableUri) {
-    this.withTableUri = withTableUri;
-  }
-
-  public void setWithTableUri(@javax.annotation.Nullable Boolean withTableUri) {
-    this.withTableUri = JsonNullable.<Boolean>of(withTableUri);
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -186,8 +147,7 @@ public class DescribeTableRequest {
     DescribeTableRequest describeTableRequest = (DescribeTableRequest) o;
     return Objects.equals(this.name, describeTableRequest.name)
         && Objects.equals(this.namespace, describeTableRequest.namespace)
-        && equalsNullable(this.version, describeTableRequest.version)
-        && equalsNullable(this.withTableUri, describeTableRequest.withTableUri);
+        && equalsNullable(this.version, describeTableRequest.version);
   }
 
   private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
@@ -201,7 +161,7 @@ public class DescribeTableRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, hashCodeNullable(version), hashCodeNullable(withTableUri));
+    return Objects.hash(name, namespace, hashCodeNullable(version));
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -218,7 +178,6 @@ public class DescribeTableRequest {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
-    sb.append("    withTableUri: ").append(toIndentedString(withTableUri)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -310,22 +269,6 @@ public class DescribeTableRequest {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `with_table_uri` to the URL query string
-    if (getWithTableUri() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%swith_table_uri%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getWithTableUri()), "UTF-8")
-                    .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

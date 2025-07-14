@@ -39,8 +39,7 @@ class TestDescribeTableRequest(unittest.TestCase):
                 namespace = [
                     ''
                     ],
-                version = 0,
-                with_table_uri = True
+                version = 0
             )
         else:
             return DescribeTableRequest(

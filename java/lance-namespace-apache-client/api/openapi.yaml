@@ -1143,33 +1143,6 @@ components:
       schema:
         $ref: '#/components/schemas/PageToken'
       style: form
-    x-lancedb-database:
-      description: Database name (used when host override is enabled)
-      explode: false
-      in: header
-      name: x-lancedb-database
-      required: false
-      schema:
-        nullable: true
-      style: simple
-    x-lancedb-database-prefix:
-      description: Database prefix for multi-tenant environments
-      explode: false
-      in: header
-      name: x-lancedb-database-prefix
-      required: false
-      schema:
-        nullable: true
-      style: simple
-    x-azure-storage-account-name:
-      description: Azure storage account name for Azure-backed databases
-      explode: false
-      in: header
-      name: x-azure-storage-account-name
-      required: false
-      schema:
-        nullable: true
-      style: simple
   responses:
     ListNamespacesResponse:
       content:
@@ -1758,7 +1731,6 @@ components:
         - namespace
         - namespace
         version: 0
-        with_table_uri: true
       properties:
         name:
           type: string
@@ -1771,12 +1743,6 @@ components:
           minimum: 0
           nullable: true
           type: integer
-        with_table_uri:
-          description: |-
-            If set to `Some(true)`, returns Table URI as payload.
-            This flag should not be public in SaaS.
-          nullable: true
-          type: boolean
     DescribeTableResponse:
       example:
         schema:

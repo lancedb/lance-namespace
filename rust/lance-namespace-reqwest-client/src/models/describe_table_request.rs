@@ -19,9 +19,6 @@ pub struct DescribeTableRequest {
     pub namespace: Option<Vec<String>>,
     #[serde(rename = "version", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub version: Option<Option<i64>>,
-    /// If set to `Some(true)`, returns Table URI as payload. This flag should not be public in SaaS.
-    #[serde(rename = "with_table_uri", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
-    pub with_table_uri: Option<Option<bool>>,
 }
 
 impl DescribeTableRequest {
@@ -30,7 +27,6 @@ impl DescribeTableRequest {
             name: None,
             namespace: None,
             version: None,
-            with_table_uri: None,
         }
     }
 }

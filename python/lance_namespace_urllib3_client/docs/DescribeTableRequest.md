@@ -8,7 +8,6 @@ Name | Type | Description | Notes
 **name** | **str** |  | [optional] 
 **namespace** | **List[str]** |  | [optional] 
 **version** | **int** |  | [optional] 
-**with_table_uri** | **bool** | If set to &#x60;Some(true)&#x60;, returns Table URI as payload. This flag should not be public in SaaS. | [optional] 
 
 ## Example
 
