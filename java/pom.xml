@@ -268,7 +268,8 @@
                         <version>3.3.0</version>
                         <executions>
                             <execution>
-                                <id>attach-sources</id>
+                                <id>attach-sources-deploy</id>
+                                <phase>verify</phase>
                                 <goals>
                                     <goal>jar-no-fork</goal>
                                 </goals>
