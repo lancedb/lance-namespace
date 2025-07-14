@@ -130,7 +130,6 @@ public class RestTableApiTest {
     System.out.println("\n--- Testing describe table ---");
     DescribeTableRequest describeRequest = new DescribeTableRequest();
     describeRequest.setName(testCreateTableName);
-    describeRequest.setWithTableUri(true);
 
     DescribeTableResponse describeResponse = namespace.describeTable(describeRequest);
     assertNotNull(describeResponse, "Describe response should not be null");
