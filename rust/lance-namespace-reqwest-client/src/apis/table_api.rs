@@ -360,7 +360,7 @@ pub async fn create_scalar_index(configuration: &configuration::Configuration, i
 }
 
 /// Create a new table in the namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
-pub async fn create_table(configuration: &configuration::Configuration, id: &str, body: std::path::PathBuf) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
+pub async fn create_table(configuration: &configuration::Configuration, id: &str, body: Vec<u8>) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_body = body;
@@ -607,7 +607,7 @@ pub async fn get_index_stats(configuration: &configuration::Configuration, id: &
 }
 
 /// Insert new records into an existing table using Arrow IPC format. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
-pub async fn insert_table(configuration: &configuration::Configuration, id: &str, body: std::path::PathBuf, mode: Option<&str>) -> Result<models::InsertTableResponse, Error<InsertTableError>> {
+pub async fn insert_table(configuration: &configuration::Configuration, id: &str, body: Vec<u8>, mode: Option<&str>) -> Result<models::InsertTableResponse, Error<InsertTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_body = body;
@@ -732,7 +732,7 @@ pub async fn list_tables(configuration: &configuration::Configuration, id: &str,
 }
 
 /// Performs a merge insert (upsert) operation on a table. This operation updates existing rows based on a matching column and inserts new rows that don't match. Returns the number of rows inserted and updated. 
-pub async fn merge_insert_table(configuration: &configuration::Configuration, id: &str, on: &str, body: std::path::PathBuf, when_matched_update_all: Option<bool>, when_not_matched_insert_all: Option<bool>) -> Result<models::MergeInsertTableResponse, Error<MergeInsertTableError>> {
+pub async fn merge_insert_table(configuration: &configuration::Configuration, id: &str, on: &str, body: Vec<u8>, when_matched_update_all: Option<bool>, when_not_matched_insert_all: Option<bool>) -> Result<models::MergeInsertTableResponse, Error<MergeInsertTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_on = on;

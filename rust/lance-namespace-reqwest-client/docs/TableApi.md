@@ -131,7 +131,7 @@ Create a new table in the namespace. Supports both lance-namespace format (with 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
-**body** | **std::path::PathBuf** | Arrow IPC data | [required] |
+**body** | **Vec<u8>** | Arrow IPC data | [required] |
 
 ### Return type
 
@@ -321,7 +321,7 @@ Insert new records into an existing table using Arrow IPC format. Supports both 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
-**body** | **std::path::PathBuf** | Arrow IPC data | [required] |
+**body** | **Vec<u8>** | Arrow IPC data | [required] |
 **mode** | Option<**String**> | Insert mode: \"append\" (default) or \"overwrite\" |  |[default to append]
 
 ### Return type
@@ -417,7 +417,7 @@ Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
 **on** | **String** | Column name to use for matching rows (required) | [required] |
-**body** | **std::path::PathBuf** | Arrow IPC data containing the records to merge | [required] |
+**body** | **Vec<u8>** | Arrow IPC data containing the records to merge | [required] |
 **when_matched_update_all** | Option<**bool**> | Update all columns when rows match |  |[default to false]
 **when_not_matched_insert_all** | Option<**bool**> | Insert all columns when rows don't match |  |[default to false]
 
@@ -439,7 +439,7 @@ No authorization required
 
 ## query_table
 
-> std::path::PathBuf query_table(id, query_request)
+> Vec<u8> query_table(id, query_request)
 Query a table
 
 Query a table with vector search and optional filtering. Returns results in Arrow IPC stream format. 
@@ -454,7 +454,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**std::path::PathBuf**](std::path::PathBuf.md)
+[**Vec<u8>**](Vec<u8>.md)
 
 ### Authorization
 

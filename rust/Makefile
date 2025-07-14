@@ -20,6 +20,7 @@ gen-rust-reqwest-client: clean-rust-reqwest-client
 	  -i ../docs/src/spec/rest.yaml \
 	  -g rust \
 	  -o lance-namespace-reqwest-client \
+	  --type-mappings='Binary=Vec<u8>,binary=Vec<u8>,file=Vec<u8>' \
 	  --additional-properties=packageName=lance-namespace-reqwest-client,packageVersion=$(VERSION),asyncApi=true,library=reqwest
 	rm -rf lance-namespace-reqwest-client/.openapi-generator-ignore
 	rm -rf lance-namespace-reqwest-client/.openapi-generator
