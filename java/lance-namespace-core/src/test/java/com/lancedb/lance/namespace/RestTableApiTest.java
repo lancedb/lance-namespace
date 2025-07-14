@@ -89,11 +89,15 @@ public class RestTableApiTest {
 
   @BeforeEach
   public void setUp() {
-    namespace = initializeClient();
-    allocator = new RootAllocator();
-    // Generate unique table name for each test run
-    testCreateTableName =
-        "test_table_" + UUID.randomUUID().toString().replace("-", "_").substring(0, 8);
+    // Only initialize if required environment variables are set
+    // TODO add required environment variables as github secrets
+    if (DATABASE != null && API_KEY != null) {
+      namespace = initializeClient();
+      allocator = new RootAllocator();
+      // Generate unique table name for each test run
+      testCreateTableName =
+          "test_table_" + UUID.randomUUID().toString().replace("-", "_").substring(0, 8);
+    }
   }
 
   @Test
@@ -472,7 +476,9 @@ public class RestTableApiTest {
     if (HOST_OVERRIDE != null) {
       config.put("host_override", HOST_OVERRIDE);
     }
-    config.put("region", REGION);
+    if (REGION != null) {
+      config.put("region", REGION);
+    }
 
     ApiClient apiClient = new ApiClient();
 
