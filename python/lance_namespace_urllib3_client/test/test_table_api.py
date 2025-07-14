@@ -75,6 +75,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_describe_table_v2(self) -> None:
+        """Test case for describe_table_v2
+
+        Describe a table from the namespace
+        """
+        pass
+
     def test_drop_table(self) -> None:
         """Test case for drop_table
 

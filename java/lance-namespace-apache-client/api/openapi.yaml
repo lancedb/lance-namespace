@@ -806,6 +806,44 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v2/table/{id}/describe:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
+    post:
+      description: |
+        Get a table's detailed information under a specified namespace.
+      operationId: DescribeTableV2
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DescribeTableRequestV2'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/DescribeTableResponseV2'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Describe a table from the namespace
+      tags:
+      - Table
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/table/{id}/count_rows:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -1180,6 +1218,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/DescribeTableResponse'
+      description: Table properties result when loading a table
+    DescribeTableResponseV2:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DescribeTableResponseV2'
       description: Table properties result when loading a table
     CountRowsResponse:
       content:
@@ -1802,6 +1846,47 @@ components:
       - stats
       - table
       - version
+    DescribeTableRequestV2:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+      properties:
+        name:
+          type: string
+        namespace:
+          items:
+            type: string
+          type: array
+      required:
+      - name
+      - namespace
+    DescribeTableResponseV2:
+      example:
+        name: name
+        namespace:
+        - namespace
+        - namespace
+        location: location
+        properties:
+          key: properties
+      properties:
+        name:
+          type: string
+        namespace:
+          items:
+            type: string
+          type: array
+        location:
+          type: string
+        properties:
+          additionalProperties:
+            type: string
+      required:
+      - location
+      - name
+      - namespace
     CountRowsRequest:
       example:
         name: name

@@ -27,7 +27,9 @@ import com.lancedb.lance.namespace.model.DeleteFromTableResponse;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
+import com.lancedb.lance.namespace.model.DescribeTableRequestV2;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
+import com.lancedb.lance.namespace.model.DescribeTableResponseV2;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
 import com.lancedb.lance.namespace.model.IndexListRequest;
@@ -708,6 +710,108 @@ public class TableApi extends BaseApi {
 
     TypeReference<DescribeTableResponse> localVarReturnType =
         new TypeReference<DescribeTableResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Describe a table from the namespace Get a table&#39;s detailed information under a specified
+   * namespace.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param describeTableRequestV2 (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @return DescribeTableResponseV2
+   * @throws ApiException if fails to make API call
+   */
+  public DescribeTableResponseV2 describeTableV2(
+      String id, DescribeTableRequestV2 describeTableRequestV2, String delimiter)
+      throws ApiException {
+    return this.describeTableV2(id, describeTableRequestV2, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Describe a table from the namespace Get a table&#39;s detailed information under a specified
+   * namespace.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param describeTableRequestV2 (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return DescribeTableResponseV2
+   * @throws ApiException if fails to make API call
+   */
+  public DescribeTableResponseV2 describeTableV2(
+      String id,
+      DescribeTableRequestV2 describeTableRequestV2,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = describeTableRequestV2;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling describeTableV2");
+    }
+
+    // verify the required parameter 'describeTableRequestV2' is set
+    if (describeTableRequestV2 == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'describeTableRequestV2' when calling describeTableV2");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v2/table/{id}/describe"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<DescribeTableResponseV2> localVarReturnType =
+        new TypeReference<DescribeTableResponseV2>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

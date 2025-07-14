@@ -692,6 +692,38 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v2/table/{id}/describe:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags: [ Table ]
+      summary: Describe a table from the namespace
+      operationId: DescribeTableV2
+      description: >
+        Get a table's detailed information under a specified namespace.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DescribeTableRequestV2'
+      responses:
+        200:
+          $ref: '#/components/responses/DescribeTableResponseV2'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
   /v1/table/{id}/count_rows:
     parameters:
       - $ref: '#/components/parameters/id'
@@ -1311,6 +1343,39 @@ components:
           type: integer
           format: int64
           minimum: 0
+
+    DescribeTableRequestV2:
+      type: object
+      required:
+        - name
+        - namespace
+      properties:
+        name:
+          type: string
+        namespace:
+          type: array
+          items:
+            type: string
+
+    DescribeTableResponseV2:
+      type: object
+      required:
+        - name
+        - namespace
+        - location
+      properties:
+        name:
+          type: string
+        namespace:
+          type: array
+          items:
+            type: string
+        location:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            type: string
 
     CountRowsRequest:
       type: object
@@ -2065,6 +2130,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/DescribeTableResponse'
+
+    DescribeTableResponseV2:
+      description: Table properties result when loading a table
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DescribeTableResponseV2'
 
     CountRowsResponse:
       description: Result of counting rows in a table

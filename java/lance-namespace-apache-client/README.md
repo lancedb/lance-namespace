@@ -125,6 +125,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**deleteFromTable**](docs/TableApi.md#deleteFromTable) | **POST** /v1/table/{id}/delete | Delete rows from a table
 *TableApi* | [**deregisterTable**](docs/TableApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 *TableApi* | [**describeTable**](docs/TableApi.md#describeTable) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
+*TableApi* | [**describeTableV2**](docs/TableApi.md#describeTableV2) | **POST** /v2/table/{id}/describe | Describe a table from the namespace
 *TableApi* | [**dropTable**](docs/TableApi.md#dropTable) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
 *TableApi* | [**getIndexStats**](docs/TableApi.md#getIndexStats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
 *TableApi* | [**insertTable**](docs/TableApi.md#insertTable) | **POST** /v1/table/{id}/insert | Insert records into a table
@@ -160,7 +161,9 @@ Class | Method | HTTP request | Description
  - [DescribeNamespaceRequest](docs/DescribeNamespaceRequest.md)
  - [DescribeNamespaceResponse](docs/DescribeNamespaceResponse.md)
  - [DescribeTableRequest](docs/DescribeTableRequest.md)
+ - [DescribeTableRequestV2](docs/DescribeTableRequestV2.md)
  - [DescribeTableResponse](docs/DescribeTableResponse.md)
+ - [DescribeTableResponseV2](docs/DescribeTableResponseV2.md)
  - [DescribeTransactionRequest](docs/DescribeTransactionRequest.md)
  - [DescribeTransactionResponse](docs/DescribeTransactionResponse.md)
  - [DropNamespaceRequest](docs/DropNamespaceRequest.md)

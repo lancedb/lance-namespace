@@ -11,6 +11,7 @@ Method | HTTP request | Description
 [**delete_from_table**](TableApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
 [**deregister_table**](TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 [**describe_table**](TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
+[**describe_table_v2**](TableApi.md#describe_table_v2) | **POST** /v2/table/{id}/describe | Describe a table from the namespace
 [**drop_table**](TableApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
 [**get_index_stats**](TableApi.md#get_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
 [**insert_table**](TableApi.md#insert_table) | **POST** /v1/table/{id}/insert | Insert records into a table
@@ -231,6 +232,38 @@ Name | Type | Description  | Required | Notes
 ### Return type
 
 [**models::DescribeTableResponse**](DescribeTableResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## describe_table_v2
+
+> models::DescribeTableResponseV2 describe_table_v2(id, describe_table_request_v2, delimiter)
+Describe a table from the namespace
+
+Get a table's detailed information under a specified namespace. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**describe_table_request_v2** | [**DescribeTableRequestV2**](DescribeTableRequestV2.md) |  | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
+
+### Return type
+
+[**models::DescribeTableResponseV2**](DescribeTableResponseV2.md)
 
 ### Authorization
 

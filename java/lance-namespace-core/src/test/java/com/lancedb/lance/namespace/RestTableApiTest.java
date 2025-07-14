@@ -69,8 +69,11 @@ public class RestTableApiTest {
   @BeforeAll
   public static void setUpClass() {
     // Get configuration from environment variables
+    // The top level folder name, e.g. s3://my-bucket/my-database
+    // LANCEDB_DB is the 'my-database'
     DATABASE = System.getenv("LANCEDB_DB");
     API_KEY = System.getenv("LANCEDB_API_KEY");
+    // e.g. http://localhost:10024
     HOST_OVERRIDE = System.getenv("LANCEDB_HOST_OVERRIDE");
     REGION = System.getenv("LANCEDB_REGION");
 
