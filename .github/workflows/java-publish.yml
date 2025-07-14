@@ -1,0 +1,212 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Java Publish
+
+on:
+  release:
+    types:
+      - released
+  pull_request:
+    paths:
+      - .github/workflows/java-publish.yml
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "dry_run: build & package only, release: build & deploy to OSSRH"
+        required: true
+        default: "dry_run"
+        type: choice
+        options:
+          - dry_run
+          - release
+
+jobs:
+  # Build on multiple platforms to ensure compatibility
+  build:
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            arch: linux-x86-64
+            java-version: 11
+          - runner: ubuntu-latest
+            arch: linux-x86-64
+            java-version: 17
+          - runner: buildjet-4vcpu-ubuntu-2204-arm
+            arch: linux-arm64
+            java-version: 11
+          - runner: buildjet-4vcpu-ubuntu-2204-arm
+            arch: linux-arm64
+            java-version: 17
+          - runner: macos-14
+            arch: macos-arm64
+            java-version: 11
+          - runner: macos-14
+            arch: macos-arm64
+            java-version: 17
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java-version }}
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install openapi-generator-cli
+        run: |
+          npm install -g @openapitools/openapi-generator-cli@7.10.0
+          openapi-generator-cli version
+
+      - name: Set Maven version
+        working-directory: java
+        run: |
+          if [ "${{ github.event_name }}" == "release" ]; then
+            VERSION="${{ github.event.release.tag_name }}"
+            # Remove 'v' prefix if present
+            VERSION="${VERSION#v}"
+            echo "Setting version to $VERSION"
+            ./mvnw versions:set -DnewVersion=$VERSION -DgenerateBackupPoms=false
+          else
+            echo "Using version from pom.xml"
+          fi
+
+      - name: Build and test
+        working-directory: java
+        run: |
+          ./mvnw clean package
+          echo "Build completed on ${{ matrix.arch }} with JDK ${{ matrix.java-version }}"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: java-artifacts-${{ matrix.arch }}-jdk${{ matrix.java-version }}
+          path: |
+            java/*/target/*.jar
+            !java/*/target/*-sources.jar
+            !java/*/target/*-javadoc.jar
+          retention-days: 1
+
+  # Deploy from Linux x86-64 with JDK 11 (for widest compatibility)
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 11
+          server-id: ossrh
+          server-username: SONATYPE_USER
+          server-password: SONATYPE_TOKEN
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
+
+      - name: Configure GPG
+        run: |
+          echo "use-agent" >> ~/.gnupg/gpg.conf
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo "RELOADAGENT" | gpg-connect-agent
+          export GPG_TTY=$(tty)
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install openapi-generator-cli
+        run: |
+          npm install -g @openapitools/openapi-generator-cli@7.10.0
+          openapi-generator-cli version
+
+      - name: Generate code
+        working-directory: java
+        run: make gen
+
+      - name: Set Maven version
+        working-directory: java
+        run: |
+          if [ "${{ github.event_name }}" == "release" ]; then
+            VERSION="${{ github.event.release.tag_name }}"
+            # Remove 'v' prefix if present
+            VERSION="${VERSION#v}"
+            echo "Setting version to $VERSION"
+            ./mvnw versions:set -DnewVersion=$VERSION -DgenerateBackupPoms=false
+          else
+            echo "Using version from pom.xml"
+          fi
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Display artifact structure
+        run: |
+          echo "Downloaded artifacts:"
+          find artifacts -type f -name "*.jar" | sort
+
+      - name: Package artifacts
+        working-directory: java
+        run: |
+          ./mvnw clean package -DskipTests
+        env:
+          SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
+          SONATYPE_TOKEN: ${{ secrets.SONATYPE_TOKEN }}
+
+      - name: Deploy to OSSRH
+        if: |
+          (github.event_name == 'release' && github.event.action == 'released') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
+        working-directory: java
+        run: |
+          ./mvnw deploy -P deploy-to-ossrh \
+            --batch-mode \
+            -DskipTests \
+            -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
+            -DpushChanges=false
+        env:
+          SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
+          SONATYPE_TOKEN: ${{ secrets.SONATYPE_TOKEN }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Display deployment info
+        if: |
+          (github.event_name == 'release' && github.event.action == 'released') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
+        run: |
+          echo "Artifacts have been deployed to OSSRH."
+          echo "They will be automatically synced to Maven Central after validation."
+          echo "This process typically takes 10-30 minutes."
+          echo ""
+          echo "You can check the deployment status at:"
+          echo "https://s01.oss.sonatype.org/"
