@@ -28,10 +28,3 @@ To better support this usage pattern, Lance adopts the term **_namespace_** to r
 — including what would traditionally be called a catalog. 
 With the **Lance Namespace Specification**, we provide a flexible, multi-level namespace abstraction 
 that allows users to structure and manage Lance datasets in ways that best align with their data organization strategies.
-
-## Getting Started
-
-- **[Specification](./spec/concepts.md)** - Learn about the core concepts and operations
-- **[Native Implementations](./spec/impls/overview.md)** - Explore available implementations  
-- **[User Guide](./user-guide/overview.md)** - Get started with client SDKs
-- **[Java SDK](./user-guide/java-sdk.md)** - Use the Java SDK for LanceDB Cloud/Enterprise
