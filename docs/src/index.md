@@ -31,7 +31,7 @@ that allows users to structure and manage Lance datasets in ways that best align
 
 ## Getting Started
 
-- **[Specification](spec/concepts.md)** - Learn about the core concepts and operations
-- **[Native Implementations](spec/impls/overview.md)** - Explore available implementations  
-- **[User Guide](user-guide/overview.md)** - Get started with client SDKs
-- **[Java SDK](user-guide/java-sdk.md)** - Use the Java SDK for LanceDB Cloud/Enterprise
+- **[Specification](./spec/concepts.md)** - Learn about the core concepts and operations
+- **[Native Implementations](./spec/impls/overview.md)** - Explore available implementations  
+- **[User Guide](./user-guide/overview.md)** - Get started with client SDKs
+- **[Java SDK](./user-guide/java-sdk.md)** - Use the Java SDK for LanceDB Cloud/Enterprise
