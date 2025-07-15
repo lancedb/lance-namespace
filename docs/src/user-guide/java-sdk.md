@@ -1,4 +1,4 @@
-# Java SDK for LanceDB Cloud/Enterprise
+# Java SDK for LanceDB Cloud/Enterprise (Experimental)
 
 This guide explains how to use the Java SDK to interact with LanceDB Cloud and Enterprise deployments.
 
@@ -28,20 +28,17 @@ import com.lancedb.lance.namespace.LanceRestNamespace;
 import java.util.HashMap;
 import java.util.Map;
 
-// Configuration
-Map<String, String> config = new HashMap<>();
 // If your DB url is db://example-db, then your db here is example-db
-config.put("headers.x-lancedb-database", "your_db");
-config.put("headers.x-api-key", "your_api_key");
+String lancedbDatabase = "your_database_name";
+String lancedbApiKey = "your_lancedb_cloud_api_key";
 
-// Initialize API client
+Map<String, String> config = new HashMap<>();
+config.put("headers.x-lancedb-database", lancedbDatabase);
+config.put("headers.x-api-key", lancedbApiKey);
+
 ApiClient apiClient = new ApiClient();
-String DATABASE = "your_database_name";
-String REGION = "us-east-1";  // or your specific region
-String baseUrl = String.format("https://%s.%s.api.lancedb.com", DATABASE, REGION);
+String baseUrl = String.format("https://%s.us-east-1.api.lancedb.com", lancedbDatabase);
 apiClient.setBasePath(baseUrl);
-
-// Create namespace client
 LanceRestNamespace namespace = new LanceRestNamespace(apiClient, config);
 ```
 
@@ -50,17 +47,18 @@ LanceRestNamespace namespace = new LanceRestNamespace(apiClient, config);
 For Enterprise deployments, use your VPC endpoint:
 
 ```java
-// Configuration
+// Your top level folder under your cloud bucket, e.g. s3://your-bucket/your-top-dir/
+String lancedbDatabase = "your-top-dir";
+String lancedbApiKey = "your_lancedb_enterprise_api_key";
+// Your enterprise connection url
+String lancedbHostOverride = "http://<vpc_endpoint_dns_name>:80";
+
 Map<String, String> config = new HashMap<>();
-// If your DB url is db://example-db, then your db here is example-db
-config.put("headers.x-lancedb-database", "your_db");
-config.put("headers.x-api-key", "your_api_key");
+config.put("headers.x-lancedb-database", lancedbDatabase);
+config.put("headers.x-api-key", lancedbApiKey);
 
-// Initialize API client
 ApiClient apiClient = new ApiClient();
-apiClient.setBasePath("http://<vpc_endpoint_dns_name>:80");
-
-// Create namespace client
+apiClient.setBasePath(lancedbHostOverride);
 LanceRestNamespace namespace = new LanceRestNamespace(apiClient, config);
 ```
 
@@ -87,28 +85,21 @@ The Java SDK supports the following endpoints. Full API documentation is availab
 
 ## Request and Response Structure
 
-!!! note "Protocol Fields"
-    The request and response structures contain fields like `location`, `name`, `namespace`, and `properties` that are part of the lance-namespace protocol. These fields will be empty in responses and should be ignored.
+!!! note "Response Fields"
+    The response structures contain fields like `location`, `name`, `namespace`, and `properties` that are part of the lance-namespace protocol. These fields will be empty in responses and should be ignored.
+
+!!! note "Request Fields"
+    The request structures contains field `name` which refer to table name and it's required. The `namespace` field is optional, if provided the result table name will be in format of `namespace.name`.
 
 For detailed request/response structures, refer to the [Apache Client documentation](https://javadoc.io/doc/com.lancedb/lance-namespace-apache-client/latest/index.html).
-
-### Important Response Fields to Ignore
-
-When working with responses, ignore these protocol-specific fields:
-- `location` - Always empty
-- `name` - Protocol field, not related to your data
-- `namespace` - Protocol field, not related to your data  
-- `properties` - Protocol field, not related to your data
-
-Focus on the actual data fields like:
-- `version` - Table version number
-- `schema` - Table schema information
-- `stats` - Table statistics
-- Response-specific data fields
 
 ## Examples
 
 ### Creating a Table
+
+LanceDB uses Apache Arrow format for data exchange. Arrow provides:
+- Cross-language compatibility
+- Rich data type support including nested types and tensors
 
 ```java
 import org.apache.arrow.vector.*;
@@ -129,7 +120,6 @@ Field embeddingField = new Field(
             null)
     )
 );
-
 Schema schema = new Schema(Arrays.asList(idField, nameField, embeddingField));
 
 // Create data
@@ -183,6 +173,8 @@ try (BufferAllocator allocator = new RootAllocator();
 
 ### Querying a Table
 
+Query results are returned in Arrow File format. Use `ArrowFileReader` to read the results:
+
 ```java
 import com.lancedb.lance.namespace.model.QueryRequest;
 
@@ -230,6 +222,16 @@ try (BufferAllocator allocator = new RootAllocator();
 
 ### Creating an Index
 
+LanceDB automatically optimizes index parameters based on best practices for your workload.
+
+#### Vector Index Best Practices
+
+- **Index Type**: Use IVF_PQ for production workloads (default)
+- **Metric Type**: 
+  - Use `L2` for normalized vectors (faster computation)
+  - Use `COSINE` for non-normalized vectors (more compute-intensive)
+- Other parameters are automatically tuned by the system
+
 ```java
 import com.lancedb.lance.namespace.model.CreateIndexRequest;
 
@@ -241,6 +243,22 @@ indexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.IVF_PQ);
 indexRequest.setMetricType(CreateIndexRequest.MetricTypeEnum.L2);
 
 CreateIndexResponse response = namespace.createIndex(indexRequest);
+```
+
+#### Scalar Index Best Practices
+
+Scalar indexes improve query performance when using filters: `table.query(embedding).where(filter)`
+
+- **BITMAP Index**: Best for columns with low cardinality (< few thousand unique values)
+  - Excellent search performance
+  - Relatively small index size
+- **BTREE Index**: Use when unique values are high
+- **Optimization Tip**: Reduce data precision to enable bitmap indexing:
+  - Round floating-point values
+  - Reduce timestamp precision (e.g., second → day)
+
+```java
+import com.lancedb.lance.namespace.model.CreateIndexRequest;
 
 // Create scalar index
 CreateIndexRequest scalarIndexRequest = new CreateIndexRequest();
@@ -302,7 +320,7 @@ System.out.println("Inserted rows: " + response.getNumInsertedRows());
 
 ## Current Limitations
 
-The Java SDK is generated from an OpenAPI specification created by utoipa, which has some limitations with recursive structures:
+The Java SDK is generated from an OpenAPI specification created by utoipa, which has some limitations with recursive structures. We are actively working to address these limitations.
 
 ### Schema Representation
 
@@ -341,12 +359,6 @@ pub struct BooleanQuery {
     pub must_not: Vec<FtsQuery>,
 }
 ```
-
-### Workarounds
-
-- For complex schemas, use the raw Arrow IPC format which preserves full schema information
-- For advanced FTS queries, use simple match or phrase queries instead of complex boolean combinations
-- These limitations will be addressed in future SDK versions
 
 ## Additional Resources
 
