@@ -287,6 +287,10 @@
                             <notree>true</notree>
                             <nocomment>true</nocomment>
                             <nohelp>true</nohelp>
+                            <detectJavaApiLink>false</detectJavaApiLink>
+                            <links>
+                                <link>https://javadoc.io/doc/com.lancedb/lance-namespace-apache-client/${lance-namespace.version}</link>
+                            </links>
                         </configuration>
                         <executions>
                             <execution>
