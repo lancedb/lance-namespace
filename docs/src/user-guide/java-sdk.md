@@ -89,19 +89,9 @@ The Java SDK supports the following endpoints. Full API documentation is availab
     The response structures contain fields like `location`, `name`, `namespace`, and `properties` that are part of the lance-namespace protocol. These fields will be empty in responses and should be ignored.
 
 !!! note "Request Fields"
-    The request structures contains field `name` which refer to table name and it's required. The `namespace` field is optional, if provided the result table name will be in format of `namespace.name`.
+    The request structures contain field `name` which refers to the table name and is required. The `namespace` field is optional; if provided, the resulting table name will be in the format `namespace.name`.
 
 For detailed request/response structures, refer to the [Apache Client documentation](https://javadoc.io/doc/com.lancedb/lance-namespace-apache-client/latest/index.html).
-
-## Best Practices
-
-1. **Always use `fast_search=true`** for queries to avoid scanning unindexed data from storage, which can be slow and incur data egress costs.
-2. **Monitor index creation** using `waitForIndexComplete()` to ensure indexes are fully built before running queries.
-3. **Use appropriate index types**:
-   - IVF_PQ for vector columns
-   - BITMAP for low-cardinality scalar columns
-   - FTS for text search columns
-4. **Combine search types** with hybrid queries for better relevance.
 
 ## Examples
 
@@ -112,11 +102,16 @@ LanceDB uses Apache Arrow format for data exchange. Arrow provides:
 - Rich data type support including nested types and tensors
 
 ```java
+import org.apache.arrow.memory.BufferAllocator;
+import org.apache.arrow.memory.RootAllocator;
 import org.apache.arrow.vector.*;
 import org.apache.arrow.vector.types.pojo.*;
+import org.apache.arrow.vector.types.FloatingPointPrecision;
 import org.apache.arrow.vector.ipc.ArrowStreamWriter;
 import java.io.ByteArrayOutputStream;
 import java.nio.channels.Channels;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 // Define Arrow schema
 Field idField = new Field("id", FieldType.nullable(new ArrowType.Int(32, true)), null);
@@ -185,10 +180,17 @@ try (BufferAllocator allocator = new RootAllocator();
 
 Query results are returned in Arrow File format. Use `ArrowFileReader` to read the results.
 
-#### Basic Vector Search
+#### Vector Search
 
 ```java
 import com.lancedb.lance.namespace.model.QueryRequest;
+import org.apache.arrow.vector.ipc.ArrowFileReader;
+import org.apache.arrow.vector.ipc.ArrowBlock;
+import org.apache.arrow.vector.ipc.SeekableReadChannel;
+import java.io.ByteArrayInputStream;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 // Create query request
 QueryRequest queryRequest = new QueryRequest();
@@ -232,12 +234,9 @@ try (BufferAllocator allocator = new RootAllocator();
 }
 ```
 
-#### Advanced Query Options
+##### Fast Search Option
 
-##### Fast Search (Recommended)
-
-!!! warning "Always use fast_search=true"
-    When `fast_search` is true, the query will only search indexed data, providing better performance and avoiding potential data egress costs. When false, it will scan the entire column from storage, which can be slow and expensive.
+Always use `fast_search=true` if possible. When enabled, the query will only search indexed data, providing better performance and avoiding potential data egress costs. When disabled, it will scan the entire unindexed portion of the column from storage, which can be slow and expensive.
 
 ```java
 QueryRequest queryRequest = new QueryRequest();
@@ -245,52 +244,119 @@ queryRequest.setName("my_table");
 queryRequest.setVector(queryVector);
 queryRequest.setK(10);
 
-// RECOMMENDED: Enable fast search to skip unindexed data
-queryRequest.setFastSearch(true);
-
-// Other query options
-queryRequest.setDistanceType("cosine");  // "l2" or "cosine"
-queryRequest.setFilter("price < 100");   // SQL filter
-queryRequest.setPrefilter(true);        // Apply filter before vector search
-queryRequest.setOffset(10);              // Skip first 10 results
-queryRequest.setBypassVectorIndex(false); // Use index (default)
-queryRequest.setWithRowId(true);         // Include row IDs in results
+queryRequest.setFastSearch(true); // Recommended for better performance
 ```
 
-##### Filter Queries
+##### SQL Filters
+
+You can use SQL filters with or without vector search:
 
 ```java
-// Query with SQL filter
-QueryRequest filterQuery = new QueryRequest();
-filterQuery.setName("my_table");
-filterQuery.setK(10);
-filterQuery.setFilter("category = 'electronics' AND price < 500");
-filterQuery.setFastSearch(true);  // Recommended
+// SQL filter only (no vector search)
+QueryRequest filterOnlyQuery = new QueryRequest();
+filterOnlyQuery.setName("my_table");
+filterOnlyQuery.setK(10);
+filterOnlyQuery.setFilter("category = 'electronics' AND price < 500");
+filterOnlyQuery.setFastSearch(true);
 
-// For filter-only queries (no vector search), omit the vector
-byte[] results = namespace.queryTable(filterQuery);
+// Vector search with SQL filter
+QueryRequest vectorWithFilter = new QueryRequest();
+vectorWithFilter.setName("my_table");
+vectorWithFilter.setVector(queryVector);
+vectorWithFilter.setK(10);
+vectorWithFilter.setFilter("status = 'active' AND price < 1000");
+vectorWithFilter.setFastSearch(true);
 ```
 
-##### Hybrid Search with Prefilter
+##### Prefilter vs Postfilter
+
+When combining vector search with filters, use `prefilter` to control the order of operations:
+- `prefilter=true`: Apply filter BEFORE vector search (faster when filter is selective)
+- `prefilter=false`: Apply filter AFTER vector search (better when filter matches many rows)
 
 ```java
-// Combine vector search with prefiltering
+// Prefiltering - filter first, then search vectors
+QueryRequest prefilterQuery = new QueryRequest();
+prefilterQuery.setName("my_table");
+prefilterQuery.setVector(queryVector);
+prefilterQuery.setK(10);
+prefilterQuery.setFilter("status = 'active'");
+prefilterQuery.setPrefilter(true);
+prefilterQuery.setFastSearch(true);
+
+// Postfiltering - search vectors first, then filter (default)
+QueryRequest postfilterQuery = new QueryRequest();
+postfilterQuery.setName("my_table");
+postfilterQuery.setVector(queryVector);
+postfilterQuery.setK(10);
+postfilterQuery.setFilter("category = 'electronics'");
+postfilterQuery.setPrefilter(false);
+postfilterQuery.setFastSearch(true);
+```
+
+#### Full-Text Search
+
+LanceDB supports full-text search on string columns. First create an FTS index, then use text queries:
+
+```java
+// Create FTS index
+CreateIndexRequest ftsIndexRequest = new CreateIndexRequest();
+ftsIndexRequest.setName("my_table");
+ftsIndexRequest.setColumn("content");
+ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
+
+CreateIndexResponse ftsResponse = namespace.createIndex(ftsIndexRequest);
+waitForIndexComplete("my_table", "content_idx", 30);
+
+// Perform full-text search
+import com.lancedb.lance.namespace.model.StringFtsQuery;
+
+QueryRequest textQuery = new QueryRequest();
+textQuery.setName("my_table");
+textQuery.setK(10);
+
+StringFtsQuery fts = new StringFtsQuery();
+fts.setQuery("search terms"); // The search query
+fts.setColumns(Arrays.asList("content", "title")); // Optional: columns to search
+textQuery.setFullTextQuery(fts);
+
+byte[] results = namespace.queryTable(textQuery);
+```
+
+#### Hybrid Search
+
+Combining vector similarity search with full-text search often provides more relevant results than using either method alone. This is especially useful for semantic search applications where both conceptual similarity and keyword matching are important.
+
+```java
+// Hybrid search: vector + text
 QueryRequest hybridQuery = new QueryRequest();
 hybridQuery.setName("my_table");
+
+// Vector search component
+List<Float> queryVector = generateQueryVector(); // Your vector
 hybridQuery.setVector(queryVector);
-hybridQuery.setK(5);
-hybridQuery.setFilter("status = 'active'");
-hybridQuery.setPrefilter(true);  // Filter BEFORE vector search
+hybridQuery.setK(10);
+
+// Text search component
+StringFtsQuery fts = new StringFtsQuery();
+fts.setQuery("search terms");
+fts.setColumns(Arrays.asList("content", "title")); // Optional: columns to search
+hybridQuery.setFullTextQuery(fts);
+
+// Optional: Add filters
+hybridQuery.setFilter("date > '2024-01-01'");
+hybridQuery.setPrefilter(true);
 hybridQuery.setFastSearch(true);
+
+byte[] hybridResults = namespace.queryTable(hybridQuery);
 ```
 
-### Creating an Index
+### Creating a Vector Index
 
 LanceDB automatically optimizes index parameters based on best practices for your workload.
 
-#### Vector Index Best Practices
-
-- **Index Type**: Use IVF_PQ for production workloads (default)
+**Best Practices:**
+- **Index Type**: Use `IVF_PQ` for production workloads (default)
 - **Metric Type**: 
   - Use `L2` for normalized vectors (faster computation)
   - Use `COSINE` for non-normalized vectors (more compute-intensive)
@@ -309,11 +375,93 @@ indexRequest.setMetricType(CreateIndexRequest.MetricTypeEnum.L2);
 CreateIndexResponse response = namespace.createIndex(indexRequest);
 ```
 
-#### Monitoring Index Creation
+!!! note "Asynchronous Index Creation"
+    LanceDB Cloud/Enterprise handles index creation asynchronously. Use the `listIndices` and `getIndexStats` operations to monitor index creation progress.
 
-Index creation is asynchronous. Use the following helper method to wait for index completion:
+### Creating a Scalar Index
+
+Scalar indexes improve query performance when using filters.
+
+**Index Type Selection:**
+- **BITMAP Index**: Best for columns with low cardinality (< few thousand unique values)
+  - Excellent search performance
+  - Relatively small index size
+- **BTREE Index**: Use when unique values are high
+
+!!! tip "Optimization Tip"
+    To enable BITMAP indexing on high-cardinality columns, reduce data precision:
+    - Round floating-point values
+    - Reduce timestamp precision (e.g., second → day)
 
 ```java
+import com.lancedb.lance.namespace.model.CreateIndexRequest;
+
+// Create scalar index
+CreateIndexRequest scalarIndexRequest = new CreateIndexRequest();
+scalarIndexRequest.setName("my_table");
+scalarIndexRequest.setColumn("name");
+scalarIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.BITMAP);
+
+CreateIndexResponse scalarResponse = namespace.createScalarIndex(scalarIndexRequest);
+```
+
+!!! note "Asynchronous Index Creation"
+    Similar to vector index creation, scalar index creation is also asynchronous. Use `listIndices` and `getIndexStats` to monitor index creation progress.
+
+### List Indices
+
+List all indices on a table:
+
+```java
+import com.lancedb.lance.namespace.model.IndexListRequest;
+import com.lancedb.lance.namespace.model.IndexListResponse;
+
+IndexListRequest listRequest = new IndexListRequest();
+listRequest.setName("my_table");
+
+IndexListResponse listResponse = namespace.listIndices(listRequest);
+if (listResponse.getIndexes() != null) {
+    for (IndexListItemResponse index : listResponse.getIndexes()) {
+        System.out.println("Index: " + index.getIndexName());
+        System.out.println("  Columns: " + index.getColumns());
+        System.out.println("  Index Type: " + index.getIndexType());
+    }
+}
+```
+
+### Get Index Statistics
+
+!!! info "Auto-reindexing"
+    LanceDB Cloud/Enterprise automatically reindexes columns when table data is modified. Use `getNumUnindexedRows()` to check whether the column is fully indexed.
+
+Get detailed statistics for a specific index:
+```java
+import com.lancedb.lance.namespace.model.IndexStatsRequest;
+import com.lancedb.lance.namespace.model.IndexStatsResponse;
+
+IndexStatsRequest statsRequest = new IndexStatsRequest();
+statsRequest.setName("my_table");
+
+// Get stats for specific index (index name format: <column_name>_idx)
+IndexStatsResponse stats = namespace.getIndexStats(statsRequest, "embedding_idx");
+
+System.out.println("Index Type: " + stats.getIndexType());
+System.out.println("Distance Type: " + stats.getDistanceType());
+System.out.println("Indexed Rows: " + stats.getNumIndexedRows());
+System.out.println("Unindexed Rows: " + stats.getNumUnindexedRows());
+System.out.println("Index Metadata: " + stats.getIndexMetadata());
+```
+
+### Monitoring Index Creation
+
+!!! important "Wait for Index Completion"
+    Index creation is asynchronous. Always wait for indexes to be fully built before running queries to ensure optimal performance and avoid scanning unindexed data.
+
+Here's a helper method that combines `listIndices` and `getIndexStats` to monitor index creation:
+
+```java
+import java.util.Optional;
+
 /**
  * Wait for index to be fully built with no unindexed rows
  * @param tableName The name of the table
@@ -335,18 +483,12 @@ private boolean waitForIndexComplete(String tableName, String indexName, int max
                 .findFirst();
             
             if (indexOpt.isPresent()) {
-                // Index exists, now check if it's fully built
                 IndexStatsRequest statsRequest = new IndexStatsRequest();
                 statsRequest.setName(tableName);
-                
                 IndexStatsResponse stats = namespace.getIndexStats(statsRequest, indexName);
                 if (stats != null && stats.getNumUnindexedRows() != null 
                     && stats.getNumUnindexedRows() == 0) {
-                    System.out.println("✓ Index " + indexName + " is fully built");
                     return true;
-                } else if (stats != null && stats.getNumUnindexedRows() != null) {
-                    System.out.println("  Waiting... " + stats.getNumUnindexedRows() 
-                        + " rows remaining");
                 }
             }
         }
@@ -361,117 +503,6 @@ boolean indexReady = waitForIndexComplete("my_table", "embedding_idx", 60);
 if (!indexReady) {
     System.out.println("Warning: Index creation timed out");
 }
-```
-
-#### Scalar Index Best Practices
-
-Scalar indexes improve query performance when using filters: `table.query(embedding).where(filter)`
-
-- **BITMAP Index**: Best for columns with low cardinality (< few thousand unique values)
-  - Excellent search performance
-  - Relatively small index size
-- **BTREE Index**: Use when unique values are high
-- **Optimization Tip**: Reduce data precision to enable bitmap indexing:
-  - Round floating-point values
-  - Reduce timestamp precision (e.g., second → day)
-
-```java
-import com.lancedb.lance.namespace.model.CreateIndexRequest;
-
-// Create scalar index
-CreateIndexRequest scalarIndexRequest = new CreateIndexRequest();
-scalarIndexRequest.setName("my_table");
-scalarIndexRequest.setColumn("name");
-scalarIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.BITMAP);
-
-CreateIndexResponse scalarResponse = namespace.createScalarIndex(scalarIndexRequest);
-```
-
-### Full-Text Search (FTS)
-
-LanceDB supports full-text search on string columns. Create an FTS index first, then use text queries.
-
-#### Creating an FTS Index
-
-```java
-// Create FTS index on text column
-CreateIndexRequest ftsIndexRequest = new CreateIndexRequest();
-ftsIndexRequest.setName("my_table");
-ftsIndexRequest.setColumn("content");
-ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
-
-CreateIndexResponse ftsResponse = namespace.createIndex(ftsIndexRequest);
-
-// Wait for index to be ready
-waitForIndexComplete("my_table", "content_idx", 30);
-```
-
-#### Simple Text Search
-
-```java
-import com.lancedb.lance.namespace.model.StringFtsQuery;
-
-// Simple text search
-QueryRequest textQuery = new QueryRequest();
-textQuery.setName("my_table");
-textQuery.setK(10);
-
-StringFtsQuery fts = new StringFtsQuery();
-fts.setQuery("search terms");
-fts.setColumns(Arrays.asList("content", "title")); // Optional: specify columns
-textQuery.setFullTextQuery(fts);
-textQuery.setFastSearch(true);  // Recommended
-
-byte[] results = namespace.queryTable(textQuery);
-```
-
-#### Hybrid Search: Vector + Text
-
-Combine vector similarity search with full-text search for more relevant results:
-
-```java
-// Hybrid search: vector + text
-QueryRequest hybridQuery = new QueryRequest();
-hybridQuery.setName("my_table");
-
-// Vector search component
-List<Float> queryVector = generateQueryVector(); // Your vector
-hybridQuery.setVector(queryVector);
-hybridQuery.setK(10);
-
-// Text search component
-StringFtsQuery ftsQuery = new StringFtsQuery();
-ftsQuery.setQuery("important document");
-hybridQuery.setFullTextQuery(ftsQuery);
-
-// Optional: Add filters
-hybridQuery.setFilter("date > '2024-01-01'");
-hybridQuery.setPrefilter(true);
-hybridQuery.setFastSearch(true);  // Recommended
-
-byte[] hybridResults = namespace.queryTable(hybridQuery);
-```
-
-#### Hybrid Search with Column Selection
-
-```java
-// Hybrid search with specific result columns
-QueryRequest advancedHybrid = new QueryRequest();
-advancedHybrid.setName("my_table");
-advancedHybrid.setVector(queryVector);
-advancedHybrid.setK(5);
-
-// Text search on specific columns
-StringFtsQuery fts = new StringFtsQuery();
-fts.setQuery("machine learning");
-fts.setColumns(Arrays.asList("abstract", "keywords"));
-advancedHybrid.setFullTextQuery(fts);
-
-// Return only specific columns in results
-advancedHybrid.setColumns(Arrays.asList("id", "title", "score"));
-advancedHybrid.setFastSearch(true);
-
-byte[] results = namespace.queryTable(advancedHybrid);
 ```
 
 ### Updating and Deleting Data
@@ -525,7 +556,7 @@ System.out.println("Inserted rows: " + response.getNumInsertedRows());
 
 ## Known Limitations
 
-Due to limitations in the OpenAPI code generator for Java, some advanced features that use `oneOf` polymorphic types are not fully supported in this SDK:
+Due to limitations in the OpenAPI code generator for Java, some advanced features that use `oneOf` polymorphic types are not fully supported in this SDK. The SDK has been simplified to support the most common use cases:
 
 ### 1. Multi-Vector Queries
 - **Limitation**: Only single vector queries are supported
