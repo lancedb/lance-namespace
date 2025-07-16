@@ -37,7 +37,7 @@ public class QueryRequest {
 
   private Boolean bypassVectorIndex = null;
 
-  private Columns columns = null;
+  @Valid private List<String> columns = new ArrayList<>();
 
   private String distanceType = null;
 
@@ -47,7 +47,7 @@ public class QueryRequest {
 
   private String filter = null;
 
-  private FtsQueryInput fullTextQuery = null;
+  private StringFtsQuery fullTextQuery;
 
   private Integer k;
 
@@ -63,7 +63,7 @@ public class QueryRequest {
 
   private Float upperBound = null;
 
-  private QueryVector vector;
+  @Valid private List<Float> vector = new ArrayList<>();
 
   private String vectorColumn = null;
 
@@ -76,7 +76,7 @@ public class QueryRequest {
   }
 
   /** Constructor with only required parameters */
-  public QueryRequest(String name, List<String> namespace, Integer k, QueryVector vector) {
+  public QueryRequest(String name, List<String> namespace, Integer k, List<Float> vector) {
     this.name = name;
     this.namespace = namespace;
     this.k = k;
@@ -156,24 +156,34 @@ public class QueryRequest {
     this.bypassVectorIndex = bypassVectorIndex;
   }
 
-  public QueryRequest columns(Columns columns) {
+  public QueryRequest columns(List<String> columns) {
     this.columns = columns;
     return this;
   }
 
+  public QueryRequest addColumnsItem(String columnsItem) {
+    if (this.columns == null) {
+      this.columns = new ArrayList<>();
+    }
+    this.columns.add(columnsItem);
+    return this;
+  }
+
   /**
-   * Get columns
+   * Optional list of columns to return
    *
    * @return columns
    */
-  @Valid
-  @Schema(name = "columns", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "columns",
+      description = "Optional list of columns to return",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("columns")
-  public Columns getColumns() {
+  public List<String> getColumns() {
     return columns;
   }
 
-  public void setColumns(Columns columns) {
+  public void setColumns(List<String> columns) {
     this.columns = columns;
   }
 
@@ -270,24 +280,27 @@ public class QueryRequest {
     this.filter = filter;
   }
 
-  public QueryRequest fullTextQuery(FtsQueryInput fullTextQuery) {
+  public QueryRequest fullTextQuery(StringFtsQuery fullTextQuery) {
     this.fullTextQuery = fullTextQuery;
     return this;
   }
 
   /**
-   * Get fullTextQuery
+   * Optional full-text search query (only string query supported)
    *
    * @return fullTextQuery
    */
   @Valid
-  @Schema(name = "full_text_query", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "full_text_query",
+      description = "Optional full-text search query (only string query supported)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("full_text_query")
-  public FtsQueryInput getFullTextQuery() {
+  public StringFtsQuery getFullTextQuery() {
     return fullTextQuery;
   }
 
-  public void setFullTextQuery(FtsQueryInput fullTextQuery) {
+  public void setFullTextQuery(StringFtsQuery fullTextQuery) {
     this.fullTextQuery = fullTextQuery;
   }
 
@@ -457,28 +470,35 @@ public class QueryRequest {
     this.upperBound = upperBound;
   }
 
-  public QueryRequest vector(QueryVector vector) {
+  public QueryRequest vector(List<Float> vector) {
     this.vector = vector;
     return this;
   }
 
+  public QueryRequest addVectorItem(Float vectorItem) {
+    if (this.vector == null) {
+      this.vector = new ArrayList<>();
+    }
+    this.vector.add(vectorItem);
+    return this;
+  }
+
   /**
-   * Query vector(s) for similarity search
+   * Query vector for similarity search (single vector only)
    *
    * @return vector
    */
   @NotNull
-  @Valid
   @Schema(
       name = "vector",
-      description = "Query vector(s) for similarity search",
+      description = "Query vector for similarity search (single vector only)",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("vector")
-  public QueryVector getVector() {
+  public List<Float> getVector() {
     return vector;
   }
 
-  public void setVector(QueryVector vector) {
+  public void setVector(List<Float> vector) {
     this.vector = vector;
   }
 

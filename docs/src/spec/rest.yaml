@@ -1501,10 +1501,10 @@ components:
           - 'null'
           description: Whether to bypass vector index
         columns:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/Columns'
-          description: Optional columns specification
+          type: array
+          items:
+            type: string
+          description: Optional list of columns to return
         distance_type:
           type:
           - string
@@ -1527,10 +1527,8 @@ components:
           - 'null'
           description: Optional SQL filter expression
         full_text_query:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/FtsQueryInput'
-          description: Optional full-text search query
+          $ref: '#/components/schemas/StringFtsQuery'
+          description: Optional full-text search query (only string query supported)
         k:
           type: integer
           minimum: 0
@@ -1572,8 +1570,11 @@ components:
           format: float
           description: Upper bound for search
         vector:
-          $ref: '#/components/schemas/QueryVector'
-          description: Query vector(s) for similarity search
+          type: array
+          items:
+            type: number
+            format: float
+          description: Query vector for similarity search (single vector only)
         vector_column:
           type:
           - string
@@ -2082,30 +2083,6 @@ components:
           type: integer
           minimum: 0
 
-    QueryVector:
-      oneOf:
-      - type: array
-        items:
-          type: number
-          format: float
-      - type: array
-        items:
-          type: array
-          items:
-            type: number
-            format: float
-
-    Columns:
-      oneOf:
-      - type: array
-        items:
-          type: string
-      - type: object
-
-    FtsQueryInput:
-      oneOf:
-      - $ref: '#/components/schemas/StringFtsQuery'
-      - $ref: '#/components/schemas/StructuredFtsQuery'
 
     StringFtsQuery:
       type: object

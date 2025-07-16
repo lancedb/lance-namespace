@@ -43,7 +43,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 8
+          java-version: 11
           server-id: ossrh
           server-username: SONATYPE_USER
           server-password: SONATYPE_TOKEN

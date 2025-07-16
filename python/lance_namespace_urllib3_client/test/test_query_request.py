@@ -40,12 +40,18 @@ class TestQueryRequest(unittest.TestCase):
                     ''
                     ],
                 bypass_vector_index = True,
-                columns = None,
+                columns = [
+                    ''
+                    ],
                 distance_type = '',
                 ef = 0,
                 fast_search = True,
                 filter = '',
-                full_text_query = None,
+                full_text_query = lance_namespace_urllib3_client.models.string_fts_query.StringFtsQuery(
+                    columns = [
+                        ''
+                        ], 
+                    query = '', ),
                 k = 0,
                 lower_bound = 1.337,
                 nprobes = 0,
@@ -53,7 +59,9 @@ class TestQueryRequest(unittest.TestCase):
                 prefilter = True,
                 refine_factor = 0,
                 upper_bound = 1.337,
-                vector = None,
+                vector = [
+                    1.337
+                    ],
                 vector_column = '',
                 version = 0,
                 with_row_id = True
@@ -65,7 +73,9 @@ class TestQueryRequest(unittest.TestCase):
                     ''
                     ],
                 k = 0,
-                vector = None,
+                vector = [
+                    1.337
+                    ],
         )
         """
 

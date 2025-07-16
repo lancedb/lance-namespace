@@ -318,47 +318,59 @@ System.out.println("Updated rows: " + response.getNumUpdatedRows());
 System.out.println("Inserted rows: " + response.getNumInsertedRows());
 ```
 
-## Current Limitations
+## Known Limitations
 
-The Java SDK is generated from an OpenAPI specification created by utoipa, which has some limitations with recursive structures. We are actively working to address these limitations.
+Due to limitations in the OpenAPI code generator for Java, some advanced features that use `oneOf` polymorphic types are not fully supported in this SDK:
 
-### Schema Representation
+### 1. Multi-Vector Queries
+- **Limitation**: Only single vector queries are supported
+- **Workaround**: Submit one vector at a time rather than batching multiple vectors
 
-The schema structure (`JsonSchema` → `JsonField` → `JsonDataType` → `JsonField`) has limitations in representing nested types. This affects `describeTable` calls where complex nested schemas may not be fully represented.
+### 2. Complex Column Specifications  
+- **Limitation**: Only simple column lists (array of strings) are supported
+- **Workaround**: Use `Arrays.asList("col1", "col2")` to specify columns
+- **Not Supported**: Advanced column specifications with include/exclude patterns
 
-```rust
-// Recursive structure that causes issues
-pub struct JsonField {
-    name: String,
-    type_: JsonDataType,
-    nullable: bool,
-    metadata: Option<HashMap<String, String>>,
-}
+### 3. Structured Full-Text Search
+- **Limitation**: Only simple string queries are supported via `StringFtsQuery`
+- **Workaround**: Use basic text search with `query.setFullTextQuery(stringQuery)`
+- **Not Supported**: Complex boolean queries, phrase queries, or boosted queries
 
-pub struct JsonDataType {
-    type_: String,
-    fields: Option<Vec<JsonField>>, // Recursive reference
-    length: Option<usize>,
-}
+### Example of Supported vs Unsupported Features
+
+```java
+// ✅ SUPPORTED: Simple vector query
+QueryRequest query = new QueryRequest();
+query.setName("my_table");
+query.setK(10);
+List<Float> vector = Arrays.asList(0.1f, 0.2f, 0.3f, ...);
+query.setVector(vector);
+
+// ❌ NOT SUPPORTED: Multi-vector query
+// List<List<Float>> vectors = Arrays.asList(vector1, vector2, vector3);
+// query.setVector(vectors); // This won't compile
+
+// ✅ SUPPORTED: Simple column selection
+query.setColumns(Arrays.asList("id", "name", "score"));
+
+// ❌ NOT SUPPORTED: Complex column specification
+// ColumnsObject cols = new ColumnsObject();
+// cols.setInclude(Arrays.asList("*"));
+// cols.setExclude(Arrays.asList("embedding"));
+
+// ✅ SUPPORTED: Simple text search
+StringFtsQuery fts = new StringFtsQuery();
+fts.setQuery("search terms");
+fts.setColumns(Arrays.asList("title", "content"));
+query.setFullTextQuery(fts);
+
+// ❌ NOT SUPPORTED: Structured boolean queries
+// BooleanQuery bool = new BooleanQuery();
+// bool.setMust(Arrays.asList(matchQuery1));
+// bool.setShould(Arrays.asList(matchQuery2));
 ```
 
-### Full-Text Search (FTS) Queries
-
-Advanced FTS queries with boolean combinations are limited due to recursive query structures:
-
-```rust
-pub enum FtsQuery {
-    Match(MatchQuery),
-    Phrase(PhraseQuery),
-    Boolean(BooleanQuery), // Recursive structure
-}
-
-pub struct BooleanQuery {
-    pub should: Vec<FtsQuery>,
-    pub must: Vec<FtsQuery>,
-    pub must_not: Vec<FtsQuery>,
-}
-```
+These limitations are due to the OpenAPI generator's inability to properly handle `oneOf` types in the specification. The simplified types ensure the SDK works reliably for the most common use cases.
 
 ## Additional Resources
 

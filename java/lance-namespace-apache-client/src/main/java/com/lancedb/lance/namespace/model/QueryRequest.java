@@ -66,9 +66,7 @@ public class QueryRequest {
   private JsonNullable<Boolean> bypassVectorIndex = JsonNullable.<Boolean>undefined();
 
   public static final String JSON_PROPERTY_COLUMNS = "columns";
-
-  @javax.annotation.Nullable
-  private JsonNullable<Columns> columns = JsonNullable.<Columns>undefined();
+  @javax.annotation.Nullable private List<String> columns = new ArrayList<>();
 
   public static final String JSON_PROPERTY_DISTANCE_TYPE = "distance_type";
 
@@ -87,9 +85,7 @@ public class QueryRequest {
   @javax.annotation.Nullable private JsonNullable<String> filter = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_FULL_TEXT_QUERY = "full_text_query";
-
-  @javax.annotation.Nullable
-  private JsonNullable<FtsQueryInput> fullTextQuery = JsonNullable.<FtsQueryInput>undefined();
+  @javax.annotation.Nullable private StringFtsQuery fullTextQuery;
 
   public static final String JSON_PROPERTY_K = "k";
   @javax.annotation.Nonnull private Integer k;
@@ -125,7 +121,7 @@ public class QueryRequest {
   private JsonNullable<Float> upperBound = JsonNullable.<Float>undefined();
 
   public static final String JSON_PROPERTY_VECTOR = "vector";
-  @javax.annotation.Nonnull private QueryVector vector;
+  @javax.annotation.Nonnull private List<Float> vector = new ArrayList<>();
 
   public static final String JSON_PROPERTY_VECTOR_COLUMN = "vector_column";
 
@@ -230,36 +226,36 @@ public class QueryRequest {
     this.bypassVectorIndex = JsonNullable.<Boolean>of(bypassVectorIndex);
   }
 
-  public QueryRequest columns(@javax.annotation.Nullable Columns columns) {
-    this.columns = JsonNullable.<Columns>of(columns);
+  public QueryRequest columns(@javax.annotation.Nullable List<String> columns) {
 
+    this.columns = columns;
+    return this;
+  }
+
+  public QueryRequest addColumnsItem(String columnsItem) {
+    if (this.columns == null) {
+      this.columns = new ArrayList<>();
+    }
+    this.columns.add(columnsItem);
     return this;
   }
 
   /**
-   * Get columns
+   * Optional list of columns to return
    *
    * @return columns
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Columns getColumns() {
-    return columns.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_COLUMNS)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Columns> getColumns_JsonNullable() {
+  public List<String> getColumns() {
     return columns;
   }
 
   @JsonProperty(JSON_PROPERTY_COLUMNS)
-  public void setColumns_JsonNullable(JsonNullable<Columns> columns) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setColumns(@javax.annotation.Nullable List<String> columns) {
     this.columns = columns;
-  }
-
-  public void setColumns(@javax.annotation.Nullable Columns columns) {
-    this.columns = JsonNullable.<Columns>of(columns);
   }
 
   public QueryRequest distanceType(@javax.annotation.Nullable String distanceType) {
@@ -390,36 +386,28 @@ public class QueryRequest {
     this.filter = JsonNullable.<String>of(filter);
   }
 
-  public QueryRequest fullTextQuery(@javax.annotation.Nullable FtsQueryInput fullTextQuery) {
-    this.fullTextQuery = JsonNullable.<FtsQueryInput>of(fullTextQuery);
+  public QueryRequest fullTextQuery(@javax.annotation.Nullable StringFtsQuery fullTextQuery) {
 
+    this.fullTextQuery = fullTextQuery;
     return this;
   }
 
   /**
-   * Get fullTextQuery
+   * Optional full-text search query (only string query supported)
    *
    * @return fullTextQuery
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public FtsQueryInput getFullTextQuery() {
-    return fullTextQuery.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_FULL_TEXT_QUERY)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<FtsQueryInput> getFullTextQuery_JsonNullable() {
+  public StringFtsQuery getFullTextQuery() {
     return fullTextQuery;
   }
 
   @JsonProperty(JSON_PROPERTY_FULL_TEXT_QUERY)
-  public void setFullTextQuery_JsonNullable(JsonNullable<FtsQueryInput> fullTextQuery) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setFullTextQuery(@javax.annotation.Nullable StringFtsQuery fullTextQuery) {
     this.fullTextQuery = fullTextQuery;
-  }
-
-  public void setFullTextQuery(@javax.annotation.Nullable FtsQueryInput fullTextQuery) {
-    this.fullTextQuery = JsonNullable.<FtsQueryInput>of(fullTextQuery);
   }
 
   public QueryRequest k(@javax.annotation.Nonnull Integer k) {
@@ -638,27 +626,35 @@ public class QueryRequest {
     this.upperBound = JsonNullable.<Float>of(upperBound);
   }
 
-  public QueryRequest vector(@javax.annotation.Nonnull QueryVector vector) {
+  public QueryRequest vector(@javax.annotation.Nonnull List<Float> vector) {
 
     this.vector = vector;
     return this;
   }
 
+  public QueryRequest addVectorItem(Float vectorItem) {
+    if (this.vector == null) {
+      this.vector = new ArrayList<>();
+    }
+    this.vector.add(vectorItem);
+    return this;
+  }
+
   /**
-   * Query vector(s) for similarity search
+   * Query vector for similarity search (single vector only)
    *
    * @return vector
    */
   @javax.annotation.Nonnull
   @JsonProperty(JSON_PROPERTY_VECTOR)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public QueryVector getVector() {
+  public List<Float> getVector() {
     return vector;
   }
 
   @JsonProperty(JSON_PROPERTY_VECTOR)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setVector(@javax.annotation.Nonnull QueryVector vector) {
+  public void setVector(@javax.annotation.Nonnull List<Float> vector) {
     this.vector = vector;
   }
 
@@ -770,12 +766,12 @@ public class QueryRequest {
     return Objects.equals(this.name, queryRequest.name)
         && Objects.equals(this.namespace, queryRequest.namespace)
         && equalsNullable(this.bypassVectorIndex, queryRequest.bypassVectorIndex)
-        && equalsNullable(this.columns, queryRequest.columns)
+        && Objects.equals(this.columns, queryRequest.columns)
         && equalsNullable(this.distanceType, queryRequest.distanceType)
         && equalsNullable(this.ef, queryRequest.ef)
         && equalsNullable(this.fastSearch, queryRequest.fastSearch)
         && equalsNullable(this.filter, queryRequest.filter)
-        && equalsNullable(this.fullTextQuery, queryRequest.fullTextQuery)
+        && Objects.equals(this.fullTextQuery, queryRequest.fullTextQuery)
         && Objects.equals(this.k, queryRequest.k)
         && equalsNullable(this.lowerBound, queryRequest.lowerBound)
         && equalsNullable(this.nprobes, queryRequest.nprobes)
@@ -804,12 +800,12 @@ public class QueryRequest {
         name,
         namespace,
         hashCodeNullable(bypassVectorIndex),
-        hashCodeNullable(columns),
+        columns,
         hashCodeNullable(distanceType),
         hashCodeNullable(ef),
         hashCodeNullable(fastSearch),
         hashCodeNullable(filter),
-        hashCodeNullable(fullTextQuery),
+        fullTextQuery,
         k,
         hashCodeNullable(lowerBound),
         hashCodeNullable(nprobes),
@@ -954,7 +950,23 @@ public class QueryRequest {
 
     // add `columns` to the URL query string
     if (getColumns() != null) {
-      joiner.add(getColumns().toUrlQueryString(prefix + "columns" + suffix));
+      for (int i = 0; i < getColumns().size(); i++) {
+        try {
+          joiner.add(
+              String.format(
+                  "%scolumns%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
+                  URLEncoder.encode(String.valueOf(getColumns().get(i)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
+      }
     }
 
     // add `distance_type` to the URL query string
@@ -1135,7 +1147,23 @@ public class QueryRequest {
 
     // add `vector` to the URL query string
     if (getVector() != null) {
-      joiner.add(getVector().toUrlQueryString(prefix + "vector" + suffix));
+      for (int i = 0; i < getVector().size(); i++) {
+        try {
+          joiner.add(
+              String.format(
+                  "%svector%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
+                  URLEncoder.encode(String.valueOf(getVector().get(i)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
+      }
     }
 
     // add `vector_column` to the URL query string

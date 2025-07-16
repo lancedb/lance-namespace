@@ -2017,8 +2017,8 @@ components:
         ef: 0
         offset: 0
         columns:
-        - Columns
-        - Columns
+        - columns
+        - columns
         vector_column: vector_column
         fast_search: true
         k: 0
@@ -2056,7 +2056,10 @@ components:
           nullable: true
           type: boolean
         columns:
-          $ref: '#/components/schemas/Columns'
+          description: Optional list of columns to return
+          items:
+            type: string
+          type: array
         distance_type:
           description: Distance metric to use
           nullable: true
@@ -2075,7 +2078,7 @@ components:
           nullable: true
           type: string
         full_text_query:
-          $ref: '#/components/schemas/FtsQueryInput'
+          $ref: '#/components/schemas/StringFtsQuery'
         k:
           description: Number of results to return
           minimum: 0
@@ -2111,7 +2114,11 @@ components:
           nullable: true
           type: number
         vector:
-          $ref: '#/components/schemas/QueryVector'
+          description: Query vector for similarity search (single vector only)
+          items:
+            format: float
+            type: number
+          type: array
         vector_column:
           description: Name of the vector column to search
           nullable: true
@@ -2753,28 +2760,6 @@ components:
       required:
       - num_deleted_rows
       - num_fragments
-    QueryVector:
-      oneOf:
-      - items:
-          format: float
-          type: number
-        type: array
-      - items:
-          items:
-            format: float
-            type: number
-          type: array
-        type: array
-    Columns:
-      oneOf:
-      - items:
-          type: string
-        type: array
-      - type: object
-    FtsQueryInput:
-      oneOf:
-      - $ref: '#/components/schemas/StringFtsQuery'
-      - $ref: '#/components/schemas/StructuredFtsQuery'
     StringFtsQuery:
       example:
         columns:
