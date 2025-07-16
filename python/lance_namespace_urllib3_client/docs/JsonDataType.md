@@ -1,14 +1,14 @@
 # JsonDataType
 
-JSON representation of an Apache Arrow [DataType].
+JSON representation of an Apache Arrow DataType
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**fields** | **object** |  | [optional] 
-**length** | **int** |  | [optional] 
-**type** | **str** |  | 
+**fields** | [**List[JsonField]**](JsonField.md) | Fields for complex types like Struct, Union, etc. | [optional] 
+**length** | **int** | Length for fixed-size types | [optional] 
+**type** | **str** | The data type name | 
 
 ## Example
 

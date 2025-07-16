@@ -11,7 +11,6 @@ Name | Type | Description | Notes
 **schema** | [**models::JsonSchema**](JsonSchema.md) |  | 
 **stats** | [**models::TableBasicStats**](TableBasicStats.md) |  | 
 **table** | **String** |  | 
-**table_uri** | Option<**String**> | Table URI, optional | [optional]
 **version** | **i64** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

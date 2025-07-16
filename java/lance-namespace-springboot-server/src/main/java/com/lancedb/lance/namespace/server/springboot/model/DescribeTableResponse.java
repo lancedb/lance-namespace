@@ -47,8 +47,6 @@ public class DescribeTableResponse {
 
   private String table;
 
-  private String tableUri = null;
-
   private Long version;
 
   public DescribeTableResponse() {
@@ -237,29 +235,6 @@ public class DescribeTableResponse {
     this.table = table;
   }
 
-  public DescribeTableResponse tableUri(String tableUri) {
-    this.tableUri = tableUri;
-    return this;
-  }
-
-  /**
-   * Table URI, optional
-   *
-   * @return tableUri
-   */
-  @Schema(
-      name = "table_uri",
-      description = "Table URI, optional",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("table_uri")
-  public String getTableUri() {
-    return tableUri;
-  }
-
-  public void setTableUri(String tableUri) {
-    this.tableUri = tableUri;
-  }
-
   public DescribeTableResponse version(Long version) {
     this.version = version;
     return this;
@@ -298,14 +273,12 @@ public class DescribeTableResponse {
         && Objects.equals(this.schema, describeTableResponse.schema)
         && Objects.equals(this.stats, describeTableResponse.stats)
         && Objects.equals(this.table, describeTableResponse.table)
-        && Objects.equals(this.tableUri, describeTableResponse.tableUri)
         && Objects.equals(this.version, describeTableResponse.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        name, namespace, location, properties, schema, stats, table, tableUri, version);
+    return Objects.hash(name, namespace, location, properties, schema, stats, table, version);
   }
 
   @Override
@@ -319,7 +292,6 @@ public class DescribeTableResponse {
     sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    stats: ").append(toIndentedString(stats)).append("\n");
     sb.append("    table: ").append(toIndentedString(table)).append("\n");
-    sb.append("    tableUri: ").append(toIndentedString(tableUri)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
     return sb.toString();

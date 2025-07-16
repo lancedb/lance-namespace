@@ -17,21 +17,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.annotation.Generated;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-/** JSON representation of an Apache Arrow [DataType]. */
-@Schema(name = "JsonDataType", description = "JSON representation of an Apache Arrow [DataType].")
+/** JSON representation of an Apache Arrow DataType */
+@Schema(name = "JsonDataType", description = "JSON representation of an Apache Arrow DataType")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class JsonDataType {
 
-  private Object fields;
+  @Valid private List<@Valid JsonField> fields = new ArrayList<>();
 
-  private Integer length = null;
+  private Long length;
 
   private String type;
 
@@ -44,44 +47,59 @@ public class JsonDataType {
     this.type = type;
   }
 
-  public JsonDataType fields(Object fields) {
+  public JsonDataType fields(List<@Valid JsonField> fields) {
     this.fields = fields;
     return this;
   }
 
+  public JsonDataType addFieldsItem(JsonField fieldsItem) {
+    if (this.fields == null) {
+      this.fields = new ArrayList<>();
+    }
+    this.fields.add(fieldsItem);
+    return this;
+  }
+
   /**
-   * Get fields
+   * Fields for complex types like Struct, Union, etc.
    *
    * @return fields
    */
-  @Schema(name = "fields", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Valid
+  @Schema(
+      name = "fields",
+      description = "Fields for complex types like Struct, Union, etc.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("fields")
-  public Object getFields() {
+  public List<@Valid JsonField> getFields() {
     return fields;
   }
 
-  public void setFields(Object fields) {
+  public void setFields(List<@Valid JsonField> fields) {
     this.fields = fields;
   }
 
-  public JsonDataType length(Integer length) {
+  public JsonDataType length(Long length) {
     this.length = length;
     return this;
   }
 
   /**
-   * Get length minimum: 0
+   * Length for fixed-size types minimum: 0
    *
    * @return length
    */
-  @Min(0)
-  @Schema(name = "length", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0L)
+  @Schema(
+      name = "length",
+      description = "Length for fixed-size types",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("length")
-  public Integer getLength() {
+  public Long getLength() {
     return length;
   }
 
-  public void setLength(Integer length) {
+  public void setLength(Long length) {
     this.length = length;
   }
 
@@ -91,12 +109,15 @@ public class JsonDataType {
   }
 
   /**
-   * Get type
+   * The data type name
    *
    * @return type
    */
   @NotNull
-  @Schema(name = "type", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(
+      name = "type",
+      description = "The data type name",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("type")
   public String getType() {
     return type;

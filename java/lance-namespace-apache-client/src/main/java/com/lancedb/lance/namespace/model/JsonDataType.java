@@ -13,19 +13,18 @@
  */
 package com.lancedb.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** JSON representation of an Apache Arrow [DataType]. */
+/** JSON representation of an Apache Arrow DataType */
 @JsonPropertyOrder({
   JsonDataType.JSON_PROPERTY_FIELDS,
   JsonDataType.JSON_PROPERTY_LENGTH,
@@ -36,72 +35,70 @@ import java.util.StringJoiner;
     comments = "Generator version: 7.12.0")
 public class JsonDataType {
   public static final String JSON_PROPERTY_FIELDS = "fields";
-  @javax.annotation.Nullable private Object fields;
+  @javax.annotation.Nullable private List<JsonField> fields = new ArrayList<>();
 
   public static final String JSON_PROPERTY_LENGTH = "length";
-
-  @javax.annotation.Nullable
-  private JsonNullable<Integer> length = JsonNullable.<Integer>undefined();
+  @javax.annotation.Nullable private Long length;
 
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull private String type;
 
   public JsonDataType() {}
 
-  public JsonDataType fields(@javax.annotation.Nullable Object fields) {
+  public JsonDataType fields(@javax.annotation.Nullable List<JsonField> fields) {
 
     this.fields = fields;
     return this;
   }
 
+  public JsonDataType addFieldsItem(JsonField fieldsItem) {
+    if (this.fields == null) {
+      this.fields = new ArrayList<>();
+    }
+    this.fields.add(fieldsItem);
+    return this;
+  }
+
   /**
-   * Get fields
+   * Fields for complex types like Struct, Union, etc.
    *
    * @return fields
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_FIELDS)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Object getFields() {
+  public List<JsonField> getFields() {
     return fields;
   }
 
   @JsonProperty(JSON_PROPERTY_FIELDS)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setFields(@javax.annotation.Nullable Object fields) {
+  public void setFields(@javax.annotation.Nullable List<JsonField> fields) {
     this.fields = fields;
   }
 
-  public JsonDataType length(@javax.annotation.Nullable Integer length) {
-    this.length = JsonNullable.<Integer>of(length);
+  public JsonDataType length(@javax.annotation.Nullable Long length) {
 
+    this.length = length;
     return this;
   }
 
   /**
-   * Get length minimum: 0
+   * Length for fixed-size types minimum: 0
    *
    * @return length
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Integer getLength() {
-    return length.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_LENGTH)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Integer> getLength_JsonNullable() {
+  public Long getLength() {
     return length;
   }
 
   @JsonProperty(JSON_PROPERTY_LENGTH)
-  public void setLength_JsonNullable(JsonNullable<Integer> length) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setLength(@javax.annotation.Nullable Long length) {
     this.length = length;
-  }
-
-  public void setLength(@javax.annotation.Nullable Integer length) {
-    this.length = JsonNullable.<Integer>of(length);
   }
 
   public JsonDataType type(@javax.annotation.Nonnull String type) {
@@ -111,7 +108,7 @@ public class JsonDataType {
   }
 
   /**
-   * Get type
+   * The data type name
    *
    * @return type
    */
@@ -138,29 +135,13 @@ public class JsonDataType {
     }
     JsonDataType jsonDataType = (JsonDataType) o;
     return Objects.equals(this.fields, jsonDataType.fields)
-        && equalsNullable(this.length, jsonDataType.length)
+        && Objects.equals(this.length, jsonDataType.length)
         && Objects.equals(this.type, jsonDataType.type);
-  }
-
-  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
-    return a == b
-        || (a != null
-            && b != null
-            && a.isPresent()
-            && b.isPresent()
-            && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(fields, hashCodeNullable(length), type);
-  }
-
-  private static <T> int hashCodeNullable(JsonNullable<T> a) {
-    if (a == null) {
-      return 1;
-    }
-    return a.isPresent() ? Arrays.deepHashCode(new Object[] {a.get()}) : 31;
+    return Objects.hash(fields, length, type);
   }
 
   @Override
@@ -218,16 +199,20 @@ public class JsonDataType {
 
     // add `fields` to the URL query string
     if (getFields() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sfields%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getFields()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
+      for (int i = 0; i < getFields().size(); i++) {
+        if (getFields().get(i) != null) {
+          joiner.add(
+              getFields()
+                  .get(i)
+                  .toUrlQueryString(
+                      String.format(
+                          "%sfields%s%s",
+                          prefix,
+                          suffix,
+                          "".equals(suffix)
+                              ? ""
+                              : String.format("%s%d%s", containerPrefix, i, containerSuffix))));
+        }
       }
     }
 

@@ -62,7 +62,6 @@ class TestDescribeTableResponse(unittest.TestCase):
                     num_deleted_rows = 0, 
                     num_fragments = 0, ),
                 table = '',
-                table_uri = '',
                 version = 0
             )
         else:

@@ -19,7 +19,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from lance_namespace_urllib3_client.models.json_data_type import JsonDataType
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -94,4 +93,7 @@ class JsonField(BaseModel):
         })
         return _obj
 
+from lance_namespace_urllib3_client.models.json_data_type import JsonDataType
+# TODO: Rewrite to not use raise_errors
+JsonField.model_rebuild(raise_errors=False)
 

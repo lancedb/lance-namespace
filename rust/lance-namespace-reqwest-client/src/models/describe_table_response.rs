@@ -27,9 +27,6 @@ pub struct DescribeTableResponse {
     pub stats: Box<models::TableBasicStats>,
     #[serde(rename = "table")]
     pub table: String,
-    /// Table URI, optional
-    #[serde(rename = "table_uri", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
-    pub table_uri: Option<Option<String>>,
     #[serde(rename = "version")]
     pub version: i64,
 }
@@ -44,7 +41,6 @@ impl DescribeTableResponse {
             schema: Box::new(schema),
             stats: Box::new(stats),
             table,
-            table_uri: None,
             version,
         }
     }

@@ -1755,7 +1755,9 @@ components:
             name: name
             type:
               length: 0
-              fields: "{}"
+              fields:
+              - null
+              - null
               type: type
           - metadata:
               key: metadata
@@ -1763,12 +1765,13 @@ components:
             name: name
             type:
               length: 0
-              fields: "{}"
+              fields:
+              - null
+              - null
               type: type
         stats:
           num_deleted_rows: 0
           num_fragments: 0
-        table_uri: table_uri
         name: name
         namespace:
         - namespace
@@ -1795,10 +1798,6 @@ components:
         stats:
           $ref: '#/components/schemas/TableBasicStats'
         table:
-          type: string
-        table_uri:
-          description: "Table URI, optional"
-          nullable: true
           type: string
         version:
           format: int64
@@ -2015,27 +2014,36 @@ components:
       - version
     QueryRequest:
       example:
-        ef: 1
+        ef: 0
         offset: 0
         columns:
-        - columns
-        - columns
-        k: 1
+        - Columns
+        - Columns
+        vector_column: vector_column
+        fast_search: true
+        k: 0
+        upper_bound: 7.0614014
         version: 0
         with_row_id: true
         prefilter: true
         filter: filter
-        refine_factor: 1
-        distance_type: l2
+        refine_factor: 0
+        full_text_query:
+          columns:
+          - columns
+          - columns
+          query: query
+        distance_type: distance_type
+        lower_bound: 1.4658129
         bypass_vector_index: true
-        nprobes: 1
+        nprobes: 0
         name: name
         namespace:
         - namespace
         - namespace
         vector:
-        - 0.8008282
-        - 0.8008282
+        - 9.301444
+        - 9.301444
       properties:
         name:
           type: string
@@ -2043,61 +2051,81 @@ components:
           items:
             type: string
           type: array
-        vector:
-          description: Query vector for similarity search
-          items:
-            format: float
-            type: number
-          type: array
-        k:
-          description: Number of results to return
-          minimum: 1
-          type: integer
-        filter:
-          description: Optional SQL filter expression
-          type: string
-        columns:
-          description: Optional list of columns to return
-          items:
-            type: string
-          type: array
-        distance_type:
-          description: Distance metric to use
-          enum:
-          - l2
-          - cosine
-          - dot
-          type: string
-        prefilter:
-          description: Whether to apply filtering before vector search
-          type: boolean
         bypass_vector_index:
           description: Whether to bypass vector index
+          nullable: true
           type: boolean
+        columns:
+          $ref: '#/components/schemas/Columns'
+        distance_type:
+          description: Distance metric to use
+          nullable: true
+          type: string
         ef:
           description: Search effort parameter for HNSW index
-          minimum: 1
+          minimum: 0
+          nullable: true
           type: integer
+        fast_search:
+          description: Whether to use fast search
+          nullable: true
+          type: boolean
+        filter:
+          description: Optional SQL filter expression
+          nullable: true
+          type: string
+        full_text_query:
+          $ref: '#/components/schemas/FtsQueryInput'
+        k:
+          description: Number of results to return
+          minimum: 0
+          type: integer
+        lower_bound:
+          description: Lower bound for search
+          format: float
+          nullable: true
+          type: number
         nprobes:
           description: Number of probes for IVF index
-          minimum: 1
+          minimum: 0
+          nullable: true
           type: integer
-        refine_factor:
-          description: Refine factor for search
-          minimum: 1
-          type: integer
-        with_row_id:
-          description: Whether to include row ID in results
-          type: boolean
         offset:
           description: Number of results to skip
           minimum: 0
+          nullable: true
           type: integer
+        prefilter:
+          description: Whether to apply filtering before vector search
+          nullable: true
+          type: boolean
+        refine_factor:
+          description: Refine factor for search
+          format: int32
+          minimum: 0
+          nullable: true
+          type: integer
+        upper_bound:
+          description: Upper bound for search
+          format: float
+          nullable: true
+          type: number
+        vector:
+          $ref: '#/components/schemas/QueryVector'
+        vector_column:
+          description: Name of the vector column to search
+          nullable: true
+          type: string
         version:
           description: Table version to query
           format: int64
           minimum: 0
+          nullable: true
           type: integer
+        with_row_id:
+          description: "If true, return the row id as a column called `_rowid`"
+          nullable: true
+          type: boolean
       required:
       - k
       - name
@@ -2367,7 +2395,9 @@ components:
           name: name
           type:
             length: 0
-            fields: "{}"
+            fields:
+            - null
+            - null
             type: type
         - metadata:
             key: metadata
@@ -2375,7 +2405,9 @@ components:
           name: name
           type:
             length: 0
-            fields: "{}"
+            fields:
+            - null
+            - null
             type: type
       properties:
         fields:
@@ -2396,7 +2428,9 @@ components:
         name: name
         type:
           length: 0
-          fields: "{}"
+          fields:
+          - null
+          - null
           type: type
       properties:
         metadata:
@@ -2413,19 +2447,26 @@ components:
       - nullable
       - type
     JsonDataType:
-      description: "JSON representation of an Apache Arrow [DataType]."
+      description: JSON representation of an Apache Arrow DataType
       example:
         length: 0
-        fields: "{}"
+        fields:
+        - null
+        - null
         type: type
       properties:
         fields:
-          type: object
+          description: "Fields for complex types like Struct, Union, etc."
+          items:
+            $ref: '#/components/schemas/JsonField'
+          type: array
         length:
+          description: Length for fixed-size types
+          format: int64
           minimum: 0
-          nullable: true
           type: integer
         type:
+          description: The data type name
           type: string
       required:
       - type
@@ -2712,4 +2753,177 @@ components:
       required:
       - num_deleted_rows
       - num_fragments
+    QueryVector:
+      oneOf:
+      - items:
+          format: float
+          type: number
+        type: array
+      - items:
+          items:
+            format: float
+            type: number
+          type: array
+        type: array
+    Columns:
+      oneOf:
+      - items:
+          type: string
+        type: array
+      - type: object
+    FtsQueryInput:
+      oneOf:
+      - $ref: '#/components/schemas/StringFtsQuery'
+      - $ref: '#/components/schemas/StructuredFtsQuery'
+    StringFtsQuery:
+      example:
+        columns:
+        - columns
+        - columns
+        query: query
+      properties:
+        columns:
+          items:
+            type: string
+          nullable: true
+          type: array
+        query:
+          type: string
+      required:
+      - query
+    StructuredFtsQuery:
+      properties:
+        query:
+          $ref: '#/components/schemas/FtsQuery'
+      required:
+      - query
+    FtsQuery:
+      oneOf:
+      - $ref: '#/components/schemas/FtsQuery_oneOf'
+      - $ref: '#/components/schemas/FtsQuery_oneOf_1'
+      - $ref: '#/components/schemas/FtsQuery_oneOf_2'
+      - $ref: '#/components/schemas/FtsQuery_oneOf_3'
+      - $ref: '#/components/schemas/FtsQuery_oneOf_4'
+    MatchQuery:
+      properties:
+        boost:
+          format: float
+          type: number
+        column:
+          nullable: true
+          type: string
+        fuzziness:
+          format: int32
+          minimum: 0
+          nullable: true
+          type: integer
+        max_expansions:
+          description: |-
+            The maximum number of terms to expand for fuzzy matching.
+            Default to 50.
+          minimum: 0
+          type: integer
+        operator:
+          $ref: '#/components/schemas/Operator'
+        prefix_length:
+          description: |-
+            The number of beginning characters being unchanged for fuzzy matching.
+            Default to 0.
+          format: int32
+          minimum: 0
+          type: integer
+        terms:
+          type: string
+      required:
+      - terms
+    PhraseQuery:
+      properties:
+        column:
+          nullable: true
+          type: string
+        slop:
+          format: int32
+          minimum: 0
+          type: integer
+        terms:
+          type: string
+      required:
+      - terms
+    BoostQuery:
+      properties:
+        negative:
+          type: object
+        negative_boost:
+          format: float
+          type: number
+        positive:
+          type: object
+      required:
+      - negative
+      - positive
+    MultiMatchQuery:
+      properties:
+        match_queries:
+          items:
+            $ref: '#/components/schemas/MatchQuery'
+          type: array
+      required:
+      - match_queries
+    BooleanQuery:
+      description: "Boolean query with must, should, and must_not clauses"
+      properties:
+        must:
+          description: Queries that must match (AND)
+          items:
+            $ref: '#/components/schemas/FtsQuery'
+          type: array
+        must_not:
+          description: Queries that must not match (NOT)
+          items:
+            $ref: '#/components/schemas/FtsQuery'
+          type: array
+        should:
+          description: Queries that should match (OR)
+          items:
+            $ref: '#/components/schemas/FtsQuery'
+          type: array
+      required:
+      - must
+      - must_not
+      - should
+    Operator:
+      enum:
+      - And
+      - Or
+      type: string
+    FtsQuery_oneOf:
+      properties:
+        match:
+          $ref: '#/components/schemas/MatchQuery'
+      required:
+      - match
+    FtsQuery_oneOf_1:
+      properties:
+        phrase:
+          $ref: '#/components/schemas/PhraseQuery'
+      required:
+      - phrase
+    FtsQuery_oneOf_2:
+      properties:
+        boost:
+          $ref: '#/components/schemas/BoostQuery'
+      required:
+      - boost
+    FtsQuery_oneOf_3:
+      properties:
+        multi_match:
+          $ref: '#/components/schemas/MultiMatchQuery'
+      required:
+      - multi_match
+    FtsQuery_oneOf_4:
+      properties:
+        boolean:
+          $ref: '#/components/schemas/BooleanQuery'
+      required:
+      - boolean
 

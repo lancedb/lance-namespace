@@ -35,7 +35,17 @@ class TestJsonDataType(unittest.TestCase):
         model = JsonDataType()
         if include_optional:
             return JsonDataType(
-                fields = lance_namespace_urllib3_client.models.fields.fields(),
+                fields = [
+                    lance_namespace_urllib3_client.models.json_field.JsonField(
+                        metadata = {
+                            'key' : ''
+                            }, 
+                        name = '', 
+                        nullable = True, 
+                        type = lance_namespace_urllib3_client.models.json_data_type.JsonDataType(
+                            length = 0, 
+                            type = '', ), )
+                    ],
                 length = 0,
                 type = ''
             )

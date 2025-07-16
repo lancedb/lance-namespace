@@ -36,9 +36,8 @@ class DescribeTableResponse(BaseModel):
     var_schema: JsonSchema = Field(alias="schema")
     stats: TableBasicStats
     table: StrictStr
-    table_uri: Optional[StrictStr] = Field(default=None, description="Table URI, optional")
     version: Annotated[int, Field(strict=True, ge=0)]
-    __properties: ClassVar[List[str]] = ["name", "namespace", "location", "properties", "schema", "stats", "table", "table_uri", "version"]
+    __properties: ClassVar[List[str]] = ["name", "namespace", "location", "properties", "schema", "stats", "table", "version"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -85,11 +84,6 @@ class DescribeTableResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of stats
         if self.stats:
             _dict['stats'] = self.stats.to_dict()
-        # set to None if table_uri (nullable) is None
-        # and model_fields_set contains the field
-        if self.table_uri is None and "table_uri" in self.model_fields_set:
-            _dict['table_uri'] = None
-
         return _dict
 
     @classmethod
@@ -109,7 +103,6 @@ class DescribeTableResponse(BaseModel):
             "schema": JsonSchema.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
             "stats": TableBasicStats.from_dict(obj["stats"]) if obj.get("stats") is not None else None,
             "table": obj.get("table"),
-            "table_uri": obj.get("table_uri"),
             "version": obj.get("version")
         })
         return _obj

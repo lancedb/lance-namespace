@@ -12,7 +12,6 @@ Name | Type | Description | Notes
 **var_schema** | [**JsonSchema**](JsonSchema.md) |  | 
 **stats** | [**TableBasicStats**](TableBasicStats.md) |  | 
 **table** | **str** |  | 
-**table_uri** | **str** | Table URI, optional | [optional] 
 **version** | **int** |  | 
 
 ## Example

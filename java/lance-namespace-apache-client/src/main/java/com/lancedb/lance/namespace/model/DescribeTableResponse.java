@@ -13,16 +13,13 @@
  */
 package com.lancedb.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +35,6 @@ import java.util.StringJoiner;
   DescribeTableResponse.JSON_PROPERTY_SCHEMA,
   DescribeTableResponse.JSON_PROPERTY_STATS,
   DescribeTableResponse.JSON_PROPERTY_TABLE,
-  DescribeTableResponse.JSON_PROPERTY_TABLE_URI,
   DescribeTableResponse.JSON_PROPERTY_VERSION
 })
 @javax.annotation.Generated(
@@ -65,11 +61,6 @@ public class DescribeTableResponse {
 
   public static final String JSON_PROPERTY_TABLE = "table";
   @javax.annotation.Nonnull private String table;
-
-  public static final String JSON_PROPERTY_TABLE_URI = "table_uri";
-
-  @javax.annotation.Nullable
-  private JsonNullable<String> tableUri = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nonnull private Long version;
@@ -261,38 +252,6 @@ public class DescribeTableResponse {
     this.table = table;
   }
 
-  public DescribeTableResponse tableUri(@javax.annotation.Nullable String tableUri) {
-    this.tableUri = JsonNullable.<String>of(tableUri);
-
-    return this;
-  }
-
-  /**
-   * Table URI, optional
-   *
-   * @return tableUri
-   */
-  @javax.annotation.Nullable
-  @JsonIgnore
-  public String getTableUri() {
-    return tableUri.orElse(null);
-  }
-
-  @JsonProperty(JSON_PROPERTY_TABLE_URI)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<String> getTableUri_JsonNullable() {
-    return tableUri;
-  }
-
-  @JsonProperty(JSON_PROPERTY_TABLE_URI)
-  public void setTableUri_JsonNullable(JsonNullable<String> tableUri) {
-    this.tableUri = tableUri;
-  }
-
-  public void setTableUri(@javax.annotation.Nullable String tableUri) {
-    this.tableUri = JsonNullable.<String>of(tableUri);
-  }
-
   public DescribeTableResponse version(@javax.annotation.Nonnull Long version) {
 
     this.version = version;
@@ -333,38 +292,12 @@ public class DescribeTableResponse {
         && Objects.equals(this.schema, describeTableResponse.schema)
         && Objects.equals(this.stats, describeTableResponse.stats)
         && Objects.equals(this.table, describeTableResponse.table)
-        && equalsNullable(this.tableUri, describeTableResponse.tableUri)
         && Objects.equals(this.version, describeTableResponse.version);
-  }
-
-  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
-    return a == b
-        || (a != null
-            && b != null
-            && a.isPresent()
-            && b.isPresent()
-            && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        name,
-        namespace,
-        location,
-        properties,
-        schema,
-        stats,
-        table,
-        hashCodeNullable(tableUri),
-        version);
-  }
-
-  private static <T> int hashCodeNullable(JsonNullable<T> a) {
-    if (a == null) {
-      return 1;
-    }
-    return a.isPresent() ? Arrays.deepHashCode(new Object[] {a.get()}) : 31;
+    return Objects.hash(name, namespace, location, properties, schema, stats, table, version);
   }
 
   @Override
@@ -378,7 +311,6 @@ public class DescribeTableResponse {
     sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    stats: ").append(toIndentedString(stats)).append("\n");
     sb.append("    table: ").append(toIndentedString(table)).append("\n");
-    sb.append("    tableUri: ").append(toIndentedString(tableUri)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -519,22 +451,6 @@ public class DescribeTableResponse {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getTable()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `table_uri` to the URL query string
-    if (getTableUri() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%stable_uri%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getTableUri()), "UTF-8")
-                    .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

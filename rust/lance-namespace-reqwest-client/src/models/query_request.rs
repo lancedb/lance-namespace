@@ -17,82 +17,84 @@ pub struct QueryRequest {
     pub name: String,
     #[serde(rename = "namespace")]
     pub namespace: Vec<String>,
-    /// Query vector for similarity search
-    #[serde(rename = "vector")]
-    pub vector: Vec<f32>,
+    /// Whether to bypass vector index
+    #[serde(rename = "bypass_vector_index", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub bypass_vector_index: Option<Option<bool>>,
+    #[serde(rename = "columns", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub columns: Option<Option<Box<models::Columns>>>,
+    /// Distance metric to use
+    #[serde(rename = "distance_type", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub distance_type: Option<Option<String>>,
+    /// Search effort parameter for HNSW index
+    #[serde(rename = "ef", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub ef: Option<Option<i32>>,
+    /// Whether to use fast search
+    #[serde(rename = "fast_search", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub fast_search: Option<Option<bool>>,
+    /// Optional SQL filter expression
+    #[serde(rename = "filter", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub filter: Option<Option<String>>,
+    #[serde(rename = "full_text_query", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub full_text_query: Option<Option<Box<models::FtsQueryInput>>>,
     /// Number of results to return
     #[serde(rename = "k")]
     pub k: i32,
-    /// Optional SQL filter expression
-    #[serde(rename = "filter", skip_serializing_if = "Option::is_none")]
-    pub filter: Option<String>,
-    /// Optional list of columns to return
-    #[serde(rename = "columns", skip_serializing_if = "Option::is_none")]
-    pub columns: Option<Vec<String>>,
-    /// Distance metric to use
-    #[serde(rename = "distance_type", skip_serializing_if = "Option::is_none")]
-    pub distance_type: Option<DistanceType>,
-    /// Whether to apply filtering before vector search
-    #[serde(rename = "prefilter", skip_serializing_if = "Option::is_none")]
-    pub prefilter: Option<bool>,
-    /// Whether to bypass vector index
-    #[serde(rename = "bypass_vector_index", skip_serializing_if = "Option::is_none")]
-    pub bypass_vector_index: Option<bool>,
-    /// Search effort parameter for HNSW index
-    #[serde(rename = "ef", skip_serializing_if = "Option::is_none")]
-    pub ef: Option<i32>,
+    /// Lower bound for search
+    #[serde(rename = "lower_bound", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub lower_bound: Option<Option<f32>>,
     /// Number of probes for IVF index
-    #[serde(rename = "nprobes", skip_serializing_if = "Option::is_none")]
-    pub nprobes: Option<i32>,
-    /// Refine factor for search
-    #[serde(rename = "refine_factor", skip_serializing_if = "Option::is_none")]
-    pub refine_factor: Option<i32>,
-    /// Whether to include row ID in results
-    #[serde(rename = "with_row_id", skip_serializing_if = "Option::is_none")]
-    pub with_row_id: Option<bool>,
+    #[serde(rename = "nprobes", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub nprobes: Option<Option<i32>>,
     /// Number of results to skip
-    #[serde(rename = "offset", skip_serializing_if = "Option::is_none")]
-    pub offset: Option<i32>,
+    #[serde(rename = "offset", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub offset: Option<Option<i32>>,
+    /// Whether to apply filtering before vector search
+    #[serde(rename = "prefilter", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub prefilter: Option<Option<bool>>,
+    /// Refine factor for search
+    #[serde(rename = "refine_factor", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub refine_factor: Option<Option<i32>>,
+    /// Upper bound for search
+    #[serde(rename = "upper_bound", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub upper_bound: Option<Option<f32>>,
+    /// Query vector(s) for similarity search
+    #[serde(rename = "vector")]
+    pub vector: Box<models::QueryVector>,
+    /// Name of the vector column to search
+    #[serde(rename = "vector_column", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub vector_column: Option<Option<String>>,
     /// Table version to query
-    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
-    pub version: Option<i64>,
+    #[serde(rename = "version", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub version: Option<Option<i64>>,
+    /// If true, return the row id as a column called `_rowid`
+    #[serde(rename = "with_row_id", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub with_row_id: Option<Option<bool>>,
 }
 
 impl QueryRequest {
-    pub fn new(name: String, namespace: Vec<String>, vector: Vec<f32>, k: i32) -> QueryRequest {
+    pub fn new(name: String, namespace: Vec<String>, k: i32, vector: models::QueryVector) -> QueryRequest {
         QueryRequest {
             name,
             namespace,
-            vector,
-            k,
-            filter: None,
+            bypass_vector_index: None,
             columns: None,
             distance_type: None,
-            prefilter: None,
-            bypass_vector_index: None,
             ef: None,
+            fast_search: None,
+            filter: None,
+            full_text_query: None,
+            k,
+            lower_bound: None,
             nprobes: None,
-            refine_factor: None,
-            with_row_id: None,
             offset: None,
+            prefilter: None,
+            refine_factor: None,
+            upper_bound: None,
+            vector: Box::new(vector),
+            vector_column: None,
             version: None,
+            with_row_id: None,
         }
-    }
-}
-/// Distance metric to use
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum DistanceType {
-    #[serde(rename = "l2")]
-    L2,
-    #[serde(rename = "cosine")]
-    Cosine,
-    #[serde(rename = "dot")]
-    Dot,
-}
-
-impl Default for DistanceType {
-    fn default() -> DistanceType {
-        Self::L2
     }
 }
 

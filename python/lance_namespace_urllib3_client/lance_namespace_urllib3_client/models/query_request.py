@@ -17,9 +17,12 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
+from lance_namespace_urllib3_client.models.columns import Columns
+from lance_namespace_urllib3_client.models.fts_query_input import FtsQueryInput
+from lance_namespace_urllib3_client.models.query_vector import QueryVector
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,30 +32,25 @@ class QueryRequest(BaseModel):
     """ # noqa: E501
     name: StrictStr
     namespace: List[StrictStr]
-    vector: List[Union[StrictFloat, StrictInt]] = Field(description="Query vector for similarity search")
-    k: Annotated[int, Field(strict=True, ge=1)] = Field(description="Number of results to return")
-    filter: Optional[StrictStr] = Field(default=None, description="Optional SQL filter expression")
-    columns: Optional[List[StrictStr]] = Field(default=None, description="Optional list of columns to return")
-    distance_type: Optional[StrictStr] = Field(default=None, description="Distance metric to use")
-    prefilter: Optional[StrictBool] = Field(default=None, description="Whether to apply filtering before vector search")
     bypass_vector_index: Optional[StrictBool] = Field(default=None, description="Whether to bypass vector index")
-    ef: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Search effort parameter for HNSW index")
-    nprobes: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Number of probes for IVF index")
-    refine_factor: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Refine factor for search")
-    with_row_id: Optional[StrictBool] = Field(default=None, description="Whether to include row ID in results")
+    columns: Optional[Columns] = None
+    distance_type: Optional[StrictStr] = Field(default=None, description="Distance metric to use")
+    ef: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Search effort parameter for HNSW index")
+    fast_search: Optional[StrictBool] = Field(default=None, description="Whether to use fast search")
+    filter: Optional[StrictStr] = Field(default=None, description="Optional SQL filter expression")
+    full_text_query: Optional[FtsQueryInput] = None
+    k: Annotated[int, Field(strict=True, ge=0)] = Field(description="Number of results to return")
+    lower_bound: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Lower bound for search")
+    nprobes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of probes for IVF index")
     offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of results to skip")
+    prefilter: Optional[StrictBool] = Field(default=None, description="Whether to apply filtering before vector search")
+    refine_factor: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Refine factor for search")
+    upper_bound: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Upper bound for search")
+    vector: QueryVector = Field(description="Query vector(s) for similarity search")
+    vector_column: Optional[StrictStr] = Field(default=None, description="Name of the vector column to search")
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Table version to query")
-    __properties: ClassVar[List[str]] = ["name", "namespace", "vector", "k", "filter", "columns", "distance_type", "prefilter", "bypass_vector_index", "ef", "nprobes", "refine_factor", "with_row_id", "offset", "version"]
-
-    @field_validator('distance_type')
-    def distance_type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['l2', 'cosine', 'dot']):
-            raise ValueError("must be one of enum values ('l2', 'cosine', 'dot')")
-        return value
+    with_row_id: Optional[StrictBool] = Field(default=None, description="If true, return the row id as a column called `_rowid`")
+    __properties: ClassVar[List[str]] = ["name", "namespace", "bypass_vector_index", "columns", "distance_type", "ef", "fast_search", "filter", "full_text_query", "k", "lower_bound", "nprobes", "offset", "prefilter", "refine_factor", "upper_bound", "vector", "vector_column", "version", "with_row_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -93,6 +91,95 @@ class QueryRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of columns
+        if self.columns:
+            _dict['columns'] = self.columns.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of full_text_query
+        if self.full_text_query:
+            _dict['full_text_query'] = self.full_text_query.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of vector
+        if self.vector:
+            _dict['vector'] = self.vector.to_dict()
+        # set to None if bypass_vector_index (nullable) is None
+        # and model_fields_set contains the field
+        if self.bypass_vector_index is None and "bypass_vector_index" in self.model_fields_set:
+            _dict['bypass_vector_index'] = None
+
+        # set to None if columns (nullable) is None
+        # and model_fields_set contains the field
+        if self.columns is None and "columns" in self.model_fields_set:
+            _dict['columns'] = None
+
+        # set to None if distance_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.distance_type is None and "distance_type" in self.model_fields_set:
+            _dict['distance_type'] = None
+
+        # set to None if ef (nullable) is None
+        # and model_fields_set contains the field
+        if self.ef is None and "ef" in self.model_fields_set:
+            _dict['ef'] = None
+
+        # set to None if fast_search (nullable) is None
+        # and model_fields_set contains the field
+        if self.fast_search is None and "fast_search" in self.model_fields_set:
+            _dict['fast_search'] = None
+
+        # set to None if filter (nullable) is None
+        # and model_fields_set contains the field
+        if self.filter is None and "filter" in self.model_fields_set:
+            _dict['filter'] = None
+
+        # set to None if full_text_query (nullable) is None
+        # and model_fields_set contains the field
+        if self.full_text_query is None and "full_text_query" in self.model_fields_set:
+            _dict['full_text_query'] = None
+
+        # set to None if lower_bound (nullable) is None
+        # and model_fields_set contains the field
+        if self.lower_bound is None and "lower_bound" in self.model_fields_set:
+            _dict['lower_bound'] = None
+
+        # set to None if nprobes (nullable) is None
+        # and model_fields_set contains the field
+        if self.nprobes is None and "nprobes" in self.model_fields_set:
+            _dict['nprobes'] = None
+
+        # set to None if offset (nullable) is None
+        # and model_fields_set contains the field
+        if self.offset is None and "offset" in self.model_fields_set:
+            _dict['offset'] = None
+
+        # set to None if prefilter (nullable) is None
+        # and model_fields_set contains the field
+        if self.prefilter is None and "prefilter" in self.model_fields_set:
+            _dict['prefilter'] = None
+
+        # set to None if refine_factor (nullable) is None
+        # and model_fields_set contains the field
+        if self.refine_factor is None and "refine_factor" in self.model_fields_set:
+            _dict['refine_factor'] = None
+
+        # set to None if upper_bound (nullable) is None
+        # and model_fields_set contains the field
+        if self.upper_bound is None and "upper_bound" in self.model_fields_set:
+            _dict['upper_bound'] = None
+
+        # set to None if vector_column (nullable) is None
+        # and model_fields_set contains the field
+        if self.vector_column is None and "vector_column" in self.model_fields_set:
+            _dict['vector_column'] = None
+
+        # set to None if version (nullable) is None
+        # and model_fields_set contains the field
+        if self.version is None and "version" in self.model_fields_set:
+            _dict['version'] = None
+
+        # set to None if with_row_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.with_row_id is None and "with_row_id" in self.model_fields_set:
+            _dict['with_row_id'] = None
+
         return _dict
 
     @classmethod
@@ -107,19 +194,24 @@ class QueryRequest(BaseModel):
         _obj = cls.model_validate({
             "name": obj.get("name"),
             "namespace": obj.get("namespace"),
-            "vector": obj.get("vector"),
-            "k": obj.get("k"),
-            "filter": obj.get("filter"),
-            "columns": obj.get("columns"),
-            "distance_type": obj.get("distance_type"),
-            "prefilter": obj.get("prefilter"),
             "bypass_vector_index": obj.get("bypass_vector_index"),
+            "columns": Columns.from_dict(obj["columns"]) if obj.get("columns") is not None else None,
+            "distance_type": obj.get("distance_type"),
             "ef": obj.get("ef"),
+            "fast_search": obj.get("fast_search"),
+            "filter": obj.get("filter"),
+            "full_text_query": FtsQueryInput.from_dict(obj["full_text_query"]) if obj.get("full_text_query") is not None else None,
+            "k": obj.get("k"),
+            "lower_bound": obj.get("lower_bound"),
             "nprobes": obj.get("nprobes"),
-            "refine_factor": obj.get("refine_factor"),
-            "with_row_id": obj.get("with_row_id"),
             "offset": obj.get("offset"),
-            "version": obj.get("version")
+            "prefilter": obj.get("prefilter"),
+            "refine_factor": obj.get("refine_factor"),
+            "upper_bound": obj.get("upper_bound"),
+            "vector": QueryVector.from_dict(obj["vector"]) if obj.get("vector") is not None else None,
+            "vector_column": obj.get("vector_column"),
+            "version": obj.get("version"),
+            "with_row_id": obj.get("with_row_id")
         })
         return _obj
 

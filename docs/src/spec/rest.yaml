@@ -1266,7 +1266,6 @@ components:
           type: array
           items:
             type: string
-
         version:
           type:
           - integer
@@ -1303,11 +1302,6 @@ components:
           $ref: '#/components/schemas/TableBasicStats'
         table:
           type: string
-        table_uri:
-          type:
-          - string
-          - 'null'
-          description: Table URI, optional
         version:
           type: integer
           format: int64
@@ -1501,58 +1495,102 @@ components:
           type: array
           items:
             type: string
-        vector:
-          type: array
-          items:
-            type: number
-            format: float
-          description: Query vector for similarity search
+        bypass_vector_index:
+          type:
+          - boolean
+          - 'null'
+          description: Whether to bypass vector index
+        columns:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/Columns'
+          description: Optional columns specification
+        distance_type:
+          type:
+          - string
+          - 'null'
+          description: Distance metric to use
+        ef:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          description: Search effort parameter for HNSW index
+        fast_search:
+          type:
+          - boolean
+          - 'null'
+          description: Whether to use fast search
+        filter:
+          type:
+          - string
+          - 'null'
+          description: Optional SQL filter expression
+        full_text_query:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/FtsQueryInput'
+          description: Optional full-text search query
         k:
           type: integer
-          minimum: 1
+          minimum: 0
           description: Number of results to return
-        filter:
-          type: string
-          description: Optional SQL filter expression
-        columns:
-          type: array
-          items:
-            type: string
-          description: Optional list of columns to return
-        distance_type:
-          type: string
-          enum: ["l2", "cosine", "dot"]
-          description: Distance metric to use
-        prefilter:
-          type: boolean
-          description: Whether to apply filtering before vector search
-        bypass_vector_index:
-          type: boolean
-          description: Whether to bypass vector index
-        ef:
-          type: integer
-          minimum: 1
-          description: Search effort parameter for HNSW index
+        lower_bound:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: Lower bound for search
         nprobes:
-          type: integer
-          minimum: 1
+          type:
+          - integer
+          - 'null'
+          minimum: 0
           description: Number of probes for IVF index
-        refine_factor:
-          type: integer
-          minimum: 1
-          description: Refine factor for search
-        with_row_id:
-          type: boolean
-          description: Whether to include row ID in results
         offset:
-          type: integer
+          type:
+          - integer
+          - 'null'
           minimum: 0
           description: Number of results to skip
+        prefilter:
+          type:
+          - boolean
+          - 'null'
+          description: Whether to apply filtering before vector search
+        refine_factor:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          minimum: 0
+          description: Refine factor for search
+        upper_bound:
+          type:
+          - number
+          - 'null'
+          format: float
+          description: Upper bound for search
+        vector:
+          $ref: '#/components/schemas/QueryVector'
+          description: Query vector(s) for similarity search
+        vector_column:
+          type:
+          - string
+          - 'null'
+          description: Name of the vector column to search
         version:
-          type: integer
+          type:
+          - integer
+          - 'null'
           format: int64
           minimum: 0
           description: Table version to query
+        with_row_id:
+          type:
+          - boolean
+          - 'null'
+          description: If true, return the row id as a column called `_rowid`
 
     CreateIndexRequest:
       type: object
@@ -1788,19 +1826,23 @@ components:
           $ref: '#/components/schemas/JsonDataType'
     JsonDataType:
       type: object
-      description: JSON representation of an Apache Arrow [DataType].
+      description: JSON representation of an Apache Arrow DataType
       required:
       - type
       properties:
         fields:
-          type: object
+          type: array
+          items:
+            $ref: '#/components/schemas/JsonField'
+          description: Fields for complex types like Struct, Union, etc.
         length:
-          type:
-          - integer
-          - 'null'
+          type: integer
+          format: int64
+          description: Length for fixed-size types
           minimum: 0
         type:
           type: string
+          description: The data type name
 
     Binary:
       type: string
@@ -2039,6 +2081,197 @@ components:
         num_fragments:
           type: integer
           minimum: 0
+
+    QueryVector:
+      oneOf:
+      - type: array
+        items:
+          type: number
+          format: float
+      - type: array
+        items:
+          type: array
+          items:
+            type: number
+            format: float
+
+    Columns:
+      oneOf:
+      - type: array
+        items:
+          type: string
+      - type: object
+
+    FtsQueryInput:
+      oneOf:
+      - $ref: '#/components/schemas/StringFtsQuery'
+      - $ref: '#/components/schemas/StructuredFtsQuery'
+
+    StringFtsQuery:
+      type: object
+      required:
+      - query
+      properties:
+        columns:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        query:
+          type: string
+
+    StructuredFtsQuery:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          $ref: '#/components/schemas/FtsQuery'
+
+    FtsQuery:
+      oneOf:
+      - type: object
+        required:
+        - match
+        properties:
+          match:
+            $ref: '#/components/schemas/MatchQuery'
+      - type: object
+        required:
+        - phrase
+        properties:
+          phrase:
+            $ref: '#/components/schemas/PhraseQuery'
+      - type: object
+        required:
+        - boost
+        properties:
+          boost:
+            $ref: '#/components/schemas/BoostQuery'
+      - type: object
+        required:
+        - multi_match
+        properties:
+          multi_match:
+            $ref: '#/components/schemas/MultiMatchQuery'
+      - type: object
+        required:
+        - boolean
+        properties:
+          boolean:
+            $ref: '#/components/schemas/BooleanQuery'
+
+    MatchQuery:
+      type: object
+      required:
+      - terms
+      properties:
+        boost:
+          type: number
+          format: float
+        column:
+          type:
+          - string
+          - 'null'
+        fuzziness:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          minimum: 0
+        max_expansions:
+          type: integer
+          description: |-
+            The maximum number of terms to expand for fuzzy matching.
+            Default to 50.
+          minimum: 0
+        operator:
+          $ref: '#/components/schemas/Operator'
+          description: |-
+            The operator to use for combining terms.
+            This can be either `And` or `Or`, it's 'Or' by default.
+            - `And`: All terms must match.
+            - `Or`: At least one term must match.
+        prefix_length:
+          type: integer
+          format: int32
+          description: |-
+            The number of beginning characters being unchanged for fuzzy matching.
+            Default to 0.
+          minimum: 0
+        terms:
+          type: string
+
+    PhraseQuery:
+      type: object
+      required:
+      - terms
+      properties:
+        column:
+          type:
+          - string
+          - 'null'
+        slop:
+          type: integer
+          format: int32
+          minimum: 0
+        terms:
+          type: string
+
+    BoostQuery:
+      type: object
+      required:
+      - positive
+      - negative
+      properties:
+        negative:
+          type: object
+        negative_boost:
+          type: number
+          format: float
+        positive:
+          type: object
+
+    MultiMatchQuery:
+      type: object
+      required:
+      - match_queries
+      properties:
+        match_queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchQuery'
+
+    BooleanQuery:
+      type: object
+      description: Boolean query with must, should, and must_not clauses
+      required:
+      - should
+      - must
+      - must_not
+      properties:
+        must:
+          type: array
+          items:
+            $ref: '#/components/schemas/FtsQuery'
+          description: Queries that must match (AND)
+        must_not:
+          type: array
+          items:
+            $ref: '#/components/schemas/FtsQuery'
+          description: Queries that must not match (NOT)
+        should:
+          type: array
+          items:
+            $ref: '#/components/schemas/FtsQuery'
+          description: Queries that should match (OR)
+
+    Operator:
+      type: string
+      enum:
+      - And
+      - Or
 
   responses:
     ListNamespacesResponse:

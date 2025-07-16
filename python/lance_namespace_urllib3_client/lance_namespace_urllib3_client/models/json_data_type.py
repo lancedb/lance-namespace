@@ -25,11 +25,11 @@ from typing_extensions import Self
 
 class JsonDataType(BaseModel):
     """
-    JSON representation of an Apache Arrow [DataType].
+    JSON representation of an Apache Arrow DataType
     """ # noqa: E501
-    fields: Optional[Dict[str, Any]] = None
-    length: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
-    type: StrictStr
+    fields: Optional[List[JsonField]] = Field(default=None, description="Fields for complex types like Struct, Union, etc.")
+    length: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Length for fixed-size types")
+    type: StrictStr = Field(description="The data type name")
     __properties: ClassVar[List[str]] = ["fields", "length", "type"]
 
     model_config = ConfigDict(
@@ -71,11 +71,13 @@ class JsonDataType(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if length (nullable) is None
-        # and model_fields_set contains the field
-        if self.length is None and "length" in self.model_fields_set:
-            _dict['length'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of each item in fields (list)
+        _items = []
+        if self.fields:
+            for _item_fields in self.fields:
+                if _item_fields:
+                    _items.append(_item_fields.to_dict())
+            _dict['fields'] = _items
         return _dict
 
     @classmethod
@@ -88,10 +90,13 @@ class JsonDataType(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "fields": obj.get("fields"),
+            "fields": [JsonField.from_dict(_item) for _item in obj["fields"]] if obj.get("fields") is not None else None,
             "length": obj.get("length"),
             "type": obj.get("type")
         })
         return _obj
 
+from lance_namespace_urllib3_client.models.json_field import JsonField
+# TODO: Rewrite to not use raise_errors
+JsonDataType.model_rebuild(raise_errors=False)
 

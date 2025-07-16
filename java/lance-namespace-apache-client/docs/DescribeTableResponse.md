@@ -14,7 +14,6 @@
 |**schema** | [**JsonSchema**](JsonSchema.md) |  |  |
 |**stats** | [**TableBasicStats**](TableBasicStats.md) |  |  |
 |**table** | **String** |  |  |
-|**tableUri** | **String** | Table URI, optional |  [optional] |
 |**version** | **Long** |  |  |
 
 
