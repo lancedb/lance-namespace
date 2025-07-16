@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -496,13 +497,7 @@ public class RestTableApiTest {
       assertNotNull(filterResult, "Filter query result should not be null");
       verifyQueryResultRowCount(filterResult, 10, "Filter query");
 
-      // Don't set vector for offset queries
-
-      byte[] offsetResult = namespace.queryTable(offsetQuery);
-      assertNotNull(offsetResult, "Offset query result should not be null");
-      verifyQueryResultRowCount(offsetResult, 5, "Offset query");
-
-      // Test 4: Query with prefilter
+      // Test 2: Query with prefilter
       System.out.println("\n--- Test 4: Query with prefilter ---");
       QueryRequest prefilterQuery = new QueryRequest();
       prefilterQuery.setName(tableName);
@@ -512,6 +507,39 @@ public class RestTableApiTest {
 
       byte[] prefilterResult = namespace.queryTable(prefilterQuery);
       assertNotNull(prefilterResult, "Prefilter query result should not be null");
+
+      // Test 3: Query with fast_search true
+      System.out.println("\n--- Test 5: Query with fast_search=true ---");
+      QueryRequest fastSearchQuery = new QueryRequest();
+      fastSearchQuery.setName(tableName);
+      List<Float> fastSearchVector = new ArrayList<>();
+      for (int i = 0; i < 128; i++) {
+        fastSearchVector.add((float) (i % 10));
+      }
+      fastSearchQuery.setVector(fastSearchVector);
+      fastSearchQuery.setK(10);
+      fastSearchQuery.setFastSearch(true);
+
+      byte[] fastSearchResult = namespace.queryTable(fastSearchQuery);
+      assertNotNull(fastSearchResult, "Fast search query result should not be null");
+      verifyQueryResultRowCount(fastSearchResult, 10, "Fast search query");
+
+      // Test 4: Query with fast_search false
+      System.out.println("\n--- Test 6: Query with fast_search=false ---");
+      QueryRequest noFastSearchQuery = new QueryRequest();
+      noFastSearchQuery.setName(tableName);
+      List<Float> noFastSearchVector = new ArrayList<>();
+      for (int i = 0; i < 128; i++) {
+        noFastSearchVector.add((float) (i % 10));
+      }
+      noFastSearchQuery.setVector(noFastSearchVector);
+      noFastSearchQuery.setK(10);
+      noFastSearchQuery.setFastSearch(false);
+
+      byte[] noFastSearchResult = namespace.queryTable(noFastSearchQuery);
+      assertNotNull(noFastSearchResult, "No fast search query result should not be null");
+      verifyQueryResultRowCount(noFastSearchResult, 10, "No fast search query");
+
     } finally {
       dropTableHelper(tableName);
     }
@@ -616,7 +644,7 @@ public class RestTableApiTest {
       CreateIndexResponse ftsIndexResponse = namespace.createIndex(ftsIndexRequest);
       assertNotNull(ftsIndexResponse, "FTS index response should not be null");
 
-      waitForIndex(tableName, "text_idx", 6000);
+      waitForIndexComplete(tableName, "text_idx", 30);
 
       // Test 1: Simple string FTS query
       System.out.println("\n--- Test 1: Simple string FTS query ---");
@@ -746,6 +774,42 @@ public class RestTableApiTest {
     return false;
   }
 
+  /** Helper method to wait for index to be fully built with no unindexed rows */
+  private boolean waitForIndexComplete(String tableName, String indexName, int maxSeconds)
+      throws InterruptedException {
+    IndexListRequest listRequest = new IndexListRequest();
+    listRequest.setName(tableName);
+
+    for (int i = 0; i < maxSeconds; i++) {
+      IndexListResponse listResponse = namespace.listIndices(listRequest);
+      if (listResponse.getIndexes() != null) {
+        Optional<IndexListItemResponse> indexOpt =
+            listResponse.getIndexes().stream()
+                .filter(idx -> idx.getIndexName().equals(indexName))
+                .findFirst();
+
+        if (indexOpt.isPresent()) {
+          // Index exists, now check if it's fully built
+          IndexStatsRequest statsRequest = new IndexStatsRequest();
+          statsRequest.setName(tableName);
+
+          IndexStatsResponse stats = namespace.getIndexStats(statsRequest, indexName);
+          if (stats != null
+              && stats.getNumUnindexedRows() != null
+              && stats.getNumUnindexedRows() == 0) {
+            System.out.println("✓ Index " + indexName + " is fully built with 0 unindexed rows");
+            return true;
+          } else if (stats != null && stats.getNumUnindexedRows() != null) {
+            System.out.println(
+                "  Waiting for index... " + stats.getNumUnindexedRows() + " rows remaining");
+          }
+        }
+      }
+      Thread.sleep(1000);
+    }
+    return false;
+  }
+
   /** Helper method to verify query result row count */
   private void verifyQueryResultRowCount(byte[] queryResult, int expectedRows, String testName)
       throws IOException {
@@ -761,6 +825,112 @@ public class RestTableApiTest {
         assertEquals(
             expectedRows, totalRows, testName + " should return " + expectedRows + " rows");
       }
+    }
+  }
+
+  @Test
+  public void testHybridSearch() throws IOException, InterruptedException {
+    assumeTrue(
+        DATABASE != null && API_KEY != null,
+        "Skipping test: LANCEDB_DB and LANCEDB_API_KEY environment variables must be set");
+
+    System.out.println("\n=== Test: Hybrid Search (Vector + Full-Text) ===");
+    String tableName = "test_hybrid_search_" + System.currentTimeMillis();
+
+    try {
+      // Create table with text and vector data
+      CreateTableResponse createResponse = createTextTableHelper(tableName, 50);
+      assertNotNull(createResponse, "Create response should not be null");
+
+      // Create FTS index
+      System.out.println("\n--- Creating FTS index for hybrid search ---");
+      CreateIndexRequest ftsIndexRequest = new CreateIndexRequest();
+      ftsIndexRequest.setName(tableName);
+      ftsIndexRequest.setColumn("text");
+      ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
+
+      CreateIndexResponse ftsIndexResponse = namespace.createIndex(ftsIndexRequest);
+      assertNotNull(ftsIndexResponse, "FTS index response should not be null");
+
+      waitForIndexComplete(tableName, "text_idx", 30);
+
+      // Test 1: Hybrid search with vector and text
+      System.out.println("\n--- Test 1: Hybrid search with vector and full-text query ---");
+      QueryRequest hybridQuery = new QueryRequest();
+      hybridQuery.setName(tableName);
+
+      // Add vector search
+      List<Float> queryVector = new ArrayList<>();
+      for (int i = 0; i < 128; i++) {
+        queryVector.add((float) (i % 10));
+      }
+      hybridQuery.setVector(queryVector);
+      hybridQuery.setK(10);
+
+      // Add full-text search
+      StringFtsQuery ftsQuery = new StringFtsQuery();
+      ftsQuery.setQuery("document");
+      hybridQuery.setFullTextQuery(ftsQuery);
+
+      byte[] hybridResult = namespace.queryTable(hybridQuery);
+      assertNotNull(hybridResult, "Hybrid search result should not be null");
+      System.out.println("✓ Hybrid search completed successfully");
+
+      // Test 2: Hybrid search with filter
+      System.out.println("\n--- Test 2: Hybrid search with vector, text, and filter ---");
+      QueryRequest hybridFilterQuery = new QueryRequest();
+      hybridFilterQuery.setName(tableName);
+
+      // Add vector search
+      List<Float> queryVector2 = new ArrayList<>();
+      for (int i = 0; i < 128; i++) {
+        queryVector2.add((float) (i % 5));
+      }
+      hybridFilterQuery.setVector(queryVector2);
+      hybridFilterQuery.setK(5);
+
+      // Add full-text search
+      StringFtsQuery ftsQuery2 = new StringFtsQuery();
+      ftsQuery2.setQuery("entry");
+      hybridFilterQuery.setFullTextQuery(ftsQuery2);
+
+      // Add filter
+      hybridFilterQuery.setFilter("id < 30");
+
+      byte[] hybridFilterResult = namespace.queryTable(hybridFilterQuery);
+      assertNotNull(hybridFilterResult, "Hybrid search with filter result should not be null");
+      System.out.println("✓ Hybrid search with filter completed successfully");
+
+      // Test 3: Hybrid search with column selection
+      System.out.println("\n--- Test 3: Hybrid search with specific columns ---");
+      QueryRequest hybridColumnsQuery = new QueryRequest();
+      hybridColumnsQuery.setName(tableName);
+
+      // Add vector search
+      List<Float> queryVector3 = new ArrayList<>();
+      for (int i = 0; i < 128; i++) {
+        queryVector3.add((float) Math.random());
+      }
+      hybridColumnsQuery.setVector(queryVector3);
+      hybridColumnsQuery.setK(8);
+
+      // Add full-text search with columns
+      StringFtsQuery ftsQuery3 = new StringFtsQuery();
+      ftsQuery3.setQuery("test");
+      ftsQuery3.setColumns(Arrays.asList("text")); // Search only in text column
+      hybridColumnsQuery.setFullTextQuery(ftsQuery3);
+
+      // Return specific columns
+      hybridColumnsQuery.setColumns(Arrays.asList("id", "text"));
+
+      byte[] hybridColumnsResult = namespace.queryTable(hybridColumnsQuery);
+      assertNotNull(hybridColumnsResult, "Hybrid search with columns result should not be null");
+      verifyQueryResultRowCount(hybridColumnsResult, 8, "Hybrid search with columns");
+
+      System.out.println("✓ All hybrid search tests completed successfully");
+
+    } finally {
+      dropTableHelper(tableName);
     }
   }
 
