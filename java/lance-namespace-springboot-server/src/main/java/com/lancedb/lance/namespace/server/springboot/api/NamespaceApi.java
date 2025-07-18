@@ -78,13 +78,14 @@ public interface NamespaceApi {
    *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
    *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
    *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or Not Acceptable / Unsupported Operation. The server does
-   *     not support this operation. (status code 406) or The request conflicts with the current
-   *     state of the target resource. (status code 409) or The service is not ready to handle the
-   *     request. The client should wait and retry. The service may additionally send a Retry-After
-   *     header to indicate when to retry. (status code 503) or A server-side problem that might not
-   *     be addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   *     permissions. (status code 403) or A server-side problem that means can not find the
+   *     specified resource. (status code 404) or Not Acceptable / Unsupported Operation. The server
+   *     does not support this operation. (status code 406) or The request conflicts with the
+   *     current state of the target resource. (status code 409) or The service is not ready to
+   *     handle the request. The client should wait and retry. The service may additionally send a
+   *     Retry-After header to indicate when to retry. (status code 503) or A server-side problem
+   *     that might not be addressable from the client side. Used for server 5xx errors without more
+   *     specific documentation in individual routes. (status code 5XX)
    */
   @Operation(
       operationId = "createNamespace",
@@ -122,6 +123,14 @@ public interface NamespaceApi {
         @ApiResponse(
             responseCode = "403",
             description = "Forbidden. Authenticated user does not have the necessary permissions.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "404",
+            description = "A server-side problem that means can not find the specified resource.",
             content = {
               @Content(
                   mediaType = "application/json",
@@ -196,6 +205,12 @@ public interface NamespaceApi {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
                       "{ \"parent\" : [ \"parent\", \"parent\" ], \"name\" : \"name\", \"properties\" : { \"key\" : \"properties\" } }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -618,7 +633,8 @@ public interface NamespaceApi {
    *     simple text/plain content might be returned by the server&#39;s middleware. (status code
    *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
    *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or Not Acceptable / Unsupported Operation. The server does not support
+   *     (status code 403) or A server-side problem that means can not find the specified resource.
+   *     (status code 404) or Not Acceptable / Unsupported Operation. The server does not support
    *     this operation. (status code 406) or The service is not ready to handle the request. The
    *     client should wait and retry. The service may additionally send a Retry-After header to
    *     indicate when to retry. (status code 503) or A server-side problem that might not be
@@ -661,6 +677,14 @@ public interface NamespaceApi {
         @ApiResponse(
             responseCode = "403",
             description = "Forbidden. Authenticated user does not have the necessary permissions.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "404",
+            description = "A server-side problem that means can not find the specified resource.",
             content = {
               @Content(
                   mediaType = "application/json",
@@ -727,6 +751,12 @@ public interface NamespaceApi {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
                       "{ \"nextPageToken\" : \"nextPageToken\", \"namespaces\" : [ \"accounting\", \"accounting\" ] }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }

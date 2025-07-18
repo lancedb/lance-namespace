@@ -65,6 +65,8 @@ paths:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         "403":
           $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
         "406":
           $ref: '#/components/responses/UnsupportedOperationErrorResponse'
         "409":
@@ -105,6 +107,8 @@ paths:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         "403":
           $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
         "406":
           $ref: '#/components/responses/UnsupportedOperationErrorResponse'
         "503":
@@ -716,6 +720,8 @@ paths:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         "403":
           $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
         "406":
           $ref: '#/components/responses/UnsupportedOperationErrorResponse'
         "409":
@@ -756,6 +762,8 @@ paths:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         "403":
           $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
         "406":
           $ref: '#/components/responses/UnsupportedOperationErrorResponse'
         "503":
