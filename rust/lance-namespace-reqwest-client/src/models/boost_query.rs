@@ -11,22 +11,25 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
+/// BoostQuery : Boost query that scores documents matching positive query higher and negative query lower
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct BoostQuery {
+    #[serde(rename = "positive")]
+    pub positive: Box<models::FtsQuery>,
     #[serde(rename = "negative")]
-    pub negative: serde_json::Value,
+    pub negative: Box<models::FtsQuery>,
+    /// Boost factor for negative query (default: 0.5)
     #[serde(rename = "negative_boost", skip_serializing_if = "Option::is_none")]
     pub negative_boost: Option<f32>,
-    #[serde(rename = "positive")]
-    pub positive: serde_json::Value,
 }
 
 impl BoostQuery {
-    pub fn new(negative: serde_json::Value, positive: serde_json::Value) -> BoostQuery {
+    /// Boost query that scores documents matching positive query higher and negative query lower
+    pub fn new(positive: models::FtsQuery, negative: models::FtsQuery) -> BoostQuery {
         BoostQuery {
-            negative,
+            positive: Box::new(positive),
+            negative: Box::new(negative),
             negative_boost: None,
-            positive,
         }
     }
 }

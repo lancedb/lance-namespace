@@ -11,19 +11,31 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum FtsQuery {
-    FtsQueryOneOf(Box<models::FtsQueryOneOf>),
-    FtsQueryOneOf1(Box<models::FtsQueryOneOf1>),
-    FtsQueryOneOf2(Box<models::FtsQueryOneOf2>),
-    FtsQueryOneOf3(Box<models::FtsQueryOneOf3>),
-    FtsQueryOneOf4(Box<models::FtsQueryOneOf4>),
+/// FtsQuery : Full-text search query. Exactly one query type field must be provided. This structure follows the same pattern as AlterTransactionAction to minimize differences and compatibility issues across codegen in different languages. 
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct FtsQuery {
+    #[serde(rename = "match", skip_serializing_if = "Option::is_none")]
+    pub r#match: Option<Box<models::MatchQuery>>,
+    #[serde(rename = "phrase", skip_serializing_if = "Option::is_none")]
+    pub phrase: Option<Box<models::PhraseQuery>>,
+    #[serde(rename = "boost", skip_serializing_if = "Option::is_none")]
+    pub boost: Option<Box<models::BoostQuery>>,
+    #[serde(rename = "multi_match", skip_serializing_if = "Option::is_none")]
+    pub multi_match: Option<Box<models::MultiMatchQuery>>,
+    #[serde(rename = "boolean", skip_serializing_if = "Option::is_none")]
+    pub boolean: Option<Box<models::BooleanQuery>>,
 }
 
-impl Default for FtsQuery {
-    fn default() -> Self {
-        Self::FtsQueryOneOf(Default::default())
+impl FtsQuery {
+    /// Full-text search query. Exactly one query type field must be provided. This structure follows the same pattern as AlterTransactionAction to minimize differences and compatibility issues across codegen in different languages. 
+    pub fn new() -> FtsQuery {
+        FtsQuery {
+            r#match: None,
+            phrase: None,
+            boost: None,
+            multi_match: None,
+            boolean: None,
+        }
     }
 }
 

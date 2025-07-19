@@ -85,7 +85,7 @@ public class QueryRequest {
   @javax.annotation.Nullable private JsonNullable<String> filter = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_FULL_TEXT_QUERY = "full_text_query";
-  @javax.annotation.Nullable private StringFtsQuery fullTextQuery;
+  @javax.annotation.Nullable private QueryRequestFullTextQuery fullTextQuery;
 
   public static final String JSON_PROPERTY_K = "k";
   @javax.annotation.Nonnull private Integer k;
@@ -386,27 +386,28 @@ public class QueryRequest {
     this.filter = JsonNullable.<String>of(filter);
   }
 
-  public QueryRequest fullTextQuery(@javax.annotation.Nullable StringFtsQuery fullTextQuery) {
+  public QueryRequest fullTextQuery(
+      @javax.annotation.Nullable QueryRequestFullTextQuery fullTextQuery) {
 
     this.fullTextQuery = fullTextQuery;
     return this;
   }
 
   /**
-   * Optional full-text search query (only string query supported)
+   * Get fullTextQuery
    *
    * @return fullTextQuery
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_FULL_TEXT_QUERY)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public StringFtsQuery getFullTextQuery() {
+  public QueryRequestFullTextQuery getFullTextQuery() {
     return fullTextQuery;
   }
 
   @JsonProperty(JSON_PROPERTY_FULL_TEXT_QUERY)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setFullTextQuery(@javax.annotation.Nullable StringFtsQuery fullTextQuery) {
+  public void setFullTextQuery(@javax.annotation.Nullable QueryRequestFullTextQuery fullTextQuery) {
     this.fullTextQuery = fullTextQuery;
   }
 

@@ -654,7 +654,9 @@ public class RestTableApiTest {
 
       StringFtsQuery simpleFts = new StringFtsQuery();
       simpleFts.setQuery("document");
-      stringFtsQuery.setFullTextQuery(simpleFts);
+      QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
+      fullTextQuery.setStringQuery(simpleFts);
+      stringFtsQuery.setFullTextQuery(fullTextQuery);
 
       byte[] ftsResult = namespace.queryTable(stringFtsQuery);
       assertNotNull(ftsResult, "FTS query result should not be null");
@@ -666,7 +668,7 @@ public class RestTableApiTest {
       ftsPrefilterQuery.setK(5);
       ftsPrefilterQuery.setPrefilter(true);
       ftsPrefilterQuery.setFilter("id < 25");
-      ftsPrefilterQuery.setFullTextQuery(simpleFts);
+      ftsPrefilterQuery.setFullTextQuery(fullTextQuery);
 
       byte[] ftsPrefilterResult = namespace.queryTable(ftsPrefilterQuery);
       assertNotNull(ftsPrefilterResult, "FTS prefilter query result should not be null");
@@ -870,7 +872,9 @@ public class RestTableApiTest {
       // Add full-text search
       StringFtsQuery ftsQuery = new StringFtsQuery();
       ftsQuery.setQuery("document");
-      hybridQuery.setFullTextQuery(ftsQuery);
+      QueryRequestFullTextQuery hybridFullTextQuery = new QueryRequestFullTextQuery();
+      hybridFullTextQuery.setStringQuery(ftsQuery);
+      hybridQuery.setFullTextQuery(hybridFullTextQuery);
 
       byte[] hybridResult = namespace.queryTable(hybridQuery);
       assertNotNull(hybridResult, "Hybrid search result should not be null");
@@ -892,7 +896,9 @@ public class RestTableApiTest {
       // Add full-text search
       StringFtsQuery ftsQuery2 = new StringFtsQuery();
       ftsQuery2.setQuery("entry");
-      hybridFilterQuery.setFullTextQuery(ftsQuery2);
+      QueryRequestFullTextQuery hybridFilterFullTextQuery = new QueryRequestFullTextQuery();
+      hybridFilterFullTextQuery.setStringQuery(ftsQuery2);
+      hybridFilterQuery.setFullTextQuery(hybridFilterFullTextQuery);
 
       // Add filter
       hybridFilterQuery.setFilter("id < 30");
@@ -918,7 +924,9 @@ public class RestTableApiTest {
       StringFtsQuery ftsQuery3 = new StringFtsQuery();
       ftsQuery3.setQuery("test");
       ftsQuery3.setColumns(Arrays.asList("text")); // Search only in text column
-      hybridColumnsQuery.setFullTextQuery(ftsQuery3);
+      QueryRequestFullTextQuery hybridColumnsFullTextQuery = new QueryRequestFullTextQuery();
+      hybridColumnsFullTextQuery.setStringQuery(ftsQuery3);
+      hybridColumnsQuery.setFullTextQuery(hybridColumnsFullTextQuery);
 
       // Return specific columns
       hybridColumnsQuery.setColumns(Arrays.asList("id", "text"));

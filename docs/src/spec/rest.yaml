@@ -1502,6 +1502,7 @@ components:
           description: Whether to bypass vector index
         columns:
           type: array
+          nullable: true
           items:
             type: string
           description: Optional list of columns to return
@@ -1527,8 +1528,14 @@ components:
           - 'null'
           description: Optional SQL filter expression
         full_text_query:
-          $ref: '#/components/schemas/StringFtsQuery'
-          description: Optional full-text search query (only string query supported)
+          type: object
+          nullable: true
+          description: Optional full-text search query. Provide either string_query or structured_query, not both.
+          properties:
+            string_query:
+              $ref: '#/components/schemas/StringFtsQuery'
+            structured_query:
+              $ref: '#/components/schemas/StructuredFtsQuery'
         k:
           type: integer
           minimum: 0
@@ -2107,37 +2114,22 @@ components:
           $ref: '#/components/schemas/FtsQuery'
 
     FtsQuery:
-      oneOf:
-      - type: object
-        required:
-        - match
-        properties:
-          match:
-            $ref: '#/components/schemas/MatchQuery'
-      - type: object
-        required:
-        - phrase
-        properties:
-          phrase:
-            $ref: '#/components/schemas/PhraseQuery'
-      - type: object
-        required:
-        - boost
-        properties:
-          boost:
-            $ref: '#/components/schemas/BoostQuery'
-      - type: object
-        required:
-        - multi_match
-        properties:
-          multi_match:
-            $ref: '#/components/schemas/MultiMatchQuery'
-      - type: object
-        required:
-        - boolean
-        properties:
-          boolean:
-            $ref: '#/components/schemas/BooleanQuery'
+      type: object
+      description: |
+        Full-text search query. Exactly one query type field must be provided.
+        This structure follows the same pattern as AlterTransactionAction to minimize
+        differences and compatibility issues across codegen in different languages.
+      properties:
+        match:
+          $ref: '#/components/schemas/MatchQuery'
+        phrase:
+          $ref: '#/components/schemas/PhraseQuery'
+        boost:
+          $ref: '#/components/schemas/BoostQuery'
+        multi_match:
+          $ref: '#/components/schemas/MultiMatchQuery'
+        boolean:
+          $ref: '#/components/schemas/BooleanQuery'
 
     MatchQuery:
       type: object
@@ -2198,17 +2190,20 @@ components:
 
     BoostQuery:
       type: object
+      description: Boost query that scores documents matching positive query higher and negative query lower
       required:
       - positive
       - negative
       properties:
+        positive:
+          $ref: '#/components/schemas/FtsQuery'
         negative:
-          type: object
+          $ref: '#/components/schemas/FtsQuery'
         negative_boost:
           type: number
           format: float
-        positive:
-          type: object
+          description: 'Boost factor for negative query (default: 0.5)'
+          default: 0.5
 
     MultiMatchQuery:
       type: object

@@ -47,7 +47,7 @@ public class QueryRequest {
 
   private String filter = null;
 
-  private StringFtsQuery fullTextQuery;
+  private QueryRequestFullTextQuery fullTextQuery;
 
   private Integer k;
 
@@ -280,27 +280,24 @@ public class QueryRequest {
     this.filter = filter;
   }
 
-  public QueryRequest fullTextQuery(StringFtsQuery fullTextQuery) {
+  public QueryRequest fullTextQuery(QueryRequestFullTextQuery fullTextQuery) {
     this.fullTextQuery = fullTextQuery;
     return this;
   }
 
   /**
-   * Optional full-text search query (only string query supported)
+   * Get fullTextQuery
    *
    * @return fullTextQuery
    */
   @Valid
-  @Schema(
-      name = "full_text_query",
-      description = "Optional full-text search query (only string query supported)",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "full_text_query", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("full_text_query")
-  public StringFtsQuery getFullTextQuery() {
+  public QueryRequestFullTextQuery getFullTextQuery() {
     return fullTextQuery;
   }
 
-  public void setFullTextQuery(StringFtsQuery fullTextQuery) {
+  public void setFullTextQuery(QueryRequestFullTextQuery fullTextQuery) {
     this.fullTextQuery = fullTextQuery;
   }
 

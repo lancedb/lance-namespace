@@ -17,19 +17,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
 class BoostQuery(BaseModel):
     """
-    BoostQuery
+    Boost query that scores documents matching positive query higher and negative query lower
     """ # noqa: E501
-    negative: Dict[str, Any]
-    negative_boost: Optional[Union[StrictFloat, StrictInt]] = None
-    positive: Dict[str, Any]
-    __properties: ClassVar[List[str]] = ["negative", "negative_boost", "positive"]
+    positive: FtsQuery
+    negative: FtsQuery
+    negative_boost: Optional[Union[StrictFloat, StrictInt]] = Field(default=0.5, description="Boost factor for negative query (default: 0.5)")
+    __properties: ClassVar[List[str]] = ["positive", "negative", "negative_boost"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -70,6 +70,12 @@ class BoostQuery(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of positive
+        if self.positive:
+            _dict['positive'] = self.positive.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of negative
+        if self.negative:
+            _dict['negative'] = self.negative.to_dict()
         return _dict
 
     @classmethod
@@ -82,10 +88,13 @@ class BoostQuery(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "negative": obj.get("negative"),
-            "negative_boost": obj.get("negative_boost"),
-            "positive": obj.get("positive")
+            "positive": FtsQuery.from_dict(obj["positive"]) if obj.get("positive") is not None else None,
+            "negative": FtsQuery.from_dict(obj["negative"]) if obj.get("negative") is not None else None,
+            "negative_boost": obj.get("negative_boost") if obj.get("negative_boost") is not None else 0.5
         })
         return _obj
 
+from lance_namespace_urllib3_client.models.fts_query import FtsQuery
+# TODO: Rewrite to not use raise_errors
+BoostQuery.model_rebuild(raise_errors=False)
 

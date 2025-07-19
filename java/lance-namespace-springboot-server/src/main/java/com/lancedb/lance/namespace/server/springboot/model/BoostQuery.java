@@ -17,75 +17,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.annotation.Generated;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
 import java.util.Objects;
 
-/** BoostQuery */
+/** Boost query that scores documents matching positive query higher and negative query lower */
+@Schema(
+    name = "BoostQuery",
+    description =
+        "Boost query that scores documents matching positive query higher and negative query lower")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class BoostQuery {
 
-  private Object negative;
+  private FtsQuery positive;
 
-  private Float negativeBoost;
+  private FtsQuery negative;
 
-  private Object positive;
+  private Float negativeBoost = 0.5f;
 
   public BoostQuery() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public BoostQuery(Object negative, Object positive) {
-    this.negative = negative;
+  public BoostQuery(FtsQuery positive, FtsQuery negative) {
     this.positive = positive;
-  }
-
-  public BoostQuery negative(Object negative) {
-    this.negative = negative;
-    return this;
-  }
-
-  /**
-   * Get negative
-   *
-   * @return negative
-   */
-  @NotNull
-  @Schema(name = "negative", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("negative")
-  public Object getNegative() {
-    return negative;
-  }
-
-  public void setNegative(Object negative) {
     this.negative = negative;
   }
 
-  public BoostQuery negativeBoost(Float negativeBoost) {
-    this.negativeBoost = negativeBoost;
-    return this;
-  }
-
-  /**
-   * Get negativeBoost
-   *
-   * @return negativeBoost
-   */
-  @Schema(name = "negative_boost", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("negative_boost")
-  public Float getNegativeBoost() {
-    return negativeBoost;
-  }
-
-  public void setNegativeBoost(Float negativeBoost) {
-    this.negativeBoost = negativeBoost;
-  }
-
-  public BoostQuery positive(Object positive) {
+  public BoostQuery positive(FtsQuery positive) {
     this.positive = positive;
     return this;
   }
@@ -96,14 +60,60 @@ public class BoostQuery {
    * @return positive
    */
   @NotNull
+  @Valid
   @Schema(name = "positive", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("positive")
-  public Object getPositive() {
+  public FtsQuery getPositive() {
     return positive;
   }
 
-  public void setPositive(Object positive) {
+  public void setPositive(FtsQuery positive) {
     this.positive = positive;
+  }
+
+  public BoostQuery negative(FtsQuery negative) {
+    this.negative = negative;
+    return this;
+  }
+
+  /**
+   * Get negative
+   *
+   * @return negative
+   */
+  @NotNull
+  @Valid
+  @Schema(name = "negative", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("negative")
+  public FtsQuery getNegative() {
+    return negative;
+  }
+
+  public void setNegative(FtsQuery negative) {
+    this.negative = negative;
+  }
+
+  public BoostQuery negativeBoost(Float negativeBoost) {
+    this.negativeBoost = negativeBoost;
+    return this;
+  }
+
+  /**
+   * Boost factor for negative query (default: 0.5)
+   *
+   * @return negativeBoost
+   */
+  @Schema(
+      name = "negative_boost",
+      description = "Boost factor for negative query (default: 0.5)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("negative_boost")
+  public Float getNegativeBoost() {
+    return negativeBoost;
+  }
+
+  public void setNegativeBoost(Float negativeBoost) {
+    this.negativeBoost = negativeBoost;
   }
 
   @Override
@@ -115,23 +125,23 @@ public class BoostQuery {
       return false;
     }
     BoostQuery boostQuery = (BoostQuery) o;
-    return Objects.equals(this.negative, boostQuery.negative)
-        && Objects.equals(this.negativeBoost, boostQuery.negativeBoost)
-        && Objects.equals(this.positive, boostQuery.positive);
+    return Objects.equals(this.positive, boostQuery.positive)
+        && Objects.equals(this.negative, boostQuery.negative)
+        && Objects.equals(this.negativeBoost, boostQuery.negativeBoost);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(negative, negativeBoost, positive);
+    return Objects.hash(positive, negative, negativeBoost);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class BoostQuery {\n");
+    sb.append("    positive: ").append(toIndentedString(positive)).append("\n");
     sb.append("    negative: ").append(toIndentedString(negative)).append("\n");
     sb.append("    negativeBoost: ").append(toIndentedString(negativeBoost)).append("\n");
-    sb.append("    positive: ").append(toIndentedString(positive)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **ef** | **int** | Search effort parameter for HNSW index | [optional] 
 **fast_search** | **bool** | Whether to use fast search | [optional] 
 **filter** | **str** | Optional SQL filter expression | [optional] 
-**full_text_query** | [**StringFtsQuery**](StringFtsQuery.md) | Optional full-text search query (only string query supported) | [optional] 
+**full_text_query** | [**QueryRequestFullTextQuery**](QueryRequestFullTextQuery.md) |  | [optional] 
 **k** | **int** | Number of results to return | 
 **lower_bound** | **float** | Lower bound for search | [optional] 
 **nprobes** | **int** | Number of probes for IVF index | [optional] 

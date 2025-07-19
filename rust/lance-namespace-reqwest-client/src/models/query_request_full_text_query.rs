@@ -11,16 +11,21 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
+/// QueryRequestFullTextQuery : Optional full-text search query. Provide either string_query or structured_query, not both.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct FtsQueryOneOf4 {
-    #[serde(rename = "boolean")]
-    pub boolean: Box<models::BooleanQuery>,
+pub struct QueryRequestFullTextQuery {
+    #[serde(rename = "string_query", skip_serializing_if = "Option::is_none")]
+    pub string_query: Option<Box<models::StringFtsQuery>>,
+    #[serde(rename = "structured_query", skip_serializing_if = "Option::is_none")]
+    pub structured_query: Option<Box<models::StructuredFtsQuery>>,
 }
 
-impl FtsQueryOneOf4 {
-    pub fn new(boolean: models::BooleanQuery) -> FtsQueryOneOf4 {
-        FtsQueryOneOf4 {
-            boolean: Box::new(boolean),
+impl QueryRequestFullTextQuery {
+    /// Optional full-text search query. Provide either string_query or structured_query, not both.
+    pub fn new() -> QueryRequestFullTextQuery {
+        QueryRequestFullTextQuery {
+            string_query: None,
+            structured_query: None,
         }
     }
 }

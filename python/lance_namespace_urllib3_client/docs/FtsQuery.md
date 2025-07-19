@@ -1,15 +1,16 @@
 # FtsQuery
 
+Full-text search query. Exactly one query type field must be provided. This structure follows the same pattern as AlterTransactionAction to minimize differences and compatibility issues across codegen in different languages. 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**match** | [**MatchQuery**](MatchQuery.md) |  | 
-**phrase** | [**PhraseQuery**](PhraseQuery.md) |  | 
-**boost** | [**BoostQuery**](BoostQuery.md) |  | 
-**multi_match** | [**MultiMatchQuery**](MultiMatchQuery.md) |  | 
-**boolean** | [**BooleanQuery**](BooleanQuery.md) |  | 
+**match** | [**MatchQuery**](MatchQuery.md) |  | [optional] 
+**phrase** | [**PhraseQuery**](PhraseQuery.md) |  | [optional] 
+**boost** | [**BoostQuery**](BoostQuery.md) |  | [optional] 
+**multi_match** | [**MultiMatchQuery**](MultiMatchQuery.md) |  | [optional] 
+**boolean** | [**BooleanQuery**](BooleanQuery.md) |  | [optional] 
 
 ## Example
 

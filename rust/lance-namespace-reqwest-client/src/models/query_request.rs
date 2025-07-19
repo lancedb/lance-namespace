@@ -35,9 +35,8 @@ pub struct QueryRequest {
     /// Optional SQL filter expression
     #[serde(rename = "filter", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub filter: Option<Option<String>>,
-    /// Optional full-text search query (only string query supported)
     #[serde(rename = "full_text_query", skip_serializing_if = "Option::is_none")]
-    pub full_text_query: Option<Box<models::StringFtsQuery>>,
+    pub full_text_query: Option<Box<models::QueryRequestFullTextQuery>>,
     /// Number of results to return
     #[serde(rename = "k")]
     pub k: i32,

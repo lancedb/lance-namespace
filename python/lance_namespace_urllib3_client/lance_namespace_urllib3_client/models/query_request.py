@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
-from lance_namespace_urllib3_client.models.string_fts_query import StringFtsQuery
+from lance_namespace_urllib3_client.models.query_request_full_text_query import QueryRequestFullTextQuery
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -36,7 +36,7 @@ class QueryRequest(BaseModel):
     ef: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Search effort parameter for HNSW index")
     fast_search: Optional[StrictBool] = Field(default=None, description="Whether to use fast search")
     filter: Optional[StrictStr] = Field(default=None, description="Optional SQL filter expression")
-    full_text_query: Optional[StringFtsQuery] = Field(default=None, description="Optional full-text search query (only string query supported)")
+    full_text_query: Optional[QueryRequestFullTextQuery] = None
     k: Annotated[int, Field(strict=True, ge=0)] = Field(description="Number of results to return")
     lower_bound: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Lower bound for search")
     nprobes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of probes for IVF index")
@@ -182,7 +182,7 @@ class QueryRequest(BaseModel):
             "ef": obj.get("ef"),
             "fast_search": obj.get("fast_search"),
             "filter": obj.get("filter"),
-            "full_text_query": StringFtsQuery.from_dict(obj["full_text_query"]) if obj.get("full_text_query") is not None else None,
+            "full_text_query": QueryRequestFullTextQuery.from_dict(obj["full_text_query"]) if obj.get("full_text_query") is not None else None,
             "k": obj.get("k"),
             "lower_bound": obj.get("lower_bound"),
             "nprobes": obj.get("nprobes"),

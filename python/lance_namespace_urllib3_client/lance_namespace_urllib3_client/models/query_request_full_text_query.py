@@ -18,17 +18,19 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
-from lance_namespace_urllib3_client.models.boost_query import BoostQuery
+from typing import Any, ClassVar, Dict, List, Optional
+from lance_namespace_urllib3_client.models.string_fts_query import StringFtsQuery
+from lance_namespace_urllib3_client.models.structured_fts_query import StructuredFtsQuery
 from typing import Optional, Set
 from typing_extensions import Self
 
-class FtsQueryOneOf2(BaseModel):
+class QueryRequestFullTextQuery(BaseModel):
     """
-    FtsQueryOneOf2
+    Optional full-text search query. Provide either string_query or structured_query, not both.
     """ # noqa: E501
-    boost: BoostQuery
-    __properties: ClassVar[List[str]] = ["boost"]
+    string_query: Optional[StringFtsQuery] = None
+    structured_query: Optional[StructuredFtsQuery] = None
+    __properties: ClassVar[List[str]] = ["string_query", "structured_query"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +50,7 @@ class FtsQueryOneOf2(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of FtsQueryOneOf2 from a JSON string"""
+        """Create an instance of QueryRequestFullTextQuery from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,14 +71,17 @@ class FtsQueryOneOf2(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of boost
-        if self.boost:
-            _dict['boost'] = self.boost.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of string_query
+        if self.string_query:
+            _dict['string_query'] = self.string_query.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of structured_query
+        if self.structured_query:
+            _dict['structured_query'] = self.structured_query.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of FtsQueryOneOf2 from a dict"""
+        """Create an instance of QueryRequestFullTextQuery from a dict"""
         if obj is None:
             return None
 
@@ -84,7 +89,8 @@ class FtsQueryOneOf2(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "boost": BoostQuery.from_dict(obj["boost"]) if obj.get("boost") is not None else None
+            "string_query": StringFtsQuery.from_dict(obj["string_query"]) if obj.get("string_query") is not None else None,
+            "structured_query": StructuredFtsQuery.from_dict(obj["structured_query"]) if obj.get("structured_query") is not None else None
         })
         return _obj
 

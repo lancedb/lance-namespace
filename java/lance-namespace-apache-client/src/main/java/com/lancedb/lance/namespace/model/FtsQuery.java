@@ -20,7 +20,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** FtsQuery */
+/**
+ * Full-text search query. Exactly one query type field must be provided. This structure follows the
+ * same pattern as AlterTransactionAction to minimize differences and compatibility issues across
+ * codegen in different languages.
+ */
 @JsonPropertyOrder({
   FtsQuery.JSON_PROPERTY_MATCH,
   FtsQuery.JSON_PROPERTY_PHRASE,
@@ -33,23 +37,23 @@ import java.util.StringJoiner;
     comments = "Generator version: 7.12.0")
 public class FtsQuery {
   public static final String JSON_PROPERTY_MATCH = "match";
-  @javax.annotation.Nonnull private MatchQuery match;
+  @javax.annotation.Nullable private MatchQuery match;
 
   public static final String JSON_PROPERTY_PHRASE = "phrase";
-  @javax.annotation.Nonnull private PhraseQuery phrase;
+  @javax.annotation.Nullable private PhraseQuery phrase;
 
   public static final String JSON_PROPERTY_BOOST = "boost";
-  @javax.annotation.Nonnull private BoostQuery boost;
+  @javax.annotation.Nullable private BoostQuery boost;
 
   public static final String JSON_PROPERTY_MULTI_MATCH = "multi_match";
-  @javax.annotation.Nonnull private MultiMatchQuery multiMatch;
+  @javax.annotation.Nullable private MultiMatchQuery multiMatch;
 
   public static final String JSON_PROPERTY_BOOLEAN = "boolean";
-  @javax.annotation.Nonnull private BooleanQuery _boolean;
+  @javax.annotation.Nullable private BooleanQuery _boolean;
 
   public FtsQuery() {}
 
-  public FtsQuery match(@javax.annotation.Nonnull MatchQuery match) {
+  public FtsQuery match(@javax.annotation.Nullable MatchQuery match) {
 
     this.match = match;
     return this;
@@ -60,20 +64,20 @@ public class FtsQuery {
    *
    * @return match
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_MATCH)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public MatchQuery getMatch() {
     return match;
   }
 
   @JsonProperty(JSON_PROPERTY_MATCH)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setMatch(@javax.annotation.Nonnull MatchQuery match) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setMatch(@javax.annotation.Nullable MatchQuery match) {
     this.match = match;
   }
 
-  public FtsQuery phrase(@javax.annotation.Nonnull PhraseQuery phrase) {
+  public FtsQuery phrase(@javax.annotation.Nullable PhraseQuery phrase) {
 
     this.phrase = phrase;
     return this;
@@ -84,20 +88,20 @@ public class FtsQuery {
    *
    * @return phrase
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_PHRASE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public PhraseQuery getPhrase() {
     return phrase;
   }
 
   @JsonProperty(JSON_PROPERTY_PHRASE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setPhrase(@javax.annotation.Nonnull PhraseQuery phrase) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setPhrase(@javax.annotation.Nullable PhraseQuery phrase) {
     this.phrase = phrase;
   }
 
-  public FtsQuery boost(@javax.annotation.Nonnull BoostQuery boost) {
+  public FtsQuery boost(@javax.annotation.Nullable BoostQuery boost) {
 
     this.boost = boost;
     return this;
@@ -108,20 +112,20 @@ public class FtsQuery {
    *
    * @return boost
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_BOOST)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public BoostQuery getBoost() {
     return boost;
   }
 
   @JsonProperty(JSON_PROPERTY_BOOST)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setBoost(@javax.annotation.Nonnull BoostQuery boost) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBoost(@javax.annotation.Nullable BoostQuery boost) {
     this.boost = boost;
   }
 
-  public FtsQuery multiMatch(@javax.annotation.Nonnull MultiMatchQuery multiMatch) {
+  public FtsQuery multiMatch(@javax.annotation.Nullable MultiMatchQuery multiMatch) {
 
     this.multiMatch = multiMatch;
     return this;
@@ -132,20 +136,20 @@ public class FtsQuery {
    *
    * @return multiMatch
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_MULTI_MATCH)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public MultiMatchQuery getMultiMatch() {
     return multiMatch;
   }
 
   @JsonProperty(JSON_PROPERTY_MULTI_MATCH)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setMultiMatch(@javax.annotation.Nonnull MultiMatchQuery multiMatch) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setMultiMatch(@javax.annotation.Nullable MultiMatchQuery multiMatch) {
     this.multiMatch = multiMatch;
   }
 
-  public FtsQuery _boolean(@javax.annotation.Nonnull BooleanQuery _boolean) {
+  public FtsQuery _boolean(@javax.annotation.Nullable BooleanQuery _boolean) {
 
     this._boolean = _boolean;
     return this;
@@ -156,16 +160,16 @@ public class FtsQuery {
    *
    * @return _boolean
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_BOOLEAN)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public BooleanQuery getBoolean() {
     return _boolean;
   }
 
   @JsonProperty(JSON_PROPERTY_BOOLEAN)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setBoolean(@javax.annotation.Nonnull BooleanQuery _boolean) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBoolean(@javax.annotation.Nullable BooleanQuery _boolean) {
     this._boolean = _boolean;
   }
 

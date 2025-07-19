@@ -34,24 +34,25 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class BooleanQuery {
 
-  @Valid private List<FtsQuery> must = new ArrayList<>();
+  @Valid private List<@Valid FtsQuery> must = new ArrayList<>();
 
-  @Valid private List<FtsQuery> mustNot = new ArrayList<>();
+  @Valid private List<@Valid FtsQuery> mustNot = new ArrayList<>();
 
-  @Valid private List<FtsQuery> should = new ArrayList<>();
+  @Valid private List<@Valid FtsQuery> should = new ArrayList<>();
 
   public BooleanQuery() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public BooleanQuery(List<FtsQuery> must, List<FtsQuery> mustNot, List<FtsQuery> should) {
+  public BooleanQuery(
+      List<@Valid FtsQuery> must, List<@Valid FtsQuery> mustNot, List<@Valid FtsQuery> should) {
     this.must = must;
     this.mustNot = mustNot;
     this.should = should;
   }
 
-  public BooleanQuery must(List<FtsQuery> must) {
+  public BooleanQuery must(List<@Valid FtsQuery> must) {
     this.must = must;
     return this;
   }
@@ -76,15 +77,15 @@ public class BooleanQuery {
       description = "Queries that must match (AND)",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("must")
-  public List<FtsQuery> getMust() {
+  public List<@Valid FtsQuery> getMust() {
     return must;
   }
 
-  public void setMust(List<FtsQuery> must) {
+  public void setMust(List<@Valid FtsQuery> must) {
     this.must = must;
   }
 
-  public BooleanQuery mustNot(List<FtsQuery> mustNot) {
+  public BooleanQuery mustNot(List<@Valid FtsQuery> mustNot) {
     this.mustNot = mustNot;
     return this;
   }
@@ -109,15 +110,15 @@ public class BooleanQuery {
       description = "Queries that must not match (NOT)",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("must_not")
-  public List<FtsQuery> getMustNot() {
+  public List<@Valid FtsQuery> getMustNot() {
     return mustNot;
   }
 
-  public void setMustNot(List<FtsQuery> mustNot) {
+  public void setMustNot(List<@Valid FtsQuery> mustNot) {
     this.mustNot = mustNot;
   }
 
-  public BooleanQuery should(List<FtsQuery> should) {
+  public BooleanQuery should(List<@Valid FtsQuery> should) {
     this.should = should;
     return this;
   }
@@ -142,11 +143,11 @@ public class BooleanQuery {
       description = "Queries that should match (OR)",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("should")
-  public List<FtsQuery> getShould() {
+  public List<@Valid FtsQuery> getShould() {
     return should;
   }
 
-  public void setShould(List<FtsQuery> should) {
+  public void setShould(List<@Valid FtsQuery> should) {
     this.should = should;
   }
 

@@ -2,14 +2,15 @@
 
 # BoostQuery
 
+Boost query that scores documents matching positive query higher and negative query lower
 
 ## Properties
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**negative** | **Object** |  |  |
-|**negativeBoost** | **Float** |  |  [optional] |
-|**positive** | **Object** |  |  |
+|**positive** | [**FtsQuery**](FtsQuery.md) |  |  |
+|**negative** | [**FtsQuery**](FtsQuery.md) |  |  |
+|**negativeBoost** | **Float** | Boost factor for negative query (default: 0.5) |  [optional] |
 
 
 

@@ -48,9 +48,39 @@ class TestFtsQuery(unittest.TestCase):
                     slop = 0, 
                     terms = '', ),
                 boost = lance_namespace_urllib3_client.models.boost_query.BoostQuery(
-                    negative = lance_namespace_urllib3_client.models.negative.negative(), 
-                    negative_boost = 1.337, 
-                    positive = lance_namespace_urllib3_client.models.positive.positive(), ),
+                    positive = lance_namespace_urllib3_client.models.fts_query.FtsQuery(
+                        match = lance_namespace_urllib3_client.models.match_query.MatchQuery(
+                            column = '', 
+                            fuzziness = 0, 
+                            max_expansions = 0, 
+                            operator = 'And', 
+                            prefix_length = 0, 
+                            terms = '', ), 
+                        phrase = lance_namespace_urllib3_client.models.phrase_query.PhraseQuery(
+                            column = '', 
+                            slop = 0, 
+                            terms = '', ), 
+                        multi_match = lance_namespace_urllib3_client.models.multi_match_query.MultiMatchQuery(
+                            match_queries = [
+                                lance_namespace_urllib3_client.models.match_query.MatchQuery(
+                                    column = '', 
+                                    fuzziness = 0, 
+                                    max_expansions = 0, 
+                                    prefix_length = 0, 
+                                    terms = '', )
+                                ], ), 
+                        boolean = lance_namespace_urllib3_client.models.boolean_query.BooleanQuery(
+                            must = [
+                                lance_namespace_urllib3_client.models.fts_query.FtsQuery()
+                                ], 
+                            must_not = [
+                                
+                                ], 
+                            should = [
+                                
+                                ], ), ), 
+                    negative = , 
+                    negative_boost = 1.337, ),
                 multi_match = lance_namespace_urllib3_client.models.multi_match_query.MultiMatchQuery(
                     match_queries = [
                         lance_namespace_urllib3_client.models.match_query.MatchQuery(
@@ -64,54 +94,46 @@ class TestFtsQuery(unittest.TestCase):
                         ], ),
                 boolean = lance_namespace_urllib3_client.models.boolean_query.BooleanQuery(
                     must = [
-                        null
+                        lance_namespace_urllib3_client.models.fts_query.FtsQuery(
+                            match = lance_namespace_urllib3_client.models.match_query.MatchQuery(
+                                boost = 1.337, 
+                                column = '', 
+                                fuzziness = 0, 
+                                max_expansions = 0, 
+                                operator = 'And', 
+                                prefix_length = 0, 
+                                terms = '', ), 
+                            phrase = lance_namespace_urllib3_client.models.phrase_query.PhraseQuery(
+                                column = '', 
+                                slop = 0, 
+                                terms = '', ), 
+                            boost = lance_namespace_urllib3_client.models.boost_query.BoostQuery(
+                                positive = lance_namespace_urllib3_client.models.fts_query.FtsQuery(
+                                    multi_match = lance_namespace_urllib3_client.models.multi_match_query.MultiMatchQuery(
+                                        match_queries = [
+                                            lance_namespace_urllib3_client.models.match_query.MatchQuery(
+                                                column = '', 
+                                                fuzziness = 0, 
+                                                max_expansions = 0, 
+                                                prefix_length = 0, 
+                                                terms = '', )
+                                            ], ), ), 
+                                negative = , 
+                                negative_boost = 1.337, ), 
+                            multi_match = lance_namespace_urllib3_client.models.multi_match_query.MultiMatchQuery(
+                                match_queries = [
+                                    
+                                    ], ), )
                         ], 
                     must_not = [
-                        null
+                        
                         ], 
                     should = [
-                        null
+                        
                         ], )
             )
         else:
             return FtsQuery(
-                match = lance_namespace_urllib3_client.models.match_query.MatchQuery(
-                    boost = 1.337, 
-                    column = '', 
-                    fuzziness = 0, 
-                    max_expansions = 0, 
-                    operator = 'And', 
-                    prefix_length = 0, 
-                    terms = '', ),
-                phrase = lance_namespace_urllib3_client.models.phrase_query.PhraseQuery(
-                    column = '', 
-                    slop = 0, 
-                    terms = '', ),
-                boost = lance_namespace_urllib3_client.models.boost_query.BoostQuery(
-                    negative = lance_namespace_urllib3_client.models.negative.negative(), 
-                    negative_boost = 1.337, 
-                    positive = lance_namespace_urllib3_client.models.positive.positive(), ),
-                multi_match = lance_namespace_urllib3_client.models.multi_match_query.MultiMatchQuery(
-                    match_queries = [
-                        lance_namespace_urllib3_client.models.match_query.MatchQuery(
-                            boost = 1.337, 
-                            column = '', 
-                            fuzziness = 0, 
-                            max_expansions = 0, 
-                            operator = 'And', 
-                            prefix_length = 0, 
-                            terms = '', )
-                        ], ),
-                boolean = lance_namespace_urllib3_client.models.boolean_query.BooleanQuery(
-                    must = [
-                        null
-                        ], 
-                    must_not = [
-                        null
-                        ], 
-                    should = [
-                        null
-                        ], ),
         )
         """
 

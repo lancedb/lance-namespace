@@ -2022,19 +2022,64 @@ components:
         vector_column: vector_column
         fast_search: true
         k: 0
-        upper_bound: 7.0614014
+        upper_bound: 1.2315135
         version: 0
         with_row_id: true
         prefilter: true
         filter: filter
         refine_factor: 0
         full_text_query:
-          columns:
-          - columns
-          - columns
-          query: query
+          string_query:
+            columns:
+            - columns
+            - columns
+            query: query
+          structured_query:
+            query:
+              boolean:
+                must_not:
+                - null
+                - null
+                should:
+                - null
+                - null
+                must:
+                - null
+                - null
+              phrase:
+                terms: terms
+                column: column
+                slop: 0
+              match:
+                fuzziness: 0
+                terms: terms
+                column: column
+                boost: 6.0274563
+                prefix_length: 0
+                operator: And
+                max_expansions: 0
+              boost:
+                negative: null
+                negative_boost: 7.0614014
+                positive: null
+              multi_match:
+                match_queries:
+                - fuzziness: 0
+                  terms: terms
+                  column: column
+                  boost: 6.0274563
+                  prefix_length: 0
+                  operator: And
+                  max_expansions: 0
+                - fuzziness: 0
+                  terms: terms
+                  column: column
+                  boost: 6.0274563
+                  prefix_length: 0
+                  operator: And
+                  max_expansions: 0
         distance_type: distance_type
-        lower_bound: 1.4658129
+        lower_bound: 3.6160767
         bypass_vector_index: true
         nprobes: 0
         name: name
@@ -2042,8 +2087,8 @@ components:
         - namespace
         - namespace
         vector:
-        - 9.301444
-        - 9.301444
+        - 1.0246457
+        - 1.0246457
       properties:
         name:
           type: string
@@ -2060,6 +2105,7 @@ components:
           items:
             type: string
           type: array
+          nullable: true
         distance_type:
           description: Distance metric to use
           nullable: true
@@ -2078,7 +2124,7 @@ components:
           nullable: true
           type: string
         full_text_query:
-          $ref: '#/components/schemas/StringFtsQuery'
+          $ref: '#/components/schemas/QueryRequest_full_text_query'
         k:
           description: Number of results to return
           minimum: 0
@@ -2777,19 +2823,123 @@ components:
       required:
       - query
     StructuredFtsQuery:
+      example:
+        query:
+          boolean:
+            must_not:
+            - null
+            - null
+            should:
+            - null
+            - null
+            must:
+            - null
+            - null
+          phrase:
+            terms: terms
+            column: column
+            slop: 0
+          match:
+            fuzziness: 0
+            terms: terms
+            column: column
+            boost: 6.0274563
+            prefix_length: 0
+            operator: And
+            max_expansions: 0
+          boost:
+            negative: null
+            negative_boost: 7.0614014
+            positive: null
+          multi_match:
+            match_queries:
+            - fuzziness: 0
+              terms: terms
+              column: column
+              boost: 6.0274563
+              prefix_length: 0
+              operator: And
+              max_expansions: 0
+            - fuzziness: 0
+              terms: terms
+              column: column
+              boost: 6.0274563
+              prefix_length: 0
+              operator: And
+              max_expansions: 0
       properties:
         query:
           $ref: '#/components/schemas/FtsQuery'
       required:
       - query
     FtsQuery:
-      oneOf:
-      - $ref: '#/components/schemas/FtsQuery_oneOf'
-      - $ref: '#/components/schemas/FtsQuery_oneOf_1'
-      - $ref: '#/components/schemas/FtsQuery_oneOf_2'
-      - $ref: '#/components/schemas/FtsQuery_oneOf_3'
-      - $ref: '#/components/schemas/FtsQuery_oneOf_4'
+      description: |
+        Full-text search query. Exactly one query type field must be provided.
+        This structure follows the same pattern as AlterTransactionAction to minimize
+        differences and compatibility issues across codegen in different languages.
+      example:
+        boolean:
+          must_not:
+          - null
+          - null
+          should:
+          - null
+          - null
+          must:
+          - null
+          - null
+        phrase:
+          terms: terms
+          column: column
+          slop: 0
+        match:
+          fuzziness: 0
+          terms: terms
+          column: column
+          boost: 6.0274563
+          prefix_length: 0
+          operator: And
+          max_expansions: 0
+        boost:
+          negative: null
+          negative_boost: 7.0614014
+          positive: null
+        multi_match:
+          match_queries:
+          - fuzziness: 0
+            terms: terms
+            column: column
+            boost: 6.0274563
+            prefix_length: 0
+            operator: And
+            max_expansions: 0
+          - fuzziness: 0
+            terms: terms
+            column: column
+            boost: 6.0274563
+            prefix_length: 0
+            operator: And
+            max_expansions: 0
+      properties:
+        match:
+          $ref: '#/components/schemas/MatchQuery'
+        phrase:
+          $ref: '#/components/schemas/PhraseQuery'
+        boost:
+          $ref: '#/components/schemas/BoostQuery'
+        multi_match:
+          $ref: '#/components/schemas/MultiMatchQuery'
+        boolean:
+          $ref: '#/components/schemas/BooleanQuery'
     MatchQuery:
+      example:
+        fuzziness: 0
+        terms: terms
+        column: column
+        boost: 6.0274563
+        prefix_length: 0
+        operator: And
+        max_expansions: 0
       properties:
         boost:
           format: float
@@ -2822,6 +2972,10 @@ components:
       required:
       - terms
     PhraseQuery:
+      example:
+        terms: terms
+        column: column
+        slop: 0
       properties:
         column:
           nullable: true
@@ -2835,18 +2989,42 @@ components:
       required:
       - terms
     BoostQuery:
+      description: Boost query that scores documents matching positive query higher
+        and negative query lower
+      example:
+        negative: null
+        negative_boost: 7.0614014
+        positive: null
       properties:
+        positive:
+          $ref: '#/components/schemas/FtsQuery'
         negative:
-          type: object
+          $ref: '#/components/schemas/FtsQuery'
         negative_boost:
+          default: 0.5
+          description: "Boost factor for negative query (default: 0.5)"
           format: float
           type: number
-        positive:
-          type: object
       required:
       - negative
       - positive
     MultiMatchQuery:
+      example:
+        match_queries:
+        - fuzziness: 0
+          terms: terms
+          column: column
+          boost: 6.0274563
+          prefix_length: 0
+          operator: And
+          max_expansions: 0
+        - fuzziness: 0
+          terms: terms
+          column: column
+          boost: 6.0274563
+          prefix_length: 0
+          operator: And
+          max_expansions: 0
       properties:
         match_queries:
           items:
@@ -2856,6 +3034,16 @@ components:
       - match_queries
     BooleanQuery:
       description: "Boolean query with must, should, and must_not clauses"
+      example:
+        must_not:
+        - null
+        - null
+        should:
+        - null
+        - null
+        must:
+        - null
+        - null
       properties:
         must:
           description: Queries that must match (AND)
@@ -2881,34 +3069,63 @@ components:
       - And
       - Or
       type: string
-    FtsQuery_oneOf:
+    QueryRequest_full_text_query:
+      description: "Optional full-text search query. Provide either string_query or\
+        \ structured_query, not both."
+      example:
+        string_query:
+          columns:
+          - columns
+          - columns
+          query: query
+        structured_query:
+          query:
+            boolean:
+              must_not:
+              - null
+              - null
+              should:
+              - null
+              - null
+              must:
+              - null
+              - null
+            phrase:
+              terms: terms
+              column: column
+              slop: 0
+            match:
+              fuzziness: 0
+              terms: terms
+              column: column
+              boost: 6.0274563
+              prefix_length: 0
+              operator: And
+              max_expansions: 0
+            boost:
+              negative: null
+              negative_boost: 7.0614014
+              positive: null
+            multi_match:
+              match_queries:
+              - fuzziness: 0
+                terms: terms
+                column: column
+                boost: 6.0274563
+                prefix_length: 0
+                operator: And
+                max_expansions: 0
+              - fuzziness: 0
+                terms: terms
+                column: column
+                boost: 6.0274563
+                prefix_length: 0
+                operator: And
+                max_expansions: 0
       properties:
-        match:
-          $ref: '#/components/schemas/MatchQuery'
-      required:
-      - match
-    FtsQuery_oneOf_1:
-      properties:
-        phrase:
-          $ref: '#/components/schemas/PhraseQuery'
-      required:
-      - phrase
-    FtsQuery_oneOf_2:
-      properties:
-        boost:
-          $ref: '#/components/schemas/BoostQuery'
-      required:
-      - boost
-    FtsQuery_oneOf_3:
-      properties:
-        multi_match:
-          $ref: '#/components/schemas/MultiMatchQuery'
-      required:
-      - multi_match
-    FtsQuery_oneOf_4:
-      properties:
-        boolean:
-          $ref: '#/components/schemas/BooleanQuery'
-      required:
-      - boolean
+        string_query:
+          $ref: '#/components/schemas/StringFtsQuery'
+        structured_query:
+          $ref: '#/components/schemas/StructuredFtsQuery'
+      nullable: true
 

@@ -15,7 +15,7 @@
 |**ef** | **Integer** | Search effort parameter for HNSW index |  [optional] |
 |**fastSearch** | **Boolean** | Whether to use fast search |  [optional] |
 |**filter** | **String** | Optional SQL filter expression |  [optional] |
-|**fullTextQuery** | [**StringFtsQuery**](StringFtsQuery.md) | Optional full-text search query (only string query supported) |  [optional] |
+|**fullTextQuery** | [**QueryRequestFullTextQuery**](QueryRequestFullTextQuery.md) |  |  [optional] |
 |**k** | **Integer** | Number of results to return |  |
 |**lowerBound** | **Float** | Lower bound for search |  [optional] |
 |**nprobes** | **Integer** | Number of probes for IVF index |  [optional] |

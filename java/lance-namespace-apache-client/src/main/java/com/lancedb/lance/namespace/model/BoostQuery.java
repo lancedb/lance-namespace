@@ -22,28 +22,52 @@ import java.net.URLEncoder;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** BoostQuery */
+/** Boost query that scores documents matching positive query higher and negative query lower */
 @JsonPropertyOrder({
+  BoostQuery.JSON_PROPERTY_POSITIVE,
   BoostQuery.JSON_PROPERTY_NEGATIVE,
-  BoostQuery.JSON_PROPERTY_NEGATIVE_BOOST,
-  BoostQuery.JSON_PROPERTY_POSITIVE
+  BoostQuery.JSON_PROPERTY_NEGATIVE_BOOST
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class BoostQuery {
+  public static final String JSON_PROPERTY_POSITIVE = "positive";
+  @javax.annotation.Nonnull private FtsQuery positive;
+
   public static final String JSON_PROPERTY_NEGATIVE = "negative";
-  @javax.annotation.Nonnull private Object negative;
+  @javax.annotation.Nonnull private FtsQuery negative;
 
   public static final String JSON_PROPERTY_NEGATIVE_BOOST = "negative_boost";
-  @javax.annotation.Nullable private Float negativeBoost;
-
-  public static final String JSON_PROPERTY_POSITIVE = "positive";
-  @javax.annotation.Nonnull private Object positive;
+  @javax.annotation.Nullable private Float negativeBoost = 0.5f;
 
   public BoostQuery() {}
 
-  public BoostQuery negative(@javax.annotation.Nonnull Object negative) {
+  public BoostQuery positive(@javax.annotation.Nonnull FtsQuery positive) {
+
+    this.positive = positive;
+    return this;
+  }
+
+  /**
+   * Get positive
+   *
+   * @return positive
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_POSITIVE)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public FtsQuery getPositive() {
+    return positive;
+  }
+
+  @JsonProperty(JSON_PROPERTY_POSITIVE)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setPositive(@javax.annotation.Nonnull FtsQuery positive) {
+    this.positive = positive;
+  }
+
+  public BoostQuery negative(@javax.annotation.Nonnull FtsQuery negative) {
 
     this.negative = negative;
     return this;
@@ -57,13 +81,13 @@ public class BoostQuery {
   @javax.annotation.Nonnull
   @JsonProperty(JSON_PROPERTY_NEGATIVE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public Object getNegative() {
+  public FtsQuery getNegative() {
     return negative;
   }
 
   @JsonProperty(JSON_PROPERTY_NEGATIVE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setNegative(@javax.annotation.Nonnull Object negative) {
+  public void setNegative(@javax.annotation.Nonnull FtsQuery negative) {
     this.negative = negative;
   }
 
@@ -74,7 +98,7 @@ public class BoostQuery {
   }
 
   /**
-   * Get negativeBoost
+   * Boost factor for negative query (default: 0.5)
    *
    * @return negativeBoost
    */
@@ -91,30 +115,6 @@ public class BoostQuery {
     this.negativeBoost = negativeBoost;
   }
 
-  public BoostQuery positive(@javax.annotation.Nonnull Object positive) {
-
-    this.positive = positive;
-    return this;
-  }
-
-  /**
-   * Get positive
-   *
-   * @return positive
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_POSITIVE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public Object getPositive() {
-    return positive;
-  }
-
-  @JsonProperty(JSON_PROPERTY_POSITIVE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setPositive(@javax.annotation.Nonnull Object positive) {
-    this.positive = positive;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -124,23 +124,23 @@ public class BoostQuery {
       return false;
     }
     BoostQuery boostQuery = (BoostQuery) o;
-    return Objects.equals(this.negative, boostQuery.negative)
-        && Objects.equals(this.negativeBoost, boostQuery.negativeBoost)
-        && Objects.equals(this.positive, boostQuery.positive);
+    return Objects.equals(this.positive, boostQuery.positive)
+        && Objects.equals(this.negative, boostQuery.negative)
+        && Objects.equals(this.negativeBoost, boostQuery.negativeBoost);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(negative, negativeBoost, positive);
+    return Objects.hash(positive, negative, negativeBoost);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class BoostQuery {\n");
+    sb.append("    positive: ").append(toIndentedString(positive)).append("\n");
     sb.append("    negative: ").append(toIndentedString(negative)).append("\n");
     sb.append("    negativeBoost: ").append(toIndentedString(negativeBoost)).append("\n");
-    sb.append("    positive: ").append(toIndentedString(positive)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -187,20 +187,14 @@ public class BoostQuery {
 
     StringJoiner joiner = new StringJoiner("&");
 
+    // add `positive` to the URL query string
+    if (getPositive() != null) {
+      joiner.add(getPositive().toUrlQueryString(prefix + "positive" + suffix));
+    }
+
     // add `negative` to the URL query string
     if (getNegative() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%snegative%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getNegative()), "UTF-8")
-                    .replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
+      joiner.add(getNegative().toUrlQueryString(prefix + "negative" + suffix));
     }
 
     // add `negative_boost` to the URL query string
@@ -212,22 +206,6 @@ public class BoostQuery {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getNegativeBoost()), "UTF-8")
-                    .replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `positive` to the URL query string
-    if (getPositive() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%spositive%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getPositive()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
