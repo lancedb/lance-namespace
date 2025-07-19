@@ -310,18 +310,81 @@ waitForIndexComplete("my_table", "content_idx", 30);
 
 // Perform full-text search
 import com.lancedb.lance.namespace.model.StringFtsQuery;
+import com.lancedb.lance.namespace.model.QueryRequestFullTextQuery;
 
 QueryRequest textQuery = new QueryRequest();
 textQuery.setName("my_table");
 textQuery.setK(10);
 
+// Simple string query
+QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
 StringFtsQuery fts = new StringFtsQuery();
 fts.setQuery("search terms"); // The search query
 fts.setColumns(Arrays.asList("content", "title")); // Optional: columns to search
-textQuery.setFullTextQuery(fts);
+fullTextQuery.setStringQuery(fts);
+textQuery.setFullTextQuery(fullTextQuery);
 
 byte[] results = namespace.queryTable(textQuery);
 ```
+
+##### Advanced: Structured Full-Text Search
+
+The Java SDK now supports complex structured full-text queries including boolean queries, phrase queries, and boosted queries:
+
+```java
+import com.lancedb.lance.namespace.model.*;
+
+// Boolean query example: (must contain "important" AND should contain "feature" OR "update")
+QueryRequest structuredQuery = new QueryRequest();
+structuredQuery.setName("my_table");
+structuredQuery.setK(10);
+
+QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
+StructuredFtsQuery structured = new StructuredFtsQuery();
+FtsQuery ftsQuery = new FtsQuery();
+
+// Create a boolean query
+BooleanQuery boolQuery = new BooleanQuery();
+
+// Must clause: documents must contain "important"
+FtsQuery mustQuery = new FtsQuery();
+MatchQuery mustMatch = new MatchQuery();
+mustMatch.setTerms("important");
+mustMatch.setColumn("content");
+mustQuery.setMatch(mustMatch);
+boolQuery.setMust(Arrays.asList(mustQuery));
+
+// Should clauses: documents should contain "feature" OR "update" 
+FtsQuery shouldQuery1 = new FtsQuery();
+MatchQuery shouldMatch1 = new MatchQuery();
+shouldMatch1.setTerms("feature");
+shouldQuery1.setMatch(shouldMatch1);
+
+FtsQuery shouldQuery2 = new FtsQuery();
+MatchQuery shouldMatch2 = new MatchQuery();
+shouldMatch2.setTerms("update");
+shouldQuery2.setMatch(shouldMatch2);
+boolQuery.setShould(Arrays.asList(shouldQuery1, shouldQuery2));
+
+// Must NOT clause: exclude documents with "deprecated"
+FtsQuery mustNotQuery = new FtsQuery();
+MatchQuery mustNotMatch = new MatchQuery();
+mustNotMatch.setTerms("deprecated");
+mustNotQuery.setMatch(mustNotMatch);
+boolQuery.setMustNot(Arrays.asList(mustNotQuery));
+
+ftsQuery.setBoolean(boolQuery);
+structured.setQuery(ftsQuery);
+fullTextQuery.setStructuredQuery(structured);
+structuredQuery.setFullTextQuery(fullTextQuery);
+
+byte[] boolResults = namespace.queryTable(structuredQuery);
+```
+
+Other supported query types include:
+- **Phrase Query**: Find exact phrases with optional slop (word distance)
+- **Boost Query**: Boost documents matching certain criteria
+- **Multi-Match Query**: Search across multiple fields with different weights
 
 #### Hybrid Search
 
@@ -338,10 +401,12 @@ hybridQuery.setVector(queryVector);
 hybridQuery.setK(10);
 
 // Text search component
+QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
 StringFtsQuery fts = new StringFtsQuery();
 fts.setQuery("search terms");
 fts.setColumns(Arrays.asList("content", "title")); // Optional: columns to search
-hybridQuery.setFullTextQuery(fts);
+fullTextQuery.setStringQuery(fts);
+hybridQuery.setFullTextQuery(fullTextQuery);
 
 // Optional: Add filters
 hybridQuery.setFilter("date > '2024-01-01'");
@@ -567,11 +632,6 @@ Due to limitations in the OpenAPI code generator for Java, some advanced feature
 - **Workaround**: Use `Arrays.asList("col1", "col2")` to specify columns
 - **Not Supported**: Advanced column specifications with include/exclude patterns
 
-### 3. Structured Full-Text Search
-- **Limitation**: Only simple string queries are supported via `StringFtsQuery`
-- **Workaround**: Use basic text search with `query.setFullTextQuery(stringQuery)`
-- **Not Supported**: Complex boolean queries, phrase queries, or boosted queries
-
 ### Example of Supported vs Unsupported Features
 
 ```java
@@ -593,20 +653,9 @@ query.setColumns(Arrays.asList("id", "name", "score"));
 // ColumnsObject cols = new ColumnsObject();
 // cols.setInclude(Arrays.asList("*"));
 // cols.setExclude(Arrays.asList("embedding"));
-
-// ✅ SUPPORTED: Simple text search
-StringFtsQuery fts = new StringFtsQuery();
-fts.setQuery("search terms");
-fts.setColumns(Arrays.asList("title", "content"));
-query.setFullTextQuery(fts);
-
-// ❌ NOT SUPPORTED: Structured boolean queries
-// BooleanQuery bool = new BooleanQuery();
-// bool.setMust(Arrays.asList(matchQuery1));
-// bool.setShould(Arrays.asList(matchQuery2));
 ```
 
-These limitations are due to the OpenAPI generator's inability to properly handle `oneOf` types in the specification. The simplified types ensure the SDK works reliably for the most common use cases.
+These limitations are due to the OpenAPI generator's inability to properly handle certain `oneOf` types in the specification. The simplified types ensure the SDK works reliably for the most common use cases.
 
 ## Additional Resources
 
