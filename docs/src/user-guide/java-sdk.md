@@ -184,6 +184,7 @@ Query results are returned in Arrow File format. Use `ArrowFileReader` to read t
 
 ```java
 import com.lancedb.lance.namespace.model.QueryRequest;
+import com.lancedb.lance.namespace.model.QueryRequestVector;
 import org.apache.arrow.vector.ipc.ArrowFileReader;
 import org.apache.arrow.vector.ipc.ArrowBlock;
 import org.apache.arrow.vector.ipc.SeekableReadChannel;
@@ -196,11 +197,13 @@ import java.util.Arrays;
 QueryRequest queryRequest = new QueryRequest();
 queryRequest.setName("my_table");
 
-// Set query vector (128-dimensional)
+// Single vector search (most common use case)
 List<Float> queryVector = new ArrayList<>();
 for (int i = 0; i < 128; i++) {
     queryVector.add((float) Math.random());
 }
+
+// For single vector, you can set it directly
 queryRequest.setVector(queryVector);
 queryRequest.setK(5);  // Get top 5 results
 
@@ -619,43 +622,6 @@ System.out.println("Updated rows: " + response.getNumUpdatedRows());
 System.out.println("Inserted rows: " + response.getNumInsertedRows());
 ```
 
-## Known Limitations
-
-Due to limitations in the OpenAPI code generator for Java, some advanced features that use `oneOf` polymorphic types are not fully supported in this SDK. The SDK has been simplified to support the most common use cases:
-
-### 1. Multi-Vector Queries
-- **Limitation**: Only single vector queries are supported
-- **Workaround**: Submit one vector at a time rather than batching multiple vectors
-
-### 2. Complex Column Specifications  
-- **Limitation**: Only simple column lists (array of strings) are supported
-- **Workaround**: Use `Arrays.asList("col1", "col2")` to specify columns
-- **Not Supported**: Advanced column specifications with include/exclude patterns
-
-### Example of Supported vs Unsupported Features
-
-```java
-// ✅ SUPPORTED: Simple vector query
-QueryRequest query = new QueryRequest();
-query.setName("my_table");
-query.setK(10);
-List<Float> vector = Arrays.asList(0.1f, 0.2f, 0.3f, ...);
-query.setVector(vector);
-
-// ❌ NOT SUPPORTED: Multi-vector query
-// List<List<Float>> vectors = Arrays.asList(vector1, vector2, vector3);
-// query.setVector(vectors); // This won't compile
-
-// ✅ SUPPORTED: Simple column selection
-query.setColumns(Arrays.asList("id", "name", "score"));
-
-// ❌ NOT SUPPORTED: Complex column specification
-// ColumnsObject cols = new ColumnsObject();
-// cols.setInclude(Arrays.asList("*"));
-// cols.setExclude(Arrays.asList("embedding"));
-```
-
-These limitations are due to the OpenAPI generator's inability to properly handle certain `oneOf` types in the specification. The simplified types ensure the SDK works reliably for the most common use cases.
 
 ## Additional Resources
 

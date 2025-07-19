@@ -23,7 +23,7 @@
 |**prefilter** | **Boolean** | Whether to apply filtering before vector search |  [optional] |
 |**refineFactor** | **Integer** | Refine factor for search |  [optional] |
 |**upperBound** | **Float** | Upper bound for search |  [optional] |
-|**vector** | **List&lt;Float&gt;** | Query vector for similarity search (single vector only) |  |
+|**vector** | [**QueryRequestVector**](QueryRequestVector.md) |  |  |
 |**vectorColumn** | **String** | Name of the vector column to search |  [optional] |
 |**version** | **Long** | Table version to query |  [optional] |
 |**withRowId** | **Boolean** | If true, return the row id as a column called &#x60;_rowid&#x60; |  [optional] |

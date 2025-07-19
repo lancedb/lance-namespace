@@ -108,6 +108,8 @@ pub mod query_request;
 pub use self::query_request::QueryRequest;
 pub mod query_request_full_text_query;
 pub use self::query_request_full_text_query::QueryRequestFullTextQuery;
+pub mod query_request_vector;
+pub use self::query_request_vector::QueryRequestVector;
 pub mod register_table_request;
 pub use self::register_table_request::RegisterTableRequest;
 pub mod register_table_response;

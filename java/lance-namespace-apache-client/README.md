@@ -197,6 +197,7 @@ Class | Method | HTTP request | Description
  - [PhraseQuery](docs/PhraseQuery.md)
  - [QueryRequest](docs/QueryRequest.md)
  - [QueryRequestFullTextQuery](docs/QueryRequestFullTextQuery.md)
+ - [QueryRequestVector](docs/QueryRequestVector.md)
  - [RegisterTableRequest](docs/RegisterTableRequest.md)
  - [RegisterTableResponse](docs/RegisterTableResponse.md)
  - [SetPropertyMode](docs/SetPropertyMode.md)

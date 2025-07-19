@@ -121,7 +121,7 @@ public class QueryRequest {
   private JsonNullable<Float> upperBound = JsonNullable.<Float>undefined();
 
   public static final String JSON_PROPERTY_VECTOR = "vector";
-  @javax.annotation.Nonnull private List<Float> vector = new ArrayList<>();
+  @javax.annotation.Nonnull private QueryRequestVector vector;
 
   public static final String JSON_PROPERTY_VECTOR_COLUMN = "vector_column";
 
@@ -627,35 +627,27 @@ public class QueryRequest {
     this.upperBound = JsonNullable.<Float>of(upperBound);
   }
 
-  public QueryRequest vector(@javax.annotation.Nonnull List<Float> vector) {
+  public QueryRequest vector(@javax.annotation.Nonnull QueryRequestVector vector) {
 
     this.vector = vector;
     return this;
   }
 
-  public QueryRequest addVectorItem(Float vectorItem) {
-    if (this.vector == null) {
-      this.vector = new ArrayList<>();
-    }
-    this.vector.add(vectorItem);
-    return this;
-  }
-
   /**
-   * Query vector for similarity search (single vector only)
+   * Get vector
    *
    * @return vector
    */
   @javax.annotation.Nonnull
   @JsonProperty(JSON_PROPERTY_VECTOR)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public List<Float> getVector() {
+  public QueryRequestVector getVector() {
     return vector;
   }
 
   @JsonProperty(JSON_PROPERTY_VECTOR)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setVector(@javax.annotation.Nonnull List<Float> vector) {
+  public void setVector(@javax.annotation.Nonnull QueryRequestVector vector) {
     this.vector = vector;
   }
 
@@ -1148,23 +1140,7 @@ public class QueryRequest {
 
     // add `vector` to the URL query string
     if (getVector() != null) {
-      for (int i = 0; i < getVector().size(); i++) {
-        try {
-          joiner.add(
-              String.format(
-                  "%svector%s%s=%s",
-                  prefix,
-                  suffix,
-                  "".equals(suffix)
-                      ? ""
-                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getVector().get(i)), "UTF-8")
-                      .replaceAll("\\+", "%20")));
-        } catch (UnsupportedEncodingException e) {
-          // Should never happen, UTF-8 is always supported
-          throw new RuntimeException(e);
-        }
-      }
+      joiner.add(getVector().toUrlQueryString(prefix + "vector" + suffix));
     }
 
     // add `vector_column` to the URL query string

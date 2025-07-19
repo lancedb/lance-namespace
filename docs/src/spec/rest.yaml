@@ -1577,11 +1577,24 @@ components:
           format: float
           description: Upper bound for search
         vector:
-          type: array
-          items:
-            type: number
-            format: float
-          description: Query vector for similarity search (single vector only)
+          type: object
+          nullable: true
+          description: Query vector(s) for similarity search. Provide either single_vector or multi_vector, not both.
+          properties:
+            single_vector:
+              type: array
+              items:
+                type: number
+                format: float
+              description: Single query vector
+            multi_vector:
+              type: array
+              items:
+                type: array
+                items:
+                  type: number
+                  format: float
+              description: Multiple query vectors for batch search
         vector_column:
           type:
           - string

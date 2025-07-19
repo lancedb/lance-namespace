@@ -21,7 +21,7 @@ Name | Type | Description | Notes
 **prefilter** | **bool** | Whether to apply filtering before vector search | [optional] 
 **refine_factor** | **int** | Refine factor for search | [optional] 
 **upper_bound** | **float** | Upper bound for search | [optional] 
-**vector** | **List[float]** | Query vector for similarity search (single vector only) | 
+**vector** | [**QueryRequestVector**](QueryRequestVector.md) |  | 
 **vector_column** | **str** | Name of the vector column to search | [optional] 
 **version** | **int** | Table version to query | [optional] 
 **with_row_id** | **bool** | If true, return the row id as a column called &#x60;_rowid&#x60; | [optional] 

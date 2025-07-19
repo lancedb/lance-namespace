@@ -111,9 +111,15 @@ class TestQueryRequest(unittest.TestCase):
                 prefilter = True,
                 refine_factor = 0,
                 upper_bound = 1.337,
-                vector = [
-                    1.337
-                    ],
+                vector = lance_namespace_urllib3_client.models.query_request_vector.QueryRequest_vector(
+                    single_vector = [
+                        1.337
+                        ], 
+                    multi_vector = [
+                        [
+                            1.337
+                            ]
+                        ], ),
                 vector_column = '',
                 version = 0,
                 with_row_id = True
@@ -125,9 +131,15 @@ class TestQueryRequest(unittest.TestCase):
                     ''
                     ],
                 k = 0,
-                vector = [
-                    1.337
-                    ],
+                vector = lance_namespace_urllib3_client.models.query_request_vector.QueryRequest_vector(
+                    single_vector = [
+                        1.337
+                        ], 
+                    multi_vector = [
+                        [
+                            1.337
+                            ]
+                        ], ),
         )
         """
 

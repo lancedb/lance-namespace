@@ -2087,8 +2087,14 @@ components:
         - namespace
         - namespace
         vector:
-        - 1.0246457
-        - 1.0246457
+          single_vector:
+          - 1.0246457
+          - 1.0246457
+          multi_vector:
+          - - 1.4894159
+            - 1.4894159
+          - - 1.4894159
+            - 1.4894159
       properties:
         name:
           type: string
@@ -2160,11 +2166,7 @@ components:
           nullable: true
           type: number
         vector:
-          description: Query vector for similarity search (single vector only)
-          items:
-            format: float
-            type: number
-          type: array
+          $ref: '#/components/schemas/QueryRequest_vector'
         vector_column:
           description: Name of the vector column to search
           nullable: true
@@ -3127,5 +3129,33 @@ components:
           $ref: '#/components/schemas/StringFtsQuery'
         structured_query:
           $ref: '#/components/schemas/StructuredFtsQuery'
+      nullable: true
+    QueryRequest_vector:
+      description: "Query vector(s) for similarity search. Provide either single_vector\
+        \ or multi_vector, not both."
+      example:
+        single_vector:
+        - 1.0246457
+        - 1.0246457
+        multi_vector:
+        - - 1.4894159
+          - 1.4894159
+        - - 1.4894159
+          - 1.4894159
+      properties:
+        single_vector:
+          description: Single query vector
+          items:
+            format: float
+            type: number
+          type: array
+        multi_vector:
+          description: Multiple query vectors for batch search
+          items:
+            items:
+              format: float
+              type: number
+            type: array
+          type: array
       nullable: true
 
