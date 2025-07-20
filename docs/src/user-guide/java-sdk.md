@@ -97,70 +97,66 @@ For detailed request/response structures, refer to the [Apache Client documentat
 
 ### Creating a Table
 
-LanceDB uses Apache Arrow format for data exchange. Arrow provides:
-- Cross-language compatibility
-- Rich data type support including nested types and tensors
+LanceDB uses Apache Arrow format for data exchange. Here's a simple example creating a table with ID and embedding columns:
 
 ```java
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
 import org.apache.arrow.vector.*;
+import org.apache.arrow.vector.complex.FixedSizeListVector;
 import org.apache.arrow.vector.types.pojo.*;
 import org.apache.arrow.vector.types.FloatingPointPrecision;
 import org.apache.arrow.vector.ipc.ArrowStreamWriter;
 import java.io.ByteArrayOutputStream;
 import java.nio.channels.Channels;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-// Define Arrow schema
+// Define schema: id and embedding columns
 Field idField = new Field("id", FieldType.nullable(new ArrowType.Int(32, true)), null);
-Field nameField = new Field("name", FieldType.nullable(new ArrowType.Utf8()), null);
 Field embeddingField = new Field(
     "embedding",
-    FieldType.nullable(new ArrowType.FixedSizeList(128)),
+    FieldType.nullable(new ArrowType.FixedSizeList(128)),  // 128-dimensional vectors
     Arrays.asList(
         new Field("item", 
             FieldType.nullable(new ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE)), 
             null)
     )
 );
-Schema schema = new Schema(Arrays.asList(idField, nameField, embeddingField));
+Schema schema = new Schema(Arrays.asList(idField, embeddingField));
 
-// Create data
+// Create table with 1000 rows
 try (BufferAllocator allocator = new RootAllocator();
      VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator)) {
     
-    IntVector idVector = (IntVector) root.getVector("id");
-    VarCharVector nameVector = (VarCharVector) root.getVector("name");
-    FixedSizeListVector vectorVector = (FixedSizeListVector) root.getVector("embedding");
+    int numRows = 1000;
+    root.setRowCount(numRows);
     
-    // Set row count
-    root.setRowCount(3);
+    // Get vectors
+    IntVector idVector = (IntVector) root.getVector("id");
+    FixedSizeListVector embeddingVector = (FixedSizeListVector) root.getVector("embedding");
+    Float4Vector dataVector = (Float4Vector) embeddingVector.getDataVector();
+    
+    // Allocate memory
+    embeddingVector.allocateNew();
     
     // Populate data
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < numRows; i++) {
+        // Set ID
         idVector.setSafe(i, i + 1);
-        nameVector.setSafe(i, ("User" + i).getBytes(StandardCharsets.UTF_8));
-    }
-    
-    // Populate embeddings
-    Float4Vector dataVector = (Float4Vector) vectorVector.getDataVector();
-    vectorVector.allocateNew();
-    
-    for (int row = 0; row < 3; row++) {
-        vectorVector.setNotNull(row);
+        
+        // Set embedding vector
+        embeddingVector.setNotNull(i);
         for (int dim = 0; dim < 128; dim++) {
-            int index = row * 128 + dim;
+            int index = i * 128 + dim;
+            // Example: random values (in practice, use your actual embeddings)
             dataVector.setSafe(index, (float) Math.random());
         }
     }
     
     // Set value counts
-    idVector.setValueCount(3);
-    nameVector.setValueCount(3);
-    dataVector.setValueCount(3 * 128);
-    vectorVector.setValueCount(3);
+    idVector.setValueCount(numRows);
+    dataVector.setValueCount(numRows * 128);
+    embeddingVector.setValueCount(numRows);
     
     // Serialize to Arrow IPC format
     ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -170,11 +166,14 @@ try (BufferAllocator allocator = new RootAllocator();
         writer.end();
     }
     
-    // Create table
-    byte[] arrowIpcData = out.toByteArray();
-    CreateTableResponse response = namespace.createTable("my_table", arrowIpcData);
+    // Create table in LanceDB
+    byte[] arrowData = out.toByteArray();
+    CreateTableResponse response = namespace.createTable("my_vectors", arrowData);
+    System.out.println("Created table with " + numRows + " rows");
 }
 ```
+
+For more complex schemas (e.g., with text fields for full-text search, categorical fields for filtering), you can add additional fields to the schema as needed.
 
 ### Querying a Table
 
@@ -187,55 +186,49 @@ Query results are returned in Arrow File format. Use `ArrowFileReader` to read t
 
 ```java
 import com.lancedb.lance.namespace.model.QueryRequest;
-import com.lancedb.lance.namespace.model.QueryRequestVector;
 import org.apache.arrow.vector.ipc.ArrowFileReader;
-import org.apache.arrow.vector.ipc.ArrowBlock;
-import org.apache.arrow.vector.ipc.SeekableReadChannel;
-import java.io.ByteArrayInputStream;
+import org.apache.arrow.memory.ArrowBuf;
+import org.apache.arrow.vector.ipc.message.ArrowBlock;
+import java.nio.channels.SeekableByteChannel;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-// Create query request
+// Find similar items by vector
 QueryRequest queryRequest = new QueryRequest();
-queryRequest.setName("my_table");
+queryRequest.setName("my_vectors");
+queryRequest.setK(10);  // Get top 10 results
 
-// Single vector search (most common use case)
+// Create query vector (in practice, this would be your actual query embedding)
 List<Float> queryVector = new ArrayList<>();
 for (int i = 0; i < 128; i++) {
     queryVector.add((float) Math.random());
 }
-
-// For single vector, you can set it directly
 queryRequest.setVector(queryVector);
-queryRequest.setK(5);  // Get top 5 results
 
 // REQUIRED: Specify columns to return
-queryRequest.setColumns(Arrays.asList("id", "name", "embedding"));
+queryRequest.setColumns(Arrays.asList("id", "embedding"));
+
+// Optional: Set fast_search for better performance (only searches indexed data)
+queryRequest.setFastSearch(true);
 
 // Execute query
 byte[] queryResult = namespace.queryTable(queryRequest);
 
-// Parse Arrow result
+// Parse results
 try (BufferAllocator allocator = new RootAllocator();
      ArrowFileReader reader = new ArrowFileReader(
-         new SeekableReadChannel(Channels.newChannel(new ByteArrayInputStream(queryResult))), 
+         new SeekableByteChannel() { /* See ArrowTestUtils for full implementation */ }, 
          allocator)) {
     
-    // Process results
-    for (ArrowBlock block : reader.getRecordBlocks()) {
-        reader.loadRecordBatch(block);
-        VectorSchemaRoot root = reader.getVectorSchemaRoot();
-        
-        // Access data from vectors
-        IntVector idVector = (IntVector) root.getVector("id");
-        VarCharVector nameVector = (VarCharVector) root.getVector("name");
-        
-        for (int i = 0; i < root.getRowCount(); i++) {
-            int id = idVector.get(i);
-            String name = new String(nameVector.get(i), StandardCharsets.UTF_8);
-            System.out.println("ID: " + id + ", Name: " + name);
-        }
+    reader.loadRecordBatch(reader.getRecordBlocks().get(0));
+    VectorSchemaRoot root = reader.getVectorSchemaRoot();
+    
+    IntVector idVector = (IntVector) root.getVector("id");
+    
+    System.out.println("Found " + root.getRowCount() + " similar vectors:");
+    for (int i = 0; i < Math.min(5, root.getRowCount()); i++) {
+        System.out.println("  ID: " + idVector.get(i));
     }
 }
 ```
@@ -258,22 +251,45 @@ queryRequest.setFastSearch(true); // Recommended for better performance
 You can use SQL filters with or without vector search:
 
 ```java
-// SQL filter only (no vector search)
-QueryRequest filterOnlyQuery = new QueryRequest();
-filterOnlyQuery.setName("my_table");
-filterOnlyQuery.setK(10);
-filterOnlyQuery.setFilter("category = 'electronics' AND price < 500");
-filterOnlyQuery.setFastSearch(true);
-filterOnlyQuery.setColumns(Arrays.asList("id", "name", "category", "price")); // Required!
+// Example 1: Filter-only query (no vector search)
+QueryRequest filterQuery = new QueryRequest();
+filterQuery.setName("my_table");
+filterQuery.setK(20);  // Maximum results to return
+filterQuery.setFilter("id >= 100 AND id < 200");
+filterQuery.setColumns(Arrays.asList("id")); // Required!
 
-// Vector search with SQL filter
+byte[] filterResult = namespace.queryTable(filterQuery);
+
+// Example 2: Vector search with filter
 QueryRequest vectorWithFilter = new QueryRequest();
-vectorWithFilter.setName("my_table");
+vectorWithFilter.setName("my_vectors");
+vectorWithFilter.setK(5);
+
+// Create query vector
+List<Float> queryVector = new ArrayList<>();
+for (int i = 0; i < 128; i++) {
+    queryVector.add((float) Math.random());
+}
 vectorWithFilter.setVector(queryVector);
-vectorWithFilter.setK(10);
-vectorWithFilter.setFilter("status = 'active' AND price < 1000");
-vectorWithFilter.setFastSearch(true);
-vectorWithFilter.setColumns(Arrays.asList("id", "name", "status", "price")); // Required!
+
+// Only search within specific ID range
+vectorWithFilter.setFilter("id >= 500 AND id < 600");
+vectorWithFilter.setColumns(Arrays.asList("id"));
+
+byte[] filteredVectorResult = namespace.queryTable(vectorWithFilter);
+
+// Example 3: Complex filter expressions
+QueryRequest complexFilter = new QueryRequest();
+complexFilter.setName("my_table");
+complexFilter.setK(100);
+complexFilter.setFilter("id >= 10 AND id <= 90");
+complexFilter.setColumns(Arrays.asList("id"));
+
+// Supported SQL operators:
+// - Comparison: =, !=, <, >, <=, >=
+// - Logical: AND, OR, NOT
+// - IN: category IN ('category1', 'category2')
+// - String: LIKE for pattern matching
 ```
 
 ##### Prefilter vs Postfilter
@@ -307,121 +323,211 @@ postfilterQuery.setFastSearch(true);
 LanceDB supports full-text search on string columns. First create an FTS index, then use text queries:
 
 ```java
-// Create FTS index
+// Step 1: Create table with text content (add text columns to your schema)
+
+// Step 2: Create FTS index
 CreateIndexRequest ftsIndexRequest = new CreateIndexRequest();
-ftsIndexRequest.setName("my_table");
+ftsIndexRequest.setName("documents");
 ftsIndexRequest.setColumn("content");
 ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
 
 CreateIndexResponse ftsResponse = namespace.createIndex(ftsIndexRequest);
-waitForIndexComplete("my_table", "content_idx", 30);
+// Wait for index to be built
+boolean indexReady = waitForIndexComplete("documents", "content_idx", 30);
 
-// Perform full-text search
+// Step 3: Perform full-text search
 import com.lancedb.lance.namespace.model.StringFtsQuery;
 import com.lancedb.lance.namespace.model.QueryRequestFullTextQuery;
 
+// Example 1: Simple keyword search
 QueryRequest textQuery = new QueryRequest();
-textQuery.setName("my_table");
-textQuery.setK(10);
+textQuery.setName("documents");
+textQuery.setK(5);
+textQuery.setColumns(Arrays.asList("id", "title", "content")); // Required!
 
-// Simple string query
 QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
 StringFtsQuery fts = new StringFtsQuery();
-fts.setQuery("search terms"); // The search query
-fts.setColumns(Arrays.asList("content", "title")); // Optional: columns to search
+fts.setQuery("machine learning");  // Search for documents about machine learning
 fullTextQuery.setStringQuery(fts);
 textQuery.setFullTextQuery(fullTextQuery);
 
 byte[] results = namespace.queryTable(textQuery);
+// Expected: Documents containing "machine" and/or "learning"
+
+// Example 2: Search specific columns
+StringFtsQuery columnSearch = new StringFtsQuery();
+columnSearch.setQuery("neural networks");
+columnSearch.setColumns(Arrays.asList("content")); // Only search in content column
+fullTextQuery.setStringQuery(columnSearch);
+
+// Example 3: Full-text search with filter
+QueryRequest ftsWithFilter = new QueryRequest();
+ftsWithFilter.setName("documents");
+ftsWithFilter.setK(10);
+ftsWithFilter.setFilter("id <= 3");  // Only search in first 3 documents
+ftsWithFilter.setColumns(Arrays.asList("id", "title", "content"));
+
+StringFtsQuery filteredFts = new StringFtsQuery();
+filteredFts.setQuery("learning");
+QueryRequestFullTextQuery filteredFullText = new QueryRequestFullTextQuery();
+filteredFullText.setStringQuery(filteredFts);
+ftsWithFilter.setFullTextQuery(filteredFullText);
+
+byte[] filteredResults = namespace.queryTable(ftsWithFilter);
+// Expected: Documents 1-3 that contain "learning"
 ```
 
 ##### Advanced: Structured Full-Text Search
 
-The Java SDK now supports complex structured full-text queries including boolean queries, phrase queries, and boosted queries:
+The Java SDK supports complex structured full-text queries including boolean queries and phrase queries:
 
 ```java
 import com.lancedb.lance.namespace.model.*;
 
-// Boolean query example: (must contain "important" AND should contain "feature" OR "update")
-QueryRequest structuredQuery = new QueryRequest();
-structuredQuery.setName("my_table");
-structuredQuery.setK(10);
+// Example 1: Boolean Query - Complex search logic
+QueryRequest booleanSearchQuery = new QueryRequest();
+booleanSearchQuery.setName("documents");
+booleanSearchQuery.setK(10);
+booleanSearchQuery.setColumns(Arrays.asList("id", "title", "content"));
 
+// Create structured query wrapper
 QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
 StructuredFtsQuery structured = new StructuredFtsQuery();
 FtsQuery ftsQuery = new FtsQuery();
 
-// Create a boolean query
+// Boolean query: MUST contain "learning" AND (SHOULD contain "machine" OR "deep")
 BooleanQuery boolQuery = new BooleanQuery();
 
-// Must clause: documents must contain "important"
+// MUST clause: documents must contain "learning"
 FtsQuery mustQuery = new FtsQuery();
 MatchQuery mustMatch = new MatchQuery();
-mustMatch.setTerms("important");
+mustMatch.setTerms("learning");
 mustMatch.setColumn("content");
 mustQuery.setMatch(mustMatch);
 boolQuery.setMust(Arrays.asList(mustQuery));
 
-// Should clauses: documents should contain "feature" OR "update" 
+// SHOULD clauses: prefer documents with "machine" or "deep"
 FtsQuery shouldQuery1 = new FtsQuery();
 MatchQuery shouldMatch1 = new MatchQuery();
-shouldMatch1.setTerms("feature");
+shouldMatch1.setTerms("machine");
+shouldMatch1.setColumn("content");
 shouldQuery1.setMatch(shouldMatch1);
 
 FtsQuery shouldQuery2 = new FtsQuery();
 MatchQuery shouldMatch2 = new MatchQuery();
-shouldMatch2.setTerms("update");
+shouldMatch2.setTerms("deep");
+shouldMatch2.setColumn("content");
 shouldQuery2.setMatch(shouldMatch2);
 boolQuery.setShould(Arrays.asList(shouldQuery1, shouldQuery2));
 
-// Must NOT clause: exclude documents with "deprecated"
+// Optional: MUST NOT clause
 FtsQuery mustNotQuery = new FtsQuery();
 MatchQuery mustNotMatch = new MatchQuery();
-mustNotMatch.setTerms("deprecated");
+mustNotMatch.setTerms("beginner");  // Exclude beginner content
 mustNotQuery.setMatch(mustNotMatch);
 boolQuery.setMustNot(Arrays.asList(mustNotQuery));
 
+// Set the boolean query
 ftsQuery.setBoolean(boolQuery);
 structured.setQuery(ftsQuery);
 fullTextQuery.setStructuredQuery(structured);
-structuredQuery.setFullTextQuery(fullTextQuery);
+booleanSearchQuery.setFullTextQuery(fullTextQuery);
 
-byte[] boolResults = namespace.queryTable(structuredQuery);
+byte[] boolResults = namespace.queryTable(booleanSearchQuery);
+// Expected: Documents containing "learning" (required) and preferably "machine" or "deep"
+
+// Example 2: Phrase Query - Find exact phrases
+QueryRequest phraseSearchQuery = new QueryRequest();
+phraseSearchQuery.setName("documents");
+phraseSearchQuery.setK(5);
+phraseSearchQuery.setColumns(Arrays.asList("id", "title", "content"));
+
+// Create phrase query
+QueryRequestFullTextQuery phraseFullText = new QueryRequestFullTextQuery();
+StructuredFtsQuery phraseStructured = new StructuredFtsQuery();
+FtsQuery phraseFtsQuery = new FtsQuery();
+
+PhraseQuery phrase = new PhraseQuery();
+phrase.setTerms("machine learning");  // Find exact phrase
+phrase.setColumn("content");
+phrase.setSlop(1);  // Allow 1 word between "machine" and "learning"
+phraseFtsQuery.setPhrase(phrase);
+
+phraseStructured.setQuery(phraseFtsQuery);
+phraseFullText.setStructuredQuery(phraseStructured);
+phraseSearchQuery.setFullTextQuery(phraseFullText);
+
+byte[] phraseResults = namespace.queryTable(phraseSearchQuery);
+// Expected: Documents with "machine learning" or "machine [word] learning"
 ```
-
-Other supported query types include:
-- **Phrase Query**: Find exact phrases with optional slop (word distance)
-- **Boost Query**: Boost documents matching certain criteria
-- **Multi-Match Query**: Search across multiple fields with different weights
 
 #### Hybrid Search
 
 Combining vector similarity search with full-text search often provides more relevant results than using either method alone. This is especially useful for semantic search applications where both conceptual similarity and keyword matching are important.
 
 ```java
-// Hybrid search: vector + text
+// Example: Find documents similar to a query embedding AND containing specific keywords
 QueryRequest hybridQuery = new QueryRequest();
-hybridQuery.setName("my_table");
-
-// Vector search component
-List<Float> queryVector = generateQueryVector(); // Your vector
-hybridQuery.setVector(queryVector);
+hybridQuery.setName("documents");
 hybridQuery.setK(10);
+hybridQuery.setColumns(Arrays.asList("id", "title", "content"));
 
-// Text search component
+// Vector search component - find semantically similar documents
+List<Float> queryEmbedding = new ArrayList<>();
+// In practice, this would be generated from a query text using an embedding model
+for (int i = 0; i < 384; i++) {
+    queryEmbedding.add((float) Math.random());
+}
+hybridQuery.setVector(queryEmbedding);
+
+// Text search component - must also contain specific keywords
 QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
 StringFtsQuery fts = new StringFtsQuery();
-fts.setQuery("search terms");
-fts.setColumns(Arrays.asList("content", "title")); // Optional: columns to search
+fts.setQuery("neural networks");  // Require these keywords
+fts.setColumns(Arrays.asList("content", "title"));
 fullTextQuery.setStringQuery(fts);
 hybridQuery.setFullTextQuery(fullTextQuery);
 
-// Optional: Add filters
-hybridQuery.setFilter("date > '2024-01-01'");
-hybridQuery.setPrefilter(true);
-hybridQuery.setFastSearch(true);
+// Optional: Add filter for recency
+hybridQuery.setFilter("id > 2");  // Only recent documents
+hybridQuery.setPrefilter(true);    // Apply filter before search
+hybridQuery.setFastSearch(true);   // Use indexed data only
 
 byte[] hybridResults = namespace.queryTable(hybridQuery);
+// Expected: Documents that are both semantically similar to the query 
+// AND contain "neural networks" keywords
+
+// Advanced Example: Hybrid search with structured FTS
+QueryRequest advancedHybrid = new QueryRequest();
+advancedHybrid.setName("documents");
+advancedHybrid.setK(5);
+advancedHybrid.setColumns(Arrays.asList("id", "title", "content"));
+
+// Vector component (same as above)
+advancedHybrid.setVector(queryEmbedding);
+
+// Structured text search with boolean logic
+QueryRequestFullTextQuery structuredFullText = new QueryRequestFullTextQuery();
+StructuredFtsQuery structured = new StructuredFtsQuery();
+FtsQuery structuredFts = new FtsQuery();
+
+// Boolean: MUST have "learning" AND SHOULD have "deep" or "machine"
+BooleanQuery hybridBool = new BooleanQuery();
+
+FtsQuery mustHave = new FtsQuery();
+MatchQuery mustMatch = new MatchQuery();
+mustMatch.setTerms("learning");
+mustHave.setMatch(mustMatch);
+hybridBool.setMust(Arrays.asList(mustHave));
+
+// Add to query
+structuredFts.setBoolean(hybridBool);
+structured.setQuery(structuredFts);
+structuredFullText.setStructuredQuery(structured);
+advancedHybrid.setFullTextQuery(structuredFullText);
+
+byte[] advancedResults = namespace.queryTable(advancedHybrid);
+// Expected: Semantically similar documents that contain "learning"
 ```
 
 ### Creating a Vector Index
@@ -578,28 +684,75 @@ if (!indexReady) {
 }
 ```
 
-### Updating and Deleting Data
+### Inserting Additional Data
+
+```java
+// Insert more rows into existing table
+// Create Arrow data with same schema as original table
+byte[] newData = createArrowData(/* new rows */);
+
+InsertTableResponse insertResponse = namespace.insertTable("my_table", newData);
+System.out.println("Inserted " + insertResponse.getNumRows() + " new rows");
+```
+
+### Counting Rows
+
+```java
+CountRowsRequest countRequest = new CountRowsRequest();
+countRequest.setName("my_table");
+
+long rowCount = namespace.countRows(countRequest);
+System.out.println("Table has " + rowCount + " rows");
+
+// Count with filter
+countRequest.setFilter("id >= 100 AND id < 200");
+long filteredCount = namespace.countRows(countRequest);
+System.out.println("Filtered count: " + filteredCount + " rows");
+```
+
+### Updating Data
 
 ```java
 import com.lancedb.lance.namespace.model.UpdateTableRequest;
-import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
 
-// Update rows
+// Example: Update rows based on condition
 UpdateTableRequest updateRequest = new UpdateTableRequest();
 updateRequest.setName("my_table");
-updateRequest.setPredicate("id > 100");
+updateRequest.setPredicate("id >= 50 AND id <= 60");
+
 List<List<String>> updates = new ArrayList<>();
-updates.add(Arrays.asList("status", "'active'"));  // Set status = 'active'
+// Note: string values need quotes, numeric values don't
+updates.add(Arrays.asList("some_field", "'updated_value'"));
 updateRequest.setUpdates(updates);
 
 UpdateTableResponse updateResponse = namespace.updateTable(updateRequest);
+System.out.println("Updated " + updateResponse.getNumUpdatedRows() + " rows");
+```
 
-// Delete rows
+### Deleting Data
+
+```java
+import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
+
+// Delete specific rows
 DeleteFromTableRequest deleteRequest = new DeleteFromTableRequest();
 deleteRequest.setName("my_table");
-deleteRequest.setPredicate("status = 'inactive'");
+deleteRequest.setPredicate("id > 900");
 
 DeleteFromTableResponse deleteResponse = namespace.deleteFromTable(deleteRequest);
+System.out.println("Deleted " + deleteResponse.getNumDeletedRows() + " rows");
+```
+
+### Describing a Table
+
+```java
+DescribeTableRequest describeRequest = new DescribeTableRequest();
+describeRequest.setName("my_table");
+
+DescribeTableResponse tableInfo = namespace.describeTable(describeRequest);
+System.out.println("Table: " + tableInfo.getName());
+System.out.println("Schema: " + tableInfo.getSchema());
+System.out.println("Row count: " + tableInfo.getNumRows());
 ```
 
 ### Merge Insert (Upsert)
