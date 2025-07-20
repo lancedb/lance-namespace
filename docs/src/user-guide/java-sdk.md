@@ -20,26 +20,16 @@ The artifact is available on [Maven Central](https://central.sonatype.com/artifa
 
 ### LanceDB Cloud
 
-For LanceDB Cloud, use the following initialization approach:
+For LanceDB Cloud, use the simplified builder API:
 
 ```java
-import com.lancedb.lance.namespace.client.apache.ApiClient;
 import com.lancedb.lance.namespace.LanceRestNamespace;
-import java.util.HashMap;
-import java.util.Map;
 
-// If your DB url is db://example-db, then your db here is example-db
-String lancedbDatabase = "your_database_name";
-String lancedbApiKey = "your_lancedb_cloud_api_key";
-
-Map<String, String> config = new HashMap<>();
-config.put("headers.x-lancedb-database", lancedbDatabase);
-config.put("headers.x-api-key", lancedbApiKey);
-
-ApiClient apiClient = new ApiClient();
-String baseUrl = String.format("https://%s.us-east-1.api.lancedb.com", lancedbDatabase);
-apiClient.setBasePath(baseUrl);
-LanceRestNamespace namespace = new LanceRestNamespace(apiClient, config);
+// If your DB url is db://example-db, then your database here is example-db
+LanceRestNamespace namespace = LanceRestNamespace.builder()
+    .apiKey("your_lancedb_cloud_api_key")
+    .database("your_database_name")
+    .build();
 ```
 
 ### LanceDB Enterprise
@@ -47,19 +37,11 @@ LanceRestNamespace namespace = new LanceRestNamespace(apiClient, config);
 For Enterprise deployments, use your VPC endpoint:
 
 ```java
-// Your top level folder under your cloud bucket, e.g. s3://your-bucket/your-top-dir/
-String lancedbDatabase = "your-top-dir";
-String lancedbApiKey = "your_lancedb_enterprise_api_key";
-// Your enterprise connection url
-String lancedbHostOverride = "http://<vpc_endpoint_dns_name>:80";
-
-Map<String, String> config = new HashMap<>();
-config.put("headers.x-lancedb-database", lancedbDatabase);
-config.put("headers.x-api-key", lancedbApiKey);
-
-ApiClient apiClient = new ApiClient();
-apiClient.setBasePath(lancedbHostOverride);
-LanceRestNamespace namespace = new LanceRestNamespace(apiClient, config);
+LanceRestNamespace namespace = LanceRestNamespace.builder()
+    .apiKey("your_lancedb_enterprise_api_key")
+    .database("your-top-dir") // Your top level folder under your cloud bucket, e.g. s3://your-bucket/your-top-dir/
+    .hostOverride("http://<vpc_endpoint_dns_name>:80")
+    .build();
 ```
 
 ## Supported Endpoints
@@ -327,8 +309,8 @@ CreateIndexRequest ftsIndexRequest = new CreateIndexRequest();
 ftsIndexRequest.setName("documents");
 ftsIndexRequest.setColumn("content");
 ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
-// Note: Set withPosition=true if you plan to use PhraseQuery
-// ftsIndexRequest.setWithPosition(true);
+// Set withPosition=true if you plan to use PhraseQuery
+ftsIndexRequest.setWithPosition(true);
 
 CreateIndexResponse ftsResponse = namespace.createIndex(ftsIndexRequest);
 // Wait for index to be built
@@ -395,6 +377,7 @@ StructuredFtsQuery structured = new StructuredFtsQuery();
 FtsQuery ftsQuery = new FtsQuery();
 
 // Boolean query: MUST contain "learning" AND (SHOULD contain "machine" OR "deep")
+// Note: SHOULD clauses are optional when MUST clauses are present - they only affect ranking
 BooleanQuery boolQuery = new BooleanQuery();
 
 // MUST clause: documents must contain "learning"
@@ -459,6 +442,8 @@ phraseSearchQuery.setFullTextQuery(phraseFullText);
 
 byte[] phraseResults = namespace.queryTable(phraseSearchQuery);
 // Expected: Documents with "machine learning" or "machine [word] learning"
+// Note: Phrase queries search for terms in the specified order. 
+// "learning machine" would NOT match this query.
 ```
 
 !!! warning "PhraseQuery Requirements"

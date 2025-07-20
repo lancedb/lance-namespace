@@ -83,6 +83,16 @@ public class LanceRestNamespace implements LanceNamespace {
     this.config = new RestConfig(config);
   }
 
+  /**
+   * Create a new builder for constructing LanceRestNamespace instances. This is the recommended way
+   * to create a LanceRestNamespace.
+   *
+   * @return A new LanceRestNamespaceBuilder
+   */
+  public static LanceRestNamespaceBuilder builder() {
+    return LanceRestNamespaceBuilder.builder();
+  }
+
   @Override
   public CreateNamespaceResponse createNamespace(CreateNamespaceRequest request) {
     try {

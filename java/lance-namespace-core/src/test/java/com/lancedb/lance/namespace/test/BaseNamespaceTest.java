@@ -14,16 +14,13 @@
 package com.lancedb.lance.namespace.test;
 
 import com.lancedb.lance.namespace.LanceRestNamespace;
-import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.LanceRestNamespaceBuilder;
 
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -90,35 +87,29 @@ public abstract class BaseNamespaceTest {
   }
 
   /**
-   * Initialize the Lance REST client.
+   * Initialize the Lance REST client using the simplified builder API.
    *
    * @return Configured LanceRestNamespace instance
    */
   private LanceRestNamespace initializeClient() {
-    Map<String, String> config = new HashMap<>();
-    config.put("headers.x-lancedb-database", DATABASE);
-    config.put("headers.x-api-key", API_KEY);
+    LanceRestNamespaceBuilder builder =
+        LanceRestNamespace.builder().apiKey(API_KEY).database(DATABASE);
 
     if (HOST_OVERRIDE != null) {
-      config.put("host_override", HOST_OVERRIDE);
-    }
-    if (REGION != null) {
-      config.put("region", REGION);
+      builder.hostOverride(HOST_OVERRIDE);
+    } else if (REGION != null) {
+      builder.region(REGION);
     }
 
-    ApiClient apiClient = new ApiClient();
+    LanceRestNamespace namespace = builder.build();
 
-    // Set base URL based on configuration
-    String baseUrl;
-    if (HOST_OVERRIDE != null) {
-      baseUrl = HOST_OVERRIDE;
-    } else {
-      baseUrl = String.format("https://%s.%s.api.lancedb.com", DATABASE, REGION);
-    }
-    apiClient.setBasePath(baseUrl);
-
+    // Log the configuration for debugging
+    String baseUrl =
+        HOST_OVERRIDE != null
+            ? HOST_OVERRIDE
+            : String.format("https://%s.%s.api.lancedb.com", DATABASE, REGION);
     System.out.println("Initialized client with base URL: " + baseUrl);
 
-    return new LanceRestNamespace(apiClient, config);
+    return namespace;
   }
 }
