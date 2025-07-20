@@ -179,13 +179,11 @@ For more complex schemas (e.g., with text fields for full-text search, categoric
 
 Query results are returned in Arrow File format. Use `ArrowFileReader` to read the results.
 
-!!! important "Column Selection Required"
-    When querying a table, you MUST specify which columns to return using `setColumns()`. If no columns are specified, the query will fail with an error: "no columns were selected and with_row_id is false, there is nothing to scan".
-
 #### Vector Search
 
 ```java
 import com.lancedb.lance.namespace.model.QueryRequest;
+import com.lancedb.lance.namespace.model.QueryRequestVector;
 import org.apache.arrow.vector.ipc.ArrowFileReader;
 import org.apache.arrow.memory.ArrowBuf;
 import org.apache.arrow.vector.ipc.message.ArrowBlock;
@@ -200,10 +198,14 @@ queryRequest.setName("my_vectors");
 queryRequest.setK(10);  // Get top 10 results
 
 // Create query vector (in practice, this would be your actual query embedding)
-List<Float> queryVector = new ArrayList<>();
+List<Float> vectorList = new ArrayList<>();
 for (int i = 0; i < 128; i++) {
-    queryVector.add((float) Math.random());
+    vectorList.add((float) Math.random());
 }
+
+// Wrap the vector in QueryRequestVector
+QueryRequestVector queryVector = new QueryRequestVector();
+queryVector.setSingleVector(vectorList);
 queryRequest.setVector(queryVector);
 
 // REQUIRED: Specify columns to return
@@ -266,10 +268,14 @@ vectorWithFilter.setName("my_vectors");
 vectorWithFilter.setK(5);
 
 // Create query vector
-List<Float> queryVector = new ArrayList<>();
+List<Float> vectorList = new ArrayList<>();
 for (int i = 0; i < 128; i++) {
-    queryVector.add((float) Math.random());
+    vectorList.add((float) Math.random());
 }
+
+// Wrap the vector in QueryRequestVector
+QueryRequestVector queryVector = new QueryRequestVector();
+queryVector.setSingleVector(vectorList);
 vectorWithFilter.setVector(queryVector);
 
 // Only search within specific ID range
@@ -302,7 +308,7 @@ When combining vector search with filters, use `prefilter` to control the order 
 // Prefiltering - filter first, then search vectors
 QueryRequest prefilterQuery = new QueryRequest();
 prefilterQuery.setName("my_table");
-prefilterQuery.setVector(queryVector);
+prefilterQuery.setVector(queryVector); // Assumes queryVector is a QueryRequestVector
 prefilterQuery.setK(10);
 prefilterQuery.setFilter("status = 'active'");
 prefilterQuery.setPrefilter(true);
@@ -311,7 +317,7 @@ prefilterQuery.setFastSearch(true);
 // Postfiltering - search vectors first, then filter (default)
 QueryRequest postfilterQuery = new QueryRequest();
 postfilterQuery.setName("my_table");
-postfilterQuery.setVector(queryVector);
+postfilterQuery.setVector(queryVector); // Assumes queryVector is a QueryRequestVector
 postfilterQuery.setK(10);
 postfilterQuery.setFilter("category = 'electronics'");
 postfilterQuery.setPrefilter(false);
@@ -478,7 +484,11 @@ List<Float> queryEmbedding = new ArrayList<>();
 for (int i = 0; i < 384; i++) {
     queryEmbedding.add((float) Math.random());
 }
-hybridQuery.setVector(queryEmbedding);
+
+// Wrap the vector in QueryRequestVector
+QueryRequestVector queryVector = new QueryRequestVector();
+queryVector.setSingleVector(queryEmbedding);
+hybridQuery.setVector(queryVector);
 
 // Text search component - must also contain specific keywords
 QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
@@ -503,8 +513,10 @@ advancedHybrid.setName("documents");
 advancedHybrid.setK(5);
 advancedHybrid.setColumns(Arrays.asList("id", "title", "content"));
 
-// Vector component (same as above)
-advancedHybrid.setVector(queryEmbedding);
+// Vector component - wrap in QueryRequestVector
+QueryRequestVector queryVector = new QueryRequestVector();
+queryVector.setSingleVector(queryEmbedding);
+advancedHybrid.setVector(queryVector);
 
 // Structured text search with boolean logic
 QueryRequestFullTextQuery structuredFullText = new QueryRequestFullTextQuery();

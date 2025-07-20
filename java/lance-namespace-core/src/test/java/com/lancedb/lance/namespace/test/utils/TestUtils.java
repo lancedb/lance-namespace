@@ -134,7 +134,11 @@ public class TestUtils {
     for (int i = 0; i < dimensions; i++) {
       vector.add(targetValue);
     }
-    query.setVector(vector);
+
+    // Wrap the vector in QueryRequestVector
+    QueryRequestVector queryVector = new QueryRequestVector();
+    queryVector.setSingleVector(vector);
+    query.setVector(queryVector);
 
     // Add default columns to avoid "no columns selected" error
     query.setColumns(java.util.Arrays.asList("id", "name", "category", "embedding"));

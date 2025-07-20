@@ -391,10 +391,14 @@ public class FullTextSearchTest extends BaseNamespaceTest {
       hybridQuery.setColumns(Arrays.asList("id", "text"));
 
       // Add vector search - search for vector with all 10s
-      List<Float> queryVector = new ArrayList<>();
+      List<Float> vectorList = new ArrayList<>();
       for (int i = 0; i < 128; i++) {
-        queryVector.add(10.0f);
+        vectorList.add(10.0f);
       }
+
+      // Wrap the vector in QueryRequestVector
+      QueryRequestVector queryVector = new QueryRequestVector();
+      queryVector.setSingleVector(vectorList);
       hybridQuery.setVector(queryVector);
       hybridQuery.setK(10);
 
@@ -426,7 +430,7 @@ public class FullTextSearchTest extends BaseNamespaceTest {
       System.out.println("\n--- Testing hybrid search with filter (id <= 10) ---");
       QueryRequest hybridFilterQuery = new QueryRequest();
       hybridFilterQuery.setName(tableName);
-      hybridFilterQuery.setVector(queryVector);
+      hybridFilterQuery.setVector(queryVector); // Reuse the same QueryRequestVector from above
       hybridFilterQuery.setK(20);
       hybridFilterQuery.setFilter("id <= 10");
       hybridFilterQuery.setFullTextQuery(fullTextQuery);

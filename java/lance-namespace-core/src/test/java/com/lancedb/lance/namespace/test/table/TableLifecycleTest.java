@@ -67,12 +67,13 @@ public class TableLifecycleTest extends BaseNamespaceTest {
       JsonSchema responseSchema = describeResponse.getSchema();
       assertNotNull(responseSchema, "Schema object should not be null");
       assertNotNull(responseSchema.getFields(), "Schema fields should not be null");
-      assertEquals(3, responseSchema.getFields().size(), "Schema should have 3 fields");
+      assertEquals(4, responseSchema.getFields().size(), "Schema should have 4 fields");
 
       List<String> fieldNames =
           responseSchema.getFields().stream().map(JsonField::getName).collect(Collectors.toList());
       assertTrue(fieldNames.contains("id"), "Schema should contain 'id' field");
       assertTrue(fieldNames.contains("name"), "Schema should contain 'name' field");
+      assertTrue(fieldNames.contains("category"), "Schema should contain 'category' field");
       assertTrue(fieldNames.contains("embedding"), "Schema should contain 'embedding' field");
       System.out.println("✓ Table schema verified with fields: " + fieldNames);
 
