@@ -193,7 +193,7 @@ public class IndexTest extends BaseNamespaceTest {
     try {
       // Create table with text field
       System.out.println("\n--- Creating table with multiple fields ---");
-      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 100).build();
+      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
       namespace.createTable(tableName, tableData);
 
       // Create vector index
@@ -265,7 +265,7 @@ public class IndexTest extends BaseNamespaceTest {
 
     try {
       // Create table
-      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 200).build();
+      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
       namespace.createTable(tableName, tableData);
 
       // Test COSINE metric
