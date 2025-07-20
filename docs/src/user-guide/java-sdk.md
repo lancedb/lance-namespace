@@ -180,6 +180,9 @@ try (BufferAllocator allocator = new RootAllocator();
 
 Query results are returned in Arrow File format. Use `ArrowFileReader` to read the results.
 
+!!! important "Column Selection Required"
+    When querying a table, you MUST specify which columns to return using `setColumns()`. If no columns are specified, the query will fail with an error: "no columns were selected and with_row_id is false, there is nothing to scan".
+
 #### Vector Search
 
 ```java
@@ -207,7 +210,7 @@ for (int i = 0; i < 128; i++) {
 queryRequest.setVector(queryVector);
 queryRequest.setK(5);  // Get top 5 results
 
-// Specify columns to return
+// REQUIRED: Specify columns to return
 queryRequest.setColumns(Arrays.asList("id", "name", "embedding"));
 
 // Execute query
@@ -261,6 +264,7 @@ filterOnlyQuery.setName("my_table");
 filterOnlyQuery.setK(10);
 filterOnlyQuery.setFilter("category = 'electronics' AND price < 500");
 filterOnlyQuery.setFastSearch(true);
+filterOnlyQuery.setColumns(Arrays.asList("id", "name", "category", "price")); // Required!
 
 // Vector search with SQL filter
 QueryRequest vectorWithFilter = new QueryRequest();
@@ -269,6 +273,7 @@ vectorWithFilter.setVector(queryVector);
 vectorWithFilter.setK(10);
 vectorWithFilter.setFilter("status = 'active' AND price < 1000");
 vectorWithFilter.setFastSearch(true);
+vectorWithFilter.setColumns(Arrays.asList("id", "name", "status", "price")); // Required!
 ```
 
 ##### Prefilter vs Postfilter
