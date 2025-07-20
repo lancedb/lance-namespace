@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
@@ -32,12 +32,15 @@ class CreateIndexRequest(BaseModel):
     column: StrictStr = Field(description="Name of the column to create index on")
     index_type: StrictStr = Field(description="Type of index to create")
     metric_type: Optional[StrictStr] = Field(default=None, description="Distance metric type for vector indexes")
-    num_partitions: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Number of partitions for IVF indexes")
-    num_sub_vectors: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Number of sub-vectors for PQ indexes")
-    num_bits: Optional[Annotated[int, Field(le=8, strict=True, ge=1)]] = Field(default=None, description="Number of bits for scalar quantization")
-    max_iterations: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Maximum iterations for index building")
-    sample_rate: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Sample rate for index building")
-    __properties: ClassVar[List[str]] = ["name", "namespace", "column", "index_type", "metric_type", "num_partitions", "num_sub_vectors", "num_bits", "max_iterations", "sample_rate"]
+    with_position: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for position tracking")
+    base_tokenizer: Optional[StrictStr] = Field(default=None, description="Optional FTS parameter for base tokenizer")
+    language: Optional[StrictStr] = Field(default=None, description="Optional FTS parameter for language")
+    max_token_length: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Optional FTS parameter for maximum token length")
+    lower_case: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for lowercase conversion")
+    stem: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for stemming")
+    remove_stop_words: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for stop word removal")
+    ascii_folding: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for ASCII folding")
+    __properties: ClassVar[List[str]] = ["name", "namespace", "column", "index_type", "metric_type", "with_position", "base_tokenizer", "language", "max_token_length", "lower_case", "stem", "remove_stop_words", "ascii_folding"]
 
     @field_validator('index_type')
     def index_type_validate_enum(cls, value):
@@ -112,11 +115,14 @@ class CreateIndexRequest(BaseModel):
             "column": obj.get("column"),
             "index_type": obj.get("index_type"),
             "metric_type": obj.get("metric_type"),
-            "num_partitions": obj.get("num_partitions"),
-            "num_sub_vectors": obj.get("num_sub_vectors"),
-            "num_bits": obj.get("num_bits"),
-            "max_iterations": obj.get("max_iterations"),
-            "sample_rate": obj.get("sample_rate")
+            "with_position": obj.get("with_position"),
+            "base_tokenizer": obj.get("base_tokenizer"),
+            "language": obj.get("language"),
+            "max_token_length": obj.get("max_token_length"),
+            "lower_case": obj.get("lower_case"),
+            "stem": obj.get("stem"),
+            "remove_stop_words": obj.get("remove_stop_words"),
+            "ascii_folding": obj.get("ascii_folding")
         })
         return _obj
 

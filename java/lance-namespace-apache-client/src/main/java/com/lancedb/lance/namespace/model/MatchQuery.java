@@ -43,7 +43,7 @@ public class MatchQuery {
   @javax.annotation.Nullable private Float boost;
 
   public static final String JSON_PROPERTY_COLUMN = "column";
-  @javax.annotation.Nullable private JsonNullable<String> column = JsonNullable.<String>undefined();
+  @javax.annotation.Nullable private String column;
 
   public static final String JSON_PROPERTY_FUZZINESS = "fuzziness";
 
@@ -89,8 +89,8 @@ public class MatchQuery {
   }
 
   public MatchQuery column(@javax.annotation.Nullable String column) {
-    this.column = JsonNullable.<String>of(column);
 
+    this.column = column;
     return this;
   }
 
@@ -100,24 +100,16 @@ public class MatchQuery {
    * @return column
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public String getColumn() {
-    return column.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_COLUMN)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<String> getColumn_JsonNullable() {
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public String getColumn() {
     return column;
   }
 
   @JsonProperty(JSON_PROPERTY_COLUMN)
-  public void setColumn_JsonNullable(JsonNullable<String> column) {
-    this.column = column;
-  }
-
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public void setColumn(@javax.annotation.Nullable String column) {
-    this.column = JsonNullable.<String>of(column);
+    this.column = column;
   }
 
   public MatchQuery fuzziness(@javax.annotation.Nullable Integer fuzziness) {
@@ -260,7 +252,7 @@ public class MatchQuery {
     }
     MatchQuery matchQuery = (MatchQuery) o;
     return Objects.equals(this.boost, matchQuery.boost)
-        && equalsNullable(this.column, matchQuery.column)
+        && Objects.equals(this.column, matchQuery.column)
         && equalsNullable(this.fuzziness, matchQuery.fuzziness)
         && Objects.equals(this.maxExpansions, matchQuery.maxExpansions)
         && Objects.equals(this.operator, matchQuery.operator)
@@ -280,13 +272,7 @@ public class MatchQuery {
   @Override
   public int hashCode() {
     return Objects.hash(
-        boost,
-        hashCodeNullable(column),
-        hashCodeNullable(fuzziness),
-        maxExpansions,
-        operator,
-        prefixLength,
-        terms);
+        boost, column, hashCodeNullable(fuzziness), maxExpansions, operator, prefixLength, terms);
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {

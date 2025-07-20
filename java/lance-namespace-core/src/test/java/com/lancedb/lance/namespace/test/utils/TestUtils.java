@@ -134,8 +134,6 @@ public class TestUtils {
     for (int i = 0; i < dimensions; i++) {
       vector.add(targetValue);
     }
-
-    // Wrap the vector in QueryRequestVector
     QueryRequestVector queryVector = new QueryRequestVector();
     queryVector.setSingleVector(vector);
     query.setVector(queryVector);

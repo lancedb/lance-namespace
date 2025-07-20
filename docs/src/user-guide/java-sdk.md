@@ -183,7 +183,6 @@ Query results are returned in Arrow File format. Use `ArrowFileReader` to read t
 
 ```java
 import com.lancedb.lance.namespace.model.QueryRequest;
-import com.lancedb.lance.namespace.model.QueryRequestVector;
 import org.apache.arrow.vector.ipc.ArrowFileReader;
 import org.apache.arrow.memory.ArrowBuf;
 import org.apache.arrow.vector.ipc.message.ArrowBlock;
@@ -198,14 +197,10 @@ queryRequest.setName("my_vectors");
 queryRequest.setK(10);  // Get top 10 results
 
 // Create query vector (in practice, this would be your actual query embedding)
-List<Float> vectorList = new ArrayList<>();
+List<Float> queryVector = new ArrayList<>();
 for (int i = 0; i < 128; i++) {
-    vectorList.add((float) Math.random());
+    queryVector.add((float) Math.random());
 }
-
-// Wrap the vector in QueryRequestVector
-QueryRequestVector queryVector = new QueryRequestVector();
-queryVector.setSingleVector(vectorList);
 queryRequest.setVector(queryVector);
 
 // REQUIRED: Specify columns to return
@@ -268,14 +263,10 @@ vectorWithFilter.setName("my_vectors");
 vectorWithFilter.setK(5);
 
 // Create query vector
-List<Float> vectorList = new ArrayList<>();
+List<Float> queryVector = new ArrayList<>();
 for (int i = 0; i < 128; i++) {
-    vectorList.add((float) Math.random());
+    queryVector.add((float) Math.random());
 }
-
-// Wrap the vector in QueryRequestVector
-QueryRequestVector queryVector = new QueryRequestVector();
-queryVector.setSingleVector(vectorList);
 vectorWithFilter.setVector(queryVector);
 
 // Only search within specific ID range
@@ -308,7 +299,7 @@ When combining vector search with filters, use `prefilter` to control the order 
 // Prefiltering - filter first, then search vectors
 QueryRequest prefilterQuery = new QueryRequest();
 prefilterQuery.setName("my_table");
-prefilterQuery.setVector(queryVector); // Assumes queryVector is a QueryRequestVector
+prefilterQuery.setVector(queryVector);
 prefilterQuery.setK(10);
 prefilterQuery.setFilter("status = 'active'");
 prefilterQuery.setPrefilter(true);
@@ -317,7 +308,7 @@ prefilterQuery.setFastSearch(true);
 // Postfiltering - search vectors first, then filter (default)
 QueryRequest postfilterQuery = new QueryRequest();
 postfilterQuery.setName("my_table");
-postfilterQuery.setVector(queryVector); // Assumes queryVector is a QueryRequestVector
+postfilterQuery.setVector(queryVector);
 postfilterQuery.setK(10);
 postfilterQuery.setFilter("category = 'electronics'");
 postfilterQuery.setPrefilter(false);
@@ -336,6 +327,8 @@ CreateIndexRequest ftsIndexRequest = new CreateIndexRequest();
 ftsIndexRequest.setName("documents");
 ftsIndexRequest.setColumn("content");
 ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
+// Note: Set withPosition=true if you plan to use PhraseQuery
+// ftsIndexRequest.setWithPosition(true);
 
 CreateIndexResponse ftsResponse = namespace.createIndex(ftsIndexRequest);
 // Wait for index to be built
@@ -443,6 +436,7 @@ byte[] boolResults = namespace.queryTable(booleanSearchQuery);
 // Expected: Documents containing "learning" (required) and preferably "machine" or "deep"
 
 // Example 2: Phrase Query - Find exact phrases
+// IMPORTANT: PhraseQuery requires the FTS index to be created with withPosition=true
 QueryRequest phraseSearchQuery = new QueryRequest();
 phraseSearchQuery.setName("documents");
 phraseSearchQuery.setK(5);
@@ -467,80 +461,17 @@ byte[] phraseResults = namespace.queryTable(phraseSearchQuery);
 // Expected: Documents with "machine learning" or "machine [word] learning"
 ```
 
-#### Hybrid Search
-
-Combining vector similarity search with full-text search often provides more relevant results than using either method alone. This is especially useful for semantic search applications where both conceptual similarity and keyword matching are important.
-
-```java
-// Example: Find documents similar to a query embedding AND containing specific keywords
-QueryRequest hybridQuery = new QueryRequest();
-hybridQuery.setName("documents");
-hybridQuery.setK(10);
-hybridQuery.setColumns(Arrays.asList("id", "title", "content"));
-
-// Vector search component - find semantically similar documents
-List<Float> queryEmbedding = new ArrayList<>();
-// In practice, this would be generated from a query text using an embedding model
-for (int i = 0; i < 384; i++) {
-    queryEmbedding.add((float) Math.random());
-}
-
-// Wrap the vector in QueryRequestVector
-QueryRequestVector queryVector = new QueryRequestVector();
-queryVector.setSingleVector(queryEmbedding);
-hybridQuery.setVector(queryVector);
-
-// Text search component - must also contain specific keywords
-QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
-StringFtsQuery fts = new StringFtsQuery();
-fts.setQuery("neural networks");  // Require these keywords
-fts.setColumns(Arrays.asList("content", "title"));
-fullTextQuery.setStringQuery(fts);
-hybridQuery.setFullTextQuery(fullTextQuery);
-
-// Optional: Add filter for recency
-hybridQuery.setFilter("id > 2");  // Only recent documents
-hybridQuery.setPrefilter(true);    // Apply filter before search
-hybridQuery.setFastSearch(true);   // Use indexed data only
-
-byte[] hybridResults = namespace.queryTable(hybridQuery);
-// Expected: Documents that are both semantically similar to the query 
-// AND contain "neural networks" keywords
-
-// Advanced Example: Hybrid search with structured FTS
-QueryRequest advancedHybrid = new QueryRequest();
-advancedHybrid.setName("documents");
-advancedHybrid.setK(5);
-advancedHybrid.setColumns(Arrays.asList("id", "title", "content"));
-
-// Vector component - wrap in QueryRequestVector
-QueryRequestVector queryVector = new QueryRequestVector();
-queryVector.setSingleVector(queryEmbedding);
-advancedHybrid.setVector(queryVector);
-
-// Structured text search with boolean logic
-QueryRequestFullTextQuery structuredFullText = new QueryRequestFullTextQuery();
-StructuredFtsQuery structured = new StructuredFtsQuery();
-FtsQuery structuredFts = new FtsQuery();
-
-// Boolean: MUST have "learning" AND SHOULD have "deep" or "machine"
-BooleanQuery hybridBool = new BooleanQuery();
-
-FtsQuery mustHave = new FtsQuery();
-MatchQuery mustMatch = new MatchQuery();
-mustMatch.setTerms("learning");
-mustHave.setMatch(mustMatch);
-hybridBool.setMust(Arrays.asList(mustHave));
-
-// Add to query
-structuredFts.setBoolean(hybridBool);
-structured.setQuery(structuredFts);
-structuredFullText.setStructuredQuery(structured);
-advancedHybrid.setFullTextQuery(structuredFullText);
-
-byte[] advancedResults = namespace.queryTable(advancedHybrid);
-// Expected: Semantically similar documents that contain "learning"
-```
+!!! warning "PhraseQuery Requirements"
+    PhraseQuery requires the FTS index to be created with `withPosition=true`. If you attempt to use PhraseQuery on an index created without position information, you will receive an error: "position is not found but required for phrase queries". 
+    
+    Always create your FTS index with position enabled if you plan to use phrase searches:
+    ```java
+    CreateIndexRequest ftsIndexRequest = new CreateIndexRequest();
+    ftsIndexRequest.setName("documents");
+    ftsIndexRequest.setColumn("content");
+    ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
+    ftsIndexRequest.setWithPosition(true);  // Required for PhraseQuery
+    ```
 
 ### Creating a Vector Index
 
@@ -792,6 +723,10 @@ System.out.println("Updated rows: " + response.getNumUpdatedRows());
 System.out.println("Inserted rows: " + response.getNumInsertedRows());
 ```
 
+## Known Limitation
+### Not Supported: Hybrid Search
+Hybrid Search requires a vector search and a full text search, cannot run both in one query.
+Need higher level of search orchestration to provide user level hybrid search operations.
 
 ## Additional Resources
 

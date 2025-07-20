@@ -10,11 +10,14 @@ Name | Type | Description | Notes
 **column** | **str** | Name of the column to create index on | 
 **index_type** | **str** | Type of index to create | 
 **metric_type** | **str** | Distance metric type for vector indexes | [optional] 
-**num_partitions** | **int** | Number of partitions for IVF indexes | [optional] 
-**num_sub_vectors** | **int** | Number of sub-vectors for PQ indexes | [optional] 
-**num_bits** | **int** | Number of bits for scalar quantization | [optional] 
-**max_iterations** | **int** | Maximum iterations for index building | [optional] 
-**sample_rate** | **int** | Sample rate for index building | [optional] 
+**with_position** | **bool** | Optional FTS parameter for position tracking | [optional] 
+**base_tokenizer** | **str** | Optional FTS parameter for base tokenizer | [optional] 
+**language** | **str** | Optional FTS parameter for language | [optional] 
+**max_token_length** | **int** | Optional FTS parameter for maximum token length | [optional] 
+**lower_case** | **bool** | Optional FTS parameter for lowercase conversion | [optional] 
+**stem** | **bool** | Optional FTS parameter for stemming | [optional] 
+**remove_stop_words** | **bool** | Optional FTS parameter for stop word removal | [optional] 
+**ascii_folding** | **bool** | Optional FTS parameter for ASCII folding | [optional] 
 
 ## Example
 

@@ -121,15 +121,21 @@ public class CreateIndexRequest {
 
   private MetricTypeEnum metricType;
 
-  private Integer numPartitions;
+  private Boolean withPosition;
 
-  private Integer numSubVectors;
+  private String baseTokenizer;
 
-  private Integer numBits;
+  private String language;
 
-  private Integer maxIterations;
+  private Integer maxTokenLength;
 
-  private Integer sampleRate;
+  private Boolean lowerCase;
+
+  private Boolean stem;
+
+  private Boolean removeStopWords;
+
+  private Boolean asciiFolding;
 
   public CreateIndexRequest() {
     super();
@@ -271,125 +277,189 @@ public class CreateIndexRequest {
     this.metricType = metricType;
   }
 
-  public CreateIndexRequest numPartitions(Integer numPartitions) {
-    this.numPartitions = numPartitions;
+  public CreateIndexRequest withPosition(Boolean withPosition) {
+    this.withPosition = withPosition;
     return this;
   }
 
   /**
-   * Number of partitions for IVF indexes minimum: 1
+   * Optional FTS parameter for position tracking
    *
-   * @return numPartitions
+   * @return withPosition
    */
-  @Min(1)
   @Schema(
-      name = "num_partitions",
-      description = "Number of partitions for IVF indexes",
+      name = "with_position",
+      description = "Optional FTS parameter for position tracking",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("num_partitions")
-  public Integer getNumPartitions() {
-    return numPartitions;
+  @JsonProperty("with_position")
+  public Boolean getWithPosition() {
+    return withPosition;
   }
 
-  public void setNumPartitions(Integer numPartitions) {
-    this.numPartitions = numPartitions;
+  public void setWithPosition(Boolean withPosition) {
+    this.withPosition = withPosition;
   }
 
-  public CreateIndexRequest numSubVectors(Integer numSubVectors) {
-    this.numSubVectors = numSubVectors;
+  public CreateIndexRequest baseTokenizer(String baseTokenizer) {
+    this.baseTokenizer = baseTokenizer;
     return this;
   }
 
   /**
-   * Number of sub-vectors for PQ indexes minimum: 1
+   * Optional FTS parameter for base tokenizer
    *
-   * @return numSubVectors
+   * @return baseTokenizer
    */
-  @Min(1)
   @Schema(
-      name = "num_sub_vectors",
-      description = "Number of sub-vectors for PQ indexes",
+      name = "base_tokenizer",
+      description = "Optional FTS parameter for base tokenizer",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("num_sub_vectors")
-  public Integer getNumSubVectors() {
-    return numSubVectors;
+  @JsonProperty("base_tokenizer")
+  public String getBaseTokenizer() {
+    return baseTokenizer;
   }
 
-  public void setNumSubVectors(Integer numSubVectors) {
-    this.numSubVectors = numSubVectors;
+  public void setBaseTokenizer(String baseTokenizer) {
+    this.baseTokenizer = baseTokenizer;
   }
 
-  public CreateIndexRequest numBits(Integer numBits) {
-    this.numBits = numBits;
+  public CreateIndexRequest language(String language) {
+    this.language = language;
     return this;
   }
 
   /**
-   * Number of bits for scalar quantization minimum: 1 maximum: 8
+   * Optional FTS parameter for language
    *
-   * @return numBits
+   * @return language
    */
-  @Min(1)
-  @Max(8)
   @Schema(
-      name = "num_bits",
-      description = "Number of bits for scalar quantization",
+      name = "language",
+      description = "Optional FTS parameter for language",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("num_bits")
-  public Integer getNumBits() {
-    return numBits;
+  @JsonProperty("language")
+  public String getLanguage() {
+    return language;
   }
 
-  public void setNumBits(Integer numBits) {
-    this.numBits = numBits;
+  public void setLanguage(String language) {
+    this.language = language;
   }
 
-  public CreateIndexRequest maxIterations(Integer maxIterations) {
-    this.maxIterations = maxIterations;
+  public CreateIndexRequest maxTokenLength(Integer maxTokenLength) {
+    this.maxTokenLength = maxTokenLength;
     return this;
   }
 
   /**
-   * Maximum iterations for index building minimum: 1
+   * Optional FTS parameter for maximum token length minimum: 0
    *
-   * @return maxIterations
+   * @return maxTokenLength
    */
-  @Min(1)
+  @Min(0)
   @Schema(
-      name = "max_iterations",
-      description = "Maximum iterations for index building",
+      name = "max_token_length",
+      description = "Optional FTS parameter for maximum token length",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("max_iterations")
-  public Integer getMaxIterations() {
-    return maxIterations;
+  @JsonProperty("max_token_length")
+  public Integer getMaxTokenLength() {
+    return maxTokenLength;
   }
 
-  public void setMaxIterations(Integer maxIterations) {
-    this.maxIterations = maxIterations;
+  public void setMaxTokenLength(Integer maxTokenLength) {
+    this.maxTokenLength = maxTokenLength;
   }
 
-  public CreateIndexRequest sampleRate(Integer sampleRate) {
-    this.sampleRate = sampleRate;
+  public CreateIndexRequest lowerCase(Boolean lowerCase) {
+    this.lowerCase = lowerCase;
     return this;
   }
 
   /**
-   * Sample rate for index building minimum: 1
+   * Optional FTS parameter for lowercase conversion
    *
-   * @return sampleRate
+   * @return lowerCase
    */
-  @Min(1)
   @Schema(
-      name = "sample_rate",
-      description = "Sample rate for index building",
+      name = "lower_case",
+      description = "Optional FTS parameter for lowercase conversion",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("sample_rate")
-  public Integer getSampleRate() {
-    return sampleRate;
+  @JsonProperty("lower_case")
+  public Boolean getLowerCase() {
+    return lowerCase;
   }
 
-  public void setSampleRate(Integer sampleRate) {
-    this.sampleRate = sampleRate;
+  public void setLowerCase(Boolean lowerCase) {
+    this.lowerCase = lowerCase;
+  }
+
+  public CreateIndexRequest stem(Boolean stem) {
+    this.stem = stem;
+    return this;
+  }
+
+  /**
+   * Optional FTS parameter for stemming
+   *
+   * @return stem
+   */
+  @Schema(
+      name = "stem",
+      description = "Optional FTS parameter for stemming",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("stem")
+  public Boolean getStem() {
+    return stem;
+  }
+
+  public void setStem(Boolean stem) {
+    this.stem = stem;
+  }
+
+  public CreateIndexRequest removeStopWords(Boolean removeStopWords) {
+    this.removeStopWords = removeStopWords;
+    return this;
+  }
+
+  /**
+   * Optional FTS parameter for stop word removal
+   *
+   * @return removeStopWords
+   */
+  @Schema(
+      name = "remove_stop_words",
+      description = "Optional FTS parameter for stop word removal",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("remove_stop_words")
+  public Boolean getRemoveStopWords() {
+    return removeStopWords;
+  }
+
+  public void setRemoveStopWords(Boolean removeStopWords) {
+    this.removeStopWords = removeStopWords;
+  }
+
+  public CreateIndexRequest asciiFolding(Boolean asciiFolding) {
+    this.asciiFolding = asciiFolding;
+    return this;
+  }
+
+  /**
+   * Optional FTS parameter for ASCII folding
+   *
+   * @return asciiFolding
+   */
+  @Schema(
+      name = "ascii_folding",
+      description = "Optional FTS parameter for ASCII folding",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("ascii_folding")
+  public Boolean getAsciiFolding() {
+    return asciiFolding;
+  }
+
+  public void setAsciiFolding(Boolean asciiFolding) {
+    this.asciiFolding = asciiFolding;
   }
 
   @Override
@@ -406,11 +476,14 @@ public class CreateIndexRequest {
         && Objects.equals(this.column, createIndexRequest.column)
         && Objects.equals(this.indexType, createIndexRequest.indexType)
         && Objects.equals(this.metricType, createIndexRequest.metricType)
-        && Objects.equals(this.numPartitions, createIndexRequest.numPartitions)
-        && Objects.equals(this.numSubVectors, createIndexRequest.numSubVectors)
-        && Objects.equals(this.numBits, createIndexRequest.numBits)
-        && Objects.equals(this.maxIterations, createIndexRequest.maxIterations)
-        && Objects.equals(this.sampleRate, createIndexRequest.sampleRate);
+        && Objects.equals(this.withPosition, createIndexRequest.withPosition)
+        && Objects.equals(this.baseTokenizer, createIndexRequest.baseTokenizer)
+        && Objects.equals(this.language, createIndexRequest.language)
+        && Objects.equals(this.maxTokenLength, createIndexRequest.maxTokenLength)
+        && Objects.equals(this.lowerCase, createIndexRequest.lowerCase)
+        && Objects.equals(this.stem, createIndexRequest.stem)
+        && Objects.equals(this.removeStopWords, createIndexRequest.removeStopWords)
+        && Objects.equals(this.asciiFolding, createIndexRequest.asciiFolding);
   }
 
   @Override
@@ -421,11 +494,14 @@ public class CreateIndexRequest {
         column,
         indexType,
         metricType,
-        numPartitions,
-        numSubVectors,
-        numBits,
-        maxIterations,
-        sampleRate);
+        withPosition,
+        baseTokenizer,
+        language,
+        maxTokenLength,
+        lowerCase,
+        stem,
+        removeStopWords,
+        asciiFolding);
   }
 
   @Override
@@ -437,11 +513,14 @@ public class CreateIndexRequest {
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
     sb.append("    metricType: ").append(toIndentedString(metricType)).append("\n");
-    sb.append("    numPartitions: ").append(toIndentedString(numPartitions)).append("\n");
-    sb.append("    numSubVectors: ").append(toIndentedString(numSubVectors)).append("\n");
-    sb.append("    numBits: ").append(toIndentedString(numBits)).append("\n");
-    sb.append("    maxIterations: ").append(toIndentedString(maxIterations)).append("\n");
-    sb.append("    sampleRate: ").append(toIndentedString(sampleRate)).append("\n");
+    sb.append("    withPosition: ").append(toIndentedString(withPosition)).append("\n");
+    sb.append("    baseTokenizer: ").append(toIndentedString(baseTokenizer)).append("\n");
+    sb.append("    language: ").append(toIndentedString(language)).append("\n");
+    sb.append("    maxTokenLength: ").append(toIndentedString(maxTokenLength)).append("\n");
+    sb.append("    lowerCase: ").append(toIndentedString(lowerCase)).append("\n");
+    sb.append("    stem: ").append(toIndentedString(stem)).append("\n");
+    sb.append("    removeStopWords: ").append(toIndentedString(removeStopWords)).append("\n");
+    sb.append("    asciiFolding: ").append(toIndentedString(asciiFolding)).append("\n");
     sb.append("}");
     return sb.toString();
   }

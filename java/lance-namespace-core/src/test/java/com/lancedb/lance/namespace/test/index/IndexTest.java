@@ -22,7 +22,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Tests for index operations: create, list, stats. */
 public class IndexTest extends BaseNamespaceTest {
@@ -217,7 +219,7 @@ public class IndexTest extends BaseNamespaceTest {
       System.out.println("\n--- Creating FTS index ---");
       CreateIndexRequest ftsIndexRequest = new CreateIndexRequest();
       ftsIndexRequest.setName(tableName);
-      ftsIndexRequest.setColumn("text");
+      ftsIndexRequest.setColumn("name");
       ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
       namespace.createIndex(ftsIndexRequest);
 
@@ -245,7 +247,7 @@ public class IndexTest extends BaseNamespaceTest {
       boolean hasScalarIndex =
           listResponse.getIndexes().stream().anyMatch(idx -> idx.getIndexName().equals("id_idx"));
       boolean hasFtsIndex =
-          listResponse.getIndexes().stream().anyMatch(idx -> idx.getIndexName().equals("text_idx"));
+          listResponse.getIndexes().stream().anyMatch(idx -> idx.getIndexName().equals("name_idx"));
 
       assertTrue(hasVectorIndex, "Should have vector index");
       assertTrue(hasScalarIndex, "Should have scalar index");

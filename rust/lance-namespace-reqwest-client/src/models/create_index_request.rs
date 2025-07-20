@@ -28,21 +28,30 @@ pub struct CreateIndexRequest {
     /// Distance metric type for vector indexes
     #[serde(rename = "metric_type", skip_serializing_if = "Option::is_none")]
     pub metric_type: Option<MetricType>,
-    /// Number of partitions for IVF indexes
-    #[serde(rename = "num_partitions", skip_serializing_if = "Option::is_none")]
-    pub num_partitions: Option<i32>,
-    /// Number of sub-vectors for PQ indexes
-    #[serde(rename = "num_sub_vectors", skip_serializing_if = "Option::is_none")]
-    pub num_sub_vectors: Option<i32>,
-    /// Number of bits for scalar quantization
-    #[serde(rename = "num_bits", skip_serializing_if = "Option::is_none")]
-    pub num_bits: Option<i32>,
-    /// Maximum iterations for index building
-    #[serde(rename = "max_iterations", skip_serializing_if = "Option::is_none")]
-    pub max_iterations: Option<i32>,
-    /// Sample rate for index building
-    #[serde(rename = "sample_rate", skip_serializing_if = "Option::is_none")]
-    pub sample_rate: Option<i32>,
+    /// Optional FTS parameter for position tracking
+    #[serde(rename = "with_position", skip_serializing_if = "Option::is_none")]
+    pub with_position: Option<bool>,
+    /// Optional FTS parameter for base tokenizer
+    #[serde(rename = "base_tokenizer", skip_serializing_if = "Option::is_none")]
+    pub base_tokenizer: Option<String>,
+    /// Optional FTS parameter for language
+    #[serde(rename = "language", skip_serializing_if = "Option::is_none")]
+    pub language: Option<String>,
+    /// Optional FTS parameter for maximum token length
+    #[serde(rename = "max_token_length", skip_serializing_if = "Option::is_none")]
+    pub max_token_length: Option<i32>,
+    /// Optional FTS parameter for lowercase conversion
+    #[serde(rename = "lower_case", skip_serializing_if = "Option::is_none")]
+    pub lower_case: Option<bool>,
+    /// Optional FTS parameter for stemming
+    #[serde(rename = "stem", skip_serializing_if = "Option::is_none")]
+    pub stem: Option<bool>,
+    /// Optional FTS parameter for stop word removal
+    #[serde(rename = "remove_stop_words", skip_serializing_if = "Option::is_none")]
+    pub remove_stop_words: Option<bool>,
+    /// Optional FTS parameter for ASCII folding
+    #[serde(rename = "ascii_folding", skip_serializing_if = "Option::is_none")]
+    pub ascii_folding: Option<bool>,
 }
 
 impl CreateIndexRequest {
@@ -53,11 +62,14 @@ impl CreateIndexRequest {
             column,
             index_type,
             metric_type: None,
-            num_partitions: None,
-            num_sub_vectors: None,
-            num_bits: None,
-            max_iterations: None,
-            sample_rate: None,
+            with_position: None,
+            base_tokenizer: None,
+            language: None,
+            max_token_length: None,
+            lower_case: None,
+            stem: None,
+            remove_stop_words: None,
+            ascii_folding: None,
         }
     }
 }

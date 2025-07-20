@@ -1639,29 +1639,42 @@ components:
         metric_type:
           type: string
           enum: ["l2", "cosine", "dot"]
+          nullable: true
           description: Distance metric type for vector indexes
-        num_partitions:
+        with_position:
+          type: boolean
+          nullable: true
+          description: Optional FTS parameter for position tracking
+        base_tokenizer:
+          type: string
+          nullable: true
+          description: Optional FTS parameter for base tokenizer
+        language:
+          type: string
+          nullable: true
+          description: Optional FTS parameter for language
+        max_token_length:
           type: integer
-          minimum: 1
-          description: Number of partitions for IVF indexes
-        num_sub_vectors:
-          type: integer
-          minimum: 1
-          description: Number of sub-vectors for PQ indexes
-        num_bits:
-          type: integer
-          minimum: 1
-          maximum: 8
-          description: Number of bits for scalar quantization
-        max_iterations:
-          type: integer
-          minimum: 1
-          description: Maximum iterations for index building
-        sample_rate:
-          type: integer
-          minimum: 1
-          description: Sample rate for index building
-
+          nullable: true
+          minimum: 0
+          description: Optional FTS parameter for maximum token length
+        lower_case:
+          type: boolean
+          nullable: true
+          description: Optional FTS parameter for lowercase conversion
+        stem:
+          type: boolean
+          nullable: true
+          description: Optional FTS parameter for stemming
+        remove_stop_words:
+          type: boolean
+          nullable: true
+          description: Optional FTS parameter for stop word removal
+        ascii_folding:
+          type: boolean
+          nullable: true
+          description: Optional FTS parameter for ASCII folding
+        
     CreateIndexResponse:
       type: object
       required:
@@ -2148,6 +2161,7 @@ components:
       type: object
       required:
       - terms
+      - column
       properties:
         boost:
           type: number

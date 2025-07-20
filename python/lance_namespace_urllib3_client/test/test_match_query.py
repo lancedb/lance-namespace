@@ -45,6 +45,7 @@ class TestMatchQuery(unittest.TestCase):
             )
         else:
             return MatchQuery(
+                column = '',
                 terms = '',
         )
         """

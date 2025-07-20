@@ -2188,18 +2188,21 @@ components:
       - vector
     CreateIndexRequest:
       example:
-        max_iterations: 1
-        num_sub_vectors: 1
-        sample_rate: 1
+        base_tokenizer: base_tokenizer
+        column: column
+        max_token_length: 0
+        language: language
+        index_type: BTREE
+        with_position: true
+        lower_case: true
         name: name
         namespace:
         - namespace
         - namespace
-        column: column
         metric_type: l2
-        num_partitions: 1
-        num_bits: 2
-        index_type: BTREE
+        ascii_folding: true
+        remove_stop_words: true
+        stem: true
       properties:
         name:
           description: The table name
@@ -2230,27 +2233,40 @@ components:
           - cosine
           - dot
           type: string
-        num_partitions:
-          description: Number of partitions for IVF indexes
-          minimum: 1
+          nullable: true
+        with_position:
+          description: Optional FTS parameter for position tracking
+          type: boolean
+          nullable: true
+        base_tokenizer:
+          description: Optional FTS parameter for base tokenizer
+          type: string
+          nullable: true
+        language:
+          description: Optional FTS parameter for language
+          type: string
+          nullable: true
+        max_token_length:
+          description: Optional FTS parameter for maximum token length
+          minimum: 0
           type: integer
-        num_sub_vectors:
-          description: Number of sub-vectors for PQ indexes
-          minimum: 1
-          type: integer
-        num_bits:
-          description: Number of bits for scalar quantization
-          maximum: 8
-          minimum: 1
-          type: integer
-        max_iterations:
-          description: Maximum iterations for index building
-          minimum: 1
-          type: integer
-        sample_rate:
-          description: Sample rate for index building
-          minimum: 1
-          type: integer
+          nullable: true
+        lower_case:
+          description: Optional FTS parameter for lowercase conversion
+          type: boolean
+          nullable: true
+        stem:
+          description: Optional FTS parameter for stemming
+          type: boolean
+          nullable: true
+        remove_stop_words:
+          description: Optional FTS parameter for stop word removal
+          type: boolean
+          nullable: true
+        ascii_folding:
+          description: Optional FTS parameter for ASCII folding
+          type: boolean
+          nullable: true
       required:
       - column
       - index_type
@@ -2972,6 +2988,7 @@ components:
         terms:
           type: string
       required:
+      - column
       - terms
     PhraseQuery:
       example:

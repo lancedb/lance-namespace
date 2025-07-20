@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **boost** | Option<**f32**> |  | [optional]
-**column** | Option<**String**> |  | [optional]
+**column** | Option<**String**> |  | 
 **fuzziness** | Option<**i32**> |  | [optional]
 **max_expansions** | Option<**i32**> | The maximum number of terms to expand for fuzzy matching. Default to 50. | [optional]
 **operator** | Option<[**models::Operator**](Operator.md)> | The operator to use for combining terms. This can be either `And` or `Or`, it's 'Or' by default. - `And`: All terms must match. - `Or`: At least one term must match. | [optional]

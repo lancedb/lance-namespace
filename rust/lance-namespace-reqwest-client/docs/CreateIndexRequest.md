@@ -9,11 +9,14 @@ Name | Type | Description | Notes
 **column** | **String** | Name of the column to create index on | 
 **index_type** | **String** | Type of index to create | 
 **metric_type** | Option<**String**> | Distance metric type for vector indexes | [optional]
-**num_partitions** | Option<**i32**> | Number of partitions for IVF indexes | [optional]
-**num_sub_vectors** | Option<**i32**> | Number of sub-vectors for PQ indexes | [optional]
-**num_bits** | Option<**i32**> | Number of bits for scalar quantization | [optional]
-**max_iterations** | Option<**i32**> | Maximum iterations for index building | [optional]
-**sample_rate** | Option<**i32**> | Sample rate for index building | [optional]
+**with_position** | Option<**bool**> | Optional FTS parameter for position tracking | [optional]
+**base_tokenizer** | Option<**String**> | Optional FTS parameter for base tokenizer | [optional]
+**language** | Option<**String**> | Optional FTS parameter for language | [optional]
+**max_token_length** | Option<**i32**> | Optional FTS parameter for maximum token length | [optional]
+**lower_case** | Option<**bool**> | Optional FTS parameter for lowercase conversion | [optional]
+**stem** | Option<**bool**> | Optional FTS parameter for stemming | [optional]
+**remove_stop_words** | Option<**bool**> | Optional FTS parameter for stop word removal | [optional]
+**ascii_folding** | Option<**bool**> | Optional FTS parameter for ASCII folding | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

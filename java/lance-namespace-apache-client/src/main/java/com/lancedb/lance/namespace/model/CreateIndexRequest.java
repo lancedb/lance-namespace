@@ -33,11 +33,14 @@ import java.util.StringJoiner;
   CreateIndexRequest.JSON_PROPERTY_COLUMN,
   CreateIndexRequest.JSON_PROPERTY_INDEX_TYPE,
   CreateIndexRequest.JSON_PROPERTY_METRIC_TYPE,
-  CreateIndexRequest.JSON_PROPERTY_NUM_PARTITIONS,
-  CreateIndexRequest.JSON_PROPERTY_NUM_SUB_VECTORS,
-  CreateIndexRequest.JSON_PROPERTY_NUM_BITS,
-  CreateIndexRequest.JSON_PROPERTY_MAX_ITERATIONS,
-  CreateIndexRequest.JSON_PROPERTY_SAMPLE_RATE
+  CreateIndexRequest.JSON_PROPERTY_WITH_POSITION,
+  CreateIndexRequest.JSON_PROPERTY_BASE_TOKENIZER,
+  CreateIndexRequest.JSON_PROPERTY_LANGUAGE,
+  CreateIndexRequest.JSON_PROPERTY_MAX_TOKEN_LENGTH,
+  CreateIndexRequest.JSON_PROPERTY_LOWER_CASE,
+  CreateIndexRequest.JSON_PROPERTY_STEM,
+  CreateIndexRequest.JSON_PROPERTY_REMOVE_STOP_WORDS,
+  CreateIndexRequest.JSON_PROPERTY_ASCII_FOLDING
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -136,20 +139,29 @@ public class CreateIndexRequest {
   public static final String JSON_PROPERTY_METRIC_TYPE = "metric_type";
   @javax.annotation.Nullable private MetricTypeEnum metricType;
 
-  public static final String JSON_PROPERTY_NUM_PARTITIONS = "num_partitions";
-  @javax.annotation.Nullable private Integer numPartitions;
+  public static final String JSON_PROPERTY_WITH_POSITION = "with_position";
+  @javax.annotation.Nullable private Boolean withPosition;
 
-  public static final String JSON_PROPERTY_NUM_SUB_VECTORS = "num_sub_vectors";
-  @javax.annotation.Nullable private Integer numSubVectors;
+  public static final String JSON_PROPERTY_BASE_TOKENIZER = "base_tokenizer";
+  @javax.annotation.Nullable private String baseTokenizer;
 
-  public static final String JSON_PROPERTY_NUM_BITS = "num_bits";
-  @javax.annotation.Nullable private Integer numBits;
+  public static final String JSON_PROPERTY_LANGUAGE = "language";
+  @javax.annotation.Nullable private String language;
 
-  public static final String JSON_PROPERTY_MAX_ITERATIONS = "max_iterations";
-  @javax.annotation.Nullable private Integer maxIterations;
+  public static final String JSON_PROPERTY_MAX_TOKEN_LENGTH = "max_token_length";
+  @javax.annotation.Nullable private Integer maxTokenLength;
 
-  public static final String JSON_PROPERTY_SAMPLE_RATE = "sample_rate";
-  @javax.annotation.Nullable private Integer sampleRate;
+  public static final String JSON_PROPERTY_LOWER_CASE = "lower_case";
+  @javax.annotation.Nullable private Boolean lowerCase;
+
+  public static final String JSON_PROPERTY_STEM = "stem";
+  @javax.annotation.Nullable private Boolean stem;
+
+  public static final String JSON_PROPERTY_REMOVE_STOP_WORDS = "remove_stop_words";
+  @javax.annotation.Nullable private Boolean removeStopWords;
+
+  public static final String JSON_PROPERTY_ASCII_FOLDING = "ascii_folding";
+  @javax.annotation.Nullable private Boolean asciiFolding;
 
   public CreateIndexRequest() {}
 
@@ -281,124 +293,196 @@ public class CreateIndexRequest {
     this.metricType = metricType;
   }
 
-  public CreateIndexRequest numPartitions(@javax.annotation.Nullable Integer numPartitions) {
+  public CreateIndexRequest withPosition(@javax.annotation.Nullable Boolean withPosition) {
 
-    this.numPartitions = numPartitions;
+    this.withPosition = withPosition;
     return this;
   }
 
   /**
-   * Number of partitions for IVF indexes minimum: 1
+   * Optional FTS parameter for position tracking
    *
-   * @return numPartitions
+   * @return withPosition
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NUM_PARTITIONS)
+  @JsonProperty(JSON_PROPERTY_WITH_POSITION)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Integer getNumPartitions() {
-    return numPartitions;
+  public Boolean getWithPosition() {
+    return withPosition;
   }
 
-  @JsonProperty(JSON_PROPERTY_NUM_PARTITIONS)
+  @JsonProperty(JSON_PROPERTY_WITH_POSITION)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setNumPartitions(@javax.annotation.Nullable Integer numPartitions) {
-    this.numPartitions = numPartitions;
+  public void setWithPosition(@javax.annotation.Nullable Boolean withPosition) {
+    this.withPosition = withPosition;
   }
 
-  public CreateIndexRequest numSubVectors(@javax.annotation.Nullable Integer numSubVectors) {
+  public CreateIndexRequest baseTokenizer(@javax.annotation.Nullable String baseTokenizer) {
 
-    this.numSubVectors = numSubVectors;
+    this.baseTokenizer = baseTokenizer;
     return this;
   }
 
   /**
-   * Number of sub-vectors for PQ indexes minimum: 1
+   * Optional FTS parameter for base tokenizer
    *
-   * @return numSubVectors
+   * @return baseTokenizer
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NUM_SUB_VECTORS)
+  @JsonProperty(JSON_PROPERTY_BASE_TOKENIZER)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Integer getNumSubVectors() {
-    return numSubVectors;
+  public String getBaseTokenizer() {
+    return baseTokenizer;
   }
 
-  @JsonProperty(JSON_PROPERTY_NUM_SUB_VECTORS)
+  @JsonProperty(JSON_PROPERTY_BASE_TOKENIZER)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setNumSubVectors(@javax.annotation.Nullable Integer numSubVectors) {
-    this.numSubVectors = numSubVectors;
+  public void setBaseTokenizer(@javax.annotation.Nullable String baseTokenizer) {
+    this.baseTokenizer = baseTokenizer;
   }
 
-  public CreateIndexRequest numBits(@javax.annotation.Nullable Integer numBits) {
+  public CreateIndexRequest language(@javax.annotation.Nullable String language) {
 
-    this.numBits = numBits;
+    this.language = language;
     return this;
   }
 
   /**
-   * Number of bits for scalar quantization minimum: 1 maximum: 8
+   * Optional FTS parameter for language
    *
-   * @return numBits
+   * @return language
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NUM_BITS)
+  @JsonProperty(JSON_PROPERTY_LANGUAGE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Integer getNumBits() {
-    return numBits;
+  public String getLanguage() {
+    return language;
   }
 
-  @JsonProperty(JSON_PROPERTY_NUM_BITS)
+  @JsonProperty(JSON_PROPERTY_LANGUAGE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setNumBits(@javax.annotation.Nullable Integer numBits) {
-    this.numBits = numBits;
+  public void setLanguage(@javax.annotation.Nullable String language) {
+    this.language = language;
   }
 
-  public CreateIndexRequest maxIterations(@javax.annotation.Nullable Integer maxIterations) {
+  public CreateIndexRequest maxTokenLength(@javax.annotation.Nullable Integer maxTokenLength) {
 
-    this.maxIterations = maxIterations;
+    this.maxTokenLength = maxTokenLength;
     return this;
   }
 
   /**
-   * Maximum iterations for index building minimum: 1
+   * Optional FTS parameter for maximum token length minimum: 0
    *
-   * @return maxIterations
+   * @return maxTokenLength
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_MAX_ITERATIONS)
+  @JsonProperty(JSON_PROPERTY_MAX_TOKEN_LENGTH)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Integer getMaxIterations() {
-    return maxIterations;
+  public Integer getMaxTokenLength() {
+    return maxTokenLength;
   }
 
-  @JsonProperty(JSON_PROPERTY_MAX_ITERATIONS)
+  @JsonProperty(JSON_PROPERTY_MAX_TOKEN_LENGTH)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMaxIterations(@javax.annotation.Nullable Integer maxIterations) {
-    this.maxIterations = maxIterations;
+  public void setMaxTokenLength(@javax.annotation.Nullable Integer maxTokenLength) {
+    this.maxTokenLength = maxTokenLength;
   }
 
-  public CreateIndexRequest sampleRate(@javax.annotation.Nullable Integer sampleRate) {
+  public CreateIndexRequest lowerCase(@javax.annotation.Nullable Boolean lowerCase) {
 
-    this.sampleRate = sampleRate;
+    this.lowerCase = lowerCase;
     return this;
   }
 
   /**
-   * Sample rate for index building minimum: 1
+   * Optional FTS parameter for lowercase conversion
    *
-   * @return sampleRate
+   * @return lowerCase
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_SAMPLE_RATE)
+  @JsonProperty(JSON_PROPERTY_LOWER_CASE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Integer getSampleRate() {
-    return sampleRate;
+  public Boolean getLowerCase() {
+    return lowerCase;
   }
 
-  @JsonProperty(JSON_PROPERTY_SAMPLE_RATE)
+  @JsonProperty(JSON_PROPERTY_LOWER_CASE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setSampleRate(@javax.annotation.Nullable Integer sampleRate) {
-    this.sampleRate = sampleRate;
+  public void setLowerCase(@javax.annotation.Nullable Boolean lowerCase) {
+    this.lowerCase = lowerCase;
+  }
+
+  public CreateIndexRequest stem(@javax.annotation.Nullable Boolean stem) {
+
+    this.stem = stem;
+    return this;
+  }
+
+  /**
+   * Optional FTS parameter for stemming
+   *
+   * @return stem
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_STEM)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getStem() {
+    return stem;
+  }
+
+  @JsonProperty(JSON_PROPERTY_STEM)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setStem(@javax.annotation.Nullable Boolean stem) {
+    this.stem = stem;
+  }
+
+  public CreateIndexRequest removeStopWords(@javax.annotation.Nullable Boolean removeStopWords) {
+
+    this.removeStopWords = removeStopWords;
+    return this;
+  }
+
+  /**
+   * Optional FTS parameter for stop word removal
+   *
+   * @return removeStopWords
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_REMOVE_STOP_WORDS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getRemoveStopWords() {
+    return removeStopWords;
+  }
+
+  @JsonProperty(JSON_PROPERTY_REMOVE_STOP_WORDS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setRemoveStopWords(@javax.annotation.Nullable Boolean removeStopWords) {
+    this.removeStopWords = removeStopWords;
+  }
+
+  public CreateIndexRequest asciiFolding(@javax.annotation.Nullable Boolean asciiFolding) {
+
+    this.asciiFolding = asciiFolding;
+    return this;
+  }
+
+  /**
+   * Optional FTS parameter for ASCII folding
+   *
+   * @return asciiFolding
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_ASCII_FOLDING)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getAsciiFolding() {
+    return asciiFolding;
+  }
+
+  @JsonProperty(JSON_PROPERTY_ASCII_FOLDING)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setAsciiFolding(@javax.annotation.Nullable Boolean asciiFolding) {
+    this.asciiFolding = asciiFolding;
   }
 
   @Override
@@ -415,11 +499,14 @@ public class CreateIndexRequest {
         && Objects.equals(this.column, createIndexRequest.column)
         && Objects.equals(this.indexType, createIndexRequest.indexType)
         && Objects.equals(this.metricType, createIndexRequest.metricType)
-        && Objects.equals(this.numPartitions, createIndexRequest.numPartitions)
-        && Objects.equals(this.numSubVectors, createIndexRequest.numSubVectors)
-        && Objects.equals(this.numBits, createIndexRequest.numBits)
-        && Objects.equals(this.maxIterations, createIndexRequest.maxIterations)
-        && Objects.equals(this.sampleRate, createIndexRequest.sampleRate);
+        && Objects.equals(this.withPosition, createIndexRequest.withPosition)
+        && Objects.equals(this.baseTokenizer, createIndexRequest.baseTokenizer)
+        && Objects.equals(this.language, createIndexRequest.language)
+        && Objects.equals(this.maxTokenLength, createIndexRequest.maxTokenLength)
+        && Objects.equals(this.lowerCase, createIndexRequest.lowerCase)
+        && Objects.equals(this.stem, createIndexRequest.stem)
+        && Objects.equals(this.removeStopWords, createIndexRequest.removeStopWords)
+        && Objects.equals(this.asciiFolding, createIndexRequest.asciiFolding);
   }
 
   @Override
@@ -430,11 +517,14 @@ public class CreateIndexRequest {
         column,
         indexType,
         metricType,
-        numPartitions,
-        numSubVectors,
-        numBits,
-        maxIterations,
-        sampleRate);
+        withPosition,
+        baseTokenizer,
+        language,
+        maxTokenLength,
+        lowerCase,
+        stem,
+        removeStopWords,
+        asciiFolding);
   }
 
   @Override
@@ -446,11 +536,14 @@ public class CreateIndexRequest {
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
     sb.append("    metricType: ").append(toIndentedString(metricType)).append("\n");
-    sb.append("    numPartitions: ").append(toIndentedString(numPartitions)).append("\n");
-    sb.append("    numSubVectors: ").append(toIndentedString(numSubVectors)).append("\n");
-    sb.append("    numBits: ").append(toIndentedString(numBits)).append("\n");
-    sb.append("    maxIterations: ").append(toIndentedString(maxIterations)).append("\n");
-    sb.append("    sampleRate: ").append(toIndentedString(sampleRate)).append("\n");
+    sb.append("    withPosition: ").append(toIndentedString(withPosition)).append("\n");
+    sb.append("    baseTokenizer: ").append(toIndentedString(baseTokenizer)).append("\n");
+    sb.append("    language: ").append(toIndentedString(language)).append("\n");
+    sb.append("    maxTokenLength: ").append(toIndentedString(maxTokenLength)).append("\n");
+    sb.append("    lowerCase: ").append(toIndentedString(lowerCase)).append("\n");
+    sb.append("    stem: ").append(toIndentedString(stem)).append("\n");
+    sb.append("    removeStopWords: ").append(toIndentedString(removeStopWords)).append("\n");
+    sb.append("    asciiFolding: ").append(toIndentedString(asciiFolding)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -580,15 +673,15 @@ public class CreateIndexRequest {
       }
     }
 
-    // add `num_partitions` to the URL query string
-    if (getNumPartitions() != null) {
+    // add `with_position` to the URL query string
+    if (getWithPosition() != null) {
       try {
         joiner.add(
             String.format(
-                "%snum_partitions%s=%s",
+                "%swith_position%s=%s",
                 prefix,
                 suffix,
-                URLEncoder.encode(String.valueOf(getNumPartitions()), "UTF-8")
+                URLEncoder.encode(String.valueOf(getWithPosition()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
@@ -596,15 +689,15 @@ public class CreateIndexRequest {
       }
     }
 
-    // add `num_sub_vectors` to the URL query string
-    if (getNumSubVectors() != null) {
+    // add `base_tokenizer` to the URL query string
+    if (getBaseTokenizer() != null) {
       try {
         joiner.add(
             String.format(
-                "%snum_sub_vectors%s=%s",
+                "%sbase_tokenizer%s=%s",
                 prefix,
                 suffix,
-                URLEncoder.encode(String.valueOf(getNumSubVectors()), "UTF-8")
+                URLEncoder.encode(String.valueOf(getBaseTokenizer()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
@@ -612,30 +705,15 @@ public class CreateIndexRequest {
       }
     }
 
-    // add `num_bits` to the URL query string
-    if (getNumBits() != null) {
+    // add `language` to the URL query string
+    if (getLanguage() != null) {
       try {
         joiner.add(
             String.format(
-                "%snum_bits%s=%s",
+                "%slanguage%s=%s",
                 prefix,
                 suffix,
-                URLEncoder.encode(String.valueOf(getNumBits()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `max_iterations` to the URL query string
-    if (getMaxIterations() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%smax_iterations%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getMaxIterations()), "UTF-8")
+                URLEncoder.encode(String.valueOf(getLanguage()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
@@ -643,15 +721,78 @@ public class CreateIndexRequest {
       }
     }
 
-    // add `sample_rate` to the URL query string
-    if (getSampleRate() != null) {
+    // add `max_token_length` to the URL query string
+    if (getMaxTokenLength() != null) {
       try {
         joiner.add(
             String.format(
-                "%ssample_rate%s=%s",
+                "%smax_token_length%s=%s",
                 prefix,
                 suffix,
-                URLEncoder.encode(String.valueOf(getSampleRate()), "UTF-8")
+                URLEncoder.encode(String.valueOf(getMaxTokenLength()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `lower_case` to the URL query string
+    if (getLowerCase() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%slower_case%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getLowerCase()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `stem` to the URL query string
+    if (getStem() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sstem%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getStem()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `remove_stop_words` to the URL query string
+    if (getRemoveStopWords() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sremove_stop_words%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getRemoveStopWords()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `ascii_folding` to the URL query string
+    if (getAsciiFolding() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sascii_folding%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getAsciiFolding()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported

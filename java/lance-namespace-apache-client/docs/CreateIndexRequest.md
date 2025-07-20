@@ -12,11 +12,14 @@
 |**column** | **String** | Name of the column to create index on |  |
 |**indexType** | [**IndexTypeEnum**](#IndexTypeEnum) | Type of index to create |  |
 |**metricType** | [**MetricTypeEnum**](#MetricTypeEnum) | Distance metric type for vector indexes |  [optional] |
-|**numPartitions** | **Integer** | Number of partitions for IVF indexes |  [optional] |
-|**numSubVectors** | **Integer** | Number of sub-vectors for PQ indexes |  [optional] |
-|**numBits** | **Integer** | Number of bits for scalar quantization |  [optional] |
-|**maxIterations** | **Integer** | Maximum iterations for index building |  [optional] |
-|**sampleRate** | **Integer** | Sample rate for index building |  [optional] |
+|**withPosition** | **Boolean** | Optional FTS parameter for position tracking |  [optional] |
+|**baseTokenizer** | **String** | Optional FTS parameter for base tokenizer |  [optional] |
+|**language** | **String** | Optional FTS parameter for language |  [optional] |
+|**maxTokenLength** | **Integer** | Optional FTS parameter for maximum token length |  [optional] |
+|**lowerCase** | **Boolean** | Optional FTS parameter for lowercase conversion |  [optional] |
+|**stem** | **Boolean** | Optional FTS parameter for stemming |  [optional] |
+|**removeStopWords** | **Boolean** | Optional FTS parameter for stop word removal |  [optional] |
+|**asciiFolding** | **Boolean** | Optional FTS parameter for ASCII folding |  [optional] |
 
 
 

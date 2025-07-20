@@ -42,11 +42,14 @@ class TestCreateIndexRequest(unittest.TestCase):
                 column = '',
                 index_type = 'BTREE',
                 metric_type = 'l2',
-                num_partitions = 1,
-                num_sub_vectors = 1,
-                num_bits = 1,
-                max_iterations = 1,
-                sample_rate = 1
+                with_position = True,
+                base_tokenizer = '',
+                language = '',
+                max_token_length = 0,
+                lower_case = True,
+                stem = True,
+                remove_stop_words = True,
+                ascii_folding = True
             )
         else:
             return CreateIndexRequest(
