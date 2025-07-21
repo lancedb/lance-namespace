@@ -91,6 +91,7 @@
         <module>lance-namespace-core</module>
         <module>lance-namespace-adapter</module>
         <module>lance-namespace-hive</module>
+        <module>lance-namespace-glue</module>
     </modules>
 
     <dependencyManagement>
