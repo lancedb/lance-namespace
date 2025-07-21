@@ -20,7 +20,6 @@ import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain;
 import software.amazon.awssdk.services.glue.GlueClientBuilder;
 
 import java.io.Serializable;
@@ -118,11 +117,9 @@ public class GlueProperties implements Serializable {
     if (glueEndpoint != null) {
       builder.endpointOverride(URI.create(glueEndpoint));
     }
-    Region region =
-        Strings.isNullOrEmpty(glueRegion)
-            ? DefaultAwsRegionProviderChain.builder().build().getRegion()
-            : Region.of(glueRegion);
-    builder.region(region);
+    if (!Strings.isNullOrEmpty(glueRegion)) {
+      builder.region(Region.of(glueRegion));
+    }
     builder.credentialsProvider(credentialsProvider());
   }
 }
