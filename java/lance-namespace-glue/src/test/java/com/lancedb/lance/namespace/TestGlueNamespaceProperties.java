@@ -30,11 +30,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.Mockito.verify;
 
-public class TestGlueProperties {
+public class TestGlueNamespaceProperties {
 
   @Test
   public void testDefaultCredentials() {
-    GlueProperties properties = new GlueProperties();
+    GlueNamespaceProperties properties = new GlueNamespaceProperties();
     GlueClientBuilder mockBuilder = mockGlueClientBuilder();
 
     properties.configureClientBuilder(mockBuilder);
@@ -49,10 +49,10 @@ public class TestGlueProperties {
   public void testPropertiesFromMap() {
     Map<String, String> props =
         Map.of(
-            GlueProperties.CATALOG_ID, "1234567890",
-            GlueProperties.REGION, "us-west-2",
-            GlueProperties.ENDPOINT, "https://glue.us-west-2.api.aws");
-    GlueProperties properties = new GlueProperties(props);
+            GlueNamespaceProperties.CATALOG_ID, "1234567890",
+            GlueNamespaceProperties.REGION, "us-west-2",
+            GlueNamespaceProperties.ENDPOINT, "https://glue.us-west-2.api.aws");
+    GlueNamespaceProperties properties = new GlueNamespaceProperties(props);
     assertEquals("1234567890", properties.glueCatalogId());
   }
 
@@ -60,10 +60,10 @@ public class TestGlueProperties {
   public void testBasicCredentials() {
     Map<String, String> props =
         Map.of(
-            GlueProperties.ACCESS_KEY_ID, "mykey",
-            GlueProperties.SECRET_ACCESS_KEY, "secret");
+            GlueNamespaceProperties.ACCESS_KEY_ID, "mykey",
+            GlueNamespaceProperties.SECRET_ACCESS_KEY, "secret");
 
-    GlueProperties properties = new GlueProperties(props);
+    GlueNamespaceProperties properties = new GlueNamespaceProperties(props);
     GlueClientBuilder mockBuilder = mockGlueClientBuilder();
     properties.configureClientBuilder(mockBuilder);
 
@@ -82,11 +82,11 @@ public class TestGlueProperties {
   public void testSessionCredentials() {
     Map<String, String> props =
         Map.of(
-            GlueProperties.ACCESS_KEY_ID, "mykey",
-            GlueProperties.SECRET_ACCESS_KEY, "secret",
-            GlueProperties.SESSION_TOKEN, "token");
+            GlueNamespaceProperties.ACCESS_KEY_ID, "mykey",
+            GlueNamespaceProperties.SECRET_ACCESS_KEY, "secret",
+            GlueNamespaceProperties.SESSION_TOKEN, "token");
 
-    GlueProperties properties = new GlueProperties(props);
+    GlueNamespaceProperties properties = new GlueNamespaceProperties(props);
     GlueClientBuilder mockBuilder = mockGlueClientBuilder();
     properties.configureClientBuilder(mockBuilder);
 
@@ -106,13 +106,13 @@ public class TestGlueProperties {
   public void testConfigureGlueClientBuilder() {
     Map<String, String> props =
         Map.of(
-            GlueProperties.CATALOG_ID, "1234567890",
-            GlueProperties.REGION, "us-west-2",
-            GlueProperties.ENDPOINT, "https://glue.us-west-2.api.aws",
-            GlueProperties.ACCESS_KEY_ID, "mykey",
-            GlueProperties.SECRET_ACCESS_KEY, "secret");
+            GlueNamespaceProperties.CATALOG_ID, "1234567890",
+            GlueNamespaceProperties.REGION, "us-west-2",
+            GlueNamespaceProperties.ENDPOINT, "https://glue.us-west-2.api.aws",
+            GlueNamespaceProperties.ACCESS_KEY_ID, "mykey",
+            GlueNamespaceProperties.SECRET_ACCESS_KEY, "secret");
 
-    GlueProperties properties = new GlueProperties(props);
+    GlueNamespaceProperties properties = new GlueNamespaceProperties(props);
     GlueClientBuilder mockBuilder = mockGlueClientBuilder();
     properties.configureClientBuilder(mockBuilder);
 

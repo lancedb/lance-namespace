@@ -26,7 +26,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Map;
 
-public class GlueProperties implements Serializable {
+public class GlueNamespaceProperties implements Serializable {
 
   /**
    * The Catalog ID of the Glue catalog to be used for all operations. If not specified, Glue
@@ -80,7 +80,7 @@ public class GlueProperties implements Serializable {
   private final String glueSecretAccessKey;
   private final String glueSessionToken;
 
-  public GlueProperties() {
+  public GlueNamespaceProperties() {
     this.glueCatalogId = null;
     this.glueEndpoint = null;
     this.glueRegion = null;
@@ -89,7 +89,7 @@ public class GlueProperties implements Serializable {
     this.glueSessionToken = null;
   }
 
-  public GlueProperties(Map<String, String> properties) {
+  public GlueNamespaceProperties(Map<String, String> properties) {
     this.glueEndpoint = properties.get(ENDPOINT);
     this.glueRegion = properties.get(REGION);
     this.glueCatalogId = properties.get(CATALOG_ID);

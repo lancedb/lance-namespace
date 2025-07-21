@@ -13,7 +13,7 @@
  */
 package com.lancedb.lance.namespace.glue;
 
-import com.lancedb.lance.namespace.GlueProperties;
+import com.lancedb.lance.namespace.GlueNamespaceProperties;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 
@@ -46,7 +46,7 @@ public class TestLanceGlueNamespace {
   @BeforeEach
   public void before() {
     this.glueNamespace = new LanceGlueNamespace();
-    GlueProperties glueProperties = new GlueProperties();
+    GlueNamespaceProperties glueProperties = new GlueNamespaceProperties();
     glueNamespace.initialize("glue", glueProperties, glue);
   }
 

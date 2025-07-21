@@ -13,7 +13,7 @@
  */
 package com.lancedb.lance.namespace.glue;
 
-import com.lancedb.lance.namespace.GlueProperties;
+import com.lancedb.lance.namespace.GlueNamespaceProperties;
 import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.AlterTransactionResponse;
@@ -58,8 +58,6 @@ import com.lancedb.lance.namespace.model.UpdateTableResponse;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Sets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.glue.GlueClient;
 import software.amazon.awssdk.services.glue.model.GetDatabasesRequest;
 import software.amazon.awssdk.services.glue.model.GetDatabasesResponse;
@@ -70,10 +68,9 @@ import java.util.Map;
 import java.util.Set;
 
 public class LanceGlueNamespace implements LanceNamespace, Closeable {
-  private static final Logger LOG = LoggerFactory.getLogger(LanceGlueNamespace.class);
   private static final int MAX_GLUE_LISTING_SIZE = 100;
 
-  private GlueProperties properties;
+  private GlueNamespaceProperties properties;
   public GlueClient glueClient;
   private String name;
 
@@ -81,14 +78,14 @@ public class LanceGlueNamespace implements LanceNamespace, Closeable {
 
   @Override
   public void initialize(String name, Map<String, String> properties) {
-    GlueProperties glueProperties = new GlueProperties(properties);
+    GlueNamespaceProperties glueProperties = new GlueNamespaceProperties(properties);
     GlueClient glueClient =
         GlueClient.builder().applyMutation(glueProperties::configureClientBuilder).build();
     initialize(name, glueProperties, glueClient);
   }
 
   @VisibleForTesting
-  void initialize(String name, GlueProperties properties, GlueClient glueClient) {
+  void initialize(String name, GlueNamespaceProperties properties, GlueClient glueClient) {
     this.properties = properties;
     this.glueClient = glueClient;
     this.name = name;
@@ -114,7 +111,6 @@ public class LanceGlueNamespace implements LanceNamespace, Closeable {
       remaining = pageSize - databases.size();
     } while (glueNextToken != null && remaining > 0);
 
-    LOG.debug("Listing namespace returned : {}", String.join(", ", databases));
     return new ListNamespacesResponse().namespaces(databases).nextPageToken(glueNextToken);
   }
 
