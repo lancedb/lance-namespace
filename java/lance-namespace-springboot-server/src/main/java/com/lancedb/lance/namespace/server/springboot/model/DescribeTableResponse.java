@@ -21,9 +21,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -32,10 +30,6 @@ import java.util.Objects;
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class DescribeTableResponse {
-
-  private String name;
-
-  @Valid private List<String> namespace = new ArrayList<>();
 
   private String location;
 
@@ -55,70 +49,12 @@ public class DescribeTableResponse {
 
   /** Constructor with only required parameters */
   public DescribeTableResponse(
-      String name,
-      List<String> namespace,
-      String location,
-      JsonSchema schema,
-      TableBasicStats stats,
-      String table,
-      Long version) {
-    this.name = name;
-    this.namespace = namespace;
+      String location, JsonSchema schema, TableBasicStats stats, String table, Long version) {
     this.location = location;
     this.schema = schema;
     this.stats = stats;
     this.table = table;
     this.version = version;
-  }
-
-  public DescribeTableResponse name(String name) {
-    this.name = name;
-    return this;
-  }
-
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @NotNull
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public DescribeTableResponse namespace(List<String> namespace) {
-    this.namespace = namespace;
-    return this;
-  }
-
-  public DescribeTableResponse addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
-    }
-    this.namespace.add(namespaceItem);
-    return this;
-  }
-
-  /**
-   * Get namespace
-   *
-   * @return namespace
-   */
-  @NotNull
-  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("namespace")
-  public List<String> getNamespace() {
-    return namespace;
-  }
-
-  public void setNamespace(List<String> namespace) {
-    this.namespace = namespace;
   }
 
   public DescribeTableResponse location(String location) {
@@ -266,9 +202,7 @@ public class DescribeTableResponse {
       return false;
     }
     DescribeTableResponse describeTableResponse = (DescribeTableResponse) o;
-    return Objects.equals(this.name, describeTableResponse.name)
-        && Objects.equals(this.namespace, describeTableResponse.namespace)
-        && Objects.equals(this.location, describeTableResponse.location)
+    return Objects.equals(this.location, describeTableResponse.location)
         && Objects.equals(this.properties, describeTableResponse.properties)
         && Objects.equals(this.schema, describeTableResponse.schema)
         && Objects.equals(this.stats, describeTableResponse.stats)
@@ -278,15 +212,13 @@ public class DescribeTableResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, location, properties, schema, stats, table, version);
+    return Objects.hash(location, properties, schema, stats, table, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeTableResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    schema: ").append(toIndentedString(schema)).append("\n");

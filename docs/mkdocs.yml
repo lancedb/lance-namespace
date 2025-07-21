@@ -79,7 +79,6 @@ nav:
       - Apache Hive MetaStore: spec/impls/hive.md
       - Apache Iceberg REST Catalog: spec/impls/iceberg.md
   - User Guide:
-      - Overview: user-guide/overview.md
-      - Java SDK for LanceDB Cloud/Enterprise: user-guide/java-sdk.md
+      - Java SDK: user-guide/java-sdk.md
   - Contributing: contributing.md
   - Lance: https://lancedb.github.io/lance

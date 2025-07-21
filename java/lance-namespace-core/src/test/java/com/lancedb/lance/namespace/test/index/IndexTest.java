@@ -45,9 +45,9 @@ public class IndexTest extends BaseNamespaceTest {
 
       // Step 2: List indices before creating index (should be empty)
       System.out.println("\n--- Step 2: Listing indices before index creation ---");
-      IndexListRequest listRequestBefore = new IndexListRequest();
+      ListTableIndicesRequest listRequestBefore = new ListTableIndicesRequest();
       listRequestBefore.setName(tableName);
-      IndexListResponse listResponseBefore = namespace.listIndices(listRequestBefore);
+      ListTableIndicesResponse listResponseBefore = namespace.listTableIndices(listRequestBefore);
       assertNotNull(listResponseBefore, "List indices response should not be null");
       assertNotNull(listResponseBefore.getIndexes(), "Indexes list should not be null");
       assertEquals(
@@ -56,13 +56,13 @@ public class IndexTest extends BaseNamespaceTest {
 
       // Step 3: Create vector index
       System.out.println("\n--- Step 3: Creating vector index ---");
-      CreateIndexRequest indexRequest = new CreateIndexRequest();
+      CreateTableIndexRequest indexRequest = new CreateTableIndexRequest();
       indexRequest.setName(tableName);
       indexRequest.setColumn("embedding");
-      indexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.IVF_PQ);
-      indexRequest.setMetricType(CreateIndexRequest.MetricTypeEnum.L2);
+      indexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.IVF_PQ);
+      indexRequest.setMetricType(CreateTableIndexRequest.MetricTypeEnum.L2);
 
-      CreateIndexResponse indexResponse = namespace.createIndex(indexRequest);
+      CreateTableIndexResponse indexResponse = namespace.createTableIndex(indexRequest);
       assertNotNull(indexResponse, "Create index response should not be null");
       System.out.println("✓ Index creation request submitted successfully");
 
@@ -74,10 +74,11 @@ public class IndexTest extends BaseNamespaceTest {
 
       // Step 5: Get index stats
       System.out.println("\n--- Step 5: Getting index stats for embedding_idx ---");
-      IndexStatsRequest statsRequest = new IndexStatsRequest();
+      DescribeTableIndexStatsRequest statsRequest = new DescribeTableIndexStatsRequest();
       statsRequest.setName(tableName);
 
-      IndexStatsResponse statsResponse = namespace.getIndexStats(statsRequest, "embedding_idx");
+      DescribeTableIndexStatsResponse statsResponse =
+          namespace.describeTableIndexStats(statsRequest, "embedding_idx");
       assertNotNull(statsResponse, "Index stats response should not be null");
       assertEquals("IVF_PQ", statsResponse.getIndexType(), "Index type should be IVF_PQ");
       assertEquals("l2", statsResponse.getDistanceType(), "Distance type should be l2");
@@ -88,7 +89,8 @@ public class IndexTest extends BaseNamespaceTest {
       assertTrue(indexComplete, "Index should be fully built");
 
       // Verify final stats
-      IndexStatsResponse finalStats = namespace.getIndexStats(statsRequest, "embedding_idx");
+      DescribeTableIndexStatsResponse finalStats =
+          namespace.describeTableIndexStats(statsRequest, "embedding_idx");
       assertEquals(300, finalStats.getNumIndexedRows().intValue(), "Should have 300 indexed rows");
       assertEquals(0, finalStats.getNumUnindexedRows().intValue(), "Should have 0 unindexed rows");
 
@@ -99,9 +101,9 @@ public class IndexTest extends BaseNamespaceTest {
       System.out.println("  - Unindexed rows: " + finalStats.getNumUnindexedRows());
 
       // Verify index appears in list
-      IndexListRequest listRequestAfter = new IndexListRequest();
+      ListTableIndicesRequest listRequestAfter = new ListTableIndicesRequest();
       listRequestAfter.setName(tableName);
-      IndexListResponse listResponseAfter = namespace.listIndices(listRequestAfter);
+      ListTableIndicesResponse listResponseAfter = namespace.listTableIndices(listRequestAfter);
       assertEquals(1, listResponseAfter.getIndexes().size(), "Should have exactly one index");
       assertEquals(
           "embedding_idx",
@@ -129,20 +131,21 @@ public class IndexTest extends BaseNamespaceTest {
 
       // Step 2: List indices before creating index
       System.out.println("\n--- Step 2: Listing indices before index creation ---");
-      IndexListRequest listRequestBefore = new IndexListRequest();
+      ListTableIndicesRequest listRequestBefore = new ListTableIndicesRequest();
       listRequestBefore.setName(tableName);
-      IndexListResponse listResponseBefore = namespace.listIndices(listRequestBefore);
+      ListTableIndicesResponse listResponseBefore = namespace.listTableIndices(listRequestBefore);
       assertEquals(
           0, listResponseBefore.getIndexes().size(), "Should have no indices before creation");
 
       // Step 3: Create scalar index on name column
       System.out.println("\n--- Step 3: Creating scalar index ---");
-      CreateIndexRequest scalarIndexRequest = new CreateIndexRequest();
+      CreateTableIndexRequest scalarIndexRequest = new CreateTableIndexRequest();
       scalarIndexRequest.setName(tableName);
       scalarIndexRequest.setColumn("name");
-      scalarIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.BITMAP);
+      scalarIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.BITMAP);
 
-      CreateIndexResponse scalarIndexResponse = namespace.createScalarIndex(scalarIndexRequest);
+      CreateTableIndexResponse scalarIndexResponse =
+          namespace.createTableScalarIndex(scalarIndexRequest);
       assertNotNull(scalarIndexResponse, "Create scalar index response should not be null");
       System.out.println("✓ Scalar index creation request submitted");
 
@@ -156,9 +159,10 @@ public class IndexTest extends BaseNamespaceTest {
       boolean indexComplete = TestUtils.waitForIndexComplete(namespace, tableName, "name_idx", 30);
       assertTrue(indexComplete, "Scalar index should be fully built");
 
-      IndexStatsRequest statsRequest = new IndexStatsRequest();
+      DescribeTableIndexStatsRequest statsRequest = new DescribeTableIndexStatsRequest();
       statsRequest.setName(tableName);
-      IndexStatsResponse statsResponse = namespace.getIndexStats(statsRequest, "name_idx");
+      DescribeTableIndexStatsResponse statsResponse =
+          namespace.describeTableIndexStats(statsRequest, "name_idx");
 
       assertNotNull(statsResponse, "Index stats response should not be null");
       assertEquals("BITMAP", statsResponse.getIndexType(), "Index type should be BITMAP");
@@ -172,9 +176,9 @@ public class IndexTest extends BaseNamespaceTest {
       System.out.println("  - Indexed rows: " + statsResponse.getNumIndexedRows());
 
       // Verify index in list
-      IndexListRequest listRequestAfter = new IndexListRequest();
+      ListTableIndicesRequest listRequestAfter = new ListTableIndicesRequest();
       listRequestAfter.setName(tableName);
-      IndexListResponse listResponseAfter = namespace.listIndices(listRequestAfter);
+      ListTableIndicesResponse listResponseAfter = namespace.listTableIndices(listRequestAfter);
       assertEquals(1, listResponseAfter.getIndexes().size(), "Should have exactly one index");
       assertTrue(
           listResponseAfter.getIndexes().get(0).getColumns().contains("name"),
@@ -200,37 +204,37 @@ public class IndexTest extends BaseNamespaceTest {
 
       // Create vector index
       System.out.println("\n--- Creating vector index ---");
-      CreateIndexRequest vectorIndexRequest = new CreateIndexRequest();
+      CreateTableIndexRequest vectorIndexRequest = new CreateTableIndexRequest();
       vectorIndexRequest.setName(tableName);
       vectorIndexRequest.setColumn("embedding");
-      vectorIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.IVF_PQ);
-      vectorIndexRequest.setMetricType(CreateIndexRequest.MetricTypeEnum.COSINE);
-      namespace.createIndex(vectorIndexRequest);
+      vectorIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.IVF_PQ);
+      vectorIndexRequest.setMetricType(CreateTableIndexRequest.MetricTypeEnum.COSINE);
+      namespace.createTableIndex(vectorIndexRequest);
 
       // Create scalar index
       System.out.println("\n--- Creating scalar index ---");
-      CreateIndexRequest scalarIndexRequest = new CreateIndexRequest();
+      CreateTableIndexRequest scalarIndexRequest = new CreateTableIndexRequest();
       scalarIndexRequest.setName(tableName);
       scalarIndexRequest.setColumn("id");
-      scalarIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.BTREE);
-      namespace.createScalarIndex(scalarIndexRequest);
+      scalarIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.BTREE);
+      namespace.createTableScalarIndex(scalarIndexRequest);
 
       // Create FTS index
       System.out.println("\n--- Creating FTS index ---");
-      CreateIndexRequest ftsIndexRequest = new CreateIndexRequest();
+      CreateTableIndexRequest ftsIndexRequest = new CreateTableIndexRequest();
       ftsIndexRequest.setName(tableName);
       ftsIndexRequest.setColumn("name");
-      ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
-      namespace.createIndex(ftsIndexRequest);
+      ftsIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.FTS);
+      namespace.createTableIndex(ftsIndexRequest);
 
       // Wait for all indices
       System.out.println("\n--- Waiting for all indices to be created ---");
       Thread.sleep(5000); // Give some time for all indices to appear
 
       // List all indices
-      IndexListRequest listRequest = new IndexListRequest();
+      ListTableIndicesRequest listRequest = new ListTableIndicesRequest();
       listRequest.setName(tableName);
-      IndexListResponse listResponse = namespace.listIndices(listRequest);
+      ListTableIndicesResponse listResponse = namespace.listTableIndices(listRequest);
 
       assertNotNull(listResponse.getIndexes(), "Indexes list should not be null");
       assertTrue(listResponse.getIndexes().size() >= 3, "Should have at least 3 indices");
@@ -272,21 +276,22 @@ public class IndexTest extends BaseNamespaceTest {
 
       // Test COSINE metric
       System.out.println("\n--- Creating index with COSINE metric ---");
-      CreateIndexRequest cosineRequest = new CreateIndexRequest();
+      CreateTableIndexRequest cosineRequest = new CreateTableIndexRequest();
       cosineRequest.setName(tableName);
       cosineRequest.setColumn("embedding");
-      cosineRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.IVF_PQ);
-      cosineRequest.setMetricType(CreateIndexRequest.MetricTypeEnum.COSINE);
+      cosineRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.IVF_PQ);
+      cosineRequest.setMetricType(CreateTableIndexRequest.MetricTypeEnum.COSINE);
 
-      CreateIndexResponse cosineResponse = namespace.createIndex(cosineRequest);
+      CreateTableIndexResponse cosineResponse = namespace.createTableIndex(cosineRequest);
       assertNotNull(cosineResponse, "Create index response should not be null");
 
       // Wait and verify
       TestUtils.waitForIndexComplete(namespace, tableName, "embedding_idx", 30);
 
-      IndexStatsRequest statsRequest = new IndexStatsRequest();
+      DescribeTableIndexStatsRequest statsRequest = new DescribeTableIndexStatsRequest();
       statsRequest.setName(tableName);
-      IndexStatsResponse statsResponse = namespace.getIndexStats(statsRequest, "embedding_idx");
+      DescribeTableIndexStatsResponse statsResponse =
+          namespace.describeTableIndexStats(statsRequest, "embedding_idx");
 
       assertEquals("cosine", statsResponse.getDistanceType(), "Distance type should be cosine");
       System.out.println("✓ Created index with COSINE metric");

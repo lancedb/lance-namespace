@@ -75,8 +75,8 @@ public class TableUpdateDeleteTest extends BaseNamespaceTest {
       System.out.println("✓ Updated 2 rows, IDs should now be: 2, 13, 14");
 
       // Verify final state
-      QueryRequest queryRequest = TestUtils.createSimpleQuery(tableName, 3);
-      byte[] queryResult = namespace.queryTable(queryRequest);
+      QueryTableRequest QueryTableRequest = TestUtils.createSimpleQuery(tableName, 3);
+      byte[] queryResult = namespace.queryTable(QueryTableRequest);
       assertNotNull(queryResult, "Query result should not be null");
 
       List<Integer> idValues =
@@ -137,8 +137,8 @@ public class TableUpdateDeleteTest extends BaseNamespaceTest {
       System.out.println("✓ Deleted rows where id > 2, remaining count: " + finalCount);
 
       // Verify remaining row
-      QueryRequest queryRequest = TestUtils.createSimpleQuery(tableName, 1);
-      byte[] queryResult = namespace.queryTable(queryRequest);
+      QueryTableRequest QueryTableRequest = TestUtils.createSimpleQuery(tableName, 1);
+      byte[] queryResult = namespace.queryTable(QueryTableRequest);
       List<Integer> remainingIds =
           ArrowTestUtils.extractColumn(queryResult, allocator, "id", Integer.class);
       assertEquals(Arrays.asList(2), remainingIds, "Only ID 2 should remain");

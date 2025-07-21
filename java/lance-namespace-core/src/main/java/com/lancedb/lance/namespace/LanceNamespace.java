@@ -15,11 +15,11 @@ package com.lancedb.lance.namespace;
 
 import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.AlterTransactionResponse;
-import com.lancedb.lance.namespace.model.CountRowsRequest;
-import com.lancedb.lance.namespace.model.CreateIndexRequest;
-import com.lancedb.lance.namespace.model.CreateIndexResponse;
+import com.lancedb.lance.namespace.model.CountTableRowsRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
+import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
+import com.lancedb.lance.namespace.model.CreateTableIndexResponse;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
 import com.lancedb.lance.namespace.model.DeleteFromTableResponse;
@@ -27,30 +27,30 @@ import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
 import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
+import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
+import com.lancedb.lance.namespace.model.DescribeTableIndexStatsResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
+import com.lancedb.lance.namespace.model.DescribeTableRequestV2;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
+import com.lancedb.lance.namespace.model.DescribeTableResponseV2;
 import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
 import com.lancedb.lance.namespace.model.DescribeTransactionResponse;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
-import com.lancedb.lance.namespace.model.IndexListRequest;
-import com.lancedb.lance.namespace.model.IndexListResponse;
-import com.lancedb.lance.namespace.model.IndexStatsRequest;
-import com.lancedb.lance.namespace.model.IndexStatsResponse;
-import com.lancedb.lance.namespace.model.InsertTableResponse;
+import com.lancedb.lance.namespace.model.InsertIntoTableResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
-import com.lancedb.lance.namespace.model.MergeInsertTableRequest;
-import com.lancedb.lance.namespace.model.MergeInsertTableResponse;
+import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
+import com.lancedb.lance.namespace.model.ListTableIndicesResponse;
+import com.lancedb.lance.namespace.model.MergeInsertIntoTableRequest;
+import com.lancedb.lance.namespace.model.MergeInsertIntoTableResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
-import com.lancedb.lance.namespace.model.NamespaceExistsResponse;
-import com.lancedb.lance.namespace.model.QueryRequest;
+import com.lancedb.lance.namespace.model.QueryTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
-import com.lancedb.lance.namespace.model.TableExistsResponse;
 import com.lancedb.lance.namespace.model.UpdateTableRequest;
 import com.lancedb.lance.namespace.model.UpdateTableResponse;
 import com.lancedb.lance.namespace.util.DynConstructors;
@@ -82,7 +82,7 @@ public interface LanceNamespace {
   }
 
   /**
-   * Initialize namespace with custom name and conf properties.
+   * Initialize namespace with custom name and configuration properties.
    *
    * @param name a custom name for the namespace
    * @param properties namespace conf properties
@@ -97,18 +97,20 @@ public interface LanceNamespace {
 
   DropNamespaceResponse dropNamespace(DropNamespaceRequest request);
 
-  NamespaceExistsResponse namespaceExists(NamespaceExistsRequest request);
+  void namespaceExists(NamespaceExistsRequest request);
 
   DescribeTableResponse describeTable(DescribeTableRequest request);
 
-  Long countRows(CountRowsRequest request);
+  DescribeTableResponseV2 describeTableV2(DescribeTableRequestV2 request);
+
+  Long countTableRows(CountTableRowsRequest request);
 
   CreateTableResponse createTable(String tableName, byte[] arrowIpcData);
 
-  InsertTableResponse insertTable(String tableName, byte[] arrowIpcData, String mode);
+  InsertIntoTableResponse insertIntoTable(String tableName, byte[] arrowIpcData, String mode);
 
-  MergeInsertTableResponse mergeInsertTable(
-      MergeInsertTableRequest request,
+  MergeInsertIntoTableResponse mergeInsertIntoTable(
+      MergeInsertIntoTableRequest request,
       byte[] arrowIpcData,
       String on,
       Boolean whenMatchedUpdateAll,
@@ -118,19 +120,20 @@ public interface LanceNamespace {
 
   DeleteFromTableResponse deleteFromTable(DeleteFromTableRequest request);
 
-  byte[] queryTable(QueryRequest request);
+  byte[] queryTable(QueryTableRequest request);
 
-  CreateIndexResponse createIndex(CreateIndexRequest request);
+  CreateTableIndexResponse createTableIndex(CreateTableIndexRequest request);
 
-  CreateIndexResponse createScalarIndex(CreateIndexRequest request);
+  CreateTableIndexResponse createTableScalarIndex(CreateTableIndexRequest request);
 
-  IndexListResponse listIndices(IndexListRequest request);
+  ListTableIndicesResponse listTableIndices(ListTableIndicesRequest request);
 
-  IndexStatsResponse getIndexStats(IndexStatsRequest request, String indexName);
+  DescribeTableIndexStatsResponse describeTableIndexStats(
+      DescribeTableIndexStatsRequest request, String indexName);
 
   RegisterTableResponse registerTable(RegisterTableRequest request);
 
-  TableExistsResponse tableExists(TableExistsRequest request);
+  void tableExists(TableExistsRequest request);
 
   DropTableResponse dropTable(DropTableRequest request);
 

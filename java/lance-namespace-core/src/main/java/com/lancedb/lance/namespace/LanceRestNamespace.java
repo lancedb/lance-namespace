@@ -21,11 +21,11 @@ import com.lancedb.lance.namespace.client.apache.api.TransactionApi;
 import com.lancedb.lance.namespace.jackson.LanceNamespaceJacksonModule;
 import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.AlterTransactionResponse;
-import com.lancedb.lance.namespace.model.CountRowsRequest;
-import com.lancedb.lance.namespace.model.CreateIndexRequest;
-import com.lancedb.lance.namespace.model.CreateIndexResponse;
+import com.lancedb.lance.namespace.model.CountTableRowsRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
+import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
+import com.lancedb.lance.namespace.model.CreateTableIndexResponse;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
 import com.lancedb.lance.namespace.model.DeleteFromTableResponse;
@@ -33,30 +33,30 @@ import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
 import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
+import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
+import com.lancedb.lance.namespace.model.DescribeTableIndexStatsResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
+import com.lancedb.lance.namespace.model.DescribeTableRequestV2;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
+import com.lancedb.lance.namespace.model.DescribeTableResponseV2;
 import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
 import com.lancedb.lance.namespace.model.DescribeTransactionResponse;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
-import com.lancedb.lance.namespace.model.IndexListRequest;
-import com.lancedb.lance.namespace.model.IndexListResponse;
-import com.lancedb.lance.namespace.model.IndexStatsRequest;
-import com.lancedb.lance.namespace.model.IndexStatsResponse;
-import com.lancedb.lance.namespace.model.InsertTableResponse;
+import com.lancedb.lance.namespace.model.InsertIntoTableResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
-import com.lancedb.lance.namespace.model.MergeInsertTableRequest;
-import com.lancedb.lance.namespace.model.MergeInsertTableResponse;
+import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
+import com.lancedb.lance.namespace.model.ListTableIndicesResponse;
+import com.lancedb.lance.namespace.model.MergeInsertIntoTableRequest;
+import com.lancedb.lance.namespace.model.MergeInsertIntoTableResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
-import com.lancedb.lance.namespace.model.NamespaceExistsResponse;
-import com.lancedb.lance.namespace.model.QueryRequest;
+import com.lancedb.lance.namespace.model.QueryTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
-import com.lancedb.lance.namespace.model.TableExistsResponse;
 import com.lancedb.lance.namespace.model.UpdateTableRequest;
 import com.lancedb.lance.namespace.model.UpdateTableResponse;
 
@@ -147,9 +147,9 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public NamespaceExistsResponse namespaceExists(NamespaceExistsRequest request) {
+  public void namespaceExists(NamespaceExistsRequest request) {
     try {
-      return namespaceApi.namespaceExists(
+      namespaceApi.namespaceExists(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           request,
           config.delimiter(),
@@ -173,9 +173,22 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public Long countRows(CountRowsRequest request) {
+  public DescribeTableResponseV2 describeTableV2(DescribeTableRequestV2 request) {
     try {
-      return tableApi.countRows(
+      return tableApi.describeTableV2(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.delimiter(),
+          config.additionalHeaders());
+    } catch (ApiException e) {
+      throw new LanceNamespaceException(e);
+    }
+  }
+
+  @Override
+  public Long countTableRows(CountTableRowsRequest request) {
+    try {
+      return tableApi.countTableRows(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           request,
           config.delimiter(),
@@ -195,23 +208,24 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public InsertTableResponse insertTable(String tableName, byte[] arrowIpcData, String mode) {
+  public InsertIntoTableResponse insertIntoTable(
+      String tableName, byte[] arrowIpcData, String mode) {
     try {
-      return tableApi.insertTable(tableName, arrowIpcData, mode, config.additionalHeaders());
+      return tableApi.insertIntoTable(tableName, arrowIpcData, mode, config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
   }
 
   @Override
-  public MergeInsertTableResponse mergeInsertTable(
-      MergeInsertTableRequest request,
+  public MergeInsertIntoTableResponse mergeInsertIntoTable(
+      MergeInsertIntoTableRequest request,
       byte[] arrowIpcData,
       String on,
       Boolean whenMatchedUpdateAll,
       Boolean whenNotMatchedInsertAll) {
     try {
-      return tableApi.mergeInsertTable(
+      return tableApi.mergeInsertIntoTable(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           on,
           arrowIpcData,
@@ -248,7 +262,7 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public byte[] queryTable(QueryRequest request) {
+  public byte[] queryTable(QueryTableRequest request) {
     try {
       return tableApi.queryTable(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
@@ -260,9 +274,9 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public CreateIndexResponse createIndex(CreateIndexRequest request) {
+  public CreateTableIndexResponse createTableIndex(CreateTableIndexRequest request) {
     try {
-      return tableApi.createIndex(
+      return tableApi.createTableIndex(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           request,
           config.additionalHeaders());
@@ -272,9 +286,9 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public CreateIndexResponse createScalarIndex(CreateIndexRequest request) {
+  public CreateTableIndexResponse createTableScalarIndex(CreateTableIndexRequest request) {
     try {
-      return tableApi.createScalarIndex(
+      return tableApi.createTableScalarIndex(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           request,
           config.additionalHeaders());
@@ -284,9 +298,9 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public IndexListResponse listIndices(IndexListRequest request) {
+  public ListTableIndicesResponse listTableIndices(ListTableIndicesRequest request) {
     try {
-      return tableApi.listIndices(
+      return tableApi.listTableIndices(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           request,
           config.additionalHeaders());
@@ -296,9 +310,10 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public IndexStatsResponse getIndexStats(IndexStatsRequest request, String indexName) {
+  public DescribeTableIndexStatsResponse describeTableIndexStats(
+      DescribeTableIndexStatsRequest request, String indexName) {
     try {
-      return tableApi.getIndexStats(
+      return tableApi.describeTableIndexStats(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           indexName,
           request,
@@ -322,9 +337,9 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public TableExistsResponse tableExists(TableExistsRequest request) {
+  public void tableExists(TableExistsRequest request) {
     try {
-      return tableApi.tableExists(
+      tableApi.tableExists(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           request,
           config.delimiter(),

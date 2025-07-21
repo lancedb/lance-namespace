@@ -17,14 +17,13 @@ import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.server.springboot.api.TableApi;
 import com.lancedb.lance.namespace.server.springboot.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.DeregisterTableResponse;
-import com.lancedb.lance.namespace.server.springboot.model.DescribeTableRequest;
-import com.lancedb.lance.namespace.server.springboot.model.DescribeTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTableRequestV2;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTableResponseV2;
 import com.lancedb.lance.namespace.server.springboot.model.DropTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.DropTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.TableExistsRequest;
-import com.lancedb.lance.namespace.server.springboot.model.TableExistsResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -41,11 +40,12 @@ public class TableController implements TableApi {
   }
 
   @Override
-  public ResponseEntity<DescribeTableResponse> describeTable(
-      String id, DescribeTableRequest describeTableRequest, Optional<String> delimiter) {
+  public ResponseEntity<DescribeTableResponseV2> describeTableV2(
+      String id, DescribeTableRequestV2 describeTableRequestV2, Optional<String> delimiter) {
     return ResponseEntity.ok(
-        ClientToServerResponse.describeTable(
-            delegate.describeTable(ServerToClientRequest.describeTable(describeTableRequest))));
+        ClientToServerResponse.describeTableV2(
+            delegate.describeTableV2(
+                ServerToClientRequest.describeTableV2(describeTableRequestV2))));
   }
 
   @Override
@@ -57,11 +57,10 @@ public class TableController implements TableApi {
   }
 
   @Override
-  public ResponseEntity<TableExistsResponse> tableExists(
+  public ResponseEntity<Void> tableExists(
       String id, TableExistsRequest tableExistsRequest, Optional<String> delimiter) {
-    return ResponseEntity.ok(
-        ClientToServerResponse.tableExists(
-            delegate.tableExists(ServerToClientRequest.tableExists(tableExistsRequest))));
+    delegate.tableExists(ServerToClientRequest.tableExists(tableExistsRequest));
+    return ResponseEntity.ok().build();
   }
 
   @Override

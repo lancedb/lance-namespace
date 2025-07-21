@@ -13,7 +13,6 @@
  */
 package com.lancedb.lance.namespace.hive;
 
-import com.lancedb.lance.namespace.ClientPoolImpl;
 import com.lancedb.lance.namespace.util.DynMethods;
 
 import com.google.common.annotations.VisibleForTesting;

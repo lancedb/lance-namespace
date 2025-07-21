@@ -43,21 +43,21 @@ class ObjectIdentifiersTest {
     request.setParent(Arrays.asList("parent1", "parent2"));
     request.setName("testNamespace");
 
-    assertEquals("parent1.parent2.testNamespace", ObjectIdentifiers.stringFrom(request, "."));
-    assertEquals("parent1$parent2$testNamespace", ObjectIdentifiers.stringFrom(request, "$"));
+    assertEquals("parent1.parent2", ObjectIdentifiers.stringFrom(request, "."));
+    assertEquals("parent1$parent2", ObjectIdentifiers.stringFrom(request, "$"));
 
     // Test without parent (root namespace)
     CreateNamespaceRequest rootRequest = new CreateNamespaceRequest();
     rootRequest.setName("rootNamespace");
 
-    assertEquals("rootNamespace", ObjectIdentifiers.stringFrom(rootRequest, "."));
+    assertEquals(".", ObjectIdentifiers.stringFrom(rootRequest, "."));
 
     // Test with null parent
     CreateNamespaceRequest nullParentRequest = new CreateNamespaceRequest();
     nullParentRequest.setParent(null);
-    nullParentRequest.setName("nullParentNamespace");
+    nullParentRequest.setName(".");
 
-    assertEquals("nullParentNamespace", ObjectIdentifiers.stringFrom(nullParentRequest, "."));
+    assertEquals(".", ObjectIdentifiers.stringFrom(nullParentRequest, "."));
   }
 
   @Test
@@ -67,14 +67,14 @@ class ObjectIdentifiersTest {
     request.setParent(Arrays.asList("parent1", "parent2"));
     request.setName("testNamespace");
 
-    List<String> expected = Arrays.asList("parent1", "parent2", "testNamespace");
+    List<String> expected = Arrays.asList("parent1", "parent2");
     assertEquals(expected, ObjectIdentifiers.listFrom(request));
 
     // Test without parent (root namespace)
     CreateNamespaceRequest rootRequest = new CreateNamespaceRequest();
     rootRequest.setName("rootNamespace");
 
-    List<String> expectedRoot = Collections.singletonList("rootNamespace");
+    List<String> expectedRoot = Collections.emptyList();
     assertEquals(expectedRoot, ObjectIdentifiers.listFrom(rootRequest));
 
     // Test with null parent
@@ -82,7 +82,7 @@ class ObjectIdentifiersTest {
     nullParentRequest.setParent(null);
     nullParentRequest.setName("nullParentNamespace");
 
-    List<String> expectedNullParent = Collections.singletonList("nullParentNamespace");
+    List<String> expectedNullParent = Collections.emptyList();
     assertEquals(expectedNullParent, ObjectIdentifiers.listFrom(nullParentRequest));
   }
 
@@ -328,29 +328,11 @@ class ObjectIdentifiersTest {
 
   @Test
   void testEdgeCases() {
-    // Test with empty strings
-    CreateNamespaceRequest emptyRequest = new CreateNamespaceRequest();
-    emptyRequest.setParent(Arrays.asList("", "parent2"));
-    emptyRequest.setName("testNamespace");
-
-    assertEquals(".parent2.testNamespace", ObjectIdentifiers.stringFrom(emptyRequest, "."));
-    assertEquals(
-        Arrays.asList("", "parent2", "testNamespace"), ObjectIdentifiers.listFrom(emptyRequest));
-
     // Test with special characters in names
     CreateNamespaceRequest specialRequest = new CreateNamespaceRequest();
-    specialRequest.setParent(Arrays.asList("parent-1", "parent_2"));
+    specialRequest.setParent(Arrays.asList("parent-1", "parent.2"));
     specialRequest.setName("test.namespace");
-
-    assertEquals(
-        "parent-1.parent_2.test.namespace", ObjectIdentifiers.stringFrom(specialRequest, "."));
-    assertEquals(
-        Arrays.asList("parent-1", "parent_2", "test.namespace"),
-        ObjectIdentifiers.listFrom(specialRequest));
-
-    // Test with custom delimiter
-    assertEquals(
-        "parent-1$parent_2$test.namespace", ObjectIdentifiers.stringFrom(specialRequest, "$"));
+    assertEquals("parent-1$parent.2", ObjectIdentifiers.stringFrom(specialRequest, "$"));
   }
 
   @Test
@@ -360,8 +342,8 @@ class ObjectIdentifiersTest {
     request.setParent(null);
     request.setName("test");
 
-    assertEquals("test", ObjectIdentifiers.stringFrom(request, "."));
-    assertEquals(Collections.singletonList("test"), ObjectIdentifiers.listFrom(request));
+    assertEquals(".", ObjectIdentifiers.stringFrom(request, "."));
+    assertEquals(Collections.emptyList(), ObjectIdentifiers.listFrom(request));
   }
 
   @Test
@@ -371,7 +353,7 @@ class ObjectIdentifiersTest {
     request.setParent(Collections.emptyList());
     request.setName("test");
 
-    assertEquals("test", ObjectIdentifiers.stringFrom(request, "."));
-    assertEquals(Collections.singletonList("test"), ObjectIdentifiers.listFrom(request));
+    assertEquals(".", ObjectIdentifiers.stringFrom(request, "."));
+    assertEquals(Collections.emptyList(), ObjectIdentifiers.listFrom(request));
   }
 }

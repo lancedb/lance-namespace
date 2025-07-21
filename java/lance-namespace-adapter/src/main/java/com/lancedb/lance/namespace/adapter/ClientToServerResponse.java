@@ -17,7 +17,7 @@ import com.lancedb.lance.namespace.server.springboot.model.AlterTransactionRespo
 import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DescribeNamespaceResponse;
-import com.lancedb.lance.namespace.server.springboot.model.DescribeTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTableResponseV2;
 import com.lancedb.lance.namespace.server.springboot.model.DescribeTransactionResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropTableResponse;
@@ -71,9 +71,9 @@ public class ClientToServerResponse {
     return converted;
   }
 
-  public static DescribeTableResponse describeTable(
-      com.lancedb.lance.namespace.model.DescribeTableResponse response) {
-    DescribeTableResponse converted = new DescribeTableResponse();
+  public static DescribeTableResponseV2 describeTableV2(
+      com.lancedb.lance.namespace.model.DescribeTableResponseV2 response) {
+    DescribeTableResponseV2 converted = new DescribeTableResponseV2();
     converted.setNamespace(response.getNamespace());
     converted.setName(response.getName());
     converted.setProperties(response.getProperties());

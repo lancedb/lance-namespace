@@ -26,8 +26,9 @@ import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
+import com.lancedb.lance.namespace.model.ListTablesRequest;
+import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
-import com.lancedb.lance.namespace.model.NamespaceExistsResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -53,7 +54,8 @@ public class NamespaceApi extends BaseApi {
 
   /**
    * Create a new namespace Create a new namespace. A namespace can manage either a collection of
-   * child namespaces, or a collection of tables. There are three modes when trying to create a
+   * child namespaces, or a collection of tables. The namespace in the API route should be the
+   * parent namespace to create the new namespace. There are three modes when trying to create a
    * namespace, to differentiate the behavior when a namespace of the same name already exists: *
    * CREATE: the operation fails with 400. * EXIST_OK: the operation succeeds and the existing
    * namespace is kept. * OVERWRITE: the existing namespace is dropped and a new empty namespace
@@ -78,7 +80,8 @@ public class NamespaceApi extends BaseApi {
 
   /**
    * Create a new namespace Create a new namespace. A namespace can manage either a collection of
-   * child namespaces, or a collection of tables. There are three modes when trying to create a
+   * child namespaces, or a collection of tables. The namespace in the API route should be the
+   * parent namespace to create the new namespace. There are three modes when trying to create a
    * namespace, to differentiate the behavior when a namespace of the same name already exists: *
    * CREATE: the operation fails with 400. * EXIST_OK: the operation succeeds and the existing
    * namespace is kept. * OVERWRITE: the existing namespace is dropped and a new empty namespace
@@ -461,7 +464,107 @@ public class NamespaceApi extends BaseApi {
   }
 
   /**
-   * Check if a namespace exists Check if a namespace exists.
+   * List tables in a namespace List all child table names of the root namespace or a given parent
+   * namespace.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param listTablesRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @return ListTablesResponse
+   * @throws ApiException if fails to make API call
+   */
+  public ListTablesResponse listTables(
+      String id, ListTablesRequest listTablesRequest, String delimiter) throws ApiException {
+    return this.listTables(id, listTablesRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * List tables in a namespace List all child table names of the root namespace or a given parent
+   * namespace.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param listTablesRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return ListTablesResponse
+   * @throws ApiException if fails to make API call
+   */
+  public ListTablesResponse listTables(
+      String id,
+      ListTablesRequest listTablesRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = listTablesRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling listTables");
+    }
+
+    // verify the required parameter 'listTablesRequest' is set
+    if (listTablesRequest == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'listTablesRequest' when calling listTables");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/namespace/{id}/list_tables"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<ListTablesResponse> localVarReturnType =
+        new TypeReference<ListTablesResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Check if a namespace exists Check if a namespace exists. This API should behave exactly like
+   * the DescribeNamespace API, except it does not contain a body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -471,17 +574,17 @@ public class NamespaceApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
-   * @return NamespaceExistsResponse
    * @throws ApiException if fails to make API call
    */
-  public NamespaceExistsResponse namespaceExists(
+  public void namespaceExists(
       String id, NamespaceExistsRequest namespaceExistsRequest, String delimiter)
       throws ApiException {
-    return this.namespaceExists(id, namespaceExistsRequest, delimiter, Collections.emptyMap());
+    this.namespaceExists(id, namespaceExistsRequest, delimiter, Collections.emptyMap());
   }
 
   /**
-   * Check if a namespace exists Check if a namespace exists.
+   * Check if a namespace exists Check if a namespace exists. This API should behave exactly like
+   * the DescribeNamespace API, except it does not contain a body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -492,10 +595,9 @@ public class NamespaceApi extends BaseApi {
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
-   * @return NamespaceExistsResponse
    * @throws ApiException if fails to make API call
    */
-  public NamespaceExistsResponse namespaceExists(
+  public void namespaceExists(
       String id,
       NamespaceExistsRequest namespaceExistsRequest,
       String delimiter,
@@ -542,9 +644,7 @@ public class NamespaceApi extends BaseApi {
 
     String[] localVarAuthNames = new String[] {};
 
-    TypeReference<NamespaceExistsResponse> localVarReturnType =
-        new TypeReference<NamespaceExistsResponse>() {};
-    return apiClient.invokeAPI(
+    apiClient.invokeAPI(
         localVarPath,
         "POST",
         localVarQueryParams,
@@ -557,7 +657,7 @@ public class NamespaceApi extends BaseApi {
         localVarAccept,
         localVarContentType,
         localVarAuthNames,
-        localVarReturnType);
+        null);
   }
 
   @Override

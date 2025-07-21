@@ -47,11 +47,11 @@ public class QueryTest extends BaseNamespaceTest {
       namespace.createTable(tableName, tableData);
 
       // Create vector query
-      QueryRequest queryRequest = TestUtils.createVectorQuery(tableName, 5, 128);
+      QueryTableRequest QueryTableRequest = TestUtils.createVectorQuery(tableName, 5, 128);
 
-      queryRequest.setK(5);
+      QueryTableRequest.setK(5);
 
-      byte[] queryResult = namespace.queryTable(queryRequest);
+      byte[] queryResult = namespace.queryTable(QueryTableRequest);
       assertNotNull(queryResult, "Query result should not be null");
 
       // Verify results
@@ -96,7 +96,7 @@ public class QueryTest extends BaseNamespaceTest {
 
       // Test 1: Filter-only query (no vector)
       System.out.println("\n--- Test 1: Filter-only query ---");
-      QueryRequest filterQuery = new QueryRequest();
+      QueryTableRequest filterQuery = new QueryTableRequest();
       filterQuery.setName(tableName);
       filterQuery.setK(10);
       filterQuery.setFilter("id > 50");
@@ -111,7 +111,7 @@ public class QueryTest extends BaseNamespaceTest {
 
       // Test 2: Vector query with filter
       System.out.println("\n--- Test 2: Vector query with filter ---");
-      QueryRequest vectorFilterQuery = TestUtils.createVectorQuery(tableName, 5, 128);
+      QueryTableRequest vectorFilterQuery = TestUtils.createVectorQuery(tableName, 5, 128);
       vectorFilterQuery.setFilter("id < 20");
 
       byte[] vectorFilterResult = namespace.queryTable(vectorFilterQuery);
@@ -141,7 +141,7 @@ public class QueryTest extends BaseNamespaceTest {
 
       // Test prefilter = true
       System.out.println("\n--- Testing prefilter = true ---");
-      QueryRequest prefilterQuery = new QueryRequest();
+      QueryTableRequest prefilterQuery = new QueryTableRequest();
       prefilterQuery.setName(tableName);
       prefilterQuery.setK(5);
       prefilterQuery.setPrefilter(true);
@@ -159,7 +159,7 @@ public class QueryTest extends BaseNamespaceTest {
 
       // Test prefilter = false (postfilter)
       System.out.println("\n--- Testing prefilter = false (postfilter) ---");
-      QueryRequest postfilterQuery = TestUtils.createVectorQuery(tableName, 10, 128);
+      QueryTableRequest postfilterQuery = TestUtils.createVectorQuery(tableName, 10, 128);
       postfilterQuery.setPrefilter(false);
       postfilterQuery.setFilter("id % 2 = 0"); // Even IDs only
 
@@ -191,7 +191,7 @@ public class QueryTest extends BaseNamespaceTest {
 
       // Test fast_search = true
       System.out.println("\n--- Testing fast_search = true ---");
-      QueryRequest fastSearchQuery = TestUtils.createVectorQuery(tableName, 10, 128);
+      QueryTableRequest fastSearchQuery = TestUtils.createVectorQuery(tableName, 10, 128);
       fastSearchQuery.setFastSearch(true);
 
       byte[] fastSearchResult = namespace.queryTable(fastSearchQuery);
@@ -203,7 +203,7 @@ public class QueryTest extends BaseNamespaceTest {
 
       // Test fast_search = false
       System.out.println("\n--- Testing fast_search = false ---");
-      QueryRequest noFastSearchQuery = TestUtils.createVectorQuery(tableName, 10, 128);
+      QueryTableRequest noFastSearchQuery = TestUtils.createVectorQuery(tableName, 10, 128);
       noFastSearchQuery.setFastSearch(false);
 
       byte[] noFastSearchResult = namespace.queryTable(noFastSearchQuery);
@@ -231,7 +231,7 @@ public class QueryTest extends BaseNamespaceTest {
       namespace.createTable(tableName, tableData);
 
       // Query with specific columns
-      QueryRequest columnQuery = new QueryRequest();
+      QueryTableRequest columnQuery = new QueryTableRequest();
       columnQuery.setName(tableName);
       columnQuery.setK(5);
       columnQuery.setColumns(Arrays.asList("id", "name")); // Don't include embedding

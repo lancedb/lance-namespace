@@ -13,15 +13,15 @@
 ---
 openapi: 3.1.1
 info:
-  title: Lance REST Namespace Specification
+  title: Lance Namespace Specification
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.0.1
-  description: >
+  version: 1.0.0
+  description: |
     This OpenAPI specification is a part of the Lance namespace specification. It contains 2 parts:
     
-    The `components/schemas`, `components/responses`, `components/examples` sections define
+    The `components/schemas`, `components/responses`, `components/examples`, `tags` sections define
     the request and response shape for each operation in a Lance Namespace across all implementations.
     See https://lancedb.github.io/lance-namespace/spec/operations for more details.
     
@@ -50,6 +50,23 @@ servers:
       basePath:
         default: ""
 
+tags:
+  - name: Namespace
+    description: |
+      Operations that are related to a namespace
+  - name: Table
+    description: |
+      Operations that are related to a table
+  - name: Transaction
+    description: |
+      Operations that are related to a transaction
+  - name: Metadata
+    description: |
+      Operations that only interact with object metadata and should be computationally lightweight
+  - name: Data
+    description: |
+      Operations that interact with object data and might be computationally intensive
+
 security:
   - OAuth2: []
   - BearerAuth: []
@@ -60,13 +77,17 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
     post:
-      tags: [ Namespace ]
+      tags:
+        - Namespace
+        - Metadata
       summary: Create a new namespace
       operationId: CreateNamespace
-      description: >
+      description: |
         Create a new namespace.
         
         A namespace can manage either a collection of child namespaces, or a collection of tables.
+        
+        The namespace in the API route should be the parent namespace to create the new namespace.
 
         There are three modes when trying to create a namespace,
         to differentiate the behavior when a namespace of the same name already exists:
@@ -104,10 +125,12 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
     post:
-      tags: [ Namespace ]
+      tags:
+        - Namespace
+        - Metadata
       summary: List namespaces
       operationId: ListNamespaces
-      description: >
+      description: |
         List all child namespace names of the root namespace or a given parent namespace.
       requestBody:
         required: true
@@ -138,10 +161,12 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
     post:
-      tags: [ Namespace ]
+      tags:
+        - Namespace
+        - Metadata
       summary: Describe information about a namespace
       operationId: DescribeNamespace
-      description: >
+      description: |
         Return the detailed information for a given namespace
       requestBody:
         required: true
@@ -170,10 +195,12 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
     post:
-      tags: [ Namespace ]
+      tags:
+        - Namespace
+        - Metadata
       summary: Drop a namespace
       operationId: DropNamespace
-      description: >
+      description: |
         Drop a namespace. The namespace must be empty.
       requestBody:
         required: true
@@ -204,11 +231,15 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
     post:
-      tags: [ Namespace ]
+      tags:
+        - Namespace
+        - Metadata
       summary: Check if a namespace exists
       operationId: NamespaceExists
-      description: >
+      description: |
         Check if a namespace exists.
+        
+        This API should behave exactly like the DescribeNamespace API, except it does not contain a body.
       requestBody:
         required: true
         content:
@@ -217,7 +248,7 @@ paths:
               $ref: '#/components/schemas/NamespaceExistsRequest'
       responses:
         200:
-          $ref: '#/components/responses/NamespaceExistsResponse'
+          description: Success, no content
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -226,6 +257,43 @@ paths:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
           $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/namespace/{id}/list_tables:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Namespace
+        - Table
+        - Metadata
+      summary: List tables in a namespace
+      operationId: ListTables
+      description: |
+        List all child table names of the root namespace or a given parent namespace.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListTablesRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/ListTablesResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        406:
+          $ref: '#/components/responses/UnsupportedOperationErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
@@ -245,10 +313,12 @@ paths:
             - overwrite
           default: append
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Data
       summary: Insert records into a table
-      operationId: InsertTable
-      description: >
+      operationId: InsertIntoTable
+      description: |
         Insert new records into an existing table using Arrow IPC format.
         Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
       requestBody:
@@ -261,7 +331,7 @@ paths:
         required: true
       responses:
         200:
-          $ref: '#/components/responses/InsertTableResponse'
+          $ref: '#/components/responses/InsertIntoTableResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -299,10 +369,12 @@ paths:
           type: boolean
           default: false
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Data
       summary: Merge insert (upsert) records into a table
-      operationId: MergeInsertTable
-      description: >
+      operationId: MergeInsertIntoTable
+      description: |
         Performs a merge insert (upsert) operation on a table. This operation updates existing rows
         based on a matching column and inserts new rows that don't match.
         Returns the number of rows inserted and updated.
@@ -316,7 +388,7 @@ paths:
         required: true
       responses:
         200:
-          $ref: '#/components/responses/MergeInsertTableResponse'
+          $ref: '#/components/responses/MergeInsertIntoTableResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -334,10 +406,12 @@ paths:
     parameters:
       - $ref: '#/components/parameters/id'
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Data
       summary: Update rows in a table
       operationId: UpdateTable
-      description: >
+      description: |
         Update existing rows in a table using SQL expressions.
         Each update consists of a column name and an SQL expression that will be
         evaluated against the current row's value. Optionally, a predicate can be
@@ -351,11 +425,7 @@ paths:
         required: true
       responses:
         200:
-          description: Update successful
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UpdateTableResponse'
+          $ref: '#/components/responses/UpdateTableResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -373,10 +443,12 @@ paths:
     parameters:
       - $ref: '#/components/parameters/id'
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Data
       summary: Delete rows from a table
       operationId: DeleteFromTable
-      description: >
+      description: |
         Delete rows from a table based on a SQL predicate.
         Returns the number of rows that were deleted.
       requestBody:
@@ -388,11 +460,7 @@ paths:
         required: true
       responses:
         200:
-          description: Delete successful
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeleteFromTableResponse'
+          $ref: '#/components/responses/DeleteFromTableResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -410,10 +478,12 @@ paths:
     parameters:
       - $ref: '#/components/parameters/id'
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Data
       summary: Query a table
       operationId: QueryTable
-      description: >
+      description: |
         Query a table with vector search and optional filtering.
         Returns results in Arrow IPC stream format.
       requestBody:
@@ -421,16 +491,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueryRequest'
+              $ref: '#/components/schemas/QueryTableRequest'
         required: true
       responses:
         200:
-          description: Query results in Arrow IPC stream format
-          content:
-            application/vnd.apache.arrow.stream:
-              schema:
-                type: string
-                format: binary
+          $ref: '#/components/responses/QueryTableResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -448,26 +513,26 @@ paths:
     parameters:
       - $ref: '#/components/parameters/id'
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Metadata
       summary: Create an index on a table
-      operationId: CreateIndex
-      description: >
+      operationId: CreateTableIndex
+      description: |
         Create an index on a table column for faster search operations.
         Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes.
+        Index creation is handled asynchronously. 
+        Use the `listIndices` and `getIndexStats` operations to monitor index creation progress.
       requestBody:
         description: Index creation request
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateIndexRequest'
+              $ref: '#/components/schemas/CreateTableIndexRequest'
         required: true
       responses:
         200:
-          description: Index created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateIndexResponse'
+          $ref: '#/components/responses/CreateTableIndexResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -485,10 +550,12 @@ paths:
     parameters:
       - $ref: '#/components/parameters/id'
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Metadata
       summary: Create a scalar index on a table
-      operationId: CreateScalarIndex
-      description: >
+      operationId: CreateTableScalarIndex
+      description: |
         Create a scalar index on a table column for faster search operations.
         Supports scalar indexes (BTREE, BITMAP, LABEL_LIST).
       requestBody:
@@ -496,15 +563,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateIndexRequest'
+              $ref: '#/components/schemas/CreateTableIndexRequest'
         required: true
       responses:
         200:
-          description: Scalar index created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateIndexResponse'
+          $ref: '#/components/responses/CreateTableScalarIndexResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -522,10 +585,12 @@ paths:
     parameters:
       - $ref: '#/components/parameters/id'
     post:
-      tags: [ Table ]
-      summary: List indices on a table
-      operationId: ListIndices
-      description: >
+      tags:
+        - Table
+        - Metadata
+      summary: List indexes on a table
+      operationId: ListTableIndices
+      description: |
         List all indices created on a table. Returns information about each index
         including name, columns, status, and UUID.
       requestBody:
@@ -533,15 +598,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IndexListRequest'
+              $ref: '#/components/schemas/ListTableIndicesRequest'
         required: true
       responses:
         200:
-          description: List of indices on the table
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IndexListResponse'
+          $ref: '#/components/responses/ListTableIndicesResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -554,6 +615,7 @@ paths:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
+
   /v1/table/{id}/index/{index_name}/stats:
     parameters:
       - $ref: '#/components/parameters/id'
@@ -564,10 +626,12 @@ paths:
         schema:
           type: string
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Metadata
       summary: Get index statistics
-      operationId: GetIndexStats
-      description: >
+      operationId: DescribeTableIndexStats
+      description: |
         Get statistics for a specific index on a table. Returns information about
         the index type, distance type (for vector indices), and row counts.
       requestBody:
@@ -575,15 +639,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IndexStatsRequest'
+              $ref: '#/components/schemas/DescribeTableIndexStatsRequest'
         required: true
       responses:
         200:
-          description: Index statistics
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IndexStatsResponse'
+          $ref: '#/components/responses/DescribeTableIndexStatsResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -602,10 +662,12 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Metadata
       summary: Register a table to a namespace
       operationId: RegisterTable
-      description: >
+      description: |
         Register an existing table at a given storage location to a namespace.
       requestBody:
         required: true
@@ -633,49 +695,17 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
-  /v1/table/{id}/list:
-    parameters:
-      - $ref: '#/components/parameters/id'
-      - $ref: '#/components/parameters/delimiter'
-    post:
-      tags: [ Table ]
-      summary: List tables
-      operationId: ListTables
-      description: >
-        List all child table names of the root namespace or a given parent namespace.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ListTablesRequest'
-      responses:
-        200:
-          $ref: '#/components/responses/ListTablesResponse'
-        400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
-        401:
-          $ref: '#/components/responses/UnauthorizedErrorResponse'
-        403:
-          $ref: '#/components/responses/ForbiddenErrorResponse'
-        404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
-        406:
-          $ref: '#/components/responses/UnsupportedOperationErrorResponse'
-        503:
-          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
-        5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
-
   /v1/table/{id}/describe:
     parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Metadata
       summary: Describe a table from the namespace
       operationId: DescribeTable
-      description: >
+      description: |
         Get a table's detailed information under a specified namespace.
         Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
       requestBody:
@@ -705,10 +735,12 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Metadata
       summary: Describe a table from the namespace
       operationId: DescribeTableV2
-      description: >
+      description: |
         Get a table's detailed information under a specified namespace.
       requestBody:
         required: true
@@ -737,21 +769,22 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Metadata
       summary: Count rows in a table
-      operationId: CountRows
-      description: >
+      operationId: CountTableRows
+      description: |
         Count the number of rows in a table.
-        Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CountRowsRequest'
+              $ref: '#/components/schemas/CountTableRowsRequest'
       responses:
         200:
-          $ref: '#/components/responses/CountRowsResponse'
+          $ref: '#/components/responses/CountTableRowsResponse'
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -770,13 +803,15 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Metadata
       summary: Check if a table exists
       operationId: TableExists
-      description: >
+      description: |
         Check if a table exists.
         
-        This API should behave exactly like the GetTable API, except it does not contain a body.
+        This API should behave exactly like the DescribeTable API, except it does not contain a body.
       requestBody:
         required: true
         content:
@@ -785,7 +820,7 @@ paths:
               $ref: '#/components/schemas/TableExistsRequest'
       responses:
         200:
-          $ref: '#/components/responses/TableExistsResponse'
+          description: Success, no content
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -794,69 +829,6 @@ paths:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
           $ref: '#/components/responses/NotFoundErrorResponse'
-        503:
-          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
-        5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
-
-  /v1/transaction/{id}/describe:
-    parameters:
-      - $ref: '#/components/parameters/id'
-      - $ref: '#/components/parameters/delimiter'
-    post:
-      tags: [ Transaction ]
-      summary: Describe information about a transaction
-      operationId: DescribeTransaction
-      description: Return a detailed information for a given transaction
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DescribeTransactionRequest'
-      responses:
-        200:
-          $ref: '#/components/responses/DescribeTransactionResponse'
-        400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
-        401:
-          $ref: '#/components/responses/UnauthorizedErrorResponse'
-        403:
-          $ref: '#/components/responses/ForbiddenErrorResponse'
-        404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
-        503:
-          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
-        5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
-
-  /v1/transaction/{id}/alter:
-    parameters:
-      - $ref: '#/components/parameters/id'
-      - $ref: '#/components/parameters/delimiter'
-    post:
-      tags: [ Transaction ]
-      summary: Alter information of a transaction.
-      operationId: AlterTransaction
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AlterTransactionRequest'
-      responses:
-        200:
-          $ref: '#/components/responses/AlterTransactionResponse'
-        400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
-        401:
-          $ref: '#/components/responses/UnauthorizedErrorResponse'
-        403:
-          $ref: '#/components/responses/ForbiddenErrorResponse'
-        404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
-        409:
-          $ref: '#/components/responses/ConflictErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
@@ -867,10 +839,12 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Metadata
       summary: Drop a table from its namespace
       operationId: DropTable
-      description: >
+      description: |
         Drop a table from its namespace and delete its data.
         If the table and its data can be immediately deleted, return information of the deleted table.
         Otherwise, return a transaction ID that client can use to track deletion progress.
@@ -901,10 +875,12 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Metadata
       summary: Deregister a table from its namespace
       operationId: DeregisterTable
-      description: >
+      description: |
         Deregister a table from its namespace. The table content remains available in the storage.
       requestBody:
         required: true
@@ -932,10 +908,12 @@ paths:
     parameters:
       - $ref: '#/components/parameters/id'
     post:
-      tags: [ Table ]
+      tags:
+        - Table
+        - Metadata
       summary: Create a table with the given name
       operationId: CreateTable
-      description: >
+      description: |
         Create a new table in the namespace.
         Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
       requestBody:
@@ -962,11 +940,78 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/transaction/{id}/describe:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Transaction
+        - Metadata
+      summary: Describe information about a transaction
+      operationId: DescribeTransaction
+      description: Return a detailed information for a given transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DescribeTransactionRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/DescribeTransactionResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/transaction/{id}/alter:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Transaction
+        - Metadata
+      summary: Alter information of a transaction.
+      operationId: AlterTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlterTransactionRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/AlterTransactionResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        409:
+          $ref: '#/components/responses/ConflictErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
 components:
   parameters:
     id:
       name: id
-      description: >
+      description: |
         `string identifier` of an object in a namespace, following the Lance Namespace spec.
         When the value is equal to the delimiter, it represents the root namespace.
         For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.
@@ -976,7 +1021,7 @@ components:
         type: string
     delimiter:
       name: delimiter
-      description: >
+      description: |
         An optional delimiter of the `string identifier`, following the Lance Namespace spec.
         When not specified, the `.` delimiter must be used.
       in: query
@@ -1126,7 +1171,7 @@ components:
             type: string
         mode:
           type: string
-          description: >
+          description: |
             The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found.
             - FAIL (default): the server must return 400 indicating the namespace to drop does not exist.
             - SKIP: the server must return 204 indicating the drop operation has succeeded.
@@ -1135,7 +1180,7 @@ components:
             - FAIL
         behavior:
           type: string
-          description: >
+          description: |
             The behavior for dropping a namespace.
             - RESTRICT (default): the namespace should not contain any table or child namespace when drop is initiated.
                 If tables are found, the server should return error and not drop the namespace.
@@ -1158,7 +1203,7 @@ components:
           additionalProperties:
             type: string
         transactionId:
-          description: >
+          description: |
             If present, indicating the operation is long running and should be tracked using GetTransaction
           type: string
 
@@ -1284,20 +1329,12 @@ components:
     DescribeTableResponse:
       type: object
       required:
-        - name
-        - namespace
         - location
         - table
         - version
         - schema
         - stats
       properties:
-        name:
-          type: string
-        namespace:
-          type: array
-          items:
-            type: string
         location:
           type: string
         properties:
@@ -1348,7 +1385,7 @@ components:
           additionalProperties:
             type: string
 
-    CountRowsRequest:
+    CountTableRowsRequest:
       type: object
       properties:
         name:
@@ -1358,12 +1395,15 @@ components:
           items:
             type: string
 
-    CountRowsResponse:
+    CountTableRowsResponse:
       type: integer
       format: int64
-      description: Response containing the count of rows. Serializes transparently as just the number for backward compatibility.
+      description: |
+        Response containing the count of rows. 
+        Serializes transparently as just the number for backward compatibility.
       minimum: 0
-    InsertTableResponse:
+
+    InsertIntoTableResponse:
       type: object
       description: Response from inserting records into a table
       properties:
@@ -1373,7 +1413,7 @@ components:
           description: The version of the table after the insert
           minimum: 0
 
-    MergeInsertTableRequest:
+    MergeInsertIntoTableRequest:
       type: object
       required:
         - name
@@ -1388,7 +1428,7 @@ components:
             type: string
           description: The namespace identifier
 
-    MergeInsertTableResponse:
+    MergeInsertIntoTableResponse:
       type: object
       description: Response from merge insert operation
       properties:
@@ -1489,7 +1529,7 @@ components:
           description: The commit version associated with the operation
           minimum: 0
 
-    QueryRequest:
+    QueryTableRequest:
       type: object
       required:
         - name
@@ -1621,7 +1661,7 @@ components:
           - 'null'
           description: If true, return the row id as a column called `_rowid`
 
-    CreateIndexRequest:
+    CreateTableIndexRequest:
       type: object
       required:
         - name
@@ -1682,8 +1722,8 @@ components:
           type: boolean
           nullable: true
           description: Optional FTS parameter for ASCII folding
-        
-    CreateIndexResponse:
+
+    CreateTableIndexResponse:
       type: object
       required:
         - name
@@ -1707,7 +1747,7 @@ components:
             type: string
           description: Additional properties (usually empty)
 
-    IndexListRequest:
+    ListTableIndicesRequest:
       type: object
       required:
         - name
@@ -1728,7 +1768,7 @@ components:
           nullable: true
           description: Optional table version to list indexes from
 
-    IndexListResponse:
+    ListTableIndicesResponse:
       type: object
       required:
         - name
@@ -1781,7 +1821,7 @@ components:
           type: string
           description: Current status of the index
 
-    IndexStatsRequest:
+    DescribeTableIndexStatsRequest:
       type: object
       required:
         - name
@@ -1802,7 +1842,7 @@ components:
           nullable: true
           description: Optional table version to get stats for
 
-    IndexStatsResponse:
+    DescribeTableIndexStatsResponse:
       type: object
       properties:
         distance_type:
@@ -1981,7 +2021,7 @@ components:
 
     SetPropertyMode:
       type: string
-      description: >
+      description: |
         The behavior if the property key already exists.
         - OVERWRITE (default): overwrite the existing value with the provided value
         - FAIL: fail the entire operation
@@ -2001,7 +2041,7 @@ components:
 
     UnsetPropertyMode:
       type: string
-      description: >
+      description: |
         The behavior if the property key to unset does not exist.
         - SKIP (default): skip the property to unset
         - FAIL: fail the entire operation
@@ -2011,7 +2051,7 @@ components:
 
     AlterTransactionAction:
       type: object
-      description: >
+      description: |
         A single action that could be performed to alter a transaction.
         This action holds the model definition for all types of specific actions models,
         this is to minimize difference and compatibility issue across codegen in different languages.
@@ -2027,7 +2067,7 @@ components:
 
     AlterTransactionRequest:
       type: object
-      description: >
+      description: |
         Alter a transaction with a list of actions.
         The server should either succeed and apply all actions, or fail and apply no action.
       required:
@@ -2347,12 +2387,12 @@ components:
           schema:
             $ref: '#/components/schemas/DescribeTableResponseV2'
 
-    CountRowsResponse:
+    CountTableRowsResponse:
       description: Result of counting rows in a table
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CountRowsResponse'
+            $ref: '#/components/schemas/CountTableRowsResponse'
 
     CreateTableResponse:
       description: Table properties result when creating a table
@@ -2361,19 +2401,19 @@ components:
           schema:
             $ref: '#/components/schemas/CreateTableResponse'
 
-    InsertTableResponse:
+    InsertIntoTableResponse:
       description: Result of inserting records into a table
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/InsertTableResponse'
+            $ref: '#/components/schemas/InsertIntoTableResponse'
 
-    MergeInsertTableResponse:
+    MergeInsertIntoTableResponse:
       description: Result of merge insert operation
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/MergeInsertTableResponse'
+            $ref: '#/components/schemas/MergeInsertIntoTableResponse'
 
     RegisterTableResponse:
       description: Table properties result when registering a table
@@ -2419,6 +2459,56 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/DeregisterTableResponse'
+
+    UpdateTableResponse:
+      description: Update successful
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateTableResponse'
+
+    DeleteFromTableResponse:
+      description: Delete successful
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeleteFromTableResponse'
+
+    QueryTableResponse:
+      description: Query results in Arrow IPC stream format
+      content:
+        application/vnd.apache.arrow.stream:
+          schema:
+            type: string
+            format: binary
+
+    CreateTableIndexResponse:
+      description: Index created successfully
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateTableIndexResponse'
+
+    CreateTableScalarIndexResponse:
+      description: Scalar index created successfully
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateTableIndexResponse'
+
+    ListTableIndicesResponse:
+      description: List of indices on the table
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListTableIndicesResponse'
+
+    DescribeTableIndexStatsResponse:
+      description: Index statistics
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DescribeTableIndexStatsResponse'
 
     # Error Responses
 

@@ -24,7 +24,6 @@ import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceResponse
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.server.springboot.model.NamespaceExistsRequest;
-import com.lancedb.lance.namespace.server.springboot.model.NamespaceExistsResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -75,11 +74,9 @@ public class NamespaceController implements NamespaceApi {
   }
 
   @Override
-  public ResponseEntity<NamespaceExistsResponse> namespaceExists(
+  public ResponseEntity<Void> namespaceExists(
       String id, NamespaceExistsRequest namespaceExistsRequest, Optional<String> delimiter) {
-    return ResponseEntity.ok(
-        ClientToServerResponse.namespaceExists(
-            delegate.namespaceExists(
-                ServerToClientRequest.namespaceExists(namespaceExistsRequest))));
+    delegate.namespaceExists(ServerToClientRequest.namespaceExists(namespaceExistsRequest));
+    return ResponseEntity.ok().build();
   }
 }

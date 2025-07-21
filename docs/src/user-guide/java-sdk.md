@@ -1,6 +1,6 @@
-# Java SDK for LanceDB Cloud/Enterprise (Experimental)
+# Java SDK
 
-This guide explains how to use the Java SDK to interact with LanceDB Cloud and Enterprise deployments.
+This guide explains how to use the Java SDK to interact with a Lance namespace.
 
 ## Installation
 
@@ -18,52 +18,39 @@ The artifact is available on [Maven Central](https://central.sonatype.com/artifa
 
 ## Configuration and Initialization
 
-### LanceDB Cloud
+### Lance REST Catalog
 
-For LanceDB Cloud, use the simplified builder API:
+Use the following initialization approach:
 
 ```java
 import com.lancedb.lance.namespace.LanceRestNamespace;
 
-// If your DB url is db://example-db, then your database here is example-db
-LanceRestNamespace namespace = LanceRestNamespace.builder()
-    .apiKey("your_lancedb_cloud_api_key")
-    .database("your_database_name")
-    .build();
-```
-
-### LanceDB Enterprise
-
-For Enterprise deployments, use your VPC endpoint:
-
-```java
-LanceRestNamespace namespace = LanceRestNamespace.builder()
-    .apiKey("your_lancedb_enterprise_api_key")
-    .database("your-top-dir") // Your top level folder under your cloud bucket, e.g. s3://your-bucket/your-top-dir/
-    .hostOverride("http://<vpc_endpoint_dns_name>:80")
-    .build();
+ApiClient apiClient = new ApiClient();
+apiClient.setBasePath("https://my-lance-namespace.com");
+LanceRestNamespace namespace = new LanceRestNamespace(apiClient, config);
 ```
 
 ## Supported Endpoints
 
-The Java SDK supports the following endpoints. Full API documentation is available at [javadoc.io](https://javadoc.io/doc/com.lancedb/lance-namespace-core/latest/index.html).
+The Java SDK supports the following endpoints. Full API documentation is available at 
+[javadoc.io](https://javadoc.io/doc/com.lancedb/lance-namespace-core/latest/index.html).
 
 ### Table Operations
-- **countRows** - Count the number of rows in a table
+- **countTableRows** - Count the number of rows in a table
 - **createTable** - Create a new table with Arrow data
 - **describeTable** - Get table metadata and schema
 - **dropTable** - Delete a table
-- **insertTable** - Insert data into a table
+- **insertIntoTable** - Insert data into a table
 - **updateTable** - Update rows in a table
 - **deleteFromTable** - Delete rows from a table
-- **mergeInsertTable** - Upsert operation (update or insert)
+- **mergeInsertIntoTable** - Upsert operation (update or insert)
 - **queryTable** - Vector similarity search
 
 ### Index Operations
-- **createIndex** - Create a vector index
-- **createScalarIndex** - Create a scalar index
-- **listIndices** - List all indices on a table
-- **getIndexStats** - Get statistics for a specific index
+- **createTableIndex** - Create a vector index
+- **createTableScalarIndex** - Create a scalar index
+- **listTableIndices** - List all indices on a table
+- **describeTableIndexStats** - Get statistics for a specific index
 
 ## Request and Response Structure
 
@@ -79,7 +66,8 @@ For detailed request/response structures, refer to the [Apache Client documentat
 
 ### Creating a Table
 
-LanceDB uses Apache Arrow format for data exchange. Here's a simple example creating a table with ID and embedding columns:
+
+Lance Namespace uses Apache Arrow format for data exchange. Here's a simple example creating a table with ID and embedding columns:
 
 ```java
 import org.apache.arrow.memory.BufferAllocator;
@@ -164,7 +152,7 @@ Query results are returned in Arrow File format. Use `ArrowFileReader` to read t
 #### Vector Search
 
 ```java
-import com.lancedb.lance.namespace.model.QueryRequest;
+import com.lancedb.lance.namespace.model.QueryTableRequest;
 import org.apache.arrow.vector.ipc.ArrowFileReader;
 import org.apache.arrow.memory.ArrowBuf;
 import org.apache.arrow.vector.ipc.message.ArrowBlock;
@@ -174,25 +162,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 // Find similar items by vector
-QueryRequest queryRequest = new QueryRequest();
-queryRequest.setName("my_vectors");
-queryRequest.setK(10);  // Get top 10 results
+QueryTableRequest QueryTableRequest = new QueryTableRequest();
+QueryTableRequest.setName("my_vectors");
+QueryTableRequest.setK(10);  // Get top 10 results
 
 // Create query vector (in practice, this would be your actual query embedding)
 List<Float> queryVector = new ArrayList<>();
 for (int i = 0; i < 128; i++) {
     queryVector.add((float) Math.random());
 }
-queryRequest.setVector(queryVector);
+QueryTableRequest.setVector(queryVector);
 
 // REQUIRED: Specify columns to return
-queryRequest.setColumns(Arrays.asList("id", "embedding"));
+QueryTableRequest.setColumns(Arrays.asList("id", "embedding"));
 
 // Optional: Set fast_search for better performance (only searches indexed data)
-queryRequest.setFastSearch(true);
+QueryTableRequest.setFastSearch(true);
 
 // Execute query
-byte[] queryResult = namespace.queryTable(queryRequest);
+byte[] queryResult = namespace.queryTable(QueryTableRequest);
 
 // Parse results
 try (BufferAllocator allocator = new RootAllocator();
@@ -217,12 +205,12 @@ try (BufferAllocator allocator = new RootAllocator();
 Always use `fast_search=true` if possible. When enabled, the query will only search indexed data, providing better performance and avoiding potential data egress costs. When disabled, it will scan the entire unindexed portion of the column from storage, which can be slow and expensive.
 
 ```java
-QueryRequest queryRequest = new QueryRequest();
-queryRequest.setName("my_table");
-queryRequest.setVector(queryVector);
-queryRequest.setK(10);
+QueryTableRequest QueryTableRequest = new QueryTableRequest();
+QueryTableRequest.setName("my_table");
+QueryTableRequest.setVector(queryVector);
+QueryTableRequest.setK(10);
 
-queryRequest.setFastSearch(true); // Recommended for better performance
+QueryTableRequest.setFastSearch(true); // Recommended for better performance
 ```
 
 ##### SQL Filters
@@ -231,7 +219,7 @@ You can use SQL filters with or without vector search:
 
 ```java
 // Example 1: Filter-only query (no vector search)
-QueryRequest filterQuery = new QueryRequest();
+QueryTableRequest filterQuery = new QueryTableRequest();
 filterQuery.setName("my_table");
 filterQuery.setK(20);  // Maximum results to return
 filterQuery.setFilter("id >= 100 AND id < 200");
@@ -240,7 +228,7 @@ filterQuery.setColumns(Arrays.asList("id")); // Required!
 byte[] filterResult = namespace.queryTable(filterQuery);
 
 // Example 2: Vector search with filter
-QueryRequest vectorWithFilter = new QueryRequest();
+QueryTableRequest vectorWithFilter = new QueryTableRequest();
 vectorWithFilter.setName("my_vectors");
 vectorWithFilter.setK(5);
 
@@ -258,7 +246,7 @@ vectorWithFilter.setColumns(Arrays.asList("id"));
 byte[] filteredVectorResult = namespace.queryTable(vectorWithFilter);
 
 // Example 3: Complex filter expressions
-QueryRequest complexFilter = new QueryRequest();
+QueryTableRequest complexFilter = new QueryTableRequest();
 complexFilter.setName("my_table");
 complexFilter.setK(100);
 complexFilter.setFilter("id >= 10 AND id <= 90");
@@ -279,7 +267,7 @@ When combining vector search with filters, use `prefilter` to control the order 
 
 ```java
 // Prefiltering - filter first, then search vectors
-QueryRequest prefilterQuery = new QueryRequest();
+QueryTableRequest prefilterQuery = new QueryTableRequest();
 prefilterQuery.setName("my_table");
 prefilterQuery.setVector(queryVector);
 prefilterQuery.setK(10);
@@ -288,7 +276,7 @@ prefilterQuery.setPrefilter(true);
 prefilterQuery.setFastSearch(true);
 
 // Postfiltering - search vectors first, then filter (default)
-QueryRequest postfilterQuery = new QueryRequest();
+QueryTableRequest postfilterQuery = new QueryTableRequest();
 postfilterQuery.setName("my_table");
 postfilterQuery.setVector(queryVector);
 postfilterQuery.setK(10);
@@ -299,34 +287,34 @@ postfilterQuery.setFastSearch(true);
 
 #### Full-Text Search
 
-LanceDB supports full-text search on string columns. First create an FTS index, then use text queries:
+Lance supports full-text search on string columns. First create an FTS index, then use text queries:
 
 ```java
 // Step 1: Create table with text content (add text columns to your schema)
 
 // Step 2: Create FTS index
-CreateIndexRequest ftsIndexRequest = new CreateIndexRequest();
+CreateTableIndexRequest ftsIndexRequest = new CreateTableIndexRequest();
 ftsIndexRequest.setName("documents");
 ftsIndexRequest.setColumn("content");
 ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
 // Set withPosition=true if you plan to use PhraseQuery
 ftsIndexRequest.setWithPosition(true);
 
-CreateIndexResponse ftsResponse = namespace.createIndex(ftsIndexRequest);
+CreateTableIndexResponse ftsResponse = namespace.createIndex(ftsIndexRequest);
 // Wait for index to be built
 boolean indexReady = waitForIndexComplete("documents", "content_idx", 30);
 
 // Step 3: Perform full-text search
 import com.lancedb.lance.namespace.model.StringFtsQuery;
-import com.lancedb.lance.namespace.model.QueryRequestFullTextQuery;
+import com.lancedb.lance.namespace.model.QueryTableRequestFullTextQuery;
 
 // Example 1: Simple keyword search
-QueryRequest textQuery = new QueryRequest();
+QueryTableRequest textQuery = new QueryTableRequest();
 textQuery.setName("documents");
 textQuery.setK(5);
 textQuery.setColumns(Arrays.asList("id", "title", "content")); // Required!
 
-QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
+QueryTableRequestFullTextQuery fullTextQuery = new QueryTableRequestFullTextQuery();
 StringFtsQuery fts = new StringFtsQuery();
 fts.setQuery("machine learning");  // Search for documents about machine learning
 fullTextQuery.setStringQuery(fts);
@@ -342,7 +330,7 @@ columnSearch.setColumns(Arrays.asList("content")); // Only search in content col
 fullTextQuery.setStringQuery(columnSearch);
 
 // Example 3: Full-text search with filter
-QueryRequest ftsWithFilter = new QueryRequest();
+QueryTableRequest ftsWithFilter = new QueryTableRequest();
 ftsWithFilter.setName("documents");
 ftsWithFilter.setK(10);
 ftsWithFilter.setFilter("id <= 3");  // Only search in first 3 documents
@@ -350,7 +338,7 @@ ftsWithFilter.setColumns(Arrays.asList("id", "title", "content"));
 
 StringFtsQuery filteredFts = new StringFtsQuery();
 filteredFts.setQuery("learning");
-QueryRequestFullTextQuery filteredFullText = new QueryRequestFullTextQuery();
+QueryTableRequestFullTextQuery filteredFullText = new QueryTableRequestFullTextQuery();
 filteredFullText.setStringQuery(filteredFts);
 ftsWithFilter.setFullTextQuery(filteredFullText);
 
@@ -366,13 +354,13 @@ The Java SDK supports complex structured full-text queries including boolean que
 import com.lancedb.lance.namespace.model.*;
 
 // Example 1: Boolean Query - Complex search logic
-QueryRequest booleanSearchQuery = new QueryRequest();
+QueryTableRequest booleanSearchQuery = new QueryTableRequest();
 booleanSearchQuery.setName("documents");
 booleanSearchQuery.setK(10);
 booleanSearchQuery.setColumns(Arrays.asList("id", "title", "content"));
 
 // Create structured query wrapper
-QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
+QueryTableRequestFullTextQuery fullTextQuery = new QueryTableRequestFullTextQuery();
 StructuredFtsQuery structured = new StructuredFtsQuery();
 FtsQuery ftsQuery = new FtsQuery();
 
@@ -420,13 +408,13 @@ byte[] boolResults = namespace.queryTable(booleanSearchQuery);
 
 // Example 2: Phrase Query - Find exact phrases
 // IMPORTANT: PhraseQuery requires the FTS index to be created with withPosition=true
-QueryRequest phraseSearchQuery = new QueryRequest();
+QueryTableRequest phraseSearchQuery = new QueryTableRequest();
 phraseSearchQuery.setName("documents");
 phraseSearchQuery.setK(5);
 phraseSearchQuery.setColumns(Arrays.asList("id", "title", "content"));
 
 // Create phrase query
-QueryRequestFullTextQuery phraseFullText = new QueryRequestFullTextQuery();
+QueryTableRequestFullTextQuery phraseFullText = new QueryTableRequestFullTextQuery();
 StructuredFtsQuery phraseStructured = new StructuredFtsQuery();
 FtsQuery phraseFtsQuery = new FtsQuery();
 
@@ -460,7 +448,7 @@ byte[] phraseResults = namespace.queryTable(phraseSearchQuery);
 
 ### Creating a Vector Index
 
-LanceDB automatically optimizes index parameters based on best practices for your workload.
+Lance automatically optimizes index parameters based on best practices for your workload.
 
 **Best Practices:**
 - **Index Type**: Use `IVF_PQ` for production workloads (default)
@@ -470,20 +458,17 @@ LanceDB automatically optimizes index parameters based on best practices for you
 - Other parameters are automatically tuned by the system
 
 ```java
-import com.lancedb.lance.namespace.model.CreateIndexRequest;
+import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
 
 // Create vector index
-CreateIndexRequest indexRequest = new CreateIndexRequest();
+CreateTableIndexRequest indexRequest = new CreateTableIndexRequest();
 indexRequest.setName("my_table");
 indexRequest.setColumn("embedding");
-indexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.IVF_PQ);
-indexRequest.setMetricType(CreateIndexRequest.MetricTypeEnum.L2);
+indexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.IVF_PQ);
+indexRequest.setMetricType(CreateTableIndexRequest.MetricTypeEnum.L2);
 
-CreateIndexResponse response = namespace.createIndex(indexRequest);
+CreateTableIndexResponse response = namespace.createTableIndex(indexRequest);
 ```
-
-!!! note "Asynchronous Index Creation"
-    LanceDB Cloud/Enterprise handles index creation asynchronously. Use the `listIndices` and `getIndexStats` operations to monitor index creation progress.
 
 ### Creating a Scalar Index
 
@@ -501,32 +486,32 @@ Scalar indexes improve query performance when using filters.
     - Reduce timestamp precision (e.g., second → day)
 
 ```java
-import com.lancedb.lance.namespace.model.CreateIndexRequest;
+import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
 
 // Create scalar index
-CreateIndexRequest scalarIndexRequest = new CreateIndexRequest();
+CreateTableIndexRequest scalarIndexRequest = new CreateTableIndexRequest();
 scalarIndexRequest.setName("my_table");
 scalarIndexRequest.setColumn("name");
-scalarIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.BITMAP);
+scalarIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.BITMAP);
 
-CreateIndexResponse scalarResponse = namespace.createScalarIndex(scalarIndexRequest);
+CreateTableIndexResponse scalarResponse = namespace.createTableScalarIndex(scalarIndexRequest);
 ```
 
 !!! note "Asynchronous Index Creation"
-    Similar to vector index creation, scalar index creation is also asynchronous. Use `listIndices` and `getIndexStats` to monitor index creation progress.
+    Similar to vector index creation, scalar index creation is also asynchronous. Use `listTableIndices` and `describeTableIndexStats` to monitor index creation progress.
 
 ### List Indices
 
 List all indices on a table:
 
 ```java
-import com.lancedb.lance.namespace.model.IndexListRequest;
-import com.lancedb.lance.namespace.model.IndexListResponse;
+import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
+import com.lancedb.lance.namespace.model.ListTableIndicesResponse;
 
-IndexListRequest listRequest = new IndexListRequest();
+ListTableIndicesRequest listRequest = new ListTableIndicesRequest();
 listRequest.setName("my_table");
 
-IndexListResponse listResponse = namespace.listIndices(listRequest);
+ListTableIndicesResponse listResponse = namespace.listTableIndices(listRequest);
 if (listResponse.getIndexes() != null) {
     for (IndexListItemResponse index : listResponse.getIndexes()) {
         System.out.println("Index: " + index.getIndexName());
@@ -538,19 +523,16 @@ if (listResponse.getIndexes() != null) {
 
 ### Get Index Statistics
 
-!!! info "Auto-reindexing"
-    LanceDB Cloud/Enterprise automatically reindexes columns when table data is modified. Use `getNumUnindexedRows()` to check whether the column is fully indexed.
-
 Get detailed statistics for a specific index:
 ```java
-import com.lancedb.lance.namespace.model.IndexStatsRequest;
-import com.lancedb.lance.namespace.model.IndexStatsResponse;
+import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
+import com.lancedb.lance.namespace.model.DescribeTableIndexStatsResponse;
 
-IndexStatsRequest statsRequest = new IndexStatsRequest();
+DescribeTableIndexStatsRequest statsRequest = new DescribeTableIndexStatsRequest();
 statsRequest.setName("my_table");
 
 // Get stats for specific index (index name format: <column_name>_idx)
-IndexStatsResponse stats = namespace.getIndexStats(statsRequest, "embedding_idx");
+DescribeTableIndexStatsResponse stats = namespace.describeTableIndexStats(statsRequest, "embedding_idx");
 
 System.out.println("Index Type: " + stats.getIndexType());
 System.out.println("Distance Type: " + stats.getDistanceType());
@@ -564,7 +546,7 @@ System.out.println("Index Metadata: " + stats.getIndexMetadata());
 !!! important "Wait for Index Completion"
     Index creation is asynchronous. Always wait for indexes to be fully built before running queries to ensure optimal performance and avoid scanning unindexed data.
 
-Here's a helper method that combines `listIndices` and `getIndexStats` to monitor index creation:
+Here's a helper method that combines `listTableIndices` and `describeTableIndexStats` to monitor index creation:
 
 ```java
 import java.util.Optional;
@@ -579,20 +561,20 @@ import java.util.Optional;
 private boolean waitForIndexComplete(String tableName, String indexName, int maxSeconds) 
     throws InterruptedException {
     
-    IndexListRequest listRequest = new IndexListRequest();
+    ListTableIndicesRequest listRequest = new ListTableIndicesRequest();
     listRequest.setName(tableName);
 
     for (int i = 0; i < maxSeconds; i++) {
-        IndexListResponse listResponse = namespace.listIndices(listRequest);
+        ListTableIndicesResponse listResponse = namespace.listTableIndices(listRequest);
         if (listResponse.getIndexes() != null) {
             Optional<IndexListItemResponse> indexOpt = listResponse.getIndexes().stream()
                 .filter(idx -> idx.getIndexName().equals(indexName))
                 .findFirst();
             
             if (indexOpt.isPresent()) {
-                IndexStatsRequest statsRequest = new IndexStatsRequest();
+                DescribeTableIndexStatsRequest statsRequest = new DescribeTableIndexStatsRequest();
                 statsRequest.setName(tableName);
-                IndexStatsResponse stats = namespace.getIndexStats(statsRequest, indexName);
+                DescribeTableIndexStatsResponse stats = namespace.describeTableIndexStats(statsRequest, indexName);
                 if (stats != null && stats.getNumUnindexedRows() != null 
                     && stats.getNumUnindexedRows() == 0) {
                     return true;
@@ -605,7 +587,7 @@ private boolean waitForIndexComplete(String tableName, String indexName, int max
 }
 
 // Usage example
-CreateIndexResponse response = namespace.createIndex(indexRequest);
+CreateTableIndexResponse response = namespace.createTableIndex(indexRequest);
 boolean indexReady = waitForIndexComplete("my_table", "embedding_idx", 60);
 if (!indexReady) {
     System.out.println("Warning: Index creation timed out");
@@ -686,17 +668,17 @@ System.out.println("Row count: " + tableInfo.getNumRows());
 ### Merge Insert (Upsert)
 
 ```java
-import com.lancedb.lance.namespace.model.MergeInsertTableRequest;
+import com.lancedb.lance.namespace.model.MergeInsertIntoTableRequest;
 
 // Prepare data (similar to create table)
 byte[] arrowIpcData = prepareArrowData();
 
 // Create merge request
-MergeInsertTableRequest mergeRequest = new MergeInsertTableRequest();
+MergeInsertIntoTableRequest mergeRequest = new MergeInsertIntoTableRequest();
 mergeRequest.setName("my_table");
 
 // Perform merge insert
-MergeInsertTableResponse response = namespace.mergeInsertTable(
+MergeInsertIntoTableResponse response = namespace.mergeInsertIntoTable(
     mergeRequest,
     arrowIpcData,
     "id",    // match on id column
@@ -715,6 +697,5 @@ Need higher level of search orchestration to provide user level hybrid search op
 
 ## Additional Resources
 
-- [LanceDB Documentation](https://lancedb.github.io/lancedb/)
 - [API Javadoc](https://javadoc.io/doc/com.lancedb/lance-namespace-core/latest/index.html)
 - [Apache Arrow Java Documentation](https://arrow.apache.org/docs/java/)

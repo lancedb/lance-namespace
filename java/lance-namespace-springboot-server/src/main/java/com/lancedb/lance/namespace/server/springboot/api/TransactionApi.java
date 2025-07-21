@@ -43,7 +43,7 @@ import java.util.Optional;
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 @Validated
-@Tag(name = "Transaction", description = "the Transaction API")
+@Tag(name = "Transaction", description = "Operations that are related to a transaction ")
 public interface TransactionApi {
 
   default Optional<NativeWebRequest> getRequest() {
@@ -78,7 +78,7 @@ public interface TransactionApi {
   @Operation(
       operationId = "alterTransaction",
       summary = "Alter information of a transaction.",
-      tags = {"Transaction"},
+      tags = {"Transaction", "Metadata"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -260,7 +260,7 @@ public interface TransactionApi {
       operationId = "describeTransaction",
       summary = "Describe information about a transaction",
       description = "Return a detailed information for a given transaction",
-      tags = {"Transaction"},
+      tags = {"Transaction", "Metadata"},
       responses = {
         @ApiResponse(
             responseCode = "200",

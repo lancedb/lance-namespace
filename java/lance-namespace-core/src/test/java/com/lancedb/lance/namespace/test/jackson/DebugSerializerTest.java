@@ -15,8 +15,8 @@ package com.lancedb.lance.namespace.test.jackson;
 
 import com.lancedb.lance.namespace.client.apache.ApiClient;
 import com.lancedb.lance.namespace.jackson.LanceNamespaceJacksonModule;
-import com.lancedb.lance.namespace.model.QueryRequest;
-import com.lancedb.lance.namespace.model.QueryRequestFullTextQuery;
+import com.lancedb.lance.namespace.model.QueryTableRequest;
+import com.lancedb.lance.namespace.model.QueryTableRequestFullTextQuery;
 import com.lancedb.lance.namespace.model.StringFtsQuery;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,7 +29,7 @@ public class DebugSerializerTest {
   @Test
   public void debugFullTextQuerySerialization() throws Exception {
     // Create the same structure as in the failing test
-    QueryRequest ftsPrefilterQuery = new QueryRequest();
+    QueryTableRequest ftsPrefilterQuery = new QueryTableRequest();
     ftsPrefilterQuery.setName("test_table");
     ftsPrefilterQuery.setNamespace(Arrays.asList("test"));
     ftsPrefilterQuery.setK(20);
@@ -39,7 +39,7 @@ public class DebugSerializerTest {
 
     StringFtsQuery fts = new StringFtsQuery();
     fts.setQuery("document");
-    QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
+    QueryTableRequestFullTextQuery fullTextQuery = new QueryTableRequestFullTextQuery();
     fullTextQuery.setStringQuery(fts);
     ftsPrefilterQuery.setFullTextQuery(fullTextQuery);
 

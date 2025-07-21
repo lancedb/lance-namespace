@@ -36,11 +36,11 @@ public class TestUtils {
   public static boolean waitForIndex(
       LanceRestNamespace namespace, String tableName, String indexName, int maxSeconds)
       throws InterruptedException {
-    IndexListRequest listRequest = new IndexListRequest();
+    ListTableIndicesRequest listRequest = new ListTableIndicesRequest();
     listRequest.setName(tableName);
 
     for (int i = 0; i < maxSeconds; i++) {
-      IndexListResponse listResponse = namespace.listIndices(listRequest);
+      ListTableIndicesResponse listResponse = namespace.listTableIndices(listRequest);
       if (listResponse.getIndexes() != null
           && listResponse.getIndexes().stream()
               .anyMatch(idx -> idx.getIndexName().equals(indexName))) {
@@ -55,11 +55,11 @@ public class TestUtils {
   public static boolean waitForIndexComplete(
       LanceRestNamespace namespace, String tableName, String indexName, int maxSeconds)
       throws InterruptedException {
-    IndexListRequest listRequest = new IndexListRequest();
+    ListTableIndicesRequest listRequest = new ListTableIndicesRequest();
     listRequest.setName(tableName);
 
     for (int i = 0; i < maxSeconds; i++) {
-      IndexListResponse listResponse = namespace.listIndices(listRequest);
+      ListTableIndicesResponse listResponse = namespace.listTableIndices(listRequest);
       if (listResponse.getIndexes() != null) {
         Optional<IndexListItemResponse> indexOpt =
             listResponse.getIndexes().stream()
@@ -68,10 +68,11 @@ public class TestUtils {
 
         if (indexOpt.isPresent()) {
           // Index exists, now check if it's fully built
-          IndexStatsRequest statsRequest = new IndexStatsRequest();
+          DescribeTableIndexStatsRequest statsRequest = new DescribeTableIndexStatsRequest();
           statsRequest.setName(tableName);
 
-          IndexStatsResponse stats = namespace.getIndexStats(statsRequest, indexName);
+          DescribeTableIndexStatsResponse stats =
+              namespace.describeTableIndexStats(statsRequest, indexName);
           if (stats != null
               && stats.getNumUnindexedRows() != null
               && stats.getNumUnindexedRows() == 0) {
@@ -101,14 +102,14 @@ public class TestUtils {
 
   /** Count rows in a table. */
   public static long countRows(LanceRestNamespace namespace, String tableName) {
-    CountRowsRequest countRequest = new CountRowsRequest();
+    CountTableRowsRequest countRequest = new CountTableRowsRequest();
     countRequest.setName(tableName);
-    return namespace.countRows(countRequest);
+    return namespace.countTableRows(countRequest);
   }
 
   /** Create a simple query request for testing. */
-  public static QueryRequest createSimpleQuery(String tableName, int k) {
-    QueryRequest query = new QueryRequest();
+  public static QueryTableRequest createSimpleQuery(String tableName, int k) {
+    QueryTableRequest query = new QueryTableRequest();
     query.setName(tableName);
     query.setK(k);
     // Add default columns to avoid "no columns selected" error
@@ -117,14 +118,14 @@ public class TestUtils {
   }
 
   /** Create a vector query request with a specific target value. */
-  public static QueryRequest createVectorQuery(String tableName, int k, int dimensions) {
+  public static QueryTableRequest createVectorQuery(String tableName, int k, int dimensions) {
     return createVectorQuery(tableName, k, dimensions, 10.0f);
   }
 
   /** Create a vector query request with a specific target value for all dimensions. */
-  public static QueryRequest createVectorQuery(
+  public static QueryTableRequest createVectorQuery(
       String tableName, int k, int dimensions, float targetValue) {
-    QueryRequest query = new QueryRequest();
+    QueryTableRequest query = new QueryTableRequest();
     query.setName(tableName);
     query.setK(k);
 
@@ -134,7 +135,7 @@ public class TestUtils {
     for (int i = 0; i < dimensions; i++) {
       vector.add(targetValue);
     }
-    QueryRequestVector queryVector = new QueryRequestVector();
+    QueryTableRequestVector queryVector = new QueryTableRequestVector();
     queryVector.setSingleVector(vector);
     query.setVector(queryVector);
 

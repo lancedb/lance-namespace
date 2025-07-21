@@ -8,6 +8,7 @@ All URIs are relative to *http://localhost:2333*
 | [**describeNamespace**](NamespaceApi.md#describeNamespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace |
 | [**dropNamespace**](NamespaceApi.md#dropNamespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace |
 | [**listNamespaces**](NamespaceApi.md#listNamespaces) | **POST** /v1/namespace/{id}/list | List namespaces |
+| [**listTables**](NamespaceApi.md#listTables) | **POST** /v1/namespace/{id}/list_tables | List tables in a namespace |
 | [**namespaceExists**](NamespaceApi.md#namespaceExists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists |
 
 
@@ -18,7 +19,7 @@ All URIs are relative to *http://localhost:2333*
 
 Create a new namespace
 
-Create a new namespace. A namespace can manage either a collection of child namespaces, or a collection of tables. There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
+Create a new namespace.  A namespace can manage either a collection of child namespaces, or a collection of tables.  The namespace in the API route should be the parent namespace to create the new namespace.  There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
 
 ### Example
 
@@ -320,13 +321,90 @@ No authorization required
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
 
+## listTables
+
+> ListTablesResponse listTables(id, listTablesRequest, delimiter)
+
+List tables in a namespace
+
+List all child table names of the root namespace or a given parent namespace. 
+
+### Example
+
+```java
+// Import classes:
+import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.client.apache.ApiException;
+import com.lancedb.lance.namespace.client.apache.Configuration;
+import com.lancedb.lance.namespace.client.apache.models.*;
+import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
+
+public class Example {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        defaultClient.setBasePath("http://localhost:2333");
+
+        NamespaceApi apiInstance = new NamespaceApi(defaultClient);
+        String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
+        ListTablesRequest listTablesRequest = new ListTablesRequest(); // ListTablesRequest | 
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        try {
+            ListTablesResponse result = apiInstance.listTables(id, listTablesRequest, delimiter);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling NamespaceApi#listTables");
+            System.err.println("Status code: " + e.getCode());
+            System.err.println("Reason: " + e.getResponseBody());
+            System.err.println("Response headers: " + e.getResponseHeaders());
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
+| **listTablesRequest** | [**ListTablesRequest**](ListTablesRequest.md)|  | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
+
+### Return type
+
+[**ListTablesResponse**](ListTablesResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | A list of tables |  -  |
+| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
+| **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
+| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **406** | Not Acceptable / Unsupported Operation. The server does not support this operation. |  -  |
+| **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
+| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+
+
 ## namespaceExists
 
-> NamespaceExistsResponse namespaceExists(id, namespaceExistsRequest, delimiter)
+> namespaceExists(id, namespaceExistsRequest, delimiter)
 
 Check if a namespace exists
 
-Check if a namespace exists. 
+Check if a namespace exists.  This API should behave exactly like the DescribeNamespace API, except it does not contain a body. 
 
 ### Example
 
@@ -348,8 +426,7 @@ public class Example {
         NamespaceExistsRequest namespaceExistsRequest = new NamespaceExistsRequest(); // NamespaceExistsRequest | 
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         try {
-            NamespaceExistsResponse result = apiInstance.namespaceExists(id, namespaceExistsRequest, delimiter);
-            System.out.println(result);
+            apiInstance.namespaceExists(id, namespaceExistsRequest, delimiter);
         } catch (ApiException e) {
             System.err.println("Exception when calling NamespaceApi#namespaceExists");
             System.err.println("Status code: " + e.getCode());
@@ -372,7 +449,7 @@ public class Example {
 
 ### Return type
 
-[**NamespaceExistsResponse**](NamespaceExistsResponse.md)
+null (empty response body)
 
 ### Authorization
 
@@ -387,7 +464,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Result of checking if a namespace exists |  -  |
+| **200** | Success, no content |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |

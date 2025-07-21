@@ -13,7 +13,6 @@
  */
 package com.lancedb.lance.namespace.glue;
 
-import com.lancedb.lance.namespace.GlueNamespaceProperties;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 

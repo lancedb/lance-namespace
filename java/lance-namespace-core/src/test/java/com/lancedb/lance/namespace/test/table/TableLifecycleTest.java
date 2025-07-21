@@ -93,7 +93,8 @@ public class TableLifecycleTest extends BaseNamespaceTest {
               .addRows(1000, 2) // Start IDs from 1000 to differentiate
               .build();
 
-      InsertTableResponse insertResponse = namespace.insertTable(tableName, insertData1, "append");
+      InsertIntoTableResponse insertResponse =
+          namespace.insertIntoTable(tableName, insertData1, "append");
       assertNotNull(insertResponse, "Insert response should not be null");
       assertNotNull(insertResponse.getVersion(), "Insert response version should not be null");
       System.out.println("✓ Inserted 2 rows, new version: " + insertResponse.getVersion());
@@ -110,8 +111,8 @@ public class TableLifecycleTest extends BaseNamespaceTest {
               .addRows(2000, 3) // Start IDs from 2000
               .build();
 
-      InsertTableResponse secondInsertResponse =
-          namespace.insertTable(tableName, insertData2, "append");
+      InsertIntoTableResponse secondInsertResponse =
+          namespace.insertIntoTable(tableName, insertData2, "append");
       assertNotNull(secondInsertResponse, "Second insert response should not be null");
       System.out.println(
           "✓ Inserted 3 more rows, new version: " + secondInsertResponse.getVersion());
@@ -163,7 +164,7 @@ public class TableLifecycleTest extends BaseNamespaceTest {
 
       // Insert more data to create new version
       byte[] insertData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(100, 5).build();
-      namespace.insertTable(tableName, insertData, "append");
+      namespace.insertIntoTable(tableName, insertData, "append");
 
       // Describe current version
       DescribeTableRequest describeCurrent = new DescribeTableRequest();

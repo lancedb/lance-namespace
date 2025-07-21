@@ -1,14 +1,20 @@
 # lance-namespace-apache-client
 
-Lance REST Namespace Specification
+Lance Namespace Specification
 
-- API version: 0.0.1
+- API version: 1.0.0
 
 - Generator version: 7.12.0
 
 This OpenAPI specification is a part of the Lance namespace specification. It contains 2 parts:
-The `components/schemas`, `components/responses`, `components/examples` sections define the request and response shape for each operation in a Lance Namespace across all implementations. See https://lancedb.github.io/lance-namespace/spec/operations for more details.
-The `servers`, `security`, `paths`, `components/parameters` sections are for the  Lance REST Namespace implementation, which defines a complete REST server that can work with Lance datasets. See https://lancedb.github.io/lance-namespace/spec/impls/rest for more details.
+
+The `components/schemas`, `components/responses`, `components/examples`, `tags` sections define
+the request and response shape for each operation in a Lance Namespace across all implementations.
+See https://lancedb.github.io/lance-namespace/spec/operations for more details.
+
+The `servers`, `security`, `paths`, `components/parameters` sections are for the 
+Lance REST Namespace implementation, which defines a complete REST server that can work with Lance datasets.
+See https://lancedb.github.io/lance-namespace/spec/impls/rest for more details.
 
 
 
@@ -80,23 +86,22 @@ Please follow the [installation](#installation) instruction and execute the foll
 import com.lancedb.lance.namespace.client.apache.*;
 import com.lancedb.lance.namespace.client.apache.auth.*;
 import com.lancedb.lance.namespace.model.*;
-import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
+import com.lancedb.lance.namespace.client.apache.api.DataApi;
 
-public class NamespaceApiExample {
+public class DataApiExample {
 
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
         
-        NamespaceApi apiInstance = new NamespaceApi(defaultClient);
+        DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-        CreateNamespaceRequest createNamespaceRequest = new CreateNamespaceRequest(); // CreateNamespaceRequest | 
-        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        DeleteFromTableRequest deleteFromTableRequest = new DeleteFromTableRequest(); // DeleteFromTableRequest | Delete request
         try {
-            CreateNamespaceResponse result = apiInstance.createNamespace(id, createNamespaceRequest, delimiter);
+            DeleteFromTableResponse result = apiInstance.deleteFromTable(id, deleteFromTableRequest);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling NamespaceApi#createNamespace");
+            System.err.println("Exception when calling DataApi#deleteFromTable");
             System.err.println("Status code: " + e.getCode());
             System.err.println("Reason: " + e.getResponseBody());
             System.err.println("Response headers: " + e.getResponseHeaders());
@@ -113,25 +118,51 @@ All URIs are relative to *http://localhost:2333*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*DataApi* | [**deleteFromTable**](docs/DataApi.md#deleteFromTable) | **POST** /v1/table/{id}/delete | Delete rows from a table
+*DataApi* | [**insertIntoTable**](docs/DataApi.md#insertIntoTable) | **POST** /v1/table/{id}/insert | Insert records into a table
+*DataApi* | [**mergeInsertIntoTable**](docs/DataApi.md#mergeInsertIntoTable) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
+*DataApi* | [**queryTable**](docs/DataApi.md#queryTable) | **POST** /v1/table/{id}/query | Query a table
+*DataApi* | [**updateTable**](docs/DataApi.md#updateTable) | **POST** /v1/table/{id}/update | Update rows in a table
+*MetadataApi* | [**alterTransaction**](docs/MetadataApi.md#alterTransaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
+*MetadataApi* | [**countTableRows**](docs/MetadataApi.md#countTableRows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
+*MetadataApi* | [**createNamespace**](docs/MetadataApi.md#createNamespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
+*MetadataApi* | [**createTable**](docs/MetadataApi.md#createTable) | **POST** /v1/table/{id}/create | Create a table with the given name
+*MetadataApi* | [**createTableIndex**](docs/MetadataApi.md#createTableIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
+*MetadataApi* | [**createTableScalarIndex**](docs/MetadataApi.md#createTableScalarIndex) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
+*MetadataApi* | [**deregisterTable**](docs/MetadataApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
+*MetadataApi* | [**describeNamespace**](docs/MetadataApi.md#describeNamespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace
+*MetadataApi* | [**describeTable**](docs/MetadataApi.md#describeTable) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
+*MetadataApi* | [**describeTableIndexStats**](docs/MetadataApi.md#describeTableIndexStats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
+*MetadataApi* | [**describeTableV2**](docs/MetadataApi.md#describeTableV2) | **POST** /v2/table/{id}/describe | Describe a table from the namespace
+*MetadataApi* | [**describeTransaction**](docs/MetadataApi.md#describeTransaction) | **POST** /v1/transaction/{id}/describe | Describe information about a transaction
+*MetadataApi* | [**dropNamespace**](docs/MetadataApi.md#dropNamespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace
+*MetadataApi* | [**dropTable**](docs/MetadataApi.md#dropTable) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
+*MetadataApi* | [**listNamespaces**](docs/MetadataApi.md#listNamespaces) | **POST** /v1/namespace/{id}/list | List namespaces
+*MetadataApi* | [**listTableIndices**](docs/MetadataApi.md#listTableIndices) | **POST** /v1/table/{id}/index/list | List indexes on a table
+*MetadataApi* | [**listTables**](docs/MetadataApi.md#listTables) | **POST** /v1/namespace/{id}/list_tables | List tables in a namespace
+*MetadataApi* | [**namespaceExists**](docs/MetadataApi.md#namespaceExists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
+*MetadataApi* | [**registerTable**](docs/MetadataApi.md#registerTable) | **POST** /v1/table/{id}/register | Register a table to a namespace
+*MetadataApi* | [**tableExists**](docs/MetadataApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists
 *NamespaceApi* | [**createNamespace**](docs/NamespaceApi.md#createNamespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
 *NamespaceApi* | [**describeNamespace**](docs/NamespaceApi.md#describeNamespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace
 *NamespaceApi* | [**dropNamespace**](docs/NamespaceApi.md#dropNamespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace
 *NamespaceApi* | [**listNamespaces**](docs/NamespaceApi.md#listNamespaces) | **POST** /v1/namespace/{id}/list | List namespaces
+*NamespaceApi* | [**listTables**](docs/NamespaceApi.md#listTables) | **POST** /v1/namespace/{id}/list_tables | List tables in a namespace
 *NamespaceApi* | [**namespaceExists**](docs/NamespaceApi.md#namespaceExists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
-*TableApi* | [**countRows**](docs/TableApi.md#countRows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
-*TableApi* | [**createIndex**](docs/TableApi.md#createIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
-*TableApi* | [**createScalarIndex**](docs/TableApi.md#createScalarIndex) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
+*TableApi* | [**countTableRows**](docs/TableApi.md#countTableRows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
 *TableApi* | [**createTable**](docs/TableApi.md#createTable) | **POST** /v1/table/{id}/create | Create a table with the given name
+*TableApi* | [**createTableIndex**](docs/TableApi.md#createTableIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
+*TableApi* | [**createTableScalarIndex**](docs/TableApi.md#createTableScalarIndex) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *TableApi* | [**deleteFromTable**](docs/TableApi.md#deleteFromTable) | **POST** /v1/table/{id}/delete | Delete rows from a table
 *TableApi* | [**deregisterTable**](docs/TableApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 *TableApi* | [**describeTable**](docs/TableApi.md#describeTable) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
+*TableApi* | [**describeTableIndexStats**](docs/TableApi.md#describeTableIndexStats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
 *TableApi* | [**describeTableV2**](docs/TableApi.md#describeTableV2) | **POST** /v2/table/{id}/describe | Describe a table from the namespace
 *TableApi* | [**dropTable**](docs/TableApi.md#dropTable) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
-*TableApi* | [**getIndexStats**](docs/TableApi.md#getIndexStats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
-*TableApi* | [**insertTable**](docs/TableApi.md#insertTable) | **POST** /v1/table/{id}/insert | Insert records into a table
-*TableApi* | [**listIndices**](docs/TableApi.md#listIndices) | **POST** /v1/table/{id}/index/list | List indices on a table
-*TableApi* | [**listTables**](docs/TableApi.md#listTables) | **POST** /v1/table/{id}/list | List tables
-*TableApi* | [**mergeInsertTable**](docs/TableApi.md#mergeInsertTable) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
+*TableApi* | [**insertIntoTable**](docs/TableApi.md#insertIntoTable) | **POST** /v1/table/{id}/insert | Insert records into a table
+*TableApi* | [**listTableIndices**](docs/TableApi.md#listTableIndices) | **POST** /v1/table/{id}/index/list | List indexes on a table
+*TableApi* | [**listTables**](docs/TableApi.md#listTables) | **POST** /v1/namespace/{id}/list_tables | List tables in a namespace
+*TableApi* | [**mergeInsertIntoTable**](docs/TableApi.md#mergeInsertIntoTable) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 *TableApi* | [**queryTable**](docs/TableApi.md#queryTable) | **POST** /v1/table/{id}/query | Query a table
 *TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /v1/table/{id}/register | Register a table to a namespace
 *TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists
@@ -150,11 +181,11 @@ Class | Method | HTTP request | Description
  - [AlterTransactionUnsetProperty](docs/AlterTransactionUnsetProperty.md)
  - [BooleanQuery](docs/BooleanQuery.md)
  - [BoostQuery](docs/BoostQuery.md)
- - [CountRowsRequest](docs/CountRowsRequest.md)
- - [CreateIndexRequest](docs/CreateIndexRequest.md)
- - [CreateIndexResponse](docs/CreateIndexResponse.md)
+ - [CountTableRowsRequest](docs/CountTableRowsRequest.md)
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
+ - [CreateTableIndexRequest](docs/CreateTableIndexRequest.md)
+ - [CreateTableIndexResponse](docs/CreateTableIndexResponse.md)
  - [CreateTableResponse](docs/CreateTableResponse.md)
  - [DeleteFromTableRequest](docs/DeleteFromTableRequest.md)
  - [DeleteFromTableResponse](docs/DeleteFromTableResponse.md)
@@ -162,6 +193,8 @@ Class | Method | HTTP request | Description
  - [DeregisterTableResponse](docs/DeregisterTableResponse.md)
  - [DescribeNamespaceRequest](docs/DescribeNamespaceRequest.md)
  - [DescribeNamespaceResponse](docs/DescribeNamespaceResponse.md)
+ - [DescribeTableIndexStatsRequest](docs/DescribeTableIndexStatsRequest.md)
+ - [DescribeTableIndexStatsResponse](docs/DescribeTableIndexStatsResponse.md)
  - [DescribeTableRequest](docs/DescribeTableRequest.md)
  - [DescribeTableRequestV2](docs/DescribeTableRequestV2.md)
  - [DescribeTableResponse](docs/DescribeTableResponse.md)
@@ -175,29 +208,27 @@ Class | Method | HTTP request | Description
  - [ErrorResponse](docs/ErrorResponse.md)
  - [FtsQuery](docs/FtsQuery.md)
  - [IndexListItemResponse](docs/IndexListItemResponse.md)
- - [IndexListRequest](docs/IndexListRequest.md)
- - [IndexListResponse](docs/IndexListResponse.md)
- - [IndexStatsRequest](docs/IndexStatsRequest.md)
- - [IndexStatsResponse](docs/IndexStatsResponse.md)
- - [InsertTableResponse](docs/InsertTableResponse.md)
+ - [InsertIntoTableResponse](docs/InsertIntoTableResponse.md)
  - [JsonDataType](docs/JsonDataType.md)
  - [JsonField](docs/JsonField.md)
  - [JsonSchema](docs/JsonSchema.md)
  - [ListNamespacesRequest](docs/ListNamespacesRequest.md)
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
+ - [ListTableIndicesRequest](docs/ListTableIndicesRequest.md)
+ - [ListTableIndicesResponse](docs/ListTableIndicesResponse.md)
  - [ListTablesRequest](docs/ListTablesRequest.md)
  - [ListTablesResponse](docs/ListTablesResponse.md)
  - [MatchQuery](docs/MatchQuery.md)
- - [MergeInsertTableRequest](docs/MergeInsertTableRequest.md)
- - [MergeInsertTableResponse](docs/MergeInsertTableResponse.md)
+ - [MergeInsertIntoTableRequest](docs/MergeInsertIntoTableRequest.md)
+ - [MergeInsertIntoTableResponse](docs/MergeInsertIntoTableResponse.md)
  - [MultiMatchQuery](docs/MultiMatchQuery.md)
  - [NamespaceExistsRequest](docs/NamespaceExistsRequest.md)
  - [NamespaceExistsResponse](docs/NamespaceExistsResponse.md)
  - [Operator](docs/Operator.md)
  - [PhraseQuery](docs/PhraseQuery.md)
- - [QueryRequest](docs/QueryRequest.md)
- - [QueryRequestFullTextQuery](docs/QueryRequestFullTextQuery.md)
- - [QueryRequestVector](docs/QueryRequestVector.md)
+ - [QueryTableRequest](docs/QueryTableRequest.md)
+ - [QueryTableRequestFullTextQuery](docs/QueryTableRequestFullTextQuery.md)
+ - [QueryTableRequestVector](docs/QueryTableRequestVector.md)
  - [RegisterTableRequest](docs/RegisterTableRequest.md)
  - [RegisterTableResponse](docs/RegisterTableResponse.md)
  - [SetPropertyMode](docs/SetPropertyMode.md)

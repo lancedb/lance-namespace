@@ -4,20 +4,20 @@ All URIs are relative to *http://localhost:2333*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**count_rows**](TableApi.md#count_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
-[**create_index**](TableApi.md#create_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
-[**create_scalar_index**](TableApi.md#create_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
+[**count_table_rows**](TableApi.md#count_table_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
 [**create_table**](TableApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
+[**create_table_index**](TableApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
+[**create_table_scalar_index**](TableApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 [**delete_from_table**](TableApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
 [**deregister_table**](TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 [**describe_table**](TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
+[**describe_table_index_stats**](TableApi.md#describe_table_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
 [**describe_table_v2**](TableApi.md#describe_table_v2) | **POST** /v2/table/{id}/describe | Describe a table from the namespace
 [**drop_table**](TableApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
-[**get_index_stats**](TableApi.md#get_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
-[**insert_table**](TableApi.md#insert_table) | **POST** /v1/table/{id}/insert | Insert records into a table
-[**list_indices**](TableApi.md#list_indices) | **POST** /v1/table/{id}/index/list | List indices on a table
-[**list_tables**](TableApi.md#list_tables) | **POST** /v1/table/{id}/list | List tables
-[**merge_insert_table**](TableApi.md#merge_insert_table) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
+[**insert_into_table**](TableApi.md#insert_into_table) | **POST** /v1/table/{id}/insert | Insert records into a table
+[**list_table_indices**](TableApi.md#list_table_indices) | **POST** /v1/table/{id}/index/list | List indexes on a table
+[**list_tables**](TableApi.md#list_tables) | **POST** /v1/namespace/{id}/list_tables | List tables in a namespace
+[**merge_insert_into_table**](TableApi.md#merge_insert_into_table) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 [**query_table**](TableApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
 [**register_table**](TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
 [**table_exists**](TableApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
@@ -25,12 +25,12 @@ Method | HTTP request | Description
 
 
 
-## count_rows
+## count_table_rows
 
-> i64 count_rows(id, count_rows_request, delimiter)
+> i64 count_table_rows(id, count_table_rows_request, delimiter)
 Count rows in a table
 
-Count the number of rows in a table. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+Count the number of rows in a table. 
 
 ### Parameters
 
@@ -38,74 +38,12 @@ Count the number of rows in a table. Supports both lance-namespace format (with 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
-**count_rows_request** | [**CountRowsRequest**](CountRowsRequest.md) |  | [required] |
+**count_table_rows_request** | [**CountTableRowsRequest**](CountTableRowsRequest.md) |  | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
 
 ### Return type
 
 **i64**
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-
-## create_index
-
-> models::CreateIndexResponse create_index(id, create_index_request)
-Create an index on a table
-
-Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes. 
-
-### Parameters
-
-
-Name | Type | Description  | Required | Notes
-------------- | ------------- | ------------- | ------------- | -------------
-**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
-**create_index_request** | [**CreateIndexRequest**](CreateIndexRequest.md) | Index creation request | [required] |
-
-### Return type
-
-[**models::CreateIndexResponse**](CreateIndexResponse.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-
-## create_scalar_index
-
-> models::CreateIndexResponse create_scalar_index(id, create_index_request)
-Create a scalar index on a table
-
-Create a scalar index on a table column for faster search operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST). 
-
-### Parameters
-
-
-Name | Type | Description  | Required | Notes
-------------- | ------------- | ------------- | ------------- | -------------
-**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
-**create_index_request** | [**CreateIndexRequest**](CreateIndexRequest.md) | Scalar index creation request | [required] |
-
-### Return type
-
-[**models::CreateIndexResponse**](CreateIndexResponse.md)
 
 ### Authorization
 
@@ -145,6 +83,68 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/x-arrow-ipc
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## create_table_index
+
+> models::CreateTableIndexResponse create_table_index(id, create_table_index_request)
+Create an index on a table
+
+Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes. Index creation is handled asynchronously.  Use the `listIndices` and `getIndexStats` operations to monitor index creation progress. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**create_table_index_request** | [**CreateTableIndexRequest**](CreateTableIndexRequest.md) | Index creation request | [required] |
+
+### Return type
+
+[**models::CreateTableIndexResponse**](CreateTableIndexResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## create_table_scalar_index
+
+> models::CreateTableIndexResponse create_table_scalar_index(id, create_table_index_request)
+Create a scalar index on a table
+
+Create a scalar index on a table column for faster search operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST). 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**create_table_index_request** | [**CreateTableIndexRequest**](CreateTableIndexRequest.md) | Scalar index creation request | [required] |
+
+### Return type
+
+[**models::CreateTableIndexResponse**](CreateTableIndexResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -245,6 +245,38 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
+## describe_table_index_stats
+
+> models::DescribeTableIndexStatsResponse describe_table_index_stats(id, index_name, describe_table_index_stats_request)
+Get index statistics
+
+Get statistics for a specific index on a table. Returns information about the index type, distance type (for vector indices), and row counts. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**index_name** | **String** | Name of the index to get stats for | [required] |
+**describe_table_index_stats_request** | [**DescribeTableIndexStatsRequest**](DescribeTableIndexStatsRequest.md) | Index stats request | [required] |
+
+### Return type
+
+[**models::DescribeTableIndexStatsResponse**](DescribeTableIndexStatsResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
 ## describe_table_v2
 
 > models::DescribeTableResponseV2 describe_table_v2(id, describe_table_request_v2, delimiter)
@@ -309,41 +341,9 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
-## get_index_stats
+## insert_into_table
 
-> models::IndexStatsResponse get_index_stats(id, index_name, index_stats_request)
-Get index statistics
-
-Get statistics for a specific index on a table. Returns information about the index type, distance type (for vector indices), and row counts. 
-
-### Parameters
-
-
-Name | Type | Description  | Required | Notes
-------------- | ------------- | ------------- | ------------- | -------------
-**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
-**index_name** | **String** | Name of the index to get stats for | [required] |
-**index_stats_request** | [**IndexStatsRequest**](IndexStatsRequest.md) | Index stats request | [required] |
-
-### Return type
-
-[**models::IndexStatsResponse**](IndexStatsResponse.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-
-## insert_table
-
-> models::InsertTableResponse insert_table(id, body, mode)
+> models::InsertIntoTableResponse insert_into_table(id, body, mode)
 Insert records into a table
 
 Insert new records into an existing table using Arrow IPC format. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
@@ -359,7 +359,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::InsertTableResponse**](InsertTableResponse.md)
+[**models::InsertIntoTableResponse**](InsertIntoTableResponse.md)
 
 ### Authorization
 
@@ -373,10 +373,10 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
-## list_indices
+## list_table_indices
 
-> models::IndexListResponse list_indices(id, index_list_request)
-List indices on a table
+> models::ListTableIndicesResponse list_table_indices(id, list_table_indices_request)
+List indexes on a table
 
 List all indices created on a table. Returns information about each index including name, columns, status, and UUID. 
 
@@ -386,11 +386,11 @@ List all indices created on a table. Returns information about each index includ
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
-**index_list_request** | [**IndexListRequest**](IndexListRequest.md) | Index list request | [required] |
+**list_table_indices_request** | [**ListTableIndicesRequest**](ListTableIndicesRequest.md) | Index list request | [required] |
 
 ### Return type
 
-[**models::IndexListResponse**](IndexListResponse.md)
+[**models::ListTableIndicesResponse**](ListTableIndicesResponse.md)
 
 ### Authorization
 
@@ -407,7 +407,7 @@ No authorization required
 ## list_tables
 
 > models::ListTablesResponse list_tables(id, list_tables_request, delimiter)
-List tables
+List tables in a namespace
 
 List all child table names of the root namespace or a given parent namespace. 
 
@@ -436,9 +436,9 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
-## merge_insert_table
+## merge_insert_into_table
 
-> models::MergeInsertTableResponse merge_insert_table(id, on, body, when_matched_update_all, when_not_matched_insert_all)
+> models::MergeInsertIntoTableResponse merge_insert_into_table(id, on, body, when_matched_update_all, when_not_matched_insert_all)
 Merge insert (upsert) records into a table
 
 Performs a merge insert (upsert) operation on a table. This operation updates existing rows based on a matching column and inserts new rows that don't match. Returns the number of rows inserted and updated. 
@@ -456,7 +456,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::MergeInsertTableResponse**](MergeInsertTableResponse.md)
+[**models::MergeInsertIntoTableResponse**](MergeInsertIntoTableResponse.md)
 
 ### Authorization
 
@@ -472,7 +472,7 @@ No authorization required
 
 ## query_table
 
-> Vec<u8> query_table(id, query_request)
+> Vec<u8> query_table(id, query_table_request)
 Query a table
 
 Query a table with vector search and optional filtering. Returns results in Arrow IPC stream format. 
@@ -483,7 +483,7 @@ Query a table with vector search and optional filtering. Returns results in Arro
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
-**query_request** | [**QueryRequest**](QueryRequest.md) | Query request | [required] |
+**query_table_request** | [**QueryTableRequest**](QueryTableRequest.md) | Query request | [required] |
 
 ### Return type
 
@@ -535,10 +535,10 @@ No authorization required
 
 ## table_exists
 
-> models::TableExistsResponse table_exists(id, table_exists_request, delimiter)
+> table_exists(id, table_exists_request, delimiter)
 Check if a table exists
 
-Check if a table exists. This API should behave exactly like the GetTable API, except it does not contain a body. 
+Check if a table exists.  This API should behave exactly like the DescribeTable API, except it does not contain a body. 
 
 ### Parameters
 
@@ -551,7 +551,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::TableExistsResponse**](TableExistsResponse.md)
+ (empty response body)
 
 ### Authorization
 

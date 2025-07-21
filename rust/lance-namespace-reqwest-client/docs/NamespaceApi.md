@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**describe_namespace**](NamespaceApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace
 [**drop_namespace**](NamespaceApi.md#drop_namespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace
 [**list_namespaces**](NamespaceApi.md#list_namespaces) | **POST** /v1/namespace/{id}/list | List namespaces
+[**list_tables**](NamespaceApi.md#list_tables) | **POST** /v1/namespace/{id}/list_tables | List tables in a namespace
 [**namespace_exists**](NamespaceApi.md#namespace_exists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
 
 
@@ -17,7 +18,7 @@ Method | HTTP request | Description
 > models::CreateNamespaceResponse create_namespace(id, create_namespace_request, delimiter)
 Create a new namespace
 
-Create a new namespace. A namespace can manage either a collection of child namespaces, or a collection of tables. There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
+Create a new namespace.  A namespace can manage either a collection of child namespaces, or a collection of tables.  The namespace in the API route should be the parent namespace to create the new namespace.  There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
 
 ### Parameters
 
@@ -140,12 +141,44 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
+## list_tables
+
+> models::ListTablesResponse list_tables(id, list_tables_request, delimiter)
+List tables in a namespace
+
+List all child table names of the root namespace or a given parent namespace. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**list_tables_request** | [**ListTablesRequest**](ListTablesRequest.md) |  | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
+
+### Return type
+
+[**models::ListTablesResponse**](ListTablesResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
 ## namespace_exists
 
-> models::NamespaceExistsResponse namespace_exists(id, namespace_exists_request, delimiter)
+> namespace_exists(id, namespace_exists_request, delimiter)
 Check if a namespace exists
 
-Check if a namespace exists. 
+Check if a namespace exists.  This API should behave exactly like the DescribeNamespace API, except it does not contain a body. 
 
 ### Parameters
 
@@ -158,7 +191,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::NamespaceExistsResponse**](NamespaceExistsResponse.md)
+ (empty response body)
 
 ### Authorization
 

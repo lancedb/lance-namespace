@@ -58,12 +58,12 @@ public class FullTextSearchTest extends BaseNamespaceTest {
 
       // Create FTS index
       System.out.println("\n--- Creating FTS index ---");
-      CreateIndexRequest ftsIndexRequest = new CreateIndexRequest();
+      CreateTableIndexRequest ftsIndexRequest = new CreateTableIndexRequest();
       ftsIndexRequest.setName(tableName);
       ftsIndexRequest.setColumn("text");
-      ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
+      ftsIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.FTS);
 
-      CreateIndexResponse ftsIndexResponse = namespace.createIndex(ftsIndexRequest);
+      CreateTableIndexResponse ftsIndexResponse = namespace.createTableIndex(ftsIndexRequest);
       assertNotNull(ftsIndexResponse, "FTS index response should not be null");
 
       TestUtils.waitForIndexComplete(namespace, tableName, "text_idx", 30);
@@ -71,14 +71,14 @@ public class FullTextSearchTest extends BaseNamespaceTest {
       // Test 1: Simple string FTS query for "document"
       System.out.println("\n--- Test 1: Simple string FTS query for 'document' ---");
       System.out.println("Expected to find rows 1, 2, 5 (contain 'document')");
-      QueryRequest stringFtsQuery = new QueryRequest();
+      QueryTableRequest stringFtsQuery = new QueryTableRequest();
       stringFtsQuery.setName(tableName);
       stringFtsQuery.setK(10);
       stringFtsQuery.setColumns(Arrays.asList("id", "name", "text", "category"));
 
       StringFtsQuery simpleFts = new StringFtsQuery();
       simpleFts.setQuery("document");
-      QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
+      QueryTableRequestFullTextQuery fullTextQuery = new QueryTableRequestFullTextQuery();
       fullTextQuery.setStringQuery(simpleFts);
       stringFtsQuery.setFullTextQuery(fullTextQuery);
 
@@ -99,7 +99,7 @@ public class FullTextSearchTest extends BaseNamespaceTest {
       // Test 2: FTS query for "important"
       System.out.println("\n--- Test 2: FTS query for 'important' ---");
       System.out.println("Expected to find rows 1, 3, 5 (contain 'important')");
-      QueryRequest columnFtsQuery = new QueryRequest();
+      QueryTableRequest columnFtsQuery = new QueryTableRequest();
       columnFtsQuery.setName(tableName);
       columnFtsQuery.setK(5);
       columnFtsQuery.setColumns(Arrays.asList("id", "name", "text"));
@@ -107,7 +107,7 @@ public class FullTextSearchTest extends BaseNamespaceTest {
       StringFtsQuery columnFts = new StringFtsQuery();
       columnFts.setQuery("important");
       columnFts.setColumns(Arrays.asList("text")); // Search only in text column
-      QueryRequestFullTextQuery columnFullTextQuery = new QueryRequestFullTextQuery();
+      QueryTableRequestFullTextQuery columnFullTextQuery = new QueryTableRequestFullTextQuery();
       columnFullTextQuery.setStringQuery(columnFts);
       columnFtsQuery.setFullTextQuery(columnFullTextQuery);
 
@@ -158,16 +158,16 @@ public class FullTextSearchTest extends BaseNamespaceTest {
       namespace.createTable(tableName, tableData);
 
       // Create FTS index
-      CreateIndexRequest ftsIndexRequest = new CreateIndexRequest();
+      CreateTableIndexRequest ftsIndexRequest = new CreateTableIndexRequest();
       ftsIndexRequest.setName(tableName);
       ftsIndexRequest.setColumn("text");
-      ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
-      namespace.createIndex(ftsIndexRequest);
+      ftsIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.FTS);
+      namespace.createTableIndex(ftsIndexRequest);
       TestUtils.waitForIndexComplete(namespace, tableName, "text_idx", 30);
 
       // FTS with prefilter
       System.out.println("\n--- Testing FTS with prefilter (id < 25) ---");
-      QueryRequest ftsPrefilterQuery = new QueryRequest();
+      QueryTableRequest ftsPrefilterQuery = new QueryTableRequest();
       ftsPrefilterQuery.setName(tableName);
       ftsPrefilterQuery.setK(20); // Set high to get all matches
       ftsPrefilterQuery.setPrefilter(true);
@@ -176,12 +176,12 @@ public class FullTextSearchTest extends BaseNamespaceTest {
 
       StringFtsQuery fts = new StringFtsQuery();
       fts.setQuery("document");
-      QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
+      QueryTableRequestFullTextQuery fullTextQuery = new QueryTableRequestFullTextQuery();
       fullTextQuery.setStringQuery(fts);
       ftsPrefilterQuery.setFullTextQuery(fullTextQuery);
 
       // Add empty vector to satisfy API requirement
-      QueryRequestVector emptyVector = new QueryRequestVector();
+      QueryTableRequestVector emptyVector = new QueryTableRequestVector();
       emptyVector.setSingleVector(new ArrayList<>());
       ftsPrefilterQuery.setVector(emptyVector);
 
@@ -262,23 +262,23 @@ public class FullTextSearchTest extends BaseNamespaceTest {
       namespace.createTable(tableName, tableData);
 
       // Create FTS index with position for phrase queries
-      CreateIndexRequest ftsIndexRequest = new CreateIndexRequest();
+      CreateTableIndexRequest ftsIndexRequest = new CreateTableIndexRequest();
       ftsIndexRequest.setName(tableName);
       ftsIndexRequest.setColumn("text");
-      ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
+      ftsIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.FTS);
       ftsIndexRequest.setWithPosition(true); // Required for phrase queries
-      namespace.createIndex(ftsIndexRequest);
+      namespace.createTableIndex(ftsIndexRequest);
       TestUtils.waitForIndexComplete(namespace, tableName, "text_idx", 30);
 
       // Test Boolean Query
       System.out.println("\n--- Testing Boolean Query ---");
-      QueryRequest booleanQuery = new QueryRequest();
+      QueryTableRequest booleanQuery = new QueryTableRequest();
       booleanQuery.setName(tableName);
       booleanQuery.setK(10);
       booleanQuery.setColumns(Arrays.asList("id", "text"));
 
       // Create boolean query: MUST contain "important" AND SHOULD contain "document"
-      QueryRequestFullTextQuery fullTextQuery = new QueryRequestFullTextQuery();
+      QueryTableRequestFullTextQuery fullTextQuery = new QueryTableRequestFullTextQuery();
       StructuredFtsQuery structured = new StructuredFtsQuery();
       FtsQuery ftsQuery = new FtsQuery();
 
@@ -319,12 +319,12 @@ public class FullTextSearchTest extends BaseNamespaceTest {
 
       // Test Phrase Query
       System.out.println("\n--- Testing Phrase Query ---");
-      QueryRequest phraseQuery = new QueryRequest();
+      QueryTableRequest phraseQuery = new QueryTableRequest();
       phraseQuery.setName(tableName);
       phraseQuery.setK(10);
       phraseQuery.setColumns(Arrays.asList("id", "text"));
 
-      QueryRequestFullTextQuery phraseFullTextQuery = new QueryRequestFullTextQuery();
+      QueryTableRequestFullTextQuery phraseFullTextQuery = new QueryTableRequestFullTextQuery();
       StructuredFtsQuery phraseStructured = new StructuredFtsQuery();
       FtsQuery phraseFtsQuery = new FtsQuery();
 

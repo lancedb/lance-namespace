@@ -13,7 +13,7 @@
  */
 package com.lancedb.lance.namespace.jackson;
 
-import com.lancedb.lance.namespace.model.QueryRequest;
+import com.lancedb.lance.namespace.model.QueryTableRequest;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
@@ -23,7 +23,7 @@ public class LanceNamespaceJacksonModule extends SimpleModule {
   public LanceNamespaceJacksonModule() {
     super("LanceNamespaceJacksonModule");
 
-    // Register the custom serializer for QueryRequest
-    addSerializer(QueryRequest.class, new QueryRequestSerializer());
+    // Register the custom serializer for QueryTableRequest
+    addSerializer(QueryTableRequest.class, new QueryTableRequestSerializer());
   }
 }

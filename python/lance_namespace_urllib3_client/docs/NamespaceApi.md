@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**describe_namespace**](NamespaceApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace
 [**drop_namespace**](NamespaceApi.md#drop_namespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace
 [**list_namespaces**](NamespaceApi.md#list_namespaces) | **POST** /v1/namespace/{id}/list | List namespaces
+[**list_tables**](NamespaceApi.md#list_tables) | **POST** /v1/namespace/{id}/list_tables | List tables in a namespace
 [**namespace_exists**](NamespaceApi.md#namespace_exists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
 
 
@@ -17,8 +18,13 @@ Method | HTTP request | Description
 Create a new namespace
 
 Create a new namespace.
+
 A namespace can manage either a collection of child namespaces, or a collection of tables.
-There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:
+
+The namespace in the API route should be the parent namespace to create the new namespace.
+
+There are three modes when trying to create a namespace,
+to differentiate the behavior when a namespace of the same name already exists:
   * CREATE: the operation fails with 400.
   * EXIST_OK: the operation succeeds and the existing namespace is kept.
   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created.
@@ -340,12 +346,95 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **list_tables**
+> ListTablesResponse list_tables(id, list_tables_request, delimiter=delimiter)
+
+List tables in a namespace
+
+List all child table names of the root namespace or a given parent namespace.
+
+
+### Example
+
+
+```python
+import lance_namespace_urllib3_client
+from lance_namespace_urllib3_client.models.list_tables_request import ListTablesRequest
+from lance_namespace_urllib3_client.models.list_tables_response import ListTablesResponse
+from lance_namespace_urllib3_client.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to http://localhost:2333
+# See configuration.py for a list of all supported configuration parameters.
+configuration = lance_namespace_urllib3_client.Configuration(
+    host = "http://localhost:2333"
+)
+
+
+# Enter a context with an instance of the API client
+with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = lance_namespace_urllib3_client.NamespaceApi(api_client)
+    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
+    list_tables_request = lance_namespace_urllib3_client.ListTablesRequest() # ListTablesRequest | 
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
+
+    try:
+        # List tables in a namespace
+        api_response = api_instance.list_tables(id, list_tables_request, delimiter=delimiter)
+        print("The response of NamespaceApi->list_tables:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling NamespaceApi->list_tables: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
+ **list_tables_request** | [**ListTablesRequest**](ListTablesRequest.md)|  | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
+
+### Return type
+
+[**ListTablesResponse**](ListTablesResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | A list of tables |  -  |
+**400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+**401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
+**403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
+**404** | A server-side problem that means can not find the specified resource. |  -  |
+**406** | Not Acceptable / Unsupported Operation. The server does not support this operation. |  -  |
+**503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
+**5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **namespace_exists**
-> NamespaceExistsResponse namespace_exists(id, namespace_exists_request, delimiter=delimiter)
+> namespace_exists(id, namespace_exists_request, delimiter=delimiter)
 
 Check if a namespace exists
 
 Check if a namespace exists.
+
+This API should behave exactly like the DescribeNamespace API, except it does not contain a body.
 
 
 ### Example
@@ -354,7 +443,6 @@ Check if a namespace exists.
 ```python
 import lance_namespace_urllib3_client
 from lance_namespace_urllib3_client.models.namespace_exists_request import NamespaceExistsRequest
-from lance_namespace_urllib3_client.models.namespace_exists_response import NamespaceExistsResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
 
@@ -375,9 +463,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
     try:
         # Check if a namespace exists
-        api_response = api_instance.namespace_exists(id, namespace_exists_request, delimiter=delimiter)
-        print("The response of NamespaceApi->namespace_exists:\n")
-        pprint(api_response)
+        api_instance.namespace_exists(id, namespace_exists_request, delimiter=delimiter)
     except Exception as e:
         print("Exception when calling NamespaceApi->namespace_exists: %s\n" % e)
 ```
@@ -395,7 +481,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**NamespaceExistsResponse**](NamespaceExistsResponse.md)
+void (empty response body)
 
 ### Authorization
 
@@ -410,7 +496,7 @@ No authorization required
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Result of checking if a namespace exists |  -  |
+**200** | Success, no content |  -  |
 **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |

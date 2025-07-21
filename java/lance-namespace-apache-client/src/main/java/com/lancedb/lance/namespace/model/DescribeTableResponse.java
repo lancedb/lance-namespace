@@ -19,17 +19,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 /** DescribeTableResponse */
 @JsonPropertyOrder({
-  DescribeTableResponse.JSON_PROPERTY_NAME,
-  DescribeTableResponse.JSON_PROPERTY_NAMESPACE,
   DescribeTableResponse.JSON_PROPERTY_LOCATION,
   DescribeTableResponse.JSON_PROPERTY_PROPERTIES,
   DescribeTableResponse.JSON_PROPERTY_SCHEMA,
@@ -41,12 +37,6 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DescribeTableResponse {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nonnull private String name;
-
-  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
-
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nonnull private String location;
 
@@ -66,62 +56,6 @@ public class DescribeTableResponse {
   @javax.annotation.Nonnull private Long version;
 
   public DescribeTableResponse() {}
-
-  public DescribeTableResponse name(@javax.annotation.Nonnull String name) {
-
-    this.name = name;
-    return this;
-  }
-
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setName(@javax.annotation.Nonnull String name) {
-    this.name = name;
-  }
-
-  public DescribeTableResponse namespace(@javax.annotation.Nonnull List<String> namespace) {
-
-    this.namespace = namespace;
-    return this;
-  }
-
-  public DescribeTableResponse addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
-    }
-    this.namespace.add(namespaceItem);
-    return this;
-  }
-
-  /**
-   * Get namespace
-   *
-   * @return namespace
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public List<String> getNamespace() {
-    return namespace;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setNamespace(@javax.annotation.Nonnull List<String> namespace) {
-    this.namespace = namespace;
-  }
 
   public DescribeTableResponse location(@javax.annotation.Nonnull String location) {
 
@@ -285,9 +219,7 @@ public class DescribeTableResponse {
       return false;
     }
     DescribeTableResponse describeTableResponse = (DescribeTableResponse) o;
-    return Objects.equals(this.name, describeTableResponse.name)
-        && Objects.equals(this.namespace, describeTableResponse.namespace)
-        && Objects.equals(this.location, describeTableResponse.location)
+    return Objects.equals(this.location, describeTableResponse.location)
         && Objects.equals(this.properties, describeTableResponse.properties)
         && Objects.equals(this.schema, describeTableResponse.schema)
         && Objects.equals(this.stats, describeTableResponse.stats)
@@ -297,15 +229,13 @@ public class DescribeTableResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, location, properties, schema, stats, table, version);
+    return Objects.hash(location, properties, schema, stats, table, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeTableResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
@@ -357,42 +287,6 @@ public class DescribeTableResponse {
     }
 
     StringJoiner joiner = new StringJoiner("&");
-
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `namespace` to the URL query string
-    if (getNamespace() != null) {
-      for (int i = 0; i < getNamespace().size(); i++) {
-        try {
-          joiner.add(
-              String.format(
-                  "%snamespace%s%s=%s",
-                  prefix,
-                  suffix,
-                  "".equals(suffix)
-                      ? ""
-                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
-                      .replaceAll("\\+", "%20")));
-        } catch (UnsupportedEncodingException e) {
-          // Should never happen, UTF-8 is always supported
-          throw new RuntimeException(e);
-        }
-      }
-    }
 
     // add `location` to the URL query string
     if (getLocation() != null) {

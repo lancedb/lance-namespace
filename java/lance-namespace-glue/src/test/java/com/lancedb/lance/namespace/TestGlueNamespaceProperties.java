@@ -13,6 +13,8 @@
  */
 package com.lancedb.lance.namespace;
 
+import com.lancedb.lance.namespace.glue.GlueNamespaceProperties;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;

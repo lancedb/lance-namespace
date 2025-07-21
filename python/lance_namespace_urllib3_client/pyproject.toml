@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "lance_namespace_urllib3_client"
 version = "0.0.1"
-description = "Lance REST Namespace Specification"
+description = "Lance Namespace Specification"
 authors = ["OpenAPI Generator Community <team@openapitools.org>"]
 license = "Apache 2.0"
 readme = "README.md"
 repository = "https://github.com/GIT_USER_ID/GIT_REPO_ID"
-keywords = ["OpenAPI", "OpenAPI-Generator", "Lance REST Namespace Specification"]
+keywords = ["OpenAPI", "OpenAPI-Generator", "Lance Namespace Specification"]
 include = ["lance_namespace_urllib3_client/py.typed"]
 
 [tool.poetry.dependencies]

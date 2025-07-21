@@ -14,27 +14,29 @@
 package com.lancedb.lance.namespace;
 
 import com.lancedb.lance.namespace.model.AlterTransactionRequest;
-import com.lancedb.lance.namespace.model.CountRowsRequest;
-import com.lancedb.lance.namespace.model.CreateIndexRequest;
+import com.lancedb.lance.namespace.model.CountTableRowsRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
+import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
 import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
+import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
+import com.lancedb.lance.namespace.model.DescribeTableRequestV2;
 import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropTableRequest;
-import com.lancedb.lance.namespace.model.IndexListRequest;
-import com.lancedb.lance.namespace.model.IndexStatsRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
-import com.lancedb.lance.namespace.model.MergeInsertTableRequest;
+import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
+import com.lancedb.lance.namespace.model.MergeInsertIntoTableRequest;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
-import com.lancedb.lance.namespace.model.QueryRequest;
+import com.lancedb.lance.namespace.model.QueryTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
 import com.lancedb.lance.namespace.model.UpdateTableRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ObjectIdentifiers {
@@ -42,24 +44,24 @@ public class ObjectIdentifiers {
   private ObjectIdentifiers() {}
 
   public static String stringFrom(CreateNamespaceRequest request, String delimiter) {
-    StringBuilder builder = new StringBuilder();
-    if (request.getParent() != null) {
-      for (String part : request.getParent()) {
-        builder.append(part);
-        builder.append(delimiter);
-      }
+    if (request.getParent() == null || request.getParent().isEmpty()) {
+      return delimiter;
     }
-    builder.append(request.getName());
+
+    StringBuilder builder = new StringBuilder();
+    for (String part : request.getParent()) {
+      builder.append(part);
+      builder.append(delimiter);
+    }
+    builder.delete(builder.length() - delimiter.length(), builder.length());
     return builder.toString();
   }
 
   public static List<String> listFrom(CreateNamespaceRequest request) {
-    List<String> identifier = new ArrayList<>();
-    if (request.getParent() != null) {
-      identifier.addAll(request.getParent());
+    if (request.getParent() == null) {
+      return Collections.emptyList();
     }
-    identifier.add(request.getName());
-    return identifier;
+    return Collections.unmodifiableList(request.getParent());
   }
 
   public static String stringFrom(DescribeNamespaceRequest request, String delimiter) {
@@ -142,7 +144,24 @@ public class ObjectIdentifiers {
     return identifier;
   }
 
-  public static String stringFrom(CountRowsRequest request, String delimiter) {
+  public static String stringFrom(DescribeTableRequestV2 request, String delimiter) {
+    StringBuilder builder = new StringBuilder();
+    for (String part : request.getNamespace()) {
+      builder.append(part);
+      builder.append(delimiter);
+    }
+    builder.append(request.getName());
+    return builder.toString();
+  }
+
+  public static List<String> listFrom(DescribeTableRequestV2 request) {
+    List<String> identifier = new ArrayList<>();
+    identifier.addAll(request.getNamespace());
+    identifier.add(request.getName());
+    return identifier;
+  }
+
+  public static String stringFrom(CountTableRowsRequest request, String delimiter) {
     StringBuilder builder = new StringBuilder();
     if (request.getNamespace() != null) {
       for (String part : request.getNamespace()) {
@@ -154,7 +173,7 @@ public class ObjectIdentifiers {
     return builder.toString();
   }
 
-  public static List<String> listFrom(CountRowsRequest request) {
+  public static List<String> listFrom(CountTableRowsRequest request) {
     List<String> identifier = new ArrayList<>();
     if (request.getNamespace() != null) {
       identifier.addAll(request.getNamespace());
@@ -163,7 +182,7 @@ public class ObjectIdentifiers {
     return identifier;
   }
 
-  public static String stringFrom(QueryRequest request, String delimiter) {
+  public static String stringFrom(QueryTableRequest request, String delimiter) {
     StringBuilder builder = new StringBuilder();
     if (request.getNamespace() != null) {
       for (String part : request.getNamespace()) {
@@ -175,7 +194,7 @@ public class ObjectIdentifiers {
     return builder.toString();
   }
 
-  public static List<String> listFrom(QueryRequest request) {
+  public static List<String> listFrom(QueryTableRequest request) {
     List<String> identifier = new ArrayList<>();
     if (request.getNamespace() != null) {
       identifier.addAll(request.getNamespace());
@@ -184,7 +203,7 @@ public class ObjectIdentifiers {
     return identifier;
   }
 
-  public static String stringFrom(CreateIndexRequest request, String delimiter) {
+  public static String stringFrom(CreateTableIndexRequest request, String delimiter) {
     StringBuilder builder = new StringBuilder();
     if (request.getNamespace() != null) {
       for (String part : request.getNamespace()) {
@@ -196,7 +215,7 @@ public class ObjectIdentifiers {
     return builder.toString();
   }
 
-  public static List<String> listFrom(CreateIndexRequest request) {
+  public static List<String> listFrom(CreateTableIndexRequest request) {
     List<String> identifier = new ArrayList<>();
     if (request.getNamespace() != null) {
       identifier.addAll(request.getNamespace());
@@ -295,7 +314,7 @@ public class ObjectIdentifiers {
     return identifier;
   }
 
-  public static String stringFrom(IndexListRequest request, String delimiter) {
+  public static String stringFrom(ListTableIndicesRequest request, String delimiter) {
     StringBuilder builder = new StringBuilder();
     if (request.getNamespace() != null) {
       for (String part : request.getNamespace()) {
@@ -307,7 +326,7 @@ public class ObjectIdentifiers {
     return builder.toString();
   }
 
-  public static List<String> listFrom(IndexListRequest request) {
+  public static List<String> listFrom(ListTableIndicesRequest request) {
     List<String> identifier = new ArrayList<>();
     if (request.getNamespace() != null) {
       identifier.addAll(request.getNamespace());
@@ -336,7 +355,7 @@ public class ObjectIdentifiers {
     return identifier;
   }
 
-  public static String stringFrom(IndexStatsRequest request, String delimiter) {
+  public static String stringFrom(DescribeTableIndexStatsRequest request, String delimiter) {
     StringBuilder builder = new StringBuilder();
     if (request.getNamespace() != null) {
       for (String part : request.getNamespace()) {
@@ -348,7 +367,7 @@ public class ObjectIdentifiers {
     return builder.toString();
   }
 
-  public static List<String> listFrom(IndexStatsRequest request) {
+  public static List<String> listFrom(DescribeTableIndexStatsRequest request) {
     List<String> identifier = new ArrayList<>();
     if (request.getNamespace() != null) {
       identifier.addAll(request.getNamespace());
@@ -399,7 +418,7 @@ public class ObjectIdentifiers {
     return identifier;
   }
 
-  public static String stringFrom(MergeInsertTableRequest request, String delimiter) {
+  public static String stringFrom(MergeInsertIntoTableRequest request, String delimiter) {
     StringBuilder builder = new StringBuilder();
     if (request.getNamespace() != null) {
       for (String part : request.getNamespace()) {
@@ -411,7 +430,7 @@ public class ObjectIdentifiers {
     return builder.toString();
   }
 
-  public static List<String> listFrom(MergeInsertTableRequest request) {
+  public static List<String> listFrom(MergeInsertIntoTableRequest request) {
     List<String> identifier = new ArrayList<>();
     if (request.getNamespace() != null) {
       identifier.addAll(request.getNamespace());
