@@ -40,7 +40,9 @@ public class IndexTest extends BaseNamespaceTest {
       // Step 1: Create table with 300 rows
       System.out.println("\n--- Step 1: Creating table with 300 rows ---");
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
-      CreateTableResponse createResponse = namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
 
       // Step 2: List indices before creating index (should be empty)
@@ -126,7 +128,9 @@ public class IndexTest extends BaseNamespaceTest {
       // Step 1: Create table with 300 rows
       System.out.println("\n--- Step 1: Creating table with 300 rows ---");
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
-      CreateTableResponse createResponse = namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
 
       // Step 2: List indices before creating index
@@ -144,8 +148,7 @@ public class IndexTest extends BaseNamespaceTest {
       scalarIndexRequest.setColumn("name");
       scalarIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.BITMAP);
 
-      CreateTableIndexResponse scalarIndexResponse =
-          namespace.createTableScalarIndex(scalarIndexRequest);
+      CreateTableIndexResponse scalarIndexResponse = namespace.createTableIndex(scalarIndexRequest);
       assertNotNull(scalarIndexResponse, "Create scalar index response should not be null");
       System.out.println("✓ Scalar index creation request submitted");
 
@@ -200,7 +203,9 @@ public class IndexTest extends BaseNamespaceTest {
       // Create table with text field
       System.out.println("\n--- Creating table with multiple fields ---");
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
-      namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest2 = new CreateTableRequest();
+      createRequest2.setName(tableName);
+      namespace.createTable(createRequest2, tableData);
 
       // Create vector index
       System.out.println("\n--- Creating vector index ---");
@@ -217,7 +222,7 @@ public class IndexTest extends BaseNamespaceTest {
       scalarIndexRequest.setName(tableName);
       scalarIndexRequest.setColumn("id");
       scalarIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.BTREE);
-      namespace.createTableScalarIndex(scalarIndexRequest);
+      namespace.createTableIndex(scalarIndexRequest);
 
       // Create FTS index
       System.out.println("\n--- Creating FTS index ---");
@@ -272,7 +277,9 @@ public class IndexTest extends BaseNamespaceTest {
     try {
       // Create table
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
-      namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest2 = new CreateTableRequest();
+      createRequest2.setName(tableName);
+      namespace.createTable(createRequest2, tableData);
 
       // Test COSINE metric
       System.out.println("\n--- Creating index with COSINE metric ---");

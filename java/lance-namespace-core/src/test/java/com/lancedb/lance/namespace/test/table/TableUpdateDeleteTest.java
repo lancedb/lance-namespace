@@ -41,7 +41,9 @@ public class TableUpdateDeleteTest extends BaseNamespaceTest {
     try {
       // Create table with 3 rows (IDs: 1, 2, 3)
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 3).build();
-      CreateTableResponse createResponse = namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
 
       // Update all rows (id = id + 1)
@@ -103,7 +105,9 @@ public class TableUpdateDeleteTest extends BaseNamespaceTest {
       // Create table with 3 rows
       System.out.println("\n--- Step 1: Creating table with 3 rows ---");
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 3).build();
-      CreateTableResponse createResponse = namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
 
       long initialCount = TestUtils.countRows(namespace, tableName);
@@ -113,6 +117,7 @@ public class TableUpdateDeleteTest extends BaseNamespaceTest {
       System.out.println("\n--- Step 2: Deleting row with id=1 ---");
       DeleteFromTableRequest deleteRequest = new DeleteFromTableRequest();
       deleteRequest.setName(tableName);
+      deleteRequest.setNamespace(new ArrayList<>());
       deleteRequest.setPredicate("id = 1");
 
       DeleteFromTableResponse deleteResponse = namespace.deleteFromTable(deleteRequest);
@@ -126,6 +131,7 @@ public class TableUpdateDeleteTest extends BaseNamespaceTest {
       System.out.println("\n--- Step 3: Deleting with complex predicate (id > 2) ---");
       DeleteFromTableRequest complexDeleteRequest = new DeleteFromTableRequest();
       complexDeleteRequest.setName(tableName);
+      complexDeleteRequest.setNamespace(new ArrayList<>());
       complexDeleteRequest.setPredicate("id > 2");
 
       DeleteFromTableResponse complexDeleteResponse =

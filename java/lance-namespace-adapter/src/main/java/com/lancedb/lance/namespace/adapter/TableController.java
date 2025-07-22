@@ -17,8 +17,8 @@ import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.server.springboot.api.TableApi;
 import com.lancedb.lance.namespace.server.springboot.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.DeregisterTableResponse;
-import com.lancedb.lance.namespace.server.springboot.model.DescribeTableRequestV2;
-import com.lancedb.lance.namespace.server.springboot.model.DescribeTableResponseV2;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTableRequest;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.DropTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.RegisterTableRequest;
@@ -40,12 +40,11 @@ public class TableController implements TableApi {
   }
 
   @Override
-  public ResponseEntity<DescribeTableResponseV2> describeTableV2(
-      String id, DescribeTableRequestV2 describeTableRequestV2, Optional<String> delimiter) {
+  public ResponseEntity<DescribeTableResponse> describeTable(
+      String id, DescribeTableRequest describeTableRequest, Optional<String> delimiter) {
     return ResponseEntity.ok(
-        ClientToServerResponse.describeTableV2(
-            delegate.describeTableV2(
-                ServerToClientRequest.describeTableV2(describeTableRequestV2))));
+        ClientToServerResponse.describeTable(
+            delegate.describeTable(ServerToClientRequest.describeTable(describeTableRequest))));
   }
 
   @Override

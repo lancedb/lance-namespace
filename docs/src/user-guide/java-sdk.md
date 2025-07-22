@@ -48,7 +48,7 @@ The Java SDK supports the following endpoints. Full API documentation is availab
 
 ### Index Operations
 - **createTableIndex** - Create a vector index
-- **createTableScalarIndex** - Create a scalar index
+- **createTableIndex** - Create a vector or scalar index
 - **listTableIndices** - List all indices on a table
 - **describeTableIndexStats** - Get statistics for a specific index
 
@@ -138,7 +138,10 @@ try (BufferAllocator allocator = new RootAllocator();
     
     // Create table in LanceDB
     byte[] arrowData = out.toByteArray();
-    CreateTableResponse response = namespace.createTable("my_vectors", arrowData);
+    
+    CreateTableRequest createRequest = new CreateTableRequest();
+    createRequest.setName("my_vectors");
+    CreateTableResponse response = namespace.createTable(createRequest, arrowData);
     System.out.println("Created table with " + numRows + " rows");
 }
 ```
@@ -153,6 +156,7 @@ Query results are returned in Arrow File format. Use `ArrowFileReader` to read t
 
 ```java
 import com.lancedb.lance.namespace.model.QueryTableRequest;
+import com.lancedb.lance.namespace.model.QueryTableRequestVector;
 import org.apache.arrow.vector.ipc.ArrowFileReader;
 import org.apache.arrow.memory.ArrowBuf;
 import org.apache.arrow.vector.ipc.message.ArrowBlock;
@@ -162,25 +166,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 // Find similar items by vector
-QueryTableRequest QueryTableRequest = new QueryTableRequest();
-QueryTableRequest.setName("my_vectors");
-QueryTableRequest.setK(10);  // Get top 10 results
+QueryTableRequest queryRequest = new QueryTableRequest();
+queryRequest.setName("my_vectors");
+queryRequest.setK(10);  // Get top 10 results
 
 // Create query vector (in practice, this would be your actual query embedding)
 List<Float> queryVector = new ArrayList<>();
 for (int i = 0; i < 128; i++) {
     queryVector.add((float) Math.random());
 }
-QueryTableRequest.setVector(queryVector);
+
+QueryTableRequestVector vectorQuery = new QueryTableRequestVector();
+vectorQuery.setSingleVector(queryVector);
+queryRequest.setVector(vectorQuery);
 
 // REQUIRED: Specify columns to return
-QueryTableRequest.setColumns(Arrays.asList("id", "embedding"));
+queryRequest.setColumns(Arrays.asList("id", "embedding"));
 
 // Optional: Set fast_search for better performance (only searches indexed data)
-QueryTableRequest.setFastSearch(true);
+queryRequest.setFastSearch(true);
 
 // Execute query
-byte[] queryResult = namespace.queryTable(QueryTableRequest);
+byte[] queryResult = namespace.queryTable(queryRequest);
 
 // Parse results
 try (BufferAllocator allocator = new RootAllocator();
@@ -205,12 +212,15 @@ try (BufferAllocator allocator = new RootAllocator();
 Always use `fast_search=true` if possible. When enabled, the query will only search indexed data, providing better performance and avoiding potential data egress costs. When disabled, it will scan the entire unindexed portion of the column from storage, which can be slow and expensive.
 
 ```java
-QueryTableRequest QueryTableRequest = new QueryTableRequest();
-QueryTableRequest.setName("my_table");
-QueryTableRequest.setVector(queryVector);
-QueryTableRequest.setK(10);
+QueryTableRequest queryRequest = new QueryTableRequest();
+queryRequest.setName("my_table");
 
-QueryTableRequest.setFastSearch(true); // Recommended for better performance
+QueryTableRequestVector vectorQuery = new QueryTableRequestVector();
+vectorQuery.setSingleVector(queryVector);
+queryRequest.setVector(vectorQuery);
+queryRequest.setK(10);
+
+queryRequest.setFastSearch(true); // Recommended for better performance
 ```
 
 ##### SQL Filters
@@ -237,7 +247,9 @@ List<Float> queryVector = new ArrayList<>();
 for (int i = 0; i < 128; i++) {
     queryVector.add((float) Math.random());
 }
-vectorWithFilter.setVector(queryVector);
+QueryTableRequestVector vectorQuery2 = new QueryTableRequestVector();
+vectorQuery2.setSingleVector(queryVector);
+vectorWithFilter.setVector(vectorQuery2);
 
 // Only search within specific ID range
 vectorWithFilter.setFilter("id >= 500 AND id < 600");
@@ -269,7 +281,9 @@ When combining vector search with filters, use `prefilter` to control the order 
 // Prefiltering - filter first, then search vectors
 QueryTableRequest prefilterQuery = new QueryTableRequest();
 prefilterQuery.setName("my_table");
-prefilterQuery.setVector(queryVector);
+QueryTableRequestVector vectorQuery3 = new QueryTableRequestVector();
+vectorQuery3.setSingleVector(queryVector);
+prefilterQuery.setVector(vectorQuery3);
 prefilterQuery.setK(10);
 prefilterQuery.setFilter("status = 'active'");
 prefilterQuery.setPrefilter(true);
@@ -278,7 +292,9 @@ prefilterQuery.setFastSearch(true);
 // Postfiltering - search vectors first, then filter (default)
 QueryTableRequest postfilterQuery = new QueryTableRequest();
 postfilterQuery.setName("my_table");
-postfilterQuery.setVector(queryVector);
+QueryTableRequestVector vectorQuery4 = new QueryTableRequestVector();
+vectorQuery4.setSingleVector(queryVector);
+postfilterQuery.setVector(vectorQuery4);
 postfilterQuery.setK(10);
 postfilterQuery.setFilter("category = 'electronics'");
 postfilterQuery.setPrefilter(false);
@@ -296,11 +312,11 @@ Lance supports full-text search on string columns. First create an FTS index, th
 CreateTableIndexRequest ftsIndexRequest = new CreateTableIndexRequest();
 ftsIndexRequest.setName("documents");
 ftsIndexRequest.setColumn("content");
-ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
+ftsIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.FTS);
 // Set withPosition=true if you plan to use PhraseQuery
 ftsIndexRequest.setWithPosition(true);
 
-CreateTableIndexResponse ftsResponse = namespace.createIndex(ftsIndexRequest);
+CreateTableIndexResponse ftsResponse = namespace.createTableIndex(ftsIndexRequest);
 // Wait for index to be built
 boolean indexReady = waitForIndexComplete("documents", "content_idx", 30);
 
@@ -439,10 +455,10 @@ byte[] phraseResults = namespace.queryTable(phraseSearchQuery);
     
     Always create your FTS index with position enabled if you plan to use phrase searches:
     ```java
-    CreateIndexRequest ftsIndexRequest = new CreateIndexRequest();
+    CreateTableIndexRequest ftsIndexRequest = new CreateTableIndexRequest();
     ftsIndexRequest.setName("documents");
     ftsIndexRequest.setColumn("content");
-    ftsIndexRequest.setIndexType(CreateIndexRequest.IndexTypeEnum.FTS);
+    ftsIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.FTS);
     ftsIndexRequest.setWithPosition(true);  // Required for PhraseQuery
     ```
 
@@ -494,7 +510,7 @@ scalarIndexRequest.setName("my_table");
 scalarIndexRequest.setColumn("name");
 scalarIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.BITMAP);
 
-CreateTableIndexResponse scalarResponse = namespace.createTableScalarIndex(scalarIndexRequest);
+CreateTableIndexResponse scalarResponse = namespace.createTableIndex(scalarIndexRequest);
 ```
 
 !!! note "Asynchronous Index Creation"
@@ -601,22 +617,25 @@ if (!indexReady) {
 // Create Arrow data with same schema as original table
 byte[] newData = createArrowData(/* new rows */);
 
-InsertTableResponse insertResponse = namespace.insertTable("my_table", newData);
-System.out.println("Inserted " + insertResponse.getNumRows() + " new rows");
+InsertIntoTableRequest insertRequest = new InsertIntoTableRequest();
+insertRequest.setName("my_table");
+insertRequest.setMode(InsertIntoTableRequest.ModeEnum.APPEND);
+InsertIntoTableResponse insertResponse = namespace.insertIntoTable(insertRequest, newData);
+System.out.println("Inserted rows, new version: " + insertResponse.getVersion());
 ```
 
 ### Counting Rows
 
 ```java
-CountRowsRequest countRequest = new CountRowsRequest();
+CountTableRowsRequest countRequest = new CountTableRowsRequest();
 countRequest.setName("my_table");
 
-long rowCount = namespace.countRows(countRequest);
+long rowCount = namespace.countTableRows(countRequest);
 System.out.println("Table has " + rowCount + " rows");
 
 // Count with filter
 countRequest.setFilter("id >= 100 AND id < 200");
-long filteredCount = namespace.countRows(countRequest);
+long filteredCount = namespace.countTableRows(countRequest);
 System.out.println("Filtered count: " + filteredCount + " rows");
 ```
 
@@ -624,10 +643,14 @@ System.out.println("Filtered count: " + filteredCount + " rows");
 
 ```java
 import com.lancedb.lance.namespace.model.UpdateTableRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 // Example: Update rows based on condition
 UpdateTableRequest updateRequest = new UpdateTableRequest();
 updateRequest.setName("my_table");
+updateRequest.setNamespace(new ArrayList<>());
 updateRequest.setPredicate("id >= 50 AND id <= 60");
 
 List<List<String>> updates = new ArrayList<>();
@@ -636,7 +659,7 @@ updates.add(Arrays.asList("some_field", "'updated_value'"));
 updateRequest.setUpdates(updates);
 
 UpdateTableResponse updateResponse = namespace.updateTable(updateRequest);
-System.out.println("Updated " + updateResponse.getNumUpdatedRows() + " rows");
+System.out.println("Updated " + updateResponse.getUpdatedRows() + " rows");
 ```
 
 ### Deleting Data
@@ -647,10 +670,11 @@ import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
 // Delete specific rows
 DeleteFromTableRequest deleteRequest = new DeleteFromTableRequest();
 deleteRequest.setName("my_table");
+deleteRequest.setNamespace(new ArrayList<>());
 deleteRequest.setPredicate("id > 900");
 
 DeleteFromTableResponse deleteResponse = namespace.deleteFromTable(deleteRequest);
-System.out.println("Deleted " + deleteResponse.getNumDeletedRows() + " rows");
+System.out.println("Deleted rows, new version: " + deleteResponse.getVersion());
 ```
 
 ### Describing a Table
@@ -660,9 +684,9 @@ DescribeTableRequest describeRequest = new DescribeTableRequest();
 describeRequest.setName("my_table");
 
 DescribeTableResponse tableInfo = namespace.describeTable(describeRequest);
-System.out.println("Table: " + tableInfo.getName());
+System.out.println("Table location: " + tableInfo.getLocation());
 System.out.println("Schema: " + tableInfo.getSchema());
-System.out.println("Row count: " + tableInfo.getNumRows());
+System.out.println("Version: " + tableInfo.getVersion());
 ```
 
 ### Merge Insert (Upsert)
@@ -676,14 +700,14 @@ byte[] arrowIpcData = prepareArrowData();
 // Create merge request
 MergeInsertIntoTableRequest mergeRequest = new MergeInsertIntoTableRequest();
 mergeRequest.setName("my_table");
+mergeRequest.setOn("id");    // match on id column
+mergeRequest.setWhenMatchedUpdateAll(true);    // when_matched_update_all
+mergeRequest.setWhenNotMatchedInsertAll(true); // when_not_matched_insert_all
 
 // Perform merge insert
 MergeInsertIntoTableResponse response = namespace.mergeInsertIntoTable(
     mergeRequest,
-    arrowIpcData,
-    "id",    // match on id column
-    true,    // when_matched_update_all
-    true     // when_not_matched_insert_all
+    arrowIpcData
 );
 
 System.out.println("Updated rows: " + response.getNumUpdatedRows());

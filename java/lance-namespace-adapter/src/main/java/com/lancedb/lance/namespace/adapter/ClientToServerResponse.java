@@ -17,15 +17,18 @@ import com.lancedb.lance.namespace.server.springboot.model.AlterTransactionRespo
 import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DescribeNamespaceResponse;
-import com.lancedb.lance.namespace.server.springboot.model.DescribeTableResponseV2;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DescribeTransactionResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.JsonDataType;
+import com.lancedb.lance.namespace.server.springboot.model.JsonField;
+import com.lancedb.lance.namespace.server.springboot.model.JsonSchema;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
-import com.lancedb.lance.namespace.server.springboot.model.NamespaceExistsResponse;
 import com.lancedb.lance.namespace.server.springboot.model.RegisterTableResponse;
-import com.lancedb.lance.namespace.server.springboot.model.TableExistsResponse;
 import com.lancedb.lance.namespace.server.springboot.model.TransactionStatus;
+
+import java.util.stream.Collectors;
 
 public class ClientToServerResponse {
 
@@ -64,18 +67,12 @@ public class ClientToServerResponse {
     return converted;
   }
 
-  public static NamespaceExistsResponse namespaceExists(
-      com.lancedb.lance.namespace.model.NamespaceExistsResponse response) {
-    NamespaceExistsResponse converted = new NamespaceExistsResponse();
-    converted.setExists(response.getExists());
-    return converted;
-  }
-
-  public static DescribeTableResponseV2 describeTableV2(
-      com.lancedb.lance.namespace.model.DescribeTableResponseV2 response) {
-    DescribeTableResponseV2 converted = new DescribeTableResponseV2();
-    converted.setNamespace(response.getNamespace());
-    converted.setName(response.getName());
+  public static DescribeTableResponse describeTable(
+      com.lancedb.lance.namespace.model.DescribeTableResponse response) {
+    DescribeTableResponse converted = new DescribeTableResponse();
+    converted.setVersion(response.getVersion());
+    converted.setLocation(response.getLocation());
+    converted.setSchema(convertJsonSchema(response.getSchema()));
     converted.setProperties(response.getProperties());
     return converted;
   }
@@ -85,15 +82,58 @@ public class ClientToServerResponse {
     RegisterTableResponse converted = new RegisterTableResponse();
     converted.setNamespace(response.getNamespace());
     converted.setName(response.getName());
+    converted.setLocation(response.getLocation());
     converted.setProperties(response.getProperties());
     return converted;
   }
 
-  public static TableExistsResponse tableExists(
-      com.lancedb.lance.namespace.model.TableExistsResponse response) {
-    TableExistsResponse converted = new TableExistsResponse();
-    converted.setExists(response.getExists());
-    return converted;
+  private static JsonSchema convertJsonSchema(
+      com.lancedb.lance.namespace.model.JsonSchema clientSchema) {
+    if (clientSchema == null) {
+      return null;
+    }
+
+    JsonSchema serverSchema = new JsonSchema();
+    if (clientSchema.getFields() != null) {
+      serverSchema.setFields(
+          clientSchema.getFields().stream()
+              .map(ClientToServerResponse::convertJsonField)
+              .collect(Collectors.toList()));
+    }
+    serverSchema.setMetadata(clientSchema.getMetadata());
+    return serverSchema;
+  }
+
+  private static JsonField convertJsonField(
+      com.lancedb.lance.namespace.model.JsonField clientField) {
+    if (clientField == null) {
+      return null;
+    }
+
+    JsonField serverField = new JsonField();
+    serverField.setName(clientField.getName());
+    serverField.setNullable(clientField.getNullable());
+    serverField.setType(convertJsonDataType(clientField.getType()));
+    serverField.setMetadata(clientField.getMetadata());
+    return serverField;
+  }
+
+  private static JsonDataType convertJsonDataType(
+      com.lancedb.lance.namespace.model.JsonDataType clientType) {
+    if (clientType == null) {
+      return null;
+    }
+
+    JsonDataType serverType = new JsonDataType();
+    serverType.setType(clientType.getType());
+    if (clientType.getFields() != null) {
+      serverType.setFields(
+          clientType.getFields().stream()
+              .map(ClientToServerResponse::convertJsonField)
+              .collect(Collectors.toList()));
+    }
+    serverType.setLength(clientType.getLength());
+    return serverType;
   }
 
   public static DropTableResponse dropTable(

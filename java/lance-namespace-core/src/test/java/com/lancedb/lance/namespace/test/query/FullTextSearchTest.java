@@ -53,7 +53,9 @@ public class FullTextSearchTest extends BaseNamespaceTest {
               .addRows(1, 5)
               .build();
 
-      CreateTableResponse createResponse = namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create response should not be null");
 
       // Create FTS index
@@ -155,7 +157,9 @@ public class FullTextSearchTest extends BaseNamespaceTest {
 
       byte[] tableData = builder.addRows(1, 30).build();
 
-      namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      namespace.createTable(createRequest, tableData);
 
       // Create FTS index
       CreateTableIndexRequest ftsIndexRequest = new CreateTableIndexRequest();
@@ -259,7 +263,9 @@ public class FullTextSearchTest extends BaseNamespaceTest {
       System.out.println("  - Rows 9-11: contain only 'document'");
       System.out.println("  - Rows 12-15: contain neither");
 
-      namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      namespace.createTable(createRequest, tableData);
 
       // Create FTS index with position for phrase queries
       CreateTableIndexRequest ftsIndexRequest = new CreateTableIndexRequest();

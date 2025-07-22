@@ -47,7 +47,9 @@ public class MergeInsertIntoTableTest extends BaseNamespaceTest {
               .addRow(3, "Charlie", generateVector(3))
               .build();
 
-      CreateTableResponse createResponse = namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
 
       // Verify initial data
@@ -68,14 +70,12 @@ public class MergeInsertIntoTableTest extends BaseNamespaceTest {
       MergeInsertIntoTableRequest mergeRequest = new MergeInsertIntoTableRequest();
       mergeRequest.setName(tableName);
 
+      mergeRequest.setOn("id"); // match on id column
+      mergeRequest.setWhenMatchedUpdateAll(true); // when_matched_update_all
+      mergeRequest.setWhenNotMatchedInsertAll(true); // when_not_matched_insert_all
+
       MergeInsertIntoTableResponse mergeResponse =
-          namespace.mergeInsertIntoTable(
-              mergeRequest,
-              mergeData,
-              "id", // match on id column
-              true, // when_matched_update_all
-              true // when_not_matched_insert_all
-              );
+          namespace.mergeInsertIntoTable(mergeRequest, mergeData);
 
       assertNotNull(mergeResponse, "Merge response should not be null");
       assertEquals(2, mergeResponse.getNumUpdatedRows().longValue(), "Should have updated 2 rows");
@@ -126,8 +126,12 @@ public class MergeInsertIntoTableTest extends BaseNamespaceTest {
       MergeInsertIntoTableRequest insertOnlyRequest = new MergeInsertIntoTableRequest();
       insertOnlyRequest.setName(tableName);
 
+      insertOnlyRequest.setOn("id");
+      insertOnlyRequest.setWhenMatchedUpdateAll(true);
+      insertOnlyRequest.setWhenNotMatchedInsertAll(true);
+
       MergeInsertIntoTableResponse insertOnlyResponse =
-          namespace.mergeInsertIntoTable(insertOnlyRequest, insertOnlyData, "id", true, true);
+          namespace.mergeInsertIntoTable(insertOnlyRequest, insertOnlyData);
 
       assertEquals(
           0, insertOnlyResponse.getNumUpdatedRows().longValue(), "Should have updated 0 rows");
@@ -153,7 +157,9 @@ public class MergeInsertIntoTableTest extends BaseNamespaceTest {
     try {
       // Create initial table
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 5).build();
-      namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      namespace.createTable(createRequest, tableData);
 
       // Try to merge with when_not_matched_insert_all = false
       byte[] mergeData =
@@ -165,14 +171,12 @@ public class MergeInsertIntoTableTest extends BaseNamespaceTest {
       MergeInsertIntoTableRequest mergeRequest = new MergeInsertIntoTableRequest();
       mergeRequest.setName(tableName);
 
+      mergeRequest.setOn("id");
+      mergeRequest.setWhenMatchedUpdateAll(true); // when_matched_update_all
+      mergeRequest.setWhenNotMatchedInsertAll(false); // when_not_matched_insert_all = false
+
       MergeInsertIntoTableResponse mergeResponse =
-          namespace.mergeInsertIntoTable(
-              mergeRequest,
-              mergeData,
-              "id",
-              true, // when_matched_update_all
-              false // when_not_matched_insert_all = false
-              );
+          namespace.mergeInsertIntoTable(mergeRequest, mergeData);
 
       assertEquals(1, mergeResponse.getNumUpdatedRows().longValue(), "Should have updated 1 row");
       assertEquals(

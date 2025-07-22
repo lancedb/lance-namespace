@@ -44,7 +44,9 @@ public class QueryTest extends BaseNamespaceTest {
     try {
       // Create table with 10 rows
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 10).build();
-      namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      namespace.createTable(createRequest, tableData);
 
       // Create vector query
       QueryTableRequest QueryTableRequest = TestUtils.createVectorQuery(tableName, 5, 128);
@@ -92,7 +94,9 @@ public class QueryTest extends BaseNamespaceTest {
     try {
       // Create table with 100 rows for better filter testing
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 100).build();
-      namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      namespace.createTable(createRequest, tableData);
 
       // Test 1: Filter-only query (no vector)
       System.out.println("\n--- Test 1: Filter-only query ---");
@@ -137,7 +141,9 @@ public class QueryTest extends BaseNamespaceTest {
     try {
       // Create table
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 50).build();
-      namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      namespace.createTable(createRequest, tableData);
 
       // Test prefilter = true
       System.out.println("\n--- Testing prefilter = true ---");
@@ -187,7 +193,9 @@ public class QueryTest extends BaseNamespaceTest {
     try {
       // Create table
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 100).build();
-      namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      namespace.createTable(createRequest, tableData);
 
       // Test fast_search = true
       System.out.println("\n--- Testing fast_search = true ---");
@@ -228,7 +236,9 @@ public class QueryTest extends BaseNamespaceTest {
     try {
       // Create table
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 20).build();
-      namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      namespace.createTable(createRequest, tableData);
 
       // Query with specific columns
       QueryTableRequest columnQuery = new QueryTableRequest();

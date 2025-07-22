@@ -42,7 +42,9 @@ public class TableLifecycleTest extends BaseNamespaceTest {
       System.out.println("\n--- Creating table ---");
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 3).build();
 
-      CreateTableResponse createResponse = namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create response should not be null");
       System.out.println("✓ Table created successfully: " + tableName);
 
@@ -59,9 +61,7 @@ public class TableLifecycleTest extends BaseNamespaceTest {
 
       DescribeTableResponse describeResponse = namespace.describeTable(describeRequest);
       assertNotNull(describeResponse, "Describe response should not be null");
-      assertEquals(tableName, describeResponse.getTable(), "Table name should match in describe");
       assertNotNull(describeResponse.getSchema(), "Schema should not be null");
-      assertNotNull(describeResponse.getStats(), "Stats should not be null");
 
       // Verify schema
       JsonSchema responseSchema = describeResponse.getSchema();
@@ -80,11 +80,7 @@ public class TableLifecycleTest extends BaseNamespaceTest {
       // Verify version and stats
       assertNotNull(describeResponse.getVersion(), "Version should not be null");
       assertTrue(describeResponse.getVersion() >= 1, "Version should be at least 1 for new table");
-      assertTrue(
-          describeResponse.getStats().getNumFragments() >= 0,
-          "Number of fragments should be non-negative");
       System.out.println("✓ Table version: " + describeResponse.getVersion());
-      System.out.println("✓ Table fragments: " + describeResponse.getStats().getNumFragments());
 
       // Test insert table
       System.out.println("\n--- Testing insert table ---");
@@ -93,8 +89,11 @@ public class TableLifecycleTest extends BaseNamespaceTest {
               .addRows(1000, 2) // Start IDs from 1000 to differentiate
               .build();
 
+      InsertIntoTableRequest insertRequest = new InsertIntoTableRequest();
+      insertRequest.setName(tableName);
+      insertRequest.setMode(InsertIntoTableRequest.ModeEnum.APPEND);
       InsertIntoTableResponse insertResponse =
-          namespace.insertIntoTable(tableName, insertData1, "append");
+          namespace.insertIntoTable(insertRequest, insertData1);
       assertNotNull(insertResponse, "Insert response should not be null");
       assertNotNull(insertResponse.getVersion(), "Insert response version should not be null");
       System.out.println("✓ Inserted 2 rows, new version: " + insertResponse.getVersion());
@@ -111,8 +110,11 @@ public class TableLifecycleTest extends BaseNamespaceTest {
               .addRows(2000, 3) // Start IDs from 2000
               .build();
 
+      InsertIntoTableRequest insertRequest2 = new InsertIntoTableRequest();
+      insertRequest2.setName(tableName);
+      insertRequest2.setMode(InsertIntoTableRequest.ModeEnum.APPEND);
       InsertIntoTableResponse secondInsertResponse =
-          namespace.insertIntoTable(tableName, insertData2, "append");
+          namespace.insertIntoTable(insertRequest2, insertData2);
       assertNotNull(secondInsertResponse, "Second insert response should not be null");
       System.out.println(
           "✓ Inserted 3 more rows, new version: " + secondInsertResponse.getVersion());
@@ -152,7 +154,9 @@ public class TableLifecycleTest extends BaseNamespaceTest {
     try {
       // Create table
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 5).build();
-      CreateTableResponse createResponse = namespace.createTable(tableName, tableData);
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setName(tableName);
+      CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create response should not be null");
 
       // Get initial version
@@ -164,7 +168,10 @@ public class TableLifecycleTest extends BaseNamespaceTest {
 
       // Insert more data to create new version
       byte[] insertData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(100, 5).build();
-      namespace.insertIntoTable(tableName, insertData, "append");
+      InsertIntoTableRequest insertRequest = new InsertIntoTableRequest();
+      insertRequest.setName(tableName);
+      insertRequest.setMode(InsertIntoTableRequest.ModeEnum.APPEND);
+      namespace.insertIntoTable(insertRequest, insertData);
 
       // Describe current version
       DescribeTableRequest describeCurrent = new DescribeTableRequest();
@@ -203,12 +210,7 @@ public class TableLifecycleTest extends BaseNamespaceTest {
         }
       }
 
-      // Verify TableBasicStats structure
-      TableBasicStats stats = oldVersionResponse.getStats();
-      assertNotNull(stats, "Stats should not be null");
-      assertNotNull(stats.getNumDeletedRows(), "Num deleted rows should not be null");
-      assertNotNull(stats.getNumFragments(), "Num fragments should not be null");
-      assertTrue(stats.getNumFragments() >= 0, "Num fragments should be non-negative");
+      // Stats are not part of the response according to the current API
 
       System.out.println("✓ Describe table with version tested successfully");
 

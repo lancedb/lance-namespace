@@ -21,7 +21,7 @@ import com.lancedb.lance.namespace.model.AlterTransactionUnsetProperty;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
-import com.lancedb.lance.namespace.model.DescribeTableRequestV2;
+import com.lancedb.lance.namespace.model.DescribeTableRequest;
 import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropTableRequest;
@@ -76,11 +76,12 @@ public class ServerToClientRequest {
     return converted;
   }
 
-  public static DescribeTableRequestV2 describeTableV2(
-      com.lancedb.lance.namespace.server.springboot.model.DescribeTableRequestV2 request) {
-    DescribeTableRequestV2 converted = new DescribeTableRequestV2();
+  public static DescribeTableRequest describeTable(
+      com.lancedb.lance.namespace.server.springboot.model.DescribeTableRequest request) {
+    DescribeTableRequest converted = new DescribeTableRequest();
     converted.setNamespace(request.getNamespace());
     converted.setName(request.getName());
+    converted.setVersion(request.getVersion());
     return converted;
   }
 
