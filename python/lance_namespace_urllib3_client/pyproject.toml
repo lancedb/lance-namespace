@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lance_namespace_urllib3_client"
-version = "0.0.1"
+version = "0.0.2"
 description = "Lance Namespace Specification"
 authors = ["OpenAPI Generator Community <team@openapitools.org>"]
 license = "Apache 2.0"

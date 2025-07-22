@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VERSION = 0.0.1
+VERSION = 0.0.2
 
 clean-python-urllib3-client:
 	rm -rf lance_namespace_urllib3_client/**

@@ -10,7 +10,7 @@ Add the following dependency to your Maven project:
 <dependency>
     <groupId>com.lancedb</groupId>
     <artifactId>lance-namespace-core</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 
