@@ -15,11 +15,17 @@ The request and response schemas are used as the actual request and response of 
 The key design principle of the REST route is that all the necessary information for a reverse proxy 
 (e.g. load balancing, authN, authZ) should be available for access without the need to deserialize request body.
 
-Because the information could also present in the request body, when the information in the route and 
-request body does not match, the server must throw a 400 Bad Request error.
+The information in the route could also present in the request body.
+When the information in the route and request body both present but do not match, the server must throw a 400 Bad Request error.
+When the information in the request body is missing, the server must use the information in the route instead.
 
 For routes that involve multiple objects, all related objects should be present in the route.
 For example, the route for `RenameTable` is thus `POST /v1/table/{id}/rename/to/{id}`.
+
+## Handling Non-Standard Request and Response
+
+For request and response that cannot be simply described as a JSON object (e.g. `InsertIntoTable`),
+the REST server cannot simply implement the 
 
 ## Namespace Server and Adapter
 

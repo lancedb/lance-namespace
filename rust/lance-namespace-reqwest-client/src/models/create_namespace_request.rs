@@ -13,8 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateNamespaceRequest {
-    #[serde(rename = "name")]
-    pub name: String,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
     #[serde(rename = "parent", skip_serializing_if = "Option::is_none")]
     pub parent: Option<Vec<String>>,
     #[serde(rename = "mode")]
@@ -24,9 +24,9 @@ pub struct CreateNamespaceRequest {
 }
 
 impl CreateNamespaceRequest {
-    pub fn new(name: String, mode: Mode) -> CreateNamespaceRequest {
+    pub fn new(mode: Mode) -> CreateNamespaceRequest {
         CreateNamespaceRequest {
-            name,
+            name: None,
             parent: None,
             mode,
             options: None,

@@ -30,9 +30,7 @@ from lance_namespace_urllib3_client.models.deregister_table_response import Dere
 from lance_namespace_urllib3_client.models.describe_table_index_stats_request import DescribeTableIndexStatsRequest
 from lance_namespace_urllib3_client.models.describe_table_index_stats_response import DescribeTableIndexStatsResponse
 from lance_namespace_urllib3_client.models.describe_table_request import DescribeTableRequest
-from lance_namespace_urllib3_client.models.describe_table_request_v2 import DescribeTableRequestV2
 from lance_namespace_urllib3_client.models.describe_table_response import DescribeTableResponse
-from lance_namespace_urllib3_client.models.describe_table_response_v2 import DescribeTableResponseV2
 from lance_namespace_urllib3_client.models.drop_table_request import DropTableRequest
 from lance_namespace_urllib3_client.models.drop_table_response import DropTableResponse
 from lance_namespace_urllib3_client.models.insert_into_table_response import InsertIntoTableResponse
@@ -393,7 +391,9 @@ class TableApi:
     def create_table(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
+        x_lance_table_location: Annotated[StrictStr, Field(description="URI pointing to root location to create the table at")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
+        x_lance_table_properties: Annotated[Optional[StrictStr], Field(description="JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -409,12 +409,16 @@ class TableApi:
     ) -> CreateTableResponse:
         """Create a table with the given name
 
-        Create a new table in the namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+        Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
+        :param x_lance_table_location: URI pointing to root location to create the table at (required)
+        :type x_lance_table_location: str
         :param body: Arrow IPC data (required)
         :type body: bytearray
+        :param x_lance_table_properties: JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
+        :type x_lance_table_properties: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -439,7 +443,9 @@ class TableApi:
 
         _param = self._create_table_serialize(
             id=id,
+            x_lance_table_location=x_lance_table_location,
             body=body,
+            x_lance_table_properties=x_lance_table_properties,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -470,7 +476,9 @@ class TableApi:
     def create_table_with_http_info(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
+        x_lance_table_location: Annotated[StrictStr, Field(description="URI pointing to root location to create the table at")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
+        x_lance_table_properties: Annotated[Optional[StrictStr], Field(description="JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -486,12 +494,16 @@ class TableApi:
     ) -> ApiResponse[CreateTableResponse]:
         """Create a table with the given name
 
-        Create a new table in the namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+        Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
+        :param x_lance_table_location: URI pointing to root location to create the table at (required)
+        :type x_lance_table_location: str
         :param body: Arrow IPC data (required)
         :type body: bytearray
+        :param x_lance_table_properties: JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
+        :type x_lance_table_properties: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -516,7 +528,9 @@ class TableApi:
 
         _param = self._create_table_serialize(
             id=id,
+            x_lance_table_location=x_lance_table_location,
             body=body,
+            x_lance_table_properties=x_lance_table_properties,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -547,7 +561,9 @@ class TableApi:
     def create_table_without_preload_content(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
+        x_lance_table_location: Annotated[StrictStr, Field(description="URI pointing to root location to create the table at")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
+        x_lance_table_properties: Annotated[Optional[StrictStr], Field(description="JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -563,12 +579,16 @@ class TableApi:
     ) -> RESTResponseType:
         """Create a table with the given name
 
-        Create a new table in the namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+        Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
+        :param x_lance_table_location: URI pointing to root location to create the table at (required)
+        :type x_lance_table_location: str
         :param body: Arrow IPC data (required)
         :type body: bytearray
+        :param x_lance_table_properties: JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
+        :type x_lance_table_properties: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -593,7 +613,9 @@ class TableApi:
 
         _param = self._create_table_serialize(
             id=id,
+            x_lance_table_location=x_lance_table_location,
             body=body,
+            x_lance_table_properties=x_lance_table_properties,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -619,7 +641,9 @@ class TableApi:
     def _create_table_serialize(
         self,
         id,
+        x_lance_table_location,
         body,
+        x_lance_table_properties,
         _request_auth,
         _content_type,
         _headers,
@@ -645,6 +669,10 @@ class TableApi:
             _path_params['id'] = id
         # process the query parameters
         # process the header parameters
+        if x_lance_table_location is not None:
+            _header_params['x-lance-table-location'] = x_lance_table_location
+        if x_lance_table_properties is not None:
+            _header_params['x-lance-table-properties'] = x_lance_table_properties
         # process the form parameters
         # process the body parameter
         if body is not None:
@@ -674,7 +702,7 @@ class TableApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/x-arrow-ipc'
+                        'application/vnd.apache.arrow.stream'
                     ]
                 )
             )
@@ -723,7 +751,7 @@ class TableApi:
     ) -> CreateTableIndexResponse:
         """Create an index on a table
 
-        Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes. Index creation is handled asynchronously.  Use the `listIndices` and `getIndexStats` operations to monitor index creation progress. 
+        Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously.  Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -800,7 +828,7 @@ class TableApi:
     ) -> ApiResponse[CreateTableIndexResponse]:
         """Create an index on a table
 
-        Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes. Index creation is handled asynchronously.  Use the `listIndices` and `getIndexStats` operations to monitor index creation progress. 
+        Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously.  Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -877,7 +905,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Create an index on a table
 
-        Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes. Index creation is handled asynchronously.  Use the `listIndices` and `getIndexStats` operations to monitor index creation progress. 
+        Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously.  Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -994,312 +1022,6 @@ class TableApi:
         return self.api_client.param_serialize(
             method='POST',
             resource_path='/v1/table/{id}/create_index',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def create_table_scalar_index(
-        self,
-        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        create_table_index_request: Annotated[CreateTableIndexRequest, Field(description="Scalar index creation request")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateTableIndexResponse:
-        """Create a scalar index on a table
-
-        Create a scalar index on a table column for faster search operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST). 
-
-        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
-        :type id: str
-        :param create_table_index_request: Scalar index creation request (required)
-        :type create_table_index_request: CreateTableIndexRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._create_table_scalar_index_serialize(
-            id=id,
-            create_table_index_request=create_table_index_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateTableIndexResponse",
-            '400': "ErrorResponse",
-            '401': "ErrorResponse",
-            '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def create_table_scalar_index_with_http_info(
-        self,
-        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        create_table_index_request: Annotated[CreateTableIndexRequest, Field(description="Scalar index creation request")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateTableIndexResponse]:
-        """Create a scalar index on a table
-
-        Create a scalar index on a table column for faster search operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST). 
-
-        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
-        :type id: str
-        :param create_table_index_request: Scalar index creation request (required)
-        :type create_table_index_request: CreateTableIndexRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._create_table_scalar_index_serialize(
-            id=id,
-            create_table_index_request=create_table_index_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateTableIndexResponse",
-            '400': "ErrorResponse",
-            '401': "ErrorResponse",
-            '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def create_table_scalar_index_without_preload_content(
-        self,
-        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        create_table_index_request: Annotated[CreateTableIndexRequest, Field(description="Scalar index creation request")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Create a scalar index on a table
-
-        Create a scalar index on a table column for faster search operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST). 
-
-        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
-        :type id: str
-        :param create_table_index_request: Scalar index creation request (required)
-        :type create_table_index_request: CreateTableIndexRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._create_table_scalar_index_serialize(
-            id=id,
-            create_table_index_request=create_table_index_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateTableIndexResponse",
-            '400': "ErrorResponse",
-            '401': "ErrorResponse",
-            '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _create_table_scalar_index_serialize(
-        self,
-        id,
-        create_table_index_request,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if id is not None:
-            _path_params['id'] = id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if create_table_index_request is not None:
-            _body_params = create_table_index_request
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/v1/table/{id}/create_scalar_index',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2286,7 +2008,7 @@ class TableApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> DescribeTableIndexStatsResponse:
-        """Get index statistics
+        """Get table index statistics
 
         Get statistics for a specific index on a table. Returns information about the index type, distance type (for vector indices), and row counts. 
 
@@ -2367,7 +2089,7 @@ class TableApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[DescribeTableIndexStatsResponse]:
-        """Get index statistics
+        """Get table index statistics
 
         Get statistics for a specific index on a table. Returns information about the index type, distance type (for vector indices), and row counts. 
 
@@ -2448,7 +2170,7 @@ class TableApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get index statistics
+        """Get table index statistics
 
         Get statistics for a specific index on a table. Returns information about the index type, distance type (for vector indices), and row counts. 
 
@@ -2573,329 +2295,6 @@ class TableApi:
         return self.api_client.param_serialize(
             method='POST',
             resource_path='/v1/table/{id}/index/{index_name}/stats',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def describe_table_v2(
-        self,
-        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        describe_table_request_v2: DescribeTableRequestV2,
-        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> DescribeTableResponseV2:
-        """Describe a table from the namespace
-
-        Get a table's detailed information under a specified namespace. 
-
-        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
-        :type id: str
-        :param describe_table_request_v2: (required)
-        :type describe_table_request_v2: DescribeTableRequestV2
-        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
-        :type delimiter: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._describe_table_v2_serialize(
-            id=id,
-            describe_table_request_v2=describe_table_request_v2,
-            delimiter=delimiter,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "DescribeTableResponseV2",
-            '400': "ErrorResponse",
-            '401': "ErrorResponse",
-            '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def describe_table_v2_with_http_info(
-        self,
-        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        describe_table_request_v2: DescribeTableRequestV2,
-        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[DescribeTableResponseV2]:
-        """Describe a table from the namespace
-
-        Get a table's detailed information under a specified namespace. 
-
-        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
-        :type id: str
-        :param describe_table_request_v2: (required)
-        :type describe_table_request_v2: DescribeTableRequestV2
-        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
-        :type delimiter: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._describe_table_v2_serialize(
-            id=id,
-            describe_table_request_v2=describe_table_request_v2,
-            delimiter=delimiter,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "DescribeTableResponseV2",
-            '400': "ErrorResponse",
-            '401': "ErrorResponse",
-            '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def describe_table_v2_without_preload_content(
-        self,
-        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        describe_table_request_v2: DescribeTableRequestV2,
-        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Describe a table from the namespace
-
-        Get a table's detailed information under a specified namespace. 
-
-        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
-        :type id: str
-        :param describe_table_request_v2: (required)
-        :type describe_table_request_v2: DescribeTableRequestV2
-        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
-        :type delimiter: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._describe_table_v2_serialize(
-            id=id,
-            describe_table_request_v2=describe_table_request_v2,
-            delimiter=delimiter,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "DescribeTableResponseV2",
-            '400': "ErrorResponse",
-            '401': "ErrorResponse",
-            '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _describe_table_v2_serialize(
-        self,
-        id,
-        describe_table_request_v2,
-        delimiter,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if id is not None:
-            _path_params['id'] = id
-        # process the query parameters
-        if delimiter is not None:
-            
-            _query_params.append(('delimiter', delimiter))
-            
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if describe_table_request_v2 is not None:
-            _body_params = describe_table_request_v2
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/v2/table/{id}/describe',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -3536,7 +2935,7 @@ class TableApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/x-arrow-ipc'
+                        'application/vnd.apache.arrow.stream'
                     ]
                 )
             )
@@ -4181,7 +3580,7 @@ class TableApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/namespace/{id}/list_tables',
+            resource_path='/v1/namespace/{id}/table/list',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -4204,7 +3603,10 @@ class TableApi:
         on: Annotated[StrictStr, Field(description="Column name to use for matching rows (required)")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data containing the records to merge")],
         when_matched_update_all: Annotated[Optional[StrictBool], Field(description="Update all columns when rows match")] = None,
+        when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true")] = None,
         when_not_matched_insert_all: Annotated[Optional[StrictBool], Field(description="Insert all columns when rows don't match")] = None,
+        when_not_matched_by_source_delete: Annotated[Optional[StrictBool], Field(description="Delete all rows from target table that don't match a row in the source table")] = None,
+        when_not_matched_by_source_delete_filt: Annotated[Optional[StrictStr], Field(description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4230,8 +3632,14 @@ class TableApi:
         :type body: bytearray
         :param when_matched_update_all: Update all columns when rows match
         :type when_matched_update_all: bool
+        :param when_matched_update_all_filt: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
+        :type when_matched_update_all_filt: str
         :param when_not_matched_insert_all: Insert all columns when rows don't match
         :type when_not_matched_insert_all: bool
+        :param when_not_matched_by_source_delete: Delete all rows from target table that don't match a row in the source table
+        :type when_not_matched_by_source_delete: bool
+        :param when_not_matched_by_source_delete_filt: Delete rows from the target table if there is no match AND the SQL expression evaluates to true
+        :type when_not_matched_by_source_delete_filt: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4259,7 +3667,10 @@ class TableApi:
             on=on,
             body=body,
             when_matched_update_all=when_matched_update_all,
+            when_matched_update_all_filt=when_matched_update_all_filt,
             when_not_matched_insert_all=when_not_matched_insert_all,
+            when_not_matched_by_source_delete=when_not_matched_by_source_delete,
+            when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4293,7 +3704,10 @@ class TableApi:
         on: Annotated[StrictStr, Field(description="Column name to use for matching rows (required)")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data containing the records to merge")],
         when_matched_update_all: Annotated[Optional[StrictBool], Field(description="Update all columns when rows match")] = None,
+        when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true")] = None,
         when_not_matched_insert_all: Annotated[Optional[StrictBool], Field(description="Insert all columns when rows don't match")] = None,
+        when_not_matched_by_source_delete: Annotated[Optional[StrictBool], Field(description="Delete all rows from target table that don't match a row in the source table")] = None,
+        when_not_matched_by_source_delete_filt: Annotated[Optional[StrictStr], Field(description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4319,8 +3733,14 @@ class TableApi:
         :type body: bytearray
         :param when_matched_update_all: Update all columns when rows match
         :type when_matched_update_all: bool
+        :param when_matched_update_all_filt: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
+        :type when_matched_update_all_filt: str
         :param when_not_matched_insert_all: Insert all columns when rows don't match
         :type when_not_matched_insert_all: bool
+        :param when_not_matched_by_source_delete: Delete all rows from target table that don't match a row in the source table
+        :type when_not_matched_by_source_delete: bool
+        :param when_not_matched_by_source_delete_filt: Delete rows from the target table if there is no match AND the SQL expression evaluates to true
+        :type when_not_matched_by_source_delete_filt: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4348,7 +3768,10 @@ class TableApi:
             on=on,
             body=body,
             when_matched_update_all=when_matched_update_all,
+            when_matched_update_all_filt=when_matched_update_all_filt,
             when_not_matched_insert_all=when_not_matched_insert_all,
+            when_not_matched_by_source_delete=when_not_matched_by_source_delete,
+            when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4382,7 +3805,10 @@ class TableApi:
         on: Annotated[StrictStr, Field(description="Column name to use for matching rows (required)")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data containing the records to merge")],
         when_matched_update_all: Annotated[Optional[StrictBool], Field(description="Update all columns when rows match")] = None,
+        when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true")] = None,
         when_not_matched_insert_all: Annotated[Optional[StrictBool], Field(description="Insert all columns when rows don't match")] = None,
+        when_not_matched_by_source_delete: Annotated[Optional[StrictBool], Field(description="Delete all rows from target table that don't match a row in the source table")] = None,
+        when_not_matched_by_source_delete_filt: Annotated[Optional[StrictStr], Field(description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4408,8 +3834,14 @@ class TableApi:
         :type body: bytearray
         :param when_matched_update_all: Update all columns when rows match
         :type when_matched_update_all: bool
+        :param when_matched_update_all_filt: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
+        :type when_matched_update_all_filt: str
         :param when_not_matched_insert_all: Insert all columns when rows don't match
         :type when_not_matched_insert_all: bool
+        :param when_not_matched_by_source_delete: Delete all rows from target table that don't match a row in the source table
+        :type when_not_matched_by_source_delete: bool
+        :param when_not_matched_by_source_delete_filt: Delete rows from the target table if there is no match AND the SQL expression evaluates to true
+        :type when_not_matched_by_source_delete_filt: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4437,7 +3869,10 @@ class TableApi:
             on=on,
             body=body,
             when_matched_update_all=when_matched_update_all,
+            when_matched_update_all_filt=when_matched_update_all_filt,
             when_not_matched_insert_all=when_not_matched_insert_all,
+            when_not_matched_by_source_delete=when_not_matched_by_source_delete,
+            when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4466,7 +3901,10 @@ class TableApi:
         on,
         body,
         when_matched_update_all,
+        when_matched_update_all_filt,
         when_not_matched_insert_all,
+        when_not_matched_by_source_delete,
+        when_not_matched_by_source_delete_filt,
         _request_auth,
         _content_type,
         _headers,
@@ -4499,9 +3937,21 @@ class TableApi:
             
             _query_params.append(('when_matched_update_all', when_matched_update_all))
             
+        if when_matched_update_all_filt is not None:
+            
+            _query_params.append(('when_matched_update_all_filt', when_matched_update_all_filt))
+            
         if when_not_matched_insert_all is not None:
             
             _query_params.append(('when_not_matched_insert_all', when_not_matched_insert_all))
+            
+        if when_not_matched_by_source_delete is not None:
+            
+            _query_params.append(('when_not_matched_by_source_delete', when_not_matched_by_source_delete))
+            
+        if when_not_matched_by_source_delete_filt is not None:
+            
+            _query_params.append(('when_not_matched_by_source_delete_filt', when_not_matched_by_source_delete_filt))
             
         # process the header parameters
         # process the form parameters
@@ -4533,7 +3983,7 @@ class TableApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/x-arrow-ipc'
+                        'application/vnd.apache.arrow.stream'
                     ]
                 )
             )
@@ -4582,7 +4032,7 @@ class TableApi:
     ) -> bytearray:
         """Query a table
 
-        Query a table with vector search and optional filtering. Returns results in Arrow IPC stream format. 
+        Query a table with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4659,7 +4109,7 @@ class TableApi:
     ) -> ApiResponse[bytearray]:
         """Query a table
 
-        Query a table with vector search and optional filtering. Returns results in Arrow IPC stream format. 
+        Query a table with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4736,7 +4186,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Query a table
 
-        Query a table with vector search and optional filtering. Returns results in Arrow IPC stream format. 
+        Query a table with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4828,6 +4278,7 @@ class TableApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
+                    'application/vnd.apache.arrow.file', 
                     'application/vnd.apache.arrow.stream', 
                     'application/json'
                 ]

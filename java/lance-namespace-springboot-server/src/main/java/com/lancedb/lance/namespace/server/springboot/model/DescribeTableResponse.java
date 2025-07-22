@@ -31,29 +31,42 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DescribeTableResponse {
 
-  private String location;
+  private Long version;
 
-  @Valid private Map<String, String> properties = new HashMap<>();
+  private String location;
 
   private JsonSchema schema;
 
-  private TableBasicStats stats;
-
-  private String table;
-
-  private Long version;
+  @Valid private Map<String, String> properties = new HashMap<>();
 
   public DescribeTableResponse() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public DescribeTableResponse(
-      String location, JsonSchema schema, TableBasicStats stats, String table, Long version) {
+  public DescribeTableResponse(String location, JsonSchema schema) {
     this.location = location;
     this.schema = schema;
-    this.stats = stats;
-    this.table = table;
+  }
+
+  public DescribeTableResponse version(Long version) {
+    this.version = version;
+    return this;
+  }
+
+  /**
+   * Get version minimum: 0
+   *
+   * @return version
+   */
+  @Min(0L)
+  @Schema(name = "version", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("version")
+  public Long getVersion() {
+    return version;
+  }
+
+  public void setVersion(Long version) {
     this.version = version;
   }
 
@@ -76,6 +89,28 @@ public class DescribeTableResponse {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public DescribeTableResponse schema(JsonSchema schema) {
+    this.schema = schema;
+    return this;
+  }
+
+  /**
+   * Get schema
+   *
+   * @return schema
+   */
+  @NotNull
+  @Valid
+  @Schema(name = "schema", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("schema")
+  public JsonSchema getSchema() {
+    return schema;
+  }
+
+  public void setSchema(JsonSchema schema) {
+    this.schema = schema;
   }
 
   public DescribeTableResponse properties(Map<String, String> properties) {
@@ -106,93 +141,6 @@ public class DescribeTableResponse {
     this.properties = properties;
   }
 
-  public DescribeTableResponse schema(JsonSchema schema) {
-    this.schema = schema;
-    return this;
-  }
-
-  /**
-   * Get schema
-   *
-   * @return schema
-   */
-  @NotNull
-  @Valid
-  @Schema(name = "schema", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("schema")
-  public JsonSchema getSchema() {
-    return schema;
-  }
-
-  public void setSchema(JsonSchema schema) {
-    this.schema = schema;
-  }
-
-  public DescribeTableResponse stats(TableBasicStats stats) {
-    this.stats = stats;
-    return this;
-  }
-
-  /**
-   * Get stats
-   *
-   * @return stats
-   */
-  @NotNull
-  @Valid
-  @Schema(name = "stats", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("stats")
-  public TableBasicStats getStats() {
-    return stats;
-  }
-
-  public void setStats(TableBasicStats stats) {
-    this.stats = stats;
-  }
-
-  public DescribeTableResponse table(String table) {
-    this.table = table;
-    return this;
-  }
-
-  /**
-   * Get table
-   *
-   * @return table
-   */
-  @NotNull
-  @Schema(name = "table", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("table")
-  public String getTable() {
-    return table;
-  }
-
-  public void setTable(String table) {
-    this.table = table;
-  }
-
-  public DescribeTableResponse version(Long version) {
-    this.version = version;
-    return this;
-  }
-
-  /**
-   * Get version minimum: 0
-   *
-   * @return version
-   */
-  @NotNull
-  @Min(0L)
-  @Schema(name = "version", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("version")
-  public Long getVersion() {
-    return version;
-  }
-
-  public void setVersion(Long version) {
-    this.version = version;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -202,29 +150,25 @@ public class DescribeTableResponse {
       return false;
     }
     DescribeTableResponse describeTableResponse = (DescribeTableResponse) o;
-    return Objects.equals(this.location, describeTableResponse.location)
-        && Objects.equals(this.properties, describeTableResponse.properties)
+    return Objects.equals(this.version, describeTableResponse.version)
+        && Objects.equals(this.location, describeTableResponse.location)
         && Objects.equals(this.schema, describeTableResponse.schema)
-        && Objects.equals(this.stats, describeTableResponse.stats)
-        && Objects.equals(this.table, describeTableResponse.table)
-        && Objects.equals(this.version, describeTableResponse.version);
+        && Objects.equals(this.properties, describeTableResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(location, properties, schema, stats, table, version);
+    return Objects.hash(version, location, schema, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeTableResponse {\n");
-    sb.append("    location: ").append(toIndentedString(location)).append("\n");
-    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
-    sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
-    sb.append("    stats: ").append(toIndentedString(stats)).append("\n");
-    sb.append("    table: ").append(toIndentedString(table)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
+    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
   }

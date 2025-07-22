@@ -15,6 +15,19 @@ use crate::{apis::ResponseContent, models};
 use super::{Error, configuration, ContentType};
 
 
+/// struct for typed errors of method [`count_table_rows`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CountTableRowsError {
+    Status400(models::ErrorResponse),
+    Status401(models::ErrorResponse),
+    Status403(models::ErrorResponse),
+    Status404(models::ErrorResponse),
+    Status503(models::ErrorResponse),
+    Status5XX(models::ErrorResponse),
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`delete_from_table`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -80,6 +93,49 @@ pub enum UpdateTableError {
     UnknownValue(serde_json::Value),
 }
 
+
+/// Count the number of rows in a table. 
+pub async fn count_table_rows(configuration: &configuration::Configuration, id: &str, count_table_rows_request: models::CountTableRowsRequest, delimiter: Option<&str>) -> Result<i64, Error<CountTableRowsError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
+    let p_count_table_rows_request = count_table_rows_request;
+    let p_delimiter = delimiter;
+
+    let uri_str = format!("{}/v1/table/{id}/count_rows", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    req_builder = req_builder.json(&p_count_table_rows_request);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `i64`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `i64`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<CountTableRowsError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
 
 /// Delete rows from a table based on a SQL predicate. Returns the number of rows that were deleted. 
 pub async fn delete_from_table(configuration: &configuration::Configuration, id: &str, delete_from_table_request: models::DeleteFromTableRequest) -> Result<models::DeleteFromTableResponse, Error<DeleteFromTableError>> {
@@ -164,13 +220,16 @@ pub async fn insert_into_table(configuration: &configuration::Configuration, id:
 }
 
 /// Performs a merge insert (upsert) operation on a table. This operation updates existing rows based on a matching column and inserts new rows that don't match. Returns the number of rows inserted and updated. 
-pub async fn merge_insert_into_table(configuration: &configuration::Configuration, id: &str, on: &str, body: Vec<u8>, when_matched_update_all: Option<bool>, when_not_matched_insert_all: Option<bool>) -> Result<models::MergeInsertIntoTableResponse, Error<MergeInsertIntoTableError>> {
+pub async fn merge_insert_into_table(configuration: &configuration::Configuration, id: &str, on: &str, body: Vec<u8>, when_matched_update_all: Option<bool>, when_matched_update_all_filt: Option<&str>, when_not_matched_insert_all: Option<bool>, when_not_matched_by_source_delete: Option<bool>, when_not_matched_by_source_delete_filt: Option<&str>) -> Result<models::MergeInsertIntoTableResponse, Error<MergeInsertIntoTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_on = on;
     let p_body = body;
     let p_when_matched_update_all = when_matched_update_all;
+    let p_when_matched_update_all_filt = when_matched_update_all_filt;
     let p_when_not_matched_insert_all = when_not_matched_insert_all;
+    let p_when_not_matched_by_source_delete = when_not_matched_by_source_delete;
+    let p_when_not_matched_by_source_delete_filt = when_not_matched_by_source_delete_filt;
 
     let uri_str = format!("{}/v1/table/{id}/merge_insert", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
@@ -179,8 +238,17 @@ pub async fn merge_insert_into_table(configuration: &configuration::Configuratio
     if let Some(ref param_value) = p_when_matched_update_all {
         req_builder = req_builder.query(&[("when_matched_update_all", &param_value.to_string())]);
     }
+    if let Some(ref param_value) = p_when_matched_update_all_filt {
+        req_builder = req_builder.query(&[("when_matched_update_all_filt", &param_value.to_string())]);
+    }
     if let Some(ref param_value) = p_when_not_matched_insert_all {
         req_builder = req_builder.query(&[("when_not_matched_insert_all", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_when_not_matched_by_source_delete {
+        req_builder = req_builder.query(&[("when_not_matched_by_source_delete", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_when_not_matched_by_source_delete_filt {
+        req_builder = req_builder.query(&[("when_not_matched_by_source_delete_filt", &param_value.to_string())]);
     }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
@@ -212,7 +280,7 @@ pub async fn merge_insert_into_table(configuration: &configuration::Configuratio
     }
 }
 
-/// Query a table with vector search and optional filtering. Returns results in Arrow IPC stream format. 
+/// Query a table with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
 pub async fn query_table(configuration: &configuration::Configuration, id: &str, query_table_request: models::QueryTableRequest) -> Result<reqwest::Response, Error<QueryTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;

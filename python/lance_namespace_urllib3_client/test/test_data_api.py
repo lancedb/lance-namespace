@@ -26,6 +26,13 @@ class TestDataApi(unittest.TestCase):
     def tearDown(self) -> None:
         pass
 
+    def test_count_table_rows(self) -> None:
+        """Test case for count_table_rows
+
+        Count rows in a table
+        """
+        pass
+
     def test_delete_from_table(self) -> None:
         """Test case for delete_from_table
 

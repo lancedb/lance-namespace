@@ -7,12 +7,10 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
+|**version** | **Long** |  |  [optional] |
 |**location** | **String** |  |  |
-|**properties** | **Map&lt;String, String&gt;** |  |  [optional] |
 |**schema** | [**JsonSchema**](JsonSchema.md) |  |  |
-|**stats** | [**TableBasicStats**](TableBasicStats.md) |  |  |
-|**table** | **String** |  |  |
-|**version** | **Long** |  |  |
+|**properties** | **Map&lt;String, String&gt;** |  |  [optional] |
 
 
 

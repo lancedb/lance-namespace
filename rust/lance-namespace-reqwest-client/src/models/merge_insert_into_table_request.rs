@@ -11,21 +11,47 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
+/// MergeInsertIntoTableRequest : Request for merging or inserting records into a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MergeInsertIntoTableRequest {
     /// The table name
-    #[serde(rename = "name")]
-    pub name: String,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
     /// The namespace identifier
-    #[serde(rename = "namespace")]
-    pub namespace: Vec<String>,
+    #[serde(rename = "namespace", skip_serializing_if = "Option::is_none")]
+    pub namespace: Option<Vec<String>>,
+    /// Column name to use for matching rows (required)
+    #[serde(rename = "on", skip_serializing_if = "Option::is_none")]
+    pub on: Option<String>,
+    /// Update all columns when rows match
+    #[serde(rename = "when_matched_update_all", skip_serializing_if = "Option::is_none")]
+    pub when_matched_update_all: Option<bool>,
+    /// The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
+    #[serde(rename = "when_matched_update_all_filt", skip_serializing_if = "Option::is_none")]
+    pub when_matched_update_all_filt: Option<String>,
+    /// Insert all columns when rows don't match
+    #[serde(rename = "when_not_matched_insert_all", skip_serializing_if = "Option::is_none")]
+    pub when_not_matched_insert_all: Option<bool>,
+    /// Delete all rows from target table that don't match a row in the source table
+    #[serde(rename = "when_not_matched_by_source_delete", skip_serializing_if = "Option::is_none")]
+    pub when_not_matched_by_source_delete: Option<bool>,
+    /// Delete rows from the target table if there is no match AND the SQL expression evaluates to true
+    #[serde(rename = "when_not_matched_by_source_delete_filt", skip_serializing_if = "Option::is_none")]
+    pub when_not_matched_by_source_delete_filt: Option<String>,
 }
 
 impl MergeInsertIntoTableRequest {
-    pub fn new(name: String, namespace: Vec<String>) -> MergeInsertIntoTableRequest {
+    /// Request for merging or inserting records into a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
+    pub fn new() -> MergeInsertIntoTableRequest {
         MergeInsertIntoTableRequest {
-            name,
-            namespace,
+            name: None,
+            namespace: None,
+            on: None,
+            when_matched_update_all: None,
+            when_matched_update_all_filt: None,
+            when_not_matched_insert_all: None,
+            when_not_matched_by_source_delete: None,
+            when_not_matched_by_source_delete_filt: None,
         }
     }
 }

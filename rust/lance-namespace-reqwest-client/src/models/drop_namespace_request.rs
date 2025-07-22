@@ -13,8 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DropNamespaceRequest {
-    #[serde(rename = "name")]
-    pub name: String,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
     #[serde(rename = "parent", skip_serializing_if = "Option::is_none")]
     pub parent: Option<Vec<String>>,
     /// The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. - FAIL (default): the server must return 400 indicating the namespace to drop does not exist. - SKIP: the server must return 204 indicating the drop operation has succeeded. 
@@ -26,9 +26,9 @@ pub struct DropNamespaceRequest {
 }
 
 impl DropNamespaceRequest {
-    pub fn new(name: String) -> DropNamespaceRequest {
+    pub fn new() -> DropNamespaceRequest {
         DropNamespaceRequest {
-            name,
+            name: None,
             parent: None,
             mode: None,
             behavior: None,

@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **String** |  | 
+**name** | Option<**String**> |  | [optional]
 **parent** | Option<**Vec<String>**> |  | [optional]
 **mode** | **String** |  | 
 **options** | Option<**std::collections::HashMap<String, String>**> |  | [optional]

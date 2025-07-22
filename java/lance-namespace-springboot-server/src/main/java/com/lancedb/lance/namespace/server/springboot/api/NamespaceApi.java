@@ -804,7 +804,7 @@ public interface NamespaceApi {
   }
 
   /**
-   * POST /v1/namespace/{id}/list_tables : List tables in a namespace List all child table names of
+   * POST /v1/namespace/{id}/table/list : List tables in a namespace List all child table names of
    * the root namespace or a given parent namespace.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
@@ -908,7 +908,7 @@ public interface NamespaceApi {
       })
   @RequestMapping(
       method = RequestMethod.POST,
-      value = "/v1/namespace/{id}/list_tables",
+      value = "/v1/namespace/{id}/table/list",
       produces = {"application/json"},
       consumes = {"application/json"})
   default ResponseEntity<ListTablesResponse> listTables(

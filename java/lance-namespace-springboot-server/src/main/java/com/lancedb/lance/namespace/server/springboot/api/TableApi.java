@@ -24,9 +24,7 @@ import com.lancedb.lance.namespace.server.springboot.model.DeregisterTableRespon
 import com.lancedb.lance.namespace.server.springboot.model.DescribeTableIndexStatsRequest;
 import com.lancedb.lance.namespace.server.springboot.model.DescribeTableIndexStatsResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DescribeTableRequest;
-import com.lancedb.lance.namespace.server.springboot.model.DescribeTableRequestV2;
 import com.lancedb.lance.namespace.server.springboot.model.DescribeTableResponse;
-import com.lancedb.lance.namespace.server.springboot.model.DescribeTableResponseV2;
 import com.lancedb.lance.namespace.server.springboot.model.DropTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.DropTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ErrorResponse;
@@ -100,7 +98,7 @@ public interface TableApi {
       operationId = "countTableRows",
       summary = "Count rows in a table",
       description = "Count the number of rows in a table. ",
-      tags = {"Table", "Metadata"},
+      tags = {"Table", "Data"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -236,14 +234,17 @@ public interface TableApi {
 
   /**
    * POST /v1/table/{id}/create : Create a table with the given name Create a new table in the
-   * namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format
-   * (with database in headers).
+   * namespace with the given data in Arrow IPC stream. The schema of the Arrow IPC stream is used
+   * as the table schema. If the stream is empty, the API creates a new empty table.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
+   * @param xLanceTableLocation URI pointing to root location to create the table at (required)
    * @param body Arrow IPC data (required)
+   * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
+   *     \&quot;jack\&quot; }) (optional)
    * @return Table properties result when creating a table (status code 200) or Indicates a bad
    *     request error. It could be caused by an unexpected request body format or other forms of
    *     request validation failure, such as invalid json. Usually serves application/json content,
@@ -261,7 +262,7 @@ public interface TableApi {
       operationId = "createTable",
       summary = "Create a table with the given name",
       description =
-          "Create a new table in the namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). ",
+          "Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. ",
       tags = {"Table", "Metadata"},
       responses = {
         @ApiResponse(
@@ -329,7 +330,7 @@ public interface TableApi {
       method = RequestMethod.POST,
       value = "/v1/table/{id}/create",
       produces = {"application/json"},
-      consumes = {"application/x-arrow-ipc"})
+      consumes = {"application/vnd.apache.arrow.stream"})
   default ResponseEntity<CreateTableResponse> createTable(
       @Parameter(
               name = "id",
@@ -339,8 +340,22 @@ public interface TableApi {
               in = ParameterIn.PATH)
           @PathVariable("id")
           String id,
+      @NotNull
+          @Parameter(
+              name = "x-lance-table-location",
+              description = "URI pointing to root location to create the table at",
+              required = true,
+              in = ParameterIn.HEADER)
+          @RequestHeader(value = "x-lance-table-location", required = true)
+          String xLanceTableLocation,
       @Parameter(name = "body", description = "Arrow IPC data", required = true) @Valid @RequestBody
-          org.springframework.core.io.Resource body) {
+          org.springframework.core.io.Resource body,
+      @Parameter(
+              name = "x-lance-table-properties",
+              description = "JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ",
+              in = ParameterIn.HEADER)
+          @RequestHeader(value = "x-lance-table-properties", required = false)
+          Optional<String> xLanceTableProperties) {
     getRequest()
         .ifPresent(
             request -> {
@@ -394,9 +409,10 @@ public interface TableApi {
 
   /**
    * POST /v1/table/{id}/create_index : Create an index on a table Create an index on a table column
-   * for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and
-   * scalar indexes. Index creation is handled asynchronously. Use the &#x60;listIndices&#x60; and
-   * &#x60;getIndexStats&#x60; operations to monitor index creation progress.
+   * for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and
+   * scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the
+   * &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to monitor
+   * index creation progress.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -420,8 +436,8 @@ public interface TableApi {
       operationId = "createTableIndex",
       summary = "Create an index on a table",
       description =
-          "Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes. Index creation is handled asynchronously.  Use the `listIndices` and `getIndexStats` operations to monitor index creation progress. ",
-      tags = {"Table", "Metadata"},
+          "Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously.  Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. ",
+      tags = {"Table", "Index", "Metadata"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -501,169 +517,6 @@ public interface TableApi {
       @Parameter(
               name = "CreateTableIndexRequest",
               description = "Index creation request",
-              required = true)
-          @Valid
-          @RequestBody
-          CreateTableIndexRequest createTableIndexRequest) {
-    getRequest()
-        .ifPresent(
-            request -> {
-              for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"name\" : \"name\", \"namespace\" : [ \"namespace\", \"namespace\" ], \"location\" : \"location\", \"properties\" : { \"key\" : \"properties\" } }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-              }
-            });
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-  }
-
-  /**
-   * POST /v1/table/{id}/create_scalar_index : Create a scalar index on a table Create a scalar
-   * index on a table column for faster search operations. Supports scalar indexes (BTREE, BITMAP,
-   * LABEL_LIST).
-   *
-   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
-   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
-   *     root namespace. (required)
-   * @param createTableIndexRequest Scalar index creation request (required)
-   * @return Scalar index created successfully (status code 200) or Indicates a bad request error.
-   *     It could be caused by an unexpected request body format or other forms of request
-   *     validation failure, such as invalid json. Usually serves application/json content, although
-   *     in some cases simple text/plain content might be returned by the server&#39;s middleware.
-   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
-   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
-   *     necessary permissions. (status code 403) or A server-side problem that means can not find
-   *     the specified resource. (status code 404) or The service is not ready to handle the
-   *     request. The client should wait and retry. The service may additionally send a Retry-After
-   *     header to indicate when to retry. (status code 503) or A server-side problem that might not
-   *     be addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
-   */
-  @Operation(
-      operationId = "createTableScalarIndex",
-      summary = "Create a scalar index on a table",
-      description =
-          "Create a scalar index on a table column for faster search operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST). ",
-      tags = {"Table", "Metadata"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Scalar index created successfully",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = CreateTableIndexResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "401",
-            description =
-                "Unauthorized. The request lacks valid authentication credentials for the operation.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "403",
-            description = "Forbidden. Authenticated user does not have the necessary permissions.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "503",
-            description =
-                "The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            })
-      })
-  @RequestMapping(
-      method = RequestMethod.POST,
-      value = "/v1/table/{id}/create_scalar_index",
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  default ResponseEntity<CreateTableIndexResponse> createTableScalarIndex(
-      @Parameter(
-              name = "id",
-              description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
-              required = true,
-              in = ParameterIn.PATH)
-          @PathVariable("id")
-          String id,
-      @Parameter(
-              name = "CreateTableIndexRequest",
-              description = "Scalar index creation request",
               required = true)
           @Valid
           @RequestBody
@@ -1173,7 +1026,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"schema\" : { \"metadata\" : { \"key\" : \"metadata\" }, \"fields\" : [ { \"metadata\" : { \"key\" : \"metadata\" }, \"nullable\" : true, \"name\" : \"name\", \"type\" : { \"length\" : 0, \"fields\" : [ null, null ], \"type\" : \"type\" } }, { \"metadata\" : { \"key\" : \"metadata\" }, \"nullable\" : true, \"name\" : \"name\", \"type\" : { \"length\" : 0, \"fields\" : [ null, null ], \"type\" : \"type\" } } ] }, \"stats\" : { \"num_deleted_rows\" : 0, \"num_fragments\" : 0 }, \"location\" : \"location\", \"version\" : 0, \"properties\" : { \"key\" : \"properties\" }, \"table\" : \"table\" }";
+                      "{ \"schema\" : { \"metadata\" : { \"key\" : \"metadata\" }, \"fields\" : [ { \"metadata\" : { \"key\" : \"metadata\" }, \"nullable\" : true, \"name\" : \"name\", \"type\" : { \"length\" : 0, \"fields\" : [ null, null ], \"type\" : \"type\" } }, { \"metadata\" : { \"key\" : \"metadata\" }, \"nullable\" : true, \"name\" : \"name\", \"type\" : { \"length\" : 0, \"fields\" : [ null, null ], \"type\" : \"type\" } } ] }, \"location\" : \"location\", \"version\" : 0, \"properties\" : { \"key\" : \"properties\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1219,7 +1072,7 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/table/{id}/index/{index_name}/stats : Get index statistics Get statistics for a
+   * POST /v1/table/{id}/index/{index_name}/stats : Get table index statistics Get statistics for a
    * specific index on a table. Returns information about the index type, distance type (for vector
    * indices), and row counts.
    *
@@ -1244,10 +1097,10 @@ public interface TableApi {
    */
   @Operation(
       operationId = "describeTableIndexStats",
-      summary = "Get index statistics",
+      summary = "Get table index statistics",
       description =
           "Get statistics for a specific index on a table. Returns information about the index type, distance type (for vector indices), and row counts. ",
-      tags = {"Table", "Metadata"},
+      tags = {"Table", "Index", "Metadata"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -1345,175 +1198,6 @@ public interface TableApi {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
                       "{ \"distance_type\" : \"distance_type\", \"num_unindexed_rows\" : 0, \"num_indexed_rows\" : 0, \"index_type\" : \"index_type\" }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\", \"title\" : \"Incorrect username or password\", \"status\" : 404 }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-              }
-            });
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-  }
-
-  /**
-   * POST /v2/table/{id}/describe : Describe a table from the namespace Get a table&#39;s detailed
-   * information under a specified namespace.
-   *
-   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
-   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
-   *     root namespace. (required)
-   * @param describeTableRequestV2 (required)
-   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
-   *     (optional)
-   * @return Table properties result when loading a table (status code 200) or Indicates a bad
-   *     request error. It could be caused by an unexpected request body format or other forms of
-   *     request validation failure, such as invalid json. Usually serves application/json content,
-   *     although in some cases simple text/plain content might be returned by the server&#39;s
-   *     middleware. (status code 400) or Unauthorized. The request lacks valid authentication
-   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
-   *     have the necessary permissions. (status code 403) or A server-side problem that means can
-   *     not find the specified resource. (status code 404) or The service is not ready to handle
-   *     the request. The client should wait and retry. The service may additionally send a
-   *     Retry-After header to indicate when to retry. (status code 503) or A server-side problem
-   *     that might not be addressable from the client side. Used for server 5xx errors without more
-   *     specific documentation in individual routes. (status code 5XX)
-   */
-  @Operation(
-      operationId = "describeTableV2",
-      summary = "Describe a table from the namespace",
-      description = "Get a table's detailed information under a specified namespace. ",
-      tags = {"Table", "Metadata"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Table properties result when loading a table",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = DescribeTableResponseV2.class))
-            }),
-        @ApiResponse(
-            responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "401",
-            description =
-                "Unauthorized. The request lacks valid authentication credentials for the operation.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "403",
-            description = "Forbidden. Authenticated user does not have the necessary permissions.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "503",
-            description =
-                "The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            })
-      })
-  @RequestMapping(
-      method = RequestMethod.POST,
-      value = "/v2/table/{id}/describe",
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  default ResponseEntity<DescribeTableResponseV2> describeTableV2(
-      @Parameter(
-              name = "id",
-              description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
-              required = true,
-              in = ParameterIn.PATH)
-          @PathVariable("id")
-          String id,
-      @Parameter(name = "DescribeTableRequestV2", description = "", required = true)
-          @Valid
-          @RequestBody
-          DescribeTableRequestV2 describeTableRequestV2,
-      @Parameter(
-              name = "delimiter",
-              description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
-              in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "delimiter", required = false)
-          Optional<String> delimiter) {
-    getRequest()
-        .ifPresent(
-            request -> {
-              for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"name\" : \"name\", \"namespace\" : [ \"namespace\", \"namespace\" ], \"location\" : \"location\", \"properties\" : { \"key\" : \"properties\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1825,7 +1509,7 @@ public interface TableApi {
       method = RequestMethod.POST,
       value = "/v1/table/{id}/insert",
       produces = {"application/json"},
-      consumes = {"application/x-arrow-ipc"})
+      consumes = {"application/vnd.apache.arrow.stream"})
   default ResponseEntity<InsertIntoTableResponse> insertIntoTable(
       @Parameter(
               name = "id",
@@ -1921,7 +1605,7 @@ public interface TableApi {
       summary = "List indexes on a table",
       description =
           "List all indices created on a table. Returns information about each index including name, columns, status, and UUID. ",
-      tags = {"Table", "Metadata"},
+      tags = {"Table", "Index", "Metadata"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -2069,8 +1753,14 @@ public interface TableApi {
    * @param on Column name to use for matching rows (required) (required)
    * @param body Arrow IPC data containing the records to merge (required)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
+   * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
+   *     the SQL expression evaluates to true (optional)
    * @param whenNotMatchedInsertAll Insert all columns when rows don&#39;t match (optional, default
    *     to false)
+   * @param whenNotMatchedBySourceDelete Delete all rows from target table that don&#39;t match a
+   *     row in the source table (optional, default to false)
+   * @param whenNotMatchedBySourceDeleteFilt Delete rows from the target table if there is no match
+   *     AND the SQL expression evaluates to true (optional)
    * @return Result of merge insert operation (status code 200) or Indicates a bad request error. It
    *     could be caused by an unexpected request body format or other forms of request validation
    *     failure, such as invalid json. Usually serves application/json content, although in some
@@ -2156,7 +1846,7 @@ public interface TableApi {
       method = RequestMethod.POST,
       value = "/v1/table/{id}/merge_insert",
       produces = {"application/json"},
-      consumes = {"application/x-arrow-ipc"})
+      consumes = {"application/vnd.apache.arrow.stream"})
   default ResponseEntity<MergeInsertIntoTableResponse> mergeInsertIntoTable(
       @Parameter(
               name = "id",
@@ -2190,6 +1880,14 @@ public interface TableApi {
           @RequestParam(value = "when_matched_update_all", required = false, defaultValue = "false")
           Optional<Boolean> whenMatchedUpdateAll,
       @Parameter(
+              name = "when_matched_update_all_filt",
+              description =
+                  "The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "when_matched_update_all_filt", required = false)
+          Optional<String> whenMatchedUpdateAllFilt,
+      @Parameter(
               name = "when_not_matched_insert_all",
               description = "Insert all columns when rows don't match",
               in = ParameterIn.QUERY)
@@ -2198,7 +1896,26 @@ public interface TableApi {
               value = "when_not_matched_insert_all",
               required = false,
               defaultValue = "false")
-          Optional<Boolean> whenNotMatchedInsertAll) {
+          Optional<Boolean> whenNotMatchedInsertAll,
+      @Parameter(
+              name = "when_not_matched_by_source_delete",
+              description =
+                  "Delete all rows from target table that don't match a row in the source table",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(
+              value = "when_not_matched_by_source_delete",
+              required = false,
+              defaultValue = "false")
+          Optional<Boolean> whenNotMatchedBySourceDelete,
+      @Parameter(
+              name = "when_not_matched_by_source_delete_filt",
+              description =
+                  "Delete rows from the target table if there is no match AND the SQL expression evaluates to true",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "when_not_matched_by_source_delete_filt", required = false)
+          Optional<String> whenNotMatchedBySourceDeleteFilt) {
     getRequest()
         .ifPresent(
             request -> {
@@ -2251,38 +1968,41 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/table/{id}/query : Query a table Query a table with vector search and optional
-   * filtering. Returns results in Arrow IPC stream format.
+   * POST /v1/table/{id}/query : Query a table Query a table with vector search, full text search
+   * and optional SQL filtering. Returns results in Arrow IPC file or stream format.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param queryTableRequest Query request (required)
-   * @return Query results in Arrow IPC stream format (status code 200) or Indicates a bad request
-   *     error. It could be caused by an unexpected request body format or other forms of request
-   *     validation failure, such as invalid json. Usually serves application/json content, although
-   *     in some cases simple text/plain content might be returned by the server&#39;s middleware.
-   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
-   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
-   *     necessary permissions. (status code 403) or A server-side problem that means can not find
-   *     the specified resource. (status code 404) or The service is not ready to handle the
-   *     request. The client should wait and retry. The service may additionally send a Retry-After
-   *     header to indicate when to retry. (status code 503) or A server-side problem that might not
-   *     be addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return Query results in Arrow IPC file or stream format (status code 200) or Indicates a bad
+   *     request error. It could be caused by an unexpected request body format or other forms of
+   *     request validation failure, such as invalid json. Usually serves application/json content,
+   *     although in some cases simple text/plain content might be returned by the server&#39;s
+   *     middleware. (status code 400) or Unauthorized. The request lacks valid authentication
+   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
+   *     have the necessary permissions. (status code 403) or A server-side problem that means can
+   *     not find the specified resource. (status code 404) or The service is not ready to handle
+   *     the request. The client should wait and retry. The service may additionally send a
+   *     Retry-After header to indicate when to retry. (status code 503) or A server-side problem
+   *     that might not be addressable from the client side. Used for server 5xx errors without more
+   *     specific documentation in individual routes. (status code 5XX)
    */
   @Operation(
       operationId = "queryTable",
       summary = "Query a table",
       description =
-          "Query a table with vector search and optional filtering. Returns results in Arrow IPC stream format. ",
+          "Query a table with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. ",
       tags = {"Table", "Data"},
       responses = {
         @ApiResponse(
             responseCode = "200",
-            description = "Query results in Arrow IPC stream format",
+            description = "Query results in Arrow IPC file or stream format",
             content = {
+              @Content(
+                  mediaType = "application/vnd.apache.arrow.file",
+                  schema = @Schema(implementation = org.springframework.core.io.Resource.class)),
               @Content(
                   mediaType = "application/vnd.apache.arrow.stream",
                   schema = @Schema(implementation = org.springframework.core.io.Resource.class)),
@@ -2296,6 +2016,9 @@ public interface TableApi {
                 "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
             content = {
               @Content(
+                  mediaType = "application/vnd.apache.arrow.file",
+                  schema = @Schema(implementation = ErrorResponse.class)),
+              @Content(
                   mediaType = "application/vnd.apache.arrow.stream",
                   schema = @Schema(implementation = ErrorResponse.class)),
               @Content(
@@ -2308,6 +2031,9 @@ public interface TableApi {
                 "Unauthorized. The request lacks valid authentication credentials for the operation.",
             content = {
               @Content(
+                  mediaType = "application/vnd.apache.arrow.file",
+                  schema = @Schema(implementation = ErrorResponse.class)),
+              @Content(
                   mediaType = "application/vnd.apache.arrow.stream",
                   schema = @Schema(implementation = ErrorResponse.class)),
               @Content(
@@ -2319,6 +2045,9 @@ public interface TableApi {
             description = "Forbidden. Authenticated user does not have the necessary permissions.",
             content = {
               @Content(
+                  mediaType = "application/vnd.apache.arrow.file",
+                  schema = @Schema(implementation = ErrorResponse.class)),
+              @Content(
                   mediaType = "application/vnd.apache.arrow.stream",
                   schema = @Schema(implementation = ErrorResponse.class)),
               @Content(
@@ -2329,6 +2058,9 @@ public interface TableApi {
             responseCode = "404",
             description = "A server-side problem that means can not find the specified resource.",
             content = {
+              @Content(
+                  mediaType = "application/vnd.apache.arrow.file",
+                  schema = @Schema(implementation = ErrorResponse.class)),
               @Content(
                   mediaType = "application/vnd.apache.arrow.stream",
                   schema = @Schema(implementation = ErrorResponse.class)),
@@ -2342,6 +2074,9 @@ public interface TableApi {
                 "The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry.",
             content = {
               @Content(
+                  mediaType = "application/vnd.apache.arrow.file",
+                  schema = @Schema(implementation = ErrorResponse.class)),
+              @Content(
                   mediaType = "application/vnd.apache.arrow.stream",
                   schema = @Schema(implementation = ErrorResponse.class)),
               @Content(
@@ -2354,6 +2089,9 @@ public interface TableApi {
                 "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
             content = {
               @Content(
+                  mediaType = "application/vnd.apache.arrow.file",
+                  schema = @Schema(implementation = ErrorResponse.class)),
+              @Content(
                   mediaType = "application/vnd.apache.arrow.stream",
                   schema = @Schema(implementation = ErrorResponse.class)),
               @Content(
@@ -2364,7 +2102,11 @@ public interface TableApi {
   @RequestMapping(
       method = RequestMethod.POST,
       value = "/v1/table/{id}/query",
-      produces = {"application/vnd.apache.arrow.stream", "application/json"},
+      produces = {
+        "application/vnd.apache.arrow.file",
+        "application/vnd.apache.arrow.stream",
+        "application/json"
+      },
       consumes = {"application/json"})
   default ResponseEntity<org.springframework.core.io.Resource> queryTable(
       @Parameter(

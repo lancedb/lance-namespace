@@ -35,17 +35,17 @@ import java.util.StringJoiner;
     comments = "Generator version: 7.12.0")
 public class RegisterTableRequest {
   public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nonnull private String name;
+  @javax.annotation.Nullable private String name;
 
   public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
+  @javax.annotation.Nullable private List<String> namespace = new ArrayList<>();
 
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nonnull private String location;
 
   public RegisterTableRequest() {}
 
-  public RegisterTableRequest name(@javax.annotation.Nonnull String name) {
+  public RegisterTableRequest name(@javax.annotation.Nullable String name) {
 
     this.name = name;
     return this;
@@ -56,20 +56,20 @@ public class RegisterTableRequest {
    *
    * @return name
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public String getName() {
     return name;
   }
 
   @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setName(@javax.annotation.Nonnull String name) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setName(@javax.annotation.Nullable String name) {
     this.name = name;
   }
 
-  public RegisterTableRequest namespace(@javax.annotation.Nonnull List<String> namespace) {
+  public RegisterTableRequest namespace(@javax.annotation.Nullable List<String> namespace) {
 
     this.namespace = namespace;
     return this;
@@ -88,16 +88,16 @@ public class RegisterTableRequest {
    *
    * @return namespace
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public List<String> getNamespace() {
     return namespace;
   }
 
   @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setNamespace(@javax.annotation.Nonnull List<String> namespace) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNamespace(@javax.annotation.Nullable List<String> namespace) {
     this.namespace = namespace;
   }
 

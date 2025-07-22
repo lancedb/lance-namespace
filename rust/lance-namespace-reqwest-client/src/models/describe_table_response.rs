@@ -13,29 +13,23 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DescribeTableResponse {
+    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
+    pub version: Option<i64>,
     #[serde(rename = "location")]
     pub location: String,
-    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
-    pub properties: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "schema")]
     pub schema: Box<models::JsonSchema>,
-    #[serde(rename = "stats")]
-    pub stats: Box<models::TableBasicStats>,
-    #[serde(rename = "table")]
-    pub table: String,
-    #[serde(rename = "version")]
-    pub version: i64,
+    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
+    pub properties: Option<std::collections::HashMap<String, String>>,
 }
 
 impl DescribeTableResponse {
-    pub fn new(location: String, schema: models::JsonSchema, stats: models::TableBasicStats, table: String, version: i64) -> DescribeTableResponse {
+    pub fn new(location: String, schema: models::JsonSchema) -> DescribeTableResponse {
         DescribeTableResponse {
+            version: None,
             location,
-            properties: None,
             schema: Box::new(schema),
-            stats: Box::new(stats),
-            table,
-            version,
+            properties: None,
         }
     }
 }

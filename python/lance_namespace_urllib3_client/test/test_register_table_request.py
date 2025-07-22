@@ -43,10 +43,6 @@ class TestRegisterTableRequest(unittest.TestCase):
             )
         else:
             return RegisterTableRequest(
-                name = '',
-                namespace = [
-                    ''
-                    ],
                 location = '',
         )
         """

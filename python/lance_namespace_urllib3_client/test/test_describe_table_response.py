@@ -35,10 +35,8 @@ class TestDescribeTableResponse(unittest.TestCase):
         model = DescribeTableResponse()
         if include_optional:
             return DescribeTableResponse(
+                version = 0,
                 location = '',
-                properties = {
-                    'key' : ''
-                    },
                 var_schema = lance_namespace_urllib3_client.models.json_schema.JsonSchema(
                     fields = [
                         lance_namespace_urllib3_client.models.json_field.JsonField(
@@ -54,11 +52,9 @@ class TestDescribeTableResponse(unittest.TestCase):
                     metadata = {
                         'key' : ''
                         }, ),
-                stats = lance_namespace_urllib3_client.models.table_basic_stats.TableBasicStats(
-                    num_deleted_rows = 0, 
-                    num_fragments = 0, ),
-                table = '',
-                version = 0
+                properties = {
+                    'key' : ''
+                    }
             )
         else:
             return DescribeTableResponse(
@@ -78,11 +74,6 @@ class TestDescribeTableResponse(unittest.TestCase):
                     metadata = {
                         'key' : ''
                         }, ),
-                stats = lance_namespace_urllib3_client.models.table_basic_stats.TableBasicStats(
-                    num_deleted_rows = 0, 
-                    num_fragments = 0, ),
-                table = '',
-                version = 0,
         )
         """
 

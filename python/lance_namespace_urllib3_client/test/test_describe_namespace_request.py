@@ -42,7 +42,6 @@ class TestDescribeNamespaceRequest(unittest.TestCase):
             )
         else:
             return DescribeNamespaceRequest(
-                name = '',
         )
         """
 

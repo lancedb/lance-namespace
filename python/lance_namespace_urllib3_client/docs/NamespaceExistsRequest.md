@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** |  | 
+**name** | **str** |  | [optional] 
 **parent** | **List[str]** |  | [optional] 
 
 ## Example

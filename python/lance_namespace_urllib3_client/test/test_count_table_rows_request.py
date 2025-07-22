@@ -38,7 +38,9 @@ class TestCountTableRowsRequest(unittest.TestCase):
                 name = '',
                 namespace = [
                     ''
-                    ]
+                    ],
+                version = 0,
+                filter = ''
             )
         else:
             return CountTableRowsRequest(

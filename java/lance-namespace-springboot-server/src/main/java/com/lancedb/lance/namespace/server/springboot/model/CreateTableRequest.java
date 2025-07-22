@@ -27,11 +27,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/** DescribeTableResponseV2 */
+/**
+ * Request for creating a table, excluding the Arrow IPC stream. Note that this is only used for
+ * non-REST implementations. For REST, pass in the information in the following way: -
+ * &#x60;name&#x60;: pass as a part of the path parameter &#x60;id&#x60; - &#x60;namespace&#x60;:
+ * pass as a part of the path parameter &#x60;namespace&#x60; - &#x60;location&#x60;: pass through
+ * header &#x60;x-lance-table-location&#x60; - &#x60;properties&#x60;: pass through header
+ * &#x60;x-lance-table-properties&#x60;
+ */
+@Schema(
+    name = "CreateTableRequest",
+    description =
+        "Request for creating a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` ")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
-public class DescribeTableResponseV2 {
+public class CreateTableRequest {
 
   private String name;
 
@@ -41,18 +52,7 @@ public class DescribeTableResponseV2 {
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
-  public DescribeTableResponseV2() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public DescribeTableResponseV2(String name, List<String> namespace, String location) {
-    this.name = name;
-    this.namespace = namespace;
-    this.location = location;
-  }
-
-  public DescribeTableResponseV2 name(String name) {
+  public CreateTableRequest name(String name) {
     this.name = name;
     return this;
   }
@@ -62,8 +62,7 @@ public class DescribeTableResponseV2 {
    *
    * @return name
    */
-  @NotNull
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("name")
   public String getName() {
     return name;
@@ -73,12 +72,12 @@ public class DescribeTableResponseV2 {
     this.name = name;
   }
 
-  public DescribeTableResponseV2 namespace(List<String> namespace) {
+  public CreateTableRequest namespace(List<String> namespace) {
     this.namespace = namespace;
     return this;
   }
 
-  public DescribeTableResponseV2 addNamespaceItem(String namespaceItem) {
+  public CreateTableRequest addNamespaceItem(String namespaceItem) {
     if (this.namespace == null) {
       this.namespace = new ArrayList<>();
     }
@@ -91,8 +90,7 @@ public class DescribeTableResponseV2 {
    *
    * @return namespace
    */
-  @NotNull
-  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("namespace")
   public List<String> getNamespace() {
     return namespace;
@@ -102,7 +100,7 @@ public class DescribeTableResponseV2 {
     this.namespace = namespace;
   }
 
-  public DescribeTableResponseV2 location(String location) {
+  public CreateTableRequest location(String location) {
     this.location = location;
     return this;
   }
@@ -112,8 +110,7 @@ public class DescribeTableResponseV2 {
    *
    * @return location
    */
-  @NotNull
-  @Schema(name = "location", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "location", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("location")
   public String getLocation() {
     return location;
@@ -123,12 +120,12 @@ public class DescribeTableResponseV2 {
     this.location = location;
   }
 
-  public DescribeTableResponseV2 properties(Map<String, String> properties) {
+  public CreateTableRequest properties(Map<String, String> properties) {
     this.properties = properties;
     return this;
   }
 
-  public DescribeTableResponseV2 putPropertiesItem(String key, String propertiesItem) {
+  public CreateTableRequest putPropertiesItem(String key, String propertiesItem) {
     if (this.properties == null) {
       this.properties = new HashMap<>();
     }
@@ -159,11 +156,11 @@ public class DescribeTableResponseV2 {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    DescribeTableResponseV2 describeTableResponseV2 = (DescribeTableResponseV2) o;
-    return Objects.equals(this.name, describeTableResponseV2.name)
-        && Objects.equals(this.namespace, describeTableResponseV2.namespace)
-        && Objects.equals(this.location, describeTableResponseV2.location)
-        && Objects.equals(this.properties, describeTableResponseV2.properties);
+    CreateTableRequest createTableRequest = (CreateTableRequest) o;
+    return Objects.equals(this.name, createTableRequest.name)
+        && Objects.equals(this.namespace, createTableRequest.namespace)
+        && Objects.equals(this.location, createTableRequest.location)
+        && Objects.equals(this.properties, createTableRequest.properties);
   }
 
   @Override
@@ -174,7 +171,7 @@ public class DescribeTableResponseV2 {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class DescribeTableResponseV2 {\n");
+    sb.append("class CreateTableRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");

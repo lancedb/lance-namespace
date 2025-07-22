@@ -18,6 +18,7 @@ import com.lancedb.lance.namespace.client.apache.ApiException;
 import com.lancedb.lance.namespace.client.apache.BaseApi;
 import com.lancedb.lance.namespace.client.apache.Configuration;
 import com.lancedb.lance.namespace.client.apache.Pair;
+import com.lancedb.lance.namespace.model.CountTableRowsRequest;
 import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
 import com.lancedb.lance.namespace.model.DeleteFromTableResponse;
 import com.lancedb.lance.namespace.model.InsertIntoTableResponse;
@@ -46,6 +47,105 @@ public class DataApi extends BaseApi {
 
   public DataApi(ApiClient apiClient) {
     super(apiClient);
+  }
+
+  /**
+   * Count rows in a table Count the number of rows in a table.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param countTableRowsRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @return Long
+   * @throws ApiException if fails to make API call
+   */
+  public Long countTableRows(
+      String id, CountTableRowsRequest countTableRowsRequest, String delimiter)
+      throws ApiException {
+    return this.countTableRows(id, countTableRowsRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Count rows in a table Count the number of rows in a table.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param countTableRowsRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return Long
+   * @throws ApiException if fails to make API call
+   */
+  public Long countTableRows(
+      String id,
+      CountTableRowsRequest countTableRowsRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = countTableRowsRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling countTableRows");
+    }
+
+    // verify the required parameter 'countTableRowsRequest' is set
+    if (countTableRowsRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'countTableRowsRequest' when calling countTableRows");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/count_rows"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<Long> localVarReturnType = new TypeReference<Long>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
   }
 
   /**
@@ -214,7 +314,7 @@ public class DataApi extends BaseApi {
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {"application/x-arrow-ipc"};
+    final String[] localVarContentTypes = {"application/vnd.apache.arrow.stream"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
     String[] localVarAuthNames = new String[] {};
@@ -249,8 +349,14 @@ public class DataApi extends BaseApi {
    * @param on Column name to use for matching rows (required) (required)
    * @param body Arrow IPC data containing the records to merge (required)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
+   * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
+   *     the SQL expression evaluates to true (optional)
    * @param whenNotMatchedInsertAll Insert all columns when rows don&#39;t match (optional, default
    *     to false)
+   * @param whenNotMatchedBySourceDelete Delete all rows from target table that don&#39;t match a
+   *     row in the source table (optional, default to false)
+   * @param whenNotMatchedBySourceDeleteFilt Delete rows from the target table if there is no match
+   *     AND the SQL expression evaluates to true (optional)
    * @return MergeInsertIntoTableResponse
    * @throws ApiException if fails to make API call
    */
@@ -259,10 +365,21 @@ public class DataApi extends BaseApi {
       String on,
       byte[] body,
       Boolean whenMatchedUpdateAll,
-      Boolean whenNotMatchedInsertAll)
+      String whenMatchedUpdateAllFilt,
+      Boolean whenNotMatchedInsertAll,
+      Boolean whenNotMatchedBySourceDelete,
+      String whenNotMatchedBySourceDeleteFilt)
       throws ApiException {
     return this.mergeInsertIntoTable(
-        id, on, body, whenMatchedUpdateAll, whenNotMatchedInsertAll, Collections.emptyMap());
+        id,
+        on,
+        body,
+        whenMatchedUpdateAll,
+        whenMatchedUpdateAllFilt,
+        whenNotMatchedInsertAll,
+        whenNotMatchedBySourceDelete,
+        whenNotMatchedBySourceDeleteFilt,
+        Collections.emptyMap());
   }
 
   /**
@@ -277,8 +394,14 @@ public class DataApi extends BaseApi {
    * @param on Column name to use for matching rows (required) (required)
    * @param body Arrow IPC data containing the records to merge (required)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
+   * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
+   *     the SQL expression evaluates to true (optional)
    * @param whenNotMatchedInsertAll Insert all columns when rows don&#39;t match (optional, default
    *     to false)
+   * @param whenNotMatchedBySourceDelete Delete all rows from target table that don&#39;t match a
+   *     row in the source table (optional, default to false)
+   * @param whenNotMatchedBySourceDeleteFilt Delete rows from the target table if there is no match
+   *     AND the SQL expression evaluates to true (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return MergeInsertIntoTableResponse
    * @throws ApiException if fails to make API call
@@ -288,7 +411,10 @@ public class DataApi extends BaseApi {
       String on,
       byte[] body,
       Boolean whenMatchedUpdateAll,
+      String whenMatchedUpdateAllFilt,
       Boolean whenNotMatchedInsertAll,
+      Boolean whenNotMatchedBySourceDelete,
+      String whenNotMatchedBySourceDeleteFilt,
       Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = body;
@@ -329,14 +455,22 @@ public class DataApi extends BaseApi {
     localVarQueryParams.addAll(
         apiClient.parameterToPair("when_matched_update_all", whenMatchedUpdateAll));
     localVarQueryParams.addAll(
+        apiClient.parameterToPair("when_matched_update_all_filt", whenMatchedUpdateAllFilt));
+    localVarQueryParams.addAll(
         apiClient.parameterToPair("when_not_matched_insert_all", whenNotMatchedInsertAll));
+    localVarQueryParams.addAll(
+        apiClient.parameterToPair(
+            "when_not_matched_by_source_delete", whenNotMatchedBySourceDelete));
+    localVarQueryParams.addAll(
+        apiClient.parameterToPair(
+            "when_not_matched_by_source_delete_filt", whenNotMatchedBySourceDeleteFilt));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {"application/x-arrow-ipc"};
+    final String[] localVarContentTypes = {"application/vnd.apache.arrow.stream"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
     String[] localVarAuthNames = new String[] {};
@@ -360,8 +494,8 @@ public class DataApi extends BaseApi {
   }
 
   /**
-   * Query a table Query a table with vector search and optional filtering. Returns results in Arrow
-   * IPC stream format.
+   * Query a table Query a table with vector search, full text search and optional SQL filtering.
+   * Returns results in Arrow IPC file or stream format.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -376,8 +510,8 @@ public class DataApi extends BaseApi {
   }
 
   /**
-   * Query a table Query a table with vector search and optional filtering. Returns results in Arrow
-   * IPC stream format.
+   * Query a table Query a table with vector search, full text search and optional SQL filtering.
+   * Returns results in Arrow IPC file or stream format.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -420,7 +554,9 @@ public class DataApi extends BaseApi {
 
     localVarHeaderParams.putAll(additionalHeaders);
 
-    final String[] localVarAccepts = {"application/vnd.apache.arrow.stream", "application/json"};
+    final String[] localVarAccepts = {
+      "application/vnd.apache.arrow.file", "application/vnd.apache.arrow.stream", "application/json"
+    };
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
     final String[] localVarContentTypes = {"application/json"};

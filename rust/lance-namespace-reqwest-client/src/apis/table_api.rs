@@ -54,19 +54,6 @@ pub enum CreateTableIndexError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`create_table_scalar_index`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum CreateTableScalarIndexError {
-    Status400(models::ErrorResponse),
-    Status401(models::ErrorResponse),
-    Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
-    Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
-    UnknownValue(serde_json::Value),
-}
-
 /// struct for typed errors of method [`delete_from_table`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -110,19 +97,6 @@ pub enum DescribeTableError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DescribeTableIndexStatsError {
-    Status400(models::ErrorResponse),
-    Status401(models::ErrorResponse),
-    Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
-    Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
-    UnknownValue(serde_json::Value),
-}
-
-/// struct for typed errors of method [`describe_table_v2`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum DescribeTableV2Error {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
@@ -296,17 +270,23 @@ pub async fn count_table_rows(configuration: &configuration::Configuration, id: 
     }
 }
 
-/// Create a new table in the namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
-pub async fn create_table(configuration: &configuration::Configuration, id: &str, body: Vec<u8>) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
+/// Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. 
+pub async fn create_table(configuration: &configuration::Configuration, id: &str, x_lance_table_location: &str, body: Vec<u8>, x_lance_table_properties: Option<&str>) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
+    let p_x_lance_table_location = x_lance_table_location;
     let p_body = body;
+    let p_x_lance_table_properties = x_lance_table_properties;
 
     let uri_str = format!("{}/v1/table/{id}/create", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    req_builder = req_builder.header("x-lance-table-location", p_x_lance_table_location.to_string());
+    if let Some(param_value) = p_x_lance_table_properties {
+        req_builder = req_builder.header("x-lance-table-properties", param_value.to_string());
     }
     req_builder = req_builder.body(p_body);
 
@@ -335,7 +315,7 @@ pub async fn create_table(configuration: &configuration::Configuration, id: &str
     }
 }
 
-/// Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes. Index creation is handled asynchronously.  Use the `listIndices` and `getIndexStats` operations to monitor index creation progress. 
+/// Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously.  Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
 pub async fn create_table_index(configuration: &configuration::Configuration, id: &str, create_table_index_request: models::CreateTableIndexRequest) -> Result<models::CreateTableIndexResponse, Error<CreateTableIndexError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -370,45 +350,6 @@ pub async fn create_table_index(configuration: &configuration::Configuration, id
     } else {
         let content = resp.text().await?;
         let entity: Option<CreateTableIndexError> = serde_json::from_str(&content).ok();
-        Err(Error::ResponseError(ResponseContent { status, content, entity }))
-    }
-}
-
-/// Create a scalar index on a table column for faster search operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST). 
-pub async fn create_table_scalar_index(configuration: &configuration::Configuration, id: &str, create_table_index_request: models::CreateTableIndexRequest) -> Result<models::CreateTableIndexResponse, Error<CreateTableScalarIndexError>> {
-    // add a prefix to parameters to efficiently prevent name collisions
-    let p_id = id;
-    let p_create_table_index_request = create_table_index_request;
-
-    let uri_str = format!("{}/v1/table/{id}/create_scalar_index", configuration.base_path, id=crate::apis::urlencode(p_id));
-    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
-
-    if let Some(ref user_agent) = configuration.user_agent {
-        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
-    }
-    req_builder = req_builder.json(&p_create_table_index_request);
-
-    let req = req_builder.build()?;
-    let resp = configuration.client.execute(req).await?;
-
-    let status = resp.status();
-    let content_type = resp
-        .headers()
-        .get("content-type")
-        .and_then(|v| v.to_str().ok())
-        .unwrap_or("application/octet-stream");
-    let content_type = super::ContentType::from(content_type);
-
-    if !status.is_client_error() && !status.is_server_error() {
-        let content = resp.text().await?;
-        match content_type {
-            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::CreateTableIndexResponse`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::CreateTableIndexResponse`")))),
-        }
-    } else {
-        let content = resp.text().await?;
-        let entity: Option<CreateTableScalarIndexError> = serde_json::from_str(&content).ok();
         Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
@@ -578,49 +519,6 @@ pub async fn describe_table_index_stats(configuration: &configuration::Configura
     }
 }
 
-/// Get a table's detailed information under a specified namespace. 
-pub async fn describe_table_v2(configuration: &configuration::Configuration, id: &str, describe_table_request_v2: models::DescribeTableRequestV2, delimiter: Option<&str>) -> Result<models::DescribeTableResponseV2, Error<DescribeTableV2Error>> {
-    // add a prefix to parameters to efficiently prevent name collisions
-    let p_id = id;
-    let p_describe_table_request_v2 = describe_table_request_v2;
-    let p_delimiter = delimiter;
-
-    let uri_str = format!("{}/v2/table/{id}/describe", configuration.base_path, id=crate::apis::urlencode(p_id));
-    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
-
-    if let Some(ref param_value) = p_delimiter {
-        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
-    }
-    if let Some(ref user_agent) = configuration.user_agent {
-        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
-    }
-    req_builder = req_builder.json(&p_describe_table_request_v2);
-
-    let req = req_builder.build()?;
-    let resp = configuration.client.execute(req).await?;
-
-    let status = resp.status();
-    let content_type = resp
-        .headers()
-        .get("content-type")
-        .and_then(|v| v.to_str().ok())
-        .unwrap_or("application/octet-stream");
-    let content_type = super::ContentType::from(content_type);
-
-    if !status.is_client_error() && !status.is_server_error() {
-        let content = resp.text().await?;
-        match content_type {
-            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::DescribeTableResponseV2`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::DescribeTableResponseV2`")))),
-        }
-    } else {
-        let content = resp.text().await?;
-        let entity: Option<DescribeTableV2Error> = serde_json::from_str(&content).ok();
-        Err(Error::ResponseError(ResponseContent { status, content, entity }))
-    }
-}
-
 /// Drop a table from its namespace and delete its data. If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. 
 pub async fn drop_table(configuration: &configuration::Configuration, id: &str, drop_table_request: models::DropTableRequest, delimiter: Option<&str>) -> Result<models::DropTableResponse, Error<DropTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
@@ -753,7 +651,7 @@ pub async fn list_tables(configuration: &configuration::Configuration, id: &str,
     let p_list_tables_request = list_tables_request;
     let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/v1/namespace/{id}/list_tables", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let uri_str = format!("{}/v1/namespace/{id}/table/list", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
     if let Some(ref param_value) = p_delimiter {
@@ -790,13 +688,16 @@ pub async fn list_tables(configuration: &configuration::Configuration, id: &str,
 }
 
 /// Performs a merge insert (upsert) operation on a table. This operation updates existing rows based on a matching column and inserts new rows that don't match. Returns the number of rows inserted and updated. 
-pub async fn merge_insert_into_table(configuration: &configuration::Configuration, id: &str, on: &str, body: Vec<u8>, when_matched_update_all: Option<bool>, when_not_matched_insert_all: Option<bool>) -> Result<models::MergeInsertIntoTableResponse, Error<MergeInsertIntoTableError>> {
+pub async fn merge_insert_into_table(configuration: &configuration::Configuration, id: &str, on: &str, body: Vec<u8>, when_matched_update_all: Option<bool>, when_matched_update_all_filt: Option<&str>, when_not_matched_insert_all: Option<bool>, when_not_matched_by_source_delete: Option<bool>, when_not_matched_by_source_delete_filt: Option<&str>) -> Result<models::MergeInsertIntoTableResponse, Error<MergeInsertIntoTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_on = on;
     let p_body = body;
     let p_when_matched_update_all = when_matched_update_all;
+    let p_when_matched_update_all_filt = when_matched_update_all_filt;
     let p_when_not_matched_insert_all = when_not_matched_insert_all;
+    let p_when_not_matched_by_source_delete = when_not_matched_by_source_delete;
+    let p_when_not_matched_by_source_delete_filt = when_not_matched_by_source_delete_filt;
 
     let uri_str = format!("{}/v1/table/{id}/merge_insert", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
@@ -805,8 +706,17 @@ pub async fn merge_insert_into_table(configuration: &configuration::Configuratio
     if let Some(ref param_value) = p_when_matched_update_all {
         req_builder = req_builder.query(&[("when_matched_update_all", &param_value.to_string())]);
     }
+    if let Some(ref param_value) = p_when_matched_update_all_filt {
+        req_builder = req_builder.query(&[("when_matched_update_all_filt", &param_value.to_string())]);
+    }
     if let Some(ref param_value) = p_when_not_matched_insert_all {
         req_builder = req_builder.query(&[("when_not_matched_insert_all", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_when_not_matched_by_source_delete {
+        req_builder = req_builder.query(&[("when_not_matched_by_source_delete", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_when_not_matched_by_source_delete_filt {
+        req_builder = req_builder.query(&[("when_not_matched_by_source_delete_filt", &param_value.to_string())]);
     }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
@@ -838,7 +748,7 @@ pub async fn merge_insert_into_table(configuration: &configuration::Configuratio
     }
 }
 
-/// Query a table with vector search and optional filtering. Returns results in Arrow IPC stream format. 
+/// Query a table with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
 pub async fn query_table(configuration: &configuration::Configuration, id: &str, query_table_request: models::QueryTableRequest) -> Result<reqwest::Response, Error<QueryTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;

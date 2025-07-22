@@ -35,6 +35,10 @@ public class CountTableRowsRequest {
 
   @Valid private List<String> namespace = new ArrayList<>();
 
+  private Long version;
+
+  private String filter;
+
   public CountTableRowsRequest name(String name) {
     this.name = name;
     return this;
@@ -83,6 +87,55 @@ public class CountTableRowsRequest {
     this.namespace = namespace;
   }
 
+  public CountTableRowsRequest version(Long version) {
+    this.version = version;
+    return this;
+  }
+
+  /**
+   * Version of the table to describe. If not specified, server should resolve it to the latest
+   * version. minimum: 0
+   *
+   * @return version
+   */
+  @Min(0L)
+  @Schema(
+      name = "version",
+      description =
+          "Version of the table to describe. If not specified, server should resolve it to the latest version. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("version")
+  public Long getVersion() {
+    return version;
+  }
+
+  public void setVersion(Long version) {
+    this.version = version;
+  }
+
+  public CountTableRowsRequest filter(String filter) {
+    this.filter = filter;
+    return this;
+  }
+
+  /**
+   * SQL filter expression to be applied
+   *
+   * @return filter
+   */
+  @Schema(
+      name = "filter",
+      description = "SQL filter expression to be applied ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("filter")
+  public String getFilter() {
+    return filter;
+  }
+
+  public void setFilter(String filter) {
+    this.filter = filter;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -93,12 +146,14 @@ public class CountTableRowsRequest {
     }
     CountTableRowsRequest countTableRowsRequest = (CountTableRowsRequest) o;
     return Objects.equals(this.name, countTableRowsRequest.name)
-        && Objects.equals(this.namespace, countTableRowsRequest.namespace);
+        && Objects.equals(this.namespace, countTableRowsRequest.namespace)
+        && Objects.equals(this.version, countTableRowsRequest.version)
+        && Objects.equals(this.filter, countTableRowsRequest.filter);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace);
+    return Objects.hash(name, namespace, version, filter);
   }
 
   @Override
@@ -107,6 +162,8 @@ public class CountTableRowsRequest {
     sb.append("class CountTableRowsRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    filter: ").append(toIndentedString(filter)).append("\n");
     sb.append("}");
     return sb.toString();
   }

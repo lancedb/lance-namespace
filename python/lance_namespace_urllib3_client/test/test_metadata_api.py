@@ -33,13 +33,6 @@ class TestMetadataApi(unittest.TestCase):
         """
         pass
 
-    def test_count_table_rows(self) -> None:
-        """Test case for count_table_rows
-
-        Count rows in a table
-        """
-        pass
-
     def test_create_namespace(self) -> None:
         """Test case for create_namespace
 
@@ -58,13 +51,6 @@ class TestMetadataApi(unittest.TestCase):
         """Test case for create_table_index
 
         Create an index on a table
-        """
-        pass
-
-    def test_create_table_scalar_index(self) -> None:
-        """Test case for create_table_scalar_index
-
-        Create a scalar index on a table
         """
         pass
 
@@ -92,14 +78,7 @@ class TestMetadataApi(unittest.TestCase):
     def test_describe_table_index_stats(self) -> None:
         """Test case for describe_table_index_stats
 
-        Get index statistics
-        """
-        pass
-
-    def test_describe_table_v2(self) -> None:
-        """Test case for describe_table_v2
-
-        Describe a table from the namespace
+        Get table index statistics
         """
         pass
 

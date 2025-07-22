@@ -42,7 +42,6 @@ class TestNamespaceExistsRequest(unittest.TestCase):
             )
         else:
             return NamespaceExistsRequest(
-                name = '',
         )
         """
 

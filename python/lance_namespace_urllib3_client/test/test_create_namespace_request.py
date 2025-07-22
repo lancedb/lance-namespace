@@ -46,7 +46,6 @@ class TestCreateNamespaceRequest(unittest.TestCase):
             )
         else:
             return CreateNamespaceRequest(
-                name = '',
                 mode = 'CREATE',
         )
         """

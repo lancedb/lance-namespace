@@ -8,7 +8,7 @@ All URIs are relative to *http://localhost:2333*
 | [**describeNamespace**](NamespaceApi.md#describeNamespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace |
 | [**dropNamespace**](NamespaceApi.md#dropNamespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace |
 | [**listNamespaces**](NamespaceApi.md#listNamespaces) | **POST** /v1/namespace/{id}/list | List namespaces |
-| [**listTables**](NamespaceApi.md#listTables) | **POST** /v1/namespace/{id}/list_tables | List tables in a namespace |
+| [**listTables**](NamespaceApi.md#listTables) | **POST** /v1/namespace/{id}/table/list | List tables in a namespace |
 | [**namespaceExists**](NamespaceApi.md#namespaceExists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists |
 
 

@@ -5,12 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**version** | **int** |  | [optional] 
 **location** | **str** |  | 
-**properties** | **Dict[str, str]** |  | [optional] 
 **var_schema** | [**JsonSchema**](JsonSchema.md) |  | 
-**stats** | [**TableBasicStats**](TableBasicStats.md) |  | 
-**table** | **str** |  | 
-**version** | **int** |  | 
+**properties** | **Dict[str, str]** |  | [optional] 
 
 ## Example
 

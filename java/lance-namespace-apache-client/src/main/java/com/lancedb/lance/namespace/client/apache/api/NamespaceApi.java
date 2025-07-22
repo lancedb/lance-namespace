@@ -520,7 +520,7 @@ public class NamespaceApi extends BaseApi {
 
     // create path and map variables
     String localVarPath =
-        "/v1/namespace/{id}/list_tables"
+        "/v1/namespace/{id}/table/list"
             .replaceAll(
                 "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 

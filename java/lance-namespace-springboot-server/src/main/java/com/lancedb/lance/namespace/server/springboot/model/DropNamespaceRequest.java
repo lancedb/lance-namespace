@@ -116,15 +116,6 @@ public class DropNamespaceRequest {
 
   private BehaviorEnum behavior;
 
-  public DropNamespaceRequest() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public DropNamespaceRequest(String name) {
-    this.name = name;
-  }
-
   public DropNamespaceRequest name(String name) {
     this.name = name;
     return this;
@@ -135,8 +126,7 @@ public class DropNamespaceRequest {
    *
    * @return name
    */
-  @NotNull
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("name")
   public String getName() {
     return name;

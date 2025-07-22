@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +29,9 @@ class CountTableRowsRequest(BaseModel):
     """ # noqa: E501
     name: Optional[StrictStr] = None
     namespace: Optional[List[StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["name", "namespace"]
+    version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Version of the table to describe. If not specified, server should resolve it to the latest version. ")
+    filter: Optional[StrictStr] = Field(default=None, description="SQL filter expression to be applied ")
+    __properties: ClassVar[List[str]] = ["name", "namespace", "version", "filter"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -82,7 +85,9 @@ class CountTableRowsRequest(BaseModel):
 
         _obj = cls.model_validate({
             "name": obj.get("name"),
-            "namespace": obj.get("namespace")
+            "namespace": obj.get("namespace"),
+            "version": obj.get("version"),
+            "filter": obj.get("filter")
         })
         return _obj
 

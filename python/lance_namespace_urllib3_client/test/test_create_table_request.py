@@ -14,10 +14,10 @@
 
 import unittest
 
-from lance_namespace_urllib3_client.models.table_exists_response import TableExistsResponse
+from lance_namespace_urllib3_client.models.create_table_request import CreateTableRequest
 
-class TestTableExistsResponse(unittest.TestCase):
-    """TableExistsResponse unit test stubs"""
+class TestCreateTableRequest(unittest.TestCase):
+    """CreateTableRequest unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,26 +25,32 @@ class TestTableExistsResponse(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> TableExistsResponse:
-        """Test TableExistsResponse
+    def make_instance(self, include_optional) -> CreateTableRequest:
+        """Test CreateTableRequest
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `TableExistsResponse`
+        # uncomment below to create an instance of `CreateTableRequest`
         """
-        model = TableExistsResponse()
+        model = CreateTableRequest()
         if include_optional:
-            return TableExistsResponse(
-                exists = True
+            return CreateTableRequest(
+                name = '',
+                namespace = [
+                    ''
+                    ],
+                location = '',
+                properties = {
+                    'key' : ''
+                    }
             )
         else:
-            return TableExistsResponse(
-                exists = True,
+            return CreateTableRequest(
         )
         """
 
-    def testTableExistsResponse(self):
-        """Test TableExistsResponse"""
+    def testCreateTableRequest(self):
+        """Test CreateTableRequest"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 

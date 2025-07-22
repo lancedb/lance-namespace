@@ -21,7 +21,6 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.json_schema import JsonSchema
-from lance_namespace_urllib3_client.models.table_basic_stats import TableBasicStats
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,13 +28,11 @@ class DescribeTableResponse(BaseModel):
     """
     DescribeTableResponse
     """ # noqa: E501
+    version: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
     location: StrictStr
-    properties: Optional[Dict[str, StrictStr]] = None
     var_schema: JsonSchema = Field(alias="schema")
-    stats: TableBasicStats
-    table: StrictStr
-    version: Annotated[int, Field(strict=True, ge=0)]
-    __properties: ClassVar[List[str]] = ["location", "properties", "schema", "stats", "table", "version"]
+    properties: Optional[Dict[str, StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["version", "location", "schema", "properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -79,9 +76,6 @@ class DescribeTableResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of var_schema
         if self.var_schema:
             _dict['schema'] = self.var_schema.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of stats
-        if self.stats:
-            _dict['stats'] = self.stats.to_dict()
         return _dict
 
     @classmethod
@@ -94,12 +88,10 @@ class DescribeTableResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "version": obj.get("version"),
             "location": obj.get("location"),
-            "properties": obj.get("properties"),
             "schema": JsonSchema.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
-            "stats": TableBasicStats.from_dict(obj["stats"]) if obj.get("stats") is not None else None,
-            "table": obj.get("table"),
-            "version": obj.get("version")
+            "properties": obj.get("properties")
         })
         return _obj
 

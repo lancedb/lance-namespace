@@ -27,7 +27,9 @@ import java.util.StringJoiner;
 /** CountTableRowsRequest */
 @JsonPropertyOrder({
   CountTableRowsRequest.JSON_PROPERTY_NAME,
-  CountTableRowsRequest.JSON_PROPERTY_NAMESPACE
+  CountTableRowsRequest.JSON_PROPERTY_NAMESPACE,
+  CountTableRowsRequest.JSON_PROPERTY_VERSION,
+  CountTableRowsRequest.JSON_PROPERTY_FILTER
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -38,6 +40,12 @@ public class CountTableRowsRequest {
 
   public static final String JSON_PROPERTY_NAMESPACE = "namespace";
   @javax.annotation.Nullable private List<String> namespace = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_VERSION = "version";
+  @javax.annotation.Nullable private Long version;
+
+  public static final String JSON_PROPERTY_FILTER = "filter";
+  @javax.annotation.Nullable private String filter;
 
   public CountTableRowsRequest() {}
 
@@ -97,6 +105,55 @@ public class CountTableRowsRequest {
     this.namespace = namespace;
   }
 
+  public CountTableRowsRequest version(@javax.annotation.Nullable Long version) {
+
+    this.version = version;
+    return this;
+  }
+
+  /**
+   * Version of the table to describe. If not specified, server should resolve it to the latest
+   * version. minimum: 0
+   *
+   * @return version
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_VERSION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Long getVersion() {
+    return version;
+  }
+
+  @JsonProperty(JSON_PROPERTY_VERSION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setVersion(@javax.annotation.Nullable Long version) {
+    this.version = version;
+  }
+
+  public CountTableRowsRequest filter(@javax.annotation.Nullable String filter) {
+
+    this.filter = filter;
+    return this;
+  }
+
+  /**
+   * SQL filter expression to be applied
+   *
+   * @return filter
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_FILTER)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getFilter() {
+    return filter;
+  }
+
+  @JsonProperty(JSON_PROPERTY_FILTER)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setFilter(@javax.annotation.Nullable String filter) {
+    this.filter = filter;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -107,12 +164,14 @@ public class CountTableRowsRequest {
     }
     CountTableRowsRequest countTableRowsRequest = (CountTableRowsRequest) o;
     return Objects.equals(this.name, countTableRowsRequest.name)
-        && Objects.equals(this.namespace, countTableRowsRequest.namespace);
+        && Objects.equals(this.namespace, countTableRowsRequest.namespace)
+        && Objects.equals(this.version, countTableRowsRequest.version)
+        && Objects.equals(this.filter, countTableRowsRequest.filter);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace);
+    return Objects.hash(name, namespace, version, filter);
   }
 
   @Override
@@ -121,6 +180,8 @@ public class CountTableRowsRequest {
     sb.append("class CountTableRowsRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    filter: ").append(toIndentedString(filter)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -200,6 +261,36 @@ public class CountTableRowsRequest {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
+      }
+    }
+
+    // add `version` to the URL query string
+    if (getVersion() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sversion%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `filter` to the URL query string
+    if (getFilter() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sfilter%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getFilter()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
       }
     }
 

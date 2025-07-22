@@ -47,13 +47,6 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
-    def test_create_table_scalar_index(self) -> None:
-        """Test case for create_table_scalar_index
-
-        Create a scalar index on a table
-        """
-        pass
-
     def test_delete_from_table(self) -> None:
         """Test case for delete_from_table
 
@@ -78,14 +71,7 @@ class TestTableApi(unittest.TestCase):
     def test_describe_table_index_stats(self) -> None:
         """Test case for describe_table_index_stats
 
-        Get index statistics
-        """
-        pass
-
-    def test_describe_table_v2(self) -> None:
-        """Test case for describe_table_v2
-
-        Describe a table from the namespace
+        Get table index statistics
         """
         pass
 

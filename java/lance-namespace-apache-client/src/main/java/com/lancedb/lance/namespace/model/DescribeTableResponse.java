@@ -26,36 +26,52 @@ import java.util.StringJoiner;
 
 /** DescribeTableResponse */
 @JsonPropertyOrder({
+  DescribeTableResponse.JSON_PROPERTY_VERSION,
   DescribeTableResponse.JSON_PROPERTY_LOCATION,
-  DescribeTableResponse.JSON_PROPERTY_PROPERTIES,
   DescribeTableResponse.JSON_PROPERTY_SCHEMA,
-  DescribeTableResponse.JSON_PROPERTY_STATS,
-  DescribeTableResponse.JSON_PROPERTY_TABLE,
-  DescribeTableResponse.JSON_PROPERTY_VERSION
+  DescribeTableResponse.JSON_PROPERTY_PROPERTIES
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DescribeTableResponse {
+  public static final String JSON_PROPERTY_VERSION = "version";
+  @javax.annotation.Nullable private Long version;
+
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nonnull private String location;
-
-  public static final String JSON_PROPERTY_PROPERTIES = "properties";
-  @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public static final String JSON_PROPERTY_SCHEMA = "schema";
   @javax.annotation.Nonnull private JsonSchema schema;
 
-  public static final String JSON_PROPERTY_STATS = "stats";
-  @javax.annotation.Nonnull private TableBasicStats stats;
-
-  public static final String JSON_PROPERTY_TABLE = "table";
-  @javax.annotation.Nonnull private String table;
-
-  public static final String JSON_PROPERTY_VERSION = "version";
-  @javax.annotation.Nonnull private Long version;
+  public static final String JSON_PROPERTY_PROPERTIES = "properties";
+  @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public DescribeTableResponse() {}
+
+  public DescribeTableResponse version(@javax.annotation.Nullable Long version) {
+
+    this.version = version;
+    return this;
+  }
+
+  /**
+   * Get version minimum: 0
+   *
+   * @return version
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_VERSION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Long getVersion() {
+    return version;
+  }
+
+  @JsonProperty(JSON_PROPERTY_VERSION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setVersion(@javax.annotation.Nullable Long version) {
+    this.version = version;
+  }
 
   public DescribeTableResponse location(@javax.annotation.Nonnull String location) {
 
@@ -79,6 +95,30 @@ public class DescribeTableResponse {
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public void setLocation(@javax.annotation.Nonnull String location) {
     this.location = location;
+  }
+
+  public DescribeTableResponse schema(@javax.annotation.Nonnull JsonSchema schema) {
+
+    this.schema = schema;
+    return this;
+  }
+
+  /**
+   * Get schema
+   *
+   * @return schema
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_SCHEMA)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public JsonSchema getSchema() {
+    return schema;
+  }
+
+  @JsonProperty(JSON_PROPERTY_SCHEMA)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setSchema(@javax.annotation.Nonnull JsonSchema schema) {
+    this.schema = schema;
   }
 
   public DescribeTableResponse properties(
@@ -114,102 +154,6 @@ public class DescribeTableResponse {
     this.properties = properties;
   }
 
-  public DescribeTableResponse schema(@javax.annotation.Nonnull JsonSchema schema) {
-
-    this.schema = schema;
-    return this;
-  }
-
-  /**
-   * Get schema
-   *
-   * @return schema
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_SCHEMA)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public JsonSchema getSchema() {
-    return schema;
-  }
-
-  @JsonProperty(JSON_PROPERTY_SCHEMA)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setSchema(@javax.annotation.Nonnull JsonSchema schema) {
-    this.schema = schema;
-  }
-
-  public DescribeTableResponse stats(@javax.annotation.Nonnull TableBasicStats stats) {
-
-    this.stats = stats;
-    return this;
-  }
-
-  /**
-   * Get stats
-   *
-   * @return stats
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_STATS)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public TableBasicStats getStats() {
-    return stats;
-  }
-
-  @JsonProperty(JSON_PROPERTY_STATS)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setStats(@javax.annotation.Nonnull TableBasicStats stats) {
-    this.stats = stats;
-  }
-
-  public DescribeTableResponse table(@javax.annotation.Nonnull String table) {
-
-    this.table = table;
-    return this;
-  }
-
-  /**
-   * Get table
-   *
-   * @return table
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_TABLE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getTable() {
-    return table;
-  }
-
-  @JsonProperty(JSON_PROPERTY_TABLE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setTable(@javax.annotation.Nonnull String table) {
-    this.table = table;
-  }
-
-  public DescribeTableResponse version(@javax.annotation.Nonnull Long version) {
-
-    this.version = version;
-    return this;
-  }
-
-  /**
-   * Get version minimum: 0
-   *
-   * @return version
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_VERSION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public Long getVersion() {
-    return version;
-  }
-
-  @JsonProperty(JSON_PROPERTY_VERSION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setVersion(@javax.annotation.Nonnull Long version) {
-    this.version = version;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -219,29 +163,25 @@ public class DescribeTableResponse {
       return false;
     }
     DescribeTableResponse describeTableResponse = (DescribeTableResponse) o;
-    return Objects.equals(this.location, describeTableResponse.location)
-        && Objects.equals(this.properties, describeTableResponse.properties)
+    return Objects.equals(this.version, describeTableResponse.version)
+        && Objects.equals(this.location, describeTableResponse.location)
         && Objects.equals(this.schema, describeTableResponse.schema)
-        && Objects.equals(this.stats, describeTableResponse.stats)
-        && Objects.equals(this.table, describeTableResponse.table)
-        && Objects.equals(this.version, describeTableResponse.version);
+        && Objects.equals(this.properties, describeTableResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(location, properties, schema, stats, table, version);
+    return Objects.hash(version, location, schema, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeTableResponse {\n");
-    sb.append("    location: ").append(toIndentedString(location)).append("\n");
-    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
-    sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
-    sb.append("    stats: ").append(toIndentedString(stats)).append("\n");
-    sb.append("    table: ").append(toIndentedString(table)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
+    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -288,6 +228,21 @@ public class DescribeTableResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
+    // add `version` to the URL query string
+    if (getVersion() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sversion%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
     // add `location` to the URL query string
     if (getLocation() != null) {
       try {
@@ -302,6 +257,11 @@ public class DescribeTableResponse {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);
       }
+    }
+
+    // add `schema` to the URL query string
+    if (getSchema() != null) {
+      joiner.add(getSchema().toUrlQueryString(prefix + "schema" + suffix));
     }
 
     // add `properties` to the URL query string
@@ -323,46 +283,6 @@ public class DescribeTableResponse {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
-      }
-    }
-
-    // add `schema` to the URL query string
-    if (getSchema() != null) {
-      joiner.add(getSchema().toUrlQueryString(prefix + "schema" + suffix));
-    }
-
-    // add `stats` to the URL query string
-    if (getStats() != null) {
-      joiner.add(getStats().toUrlQueryString(prefix + "stats" + suffix));
-    }
-
-    // add `table` to the URL query string
-    if (getTable() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%stable%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getTable()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `version` to the URL query string
-    if (getVersion() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sversion%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
       }
     }
 

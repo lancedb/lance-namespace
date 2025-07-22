@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** |  | 
-**namespace** | **List[str]** |  | 
+**name** | **str** |  | [optional] 
+**namespace** | **List[str]** |  | [optional] 
 **location** | **str** |  | 
 
 ## Example

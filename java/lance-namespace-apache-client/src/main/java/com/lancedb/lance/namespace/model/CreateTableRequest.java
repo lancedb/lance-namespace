@@ -26,32 +26,39 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** DescribeTableResponseV2 */
+/**
+ * Request for creating a table, excluding the Arrow IPC stream. Note that this is only used for
+ * non-REST implementations. For REST, pass in the information in the following way: -
+ * &#x60;name&#x60;: pass as a part of the path parameter &#x60;id&#x60; - &#x60;namespace&#x60;:
+ * pass as a part of the path parameter &#x60;namespace&#x60; - &#x60;location&#x60;: pass through
+ * header &#x60;x-lance-table-location&#x60; - &#x60;properties&#x60;: pass through header
+ * &#x60;x-lance-table-properties&#x60;
+ */
 @JsonPropertyOrder({
-  DescribeTableResponseV2.JSON_PROPERTY_NAME,
-  DescribeTableResponseV2.JSON_PROPERTY_NAMESPACE,
-  DescribeTableResponseV2.JSON_PROPERTY_LOCATION,
-  DescribeTableResponseV2.JSON_PROPERTY_PROPERTIES
+  CreateTableRequest.JSON_PROPERTY_NAME,
+  CreateTableRequest.JSON_PROPERTY_NAMESPACE,
+  CreateTableRequest.JSON_PROPERTY_LOCATION,
+  CreateTableRequest.JSON_PROPERTY_PROPERTIES
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class DescribeTableResponseV2 {
+public class CreateTableRequest {
   public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nonnull private String name;
+  @javax.annotation.Nullable private String name;
 
   public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
+  @javax.annotation.Nullable private List<String> namespace = new ArrayList<>();
 
   public static final String JSON_PROPERTY_LOCATION = "location";
-  @javax.annotation.Nonnull private String location;
+  @javax.annotation.Nullable private String location;
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
-  public DescribeTableResponseV2() {}
+  public CreateTableRequest() {}
 
-  public DescribeTableResponseV2 name(@javax.annotation.Nonnull String name) {
+  public CreateTableRequest name(@javax.annotation.Nullable String name) {
 
     this.name = name;
     return this;
@@ -62,26 +69,26 @@ public class DescribeTableResponseV2 {
    *
    * @return name
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public String getName() {
     return name;
   }
 
   @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setName(@javax.annotation.Nonnull String name) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setName(@javax.annotation.Nullable String name) {
     this.name = name;
   }
 
-  public DescribeTableResponseV2 namespace(@javax.annotation.Nonnull List<String> namespace) {
+  public CreateTableRequest namespace(@javax.annotation.Nullable List<String> namespace) {
 
     this.namespace = namespace;
     return this;
   }
 
-  public DescribeTableResponseV2 addNamespaceItem(String namespaceItem) {
+  public CreateTableRequest addNamespaceItem(String namespaceItem) {
     if (this.namespace == null) {
       this.namespace = new ArrayList<>();
     }
@@ -94,20 +101,20 @@ public class DescribeTableResponseV2 {
    *
    * @return namespace
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public List<String> getNamespace() {
     return namespace;
   }
 
   @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setNamespace(@javax.annotation.Nonnull List<String> namespace) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNamespace(@javax.annotation.Nullable List<String> namespace) {
     this.namespace = namespace;
   }
 
-  public DescribeTableResponseV2 location(@javax.annotation.Nonnull String location) {
+  public CreateTableRequest location(@javax.annotation.Nullable String location) {
 
     this.location = location;
     return this;
@@ -118,27 +125,26 @@ public class DescribeTableResponseV2 {
    *
    * @return location
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public String getLocation() {
     return location;
   }
 
   @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setLocation(@javax.annotation.Nonnull String location) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setLocation(@javax.annotation.Nullable String location) {
     this.location = location;
   }
 
-  public DescribeTableResponseV2 properties(
-      @javax.annotation.Nullable Map<String, String> properties) {
+  public CreateTableRequest properties(@javax.annotation.Nullable Map<String, String> properties) {
 
     this.properties = properties;
     return this;
   }
 
-  public DescribeTableResponseV2 putPropertiesItem(String key, String propertiesItem) {
+  public CreateTableRequest putPropertiesItem(String key, String propertiesItem) {
     if (this.properties == null) {
       this.properties = new HashMap<>();
     }
@@ -172,11 +178,11 @@ public class DescribeTableResponseV2 {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    DescribeTableResponseV2 describeTableResponseV2 = (DescribeTableResponseV2) o;
-    return Objects.equals(this.name, describeTableResponseV2.name)
-        && Objects.equals(this.namespace, describeTableResponseV2.namespace)
-        && Objects.equals(this.location, describeTableResponseV2.location)
-        && Objects.equals(this.properties, describeTableResponseV2.properties);
+    CreateTableRequest createTableRequest = (CreateTableRequest) o;
+    return Objects.equals(this.name, createTableRequest.name)
+        && Objects.equals(this.namespace, createTableRequest.namespace)
+        && Objects.equals(this.location, createTableRequest.location)
+        && Objects.equals(this.properties, createTableRequest.properties);
   }
 
   @Override
@@ -187,7 +193,7 @@ public class DescribeTableResponseV2 {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class DescribeTableResponseV2 {\n");
+    sb.append("class CreateTableRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");

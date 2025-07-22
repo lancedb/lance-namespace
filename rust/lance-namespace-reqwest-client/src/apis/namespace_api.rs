@@ -278,7 +278,7 @@ pub async fn list_tables(configuration: &configuration::Configuration, id: &str,
     let p_list_tables_request = list_tables_request;
     let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/v1/namespace/{id}/list_tables", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let uri_str = format!("{}/v1/namespace/{id}/table/list", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
     if let Some(ref param_value) = p_delimiter {

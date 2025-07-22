@@ -42,9 +42,7 @@ public class RegisterTableRequest {
   }
 
   /** Constructor with only required parameters */
-  public RegisterTableRequest(String name, List<String> namespace, String location) {
-    this.name = name;
-    this.namespace = namespace;
+  public RegisterTableRequest(String location) {
     this.location = location;
   }
 
@@ -58,8 +56,7 @@ public class RegisterTableRequest {
    *
    * @return name
    */
-  @NotNull
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("name")
   public String getName() {
     return name;
@@ -87,8 +84,7 @@ public class RegisterTableRequest {
    *
    * @return namespace
    */
-  @NotNull
-  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("namespace")
   public List<String> getNamespace() {
     return namespace;

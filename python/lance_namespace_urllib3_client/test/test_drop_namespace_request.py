@@ -44,7 +44,6 @@ class TestDropNamespaceRequest(unittest.TestCase):
             )
         else:
             return DropNamespaceRequest(
-                name = '',
         )
         """
 

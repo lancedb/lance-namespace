@@ -4,12 +4,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**version** | Option<**i64**> |  | [optional]
 **location** | **String** |  | 
-**properties** | Option<**std::collections::HashMap<String, String>**> |  | [optional]
 **schema** | [**models::JsonSchema**](JsonSchema.md) |  | 
-**stats** | [**models::TableBasicStats**](TableBasicStats.md) |  | 
-**table** | **String** |  | 
-**version** | **i64** |  | 
+**properties** | Option<**std::collections::HashMap<String, String>**> |  | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

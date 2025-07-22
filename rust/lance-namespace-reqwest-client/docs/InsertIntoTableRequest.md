@@ -1,11 +1,12 @@
-# TableBasicStats
+# InsertIntoTableRequest
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**num_deleted_rows** | **i32** |  | 
-**num_fragments** | **i32** |  | 
+**name** | Option<**String**> |  | [optional]
+**namespace** | Option<**Vec<String>**> |  | [optional]
+**mode** | Option<**String**> |  | [optional][default to Append]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

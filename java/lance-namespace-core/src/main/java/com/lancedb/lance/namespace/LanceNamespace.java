@@ -55,6 +55,7 @@ import com.lancedb.lance.namespace.model.UpdateTableRequest;
 import com.lancedb.lance.namespace.model.UpdateTableResponse;
 import com.lancedb.lance.namespace.util.DynConstructors;
 
+import java.io.InputStream;
 import java.util.Map;
 
 /** TODO: add documentation */
@@ -105,16 +106,12 @@ public interface LanceNamespace {
 
   Long countTableRows(CountTableRowsRequest request);
 
-  CreateTableResponse createTable(String tableName, byte[] arrowIpcData);
+  CreateTableResponse createTable(String tableName, InputStream requestData);
 
-  InsertIntoTableResponse insertIntoTable(String tableName, byte[] arrowIpcData, String mode);
+  InsertIntoTableResponse insertIntoTable(String tableName, InputStream requestData);
 
   MergeInsertIntoTableResponse mergeInsertIntoTable(
-      MergeInsertIntoTableRequest request,
-      byte[] arrowIpcData,
-      String on,
-      Boolean whenMatchedUpdateAll,
-      Boolean whenNotMatchedInsertAll);
+      MergeInsertIntoTableRequest request, InputStream requestData);
 
   UpdateTableResponse updateTable(UpdateTableRequest request);
 

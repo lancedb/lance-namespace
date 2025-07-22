@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,8 +26,8 @@ class RegisterTableRequest(BaseModel):
     """
     RegisterTableRequest
     """ # noqa: E501
-    name: StrictStr
-    namespace: List[StrictStr]
+    name: Optional[StrictStr] = None
+    namespace: Optional[List[StrictStr]] = None
     location: StrictStr
     __properties: ClassVar[List[str]] = ["name", "namespace", "location"]
 

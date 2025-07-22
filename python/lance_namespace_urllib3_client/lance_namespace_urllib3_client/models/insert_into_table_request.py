@@ -17,19 +17,29 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List
-from typing_extensions import Annotated
+from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TableBasicStats(BaseModel):
+class InsertIntoTableRequest(BaseModel):
     """
-    TableBasicStats
+    Request for inserting records into a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `mode`: pass through query parameter of the same name 
     """ # noqa: E501
-    num_deleted_rows: Annotated[int, Field(strict=True, ge=0)]
-    num_fragments: Annotated[int, Field(strict=True, ge=0)]
-    __properties: ClassVar[List[str]] = ["num_deleted_rows", "num_fragments"]
+    name: Optional[StrictStr] = None
+    namespace: Optional[List[StrictStr]] = None
+    mode: Optional[StrictStr] = 'append'
+    __properties: ClassVar[List[str]] = ["name", "namespace", "mode"]
+
+    @field_validator('mode')
+    def mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['append', 'overwrite']):
+            raise ValueError("must be one of enum values ('append', 'overwrite')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +59,7 @@ class TableBasicStats(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TableBasicStats from a JSON string"""
+        """Create an instance of InsertIntoTableRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,7 +84,7 @@ class TableBasicStats(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TableBasicStats from a dict"""
+        """Create an instance of InsertIntoTableRequest from a dict"""
         if obj is None:
             return None
 
@@ -82,8 +92,9 @@ class TableBasicStats(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "num_deleted_rows": obj.get("num_deleted_rows"),
-            "num_fragments": obj.get("num_fragments")
+            "name": obj.get("name"),
+            "namespace": obj.get("namespace"),
+            "mode": obj.get("mode") if obj.get("mode") is not None else 'append'
         })
         return _obj
 

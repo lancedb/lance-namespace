@@ -35,28 +35,29 @@ All URIs are relative to *http://localhost:2333*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*DataApi* | [**count_table_rows**](docs/DataApi.md#count_table_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
 *DataApi* | [**delete_from_table**](docs/DataApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
 *DataApi* | [**insert_into_table**](docs/DataApi.md#insert_into_table) | **POST** /v1/table/{id}/insert | Insert records into a table
 *DataApi* | [**merge_insert_into_table**](docs/DataApi.md#merge_insert_into_table) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 *DataApi* | [**query_table**](docs/DataApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
 *DataApi* | [**update_table**](docs/DataApi.md#update_table) | **POST** /v1/table/{id}/update | Update rows in a table
+*IndexApi* | [**create_table_index**](docs/IndexApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
+*IndexApi* | [**describe_table_index_stats**](docs/IndexApi.md#describe_table_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get table index statistics
+*IndexApi* | [**list_table_indices**](docs/IndexApi.md#list_table_indices) | **POST** /v1/table/{id}/index/list | List indexes on a table
 *MetadataApi* | [**alter_transaction**](docs/MetadataApi.md#alter_transaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
-*MetadataApi* | [**count_table_rows**](docs/MetadataApi.md#count_table_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
 *MetadataApi* | [**create_namespace**](docs/MetadataApi.md#create_namespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
 *MetadataApi* | [**create_table**](docs/MetadataApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 *MetadataApi* | [**create_table_index**](docs/MetadataApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
-*MetadataApi* | [**create_table_scalar_index**](docs/MetadataApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *MetadataApi* | [**deregister_table**](docs/MetadataApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 *MetadataApi* | [**describe_namespace**](docs/MetadataApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace
 *MetadataApi* | [**describe_table**](docs/MetadataApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
-*MetadataApi* | [**describe_table_index_stats**](docs/MetadataApi.md#describe_table_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
-*MetadataApi* | [**describe_table_v2**](docs/MetadataApi.md#describe_table_v2) | **POST** /v2/table/{id}/describe | Describe a table from the namespace
+*MetadataApi* | [**describe_table_index_stats**](docs/MetadataApi.md#describe_table_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get table index statistics
 *MetadataApi* | [**describe_transaction**](docs/MetadataApi.md#describe_transaction) | **POST** /v1/transaction/{id}/describe | Describe information about a transaction
 *MetadataApi* | [**drop_namespace**](docs/MetadataApi.md#drop_namespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace
 *MetadataApi* | [**drop_table**](docs/MetadataApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
 *MetadataApi* | [**list_namespaces**](docs/MetadataApi.md#list_namespaces) | **POST** /v1/namespace/{id}/list | List namespaces
 *MetadataApi* | [**list_table_indices**](docs/MetadataApi.md#list_table_indices) | **POST** /v1/table/{id}/index/list | List indexes on a table
-*MetadataApi* | [**list_tables**](docs/MetadataApi.md#list_tables) | **POST** /v1/namespace/{id}/list_tables | List tables in a namespace
+*MetadataApi* | [**list_tables**](docs/MetadataApi.md#list_tables) | **POST** /v1/namespace/{id}/table/list | List tables in a namespace
 *MetadataApi* | [**namespace_exists**](docs/MetadataApi.md#namespace_exists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
 *MetadataApi* | [**register_table**](docs/MetadataApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
 *MetadataApi* | [**table_exists**](docs/MetadataApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
@@ -64,21 +65,19 @@ Class | Method | HTTP request | Description
 *NamespaceApi* | [**describe_namespace**](docs/NamespaceApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace
 *NamespaceApi* | [**drop_namespace**](docs/NamespaceApi.md#drop_namespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace
 *NamespaceApi* | [**list_namespaces**](docs/NamespaceApi.md#list_namespaces) | **POST** /v1/namespace/{id}/list | List namespaces
-*NamespaceApi* | [**list_tables**](docs/NamespaceApi.md#list_tables) | **POST** /v1/namespace/{id}/list_tables | List tables in a namespace
+*NamespaceApi* | [**list_tables**](docs/NamespaceApi.md#list_tables) | **POST** /v1/namespace/{id}/table/list | List tables in a namespace
 *NamespaceApi* | [**namespace_exists**](docs/NamespaceApi.md#namespace_exists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
 *TableApi* | [**count_table_rows**](docs/TableApi.md#count_table_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
 *TableApi* | [**create_table**](docs/TableApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 *TableApi* | [**create_table_index**](docs/TableApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
-*TableApi* | [**create_table_scalar_index**](docs/TableApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *TableApi* | [**delete_from_table**](docs/TableApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
 *TableApi* | [**deregister_table**](docs/TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 *TableApi* | [**describe_table**](docs/TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
-*TableApi* | [**describe_table_index_stats**](docs/TableApi.md#describe_table_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
-*TableApi* | [**describe_table_v2**](docs/TableApi.md#describe_table_v2) | **POST** /v2/table/{id}/describe | Describe a table from the namespace
+*TableApi* | [**describe_table_index_stats**](docs/TableApi.md#describe_table_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get table index statistics
 *TableApi* | [**drop_table**](docs/TableApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
 *TableApi* | [**insert_into_table**](docs/TableApi.md#insert_into_table) | **POST** /v1/table/{id}/insert | Insert records into a table
 *TableApi* | [**list_table_indices**](docs/TableApi.md#list_table_indices) | **POST** /v1/table/{id}/index/list | List indexes on a table
-*TableApi* | [**list_tables**](docs/TableApi.md#list_tables) | **POST** /v1/namespace/{id}/list_tables | List tables in a namespace
+*TableApi* | [**list_tables**](docs/TableApi.md#list_tables) | **POST** /v1/namespace/{id}/table/list | List tables in a namespace
 *TableApi* | [**merge_insert_into_table**](docs/TableApi.md#merge_insert_into_table) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 *TableApi* | [**query_table**](docs/TableApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
 *TableApi* | [**register_table**](docs/TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
@@ -103,6 +102,7 @@ Class | Method | HTTP request | Description
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
  - [CreateTableIndexRequest](docs/CreateTableIndexRequest.md)
  - [CreateTableIndexResponse](docs/CreateTableIndexResponse.md)
+ - [CreateTableRequest](docs/CreateTableRequest.md)
  - [CreateTableResponse](docs/CreateTableResponse.md)
  - [DeleteFromTableRequest](docs/DeleteFromTableRequest.md)
  - [DeleteFromTableResponse](docs/DeleteFromTableResponse.md)
@@ -113,9 +113,7 @@ Class | Method | HTTP request | Description
  - [DescribeTableIndexStatsRequest](docs/DescribeTableIndexStatsRequest.md)
  - [DescribeTableIndexStatsResponse](docs/DescribeTableIndexStatsResponse.md)
  - [DescribeTableRequest](docs/DescribeTableRequest.md)
- - [DescribeTableRequestV2](docs/DescribeTableRequestV2.md)
  - [DescribeTableResponse](docs/DescribeTableResponse.md)
- - [DescribeTableResponseV2](docs/DescribeTableResponseV2.md)
  - [DescribeTransactionRequest](docs/DescribeTransactionRequest.md)
  - [DescribeTransactionResponse](docs/DescribeTransactionResponse.md)
  - [DropNamespaceRequest](docs/DropNamespaceRequest.md)
@@ -125,6 +123,7 @@ Class | Method | HTTP request | Description
  - [ErrorResponse](docs/ErrorResponse.md)
  - [FtsQuery](docs/FtsQuery.md)
  - [IndexListItemResponse](docs/IndexListItemResponse.md)
+ - [InsertIntoTableRequest](docs/InsertIntoTableRequest.md)
  - [InsertIntoTableResponse](docs/InsertIntoTableResponse.md)
  - [JsonDataType](docs/JsonDataType.md)
  - [JsonField](docs/JsonField.md)
@@ -140,7 +139,6 @@ Class | Method | HTTP request | Description
  - [MergeInsertIntoTableResponse](docs/MergeInsertIntoTableResponse.md)
  - [MultiMatchQuery](docs/MultiMatchQuery.md)
  - [NamespaceExistsRequest](docs/NamespaceExistsRequest.md)
- - [NamespaceExistsResponse](docs/NamespaceExistsResponse.md)
  - [Operator](docs/Operator.md)
  - [PhraseQuery](docs/PhraseQuery.md)
  - [QueryTableRequest](docs/QueryTableRequest.md)
@@ -151,9 +149,7 @@ Class | Method | HTTP request | Description
  - [SetPropertyMode](docs/SetPropertyMode.md)
  - [StringFtsQuery](docs/StringFtsQuery.md)
  - [StructuredFtsQuery](docs/StructuredFtsQuery.md)
- - [TableBasicStats](docs/TableBasicStats.md)
  - [TableExistsRequest](docs/TableExistsRequest.md)
- - [TableExistsResponse](docs/TableExistsResponse.md)
  - [TransactionStatus](docs/TransactionStatus.md)
  - [UnsetPropertyMode](docs/UnsetPropertyMode.md)
  - [UpdateTableRequest](docs/UpdateTableRequest.md)

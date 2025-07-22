@@ -8,7 +8,7 @@ Method | HTTP request | Description
 [**describe_namespace**](NamespaceApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace
 [**drop_namespace**](NamespaceApi.md#drop_namespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace
 [**list_namespaces**](NamespaceApi.md#list_namespaces) | **POST** /v1/namespace/{id}/list | List namespaces
-[**list_tables**](NamespaceApi.md#list_tables) | **POST** /v1/namespace/{id}/list_tables | List tables in a namespace
+[**list_tables**](NamespaceApi.md#list_tables) | **POST** /v1/namespace/{id}/table/list | List tables in a namespace
 [**namespace_exists**](NamespaceApi.md#namespace_exists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
 
 

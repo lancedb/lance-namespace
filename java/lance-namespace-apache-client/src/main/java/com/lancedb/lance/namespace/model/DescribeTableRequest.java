@@ -13,16 +13,13 @@
  */
 package com.lancedb.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -44,7 +41,7 @@ public class DescribeTableRequest {
   @javax.annotation.Nullable private List<String> namespace = new ArrayList<>();
 
   public static final String JSON_PROPERTY_VERSION = "version";
-  @javax.annotation.Nullable private JsonNullable<Long> version = JsonNullable.<Long>undefined();
+  @javax.annotation.Nullable private Long version;
 
   public DescribeTableRequest() {}
 
@@ -105,35 +102,28 @@ public class DescribeTableRequest {
   }
 
   public DescribeTableRequest version(@javax.annotation.Nullable Long version) {
-    this.version = JsonNullable.<Long>of(version);
 
+    this.version = version;
     return this;
   }
 
   /**
-   * Get version minimum: 0
+   * Version of the table to describe. If not specified, server should resolve it to the latest
+   * version. minimum: 0
    *
    * @return version
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Long getVersion() {
-    return version.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_VERSION)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Long> getVersion_JsonNullable() {
+  public Long getVersion() {
     return version;
   }
 
   @JsonProperty(JSON_PROPERTY_VERSION)
-  public void setVersion_JsonNullable(JsonNullable<Long> version) {
-    this.version = version;
-  }
-
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setVersion(@javax.annotation.Nullable Long version) {
-    this.version = JsonNullable.<Long>of(version);
+    this.version = version;
   }
 
   @Override
@@ -147,28 +137,12 @@ public class DescribeTableRequest {
     DescribeTableRequest describeTableRequest = (DescribeTableRequest) o;
     return Objects.equals(this.name, describeTableRequest.name)
         && Objects.equals(this.namespace, describeTableRequest.namespace)
-        && equalsNullable(this.version, describeTableRequest.version);
-  }
-
-  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
-    return a == b
-        || (a != null
-            && b != null
-            && a.isPresent()
-            && b.isPresent()
-            && Objects.deepEquals(a.get(), b.get()));
+        && Objects.equals(this.version, describeTableRequest.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, hashCodeNullable(version));
-  }
-
-  private static <T> int hashCodeNullable(JsonNullable<T> a) {
-    if (a == null) {
-      return 1;
-    }
-    return a.isPresent() ? Arrays.deepHashCode(new Object[] {a.get()}) : 31;
+    return Objects.hash(name, namespace, version);
   }
 
   @Override

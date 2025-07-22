@@ -20,7 +20,6 @@ import com.lancedb.lance.namespace.client.apache.Configuration;
 import com.lancedb.lance.namespace.client.apache.Pair;
 import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.AlterTransactionResponse;
-import com.lancedb.lance.namespace.model.CountTableRowsRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
@@ -33,9 +32,7 @@ import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
-import com.lancedb.lance.namespace.model.DescribeTableRequestV2;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
-import com.lancedb.lance.namespace.model.DescribeTableResponseV2;
 import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
 import com.lancedb.lance.namespace.model.DescribeTransactionResponse;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
@@ -176,105 +173,6 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Count rows in a table Count the number of rows in a table.
-   *
-   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
-   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
-   *     root namespace. (required)
-   * @param countTableRowsRequest (required)
-   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
-   *     (optional)
-   * @return Long
-   * @throws ApiException if fails to make API call
-   */
-  public Long countTableRows(
-      String id, CountTableRowsRequest countTableRowsRequest, String delimiter)
-      throws ApiException {
-    return this.countTableRows(id, countTableRowsRequest, delimiter, Collections.emptyMap());
-  }
-
-  /**
-   * Count rows in a table Count the number of rows in a table.
-   *
-   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
-   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
-   *     root namespace. (required)
-   * @param countTableRowsRequest (required)
-   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
-   *     (optional)
-   * @param additionalHeaders additionalHeaders for this call
-   * @return Long
-   * @throws ApiException if fails to make API call
-   */
-  public Long countTableRows(
-      String id,
-      CountTableRowsRequest countTableRowsRequest,
-      String delimiter,
-      Map<String, String> additionalHeaders)
-      throws ApiException {
-    Object localVarPostBody = countTableRowsRequest;
-
-    // verify the required parameter 'id' is set
-    if (id == null) {
-      throw new ApiException(
-          400, "Missing the required parameter 'id' when calling countTableRows");
-    }
-
-    // verify the required parameter 'countTableRowsRequest' is set
-    if (countTableRowsRequest == null) {
-      throw new ApiException(
-          400,
-          "Missing the required parameter 'countTableRowsRequest' when calling countTableRows");
-    }
-
-    // create path and map variables
-    String localVarPath =
-        "/v1/table/{id}/count_rows"
-            .replaceAll(
-                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
-
-    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-    String localVarQueryParameterBaseName;
-    List<Pair> localVarQueryParams = new ArrayList<Pair>();
-    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-    Map<String, String> localVarCookieParams = new HashMap<String, String>();
-    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
-
-    localVarHeaderParams.putAll(additionalHeaders);
-
-    final String[] localVarAccepts = {"application/json"};
-    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-    final String[] localVarContentTypes = {"application/json"};
-    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-    String[] localVarAuthNames = new String[] {};
-
-    TypeReference<Long> localVarReturnType = new TypeReference<Long>() {};
-    return apiClient.invokeAPI(
-        localVarPath,
-        "POST",
-        localVarQueryParams,
-        localVarCollectionQueryParams,
-        localVarQueryStringJoiner.toString(),
-        localVarPostBody,
-        localVarHeaderParams,
-        localVarCookieParams,
-        localVarFormParams,
-        localVarAccept,
-        localVarContentType,
-        localVarAuthNames,
-        localVarReturnType);
-  }
-
-  /**
    * Create a new namespace Create a new namespace. A namespace can manage either a collection of
    * child namespaces, or a collection of tables. The namespace in the API route should be the
    * parent namespace to create the new namespace. There are three modes when trying to create a
@@ -387,41 +285,63 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Create a table with the given name Create a new table in the namespace. Supports both
-   * lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+   * Create a table with the given name Create a new table in the namespace with the given data in
+   * Arrow IPC stream. The schema of the Arrow IPC stream is used as the table schema. If the stream
+   * is empty, the API creates a new empty table.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
+   * @param xLanceTableLocation URI pointing to root location to create the table at (required)
    * @param body Arrow IPC data (required)
+   * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
+   *     \&quot;jack\&quot; }) (optional)
    * @return CreateTableResponse
    * @throws ApiException if fails to make API call
    */
-  public CreateTableResponse createTable(String id, byte[] body) throws ApiException {
-    return this.createTable(id, body, Collections.emptyMap());
+  public CreateTableResponse createTable(
+      String id, String xLanceTableLocation, byte[] body, String xLanceTableProperties)
+      throws ApiException {
+    return this.createTable(
+        id, xLanceTableLocation, body, xLanceTableProperties, Collections.emptyMap());
   }
 
   /**
-   * Create a table with the given name Create a new table in the namespace. Supports both
-   * lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+   * Create a table with the given name Create a new table in the namespace with the given data in
+   * Arrow IPC stream. The schema of the Arrow IPC stream is used as the table schema. If the stream
+   * is empty, the API creates a new empty table.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
+   * @param xLanceTableLocation URI pointing to root location to create the table at (required)
    * @param body Arrow IPC data (required)
+   * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
+   *     \&quot;jack\&quot; }) (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return CreateTableResponse
    * @throws ApiException if fails to make API call
    */
   public CreateTableResponse createTable(
-      String id, byte[] body, Map<String, String> additionalHeaders) throws ApiException {
+      String id,
+      String xLanceTableLocation,
+      byte[] body,
+      String xLanceTableProperties,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
     Object localVarPostBody = body;
 
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(400, "Missing the required parameter 'id' when calling createTable");
+    }
+
+    // verify the required parameter 'xLanceTableLocation' is set
+    if (xLanceTableLocation == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'xLanceTableLocation' when calling createTable");
     }
 
     // verify the required parameter 'body' is set
@@ -443,12 +363,19 @@ public class MetadataApi extends BaseApi {
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
+    if (xLanceTableLocation != null)
+      localVarHeaderParams.put(
+          "x-lance-table-location", apiClient.parameterToString(xLanceTableLocation));
+    if (xLanceTableProperties != null)
+      localVarHeaderParams.put(
+          "x-lance-table-properties", apiClient.parameterToString(xLanceTableProperties));
+
     localVarHeaderParams.putAll(additionalHeaders);
 
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {"application/x-arrow-ipc"};
+    final String[] localVarContentTypes = {"application/vnd.apache.arrow.stream"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
     String[] localVarAuthNames = new String[] {};
@@ -473,9 +400,10 @@ public class MetadataApi extends BaseApi {
 
   /**
    * Create an index on a table Create an index on a table column for faster search operations.
-   * Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes. Index creation is
-   * handled asynchronously. Use the &#x60;listIndices&#x60; and &#x60;getIndexStats&#x60;
-   * operations to monitor index creation progress.
+   * Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE,
+   * BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the
+   * &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to monitor
+   * index creation progress.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -492,9 +420,10 @@ public class MetadataApi extends BaseApi {
 
   /**
    * Create an index on a table Create an index on a table column for faster search operations.
-   * Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes. Index creation is
-   * handled asynchronously. Use the &#x60;listIndices&#x60; and &#x60;getIndexStats&#x60;
-   * operations to monitor index creation progress.
+   * Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE,
+   * BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the
+   * &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to monitor
+   * index creation progress.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -528,98 +457,6 @@ public class MetadataApi extends BaseApi {
     // create path and map variables
     String localVarPath =
         "/v1/table/{id}/create_index"
-            .replaceAll(
-                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
-
-    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-    String localVarQueryParameterBaseName;
-    List<Pair> localVarQueryParams = new ArrayList<Pair>();
-    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-    Map<String, String> localVarCookieParams = new HashMap<String, String>();
-    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-    localVarHeaderParams.putAll(additionalHeaders);
-
-    final String[] localVarAccepts = {"application/json"};
-    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-    final String[] localVarContentTypes = {"application/json"};
-    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-    String[] localVarAuthNames = new String[] {};
-
-    TypeReference<CreateTableIndexResponse> localVarReturnType =
-        new TypeReference<CreateTableIndexResponse>() {};
-    return apiClient.invokeAPI(
-        localVarPath,
-        "POST",
-        localVarQueryParams,
-        localVarCollectionQueryParams,
-        localVarQueryStringJoiner.toString(),
-        localVarPostBody,
-        localVarHeaderParams,
-        localVarCookieParams,
-        localVarFormParams,
-        localVarAccept,
-        localVarContentType,
-        localVarAuthNames,
-        localVarReturnType);
-  }
-
-  /**
-   * Create a scalar index on a table Create a scalar index on a table column for faster search
-   * operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST).
-   *
-   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
-   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
-   *     root namespace. (required)
-   * @param createTableIndexRequest Scalar index creation request (required)
-   * @return CreateTableIndexResponse
-   * @throws ApiException if fails to make API call
-   */
-  public CreateTableIndexResponse createTableScalarIndex(
-      String id, CreateTableIndexRequest createTableIndexRequest) throws ApiException {
-    return this.createTableScalarIndex(id, createTableIndexRequest, Collections.emptyMap());
-  }
-
-  /**
-   * Create a scalar index on a table Create a scalar index on a table column for faster search
-   * operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST).
-   *
-   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
-   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
-   *     root namespace. (required)
-   * @param createTableIndexRequest Scalar index creation request (required)
-   * @param additionalHeaders additionalHeaders for this call
-   * @return CreateTableIndexResponse
-   * @throws ApiException if fails to make API call
-   */
-  public CreateTableIndexResponse createTableScalarIndex(
-      String id,
-      CreateTableIndexRequest createTableIndexRequest,
-      Map<String, String> additionalHeaders)
-      throws ApiException {
-    Object localVarPostBody = createTableIndexRequest;
-
-    // verify the required parameter 'id' is set
-    if (id == null) {
-      throw new ApiException(
-          400, "Missing the required parameter 'id' when calling createTableScalarIndex");
-    }
-
-    // verify the required parameter 'createTableIndexRequest' is set
-    if (createTableIndexRequest == null) {
-      throw new ApiException(
-          400,
-          "Missing the required parameter 'createTableIndexRequest' when calling createTableScalarIndex");
-    }
-
-    // create path and map variables
-    String localVarPath =
-        "/v1/table/{id}/create_scalar_index"
             .replaceAll(
                 "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
@@ -963,8 +800,8 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Get index statistics Get statistics for a specific index on a table. Returns information about
-   * the index type, distance type (for vector indices), and row counts.
+   * Get table index statistics Get statistics for a specific index on a table. Returns information
+   * about the index type, distance type (for vector indices), and row counts.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -983,8 +820,8 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Get index statistics Get statistics for a specific index on a table. Returns information about
-   * the index type, distance type (for vector indices), and row counts.
+   * Get table index statistics Get statistics for a specific index on a table. Returns information
+   * about the index type, distance type (for vector indices), and row counts.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1052,108 +889,6 @@ public class MetadataApi extends BaseApi {
 
     TypeReference<DescribeTableIndexStatsResponse> localVarReturnType =
         new TypeReference<DescribeTableIndexStatsResponse>() {};
-    return apiClient.invokeAPI(
-        localVarPath,
-        "POST",
-        localVarQueryParams,
-        localVarCollectionQueryParams,
-        localVarQueryStringJoiner.toString(),
-        localVarPostBody,
-        localVarHeaderParams,
-        localVarCookieParams,
-        localVarFormParams,
-        localVarAccept,
-        localVarContentType,
-        localVarAuthNames,
-        localVarReturnType);
-  }
-
-  /**
-   * Describe a table from the namespace Get a table&#39;s detailed information under a specified
-   * namespace.
-   *
-   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
-   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
-   *     root namespace. (required)
-   * @param describeTableRequestV2 (required)
-   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
-   *     (optional)
-   * @return DescribeTableResponseV2
-   * @throws ApiException if fails to make API call
-   */
-  public DescribeTableResponseV2 describeTableV2(
-      String id, DescribeTableRequestV2 describeTableRequestV2, String delimiter)
-      throws ApiException {
-    return this.describeTableV2(id, describeTableRequestV2, delimiter, Collections.emptyMap());
-  }
-
-  /**
-   * Describe a table from the namespace Get a table&#39;s detailed information under a specified
-   * namespace.
-   *
-   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
-   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
-   *     root namespace. (required)
-   * @param describeTableRequestV2 (required)
-   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
-   *     (optional)
-   * @param additionalHeaders additionalHeaders for this call
-   * @return DescribeTableResponseV2
-   * @throws ApiException if fails to make API call
-   */
-  public DescribeTableResponseV2 describeTableV2(
-      String id,
-      DescribeTableRequestV2 describeTableRequestV2,
-      String delimiter,
-      Map<String, String> additionalHeaders)
-      throws ApiException {
-    Object localVarPostBody = describeTableRequestV2;
-
-    // verify the required parameter 'id' is set
-    if (id == null) {
-      throw new ApiException(
-          400, "Missing the required parameter 'id' when calling describeTableV2");
-    }
-
-    // verify the required parameter 'describeTableRequestV2' is set
-    if (describeTableRequestV2 == null) {
-      throw new ApiException(
-          400,
-          "Missing the required parameter 'describeTableRequestV2' when calling describeTableV2");
-    }
-
-    // create path and map variables
-    String localVarPath =
-        "/v2/table/{id}/describe"
-            .replaceAll(
-                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
-
-    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-    String localVarQueryParameterBaseName;
-    List<Pair> localVarQueryParams = new ArrayList<Pair>();
-    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-    Map<String, String> localVarCookieParams = new HashMap<String, String>();
-    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
-
-    localVarHeaderParams.putAll(additionalHeaders);
-
-    final String[] localVarAccepts = {"application/json"};
-    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-    final String[] localVarContentTypes = {"application/json"};
-    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-    String[] localVarAuthNames = new String[] {};
-
-    TypeReference<DescribeTableResponseV2> localVarReturnType =
-        new TypeReference<DescribeTableResponseV2>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",
@@ -1719,7 +1454,7 @@ public class MetadataApi extends BaseApi {
 
     // create path and map variables
     String localVarPath =
-        "/v1/namespace/{id}/list_tables"
+        "/v1/namespace/{id}/table/list"
             .replaceAll(
                 "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 

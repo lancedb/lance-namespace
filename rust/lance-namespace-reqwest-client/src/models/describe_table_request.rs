@@ -17,8 +17,9 @@ pub struct DescribeTableRequest {
     pub name: Option<String>,
     #[serde(rename = "namespace", skip_serializing_if = "Option::is_none")]
     pub namespace: Option<Vec<String>>,
-    #[serde(rename = "version", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
-    pub version: Option<Option<i64>>,
+    /// Version of the table to describe. If not specified, server should resolve it to the latest version. 
+    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
+    pub version: Option<i64>,
 }
 
 impl DescribeTableRequest {

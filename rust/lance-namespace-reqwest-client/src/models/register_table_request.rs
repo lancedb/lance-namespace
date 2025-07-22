@@ -13,19 +13,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RegisterTableRequest {
-    #[serde(rename = "name")]
-    pub name: String,
-    #[serde(rename = "namespace")]
-    pub namespace: Vec<String>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "namespace", skip_serializing_if = "Option::is_none")]
+    pub namespace: Option<Vec<String>>,
     #[serde(rename = "location")]
     pub location: String,
 }
 
 impl RegisterTableRequest {
-    pub fn new(name: String, namespace: Vec<String>, location: String) -> RegisterTableRequest {
+    pub fn new(location: String) -> RegisterTableRequest {
         RegisterTableRequest {
-            name,
-            namespace,
+            name: None,
+            namespace: None,
             location,
         }
     }

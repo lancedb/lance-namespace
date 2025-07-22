@@ -7,16 +7,14 @@ Method | HTTP request | Description
 [**count_table_rows**](TableApi.md#count_table_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
 [**create_table**](TableApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 [**create_table_index**](TableApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
-[**create_table_scalar_index**](TableApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 [**delete_from_table**](TableApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
 [**deregister_table**](TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 [**describe_table**](TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
-[**describe_table_index_stats**](TableApi.md#describe_table_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get index statistics
-[**describe_table_v2**](TableApi.md#describe_table_v2) | **POST** /v2/table/{id}/describe | Describe a table from the namespace
+[**describe_table_index_stats**](TableApi.md#describe_table_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get table index statistics
 [**drop_table**](TableApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
 [**insert_into_table**](TableApi.md#insert_into_table) | **POST** /v1/table/{id}/insert | Insert records into a table
 [**list_table_indices**](TableApi.md#list_table_indices) | **POST** /v1/table/{id}/index/list | List indexes on a table
-[**list_tables**](TableApi.md#list_tables) | **POST** /v1/namespace/{id}/list_tables | List tables in a namespace
+[**list_tables**](TableApi.md#list_tables) | **POST** /v1/namespace/{id}/table/list | List tables in a namespace
 [**merge_insert_into_table**](TableApi.md#merge_insert_into_table) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 [**query_table**](TableApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
 [**register_table**](TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
@@ -104,12 +102,14 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **create_table**
-> CreateTableResponse create_table(id, body)
+> CreateTableResponse create_table(id, x_lance_table_location, body, x_lance_table_properties=x_lance_table_properties)
 
 Create a table with the given name
 
-Create a new table in the namespace.
-Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+Create a new table in the namespace with the given data in Arrow IPC stream.
+
+The schema of the Arrow IPC stream is used as the table schema.    
+If the stream is empty, the API creates a new empty table.
 
 
 ### Example
@@ -133,11 +133,13 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.TableApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
+    x_lance_table_location = 'x_lance_table_location_example' # str | URI pointing to root location to create the table at
     body = None # bytearray | Arrow IPC data
+    x_lance_table_properties = 'x_lance_table_properties_example' # str | JSON-encoded string map (e.g. { \"owner\": \"jack\" })  (optional)
 
     try:
         # Create a table with the given name
-        api_response = api_instance.create_table(id, body)
+        api_response = api_instance.create_table(id, x_lance_table_location, body, x_lance_table_properties=x_lance_table_properties)
         print("The response of TableApi->create_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -152,7 +154,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
+ **x_lance_table_location** | **str**| URI pointing to root location to create the table at | 
  **body** | **bytearray**| Arrow IPC data | 
+ **x_lance_table_properties** | **str**| JSON-encoded string map (e.g. { \&quot;owner\&quot;: \&quot;jack\&quot; })  | [optional] 
 
 ### Return type
 
@@ -164,7 +168,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/x-arrow-ipc
+ - **Content-Type**: application/vnd.apache.arrow.stream
  - **Accept**: application/json
 
 ### HTTP response details
@@ -187,9 +191,9 @@ No authorization required
 Create an index on a table
 
 Create an index on a table column for faster search operations.
-Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ) and scalar indexes.
+Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.).
 Index creation is handled asynchronously. 
-Use the `listIndices` and `getIndexStats` operations to monitor index creation progress.
+Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress.
 
 
 ### Example
@@ -253,85 +257,6 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Index created successfully |  -  |
-**400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
-**401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
-**403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-**404** | A server-side problem that means can not find the specified resource. |  -  |
-**503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-**5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **create_table_scalar_index**
-> CreateTableIndexResponse create_table_scalar_index(id, create_table_index_request)
-
-Create a scalar index on a table
-
-Create a scalar index on a table column for faster search operations.
-Supports scalar indexes (BTREE, BITMAP, LABEL_LIST).
-
-
-### Example
-
-
-```python
-import lance_namespace_urllib3_client
-from lance_namespace_urllib3_client.models.create_table_index_request import CreateTableIndexRequest
-from lance_namespace_urllib3_client.models.create_table_index_response import CreateTableIndexResponse
-from lance_namespace_urllib3_client.rest import ApiException
-from pprint import pprint
-
-# Defining the host is optional and defaults to http://localhost:2333
-# See configuration.py for a list of all supported configuration parameters.
-configuration = lance_namespace_urllib3_client.Configuration(
-    host = "http://localhost:2333"
-)
-
-
-# Enter a context with an instance of the API client
-with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
-    # Create an instance of the API class
-    api_instance = lance_namespace_urllib3_client.TableApi(api_client)
-    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-    create_table_index_request = lance_namespace_urllib3_client.CreateTableIndexRequest() # CreateTableIndexRequest | Scalar index creation request
-
-    try:
-        # Create a scalar index on a table
-        api_response = api_instance.create_table_scalar_index(id, create_table_index_request)
-        print("The response of TableApi->create_table_scalar_index:\n")
-        pprint(api_response)
-    except Exception as e:
-        print("Exception when calling TableApi->create_table_scalar_index: %s\n" % e)
-```
-
-
-
-### Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
- **create_table_index_request** | [**CreateTableIndexRequest**](CreateTableIndexRequest.md)| Scalar index creation request | 
-
-### Return type
-
-[**CreateTableIndexResponse**](CreateTableIndexResponse.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Scalar index created successfully |  -  |
 **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -584,7 +509,7 @@ No authorization required
 # **describe_table_index_stats**
 > DescribeTableIndexStatsResponse describe_table_index_stats(id, index_name, describe_table_index_stats_request)
 
-Get index statistics
+Get table index statistics
 
 Get statistics for a specific index on a table. Returns information about
 the index type, distance type (for vector indices), and row counts.
@@ -616,7 +541,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     describe_table_index_stats_request = lance_namespace_urllib3_client.DescribeTableIndexStatsRequest() # DescribeTableIndexStatsRequest | Index stats request
 
     try:
-        # Get index statistics
+        # Get table index statistics
         api_response = api_instance.describe_table_index_stats(id, index_name, describe_table_index_stats_request)
         print("The response of TableApi->describe_table_index_stats:\n")
         pprint(api_response)
@@ -653,86 +578,6 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Index statistics |  -  |
-**400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
-**401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
-**403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-**404** | A server-side problem that means can not find the specified resource. |  -  |
-**503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-**5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **describe_table_v2**
-> DescribeTableResponseV2 describe_table_v2(id, describe_table_request_v2, delimiter=delimiter)
-
-Describe a table from the namespace
-
-Get a table's detailed information under a specified namespace.
-
-
-### Example
-
-
-```python
-import lance_namespace_urllib3_client
-from lance_namespace_urllib3_client.models.describe_table_request_v2 import DescribeTableRequestV2
-from lance_namespace_urllib3_client.models.describe_table_response_v2 import DescribeTableResponseV2
-from lance_namespace_urllib3_client.rest import ApiException
-from pprint import pprint
-
-# Defining the host is optional and defaults to http://localhost:2333
-# See configuration.py for a list of all supported configuration parameters.
-configuration = lance_namespace_urllib3_client.Configuration(
-    host = "http://localhost:2333"
-)
-
-
-# Enter a context with an instance of the API client
-with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
-    # Create an instance of the API class
-    api_instance = lance_namespace_urllib3_client.TableApi(api_client)
-    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-    describe_table_request_v2 = lance_namespace_urllib3_client.DescribeTableRequestV2() # DescribeTableRequestV2 | 
-    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
-
-    try:
-        # Describe a table from the namespace
-        api_response = api_instance.describe_table_v2(id, describe_table_request_v2, delimiter=delimiter)
-        print("The response of TableApi->describe_table_v2:\n")
-        pprint(api_response)
-    except Exception as e:
-        print("Exception when calling TableApi->describe_table_v2: %s\n" % e)
-```
-
-
-
-### Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
- **describe_table_request_v2** | [**DescribeTableRequestV2**](DescribeTableRequestV2.md)|  | 
- **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
-
-### Return type
-
-[**DescribeTableResponseV2**](DescribeTableResponseV2.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Table properties result when loading a table |  -  |
 **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -887,7 +732,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/x-arrow-ipc
+ - **Content-Type**: application/vnd.apache.arrow.stream
  - **Accept**: application/json
 
 ### HTTP response details
@@ -1065,7 +910,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merge_insert_into_table**
-> MergeInsertIntoTableResponse merge_insert_into_table(id, on, body, when_matched_update_all=when_matched_update_all, when_not_matched_insert_all=when_not_matched_insert_all)
+> MergeInsertIntoTableResponse merge_insert_into_table(id, on, body, when_matched_update_all=when_matched_update_all, when_matched_update_all_filt=when_matched_update_all_filt, when_not_matched_insert_all=when_not_matched_insert_all, when_not_matched_by_source_delete=when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt)
 
 Merge insert (upsert) records into a table
 
@@ -1098,11 +943,14 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     on = 'on_example' # str | Column name to use for matching rows (required)
     body = None # bytearray | Arrow IPC data containing the records to merge
     when_matched_update_all = False # bool | Update all columns when rows match (optional) (default to False)
+    when_matched_update_all_filt = 'when_matched_update_all_filt_example' # str | The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true (optional)
     when_not_matched_insert_all = False # bool | Insert all columns when rows don't match (optional) (default to False)
+    when_not_matched_by_source_delete = False # bool | Delete all rows from target table that don't match a row in the source table (optional) (default to False)
+    when_not_matched_by_source_delete_filt = 'when_not_matched_by_source_delete_filt_example' # str | Delete rows from the target table if there is no match AND the SQL expression evaluates to true (optional)
 
     try:
         # Merge insert (upsert) records into a table
-        api_response = api_instance.merge_insert_into_table(id, on, body, when_matched_update_all=when_matched_update_all, when_not_matched_insert_all=when_not_matched_insert_all)
+        api_response = api_instance.merge_insert_into_table(id, on, body, when_matched_update_all=when_matched_update_all, when_matched_update_all_filt=when_matched_update_all_filt, when_not_matched_insert_all=when_not_matched_insert_all, when_not_matched_by_source_delete=when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt)
         print("The response of TableApi->merge_insert_into_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -1120,7 +968,10 @@ Name | Type | Description  | Notes
  **on** | **str**| Column name to use for matching rows (required) | 
  **body** | **bytearray**| Arrow IPC data containing the records to merge | 
  **when_matched_update_all** | **bool**| Update all columns when rows match | [optional] [default to False]
+ **when_matched_update_all_filt** | **str**| The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true | [optional] 
  **when_not_matched_insert_all** | **bool**| Insert all columns when rows don&#39;t match | [optional] [default to False]
+ **when_not_matched_by_source_delete** | **bool**| Delete all rows from target table that don&#39;t match a row in the source table | [optional] [default to False]
+ **when_not_matched_by_source_delete_filt** | **str**| Delete rows from the target table if there is no match AND the SQL expression evaluates to true | [optional] 
 
 ### Return type
 
@@ -1132,7 +983,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/x-arrow-ipc
+ - **Content-Type**: application/vnd.apache.arrow.stream
  - **Accept**: application/json
 
 ### HTTP response details
@@ -1154,8 +1005,8 @@ No authorization required
 
 Query a table
 
-Query a table with vector search and optional filtering.
-Returns results in Arrow IPC stream format.
+Query a table with vector search, full text search and optional SQL filtering.
+Returns results in Arrow IPC file or stream format.
 
 
 ### Example
@@ -1211,13 +1062,13 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: application/vnd.apache.arrow.stream, application/json
+ - **Accept**: application/vnd.apache.arrow.file, application/vnd.apache.arrow.stream, application/json
 
 ### HTTP response details
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Query results in Arrow IPC stream format |  -  |
+**200** | Query results in Arrow IPC file or stream format |  -  |
 **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |

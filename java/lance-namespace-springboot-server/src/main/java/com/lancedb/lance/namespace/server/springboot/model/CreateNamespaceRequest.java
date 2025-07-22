@@ -83,8 +83,7 @@ public class CreateNamespaceRequest {
   }
 
   /** Constructor with only required parameters */
-  public CreateNamespaceRequest(String name, ModeEnum mode) {
-    this.name = name;
+  public CreateNamespaceRequest(ModeEnum mode) {
     this.mode = mode;
   }
 
@@ -98,8 +97,7 @@ public class CreateNamespaceRequest {
    *
    * @return name
    */
-  @NotNull
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("name")
   public String getName() {
     return name;

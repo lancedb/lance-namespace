@@ -40,7 +40,7 @@ import java.util.StringJoiner;
     comments = "Generator version: 7.12.0")
 public class CreateNamespaceRequest {
   public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nonnull private String name;
+  @javax.annotation.Nullable private String name;
 
   public static final String JSON_PROPERTY_PARENT = "parent";
   @javax.annotation.Nullable private List<String> parent = new ArrayList<>();
@@ -88,7 +88,7 @@ public class CreateNamespaceRequest {
 
   public CreateNamespaceRequest() {}
 
-  public CreateNamespaceRequest name(@javax.annotation.Nonnull String name) {
+  public CreateNamespaceRequest name(@javax.annotation.Nullable String name) {
 
     this.name = name;
     return this;
@@ -99,16 +99,16 @@ public class CreateNamespaceRequest {
    *
    * @return name
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public String getName() {
     return name;
   }
 
   @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setName(@javax.annotation.Nonnull String name) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setName(@javax.annotation.Nullable String name) {
     this.name = name;
   }
 

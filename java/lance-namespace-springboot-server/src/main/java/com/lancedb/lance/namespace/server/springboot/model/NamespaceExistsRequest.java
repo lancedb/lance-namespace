@@ -35,15 +35,6 @@ public class NamespaceExistsRequest {
 
   @Valid private List<String> parent = new ArrayList<>();
 
-  public NamespaceExistsRequest() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public NamespaceExistsRequest(String name) {
-    this.name = name;
-  }
-
   public NamespaceExistsRequest name(String name) {
     this.name = name;
     return this;
@@ -54,8 +45,7 @@ public class NamespaceExistsRequest {
    *
    * @return name
    */
-  @NotNull
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("name")
   public String getName() {
     return name;

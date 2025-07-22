@@ -26,7 +26,7 @@ class NamespaceExistsRequest(BaseModel):
     """
     NamespaceExistsRequest
     """ # noqa: E501
-    name: StrictStr
+    name: Optional[StrictStr] = None
     parent: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = ["name", "parent"]
 

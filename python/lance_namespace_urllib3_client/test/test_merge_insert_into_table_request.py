@@ -38,14 +38,16 @@ class TestMergeInsertIntoTableRequest(unittest.TestCase):
                 name = '',
                 namespace = [
                     ''
-                    ]
+                    ],
+                on = '',
+                when_matched_update_all = True,
+                when_matched_update_all_filt = '',
+                when_not_matched_insert_all = True,
+                when_not_matched_by_source_delete = True,
+                when_not_matched_by_source_delete_filt = ''
             )
         else:
             return MergeInsertIntoTableRequest(
-                name = '',
-                namespace = [
-                    ''
-                    ],
         )
         """
 

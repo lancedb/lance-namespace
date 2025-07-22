@@ -26,7 +26,7 @@ class CreateNamespaceRequest(BaseModel):
     """
     CreateNamespaceRequest
     """ # noqa: E501
-    name: StrictStr
+    name: Optional[StrictStr] = None
     parent: Optional[List[StrictStr]] = None
     mode: StrictStr
     options: Optional[Dict[str, StrictStr]] = None

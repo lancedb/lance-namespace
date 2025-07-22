@@ -35,7 +35,7 @@ public class DescribeTableRequest {
 
   @Valid private List<String> namespace = new ArrayList<>();
 
-  private Long version = null;
+  private Long version;
 
   public DescribeTableRequest name(String name) {
     this.name = name;
@@ -91,12 +91,17 @@ public class DescribeTableRequest {
   }
 
   /**
-   * Get version minimum: 0
+   * Version of the table to describe. If not specified, server should resolve it to the latest
+   * version. minimum: 0
    *
    * @return version
    */
   @Min(0L)
-  @Schema(name = "version", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "version",
+      description =
+          "Version of the table to describe. If not specified, server should resolve it to the latest version. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("version")
   public Long getVersion() {
     return version;

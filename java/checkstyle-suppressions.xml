@@ -5,17 +5,11 @@
         "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 
 <suppressions>
-    <!-- Generated Apache client server configuration having a method with name 'URL' -->
-    <suppress checks="MethodName" files="lance-namespace-apache-client/src/main/java/com/lancedb/lance/namespace/client/apache/ServerConfiguration.java"/>
-    <!-- Generated QueryTableRequest has method 'k' which is standard in vector search -->
-    <suppress checks="MethodName" files="lance-namespace-apache-client/src/main/java/com/lancedb/lance/namespace/model/QueryTableRequest.java"/>
-    <suppress checks="MethodName" files="lance-namespace-springboot-server/src/main/java/com/lancedb/lance/namespace/server/springboot/model/QueryTableRequest.java"/>
-    <suppress checks="LineLength" files="lance-namespace-apache-client/src/main/java/com/lancedb/lance/namespace/client/apache/api/*"/>
+    <suppress checks="MethodName" files="lance-namespace-apache-client/src/main/java/com/lancedb/lance/namespace/client/apache/*"/>
+    <suppress checks="MethodName" files="lance-namespace-apache-client/src/main/java/com/lancedb/lance/namespace/model/*"/>
+    <suppress checks="MethodName" files="lance-namespace-springboot-server/src/main/java/com/lancedb/lance/namespace/server/springboot/*"/>
+    <suppress checks="LineLength" files="lance-namespace-apache-client/src/main/java/com/lancedb/lance/namespace/client/apache/*"/>
     <suppress checks="LineLength" files="lance-namespace-springboot-server/src/main/java/com/lancedb/lance/namespace/server/springboot/*"/>
     <suppress checks="RedundantModifier" files="lance-namespace-springboot-server/src/main/java/com/lancedb/lance/namespace/server/springboot/*"/>
-    <!-- Generated FtsQuery has method '_boolean' which is standard for OpenAPI reserved keywords -->
-    <suppress checks="MethodName" files="lance-namespace-apache-client/src/main/java/com/lancedb/lance/namespace/model/FtsQuery.java"/>
-    <suppress checks="MethodName" files="lance-namespace-apache-client/src/main/java/com/lancedb/lance/namespace/model/FtsQueryOneOf4.java"/>
-    <suppress checks="MethodName" files="lance-namespace-springboot-server/src/main/java/com/lancedb/lance/namespace/server/springboot/model/FtsQuery.java"/>
-    <suppress checks="MethodName" files="lance-namespace-springboot-server/src/main/java/com/lancedb/lance/namespace/server/springboot/model/FtsQueryOneOf4.java"/>
+    <suppress checks="NeedBraces" files="lance-namespace-apache-client/src/main/java/com/lancedb/lance/namespace/client/apache/*"/>
 </suppressions>

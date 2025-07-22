@@ -18,17 +18,19 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class DescribeTableRequestV2(BaseModel):
+class CreateTableRequest(BaseModel):
     """
-    DescribeTableRequestV2
+    Request for creating a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
     """ # noqa: E501
-    name: StrictStr
-    namespace: List[StrictStr]
-    __properties: ClassVar[List[str]] = ["name", "namespace"]
+    name: Optional[StrictStr] = None
+    namespace: Optional[List[StrictStr]] = None
+    location: Optional[StrictStr] = None
+    properties: Optional[Dict[str, StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["name", "namespace", "location", "properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +50,7 @@ class DescribeTableRequestV2(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of DescribeTableRequestV2 from a JSON string"""
+        """Create an instance of CreateTableRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +75,7 @@ class DescribeTableRequestV2(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of DescribeTableRequestV2 from a dict"""
+        """Create an instance of CreateTableRequest from a dict"""
         if obj is None:
             return None
 
@@ -82,7 +84,9 @@ class DescribeTableRequestV2(BaseModel):
 
         _obj = cls.model_validate({
             "name": obj.get("name"),
-            "namespace": obj.get("namespace")
+            "namespace": obj.get("namespace"),
+            "location": obj.get("location"),
+            "properties": obj.get("properties")
         })
         return _obj
 
