@@ -101,7 +101,7 @@ No authorization required
 
 ## createTable
 
-> CreateTableResponse createTable(id, xLanceTableLocation, body, xLanceTableProperties)
+> CreateTableResponse createTable(id, xLanceTableLocation, body, delimiter, xLanceTableProperties)
 
 Create a table with the given name
 
@@ -126,9 +126,10 @@ public class Example {
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         String xLanceTableLocation = "xLanceTableLocation_example"; // String | URI pointing to root location to create the table at
         byte[] body = null; // byte[] | Arrow IPC data
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         String xLanceTableProperties = "xLanceTableProperties_example"; // String | JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
         try {
-            CreateTableResponse result = apiInstance.createTable(id, xLanceTableLocation, body, xLanceTableProperties);
+            CreateTableResponse result = apiInstance.createTable(id, xLanceTableLocation, body, delimiter, xLanceTableProperties);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#createTable");
@@ -149,6 +150,7 @@ public class Example {
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **xLanceTableLocation** | **String**| URI pointing to root location to create the table at | |
 | **body** | **byte[]**| Arrow IPC data | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 | **xLanceTableProperties** | **String**| JSON-encoded string map (e.g. { \&quot;owner\&quot;: \&quot;jack\&quot; })  | [optional] |
 
 ### Return type
@@ -179,7 +181,7 @@ No authorization required
 
 ## createTableIndex
 
-> CreateTableIndexResponse createTableIndex(id, createTableIndexRequest)
+> CreateTableIndexResponse createTableIndex(id, createTableIndexRequest, delimiter)
 
 Create an index on a table
 
@@ -203,8 +205,9 @@ public class Example {
         TableApi apiInstance = new TableApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         CreateTableIndexRequest createTableIndexRequest = new CreateTableIndexRequest(); // CreateTableIndexRequest | Index creation request
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         try {
-            CreateTableIndexResponse result = apiInstance.createTableIndex(id, createTableIndexRequest);
+            CreateTableIndexResponse result = apiInstance.createTableIndex(id, createTableIndexRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#createTableIndex");
@@ -224,6 +227,7 @@ public class Example {
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **createTableIndexRequest** | [**CreateTableIndexRequest**](CreateTableIndexRequest.md)| Index creation request | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 
 ### Return type
 
@@ -253,7 +257,7 @@ No authorization required
 
 ## deleteFromTable
 
-> DeleteFromTableResponse deleteFromTable(id, deleteFromTableRequest)
+> DeleteFromTableResponse deleteFromTable(id, deleteFromTableRequest, delimiter)
 
 Delete rows from a table
 
@@ -277,8 +281,9 @@ public class Example {
         TableApi apiInstance = new TableApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         DeleteFromTableRequest deleteFromTableRequest = new DeleteFromTableRequest(); // DeleteFromTableRequest | Delete request
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         try {
-            DeleteFromTableResponse result = apiInstance.deleteFromTable(id, deleteFromTableRequest);
+            DeleteFromTableResponse result = apiInstance.deleteFromTable(id, deleteFromTableRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#deleteFromTable");
@@ -298,6 +303,7 @@ public class Example {
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **deleteFromTableRequest** | [**DeleteFromTableRequest**](DeleteFromTableRequest.md)| Delete request | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 
 ### Return type
 
@@ -479,7 +485,7 @@ No authorization required
 
 ## describeTableIndexStats
 
-> DescribeTableIndexStatsResponse describeTableIndexStats(id, indexName, describeTableIndexStatsRequest)
+> DescribeTableIndexStatsResponse describeTableIndexStats(id, indexName, describeTableIndexStatsRequest, delimiter)
 
 Get table index statistics
 
@@ -504,8 +510,9 @@ public class Example {
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         String indexName = "indexName_example"; // String | Name of the index to get stats for
         DescribeTableIndexStatsRequest describeTableIndexStatsRequest = new DescribeTableIndexStatsRequest(); // DescribeTableIndexStatsRequest | Index stats request
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         try {
-            DescribeTableIndexStatsResponse result = apiInstance.describeTableIndexStats(id, indexName, describeTableIndexStatsRequest);
+            DescribeTableIndexStatsResponse result = apiInstance.describeTableIndexStats(id, indexName, describeTableIndexStatsRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#describeTableIndexStats");
@@ -526,6 +533,7 @@ public class Example {
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **indexName** | **String**| Name of the index to get stats for | |
 | **describeTableIndexStatsRequest** | [**DescribeTableIndexStatsRequest**](DescribeTableIndexStatsRequest.md)| Index stats request | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 
 ### Return type
 
@@ -631,7 +639,7 @@ No authorization required
 
 ## insertIntoTable
 
-> InsertIntoTableResponse insertIntoTable(id, body, mode)
+> InsertIntoTableResponse insertIntoTable(id, body, delimiter, mode)
 
 Insert records into a table
 
@@ -655,9 +663,10 @@ public class Example {
         TableApi apiInstance = new TableApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         byte[] body = null; // byte[] | Arrow IPC data
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         String mode = "append"; // String | Insert mode: \"append\" (default) or \"overwrite\"
         try {
-            InsertIntoTableResponse result = apiInstance.insertIntoTable(id, body, mode);
+            InsertIntoTableResponse result = apiInstance.insertIntoTable(id, body, delimiter, mode);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#insertIntoTable");
@@ -677,6 +686,7 @@ public class Example {
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **body** | **byte[]**| Arrow IPC data | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 | **mode** | **String**| Insert mode: \&quot;append\&quot; (default) or \&quot;overwrite\&quot; | [optional] [default to append] [enum: append, overwrite] |
 
 ### Return type
@@ -707,7 +717,7 @@ No authorization required
 
 ## listTableIndices
 
-> ListTableIndicesResponse listTableIndices(id, listTableIndicesRequest)
+> ListTableIndicesResponse listTableIndices(id, listTableIndicesRequest, delimiter)
 
 List indexes on a table
 
@@ -731,8 +741,9 @@ public class Example {
         TableApi apiInstance = new TableApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         ListTableIndicesRequest listTableIndicesRequest = new ListTableIndicesRequest(); // ListTableIndicesRequest | Index list request
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         try {
-            ListTableIndicesResponse result = apiInstance.listTableIndices(id, listTableIndicesRequest);
+            ListTableIndicesResponse result = apiInstance.listTableIndices(id, listTableIndicesRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#listTableIndices");
@@ -752,6 +763,7 @@ public class Example {
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **listTableIndicesRequest** | [**ListTableIndicesRequest**](ListTableIndicesRequest.md)| Index list request | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 
 ### Return type
 
@@ -858,7 +870,7 @@ No authorization required
 
 ## mergeInsertIntoTable
 
-> MergeInsertIntoTableResponse mergeInsertIntoTable(id, on, body, whenMatchedUpdateAll, whenMatchedUpdateAllFilt, whenNotMatchedInsertAll, whenNotMatchedBySourceDelete, whenNotMatchedBySourceDeleteFilt)
+> MergeInsertIntoTableResponse mergeInsertIntoTable(id, on, body, delimiter, whenMatchedUpdateAll, whenMatchedUpdateAllFilt, whenNotMatchedInsertAll, whenNotMatchedBySourceDelete, whenNotMatchedBySourceDeleteFilt)
 
 Merge insert (upsert) records into a table
 
@@ -883,13 +895,14 @@ public class Example {
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         String on = "on_example"; // String | Column name to use for matching rows (required)
         byte[] body = null; // byte[] | Arrow IPC data containing the records to merge
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         Boolean whenMatchedUpdateAll = false; // Boolean | Update all columns when rows match
         String whenMatchedUpdateAllFilt = "whenMatchedUpdateAllFilt_example"; // String | The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
         Boolean whenNotMatchedInsertAll = false; // Boolean | Insert all columns when rows don't match
         Boolean whenNotMatchedBySourceDelete = false; // Boolean | Delete all rows from target table that don't match a row in the source table
         String whenNotMatchedBySourceDeleteFilt = "whenNotMatchedBySourceDeleteFilt_example"; // String | Delete rows from the target table if there is no match AND the SQL expression evaluates to true
         try {
-            MergeInsertIntoTableResponse result = apiInstance.mergeInsertIntoTable(id, on, body, whenMatchedUpdateAll, whenMatchedUpdateAllFilt, whenNotMatchedInsertAll, whenNotMatchedBySourceDelete, whenNotMatchedBySourceDeleteFilt);
+            MergeInsertIntoTableResponse result = apiInstance.mergeInsertIntoTable(id, on, body, delimiter, whenMatchedUpdateAll, whenMatchedUpdateAllFilt, whenNotMatchedInsertAll, whenNotMatchedBySourceDelete, whenNotMatchedBySourceDeleteFilt);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#mergeInsertIntoTable");
@@ -910,6 +923,7 @@ public class Example {
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **on** | **String**| Column name to use for matching rows (required) | |
 | **body** | **byte[]**| Arrow IPC data containing the records to merge | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 | **whenMatchedUpdateAll** | **Boolean**| Update all columns when rows match | [optional] [default to false] |
 | **whenMatchedUpdateAllFilt** | **String**| The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true | [optional] |
 | **whenNotMatchedInsertAll** | **Boolean**| Insert all columns when rows don&#39;t match | [optional] [default to false] |
@@ -944,7 +958,7 @@ No authorization required
 
 ## queryTable
 
-> byte[] queryTable(id, queryTableRequest)
+> byte[] queryTable(id, queryTableRequest, delimiter)
 
 Query a table
 
@@ -968,8 +982,9 @@ public class Example {
         TableApi apiInstance = new TableApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         QueryTableRequest queryTableRequest = new QueryTableRequest(); // QueryTableRequest | Query request
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         try {
-            byte[] result = apiInstance.queryTable(id, queryTableRequest);
+            byte[] result = apiInstance.queryTable(id, queryTableRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#queryTable");
@@ -989,6 +1004,7 @@ public class Example {
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **queryTableRequest** | [**QueryTableRequest**](QueryTableRequest.md)| Query request | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 
 ### Return type
 
@@ -1171,7 +1187,7 @@ No authorization required
 
 ## updateTable
 
-> UpdateTableResponse updateTable(id, updateTableRequest)
+> UpdateTableResponse updateTable(id, updateTableRequest, delimiter)
 
 Update rows in a table
 
@@ -1195,8 +1211,9 @@ public class Example {
         TableApi apiInstance = new TableApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         UpdateTableRequest updateTableRequest = new UpdateTableRequest(); // UpdateTableRequest | Update request
+        String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         try {
-            UpdateTableResponse result = apiInstance.updateTable(id, updateTableRequest);
+            UpdateTableResponse result = apiInstance.updateTable(id, updateTableRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#updateTable");
@@ -1216,6 +1233,7 @@ public class Example {
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **updateTableRequest** | [**UpdateTableRequest**](UpdateTableRequest.md)| Update request | |
+| **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 
 ### Return type
 

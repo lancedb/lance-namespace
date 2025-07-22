@@ -243,6 +243,9 @@ public interface TableApi {
    *     root namespace. (required)
    * @param xLanceTableLocation URI pointing to root location to create the table at (required)
    * @param body Arrow IPC data (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
    *     \&quot;jack\&quot; }) (optional)
    * @return Table properties result when creating a table (status code 200) or Indicates a bad
@@ -263,7 +266,7 @@ public interface TableApi {
       summary = "Create a table with the given name",
       description =
           "Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. ",
-      tags = {"Table", "Metadata"},
+      tags = {"Table", "Data"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -351,6 +354,14 @@ public interface TableApi {
       @Parameter(name = "body", description = "Arrow IPC data", required = true) @Valid @RequestBody
           org.springframework.core.io.Resource body,
       @Parameter(
+              name = "delimiter",
+              description =
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter,
+      @Parameter(
               name = "x-lance-table-properties",
               description = "JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ",
               in = ParameterIn.HEADER)
@@ -419,6 +430,9 @@ public interface TableApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param createTableIndexRequest Index creation request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return Index created successfully (status code 200) or Indicates a bad request error. It could
    *     be caused by an unexpected request body format or other forms of request validation
    *     failure, such as invalid json. Usually serves application/json content, although in some
@@ -520,7 +534,15 @@ public interface TableApi {
               required = true)
           @Valid
           @RequestBody
-          CreateTableIndexRequest createTableIndexRequest) {
+          CreateTableIndexRequest createTableIndexRequest,
+      @Parameter(
+              name = "delimiter",
+              description =
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter) {
     getRequest()
         .ifPresent(
             request -> {
@@ -581,6 +603,9 @@ public interface TableApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param deleteFromTableRequest Delete request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return Delete successful (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
    *     such as invalid json. Usually serves application/json content, although in some cases
@@ -679,7 +704,15 @@ public interface TableApi {
       @Parameter(name = "DeleteFromTableRequest", description = "Delete request", required = true)
           @Valid
           @RequestBody
-          DeleteFromTableRequest deleteFromTableRequest) {
+          DeleteFromTableRequest deleteFromTableRequest,
+      @Parameter(
+              name = "delimiter",
+              description =
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter) {
     getRequest()
         .ifPresent(
             request -> {
@@ -1082,6 +1115,9 @@ public interface TableApi {
    *     root namespace. (required)
    * @param indexName Name of the index to get stats for (required)
    * @param describeTableIndexStatsRequest Index stats request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return Index statistics (status code 200) or Indicates a bad request error. It could be caused
    *     by an unexpected request body format or other forms of request validation failure, such as
    *     invalid json. Usually serves application/json content, although in some cases simple
@@ -1190,7 +1226,15 @@ public interface TableApi {
               required = true)
           @Valid
           @RequestBody
-          DescribeTableIndexStatsRequest describeTableIndexStatsRequest) {
+          DescribeTableIndexStatsRequest describeTableIndexStatsRequest,
+      @Parameter(
+              name = "delimiter",
+              description =
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter) {
     getRequest()
         .ifPresent(
             request -> {
@@ -1422,6 +1466,9 @@ public interface TableApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param body Arrow IPC data (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param mode Insert mode: \&quot;append\&quot; (default) or \&quot;overwrite\&quot; (optional,
    *     default to append)
    * @return Result of inserting records into a table (status code 200) or Indicates a bad request
@@ -1522,6 +1569,14 @@ public interface TableApi {
       @Parameter(name = "body", description = "Arrow IPC data", required = true) @Valid @RequestBody
           org.springframework.core.io.Resource body,
       @Parameter(
+              name = "delimiter",
+              description =
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter,
+      @Parameter(
               name = "mode",
               description = "Insert mode: \"append\" (default) or \"overwrite\"",
               in = ParameterIn.QUERY)
@@ -1587,6 +1642,9 @@ public interface TableApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param listTableIndicesRequest Index list request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return List of indices on the table (status code 200) or Indicates a bad request error. It
    *     could be caused by an unexpected request body format or other forms of request validation
    *     failure, such as invalid json. Usually serves application/json content, although in some
@@ -1688,7 +1746,15 @@ public interface TableApi {
               required = true)
           @Valid
           @RequestBody
-          ListTableIndicesRequest listTableIndicesRequest) {
+          ListTableIndicesRequest listTableIndicesRequest,
+      @Parameter(
+              name = "delimiter",
+              description =
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter) {
     getRequest()
         .ifPresent(
             request -> {
@@ -1752,6 +1818,9 @@ public interface TableApi {
    *     root namespace. (required)
    * @param on Column name to use for matching rows (required) (required)
    * @param body Arrow IPC data containing the records to merge (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
    * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
    *     the SQL expression evaluates to true (optional)
@@ -1873,6 +1942,14 @@ public interface TableApi {
           @RequestBody
           org.springframework.core.io.Resource body,
       @Parameter(
+              name = "delimiter",
+              description =
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter,
+      @Parameter(
               name = "when_matched_update_all",
               description = "Update all columns when rows match",
               in = ParameterIn.QUERY)
@@ -1976,6 +2053,9 @@ public interface TableApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param queryTableRequest Query request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return Query results in Arrow IPC file or stream format (status code 200) or Indicates a bad
    *     request error. It could be caused by an unexpected request body format or other forms of
    *     request validation failure, such as invalid json. Usually serves application/json content,
@@ -2120,7 +2200,15 @@ public interface TableApi {
       @Parameter(name = "QueryTableRequest", description = "Query request", required = true)
           @Valid
           @RequestBody
-          QueryTableRequest queryTableRequest) {
+          QueryTableRequest queryTableRequest,
+      @Parameter(
+              name = "delimiter",
+              description =
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter) {
     getRequest()
         .ifPresent(
             request -> {
@@ -2532,6 +2620,9 @@ public interface TableApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param updateTableRequest Update request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return Update successful (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
    *     such as invalid json. Usually serves application/json content, although in some cases
@@ -2630,7 +2721,15 @@ public interface TableApi {
       @Parameter(name = "UpdateTableRequest", description = "Update request", required = true)
           @Valid
           @RequestBody
-          UpdateTableRequest updateTableRequest) {
+          UpdateTableRequest updateTableRequest,
+      @Parameter(
+              name = "delimiter",
+              description =
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter) {
     getRequest()
         .ifPresent(
             request -> {

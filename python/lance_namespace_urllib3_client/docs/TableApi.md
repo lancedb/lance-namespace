@@ -102,7 +102,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **create_table**
-> CreateTableResponse create_table(id, x_lance_table_location, body, x_lance_table_properties=x_lance_table_properties)
+> CreateTableResponse create_table(id, x_lance_table_location, body, delimiter=delimiter, x_lance_table_properties=x_lance_table_properties)
 
 Create a table with the given name
 
@@ -135,11 +135,12 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     x_lance_table_location = 'x_lance_table_location_example' # str | URI pointing to root location to create the table at
     body = None # bytearray | Arrow IPC data
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
     x_lance_table_properties = 'x_lance_table_properties_example' # str | JSON-encoded string map (e.g. { \"owner\": \"jack\" })  (optional)
 
     try:
         # Create a table with the given name
-        api_response = api_instance.create_table(id, x_lance_table_location, body, x_lance_table_properties=x_lance_table_properties)
+        api_response = api_instance.create_table(id, x_lance_table_location, body, delimiter=delimiter, x_lance_table_properties=x_lance_table_properties)
         print("The response of TableApi->create_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -156,6 +157,7 @@ Name | Type | Description  | Notes
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **x_lance_table_location** | **str**| URI pointing to root location to create the table at | 
  **body** | **bytearray**| Arrow IPC data | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
  **x_lance_table_properties** | **str**| JSON-encoded string map (e.g. { \&quot;owner\&quot;: \&quot;jack\&quot; })  | [optional] 
 
 ### Return type
@@ -186,7 +188,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **create_table_index**
-> CreateTableIndexResponse create_table_index(id, create_table_index_request)
+> CreateTableIndexResponse create_table_index(id, create_table_index_request, delimiter=delimiter)
 
 Create an index on a table
 
@@ -219,10 +221,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     api_instance = lance_namespace_urllib3_client.TableApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     create_table_index_request = lance_namespace_urllib3_client.CreateTableIndexRequest() # CreateTableIndexRequest | Index creation request
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # Create an index on a table
-        api_response = api_instance.create_table_index(id, create_table_index_request)
+        api_response = api_instance.create_table_index(id, create_table_index_request, delimiter=delimiter)
         print("The response of TableApi->create_table_index:\n")
         pprint(api_response)
     except Exception as e:
@@ -238,6 +241,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **create_table_index_request** | [**CreateTableIndexRequest**](CreateTableIndexRequest.md)| Index creation request | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 
@@ -267,7 +271,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_from_table**
-> DeleteFromTableResponse delete_from_table(id, delete_from_table_request)
+> DeleteFromTableResponse delete_from_table(id, delete_from_table_request, delimiter=delimiter)
 
 Delete rows from a table
 
@@ -298,10 +302,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     api_instance = lance_namespace_urllib3_client.TableApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     delete_from_table_request = lance_namespace_urllib3_client.DeleteFromTableRequest() # DeleteFromTableRequest | Delete request
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # Delete rows from a table
-        api_response = api_instance.delete_from_table(id, delete_from_table_request)
+        api_response = api_instance.delete_from_table(id, delete_from_table_request, delimiter=delimiter)
         print("The response of TableApi->delete_from_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -317,6 +322,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **delete_from_table_request** | [**DeleteFromTableRequest**](DeleteFromTableRequest.md)| Delete request | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 
@@ -507,7 +513,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **describe_table_index_stats**
-> DescribeTableIndexStatsResponse describe_table_index_stats(id, index_name, describe_table_index_stats_request)
+> DescribeTableIndexStatsResponse describe_table_index_stats(id, index_name, describe_table_index_stats_request, delimiter=delimiter)
 
 Get table index statistics
 
@@ -539,10 +545,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     index_name = 'index_name_example' # str | Name of the index to get stats for
     describe_table_index_stats_request = lance_namespace_urllib3_client.DescribeTableIndexStatsRequest() # DescribeTableIndexStatsRequest | Index stats request
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # Get table index statistics
-        api_response = api_instance.describe_table_index_stats(id, index_name, describe_table_index_stats_request)
+        api_response = api_instance.describe_table_index_stats(id, index_name, describe_table_index_stats_request, delimiter=delimiter)
         print("The response of TableApi->describe_table_index_stats:\n")
         pprint(api_response)
     except Exception as e:
@@ -559,6 +566,7 @@ Name | Type | Description  | Notes
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **index_name** | **str**| Name of the index to get stats for | 
  **describe_table_index_stats_request** | [**DescribeTableIndexStatsRequest**](DescribeTableIndexStatsRequest.md)| Index stats request | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 
@@ -670,7 +678,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **insert_into_table**
-> InsertIntoTableResponse insert_into_table(id, body, mode=mode)
+> InsertIntoTableResponse insert_into_table(id, body, delimiter=delimiter, mode=mode)
 
 Insert records into a table
 
@@ -700,11 +708,12 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     api_instance = lance_namespace_urllib3_client.TableApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     body = None # bytearray | Arrow IPC data
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
     mode = append # str | Insert mode: \"append\" (default) or \"overwrite\" (optional) (default to append)
 
     try:
         # Insert records into a table
-        api_response = api_instance.insert_into_table(id, body, mode=mode)
+        api_response = api_instance.insert_into_table(id, body, delimiter=delimiter, mode=mode)
         print("The response of TableApi->insert_into_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -720,6 +729,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **body** | **bytearray**| Arrow IPC data | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
  **mode** | **str**| Insert mode: \&quot;append\&quot; (default) or \&quot;overwrite\&quot; | [optional] [default to append]
 
 ### Return type
@@ -750,7 +760,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_table_indices**
-> ListTableIndicesResponse list_table_indices(id, list_table_indices_request)
+> ListTableIndicesResponse list_table_indices(id, list_table_indices_request, delimiter=delimiter)
 
 List indexes on a table
 
@@ -781,10 +791,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     api_instance = lance_namespace_urllib3_client.TableApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     list_table_indices_request = lance_namespace_urllib3_client.ListTableIndicesRequest() # ListTableIndicesRequest | Index list request
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # List indexes on a table
-        api_response = api_instance.list_table_indices(id, list_table_indices_request)
+        api_response = api_instance.list_table_indices(id, list_table_indices_request, delimiter=delimiter)
         print("The response of TableApi->list_table_indices:\n")
         pprint(api_response)
     except Exception as e:
@@ -800,6 +811,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **list_table_indices_request** | [**ListTableIndicesRequest**](ListTableIndicesRequest.md)| Index list request | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 
@@ -910,7 +922,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merge_insert_into_table**
-> MergeInsertIntoTableResponse merge_insert_into_table(id, on, body, when_matched_update_all=when_matched_update_all, when_matched_update_all_filt=when_matched_update_all_filt, when_not_matched_insert_all=when_not_matched_insert_all, when_not_matched_by_source_delete=when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt)
+> MergeInsertIntoTableResponse merge_insert_into_table(id, on, body, delimiter=delimiter, when_matched_update_all=when_matched_update_all, when_matched_update_all_filt=when_matched_update_all_filt, when_not_matched_insert_all=when_not_matched_insert_all, when_not_matched_by_source_delete=when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt)
 
 Merge insert (upsert) records into a table
 
@@ -942,6 +954,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     on = 'on_example' # str | Column name to use for matching rows (required)
     body = None # bytearray | Arrow IPC data containing the records to merge
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
     when_matched_update_all = False # bool | Update all columns when rows match (optional) (default to False)
     when_matched_update_all_filt = 'when_matched_update_all_filt_example' # str | The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true (optional)
     when_not_matched_insert_all = False # bool | Insert all columns when rows don't match (optional) (default to False)
@@ -950,7 +963,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
     try:
         # Merge insert (upsert) records into a table
-        api_response = api_instance.merge_insert_into_table(id, on, body, when_matched_update_all=when_matched_update_all, when_matched_update_all_filt=when_matched_update_all_filt, when_not_matched_insert_all=when_not_matched_insert_all, when_not_matched_by_source_delete=when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt)
+        api_response = api_instance.merge_insert_into_table(id, on, body, delimiter=delimiter, when_matched_update_all=when_matched_update_all, when_matched_update_all_filt=when_matched_update_all_filt, when_not_matched_insert_all=when_not_matched_insert_all, when_not_matched_by_source_delete=when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt)
         print("The response of TableApi->merge_insert_into_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -967,6 +980,7 @@ Name | Type | Description  | Notes
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **on** | **str**| Column name to use for matching rows (required) | 
  **body** | **bytearray**| Arrow IPC data containing the records to merge | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
  **when_matched_update_all** | **bool**| Update all columns when rows match | [optional] [default to False]
  **when_matched_update_all_filt** | **str**| The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true | [optional] 
  **when_not_matched_insert_all** | **bool**| Insert all columns when rows don&#39;t match | [optional] [default to False]
@@ -1001,7 +1015,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **query_table**
-> bytearray query_table(id, query_table_request)
+> bytearray query_table(id, query_table_request, delimiter=delimiter)
 
 Query a table
 
@@ -1031,10 +1045,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     api_instance = lance_namespace_urllib3_client.TableApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     query_table_request = lance_namespace_urllib3_client.QueryTableRequest() # QueryTableRequest | Query request
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # Query a table
-        api_response = api_instance.query_table(id, query_table_request)
+        api_response = api_instance.query_table(id, query_table_request, delimiter=delimiter)
         print("The response of TableApi->query_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -1050,6 +1065,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **query_table_request** | [**QueryTableRequest**](QueryTableRequest.md)| Query request | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 
@@ -1240,7 +1256,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_table**
-> UpdateTableResponse update_table(id, update_table_request)
+> UpdateTableResponse update_table(id, update_table_request, delimiter=delimiter)
 
 Update rows in a table
 
@@ -1273,10 +1289,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     api_instance = lance_namespace_urllib3_client.TableApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     update_table_request = lance_namespace_urllib3_client.UpdateTableRequest() # UpdateTableRequest | Update request
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # Update rows in a table
-        api_response = api_instance.update_table(id, update_table_request)
+        api_response = api_instance.update_table(id, update_table_request, delimiter=delimiter)
         print("The response of TableApi->update_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -1292,6 +1309,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **update_table_request** | [**UpdateTableRequest**](UpdateTableRequest.md)| Update request | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 

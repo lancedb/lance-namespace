@@ -26,6 +26,7 @@ import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
 import com.lancedb.lance.namespace.model.CreateTableIndexResponse;
+import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
 import com.lancedb.lance.namespace.model.DeleteFromTableResponse;
@@ -36,20 +37,21 @@ import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
-import com.lancedb.lance.namespace.model.DescribeTableRequestV2;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
-import com.lancedb.lance.namespace.model.DescribeTableResponseV2;
 import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
 import com.lancedb.lance.namespace.model.DescribeTransactionResponse;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
+import com.lancedb.lance.namespace.model.InsertIntoTableRequest;
 import com.lancedb.lance.namespace.model.InsertIntoTableResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
 import com.lancedb.lance.namespace.model.ListTableIndicesResponse;
+import com.lancedb.lance.namespace.model.ListTablesRequest;
+import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.MergeInsertIntoTableRequest;
 import com.lancedb.lance.namespace.model.MergeInsertIntoTableResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
@@ -59,6 +61,7 @@ import com.lancedb.lance.namespace.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
 import com.lancedb.lance.namespace.model.UpdateTableRequest;
 import com.lancedb.lance.namespace.model.UpdateTableResponse;
+import com.lancedb.lance.namespace.util.JsonUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -173,19 +176,6 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public DescribeTableResponseV2 describeTableV2(DescribeTableRequestV2 request) {
-    try {
-      return tableApi.describeTableV2(
-          ObjectIdentifiers.stringFrom(request, config.delimiter()),
-          request,
-          config.delimiter(),
-          config.additionalHeaders());
-    } catch (ApiException e) {
-      throw new LanceNamespaceException(e);
-    }
-  }
-
-  @Override
   public Long countTableRows(CountTableRowsRequest request) {
     try {
       return tableApi.countTableRows(
@@ -199,9 +189,17 @@ public class LanceRestNamespace implements LanceNamespace {
   }
 
   @Override
-  public CreateTableResponse createTable(String tableName, byte[] arrowIpcData) {
+  public CreateTableResponse createTable(CreateTableRequest request, byte[] requestData) {
     try {
-      return tableApi.createTable(tableName, arrowIpcData, config.additionalHeaders());
+      String serializedTableProperties =
+          JsonUtil.generate(gen -> JsonUtil.writeStringMap(request.getProperties(), gen), false);
+      return tableApi.createTable(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request.getLocation(),
+          requestData,
+          config.delimiter(),
+          serializedTableProperties,
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
@@ -209,9 +207,15 @@ public class LanceRestNamespace implements LanceNamespace {
 
   @Override
   public InsertIntoTableResponse insertIntoTable(
-      String tableName, byte[] arrowIpcData, String mode) {
+      InsertIntoTableRequest request, byte[] requestData) {
     try {
-      return tableApi.insertIntoTable(tableName, arrowIpcData, mode, config.additionalHeaders());
+      String modeStr = request.getMode() == null ? null : request.getMode().name();
+      return tableApi.insertIntoTable(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          requestData,
+          config.delimiter(),
+          modeStr,
+          config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
     }
@@ -219,18 +223,18 @@ public class LanceRestNamespace implements LanceNamespace {
 
   @Override
   public MergeInsertIntoTableResponse mergeInsertIntoTable(
-      MergeInsertIntoTableRequest request,
-      byte[] arrowIpcData,
-      String on,
-      Boolean whenMatchedUpdateAll,
-      Boolean whenNotMatchedInsertAll) {
+      MergeInsertIntoTableRequest request, byte[] requestData) {
     try {
       return tableApi.mergeInsertIntoTable(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
-          on,
-          arrowIpcData,
-          whenMatchedUpdateAll,
-          whenNotMatchedInsertAll,
+          request.getOn(),
+          requestData,
+          config.delimiter(),
+          request.getWhenMatchedUpdateAll(),
+          request.getWhenMatchedUpdateAllFilt(),
+          request.getWhenNotMatchedInsertAll(),
+          request.getWhenNotMatchedBySourceDelete(),
+          request.getWhenNotMatchedBySourceDeleteFilt(),
           config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
@@ -243,6 +247,7 @@ public class LanceRestNamespace implements LanceNamespace {
       return tableApi.updateTable(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           request,
+          config.delimiter(),
           config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
@@ -255,6 +260,7 @@ public class LanceRestNamespace implements LanceNamespace {
       return tableApi.deleteFromTable(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           request,
+          config.delimiter(),
           config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
@@ -267,6 +273,20 @@ public class LanceRestNamespace implements LanceNamespace {
       return tableApi.queryTable(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           request,
+          config.delimiter(),
+          config.additionalHeaders());
+    } catch (ApiException e) {
+      throw new LanceNamespaceException(e);
+    }
+  }
+
+  @Override
+  public ListTablesResponse listTables(ListTablesRequest request) {
+    try {
+      return tableApi.listTables(
+          ObjectIdentifiers.stringFrom(request, config.delimiter()),
+          request,
+          config.delimiter(),
           config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
@@ -279,18 +299,7 @@ public class LanceRestNamespace implements LanceNamespace {
       return tableApi.createTableIndex(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           request,
-          config.additionalHeaders());
-    } catch (ApiException e) {
-      throw new LanceNamespaceException(e);
-    }
-  }
-
-  @Override
-  public CreateTableIndexResponse createTableScalarIndex(CreateTableIndexRequest request) {
-    try {
-      return tableApi.createTableScalarIndex(
-          ObjectIdentifiers.stringFrom(request, config.delimiter()),
-          request,
+          config.delimiter(),
           config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
@@ -303,6 +312,7 @@ public class LanceRestNamespace implements LanceNamespace {
       return tableApi.listTableIndices(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           request,
+          config.delimiter(),
           config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
@@ -317,6 +327,7 @@ public class LanceRestNamespace implements LanceNamespace {
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           indexName,
           request,
+          config.delimiter(),
           config.additionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);

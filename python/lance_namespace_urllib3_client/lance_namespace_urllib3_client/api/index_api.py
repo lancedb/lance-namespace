@@ -17,6 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
+from typing import Optional
 from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.create_table_index_request import CreateTableIndexRequest
 from lance_namespace_urllib3_client.models.create_table_index_response import CreateTableIndexResponse
@@ -48,6 +49,7 @@ class IndexApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         create_table_index_request: Annotated[CreateTableIndexRequest, Field(description="Index creation request")],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -69,6 +71,8 @@ class IndexApi:
         :type id: str
         :param create_table_index_request: Index creation request (required)
         :type create_table_index_request: CreateTableIndexRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -94,6 +98,7 @@ class IndexApi:
         _param = self._create_table_index_serialize(
             id=id,
             create_table_index_request=create_table_index_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -125,6 +130,7 @@ class IndexApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         create_table_index_request: Annotated[CreateTableIndexRequest, Field(description="Index creation request")],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -146,6 +152,8 @@ class IndexApi:
         :type id: str
         :param create_table_index_request: Index creation request (required)
         :type create_table_index_request: CreateTableIndexRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -171,6 +179,7 @@ class IndexApi:
         _param = self._create_table_index_serialize(
             id=id,
             create_table_index_request=create_table_index_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -202,6 +211,7 @@ class IndexApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         create_table_index_request: Annotated[CreateTableIndexRequest, Field(description="Index creation request")],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -223,6 +233,8 @@ class IndexApi:
         :type id: str
         :param create_table_index_request: Index creation request (required)
         :type create_table_index_request: CreateTableIndexRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -248,6 +260,7 @@ class IndexApi:
         _param = self._create_table_index_serialize(
             id=id,
             create_table_index_request=create_table_index_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -274,6 +287,7 @@ class IndexApi:
         self,
         id,
         create_table_index_request,
+        delimiter,
         _request_auth,
         _content_type,
         _headers,
@@ -298,6 +312,10 @@ class IndexApi:
         if id is not None:
             _path_params['id'] = id
         # process the query parameters
+        if delimiter is not None:
+            
+            _query_params.append(('delimiter', delimiter))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -355,6 +373,7 @@ class IndexApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         index_name: Annotated[StrictStr, Field(description="Name of the index to get stats for")],
         describe_table_index_stats_request: Annotated[DescribeTableIndexStatsRequest, Field(description="Index stats request")],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -378,6 +397,8 @@ class IndexApi:
         :type index_name: str
         :param describe_table_index_stats_request: Index stats request (required)
         :type describe_table_index_stats_request: DescribeTableIndexStatsRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -404,6 +425,7 @@ class IndexApi:
             id=id,
             index_name=index_name,
             describe_table_index_stats_request=describe_table_index_stats_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -436,6 +458,7 @@ class IndexApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         index_name: Annotated[StrictStr, Field(description="Name of the index to get stats for")],
         describe_table_index_stats_request: Annotated[DescribeTableIndexStatsRequest, Field(description="Index stats request")],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -459,6 +482,8 @@ class IndexApi:
         :type index_name: str
         :param describe_table_index_stats_request: Index stats request (required)
         :type describe_table_index_stats_request: DescribeTableIndexStatsRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -485,6 +510,7 @@ class IndexApi:
             id=id,
             index_name=index_name,
             describe_table_index_stats_request=describe_table_index_stats_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -517,6 +543,7 @@ class IndexApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         index_name: Annotated[StrictStr, Field(description="Name of the index to get stats for")],
         describe_table_index_stats_request: Annotated[DescribeTableIndexStatsRequest, Field(description="Index stats request")],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -540,6 +567,8 @@ class IndexApi:
         :type index_name: str
         :param describe_table_index_stats_request: Index stats request (required)
         :type describe_table_index_stats_request: DescribeTableIndexStatsRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -566,6 +595,7 @@ class IndexApi:
             id=id,
             index_name=index_name,
             describe_table_index_stats_request=describe_table_index_stats_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -593,6 +623,7 @@ class IndexApi:
         id,
         index_name,
         describe_table_index_stats_request,
+        delimiter,
         _request_auth,
         _content_type,
         _headers,
@@ -619,6 +650,10 @@ class IndexApi:
         if index_name is not None:
             _path_params['index_name'] = index_name
         # process the query parameters
+        if delimiter is not None:
+            
+            _query_params.append(('delimiter', delimiter))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -675,6 +710,7 @@ class IndexApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         list_table_indices_request: Annotated[ListTableIndicesRequest, Field(description="Index list request")],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -696,6 +732,8 @@ class IndexApi:
         :type id: str
         :param list_table_indices_request: Index list request (required)
         :type list_table_indices_request: ListTableIndicesRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -721,6 +759,7 @@ class IndexApi:
         _param = self._list_table_indices_serialize(
             id=id,
             list_table_indices_request=list_table_indices_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -752,6 +791,7 @@ class IndexApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         list_table_indices_request: Annotated[ListTableIndicesRequest, Field(description="Index list request")],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -773,6 +813,8 @@ class IndexApi:
         :type id: str
         :param list_table_indices_request: Index list request (required)
         :type list_table_indices_request: ListTableIndicesRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -798,6 +840,7 @@ class IndexApi:
         _param = self._list_table_indices_serialize(
             id=id,
             list_table_indices_request=list_table_indices_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -829,6 +872,7 @@ class IndexApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         list_table_indices_request: Annotated[ListTableIndicesRequest, Field(description="Index list request")],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -850,6 +894,8 @@ class IndexApi:
         :type id: str
         :param list_table_indices_request: Index list request (required)
         :type list_table_indices_request: ListTableIndicesRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -875,6 +921,7 @@ class IndexApi:
         _param = self._list_table_indices_serialize(
             id=id,
             list_table_indices_request=list_table_indices_request,
+            delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -901,6 +948,7 @@ class IndexApi:
         self,
         id,
         list_table_indices_request,
+        delimiter,
         _request_auth,
         _content_type,
         _headers,
@@ -925,6 +973,10 @@ class IndexApi:
         if id is not None:
             _path_params['id'] = id
         # process the query parameters
+        if delimiter is not None:
+            
+            _query_params.append(('delimiter', delimiter))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter

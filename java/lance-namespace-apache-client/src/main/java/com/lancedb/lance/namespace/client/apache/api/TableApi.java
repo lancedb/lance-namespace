@@ -177,16 +177,23 @@ public class TableApi extends BaseApi {
    *     root namespace. (required)
    * @param xLanceTableLocation URI pointing to root location to create the table at (required)
    * @param body Arrow IPC data (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
    *     \&quot;jack\&quot; }) (optional)
    * @return CreateTableResponse
    * @throws ApiException if fails to make API call
    */
   public CreateTableResponse createTable(
-      String id, String xLanceTableLocation, byte[] body, String xLanceTableProperties)
+      String id,
+      String xLanceTableLocation,
+      byte[] body,
+      String delimiter,
+      String xLanceTableProperties)
       throws ApiException {
     return this.createTable(
-        id, xLanceTableLocation, body, xLanceTableProperties, Collections.emptyMap());
+        id, xLanceTableLocation, body, delimiter, xLanceTableProperties, Collections.emptyMap());
   }
 
   /**
@@ -200,6 +207,9 @@ public class TableApi extends BaseApi {
    *     root namespace. (required)
    * @param xLanceTableLocation URI pointing to root location to create the table at (required)
    * @param body Arrow IPC data (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
    *     \&quot;jack\&quot; }) (optional)
    * @param additionalHeaders additionalHeaders for this call
@@ -210,6 +220,7 @@ public class TableApi extends BaseApi {
       String id,
       String xLanceTableLocation,
       byte[] body,
+      String delimiter,
       String xLanceTableProperties,
       Map<String, String> additionalHeaders)
       throws ApiException {
@@ -245,6 +256,7 @@ public class TableApi extends BaseApi {
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
     if (xLanceTableLocation != null)
       localVarHeaderParams.put(
           "x-lance-table-location", apiClient.parameterToString(xLanceTableLocation));
@@ -292,12 +304,16 @@ public class TableApi extends BaseApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param createTableIndexRequest Index creation request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return CreateTableIndexResponse
    * @throws ApiException if fails to make API call
    */
   public CreateTableIndexResponse createTableIndex(
-      String id, CreateTableIndexRequest createTableIndexRequest) throws ApiException {
-    return this.createTableIndex(id, createTableIndexRequest, Collections.emptyMap());
+      String id, CreateTableIndexRequest createTableIndexRequest, String delimiter)
+      throws ApiException {
+    return this.createTableIndex(id, createTableIndexRequest, delimiter, Collections.emptyMap());
   }
 
   /**
@@ -312,6 +328,9 @@ public class TableApi extends BaseApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param createTableIndexRequest Index creation request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return CreateTableIndexResponse
    * @throws ApiException if fails to make API call
@@ -319,6 +338,7 @@ public class TableApi extends BaseApi {
   public CreateTableIndexResponse createTableIndex(
       String id,
       CreateTableIndexRequest createTableIndexRequest,
+      String delimiter,
       Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = createTableIndexRequest;
@@ -349,6 +369,8 @@ public class TableApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -387,12 +409,16 @@ public class TableApi extends BaseApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param deleteFromTableRequest Delete request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return DeleteFromTableResponse
    * @throws ApiException if fails to make API call
    */
   public DeleteFromTableResponse deleteFromTable(
-      String id, DeleteFromTableRequest deleteFromTableRequest) throws ApiException {
-    return this.deleteFromTable(id, deleteFromTableRequest, Collections.emptyMap());
+      String id, DeleteFromTableRequest deleteFromTableRequest, String delimiter)
+      throws ApiException {
+    return this.deleteFromTable(id, deleteFromTableRequest, delimiter, Collections.emptyMap());
   }
 
   /**
@@ -404,6 +430,9 @@ public class TableApi extends BaseApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param deleteFromTableRequest Delete request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return DeleteFromTableResponse
    * @throws ApiException if fails to make API call
@@ -411,6 +440,7 @@ public class TableApi extends BaseApi {
   public DeleteFromTableResponse deleteFromTable(
       String id,
       DeleteFromTableRequest deleteFromTableRequest,
+      String delimiter,
       Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = deleteFromTableRequest;
@@ -441,6 +471,8 @@ public class TableApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -683,14 +715,20 @@ public class TableApi extends BaseApi {
    *     root namespace. (required)
    * @param indexName Name of the index to get stats for (required)
    * @param describeTableIndexStatsRequest Index stats request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return DescribeTableIndexStatsResponse
    * @throws ApiException if fails to make API call
    */
   public DescribeTableIndexStatsResponse describeTableIndexStats(
-      String id, String indexName, DescribeTableIndexStatsRequest describeTableIndexStatsRequest)
+      String id,
+      String indexName,
+      DescribeTableIndexStatsRequest describeTableIndexStatsRequest,
+      String delimiter)
       throws ApiException {
     return this.describeTableIndexStats(
-        id, indexName, describeTableIndexStatsRequest, Collections.emptyMap());
+        id, indexName, describeTableIndexStatsRequest, delimiter, Collections.emptyMap());
   }
 
   /**
@@ -703,6 +741,9 @@ public class TableApi extends BaseApi {
    *     root namespace. (required)
    * @param indexName Name of the index to get stats for (required)
    * @param describeTableIndexStatsRequest Index stats request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return DescribeTableIndexStatsResponse
    * @throws ApiException if fails to make API call
@@ -711,6 +752,7 @@ public class TableApi extends BaseApi {
       String id,
       String indexName,
       DescribeTableIndexStatsRequest describeTableIndexStatsRequest,
+      String delimiter,
       Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = describeTableIndexStatsRequest;
@@ -750,6 +792,8 @@ public class TableApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -889,14 +933,17 @@ public class TableApi extends BaseApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param body Arrow IPC data (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param mode Insert mode: \&quot;append\&quot; (default) or \&quot;overwrite\&quot; (optional,
    *     default to append)
    * @return InsertIntoTableResponse
    * @throws ApiException if fails to make API call
    */
-  public InsertIntoTableResponse insertIntoTable(String id, byte[] body, String mode)
-      throws ApiException {
-    return this.insertIntoTable(id, body, mode, Collections.emptyMap());
+  public InsertIntoTableResponse insertIntoTable(
+      String id, byte[] body, String delimiter, String mode) throws ApiException {
+    return this.insertIntoTable(id, body, delimiter, mode, Collections.emptyMap());
   }
 
   /**
@@ -909,6 +956,9 @@ public class TableApi extends BaseApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param body Arrow IPC data (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param mode Insert mode: \&quot;append\&quot; (default) or \&quot;overwrite\&quot; (optional,
    *     default to append)
    * @param additionalHeaders additionalHeaders for this call
@@ -916,7 +966,7 @@ public class TableApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public InsertIntoTableResponse insertIntoTable(
-      String id, byte[] body, String mode, Map<String, String> additionalHeaders)
+      String id, byte[] body, String delimiter, String mode, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = body;
 
@@ -946,6 +996,7 @@ public class TableApi extends BaseApi {
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
     localVarQueryParams.addAll(apiClient.parameterToPair("mode", mode));
 
     localVarHeaderParams.putAll(additionalHeaders);
@@ -985,12 +1036,16 @@ public class TableApi extends BaseApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param listTableIndicesRequest Index list request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return ListTableIndicesResponse
    * @throws ApiException if fails to make API call
    */
   public ListTableIndicesResponse listTableIndices(
-      String id, ListTableIndicesRequest listTableIndicesRequest) throws ApiException {
-    return this.listTableIndices(id, listTableIndicesRequest, Collections.emptyMap());
+      String id, ListTableIndicesRequest listTableIndicesRequest, String delimiter)
+      throws ApiException {
+    return this.listTableIndices(id, listTableIndicesRequest, delimiter, Collections.emptyMap());
   }
 
   /**
@@ -1002,6 +1057,9 @@ public class TableApi extends BaseApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param listTableIndicesRequest Index list request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return ListTableIndicesResponse
    * @throws ApiException if fails to make API call
@@ -1009,6 +1067,7 @@ public class TableApi extends BaseApi {
   public ListTableIndicesResponse listTableIndices(
       String id,
       ListTableIndicesRequest listTableIndicesRequest,
+      String delimiter,
       Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = listTableIndicesRequest;
@@ -1039,6 +1098,8 @@ public class TableApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -1178,6 +1239,9 @@ public class TableApi extends BaseApi {
    *     root namespace. (required)
    * @param on Column name to use for matching rows (required) (required)
    * @param body Arrow IPC data containing the records to merge (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
    * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
    *     the SQL expression evaluates to true (optional)
@@ -1194,6 +1258,7 @@ public class TableApi extends BaseApi {
       String id,
       String on,
       byte[] body,
+      String delimiter,
       Boolean whenMatchedUpdateAll,
       String whenMatchedUpdateAllFilt,
       Boolean whenNotMatchedInsertAll,
@@ -1204,6 +1269,7 @@ public class TableApi extends BaseApi {
         id,
         on,
         body,
+        delimiter,
         whenMatchedUpdateAll,
         whenMatchedUpdateAllFilt,
         whenNotMatchedInsertAll,
@@ -1223,6 +1289,9 @@ public class TableApi extends BaseApi {
    *     root namespace. (required)
    * @param on Column name to use for matching rows (required) (required)
    * @param body Arrow IPC data containing the records to merge (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
    * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
    *     the SQL expression evaluates to true (optional)
@@ -1240,6 +1309,7 @@ public class TableApi extends BaseApi {
       String id,
       String on,
       byte[] body,
+      String delimiter,
       Boolean whenMatchedUpdateAll,
       String whenMatchedUpdateAllFilt,
       Boolean whenNotMatchedInsertAll,
@@ -1281,6 +1351,7 @@ public class TableApi extends BaseApi {
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
     localVarQueryParams.addAll(apiClient.parameterToPair("on", on));
     localVarQueryParams.addAll(
         apiClient.parameterToPair("when_matched_update_all", whenMatchedUpdateAll));
@@ -1332,11 +1403,15 @@ public class TableApi extends BaseApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param queryTableRequest Query request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return byte[]
    * @throws ApiException if fails to make API call
    */
-  public byte[] queryTable(String id, QueryTableRequest queryTableRequest) throws ApiException {
-    return this.queryTable(id, queryTableRequest, Collections.emptyMap());
+  public byte[] queryTable(String id, QueryTableRequest queryTableRequest, String delimiter)
+      throws ApiException {
+    return this.queryTable(id, queryTableRequest, delimiter, Collections.emptyMap());
   }
 
   /**
@@ -1348,12 +1423,18 @@ public class TableApi extends BaseApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param queryTableRequest Query request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return byte[]
    * @throws ApiException if fails to make API call
    */
   public byte[] queryTable(
-      String id, QueryTableRequest queryTableRequest, Map<String, String> additionalHeaders)
+      String id,
+      QueryTableRequest queryTableRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = queryTableRequest;
 
@@ -1381,6 +1462,8 @@ public class TableApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -1615,12 +1698,15 @@ public class TableApi extends BaseApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param updateTableRequest Update request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @return UpdateTableResponse
    * @throws ApiException if fails to make API call
    */
-  public UpdateTableResponse updateTable(String id, UpdateTableRequest updateTableRequest)
-      throws ApiException {
-    return this.updateTable(id, updateTableRequest, Collections.emptyMap());
+  public UpdateTableResponse updateTable(
+      String id, UpdateTableRequest updateTableRequest, String delimiter) throws ApiException {
+    return this.updateTable(id, updateTableRequest, delimiter, Collections.emptyMap());
   }
 
   /**
@@ -1633,12 +1719,18 @@ public class TableApi extends BaseApi {
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param updateTableRequest Update request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return UpdateTableResponse
    * @throws ApiException if fails to make API call
    */
   public UpdateTableResponse updateTable(
-      String id, UpdateTableRequest updateTableRequest, Map<String, String> additionalHeaders)
+      String id,
+      UpdateTableRequest updateTableRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = updateTableRequest;
 
@@ -1666,6 +1758,8 @@ public class TableApi extends BaseApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, String> localVarCookieParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
 
     localVarHeaderParams.putAll(additionalHeaders);
 

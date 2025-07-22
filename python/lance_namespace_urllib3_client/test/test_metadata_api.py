@@ -40,13 +40,6 @@ class TestMetadataApi(unittest.TestCase):
         """
         pass
 
-    def test_create_table(self) -> None:
-        """Test case for create_table
-
-        Create a table with the given name
-        """
-        pass
-
     def test_create_table_index(self) -> None:
         """Test case for create_table_index
 

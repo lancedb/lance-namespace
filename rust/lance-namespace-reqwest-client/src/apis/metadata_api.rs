@@ -44,19 +44,6 @@ pub enum CreateNamespaceError {
     UnknownValue(serde_json::Value),
 }
 
-/// struct for typed errors of method [`create_table`]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum CreateTableError {
-    Status400(models::ErrorResponse),
-    Status401(models::ErrorResponse),
-    Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
-    Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
-    UnknownValue(serde_json::Value),
-}
-
 /// struct for typed errors of method [`create_table_index`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -330,60 +317,19 @@ pub async fn create_namespace(configuration: &configuration::Configuration, id: 
     }
 }
 
-/// Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. 
-pub async fn create_table(configuration: &configuration::Configuration, id: &str, x_lance_table_location: &str, body: Vec<u8>, x_lance_table_properties: Option<&str>) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
-    // add a prefix to parameters to efficiently prevent name collisions
-    let p_id = id;
-    let p_x_lance_table_location = x_lance_table_location;
-    let p_body = body;
-    let p_x_lance_table_properties = x_lance_table_properties;
-
-    let uri_str = format!("{}/v1/table/{id}/create", configuration.base_path, id=crate::apis::urlencode(p_id));
-    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
-
-    if let Some(ref user_agent) = configuration.user_agent {
-        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
-    }
-    req_builder = req_builder.header("x-lance-table-location", p_x_lance_table_location.to_string());
-    if let Some(param_value) = p_x_lance_table_properties {
-        req_builder = req_builder.header("x-lance-table-properties", param_value.to_string());
-    }
-    req_builder = req_builder.body(p_body);
-
-    let req = req_builder.build()?;
-    let resp = configuration.client.execute(req).await?;
-
-    let status = resp.status();
-    let content_type = resp
-        .headers()
-        .get("content-type")
-        .and_then(|v| v.to_str().ok())
-        .unwrap_or("application/octet-stream");
-    let content_type = super::ContentType::from(content_type);
-
-    if !status.is_client_error() && !status.is_server_error() {
-        let content = resp.text().await?;
-        match content_type {
-            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::CreateTableResponse`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::CreateTableResponse`")))),
-        }
-    } else {
-        let content = resp.text().await?;
-        let entity: Option<CreateTableError> = serde_json::from_str(&content).ok();
-        Err(Error::ResponseError(ResponseContent { status, content, entity }))
-    }
-}
-
 /// Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously.  Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
-pub async fn create_table_index(configuration: &configuration::Configuration, id: &str, create_table_index_request: models::CreateTableIndexRequest) -> Result<models::CreateTableIndexResponse, Error<CreateTableIndexError>> {
+pub async fn create_table_index(configuration: &configuration::Configuration, id: &str, create_table_index_request: models::CreateTableIndexRequest, delimiter: Option<&str>) -> Result<models::CreateTableIndexResponse, Error<CreateTableIndexError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_create_table_index_request = create_table_index_request;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/create_index", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -544,15 +490,19 @@ pub async fn describe_table(configuration: &configuration::Configuration, id: &s
 }
 
 /// Get statistics for a specific index on a table. Returns information about the index type, distance type (for vector indices), and row counts. 
-pub async fn describe_table_index_stats(configuration: &configuration::Configuration, id: &str, index_name: &str, describe_table_index_stats_request: models::DescribeTableIndexStatsRequest) -> Result<models::DescribeTableIndexStatsResponse, Error<DescribeTableIndexStatsError>> {
+pub async fn describe_table_index_stats(configuration: &configuration::Configuration, id: &str, index_name: &str, describe_table_index_stats_request: models::DescribeTableIndexStatsRequest, delimiter: Option<&str>) -> Result<models::DescribeTableIndexStatsResponse, Error<DescribeTableIndexStatsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_index_name = index_name;
     let p_describe_table_index_stats_request = describe_table_index_stats_request;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/index/{index_name}/stats", configuration.base_path, id=crate::apis::urlencode(p_id), index_name=crate::apis::urlencode(p_index_name));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -756,14 +706,18 @@ pub async fn list_namespaces(configuration: &configuration::Configuration, id: &
 }
 
 /// List all indices created on a table. Returns information about each index including name, columns, status, and UUID. 
-pub async fn list_table_indices(configuration: &configuration::Configuration, id: &str, list_table_indices_request: models::ListTableIndicesRequest) -> Result<models::ListTableIndicesResponse, Error<ListTableIndicesError>> {
+pub async fn list_table_indices(configuration: &configuration::Configuration, id: &str, list_table_indices_request: models::ListTableIndicesRequest, delimiter: Option<&str>) -> Result<models::ListTableIndicesResponse, Error<ListTableIndicesError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_list_table_indices_request = list_table_indices_request;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/index/list", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }

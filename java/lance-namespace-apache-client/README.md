@@ -120,6 +120,7 @@ All URIs are relative to *http://localhost:2333*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *DataApi* | [**countTableRows**](docs/DataApi.md#countTableRows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
+*DataApi* | [**createTable**](docs/DataApi.md#createTable) | **POST** /v1/table/{id}/create | Create a table with the given name
 *DataApi* | [**deleteFromTable**](docs/DataApi.md#deleteFromTable) | **POST** /v1/table/{id}/delete | Delete rows from a table
 *DataApi* | [**insertIntoTable**](docs/DataApi.md#insertIntoTable) | **POST** /v1/table/{id}/insert | Insert records into a table
 *DataApi* | [**mergeInsertIntoTable**](docs/DataApi.md#mergeInsertIntoTable) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
@@ -130,7 +131,6 @@ Class | Method | HTTP request | Description
 *IndexApi* | [**listTableIndices**](docs/IndexApi.md#listTableIndices) | **POST** /v1/table/{id}/index/list | List indexes on a table
 *MetadataApi* | [**alterTransaction**](docs/MetadataApi.md#alterTransaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
 *MetadataApi* | [**createNamespace**](docs/MetadataApi.md#createNamespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
-*MetadataApi* | [**createTable**](docs/MetadataApi.md#createTable) | **POST** /v1/table/{id}/create | Create a table with the given name
 *MetadataApi* | [**createTableIndex**](docs/MetadataApi.md#createTableIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
 *MetadataApi* | [**deregisterTable**](docs/MetadataApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 *MetadataApi* | [**describeNamespace**](docs/MetadataApi.md#describeNamespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace

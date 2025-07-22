@@ -20,6 +20,7 @@ import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
 import com.lancedb.lance.namespace.model.CreateTableIndexResponse;
+import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
 import com.lancedb.lance.namespace.model.DeleteFromTableResponse;
@@ -30,20 +31,21 @@ import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
-import com.lancedb.lance.namespace.model.DescribeTableRequestV2;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
-import com.lancedb.lance.namespace.model.DescribeTableResponseV2;
 import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
 import com.lancedb.lance.namespace.model.DescribeTransactionResponse;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
+import com.lancedb.lance.namespace.model.InsertIntoTableRequest;
 import com.lancedb.lance.namespace.model.InsertIntoTableResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
 import com.lancedb.lance.namespace.model.ListTableIndicesResponse;
+import com.lancedb.lance.namespace.model.ListTablesRequest;
+import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.MergeInsertIntoTableRequest;
 import com.lancedb.lance.namespace.model.MergeInsertIntoTableResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
@@ -55,7 +57,6 @@ import com.lancedb.lance.namespace.model.UpdateTableRequest;
 import com.lancedb.lance.namespace.model.UpdateTableResponse;
 import com.lancedb.lance.namespace.util.DynConstructors;
 
-import java.io.InputStream;
 import java.util.Map;
 
 /** TODO: add documentation */
@@ -90,53 +91,98 @@ public interface LanceNamespace {
    */
   default void initialize(String name, Map<String, String> properties) {}
 
-  ListNamespacesResponse listNamespaces(ListNamespacesRequest request);
+  default ListNamespacesResponse listNamespaces(ListNamespacesRequest request) {
+    throw new UnsupportedOperationException("Not supported: listNamespaces");
+  }
 
-  DescribeNamespaceResponse describeNamespace(DescribeNamespaceRequest request);
+  default DescribeNamespaceResponse describeNamespace(DescribeNamespaceRequest request) {
+    throw new UnsupportedOperationException("Not supported: describeNamespace");
+  }
 
-  CreateNamespaceResponse createNamespace(CreateNamespaceRequest request);
+  default CreateNamespaceResponse createNamespace(CreateNamespaceRequest request) {
+    throw new UnsupportedOperationException("Not supported: createNamespace");
+  }
 
-  DropNamespaceResponse dropNamespace(DropNamespaceRequest request);
+  default DropNamespaceResponse dropNamespace(DropNamespaceRequest request) {
+    throw new UnsupportedOperationException("Not supported: dropNamespace");
+  }
 
-  void namespaceExists(NamespaceExistsRequest request);
+  default void namespaceExists(NamespaceExistsRequest request) {
+    throw new UnsupportedOperationException("Not supported: namespaceExists");
+  }
 
-  DescribeTableResponse describeTable(DescribeTableRequest request);
+  default ListTablesResponse listTables(ListTablesRequest request) {
+    throw new UnsupportedOperationException("Not supported: listTables");
+  }
 
-  DescribeTableResponseV2 describeTableV2(DescribeTableRequestV2 request);
+  default DescribeTableResponse describeTable(DescribeTableRequest request) {
+    throw new UnsupportedOperationException("Not supported: describeTable");
+  }
 
-  Long countTableRows(CountTableRowsRequest request);
+  default RegisterTableResponse registerTable(RegisterTableRequest request) {
+    throw new UnsupportedOperationException("Not supported: registerTable");
+  }
 
-  CreateTableResponse createTable(String tableName, InputStream requestData);
+  default void tableExists(TableExistsRequest request) {
+    throw new UnsupportedOperationException("Not supported: tableExists");
+  }
 
-  InsertIntoTableResponse insertIntoTable(String tableName, InputStream requestData);
+  default DropTableResponse dropTable(DropTableRequest request) {
+    throw new UnsupportedOperationException("Not supported: dropTable");
+  }
 
-  MergeInsertIntoTableResponse mergeInsertIntoTable(
-      MergeInsertIntoTableRequest request, InputStream requestData);
+  default DeregisterTableResponse deregisterTable(DeregisterTableRequest request) {
+    throw new UnsupportedOperationException("Not supported: deregisterTable");
+  }
 
-  UpdateTableResponse updateTable(UpdateTableRequest request);
+  default Long countTableRows(CountTableRowsRequest request) {
+    throw new UnsupportedOperationException("Not supported: countTableRows");
+  }
 
-  DeleteFromTableResponse deleteFromTable(DeleteFromTableRequest request);
+  default CreateTableResponse createTable(CreateTableRequest request, byte[] requestData) {
+    throw new UnsupportedOperationException("Not supported: createTable");
+  }
 
-  byte[] queryTable(QueryTableRequest request);
+  default InsertIntoTableResponse insertIntoTable(
+      InsertIntoTableRequest request, byte[] requestData) {
+    throw new UnsupportedOperationException("Not supported: insertIntoTable");
+  }
 
-  CreateTableIndexResponse createTableIndex(CreateTableIndexRequest request);
+  default MergeInsertIntoTableResponse mergeInsertIntoTable(
+      MergeInsertIntoTableRequest request, byte[] requestData) {
+    throw new UnsupportedOperationException("Not supported: mergeInsertIntoTable");
+  }
 
-  CreateTableIndexResponse createTableScalarIndex(CreateTableIndexRequest request);
+  default UpdateTableResponse updateTable(UpdateTableRequest request) {
+    throw new UnsupportedOperationException("Not supported: updateTable");
+  }
 
-  ListTableIndicesResponse listTableIndices(ListTableIndicesRequest request);
+  default DeleteFromTableResponse deleteFromTable(DeleteFromTableRequest request) {
+    throw new UnsupportedOperationException("Not supported: deleteFromTable");
+  }
 
-  DescribeTableIndexStatsResponse describeTableIndexStats(
-      DescribeTableIndexStatsRequest request, String indexName);
+  default byte[] queryTable(QueryTableRequest request) {
+    throw new UnsupportedOperationException("Not supported: queryTable");
+  }
 
-  RegisterTableResponse registerTable(RegisterTableRequest request);
+  default CreateTableIndexResponse createTableIndex(CreateTableIndexRequest request) {
+    throw new UnsupportedOperationException("Not supported: createTableIndex");
+  }
 
-  void tableExists(TableExistsRequest request);
+  default ListTableIndicesResponse listTableIndices(ListTableIndicesRequest request) {
+    throw new UnsupportedOperationException("Not supported: listTableIndices");
+  }
 
-  DropTableResponse dropTable(DropTableRequest request);
+  default DescribeTableIndexStatsResponse describeTableIndexStats(
+      DescribeTableIndexStatsRequest request, String indexName) {
+    throw new UnsupportedOperationException("Not supported: describeTableIndexStats");
+  }
 
-  DeregisterTableResponse deregisterTable(DeregisterTableRequest request);
+  default DescribeTransactionResponse describeTransaction(DescribeTransactionRequest request) {
+    throw new UnsupportedOperationException("Not supported: describeTransaction");
+  }
 
-  DescribeTransactionResponse describeTransaction(DescribeTransactionRequest request);
-
-  AlterTransactionResponse alterTransaction(AlterTransactionRequest request);
+  default AlterTransactionResponse alterTransaction(AlterTransactionRequest request) {
+    throw new UnsupportedOperationException("Not supported: alterTransaction");
+  }
 }

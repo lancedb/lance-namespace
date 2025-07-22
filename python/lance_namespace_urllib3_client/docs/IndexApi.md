@@ -10,7 +10,7 @@ Method | HTTP request | Description
 
 
 # **create_table_index**
-> CreateTableIndexResponse create_table_index(id, create_table_index_request)
+> CreateTableIndexResponse create_table_index(id, create_table_index_request, delimiter=delimiter)
 
 Create an index on a table
 
@@ -43,10 +43,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     api_instance = lance_namespace_urllib3_client.IndexApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     create_table_index_request = lance_namespace_urllib3_client.CreateTableIndexRequest() # CreateTableIndexRequest | Index creation request
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # Create an index on a table
-        api_response = api_instance.create_table_index(id, create_table_index_request)
+        api_response = api_instance.create_table_index(id, create_table_index_request, delimiter=delimiter)
         print("The response of IndexApi->create_table_index:\n")
         pprint(api_response)
     except Exception as e:
@@ -62,6 +63,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **create_table_index_request** | [**CreateTableIndexRequest**](CreateTableIndexRequest.md)| Index creation request | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 
@@ -91,7 +93,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **describe_table_index_stats**
-> DescribeTableIndexStatsResponse describe_table_index_stats(id, index_name, describe_table_index_stats_request)
+> DescribeTableIndexStatsResponse describe_table_index_stats(id, index_name, describe_table_index_stats_request, delimiter=delimiter)
 
 Get table index statistics
 
@@ -123,10 +125,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     index_name = 'index_name_example' # str | Name of the index to get stats for
     describe_table_index_stats_request = lance_namespace_urllib3_client.DescribeTableIndexStatsRequest() # DescribeTableIndexStatsRequest | Index stats request
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # Get table index statistics
-        api_response = api_instance.describe_table_index_stats(id, index_name, describe_table_index_stats_request)
+        api_response = api_instance.describe_table_index_stats(id, index_name, describe_table_index_stats_request, delimiter=delimiter)
         print("The response of IndexApi->describe_table_index_stats:\n")
         pprint(api_response)
     except Exception as e:
@@ -143,6 +146,7 @@ Name | Type | Description  | Notes
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **index_name** | **str**| Name of the index to get stats for | 
  **describe_table_index_stats_request** | [**DescribeTableIndexStatsRequest**](DescribeTableIndexStatsRequest.md)| Index stats request | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 
@@ -172,7 +176,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_table_indices**
-> ListTableIndicesResponse list_table_indices(id, list_table_indices_request)
+> ListTableIndicesResponse list_table_indices(id, list_table_indices_request, delimiter=delimiter)
 
 List indexes on a table
 
@@ -203,10 +207,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     api_instance = lance_namespace_urllib3_client.IndexApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     list_table_indices_request = lance_namespace_urllib3_client.ListTableIndicesRequest() # ListTableIndicesRequest | Index list request
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # List indexes on a table
-        api_response = api_instance.list_table_indices(id, list_table_indices_request)
+        api_response = api_instance.list_table_indices(id, list_table_indices_request, delimiter=delimiter)
         print("The response of IndexApi->list_table_indices:\n")
         pprint(api_response)
     except Exception as e:
@@ -222,6 +227,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **list_table_indices_request** | [**ListTableIndicesRequest**](ListTableIndicesRequest.md)| Index list request | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 

@@ -17,17 +17,19 @@ import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.CountTableRowsRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
+import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
-import com.lancedb.lance.namespace.model.DescribeTableRequestV2;
 import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropTableRequest;
+import com.lancedb.lance.namespace.model.InsertIntoTableRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
+import com.lancedb.lance.namespace.model.ListTablesRequest;
 import com.lancedb.lance.namespace.model.MergeInsertIntoTableRequest;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.QueryTableRequest;
@@ -137,14 +139,14 @@ public class ObjectIdentifiers {
     return builder.toString();
   }
 
-  public static List<String> listFrom(DescribeTableRequest request) {
+  public static List<String> listFrom(CreateTableRequest request) {
     List<String> identifier = new ArrayList<>();
     identifier.addAll(request.getNamespace());
     identifier.add(request.getName());
     return identifier;
   }
 
-  public static String stringFrom(DescribeTableRequestV2 request, String delimiter) {
+  public static String stringFrom(CreateTableRequest request, String delimiter) {
     StringBuilder builder = new StringBuilder();
     for (String part : request.getNamespace()) {
       builder.append(part);
@@ -154,7 +156,7 @@ public class ObjectIdentifiers {
     return builder.toString();
   }
 
-  public static List<String> listFrom(DescribeTableRequestV2 request) {
+  public static List<String> listFrom(DescribeTableRequest request) {
     List<String> identifier = new ArrayList<>();
     identifier.addAll(request.getNamespace());
     identifier.add(request.getName());
@@ -195,6 +197,27 @@ public class ObjectIdentifiers {
   }
 
   public static List<String> listFrom(QueryTableRequest request) {
+    List<String> identifier = new ArrayList<>();
+    if (request.getNamespace() != null) {
+      identifier.addAll(request.getNamespace());
+    }
+    identifier.add(request.getName());
+    return identifier;
+  }
+
+  public static String stringFrom(InsertIntoTableRequest request, String delimiter) {
+    StringBuilder builder = new StringBuilder();
+    if (request.getNamespace() != null) {
+      for (String part : request.getNamespace()) {
+        builder.append(part);
+        builder.append(delimiter);
+      }
+    }
+    builder.append(request.getName());
+    return builder.toString();
+  }
+
+  public static List<String> listFrom(InsertIntoTableRequest request) {
     List<String> identifier = new ArrayList<>();
     if (request.getNamespace() != null) {
       identifier.addAll(request.getNamespace());
@@ -293,6 +316,28 @@ public class ObjectIdentifiers {
   }
 
   public static String stringFrom(ListNamespacesRequest request, String delimiter) {
+    if (request.getParent() == null || request.getParent().isEmpty()) {
+      return delimiter;
+    }
+
+    StringBuilder builder = new StringBuilder();
+    for (String part : request.getParent()) {
+      builder.append(part);
+      builder.append(delimiter);
+    }
+    builder.delete(builder.length() - delimiter.length(), builder.length());
+    return builder.toString();
+  }
+
+  public static List<String> listFrom(ListTablesRequest request) {
+    List<String> identifier = new ArrayList<>();
+    if (request.getParent() != null) {
+      identifier.addAll(request.getParent());
+    }
+    return identifier;
+  }
+
+  public static String stringFrom(ListTablesRequest request, String delimiter) {
     if (request.getParent() == null || request.getParent().isEmpty()) {
       return delimiter;
     }

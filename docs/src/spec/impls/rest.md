@@ -24,8 +24,10 @@ For example, the route for `RenameTable` is thus `POST /v1/table/{id}/rename/to/
 
 ## Handling Non-Standard Request and Response
 
-For request and response that cannot be simply described as a JSON object (e.g. `InsertIntoTable`),
-the REST server cannot simply implement the 
+For request and response that cannot be simply described as a JSON object 
+(e.g. `InsertIntoTable` request is Arrow IPC stream), the REST server needs to perform special handling
+to describe equivalent information through path parameters, query parameters and headers.
+The sepcific handling is described in the OpenAPI spec.
 
 ## Namespace Server and Adapter
 

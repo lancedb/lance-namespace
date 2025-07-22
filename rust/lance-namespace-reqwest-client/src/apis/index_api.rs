@@ -56,14 +56,18 @@ pub enum ListTableIndicesError {
 
 
 /// Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously.  Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
-pub async fn create_table_index(configuration: &configuration::Configuration, id: &str, create_table_index_request: models::CreateTableIndexRequest) -> Result<models::CreateTableIndexResponse, Error<CreateTableIndexError>> {
+pub async fn create_table_index(configuration: &configuration::Configuration, id: &str, create_table_index_request: models::CreateTableIndexRequest, delimiter: Option<&str>) -> Result<models::CreateTableIndexResponse, Error<CreateTableIndexError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_create_table_index_request = create_table_index_request;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/create_index", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -95,15 +99,19 @@ pub async fn create_table_index(configuration: &configuration::Configuration, id
 }
 
 /// Get statistics for a specific index on a table. Returns information about the index type, distance type (for vector indices), and row counts. 
-pub async fn describe_table_index_stats(configuration: &configuration::Configuration, id: &str, index_name: &str, describe_table_index_stats_request: models::DescribeTableIndexStatsRequest) -> Result<models::DescribeTableIndexStatsResponse, Error<DescribeTableIndexStatsError>> {
+pub async fn describe_table_index_stats(configuration: &configuration::Configuration, id: &str, index_name: &str, describe_table_index_stats_request: models::DescribeTableIndexStatsRequest, delimiter: Option<&str>) -> Result<models::DescribeTableIndexStatsResponse, Error<DescribeTableIndexStatsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_index_name = index_name;
     let p_describe_table_index_stats_request = describe_table_index_stats_request;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/index/{index_name}/stats", configuration.base_path, id=crate::apis::urlencode(p_id), index_name=crate::apis::urlencode(p_index_name));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -135,14 +143,18 @@ pub async fn describe_table_index_stats(configuration: &configuration::Configura
 }
 
 /// List all indices created on a table. Returns information about each index including name, columns, status, and UUID. 
-pub async fn list_table_indices(configuration: &configuration::Configuration, id: &str, list_table_indices_request: models::ListTableIndicesRequest) -> Result<models::ListTableIndicesResponse, Error<ListTableIndicesError>> {
+pub async fn list_table_indices(configuration: &configuration::Configuration, id: &str, list_table_indices_request: models::ListTableIndicesRequest, delimiter: Option<&str>) -> Result<models::ListTableIndicesResponse, Error<ListTableIndicesError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_list_table_indices_request = list_table_indices_request;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/index/list", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }

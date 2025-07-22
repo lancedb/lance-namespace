@@ -491,6 +491,7 @@ paths:
   /v1/table/{id}/insert:
     parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       - name: mode
         in: query
         description: 'Insert mode: "append" (default) or "overwrite"'
@@ -537,6 +538,7 @@ paths:
   /v1/table/{id}/merge_insert:
     parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       - name: "on"
         in: query
         description: Column name to use for matching rows (required)
@@ -612,6 +614,7 @@ paths:
   /v1/table/{id}/update:
     parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
     post:
       tags:
         - Table
@@ -649,6 +652,7 @@ paths:
   /v1/table/{id}/delete:
     parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
     post:
       tags:
         - Table
@@ -684,6 +688,7 @@ paths:
   /v1/table/{id}/query:
     parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
     post:
       tags:
         - Table
@@ -753,13 +758,14 @@ paths:
   /v1/table/{id}/create:
     parameters:
       - $ref: '#/components/parameters/id'
-      - name: x-lance-table-location
+      - $ref: '#/components/parameters/delimiter'
+      - name: "x-lance-table-location"
         in: header
         required: true
         schema:
           type: string
         description: URI pointing to root location to create the table at
-      - name: x-lance-table-properties
+      - name: "x-lance-table-properties"
         in: header
         required: false
         schema:
@@ -769,7 +775,7 @@ paths:
     post:
       tags:
         - Table
-        - Metadata
+        - Data
       summary: Create a table with the given name
       operationId: CreateTable
       description: |
@@ -806,6 +812,7 @@ paths:
   /v1/table/{id}/create_index:
     parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
     post:
       tags:
         - Table
@@ -844,6 +851,7 @@ paths:
   /v1/table/{id}/index/list:
     parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
     post:
       tags:
         - Table
@@ -880,6 +888,7 @@ paths:
   /v1/table/{id}/index/{index_name}/stats:
     parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       - name: index_name
         in: path
         description: Name of the index to get stats for

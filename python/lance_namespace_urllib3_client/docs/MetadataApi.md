@@ -6,7 +6,6 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**alter_transaction**](MetadataApi.md#alter_transaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
 [**create_namespace**](MetadataApi.md#create_namespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
-[**create_table**](MetadataApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 [**create_table_index**](MetadataApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
 [**deregister_table**](MetadataApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
 [**describe_namespace**](MetadataApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace
@@ -193,92 +192,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **create_table**
-> CreateTableResponse create_table(id, x_lance_table_location, body, x_lance_table_properties=x_lance_table_properties)
-
-Create a table with the given name
-
-Create a new table in the namespace with the given data in Arrow IPC stream.
-
-The schema of the Arrow IPC stream is used as the table schema.    
-If the stream is empty, the API creates a new empty table.
-
-
-### Example
-
-
-```python
-import lance_namespace_urllib3_client
-from lance_namespace_urllib3_client.models.create_table_response import CreateTableResponse
-from lance_namespace_urllib3_client.rest import ApiException
-from pprint import pprint
-
-# Defining the host is optional and defaults to http://localhost:2333
-# See configuration.py for a list of all supported configuration parameters.
-configuration = lance_namespace_urllib3_client.Configuration(
-    host = "http://localhost:2333"
-)
-
-
-# Enter a context with an instance of the API client
-with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
-    # Create an instance of the API class
-    api_instance = lance_namespace_urllib3_client.MetadataApi(api_client)
-    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-    x_lance_table_location = 'x_lance_table_location_example' # str | URI pointing to root location to create the table at
-    body = None # bytearray | Arrow IPC data
-    x_lance_table_properties = 'x_lance_table_properties_example' # str | JSON-encoded string map (e.g. { \"owner\": \"jack\" })  (optional)
-
-    try:
-        # Create a table with the given name
-        api_response = api_instance.create_table(id, x_lance_table_location, body, x_lance_table_properties=x_lance_table_properties)
-        print("The response of MetadataApi->create_table:\n")
-        pprint(api_response)
-    except Exception as e:
-        print("Exception when calling MetadataApi->create_table: %s\n" % e)
-```
-
-
-
-### Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
- **x_lance_table_location** | **str**| URI pointing to root location to create the table at | 
- **body** | **bytearray**| Arrow IPC data | 
- **x_lance_table_properties** | **str**| JSON-encoded string map (e.g. { \&quot;owner\&quot;: \&quot;jack\&quot; })  | [optional] 
-
-### Return type
-
-[**CreateTableResponse**](CreateTableResponse.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/vnd.apache.arrow.stream
- - **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Table properties result when creating a table |  -  |
-**400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
-**401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
-**403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-**404** | A server-side problem that means can not find the specified resource. |  -  |
-**503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-**5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
 # **create_table_index**
-> CreateTableIndexResponse create_table_index(id, create_table_index_request)
+> CreateTableIndexResponse create_table_index(id, create_table_index_request, delimiter=delimiter)
 
 Create an index on a table
 
@@ -311,10 +226,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     api_instance = lance_namespace_urllib3_client.MetadataApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     create_table_index_request = lance_namespace_urllib3_client.CreateTableIndexRequest() # CreateTableIndexRequest | Index creation request
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # Create an index on a table
-        api_response = api_instance.create_table_index(id, create_table_index_request)
+        api_response = api_instance.create_table_index(id, create_table_index_request, delimiter=delimiter)
         print("The response of MetadataApi->create_table_index:\n")
         pprint(api_response)
     except Exception as e:
@@ -330,6 +246,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **create_table_index_request** | [**CreateTableIndexRequest**](CreateTableIndexRequest.md)| Index creation request | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 
@@ -600,7 +517,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **describe_table_index_stats**
-> DescribeTableIndexStatsResponse describe_table_index_stats(id, index_name, describe_table_index_stats_request)
+> DescribeTableIndexStatsResponse describe_table_index_stats(id, index_name, describe_table_index_stats_request, delimiter=delimiter)
 
 Get table index statistics
 
@@ -632,10 +549,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     index_name = 'index_name_example' # str | Name of the index to get stats for
     describe_table_index_stats_request = lance_namespace_urllib3_client.DescribeTableIndexStatsRequest() # DescribeTableIndexStatsRequest | Index stats request
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # Get table index statistics
-        api_response = api_instance.describe_table_index_stats(id, index_name, describe_table_index_stats_request)
+        api_response = api_instance.describe_table_index_stats(id, index_name, describe_table_index_stats_request, delimiter=delimiter)
         print("The response of MetadataApi->describe_table_index_stats:\n")
         pprint(api_response)
     except Exception as e:
@@ -652,6 +570,7 @@ Name | Type | Description  | Notes
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **index_name** | **str**| Name of the index to get stats for | 
  **describe_table_index_stats_request** | [**DescribeTableIndexStatsRequest**](DescribeTableIndexStatsRequest.md)| Index stats request | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 
@@ -1004,7 +923,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_table_indices**
-> ListTableIndicesResponse list_table_indices(id, list_table_indices_request)
+> ListTableIndicesResponse list_table_indices(id, list_table_indices_request, delimiter=delimiter)
 
 List indexes on a table
 
@@ -1035,10 +954,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     api_instance = lance_namespace_urllib3_client.MetadataApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     list_table_indices_request = lance_namespace_urllib3_client.ListTableIndicesRequest() # ListTableIndicesRequest | Index list request
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
         # List indexes on a table
-        api_response = api_instance.list_table_indices(id, list_table_indices_request)
+        api_response = api_instance.list_table_indices(id, list_table_indices_request, delimiter=delimiter)
         print("The response of MetadataApi->list_table_indices:\n")
         pprint(api_response)
     except Exception as e:
@@ -1054,6 +974,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **list_table_indices_request** | [**ListTableIndicesRequest**](ListTableIndicesRequest.md)| Index list request | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
 
 ### Return type
 

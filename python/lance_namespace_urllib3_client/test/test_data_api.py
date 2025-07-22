@@ -33,6 +33,13 @@ class TestDataApi(unittest.TestCase):
         """
         pass
 
+    def test_create_table(self) -> None:
+        """Test case for create_table
+
+        Create a table with the given name
+        """
+        pass
+
     def test_delete_from_table(self) -> None:
         """Test case for delete_from_table
 

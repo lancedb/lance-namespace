@@ -521,6 +521,7 @@ paths:
   /v1/table/{id}/insert:
     parameters:
     - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     - description: "Insert mode: \"append\" (default) or \"overwrite\""
       explode: true
       in: query
@@ -540,6 +541,7 @@ paths:
       operationId: InsertIntoTable
       parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       - description: "Insert mode: \"append\" (default) or \"overwrite\""
         explode: true
         in: query
@@ -585,6 +587,7 @@ paths:
   /v1/table/{id}/merge_insert:
     parameters:
     - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     - description: Column name to use for matching rows (required)
       explode: true
       in: query
@@ -647,6 +650,7 @@ paths:
       operationId: MergeInsertIntoTable
       parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       - description: Column name to use for matching rows (required)
         explode: true
         in: query
@@ -734,6 +738,7 @@ paths:
   /v1/table/{id}/update:
     parameters:
     - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: |
         Update existing rows in a table using SQL expressions.
@@ -743,6 +748,7 @@ paths:
       operationId: UpdateTable
       parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
@@ -775,6 +781,7 @@ paths:
   /v1/table/{id}/delete:
     parameters:
     - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: |
         Delete rows from a table based on a SQL predicate.
@@ -782,6 +789,7 @@ paths:
       operationId: DeleteFromTable
       parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
@@ -814,6 +822,7 @@ paths:
   /v1/table/{id}/query:
     parameters:
     - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: |
         Query a table with vector search, full text search and optional SQL filtering.
@@ -821,6 +830,7 @@ paths:
       operationId: QueryTable
       parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
@@ -894,6 +904,7 @@ paths:
   /v1/table/{id}/create:
     parameters:
     - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     - description: URI pointing to root location to create the table at
       explode: false
       in: header
@@ -918,6 +929,7 @@ paths:
       operationId: CreateTable
       parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       - description: URI pointing to root location to create the table at
         explode: false
         in: header
@@ -961,13 +973,14 @@ paths:
       summary: Create a table with the given name
       tags:
       - Table
-      - Metadata
+      - Data
       x-content-type: application/vnd.apache.arrow.stream
       x-accepts:
       - application/json
   /v1/table/{id}/create_index:
     parameters:
     - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: "Create an index on a table column for faster search operations.\n\
         Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes\
@@ -977,6 +990,7 @@ paths:
       operationId: CreateTableIndex
       parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
@@ -1010,6 +1024,7 @@ paths:
   /v1/table/{id}/index/list:
     parameters:
     - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     post:
       description: |
         List all indices created on a table. Returns information about each index
@@ -1017,6 +1032,7 @@ paths:
       operationId: ListTableIndices
       parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       requestBody:
         content:
           application/json:
@@ -1050,6 +1066,7 @@ paths:
   /v1/table/{id}/index/{index_name}/stats:
     parameters:
     - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
     - description: Name of the index to get stats for
       explode: false
       in: path
@@ -1065,6 +1082,7 @@ paths:
       operationId: DescribeTableIndexStats
       parameters:
       - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
       - description: Name of the index to get stats for
         explode: false
         in: path

@@ -271,16 +271,20 @@ pub async fn count_table_rows(configuration: &configuration::Configuration, id: 
 }
 
 /// Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. 
-pub async fn create_table(configuration: &configuration::Configuration, id: &str, x_lance_table_location: &str, body: Vec<u8>, x_lance_table_properties: Option<&str>) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
+pub async fn create_table(configuration: &configuration::Configuration, id: &str, x_lance_table_location: &str, body: Vec<u8>, delimiter: Option<&str>, x_lance_table_properties: Option<&str>) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_x_lance_table_location = x_lance_table_location;
     let p_body = body;
+    let p_delimiter = delimiter;
     let p_x_lance_table_properties = x_lance_table_properties;
 
     let uri_str = format!("{}/v1/table/{id}/create", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -316,14 +320,18 @@ pub async fn create_table(configuration: &configuration::Configuration, id: &str
 }
 
 /// Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously.  Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
-pub async fn create_table_index(configuration: &configuration::Configuration, id: &str, create_table_index_request: models::CreateTableIndexRequest) -> Result<models::CreateTableIndexResponse, Error<CreateTableIndexError>> {
+pub async fn create_table_index(configuration: &configuration::Configuration, id: &str, create_table_index_request: models::CreateTableIndexRequest, delimiter: Option<&str>) -> Result<models::CreateTableIndexResponse, Error<CreateTableIndexError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_create_table_index_request = create_table_index_request;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/create_index", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -355,14 +363,18 @@ pub async fn create_table_index(configuration: &configuration::Configuration, id
 }
 
 /// Delete rows from a table based on a SQL predicate. Returns the number of rows that were deleted. 
-pub async fn delete_from_table(configuration: &configuration::Configuration, id: &str, delete_from_table_request: models::DeleteFromTableRequest) -> Result<models::DeleteFromTableResponse, Error<DeleteFromTableError>> {
+pub async fn delete_from_table(configuration: &configuration::Configuration, id: &str, delete_from_table_request: models::DeleteFromTableRequest, delimiter: Option<&str>) -> Result<models::DeleteFromTableResponse, Error<DeleteFromTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_delete_from_table_request = delete_from_table_request;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/delete", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -480,15 +492,19 @@ pub async fn describe_table(configuration: &configuration::Configuration, id: &s
 }
 
 /// Get statistics for a specific index on a table. Returns information about the index type, distance type (for vector indices), and row counts. 
-pub async fn describe_table_index_stats(configuration: &configuration::Configuration, id: &str, index_name: &str, describe_table_index_stats_request: models::DescribeTableIndexStatsRequest) -> Result<models::DescribeTableIndexStatsResponse, Error<DescribeTableIndexStatsError>> {
+pub async fn describe_table_index_stats(configuration: &configuration::Configuration, id: &str, index_name: &str, describe_table_index_stats_request: models::DescribeTableIndexStatsRequest, delimiter: Option<&str>) -> Result<models::DescribeTableIndexStatsResponse, Error<DescribeTableIndexStatsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_index_name = index_name;
     let p_describe_table_index_stats_request = describe_table_index_stats_request;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/index/{index_name}/stats", configuration.base_path, id=crate::apis::urlencode(p_id), index_name=crate::apis::urlencode(p_index_name));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -563,15 +579,19 @@ pub async fn drop_table(configuration: &configuration::Configuration, id: &str, 
 }
 
 /// Insert new records into an existing table using Arrow IPC format. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
-pub async fn insert_into_table(configuration: &configuration::Configuration, id: &str, body: Vec<u8>, mode: Option<&str>) -> Result<models::InsertIntoTableResponse, Error<InsertIntoTableError>> {
+pub async fn insert_into_table(configuration: &configuration::Configuration, id: &str, body: Vec<u8>, delimiter: Option<&str>, mode: Option<&str>) -> Result<models::InsertIntoTableResponse, Error<InsertIntoTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_body = body;
+    let p_delimiter = delimiter;
     let p_mode = mode;
 
     let uri_str = format!("{}/v1/table/{id}/insert", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref param_value) = p_mode {
         req_builder = req_builder.query(&[("mode", &param_value.to_string())]);
     }
@@ -606,14 +626,18 @@ pub async fn insert_into_table(configuration: &configuration::Configuration, id:
 }
 
 /// List all indices created on a table. Returns information about each index including name, columns, status, and UUID. 
-pub async fn list_table_indices(configuration: &configuration::Configuration, id: &str, list_table_indices_request: models::ListTableIndicesRequest) -> Result<models::ListTableIndicesResponse, Error<ListTableIndicesError>> {
+pub async fn list_table_indices(configuration: &configuration::Configuration, id: &str, list_table_indices_request: models::ListTableIndicesRequest, delimiter: Option<&str>) -> Result<models::ListTableIndicesResponse, Error<ListTableIndicesError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_list_table_indices_request = list_table_indices_request;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/index/list", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -688,11 +712,12 @@ pub async fn list_tables(configuration: &configuration::Configuration, id: &str,
 }
 
 /// Performs a merge insert (upsert) operation on a table. This operation updates existing rows based on a matching column and inserts new rows that don't match. Returns the number of rows inserted and updated. 
-pub async fn merge_insert_into_table(configuration: &configuration::Configuration, id: &str, on: &str, body: Vec<u8>, when_matched_update_all: Option<bool>, when_matched_update_all_filt: Option<&str>, when_not_matched_insert_all: Option<bool>, when_not_matched_by_source_delete: Option<bool>, when_not_matched_by_source_delete_filt: Option<&str>) -> Result<models::MergeInsertIntoTableResponse, Error<MergeInsertIntoTableError>> {
+pub async fn merge_insert_into_table(configuration: &configuration::Configuration, id: &str, on: &str, body: Vec<u8>, delimiter: Option<&str>, when_matched_update_all: Option<bool>, when_matched_update_all_filt: Option<&str>, when_not_matched_insert_all: Option<bool>, when_not_matched_by_source_delete: Option<bool>, when_not_matched_by_source_delete_filt: Option<&str>) -> Result<models::MergeInsertIntoTableResponse, Error<MergeInsertIntoTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_on = on;
     let p_body = body;
+    let p_delimiter = delimiter;
     let p_when_matched_update_all = when_matched_update_all;
     let p_when_matched_update_all_filt = when_matched_update_all_filt;
     let p_when_not_matched_insert_all = when_not_matched_insert_all;
@@ -702,6 +727,9 @@ pub async fn merge_insert_into_table(configuration: &configuration::Configuratio
     let uri_str = format!("{}/v1/table/{id}/merge_insert", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     req_builder = req_builder.query(&[("on", &p_on.to_string())]);
     if let Some(ref param_value) = p_when_matched_update_all {
         req_builder = req_builder.query(&[("when_matched_update_all", &param_value.to_string())]);
@@ -749,14 +777,18 @@ pub async fn merge_insert_into_table(configuration: &configuration::Configuratio
 }
 
 /// Query a table with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
-pub async fn query_table(configuration: &configuration::Configuration, id: &str, query_table_request: models::QueryTableRequest) -> Result<reqwest::Response, Error<QueryTableError>> {
+pub async fn query_table(configuration: &configuration::Configuration, id: &str, query_table_request: models::QueryTableRequest, delimiter: Option<&str>) -> Result<reqwest::Response, Error<QueryTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_query_table_request = query_table_request;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/query", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
@@ -852,14 +884,18 @@ pub async fn table_exists(configuration: &configuration::Configuration, id: &str
 }
 
 /// Update existing rows in a table using SQL expressions. Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
-pub async fn update_table(configuration: &configuration::Configuration, id: &str, update_table_request: models::UpdateTableRequest) -> Result<models::UpdateTableResponse, Error<UpdateTableError>> {
+pub async fn update_table(configuration: &configuration::Configuration, id: &str, update_table_request: models::UpdateTableRequest, delimiter: Option<&str>) -> Result<models::UpdateTableResponse, Error<UpdateTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_update_table_request = update_table_request;
+    let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/update", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
