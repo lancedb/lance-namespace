@@ -21,6 +21,7 @@ pub struct CreateTableResponse {
     pub location: String,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
+    /// Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. 
     #[serde(rename = "storage_options", skip_serializing_if = "Option::is_none")]
     pub storage_options: Option<std::collections::HashMap<String, String>>,
 }

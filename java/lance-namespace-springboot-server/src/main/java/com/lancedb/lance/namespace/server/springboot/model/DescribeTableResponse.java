@@ -157,11 +157,16 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Get storageOptions
+   * Configuration options to be used to access storage. The available options depend on the type of
+   * storage in use. These will be passed directly to Lance to initialize storage access.
    *
    * @return storageOptions
    */
-  @Schema(name = "storage_options", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "storage_options",
+      description =
+          "Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("storage_options")
   public Map<String, String> getStorageOptions() {
     return storageOptions;
