@@ -42,6 +42,9 @@ class TestCreateTableResponse(unittest.TestCase):
                 location = '',
                 properties = {
                     'key' : ''
+                    },
+                storage_options = {
+                    'key' : ''
                     }
             )
         else:

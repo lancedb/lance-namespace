@@ -32,7 +32,8 @@ class DescribeTableResponse(BaseModel):
     location: StrictStr
     var_schema: JsonSchema = Field(alias="schema")
     properties: Optional[Dict[str, StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["version", "location", "schema", "properties"]
+    storage_options: Optional[Dict[str, StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["version", "location", "schema", "properties", "storage_options"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -91,7 +92,8 @@ class DescribeTableResponse(BaseModel):
             "version": obj.get("version"),
             "location": obj.get("location"),
             "schema": JsonSchema.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
-            "properties": obj.get("properties")
+            "properties": obj.get("properties"),
+            "storage_options": obj.get("storage_options")
         })
         return _obj
 

@@ -39,6 +39,8 @@ public class DescribeTableResponse {
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
+  @Valid private Map<String, String> storageOptions = new HashMap<>();
+
   public DescribeTableResponse() {
     super();
   }
@@ -141,6 +143,34 @@ public class DescribeTableResponse {
     this.properties = properties;
   }
 
+  public DescribeTableResponse storageOptions(Map<String, String> storageOptions) {
+    this.storageOptions = storageOptions;
+    return this;
+  }
+
+  public DescribeTableResponse putStorageOptionsItem(String key, String storageOptionsItem) {
+    if (this.storageOptions == null) {
+      this.storageOptions = new HashMap<>();
+    }
+    this.storageOptions.put(key, storageOptionsItem);
+    return this;
+  }
+
+  /**
+   * Get storageOptions
+   *
+   * @return storageOptions
+   */
+  @Schema(name = "storage_options", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("storage_options")
+  public Map<String, String> getStorageOptions() {
+    return storageOptions;
+  }
+
+  public void setStorageOptions(Map<String, String> storageOptions) {
+    this.storageOptions = storageOptions;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -153,12 +183,13 @@ public class DescribeTableResponse {
     return Objects.equals(this.version, describeTableResponse.version)
         && Objects.equals(this.location, describeTableResponse.location)
         && Objects.equals(this.schema, describeTableResponse.schema)
-        && Objects.equals(this.properties, describeTableResponse.properties);
+        && Objects.equals(this.properties, describeTableResponse.properties)
+        && Objects.equals(this.storageOptions, describeTableResponse.storageOptions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version, location, schema, properties);
+    return Objects.hash(version, location, schema, properties, storageOptions);
   }
 
   @Override
@@ -169,6 +200,7 @@ public class DescribeTableResponse {
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
+    sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
     sb.append("}");
     return sb.toString();
   }

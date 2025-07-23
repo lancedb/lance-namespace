@@ -21,6 +21,8 @@ pub struct DescribeTableResponse {
     pub schema: Box<models::JsonSchema>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
+    #[serde(rename = "storage_options", skip_serializing_if = "Option::is_none")]
+    pub storage_options: Option<std::collections::HashMap<String, String>>,
 }
 
 impl DescribeTableResponse {
@@ -30,6 +32,7 @@ impl DescribeTableResponse {
             location,
             schema: Box::new(schema),
             properties: None,
+            storage_options: None,
         }
     }
 }

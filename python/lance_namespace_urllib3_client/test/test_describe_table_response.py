@@ -54,6 +54,9 @@ class TestDescribeTableResponse(unittest.TestCase):
                         }, ),
                 properties = {
                     'key' : ''
+                    },
+                storage_options = {
+                    'key' : ''
                     }
             )
         else:

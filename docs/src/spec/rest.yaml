@@ -1319,6 +1319,10 @@ components:
           type: object
           additionalProperties:
             type: string
+        storage_options:
+          type: object
+          additionalProperties:
+            type: string
 
     CountTableRowsRequest:
       type: object
@@ -1969,6 +1973,10 @@ components:
         location:
           type: string
         properties:
+          type: object
+          additionalProperties:
+            type: string
+        storage_options:
           type: object
           additionalProperties:
             type: string

@@ -11,6 +11,7 @@
 |**location** | **String** |  |  |
 |**schema** | [**JsonSchema**](JsonSchema.md) |  |  |
 |**properties** | **Map&lt;String, String&gt;** |  |  [optional] |
+|**storageOptions** | **Map&lt;String, String&gt;** |  |  [optional] |
 
 
 

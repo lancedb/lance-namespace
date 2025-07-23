@@ -21,6 +21,8 @@ pub struct CreateTableResponse {
     pub location: String,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
+    #[serde(rename = "storage_options", skip_serializing_if = "Option::is_none")]
+    pub storage_options: Option<std::collections::HashMap<String, String>>,
 }
 
 impl CreateTableResponse {
@@ -30,6 +32,7 @@ impl CreateTableResponse {
             namespace,
             location,
             properties: None,
+            storage_options: None,
         }
     }
 }

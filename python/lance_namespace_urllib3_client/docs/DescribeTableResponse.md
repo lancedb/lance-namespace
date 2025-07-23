@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **location** | **str** |  | 
 **var_schema** | [**JsonSchema**](JsonSchema.md) |  | 
 **properties** | **Dict[str, str]** |  | [optional] 
+**storage_options** | **Dict[str, str]** |  | [optional] 
 
 ## Example
 

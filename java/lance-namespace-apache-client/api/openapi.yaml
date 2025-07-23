@@ -1875,6 +1875,8 @@ components:
         version: 0
         properties:
           key: properties
+        storage_options:
+          key: storage_options
       properties:
         version:
           format: int64
@@ -1885,6 +1887,9 @@ components:
         schema:
           $ref: '#/components/schemas/JsonSchema'
         properties:
+          additionalProperties:
+            type: string
+        storage_options:
           additionalProperties:
             type: string
       required:
@@ -2679,6 +2684,8 @@ components:
         location: location
         properties:
           key: properties
+        storage_options:
+          key: storage_options
       properties:
         name:
           type: string
@@ -2689,6 +2696,9 @@ components:
         location:
           type: string
         properties:
+          additionalProperties:
+            type: string
+        storage_options:
           additionalProperties:
             type: string
       required:

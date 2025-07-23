@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **namespace** | **List[str]** |  | 
 **location** | **str** |  | 
 **properties** | **Dict[str, str]** |  | [optional] 
+**storage_options** | **Dict[str, str]** |  | [optional] 
 
 ## Example
 

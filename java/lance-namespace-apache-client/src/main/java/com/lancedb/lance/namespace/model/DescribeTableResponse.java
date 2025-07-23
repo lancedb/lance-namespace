@@ -29,7 +29,8 @@ import java.util.StringJoiner;
   DescribeTableResponse.JSON_PROPERTY_VERSION,
   DescribeTableResponse.JSON_PROPERTY_LOCATION,
   DescribeTableResponse.JSON_PROPERTY_SCHEMA,
-  DescribeTableResponse.JSON_PROPERTY_PROPERTIES
+  DescribeTableResponse.JSON_PROPERTY_PROPERTIES,
+  DescribeTableResponse.JSON_PROPERTY_STORAGE_OPTIONS
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -46,6 +47,9 @@ public class DescribeTableResponse {
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
+
+  public static final String JSON_PROPERTY_STORAGE_OPTIONS = "storage_options";
+  @javax.annotation.Nullable private Map<String, String> storageOptions = new HashMap<>();
 
   public DescribeTableResponse() {}
 
@@ -154,6 +158,39 @@ public class DescribeTableResponse {
     this.properties = properties;
   }
 
+  public DescribeTableResponse storageOptions(
+      @javax.annotation.Nullable Map<String, String> storageOptions) {
+
+    this.storageOptions = storageOptions;
+    return this;
+  }
+
+  public DescribeTableResponse putStorageOptionsItem(String key, String storageOptionsItem) {
+    if (this.storageOptions == null) {
+      this.storageOptions = new HashMap<>();
+    }
+    this.storageOptions.put(key, storageOptionsItem);
+    return this;
+  }
+
+  /**
+   * Get storageOptions
+   *
+   * @return storageOptions
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_STORAGE_OPTIONS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Map<String, String> getStorageOptions() {
+    return storageOptions;
+  }
+
+  @JsonProperty(JSON_PROPERTY_STORAGE_OPTIONS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setStorageOptions(@javax.annotation.Nullable Map<String, String> storageOptions) {
+    this.storageOptions = storageOptions;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -166,12 +203,13 @@ public class DescribeTableResponse {
     return Objects.equals(this.version, describeTableResponse.version)
         && Objects.equals(this.location, describeTableResponse.location)
         && Objects.equals(this.schema, describeTableResponse.schema)
-        && Objects.equals(this.properties, describeTableResponse.properties);
+        && Objects.equals(this.properties, describeTableResponse.properties)
+        && Objects.equals(this.storageOptions, describeTableResponse.storageOptions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version, location, schema, properties);
+    return Objects.hash(version, location, schema, properties, storageOptions);
   }
 
   @Override
@@ -182,6 +220,7 @@ public class DescribeTableResponse {
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
+    sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -278,6 +317,28 @@ public class DescribeTableResponse {
                       : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
                   getProperties().get(_key),
                   URLEncoder.encode(String.valueOf(getProperties().get(_key)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
+      }
+    }
+
+    // add `storage_options` to the URL query string
+    if (getStorageOptions() != null) {
+      for (String _key : getStorageOptions().keySet()) {
+        try {
+          joiner.add(
+              String.format(
+                  "%sstorage_options%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
+                  getStorageOptions().get(_key),
+                  URLEncoder.encode(String.valueOf(getStorageOptions().get(_key)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported
