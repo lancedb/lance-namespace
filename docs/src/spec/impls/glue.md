@@ -6,7 +6,7 @@ For more details about AWS Glue, please read the [AWS Glue Data Catalog Document
 ## Namespace Mapping
 
 An AWS Glue Data Catalog can be viewed as the root Lance namespace.
-A database in Glue maps to the first-level Lance namespace,
+A database in Glue maps to the first level Lance namespace,
 to form a 2-level Lance namespace as a whole.
 
 ## Table Definition
@@ -19,6 +19,7 @@ object in AWS Glue with the following requirements:
 3. the [`Parameters`](https://docs.aws.amazon.com/glue/latest/webapi/API_Table.html#Glue-Type-Table-Parameters) must follow:
     1. there is a key `table_type` set to `lance` (case insensitive)
     2. there is a key `managed_by` set to either `storage` or `impl` (case insensitive). If not set, default to `storage`
+    3. there is a key `version` set to the latest numeric version number of the table. This field will only be respected if `managed_by=impl`
 
 ## Requirement for Implementation Managed Table
 
