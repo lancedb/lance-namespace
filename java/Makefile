@@ -16,7 +16,7 @@ clean-java-apache-client:
 	rm -rf lance-namespace-apache-client
 
 gen-java-apache-client: clean-java-apache-client
-	openapi-generator-cli generate \
+	uv run openapi-generator-cli generate \
 	  -i ../docs/src/spec/rest.yaml \
 	  -g java \
 	  -o lance-namespace-apache-client \
@@ -38,7 +38,7 @@ clean-java-springboot-server:
 	rm -rf lance-namespace-springboot-server
 
 gen-java-springboot-server: clean-java-springboot-server
-	openapi-generator-cli generate \
+	uv run openapi-generator-cli generate \
 	  -i ../docs/src/spec/rest.yaml \
 	  -g spring \
       -o lance-namespace-springboot-server \

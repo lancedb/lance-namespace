@@ -33,9 +33,7 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DropNamespaceRequest {
 
-  private String name;
-
-  @Valid private List<String> parent = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   /**
    * The mode for dropping a namespace, deciding the server behavior when the namespace to drop is
@@ -116,52 +114,32 @@ public class DropNamespaceRequest {
 
   private BehaviorEnum behavior;
 
-  public DropNamespaceRequest name(String name) {
-    this.name = name;
+  public DropNamespaceRequest id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public DropNamespaceRequest parent(List<String> parent) {
-    this.parent = parent;
-    return this;
-  }
-
-  public DropNamespaceRequest addParentItem(String parentItem) {
-    if (this.parent == null) {
-      this.parent = new ArrayList<>();
+  public DropNamespaceRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.parent.add(parentItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get parent
+   * Get id
    *
-   * @return parent
+   * @return id
    */
-  @Schema(name = "parent", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("parent")
-  public List<String> getParent() {
-    return parent;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setParent(List<String> parent) {
-    this.parent = parent;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   public DropNamespaceRequest mode(ModeEnum mode) {
@@ -226,23 +204,21 @@ public class DropNamespaceRequest {
       return false;
     }
     DropNamespaceRequest dropNamespaceRequest = (DropNamespaceRequest) o;
-    return Objects.equals(this.name, dropNamespaceRequest.name)
-        && Objects.equals(this.parent, dropNamespaceRequest.parent)
+    return Objects.equals(this.id, dropNamespaceRequest.id)
         && Objects.equals(this.mode, dropNamespaceRequest.mode)
         && Objects.equals(this.behavior, dropNamespaceRequest.behavior);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent, mode, behavior);
+    return Objects.hash(id, mode, behavior);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DropNamespaceRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    behavior: ").append(toIndentedString(behavior)).append("\n");
     sb.append("}");

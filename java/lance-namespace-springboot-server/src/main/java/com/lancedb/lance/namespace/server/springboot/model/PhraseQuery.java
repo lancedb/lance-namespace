@@ -28,7 +28,7 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class PhraseQuery {
 
-  private String column = null;
+  private String column;
 
   private Integer slop;
 

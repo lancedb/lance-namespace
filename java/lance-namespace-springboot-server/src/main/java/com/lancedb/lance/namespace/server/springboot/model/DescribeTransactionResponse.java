@@ -31,8 +31,6 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DescribeTransactionResponse {
 
-  private String id;
-
   private TransactionStatus status;
 
   @Valid private Map<String, String> properties = new HashMap<>();
@@ -42,30 +40,8 @@ public class DescribeTransactionResponse {
   }
 
   /** Constructor with only required parameters */
-  public DescribeTransactionResponse(String id, TransactionStatus status) {
-    this.id = id;
+  public DescribeTransactionResponse(TransactionStatus status) {
     this.status = status;
-  }
-
-  public DescribeTransactionResponse id(String id) {
-    this.id = id;
-    return this;
-  }
-
-  /**
-   * Get id
-   *
-   * @return id
-   */
-  @NotNull
-  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("id")
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
   }
 
   public DescribeTransactionResponse status(TransactionStatus status) {
@@ -127,21 +103,19 @@ public class DescribeTransactionResponse {
       return false;
     }
     DescribeTransactionResponse describeTransactionResponse = (DescribeTransactionResponse) o;
-    return Objects.equals(this.id, describeTransactionResponse.id)
-        && Objects.equals(this.status, describeTransactionResponse.status)
+    return Objects.equals(this.status, describeTransactionResponse.status)
         && Objects.equals(this.properties, describeTransactionResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, status, properties);
+    return Objects.hash(status, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeTransactionResponse {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");

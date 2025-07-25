@@ -35,10 +35,6 @@ class TestRegisterTableResponse(unittest.TestCase):
         model = RegisterTableResponse()
         if include_optional:
             return RegisterTableResponse(
-                name = '',
-                namespace = [
-                    ''
-                    ],
                 location = '',
                 properties = {
                     'key' : ''
@@ -46,10 +42,6 @@ class TestRegisterTableResponse(unittest.TestCase):
             )
         else:
             return RegisterTableResponse(
-                name = '',
-                namespace = [
-                    ''
-                    ],
                 location = '',
         )
         """

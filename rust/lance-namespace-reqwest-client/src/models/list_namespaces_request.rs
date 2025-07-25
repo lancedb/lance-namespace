@@ -13,22 +13,22 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ListNamespacesRequest {
-    #[serde(rename = "parent", skip_serializing_if = "Option::is_none")]
-    pub parent: Option<Vec<String>>,
-    /// An opaque token that allows pagination for list APIs (e.g. ListNamespaces). For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available. After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request. Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.
-    #[serde(rename = "pageToken", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
+    /// An opaque token that allows pagination for list operations (e.g. ListNamespaces).  For an initial request of a list operation,  if the implementation cannot return all items in one response, or if there are more items than the page limit specified in the request, the implementation must return a page token in the response, indicating there are more results available.  After the initial request,  the value of the page token from each response must be used as the page token value for the next request.  Caller must interpret either `null`,  missing value or empty string value of the page token from the implementation's response as the end of the listing results. 
+    #[serde(rename = "page_token", skip_serializing_if = "Option::is_none")]
     pub page_token: Option<String>,
-    /// An inclusive upper bound of the number of results that a client will receive.
-    #[serde(rename = "pageSize", skip_serializing_if = "Option::is_none")]
-    pub page_size: Option<i32>,
+    /// An inclusive upper bound of the  number of results that a caller will receive. 
+    #[serde(rename = "limit", skip_serializing_if = "Option::is_none")]
+    pub limit: Option<i32>,
 }
 
 impl ListNamespacesRequest {
     pub fn new() -> ListNamespacesRequest {
         ListNamespacesRequest {
-            parent: None,
+            id: None,
             page_token: None,
-            page_size: None,
+            limit: None,
         }
     }
 }

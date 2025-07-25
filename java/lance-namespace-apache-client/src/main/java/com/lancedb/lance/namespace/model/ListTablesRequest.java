@@ -26,55 +26,55 @@ import java.util.StringJoiner;
 
 /** ListTablesRequest */
 @JsonPropertyOrder({
-  ListTablesRequest.JSON_PROPERTY_PARENT,
+  ListTablesRequest.JSON_PROPERTY_ID,
   ListTablesRequest.JSON_PROPERTY_PAGE_TOKEN,
-  ListTablesRequest.JSON_PROPERTY_PAGE_SIZE
+  ListTablesRequest.JSON_PROPERTY_LIMIT
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class ListTablesRequest {
-  public static final String JSON_PROPERTY_PARENT = "parent";
-  @javax.annotation.Nullable private List<String> parent = new ArrayList<>();
+  public static final String JSON_PROPERTY_ID = "id";
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
-  public static final String JSON_PROPERTY_PAGE_TOKEN = "pageToken";
+  public static final String JSON_PROPERTY_PAGE_TOKEN = "page_token";
   @javax.annotation.Nullable private String pageToken;
 
-  public static final String JSON_PROPERTY_PAGE_SIZE = "pageSize";
-  @javax.annotation.Nullable private Integer pageSize;
+  public static final String JSON_PROPERTY_LIMIT = "limit";
+  @javax.annotation.Nullable private Integer limit;
 
   public ListTablesRequest() {}
 
-  public ListTablesRequest parent(@javax.annotation.Nullable List<String> parent) {
+  public ListTablesRequest id(@javax.annotation.Nullable List<String> id) {
 
-    this.parent = parent;
+    this.id = id;
     return this;
   }
 
-  public ListTablesRequest addParentItem(String parentItem) {
-    if (this.parent == null) {
-      this.parent = new ArrayList<>();
+  public ListTablesRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.parent.add(parentItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get parent
+   * Get id
    *
-   * @return parent
+   * @return id
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_PARENT)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getParent() {
-    return parent;
+  public List<String> getId() {
+    return id;
   }
 
-  @JsonProperty(JSON_PROPERTY_PARENT)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setParent(@javax.annotation.Nullable List<String> parent) {
-    this.parent = parent;
+  public void setId(@javax.annotation.Nullable List<String> id) {
+    this.id = id;
   }
 
   public ListTablesRequest pageToken(@javax.annotation.Nullable String pageToken) {
@@ -84,14 +84,14 @@ public class ListTablesRequest {
   }
 
   /**
-   * An opaque token that allows pagination for list APIs (e.g. ListNamespaces). For an initial
-   * client request for a list API, if the server cannot return all items in one response, or if
-   * there are more items than the &#x60;pageSize&#x60; specified in the client request, the server
-   * must return a &#x60;nextPageToken&#x60; in the response indicating there are more results
-   * available. After the initial request, the value of &#x60;nextPageToken&#x60; from each response
-   * must be used by the client as the &#x60;pageToken&#x60; parameter value for the next request.
-   * Clients must interpret either &#x60;null&#x60;, missing value or empty string value of
-   * &#x60;nextPageToken&#x60; from a server response as the end of the listing results.
+   * An opaque token that allows pagination for list operations (e.g. ListNamespaces). For an
+   * initial request of a list operation, if the implementation cannot return all items in one
+   * response, or if there are more items than the page limit specified in the request, the
+   * implementation must return a page token in the response, indicating there are more results
+   * available. After the initial request, the value of the page token from each response must be
+   * used as the page token value for the next request. Caller must interpret either
+   * &#x60;null&#x60;, missing value or empty string value of the page token from the
+   * implementation&#39;s response as the end of the listing results.
    *
    * @return pageToken
    */
@@ -108,28 +108,28 @@ public class ListTablesRequest {
     this.pageToken = pageToken;
   }
 
-  public ListTablesRequest pageSize(@javax.annotation.Nullable Integer pageSize) {
+  public ListTablesRequest limit(@javax.annotation.Nullable Integer limit) {
 
-    this.pageSize = pageSize;
+    this.limit = limit;
     return this;
   }
 
   /**
-   * An inclusive upper bound of the number of results that a client will receive.
+   * An inclusive upper bound of the number of results that a caller will receive.
    *
-   * @return pageSize
+   * @return limit
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_PAGE_SIZE)
+  @JsonProperty(JSON_PROPERTY_LIMIT)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Integer getPageSize() {
-    return pageSize;
+  public Integer getLimit() {
+    return limit;
   }
 
-  @JsonProperty(JSON_PROPERTY_PAGE_SIZE)
+  @JsonProperty(JSON_PROPERTY_LIMIT)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPageSize(@javax.annotation.Nullable Integer pageSize) {
-    this.pageSize = pageSize;
+  public void setLimit(@javax.annotation.Nullable Integer limit) {
+    this.limit = limit;
   }
 
   @Override
@@ -141,23 +141,23 @@ public class ListTablesRequest {
       return false;
     }
     ListTablesRequest listTablesRequest = (ListTablesRequest) o;
-    return Objects.equals(this.parent, listTablesRequest.parent)
+    return Objects.equals(this.id, listTablesRequest.id)
         && Objects.equals(this.pageToken, listTablesRequest.pageToken)
-        && Objects.equals(this.pageSize, listTablesRequest.pageSize);
+        && Objects.equals(this.limit, listTablesRequest.limit);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(parent, pageToken, pageSize);
+    return Objects.hash(id, pageToken, limit);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ListTablesRequest {\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
-    sb.append("    pageSize: ").append(toIndentedString(pageSize)).append("\n");
+    sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -204,19 +204,19 @@ public class ListTablesRequest {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `parent` to the URL query string
-    if (getParent() != null) {
-      for (int i = 0; i < getParent().size(); i++) {
+    // add `id` to the URL query string
+    if (getId() != null) {
+      for (int i = 0; i < getId().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%sparent%s%s=%s",
+                  "%sid%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getParent().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported
@@ -225,12 +225,12 @@ public class ListTablesRequest {
       }
     }
 
-    // add `pageToken` to the URL query string
+    // add `page_token` to the URL query string
     if (getPageToken() != null) {
       try {
         joiner.add(
             String.format(
-                "%spageToken%s=%s",
+                "%spage_token%s=%s",
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getPageToken()), "UTF-8")
@@ -241,16 +241,15 @@ public class ListTablesRequest {
       }
     }
 
-    // add `pageSize` to the URL query string
-    if (getPageSize() != null) {
+    // add `limit` to the URL query string
+    if (getLimit() != null) {
       try {
         joiner.add(
             String.format(
-                "%spageSize%s=%s",
+                "%slimit%s=%s",
                 prefix,
                 suffix,
-                URLEncoder.encode(String.valueOf(getPageSize()), "UTF-8")
-                    .replaceAll("\\+", "%20")));
+                URLEncoder.encode(String.valueOf(getLimit()), "UTF-8").replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

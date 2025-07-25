@@ -7,9 +7,9 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**name** | **String** | The table name |  |
-|**namespace** | **List&lt;String&gt;** | The namespace identifier |  |
+|**id** | **List&lt;String&gt;** |  |  [optional] |
 |**version** | **Long** | Optional table version to get stats for |  [optional] |
+|**indexName** | **String** | Name of the index |  [optional] |
 
 
 

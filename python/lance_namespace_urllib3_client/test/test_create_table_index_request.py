@@ -35,8 +35,7 @@ class TestCreateTableIndexRequest(unittest.TestCase):
         model = CreateTableIndexRequest()
         if include_optional:
             return CreateTableIndexRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ],
                 column = '',
@@ -53,10 +52,6 @@ class TestCreateTableIndexRequest(unittest.TestCase):
             )
         else:
             return CreateTableIndexRequest(
-                name = '',
-                namespace = [
-                    ''
-                    ],
                 column = '',
                 index_type = 'BTREE',
         )

@@ -29,8 +29,7 @@ class QueryTableRequest(BaseModel):
     """
     QueryTableRequest
     """ # noqa: E501
-    name: StrictStr
-    namespace: List[StrictStr]
+    id: Optional[List[StrictStr]] = None
     bypass_vector_index: Optional[StrictBool] = Field(default=None, description="Whether to bypass vector index")
     columns: Optional[List[StrictStr]] = Field(default=None, description="Optional list of columns to return")
     distance_type: Optional[StrictStr] = Field(default=None, description="Distance metric to use")
@@ -49,7 +48,7 @@ class QueryTableRequest(BaseModel):
     vector_column: Optional[StrictStr] = Field(default=None, description="Name of the vector column to search")
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Table version to query")
     with_row_id: Optional[StrictBool] = Field(default=None, description="If true, return the row id as a column called `_rowid`")
-    __properties: ClassVar[List[str]] = ["name", "namespace", "bypass_vector_index", "columns", "distance_type", "ef", "fast_search", "filter", "full_text_query", "k", "lower_bound", "nprobes", "offset", "prefilter", "refine_factor", "upper_bound", "vector", "vector_column", "version", "with_row_id"]
+    __properties: ClassVar[List[str]] = ["id", "bypass_vector_index", "columns", "distance_type", "ef", "fast_search", "filter", "full_text_query", "k", "lower_bound", "nprobes", "offset", "prefilter", "refine_factor", "upper_bound", "vector", "vector_column", "version", "with_row_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -96,76 +95,6 @@ class QueryTableRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of vector
         if self.vector:
             _dict['vector'] = self.vector.to_dict()
-        # set to None if bypass_vector_index (nullable) is None
-        # and model_fields_set contains the field
-        if self.bypass_vector_index is None and "bypass_vector_index" in self.model_fields_set:
-            _dict['bypass_vector_index'] = None
-
-        # set to None if distance_type (nullable) is None
-        # and model_fields_set contains the field
-        if self.distance_type is None and "distance_type" in self.model_fields_set:
-            _dict['distance_type'] = None
-
-        # set to None if ef (nullable) is None
-        # and model_fields_set contains the field
-        if self.ef is None and "ef" in self.model_fields_set:
-            _dict['ef'] = None
-
-        # set to None if fast_search (nullable) is None
-        # and model_fields_set contains the field
-        if self.fast_search is None and "fast_search" in self.model_fields_set:
-            _dict['fast_search'] = None
-
-        # set to None if filter (nullable) is None
-        # and model_fields_set contains the field
-        if self.filter is None and "filter" in self.model_fields_set:
-            _dict['filter'] = None
-
-        # set to None if lower_bound (nullable) is None
-        # and model_fields_set contains the field
-        if self.lower_bound is None and "lower_bound" in self.model_fields_set:
-            _dict['lower_bound'] = None
-
-        # set to None if nprobes (nullable) is None
-        # and model_fields_set contains the field
-        if self.nprobes is None and "nprobes" in self.model_fields_set:
-            _dict['nprobes'] = None
-
-        # set to None if offset (nullable) is None
-        # and model_fields_set contains the field
-        if self.offset is None and "offset" in self.model_fields_set:
-            _dict['offset'] = None
-
-        # set to None if prefilter (nullable) is None
-        # and model_fields_set contains the field
-        if self.prefilter is None and "prefilter" in self.model_fields_set:
-            _dict['prefilter'] = None
-
-        # set to None if refine_factor (nullable) is None
-        # and model_fields_set contains the field
-        if self.refine_factor is None and "refine_factor" in self.model_fields_set:
-            _dict['refine_factor'] = None
-
-        # set to None if upper_bound (nullable) is None
-        # and model_fields_set contains the field
-        if self.upper_bound is None and "upper_bound" in self.model_fields_set:
-            _dict['upper_bound'] = None
-
-        # set to None if vector_column (nullable) is None
-        # and model_fields_set contains the field
-        if self.vector_column is None and "vector_column" in self.model_fields_set:
-            _dict['vector_column'] = None
-
-        # set to None if version (nullable) is None
-        # and model_fields_set contains the field
-        if self.version is None and "version" in self.model_fields_set:
-            _dict['version'] = None
-
-        # set to None if with_row_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.with_row_id is None and "with_row_id" in self.model_fields_set:
-            _dict['with_row_id'] = None
-
         return _dict
 
     @classmethod
@@ -178,8 +107,7 @@ class QueryTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace"),
+            "id": obj.get("id"),
             "bypass_vector_index": obj.get("bypass_vector_index"),
             "columns": obj.get("columns"),
             "distance_type": obj.get("distance_type"),

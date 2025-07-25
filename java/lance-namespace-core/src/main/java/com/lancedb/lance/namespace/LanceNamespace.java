@@ -55,41 +55,17 @@ import com.lancedb.lance.namespace.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
 import com.lancedb.lance.namespace.model.UpdateTableRequest;
 import com.lancedb.lance.namespace.model.UpdateTableResponse;
-import com.lancedb.lance.namespace.util.DynConstructors;
 
 import java.util.Map;
 
-/** TODO: add documentation */
 public interface LanceNamespace {
-  static LanceNamespace create(String name, Map<String, String> properties, Object conf) {
-    String impl =
-        properties.getOrDefault(NamespaceProperties.NS_IMPL, NamespaceProperties.NS_IMPL_DEFAULT);
-
-    LanceNamespace ns;
-    try {
-      ns =
-          (LanceNamespace)
-              DynConstructors.builder(LanceNamespace.class).impl(impl).buildChecked().newInstance();
-    } catch (NoSuchMethodException e) {
-      throw new IllegalArgumentException(
-          String.format("Failed to construct namespace, impl: %s", impl), e);
-    }
-
-    if (ns instanceof Configurable && conf != null) {
-      ((Configurable) ns).setConf(conf);
-    }
-
-    ns.initialize(name, properties);
-    return ns;
-  }
 
   /**
-   * Initialize namespace with custom name and configuration properties.
+   * Initialize namespace with custom configuration properties.
    *
-   * @param name a custom name for the namespace
    * @param properties namespace conf properties
    */
-  default void initialize(String name, Map<String, String> properties) {}
+  default void initialize(Map<String, String> properties) {}
 
   default ListNamespacesResponse listNamespaces(ListNamespacesRequest request) {
     throw new UnsupportedOperationException("Not supported: listNamespaces");

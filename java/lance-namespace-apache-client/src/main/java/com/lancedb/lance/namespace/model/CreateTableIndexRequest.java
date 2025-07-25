@@ -28,8 +28,7 @@ import java.util.StringJoiner;
 
 /** CreateTableIndexRequest */
 @JsonPropertyOrder({
-  CreateTableIndexRequest.JSON_PROPERTY_NAME,
-  CreateTableIndexRequest.JSON_PROPERTY_NAMESPACE,
+  CreateTableIndexRequest.JSON_PROPERTY_ID,
   CreateTableIndexRequest.JSON_PROPERTY_COLUMN,
   CreateTableIndexRequest.JSON_PROPERTY_INDEX_TYPE,
   CreateTableIndexRequest.JSON_PROPERTY_METRIC_TYPE,
@@ -46,11 +45,8 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class CreateTableIndexRequest {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nonnull private String name;
-
-  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
+  public static final String JSON_PROPERTY_ID = "id";
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public static final String JSON_PROPERTY_COLUMN = "column";
   @javax.annotation.Nonnull private String column;
@@ -65,9 +61,9 @@ public class CreateTableIndexRequest {
 
     IVF_FLAT(String.valueOf("IVF_FLAT")),
 
-    IVF_HNSW_SQ(String.valueOf("IVF_HNSW_SQ")),
-
     IVF_PQ(String.valueOf("IVF_PQ")),
+
+    IVF_HNSW_SQ(String.valueOf("IVF_HNSW_SQ")),
 
     FTS(String.valueOf("FTS"));
 
@@ -165,60 +161,36 @@ public class CreateTableIndexRequest {
 
   public CreateTableIndexRequest() {}
 
-  public CreateTableIndexRequest name(@javax.annotation.Nonnull String name) {
+  public CreateTableIndexRequest id(@javax.annotation.Nullable List<String> id) {
 
-    this.name = name;
+    this.id = id;
     return this;
   }
 
-  /**
-   * The table name
-   *
-   * @return name
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setName(@javax.annotation.Nonnull String name) {
-    this.name = name;
-  }
-
-  public CreateTableIndexRequest namespace(@javax.annotation.Nonnull List<String> namespace) {
-
-    this.namespace = namespace;
-    return this;
-  }
-
-  public CreateTableIndexRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public CreateTableIndexRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * The namespace identifier
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public List<String> getNamespace() {
-    return namespace;
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<String> getId() {
+    return id;
   }
 
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setNamespace(@javax.annotation.Nonnull List<String> namespace) {
-    this.namespace = namespace;
+  @JsonProperty(JSON_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setId(@javax.annotation.Nullable List<String> id) {
+    this.id = id;
   }
 
   public CreateTableIndexRequest column(@javax.annotation.Nonnull String column) {
@@ -495,8 +467,7 @@ public class CreateTableIndexRequest {
       return false;
     }
     CreateTableIndexRequest createTableIndexRequest = (CreateTableIndexRequest) o;
-    return Objects.equals(this.name, createTableIndexRequest.name)
-        && Objects.equals(this.namespace, createTableIndexRequest.namespace)
+    return Objects.equals(this.id, createTableIndexRequest.id)
         && Objects.equals(this.column, createTableIndexRequest.column)
         && Objects.equals(this.indexType, createTableIndexRequest.indexType)
         && Objects.equals(this.metricType, createTableIndexRequest.metricType)
@@ -513,8 +484,7 @@ public class CreateTableIndexRequest {
   @Override
   public int hashCode() {
     return Objects.hash(
-        name,
-        namespace,
+        id,
         column,
         indexType,
         metricType,
@@ -532,8 +502,7 @@ public class CreateTableIndexRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableIndexRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
     sb.append("    metricType: ").append(toIndentedString(metricType)).append("\n");
@@ -591,34 +560,19 @@ public class CreateTableIndexRequest {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `namespace` to the URL query string
-    if (getNamespace() != null) {
-      for (int i = 0; i < getNamespace().size(); i++) {
+    // add `id` to the URL query string
+    if (getId() != null) {
+      for (int i = 0; i < getId().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%snamespace%s%s=%s",
+                  "%sid%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

@@ -31,38 +31,38 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class ListTablesRequest {
 
-  @Valid private List<String> parent = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   private String pageToken;
 
-  private Integer pageSize;
+  private Integer limit;
 
-  public ListTablesRequest parent(List<String> parent) {
-    this.parent = parent;
+  public ListTablesRequest id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  public ListTablesRequest addParentItem(String parentItem) {
-    if (this.parent == null) {
-      this.parent = new ArrayList<>();
+  public ListTablesRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.parent.add(parentItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get parent
+   * Get id
    *
-   * @return parent
+   * @return id
    */
-  @Schema(name = "parent", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("parent")
-  public List<String> getParent() {
-    return parent;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setParent(List<String> parent) {
-    this.parent = parent;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   public ListTablesRequest pageToken(String pageToken) {
@@ -71,23 +71,23 @@ public class ListTablesRequest {
   }
 
   /**
-   * An opaque token that allows pagination for list APIs (e.g. ListNamespaces). For an initial
-   * client request for a list API, if the server cannot return all items in one response, or if
-   * there are more items than the `pageSize` specified in the client request, the server must
-   * return a `nextPageToken` in the response indicating there are more results available. After the
-   * initial request, the value of `nextPageToken` from each response must be used by the client as
-   * the `pageToken` parameter value for the next request. Clients must interpret either `null`,
-   * missing value or empty string value of `nextPageToken` from a server response as the end of the
-   * listing results.
+   * An opaque token that allows pagination for list operations (e.g. ListNamespaces). For an
+   * initial request of a list operation, if the implementation cannot return all items in one
+   * response, or if there are more items than the page limit specified in the request, the
+   * implementation must return a page token in the response, indicating there are more results
+   * available. After the initial request, the value of the page token from each response must be
+   * used as the page token value for the next request. Caller must interpret either `null`, missing
+   * value or empty string value of the page token from the implementation's response as the end of
+   * the listing results.
    *
    * @return pageToken
    */
   @Schema(
-      name = "pageToken",
+      name = "page_token",
       description =
-          "An opaque token that allows pagination for list APIs (e.g. ListNamespaces). For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available. After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request. Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.",
+          "An opaque token that allows pagination for list operations (e.g. ListNamespaces).  For an initial request of a list operation,  if the implementation cannot return all items in one response, or if there are more items than the page limit specified in the request, the implementation must return a page token in the response, indicating there are more results available.  After the initial request,  the value of the page token from each response must be used as the page token value for the next request.  Caller must interpret either `null`,  missing value or empty string value of the page token from the implementation's response as the end of the listing results. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("pageToken")
+  @JsonProperty("page_token")
   public String getPageToken() {
     return pageToken;
   }
@@ -96,27 +96,28 @@ public class ListTablesRequest {
     this.pageToken = pageToken;
   }
 
-  public ListTablesRequest pageSize(Integer pageSize) {
-    this.pageSize = pageSize;
+  public ListTablesRequest limit(Integer limit) {
+    this.limit = limit;
     return this;
   }
 
   /**
-   * An inclusive upper bound of the number of results that a client will receive.
+   * An inclusive upper bound of the number of results that a caller will receive.
    *
-   * @return pageSize
+   * @return limit
    */
   @Schema(
-      name = "pageSize",
-      description = "An inclusive upper bound of the number of results that a client will receive.",
+      name = "limit",
+      description =
+          "An inclusive upper bound of the  number of results that a caller will receive. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("pageSize")
-  public Integer getPageSize() {
-    return pageSize;
+  @JsonProperty("limit")
+  public Integer getLimit() {
+    return limit;
   }
 
-  public void setPageSize(Integer pageSize) {
-    this.pageSize = pageSize;
+  public void setLimit(Integer limit) {
+    this.limit = limit;
   }
 
   @Override
@@ -128,23 +129,23 @@ public class ListTablesRequest {
       return false;
     }
     ListTablesRequest listTablesRequest = (ListTablesRequest) o;
-    return Objects.equals(this.parent, listTablesRequest.parent)
+    return Objects.equals(this.id, listTablesRequest.id)
         && Objects.equals(this.pageToken, listTablesRequest.pageToken)
-        && Objects.equals(this.pageSize, listTablesRequest.pageSize);
+        && Objects.equals(this.limit, listTablesRequest.limit);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(parent, pageToken, pageSize);
+    return Objects.hash(id, pageToken, limit);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ListTablesRequest {\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
-    sb.append("    pageSize: ").append(toIndentedString(pageSize)).append("\n");
+    sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
     sb.append("}");
     return sb.toString();
   }

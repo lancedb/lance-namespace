@@ -35,8 +35,7 @@ class TestInsertIntoTableRequest(unittest.TestCase):
         model = InsertIntoTableRequest()
         if include_optional:
             return InsertIntoTableRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ],
                 mode = 'append'

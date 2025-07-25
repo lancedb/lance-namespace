@@ -11,19 +11,18 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
+/// DeregisterTableRequest : The table content remains available in the storage. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DeregisterTableRequest {
-    #[serde(rename = "name")]
-    pub name: String,
-    #[serde(rename = "namespace", skip_serializing_if = "Option::is_none")]
-    pub namespace: Option<Vec<String>>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
 }
 
 impl DeregisterTableRequest {
-    pub fn new(name: String) -> DeregisterTableRequest {
+    /// The table content remains available in the storage. 
+    pub fn new() -> DeregisterTableRequest {
         DeregisterTableRequest {
-            name,
-            namespace: None,
+            id: None,
         }
     }
 }

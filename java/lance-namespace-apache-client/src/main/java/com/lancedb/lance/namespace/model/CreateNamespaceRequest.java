@@ -30,22 +30,23 @@ import java.util.StringJoiner;
 
 /** CreateNamespaceRequest */
 @JsonPropertyOrder({
-  CreateNamespaceRequest.JSON_PROPERTY_NAME,
-  CreateNamespaceRequest.JSON_PROPERTY_PARENT,
+  CreateNamespaceRequest.JSON_PROPERTY_ID,
   CreateNamespaceRequest.JSON_PROPERTY_MODE,
-  CreateNamespaceRequest.JSON_PROPERTY_OPTIONS
+  CreateNamespaceRequest.JSON_PROPERTY_PROPERTIES
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class CreateNamespaceRequest {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nullable private String name;
+  public static final String JSON_PROPERTY_ID = "id";
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
-  public static final String JSON_PROPERTY_PARENT = "parent";
-  @javax.annotation.Nullable private List<String> parent = new ArrayList<>();
-
-  /** Gets or Sets mode */
+  /**
+   * There are three modes when trying to create a namespace, to differentiate the behavior when a
+   * namespace of the same name already exists: * CREATE: the operation fails with 400. * EXIST_OK:
+   * the operation succeeds and the existing namespace is kept. * OVERWRITE: the existing namespace
+   * is dropped and a new empty namespace with this name is created.
+   */
   public enum ModeEnum {
     CREATE(String.valueOf("CREATE")),
 
@@ -81,123 +82,103 @@ public class CreateNamespaceRequest {
   }
 
   public static final String JSON_PROPERTY_MODE = "mode";
-  @javax.annotation.Nonnull private ModeEnum mode;
+  @javax.annotation.Nullable private ModeEnum mode;
 
-  public static final String JSON_PROPERTY_OPTIONS = "options";
-  @javax.annotation.Nullable private Map<String, String> options = new HashMap<>();
+  public static final String JSON_PROPERTY_PROPERTIES = "properties";
+  @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public CreateNamespaceRequest() {}
 
-  public CreateNamespaceRequest name(@javax.annotation.Nullable String name) {
+  public CreateNamespaceRequest id(@javax.annotation.Nullable List<String> id) {
 
-    this.name = name;
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setName(@javax.annotation.Nullable String name) {
-    this.name = name;
-  }
-
-  public CreateNamespaceRequest parent(@javax.annotation.Nullable List<String> parent) {
-
-    this.parent = parent;
-    return this;
-  }
-
-  public CreateNamespaceRequest addParentItem(String parentItem) {
-    if (this.parent == null) {
-      this.parent = new ArrayList<>();
+  public CreateNamespaceRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.parent.add(parentItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get parent
+   * Get id
    *
-   * @return parent
+   * @return id
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_PARENT)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getParent() {
-    return parent;
+  public List<String> getId() {
+    return id;
   }
 
-  @JsonProperty(JSON_PROPERTY_PARENT)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setParent(@javax.annotation.Nullable List<String> parent) {
-    this.parent = parent;
+  public void setId(@javax.annotation.Nullable List<String> id) {
+    this.id = id;
   }
 
-  public CreateNamespaceRequest mode(@javax.annotation.Nonnull ModeEnum mode) {
+  public CreateNamespaceRequest mode(@javax.annotation.Nullable ModeEnum mode) {
 
     this.mode = mode;
     return this;
   }
 
   /**
-   * Get mode
+   * There are three modes when trying to create a namespace, to differentiate the behavior when a
+   * namespace of the same name already exists: * CREATE: the operation fails with 400. * EXIST_OK:
+   * the operation succeeds and the existing namespace is kept. * OVERWRITE: the existing namespace
+   * is dropped and a new empty namespace with this name is created.
    *
    * @return mode
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_MODE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public ModeEnum getMode() {
     return mode;
   }
 
   @JsonProperty(JSON_PROPERTY_MODE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setMode(@javax.annotation.Nonnull ModeEnum mode) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setMode(@javax.annotation.Nullable ModeEnum mode) {
     this.mode = mode;
   }
 
-  public CreateNamespaceRequest options(@javax.annotation.Nullable Map<String, String> options) {
+  public CreateNamespaceRequest properties(
+      @javax.annotation.Nullable Map<String, String> properties) {
 
-    this.options = options;
+    this.properties = properties;
     return this;
   }
 
-  public CreateNamespaceRequest putOptionsItem(String key, String optionsItem) {
-    if (this.options == null) {
-      this.options = new HashMap<>();
+  public CreateNamespaceRequest putPropertiesItem(String key, String propertiesItem) {
+    if (this.properties == null) {
+      this.properties = new HashMap<>();
     }
-    this.options.put(key, optionsItem);
+    this.properties.put(key, propertiesItem);
     return this;
   }
 
   /**
-   * Get options
+   * Get properties
    *
-   * @return options
+   * @return properties
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_OPTIONS)
+  @JsonProperty(JSON_PROPERTY_PROPERTIES)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Map<String, String> getOptions() {
-    return options;
+  public Map<String, String> getProperties() {
+    return properties;
   }
 
-  @JsonProperty(JSON_PROPERTY_OPTIONS)
+  @JsonProperty(JSON_PROPERTY_PROPERTIES)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setOptions(@javax.annotation.Nullable Map<String, String> options) {
-    this.options = options;
+  public void setProperties(@javax.annotation.Nullable Map<String, String> properties) {
+    this.properties = properties;
   }
 
   @Override
@@ -209,25 +190,23 @@ public class CreateNamespaceRequest {
       return false;
     }
     CreateNamespaceRequest createNamespaceRequest = (CreateNamespaceRequest) o;
-    return Objects.equals(this.name, createNamespaceRequest.name)
-        && Objects.equals(this.parent, createNamespaceRequest.parent)
+    return Objects.equals(this.id, createNamespaceRequest.id)
         && Objects.equals(this.mode, createNamespaceRequest.mode)
-        && Objects.equals(this.options, createNamespaceRequest.options);
+        && Objects.equals(this.properties, createNamespaceRequest.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent, mode, options);
+    return Objects.hash(id, mode, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateNamespaceRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
-    sb.append("    options: ").append(toIndentedString(options)).append("\n");
+    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -274,34 +253,19 @@ public class CreateNamespaceRequest {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `parent` to the URL query string
-    if (getParent() != null) {
-      for (int i = 0; i < getParent().size(); i++) {
+    // add `id` to the URL query string
+    if (getId() != null) {
+      for (int i = 0; i < getId().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%sparent%s%s=%s",
+                  "%sid%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getParent().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported
@@ -325,20 +289,20 @@ public class CreateNamespaceRequest {
       }
     }
 
-    // add `options` to the URL query string
-    if (getOptions() != null) {
-      for (String _key : getOptions().keySet()) {
+    // add `properties` to the URL query string
+    if (getProperties() != null) {
+      for (String _key : getProperties().keySet()) {
         try {
           joiner.add(
               String.format(
-                  "%soptions%s%s=%s",
+                  "%sproperties%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
-                  getOptions().get(_key),
-                  URLEncoder.encode(String.valueOf(getOptions().get(_key)), "UTF-8")
+                  getProperties().get(_key),
+                  URLEncoder.encode(String.valueOf(getProperties().get(_key)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

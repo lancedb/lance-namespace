@@ -35,8 +35,7 @@ class TestCreateTableRequest(unittest.TestCase):
         model = CreateTableRequest()
         if include_optional:
             return CreateTableRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ],
                 location = '',

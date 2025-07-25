@@ -7,8 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**name** | **String** | The table name |  |
-|**namespace** | **List&lt;String&gt;** | The namespace identifier |  |
+|**id** | **List&lt;String&gt;** |  |  [optional] |
 |**column** | **String** | Name of the column to create index on |  |
 |**indexType** | [**IndexTypeEnum**](#IndexTypeEnum) | Type of index to create |  |
 |**metricType** | [**MetricTypeEnum**](#MetricTypeEnum) | Distance metric type for vector indexes |  [optional] |
@@ -31,8 +30,8 @@
 | BITMAP | &quot;BITMAP&quot; |
 | LABEL_LIST | &quot;LABEL_LIST&quot; |
 | IVF_FLAT | &quot;IVF_FLAT&quot; |
-| IVF_HNSW_SQ | &quot;IVF_HNSW_SQ&quot; |
 | IVF_PQ | &quot;IVF_PQ&quot; |
+| IVF_HNSW_SQ | &quot;IVF_HNSW_SQ&quot; |
 | FTS | &quot;FTS&quot; |
 
 

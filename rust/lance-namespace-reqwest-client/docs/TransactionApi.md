@@ -14,6 +14,8 @@ Method | HTTP request | Description
 > models::AlterTransactionResponse alter_transaction(id, alter_transaction_request, delimiter)
 Alter information of a transaction.
 
+Alter a transaction with a list of actions such as setting status or properties. The server should either succeed and apply all actions, or fail and apply no action. 
+
 ### Parameters
 
 
@@ -44,7 +46,7 @@ No authorization required
 > models::DescribeTransactionResponse describe_transaction(id, describe_transaction_request, delimiter)
 Describe information about a transaction
 
-Return a detailed information for a given transaction
+Return a detailed information for a given transaction 
 
 ### Parameters
 

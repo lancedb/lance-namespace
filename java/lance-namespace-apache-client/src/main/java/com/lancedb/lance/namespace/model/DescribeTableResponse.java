@@ -37,13 +37,13 @@ import java.util.StringJoiner;
     comments = "Generator version: 7.12.0")
 public class DescribeTableResponse {
   public static final String JSON_PROPERTY_VERSION = "version";
-  @javax.annotation.Nullable private Long version;
+  @javax.annotation.Nonnull private Long version;
 
   public static final String JSON_PROPERTY_LOCATION = "location";
-  @javax.annotation.Nonnull private String location;
+  @javax.annotation.Nullable private String location;
 
   public static final String JSON_PROPERTY_SCHEMA = "schema";
-  @javax.annotation.Nonnull private JsonSchema schema;
+  @javax.annotation.Nonnull private JsonArrowSchema schema;
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
@@ -53,7 +53,7 @@ public class DescribeTableResponse {
 
   public DescribeTableResponse() {}
 
-  public DescribeTableResponse version(@javax.annotation.Nullable Long version) {
+  public DescribeTableResponse version(@javax.annotation.Nonnull Long version) {
 
     this.version = version;
     return this;
@@ -64,20 +64,20 @@ public class DescribeTableResponse {
    *
    * @return version
    */
-  @javax.annotation.Nullable
+  @javax.annotation.Nonnull
   @JsonProperty(JSON_PROPERTY_VERSION)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public Long getVersion() {
     return version;
   }
 
   @JsonProperty(JSON_PROPERTY_VERSION)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setVersion(@javax.annotation.Nullable Long version) {
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setVersion(@javax.annotation.Nonnull Long version) {
     this.version = version;
   }
 
-  public DescribeTableResponse location(@javax.annotation.Nonnull String location) {
+  public DescribeTableResponse location(@javax.annotation.Nullable String location) {
 
     this.location = location;
     return this;
@@ -88,20 +88,20 @@ public class DescribeTableResponse {
    *
    * @return location
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public String getLocation() {
     return location;
   }
 
   @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setLocation(@javax.annotation.Nonnull String location) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setLocation(@javax.annotation.Nullable String location) {
     this.location = location;
   }
 
-  public DescribeTableResponse schema(@javax.annotation.Nonnull JsonSchema schema) {
+  public DescribeTableResponse schema(@javax.annotation.Nonnull JsonArrowSchema schema) {
 
     this.schema = schema;
     return this;
@@ -115,13 +115,13 @@ public class DescribeTableResponse {
   @javax.annotation.Nonnull
   @JsonProperty(JSON_PROPERTY_SCHEMA)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public JsonSchema getSchema() {
+  public JsonArrowSchema getSchema() {
     return schema;
   }
 
   @JsonProperty(JSON_PROPERTY_SCHEMA)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setSchema(@javax.annotation.Nonnull JsonSchema schema) {
+  public void setSchema(@javax.annotation.Nonnull JsonArrowSchema schema) {
     this.schema = schema;
   }
 

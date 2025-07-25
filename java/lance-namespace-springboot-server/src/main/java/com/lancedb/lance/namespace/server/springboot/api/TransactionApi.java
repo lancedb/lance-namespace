@@ -51,7 +51,9 @@ public interface TransactionApi {
   }
 
   /**
-   * POST /v1/transaction/{id}/alter : Alter information of a transaction.
+   * POST /v1/transaction/{id}/alter : Alter information of a transaction. Alter a transaction with
+   * a list of actions such as setting status or properties. The server should either succeed and
+   * apply all actions, or fail and apply no action.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -78,6 +80,8 @@ public interface TransactionApi {
   @Operation(
       operationId = "alterTransaction",
       summary = "Alter information of a transaction.",
+      description =
+          "Alter a transaction with a list of actions such as setting status or properties. The server should either succeed and apply all actions, or fail and apply no action. ",
       tags = {"Transaction", "Metadata"},
       responses = {
         @ApiResponse(
@@ -180,7 +184,8 @@ public interface TransactionApi {
             request -> {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString = "{ \"id\" : \"id\", \"status\" : \"QUEUED\" }";
+                  String exampleString =
+                      "{ \"properties\" : { \"key\" : \"properties\" }, \"status\" : \"QUEUED\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -259,7 +264,7 @@ public interface TransactionApi {
   @Operation(
       operationId = "describeTransaction",
       summary = "Describe information about a transaction",
-      description = "Return a detailed information for a given transaction",
+      description = "Return a detailed information for a given transaction ",
       tags = {"Transaction", "Metadata"},
       responses = {
         @ApiResponse(
@@ -355,7 +360,7 @@ public interface TransactionApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"id\" : \"id\", \"properties\" : { \"key\" : \"properties\" }, \"status\" : \"QUEUED\" }";
+                      "{ \"properties\" : { \"key\" : \"properties\" }, \"status\" : \"QUEUED\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }

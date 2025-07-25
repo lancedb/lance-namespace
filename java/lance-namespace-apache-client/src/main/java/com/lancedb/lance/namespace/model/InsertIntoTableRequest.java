@@ -26,27 +26,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/**
- * Request for inserting records into a table, excluding the Arrow IPC stream. Note that this is
- * only used for non-REST implementations. For REST, pass in the information in the following way: -
- * &#x60;name&#x60;: pass as a part of the path parameter &#x60;id&#x60; - &#x60;namespace&#x60;:
- * pass as a part of the path parameter &#x60;namespace&#x60; - &#x60;mode&#x60;: pass through query
- * parameter of the same name
- */
+/** Request for inserting records into a table, excluding the Arrow IPC stream. */
 @JsonPropertyOrder({
-  InsertIntoTableRequest.JSON_PROPERTY_NAME,
-  InsertIntoTableRequest.JSON_PROPERTY_NAMESPACE,
+  InsertIntoTableRequest.JSON_PROPERTY_ID,
   InsertIntoTableRequest.JSON_PROPERTY_MODE
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class InsertIntoTableRequest {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nullable private String name;
-
-  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nullable private List<String> namespace = new ArrayList<>();
+  public static final String JSON_PROPERTY_ID = "id";
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   /** Gets or Sets mode */
   public enum ModeEnum {
@@ -86,60 +76,36 @@ public class InsertIntoTableRequest {
 
   public InsertIntoTableRequest() {}
 
-  public InsertIntoTableRequest name(@javax.annotation.Nullable String name) {
+  public InsertIntoTableRequest id(@javax.annotation.Nullable List<String> id) {
 
-    this.name = name;
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setName(@javax.annotation.Nullable String name) {
-    this.name = name;
-  }
-
-  public InsertIntoTableRequest namespace(@javax.annotation.Nullable List<String> namespace) {
-
-    this.namespace = namespace;
-    return this;
-  }
-
-  public InsertIntoTableRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public InsertIntoTableRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get namespace
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getNamespace() {
-    return namespace;
+  public List<String> getId() {
+    return id;
   }
 
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setNamespace(@javax.annotation.Nullable List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(@javax.annotation.Nullable List<String> id) {
+    this.id = id;
   }
 
   public InsertIntoTableRequest mode(@javax.annotation.Nullable ModeEnum mode) {
@@ -175,22 +141,20 @@ public class InsertIntoTableRequest {
       return false;
     }
     InsertIntoTableRequest insertIntoTableRequest = (InsertIntoTableRequest) o;
-    return Objects.equals(this.name, insertIntoTableRequest.name)
-        && Objects.equals(this.namespace, insertIntoTableRequest.namespace)
+    return Objects.equals(this.id, insertIntoTableRequest.id)
         && Objects.equals(this.mode, insertIntoTableRequest.mode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, mode);
+    return Objects.hash(id, mode);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class InsertIntoTableRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -238,34 +202,19 @@ public class InsertIntoTableRequest {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `namespace` to the URL query string
-    if (getNamespace() != null) {
-      for (int i = 0; i < getNamespace().size(); i++) {
+    // add `id` to the URL query string
+    if (getId() != null) {
+      for (int i = 0; i < getId().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%snamespace%s%s=%s",
+                  "%sid%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

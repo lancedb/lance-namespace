@@ -16,7 +16,7 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBool, StrictBytes, StrictStr, field_validator
+from pydantic import Field, StrictBool, StrictBytes, StrictInt, StrictStr, field_validator
 from typing import Optional, Tuple, Union
 from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.count_table_rows_request import CountTableRowsRequest
@@ -36,7 +36,6 @@ from lance_namespace_urllib3_client.models.drop_table_response import DropTableR
 from lance_namespace_urllib3_client.models.insert_into_table_response import InsertIntoTableResponse
 from lance_namespace_urllib3_client.models.list_table_indices_request import ListTableIndicesRequest
 from lance_namespace_urllib3_client.models.list_table_indices_response import ListTableIndicesResponse
-from lance_namespace_urllib3_client.models.list_tables_request import ListTablesRequest
 from lance_namespace_urllib3_client.models.list_tables_response import ListTablesResponse
 from lance_namespace_urllib3_client.models.merge_insert_into_table_response import MergeInsertIntoTableResponse
 from lance_namespace_urllib3_client.models.query_table_request import QueryTableRequest
@@ -85,7 +84,7 @@ class TableApi:
     ) -> int:
         """Count rows in a table
 
-        Count the number of rows in a table. 
+        Count the number of rows in table `id` 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -166,7 +165,7 @@ class TableApi:
     ) -> ApiResponse[int]:
         """Count rows in a table
 
-        Count the number of rows in a table. 
+        Count the number of rows in table `id` 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -247,7 +246,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Count rows in a table
 
-        Count the number of rows in a table. 
+        Count the number of rows in table `id` 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -391,9 +390,9 @@ class TableApi:
     def create_table(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        x_lance_table_location: Annotated[StrictStr, Field(description="URI pointing to root location to create the table at")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        x_lance_table_location: Annotated[Optional[StrictStr], Field(description="URI pointing to root location to create the table at")] = None,
         x_lance_table_properties: Annotated[Optional[StrictStr], Field(description="JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ")] = None,
         _request_timeout: Union[
             None,
@@ -410,16 +409,16 @@ class TableApi:
     ) -> CreateTableResponse:
         """Create a table with the given name
 
-        Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. 
+        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param x_lance_table_location: URI pointing to root location to create the table at (required)
-        :type x_lance_table_location: str
         :param body: Arrow IPC data (required)
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param x_lance_table_location: URI pointing to root location to create the table at
+        :type x_lance_table_location: str
         :param x_lance_table_properties: JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
         :type x_lance_table_properties: str
         :param _request_timeout: timeout setting for this request. If one
@@ -446,9 +445,9 @@ class TableApi:
 
         _param = self._create_table_serialize(
             id=id,
-            x_lance_table_location=x_lance_table_location,
             body=body,
             delimiter=delimiter,
+            x_lance_table_location=x_lance_table_location,
             x_lance_table_properties=x_lance_table_properties,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -480,9 +479,9 @@ class TableApi:
     def create_table_with_http_info(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        x_lance_table_location: Annotated[StrictStr, Field(description="URI pointing to root location to create the table at")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        x_lance_table_location: Annotated[Optional[StrictStr], Field(description="URI pointing to root location to create the table at")] = None,
         x_lance_table_properties: Annotated[Optional[StrictStr], Field(description="JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ")] = None,
         _request_timeout: Union[
             None,
@@ -499,16 +498,16 @@ class TableApi:
     ) -> ApiResponse[CreateTableResponse]:
         """Create a table with the given name
 
-        Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. 
+        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param x_lance_table_location: URI pointing to root location to create the table at (required)
-        :type x_lance_table_location: str
         :param body: Arrow IPC data (required)
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param x_lance_table_location: URI pointing to root location to create the table at
+        :type x_lance_table_location: str
         :param x_lance_table_properties: JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
         :type x_lance_table_properties: str
         :param _request_timeout: timeout setting for this request. If one
@@ -535,9 +534,9 @@ class TableApi:
 
         _param = self._create_table_serialize(
             id=id,
-            x_lance_table_location=x_lance_table_location,
             body=body,
             delimiter=delimiter,
+            x_lance_table_location=x_lance_table_location,
             x_lance_table_properties=x_lance_table_properties,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -569,9 +568,9 @@ class TableApi:
     def create_table_without_preload_content(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        x_lance_table_location: Annotated[StrictStr, Field(description="URI pointing to root location to create the table at")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        x_lance_table_location: Annotated[Optional[StrictStr], Field(description="URI pointing to root location to create the table at")] = None,
         x_lance_table_properties: Annotated[Optional[StrictStr], Field(description="JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ")] = None,
         _request_timeout: Union[
             None,
@@ -588,16 +587,16 @@ class TableApi:
     ) -> RESTResponseType:
         """Create a table with the given name
 
-        Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. 
+        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param x_lance_table_location: URI pointing to root location to create the table at (required)
-        :type x_lance_table_location: str
         :param body: Arrow IPC data (required)
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param x_lance_table_location: URI pointing to root location to create the table at
+        :type x_lance_table_location: str
         :param x_lance_table_properties: JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
         :type x_lance_table_properties: str
         :param _request_timeout: timeout setting for this request. If one
@@ -624,9 +623,9 @@ class TableApi:
 
         _param = self._create_table_serialize(
             id=id,
-            x_lance_table_location=x_lance_table_location,
             body=body,
             delimiter=delimiter,
+            x_lance_table_location=x_lance_table_location,
             x_lance_table_properties=x_lance_table_properties,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -653,9 +652,9 @@ class TableApi:
     def _create_table_serialize(
         self,
         id,
-        x_lance_table_location,
         body,
         delimiter,
+        x_lance_table_location,
         x_lance_table_properties,
         _request_auth,
         _content_type,
@@ -1092,7 +1091,7 @@ class TableApi:
     ) -> DeleteFromTableResponse:
         """Delete rows from a table
 
-        Delete rows from a table based on a SQL predicate. Returns the number of rows that were deleted. 
+        Delete rows from table `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1173,7 +1172,7 @@ class TableApi:
     ) -> ApiResponse[DeleteFromTableResponse]:
         """Delete rows from a table
 
-        Delete rows from a table based on a SQL predicate. Returns the number of rows that were deleted. 
+        Delete rows from table `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1254,7 +1253,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Delete rows from a table
 
-        Delete rows from a table based on a SQL predicate. Returns the number of rows that were deleted. 
+        Delete rows from table `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1413,9 +1412,9 @@ class TableApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> DeregisterTableResponse:
-        """Deregister a table from its namespace
+        """Deregister a table
 
-        Deregister a table from its namespace. The table content remains available in the storage. 
+        Deregister table `id` from its namespace. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1494,9 +1493,9 @@ class TableApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[DeregisterTableResponse]:
-        """Deregister a table from its namespace
+        """Deregister a table
 
-        Deregister a table from its namespace. The table content remains available in the storage. 
+        Deregister table `id` from its namespace. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1575,9 +1574,9 @@ class TableApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Deregister a table from its namespace
+        """Deregister a table
 
-        Deregister a table from its namespace. The table content remains available in the storage. 
+        Deregister table `id` from its namespace. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1736,9 +1735,9 @@ class TableApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> DescribeTableResponse:
-        """Describe a table from the namespace
+        """Describe information of a table
 
-        Get a table's detailed information under a specified namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+        Describe the detailed information for table `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1817,9 +1816,9 @@ class TableApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[DescribeTableResponse]:
-        """Describe a table from the namespace
+        """Describe information of a table
 
-        Get a table's detailed information under a specified namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+        Describe the detailed information for table `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1898,9 +1897,9 @@ class TableApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Describe a table from the namespace
+        """Describe information of a table
 
-        Get a table's detailed information under a specified namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+        Describe the detailed information for table `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -2397,9 +2396,9 @@ class TableApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> DropTableResponse:
-        """Drop a table from its namespace
+        """Drop a table
 
-        Drop a table from its namespace and delete its data. If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. 
+        Drop table `id` and delete its data. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -2478,9 +2477,9 @@ class TableApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[DropTableResponse]:
-        """Drop a table from its namespace
+        """Drop a table
 
-        Drop a table from its namespace and delete its data. If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. 
+        Drop table `id` and delete its data. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -2559,9 +2558,9 @@ class TableApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Drop a table from its namespace
+        """Drop a table
 
-        Drop a table from its namespace and delete its data. If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. 
+        Drop table `id` and delete its data. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -2705,9 +2704,9 @@ class TableApi:
     def insert_into_table(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
+        body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to insert")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
-        mode: Annotated[Optional[StrictStr], Field(description="Insert mode: \"append\" (default) or \"overwrite\"")] = None,
+        mode: Annotated[Optional[StrictStr], Field(description="How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2723,15 +2722,15 @@ class TableApi:
     ) -> InsertIntoTableResponse:
         """Insert records into a table
 
-        Insert new records into an existing table using Arrow IPC format. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+        Insert new records into table `id`.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `InsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param body: Arrow IPC data (required)
+        :param body: Arrow IPC stream containing the records to insert (required)
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
-        :param mode: Insert mode: \"append\" (default) or \"overwrite\"
+        :param mode: How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it 
         :type mode: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2790,9 +2789,9 @@ class TableApi:
     def insert_into_table_with_http_info(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
+        body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to insert")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
-        mode: Annotated[Optional[StrictStr], Field(description="Insert mode: \"append\" (default) or \"overwrite\"")] = None,
+        mode: Annotated[Optional[StrictStr], Field(description="How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2808,15 +2807,15 @@ class TableApi:
     ) -> ApiResponse[InsertIntoTableResponse]:
         """Insert records into a table
 
-        Insert new records into an existing table using Arrow IPC format. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+        Insert new records into table `id`.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `InsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param body: Arrow IPC data (required)
+        :param body: Arrow IPC stream containing the records to insert (required)
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
-        :param mode: Insert mode: \"append\" (default) or \"overwrite\"
+        :param mode: How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it 
         :type mode: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2875,9 +2874,9 @@ class TableApi:
     def insert_into_table_without_preload_content(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
+        body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to insert")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
-        mode: Annotated[Optional[StrictStr], Field(description="Insert mode: \"append\" (default) or \"overwrite\"")] = None,
+        mode: Annotated[Optional[StrictStr], Field(description="How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2893,15 +2892,15 @@ class TableApi:
     ) -> RESTResponseType:
         """Insert records into a table
 
-        Insert new records into an existing table using Arrow IPC format. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+        Insert new records into table `id`.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `InsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param body: Arrow IPC data (required)
+        :param body: Arrow IPC stream containing the records to insert (required)
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
-        :param mode: Insert mode: \"append\" (default) or \"overwrite\"
+        :param mode: How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it 
         :type mode: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3376,8 +3375,9 @@ class TableApi:
     def list_tables(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        list_tables_request: ListTablesRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        page_token: Optional[StrictStr] = None,
+        limit: Optional[StrictInt] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3393,14 +3393,16 @@ class TableApi:
     ) -> ListTablesResponse:
         """List tables in a namespace
 
-        List all child table names of the root namespace or a given parent namespace. 
+        List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param list_tables_request: (required)
-        :type list_tables_request: ListTablesRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param page_token:
+        :type page_token: str
+        :param limit:
+        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3425,8 +3427,9 @@ class TableApi:
 
         _param = self._list_tables_serialize(
             id=id,
-            list_tables_request=list_tables_request,
             delimiter=delimiter,
+            page_token=page_token,
+            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3458,8 +3461,9 @@ class TableApi:
     def list_tables_with_http_info(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        list_tables_request: ListTablesRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        page_token: Optional[StrictStr] = None,
+        limit: Optional[StrictInt] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3475,14 +3479,16 @@ class TableApi:
     ) -> ApiResponse[ListTablesResponse]:
         """List tables in a namespace
 
-        List all child table names of the root namespace or a given parent namespace. 
+        List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param list_tables_request: (required)
-        :type list_tables_request: ListTablesRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param page_token:
+        :type page_token: str
+        :param limit:
+        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3507,8 +3513,9 @@ class TableApi:
 
         _param = self._list_tables_serialize(
             id=id,
-            list_tables_request=list_tables_request,
             delimiter=delimiter,
+            page_token=page_token,
+            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3540,8 +3547,9 @@ class TableApi:
     def list_tables_without_preload_content(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        list_tables_request: ListTablesRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        page_token: Optional[StrictStr] = None,
+        limit: Optional[StrictInt] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3557,14 +3565,16 @@ class TableApi:
     ) -> RESTResponseType:
         """List tables in a namespace
 
-        List all child table names of the root namespace or a given parent namespace. 
+        List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param list_tables_request: (required)
-        :type list_tables_request: ListTablesRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param page_token:
+        :type page_token: str
+        :param limit:
+        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3589,8 +3599,9 @@ class TableApi:
 
         _param = self._list_tables_serialize(
             id=id,
-            list_tables_request=list_tables_request,
             delimiter=delimiter,
+            page_token=page_token,
+            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3617,8 +3628,9 @@ class TableApi:
     def _list_tables_serialize(
         self,
         id,
-        list_tables_request,
         delimiter,
+        page_token,
+        limit,
         _request_auth,
         _content_type,
         _headers,
@@ -3647,11 +3659,17 @@ class TableApi:
             
             _query_params.append(('delimiter', delimiter))
             
+        if page_token is not None:
+            
+            _query_params.append(('page_token', page_token))
+            
+        if limit is not None:
+            
+            _query_params.append(('limit', limit))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if list_tables_request is not None:
-            _body_params = list_tables_request
 
 
         # set the HTTP header `Accept`
@@ -3662,26 +3680,13 @@ class TableApi:
                 ]
             )
 
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
         ]
 
         return self.api_client.param_serialize(
-            method='POST',
+            method='GET',
             resource_path='/v1/namespace/{id}/table/list',
             path_params=_path_params,
             query_params=_query_params,
@@ -3703,7 +3708,7 @@ class TableApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         on: Annotated[StrictStr, Field(description="Column name to use for matching rows (required)")],
-        body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data containing the records to merge")],
+        body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to merge")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         when_matched_update_all: Annotated[Optional[StrictBool], Field(description="Update all columns when rows match")] = None,
         when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true")] = None,
@@ -3725,13 +3730,13 @@ class TableApi:
     ) -> MergeInsertIntoTableResponse:
         """Merge insert (upsert) records into a table
 
-        Performs a merge insert (upsert) operation on a table. This operation updates existing rows based on a matching column and inserts new rows that don't match. Returns the number of rows inserted and updated. 
+        Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don't match. It returns the number of rows inserted and updated.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
         :param on: Column name to use for matching rows (required) (required)
         :type on: str
-        :param body: Arrow IPC data containing the records to merge (required)
+        :param body: Arrow IPC stream containing the records to merge (required)
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
@@ -3808,7 +3813,7 @@ class TableApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         on: Annotated[StrictStr, Field(description="Column name to use for matching rows (required)")],
-        body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data containing the records to merge")],
+        body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to merge")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         when_matched_update_all: Annotated[Optional[StrictBool], Field(description="Update all columns when rows match")] = None,
         when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true")] = None,
@@ -3830,13 +3835,13 @@ class TableApi:
     ) -> ApiResponse[MergeInsertIntoTableResponse]:
         """Merge insert (upsert) records into a table
 
-        Performs a merge insert (upsert) operation on a table. This operation updates existing rows based on a matching column and inserts new rows that don't match. Returns the number of rows inserted and updated. 
+        Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don't match. It returns the number of rows inserted and updated.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
         :param on: Column name to use for matching rows (required) (required)
         :type on: str
-        :param body: Arrow IPC data containing the records to merge (required)
+        :param body: Arrow IPC stream containing the records to merge (required)
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
@@ -3913,7 +3918,7 @@ class TableApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         on: Annotated[StrictStr, Field(description="Column name to use for matching rows (required)")],
-        body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data containing the records to merge")],
+        body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to merge")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
         when_matched_update_all: Annotated[Optional[StrictBool], Field(description="Update all columns when rows match")] = None,
         when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true")] = None,
@@ -3935,13 +3940,13 @@ class TableApi:
     ) -> RESTResponseType:
         """Merge insert (upsert) records into a table
 
-        Performs a merge insert (upsert) operation on a table. This operation updates existing rows based on a matching column and inserts new rows that don't match. Returns the number of rows inserted and updated. 
+        Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don't match. It returns the number of rows inserted and updated.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
         :param on: Column name to use for matching rows (required) (required)
         :type on: str
-        :param body: Arrow IPC data containing the records to merge (required)
+        :param body: Arrow IPC stream containing the records to merge (required)
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
@@ -4152,7 +4157,7 @@ class TableApi:
     ) -> bytearray:
         """Query a table
 
-        Query a table with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
+        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4233,7 +4238,7 @@ class TableApi:
     ) -> ApiResponse[bytearray]:
         """Query a table
 
-        Query a table with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
+        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4314,7 +4319,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Query a table
 
-        Query a table with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
+        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4477,7 +4482,7 @@ class TableApi:
     ) -> RegisterTableResponse:
         """Register a table to a namespace
 
-        Register an existing table at a given storage location to a namespace. 
+        Register an existing table at a given storage location as `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4560,7 +4565,7 @@ class TableApi:
     ) -> ApiResponse[RegisterTableResponse]:
         """Register a table to a namespace
 
-        Register an existing table at a given storage location to a namespace. 
+        Register an existing table at a given storage location as `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4643,7 +4648,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Register a table to a namespace
 
-        Register an existing table at a given storage location to a namespace. 
+        Register an existing table at a given storage location as `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4806,7 +4811,7 @@ class TableApi:
     ) -> None:
         """Check if a table exists
 
-        Check if a table exists.  This API should behave exactly like the DescribeTable API, except it does not contain a body. 
+        Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4887,7 +4892,7 @@ class TableApi:
     ) -> ApiResponse[None]:
         """Check if a table exists
 
-        Check if a table exists.  This API should behave exactly like the DescribeTable API, except it does not contain a body. 
+        Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4968,7 +4973,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Check if a table exists
 
-        Check if a table exists.  This API should behave exactly like the DescribeTable API, except it does not contain a body. 
+        Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -5129,7 +5134,7 @@ class TableApi:
     ) -> UpdateTableResponse:
         """Update rows in a table
 
-        Update existing rows in a table using SQL expressions. Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
+        Update existing rows in table `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -5210,7 +5215,7 @@ class TableApi:
     ) -> ApiResponse[UpdateTableResponse]:
         """Update rows in a table
 
-        Update existing rows in a table using SQL expressions. Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
+        Update existing rows in table `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -5291,7 +5296,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Update rows in a table
 
-        Update existing rows in a table using SQL expressions. Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
+        Update existing rows in table `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str

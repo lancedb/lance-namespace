@@ -4,8 +4,6 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **String** |  | 
-**namespace** | **Vec<String>** |  | 
 **location** | **String** |  | 
 **properties** | Option<**std::collections::HashMap<String, String>**> |  | [optional]
 

@@ -35,7 +35,9 @@ class TestAlterTransactionRequest(unittest.TestCase):
         model = AlterTransactionRequest()
         if include_optional:
             return AlterTransactionRequest(
-                id = '',
+                id = [
+                    ''
+                    ],
                 actions = [
                     lance_namespace_urllib3_client.models.alter_transaction_action.AlterTransactionAction(
                         set_status_action = lance_namespace_urllib3_client.models.alter_transaction_set_status.AlterTransactionSetStatus(
@@ -50,7 +52,6 @@ class TestAlterTransactionRequest(unittest.TestCase):
             )
         else:
             return AlterTransactionRequest(
-                id = '',
                 actions = [
                     lance_namespace_urllib3_client.models.alter_transaction_action.AlterTransactionAction(
                         set_status_action = lance_namespace_urllib3_client.models.alter_transaction_set_status.AlterTransactionSetStatus(

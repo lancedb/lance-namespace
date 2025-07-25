@@ -35,18 +35,16 @@ class TestCreateNamespaceRequest(unittest.TestCase):
         model = CreateNamespaceRequest()
         if include_optional:
             return CreateNamespaceRequest(
-                name = '',
-                parent = [
+                id = [
                     ''
                     ],
                 mode = 'CREATE',
-                options = {
+                properties = {
                     'key' : ''
                     }
             )
         else:
             return CreateNamespaceRequest(
-                mode = 'CREATE',
         )
         """
 

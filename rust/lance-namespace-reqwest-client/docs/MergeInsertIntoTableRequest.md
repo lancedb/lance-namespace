@@ -4,8 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | Option<**String**> | The table name | [optional]
-**namespace** | Option<**Vec<String>**> | The namespace identifier | [optional]
+**id** | Option<**Vec<String>**> |  | [optional]
 **on** | Option<**String**> | Column name to use for matching rows (required) | [optional]
 **when_matched_update_all** | Option<**bool**> | Update all columns when rows match | [optional][default to false]
 **when_matched_update_all_filt** | Option<**String**> | The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true | [optional]

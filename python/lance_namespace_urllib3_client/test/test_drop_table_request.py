@@ -35,14 +35,12 @@ class TestDropTableRequest(unittest.TestCase):
         model = DropTableRequest()
         if include_optional:
             return DropTableRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ]
             )
         else:
             return DropTableRequest(
-                name = '',
         )
         """
 

@@ -15,7 +15,7 @@
 
     <artifactId>lance-namespace-hive</artifactId>
     <name>${project.artifactId}</name>
-    <description>Lance Namespace Hive Impl</description>
+    <description>Lance Namespace Apache Hive MetaStore Implementation</description>
     <packaging>jar</packaging>
 
     <dependencies>

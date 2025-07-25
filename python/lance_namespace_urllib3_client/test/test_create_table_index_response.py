@@ -35,8 +35,7 @@ class TestCreateTableIndexResponse(unittest.TestCase):
         model = CreateTableIndexResponse()
         if include_optional:
             return CreateTableIndexResponse(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ],
                 location = '',
@@ -46,10 +45,6 @@ class TestCreateTableIndexResponse(unittest.TestCase):
             )
         else:
             return CreateTableIndexResponse(
-                name = '',
-                namespace = [
-                    ''
-                    ],
                 location = '',
         )
         """

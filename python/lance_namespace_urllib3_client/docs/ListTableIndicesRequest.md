@@ -5,8 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** | The table name | 
-**namespace** | **List[str]** | The namespace identifier | 
+**id** | **List[str]** | The namespace identifier | [optional] 
 **version** | **int** | Optional table version to list indexes from | [optional] 
 
 ## Example

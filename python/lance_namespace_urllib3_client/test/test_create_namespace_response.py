@@ -35,17 +35,12 @@ class TestCreateNamespaceResponse(unittest.TestCase):
         model = CreateNamespaceResponse()
         if include_optional:
             return CreateNamespaceResponse(
-                name = '',
-                parent = [
-                    ''
-                    ],
                 properties = {
                     'key' : ''
                     }
             )
         else:
             return CreateNamespaceResponse(
-                name = '',
         )
         """
 

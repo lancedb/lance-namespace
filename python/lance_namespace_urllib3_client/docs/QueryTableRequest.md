@@ -5,8 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** |  | 
-**namespace** | **List[str]** |  | 
+**id** | **List[str]** |  | [optional] 
 **bypass_vector_index** | **bool** | Whether to bypass vector index | [optional] 
 **columns** | **List[str]** | Optional list of columns to return | [optional] 
 **distance_type** | **str** | Distance metric to use | [optional] 

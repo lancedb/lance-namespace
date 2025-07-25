@@ -7,7 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**id** | **String** |  |  |
+|**id** | **List&lt;String&gt;** |  |  [optional] |
 
 
 

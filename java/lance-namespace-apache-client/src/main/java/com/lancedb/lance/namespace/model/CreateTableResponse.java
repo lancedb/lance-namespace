@@ -19,18 +19,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 /** CreateTableResponse */
 @JsonPropertyOrder({
-  CreateTableResponse.JSON_PROPERTY_NAME,
-  CreateTableResponse.JSON_PROPERTY_NAMESPACE,
   CreateTableResponse.JSON_PROPERTY_LOCATION,
+  CreateTableResponse.JSON_PROPERTY_VERSION,
+  CreateTableResponse.JSON_PROPERTY_SCHEMA,
   CreateTableResponse.JSON_PROPERTY_PROPERTIES,
   CreateTableResponse.JSON_PROPERTY_STORAGE_OPTIONS
 })
@@ -38,14 +36,14 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class CreateTableResponse {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nonnull private String name;
-
-  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
-
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nonnull private String location;
+
+  public static final String JSON_PROPERTY_VERSION = "version";
+  @javax.annotation.Nullable private Long version;
+
+  public static final String JSON_PROPERTY_SCHEMA = "schema";
+  @javax.annotation.Nullable private JsonArrowSchema schema;
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
@@ -54,62 +52,6 @@ public class CreateTableResponse {
   @javax.annotation.Nullable private Map<String, String> storageOptions = new HashMap<>();
 
   public CreateTableResponse() {}
-
-  public CreateTableResponse name(@javax.annotation.Nonnull String name) {
-
-    this.name = name;
-    return this;
-  }
-
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setName(@javax.annotation.Nonnull String name) {
-    this.name = name;
-  }
-
-  public CreateTableResponse namespace(@javax.annotation.Nonnull List<String> namespace) {
-
-    this.namespace = namespace;
-    return this;
-  }
-
-  public CreateTableResponse addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
-    }
-    this.namespace.add(namespaceItem);
-    return this;
-  }
-
-  /**
-   * Get namespace
-   *
-   * @return namespace
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public List<String> getNamespace() {
-    return namespace;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setNamespace(@javax.annotation.Nonnull List<String> namespace) {
-    this.namespace = namespace;
-  }
 
   public CreateTableResponse location(@javax.annotation.Nonnull String location) {
 
@@ -133,6 +75,54 @@ public class CreateTableResponse {
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public void setLocation(@javax.annotation.Nonnull String location) {
     this.location = location;
+  }
+
+  public CreateTableResponse version(@javax.annotation.Nullable Long version) {
+
+    this.version = version;
+    return this;
+  }
+
+  /**
+   * Get version minimum: 0
+   *
+   * @return version
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_VERSION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Long getVersion() {
+    return version;
+  }
+
+  @JsonProperty(JSON_PROPERTY_VERSION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setVersion(@javax.annotation.Nullable Long version) {
+    this.version = version;
+  }
+
+  public CreateTableResponse schema(@javax.annotation.Nullable JsonArrowSchema schema) {
+
+    this.schema = schema;
+    return this;
+  }
+
+  /**
+   * Get schema
+   *
+   * @return schema
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_SCHEMA)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public JsonArrowSchema getSchema() {
+    return schema;
+  }
+
+  @JsonProperty(JSON_PROPERTY_SCHEMA)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setSchema(@javax.annotation.Nullable JsonArrowSchema schema) {
+    this.schema = schema;
   }
 
   public CreateTableResponse properties(@javax.annotation.Nullable Map<String, String> properties) {
@@ -210,25 +200,25 @@ public class CreateTableResponse {
       return false;
     }
     CreateTableResponse createTableResponse = (CreateTableResponse) o;
-    return Objects.equals(this.name, createTableResponse.name)
-        && Objects.equals(this.namespace, createTableResponse.namespace)
-        && Objects.equals(this.location, createTableResponse.location)
+    return Objects.equals(this.location, createTableResponse.location)
+        && Objects.equals(this.version, createTableResponse.version)
+        && Objects.equals(this.schema, createTableResponse.schema)
         && Objects.equals(this.properties, createTableResponse.properties)
         && Objects.equals(this.storageOptions, createTableResponse.storageOptions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, location, properties, storageOptions);
+    return Objects.hash(location, version, schema, properties, storageOptions);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
     sb.append("}");
@@ -277,42 +267,6 @@ public class CreateTableResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `namespace` to the URL query string
-    if (getNamespace() != null) {
-      for (int i = 0; i < getNamespace().size(); i++) {
-        try {
-          joiner.add(
-              String.format(
-                  "%snamespace%s%s=%s",
-                  prefix,
-                  suffix,
-                  "".equals(suffix)
-                      ? ""
-                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
-                      .replaceAll("\\+", "%20")));
-        } catch (UnsupportedEncodingException e) {
-          // Should never happen, UTF-8 is always supported
-          throw new RuntimeException(e);
-        }
-      }
-    }
-
     // add `location` to the URL query string
     if (getLocation() != null) {
       try {
@@ -327,6 +281,26 @@ public class CreateTableResponse {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);
       }
+    }
+
+    // add `version` to the URL query string
+    if (getVersion() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sversion%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `schema` to the URL query string
+    if (getSchema() != null) {
+      joiner.add(getSchema().toUrlQueryString(prefix + "schema" + suffix));
     }
 
     // add `properties` to the URL query string

@@ -27,10 +27,10 @@ class DescribeTableIndexStatsRequest(BaseModel):
     """
     DescribeTableIndexStatsRequest
     """ # noqa: E501
-    name: StrictStr = Field(description="The table name")
-    namespace: List[StrictStr] = Field(description="The namespace identifier")
+    id: Optional[List[StrictStr]] = None
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Optional table version to get stats for")
-    __properties: ClassVar[List[str]] = ["name", "namespace", "version"]
+    index_name: Optional[StrictStr] = Field(default=None, description="Name of the index")
+    __properties: ClassVar[List[str]] = ["id", "version", "index_name"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,9 +83,9 @@ class DescribeTableIndexStatsRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace"),
-            "version": obj.get("version")
+            "id": obj.get("id"),
+            "version": obj.get("version"),
+            "index_name": obj.get("index_name")
         })
         return _obj
 

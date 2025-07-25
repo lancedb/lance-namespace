@@ -22,9 +22,7 @@ import javax.validation.constraints.*;
 
 import java.util.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /** ListTableIndicesResponse */
@@ -33,14 +31,6 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class ListTableIndicesResponse {
 
-  private String name;
-
-  @Valid private List<String> namespace = new ArrayList<>();
-
-  private String location;
-
-  @Valid private Map<String, String> properties = new HashMap<>();
-
   @Valid private List<@Valid IndexListItemResponse> indexes = new ArrayList<>();
 
   public ListTableIndicesResponse() {
@@ -48,126 +38,8 @@ public class ListTableIndicesResponse {
   }
 
   /** Constructor with only required parameters */
-  public ListTableIndicesResponse(
-      String name,
-      List<String> namespace,
-      String location,
-      List<@Valid IndexListItemResponse> indexes) {
-    this.name = name;
-    this.namespace = namespace;
-    this.location = location;
+  public ListTableIndicesResponse(List<@Valid IndexListItemResponse> indexes) {
     this.indexes = indexes;
-  }
-
-  public ListTableIndicesResponse name(String name) {
-    this.name = name;
-    return this;
-  }
-
-  /**
-   * The table name
-   *
-   * @return name
-   */
-  @NotNull
-  @Schema(
-      name = "name",
-      description = "The table name",
-      requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public ListTableIndicesResponse namespace(List<String> namespace) {
-    this.namespace = namespace;
-    return this;
-  }
-
-  public ListTableIndicesResponse addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
-    }
-    this.namespace.add(namespaceItem);
-    return this;
-  }
-
-  /**
-   * The namespace identifier
-   *
-   * @return namespace
-   */
-  @NotNull
-  @Schema(
-      name = "namespace",
-      description = "The namespace identifier",
-      requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("namespace")
-  public List<String> getNamespace() {
-    return namespace;
-  }
-
-  public void setNamespace(List<String> namespace) {
-    this.namespace = namespace;
-  }
-
-  public ListTableIndicesResponse location(String location) {
-    this.location = location;
-    return this;
-  }
-
-  /**
-   * Table location (usually empty)
-   *
-   * @return location
-   */
-  @NotNull
-  @Schema(
-      name = "location",
-      description = "Table location (usually empty)",
-      requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("location")
-  public String getLocation() {
-    return location;
-  }
-
-  public void setLocation(String location) {
-    this.location = location;
-  }
-
-  public ListTableIndicesResponse properties(Map<String, String> properties) {
-    this.properties = properties;
-    return this;
-  }
-
-  public ListTableIndicesResponse putPropertiesItem(String key, String propertiesItem) {
-    if (this.properties == null) {
-      this.properties = new HashMap<>();
-    }
-    this.properties.put(key, propertiesItem);
-    return this;
-  }
-
-  /**
-   * Additional properties (usually empty)
-   *
-   * @return properties
-   */
-  @Schema(
-      name = "properties",
-      description = "Additional properties (usually empty)",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("properties")
-  public Map<String, String> getProperties() {
-    return properties;
-  }
-
-  public void setProperties(Map<String, String> properties) {
-    this.properties = properties;
   }
 
   public ListTableIndicesResponse indexes(List<@Valid IndexListItemResponse> indexes) {
@@ -212,26 +84,18 @@ public class ListTableIndicesResponse {
       return false;
     }
     ListTableIndicesResponse listTableIndicesResponse = (ListTableIndicesResponse) o;
-    return Objects.equals(this.name, listTableIndicesResponse.name)
-        && Objects.equals(this.namespace, listTableIndicesResponse.namespace)
-        && Objects.equals(this.location, listTableIndicesResponse.location)
-        && Objects.equals(this.properties, listTableIndicesResponse.properties)
-        && Objects.equals(this.indexes, listTableIndicesResponse.indexes);
+    return Objects.equals(this.indexes, listTableIndicesResponse.indexes);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, location, properties, indexes);
+    return Objects.hash(indexes);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ListTableIndicesResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
-    sb.append("    location: ").append(toIndentedString(location)).append("\n");
-    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    indexes: ").append(toIndentedString(indexes)).append("\n");
     sb.append("}");
     return sb.toString();

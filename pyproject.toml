@@ -1,0 +1,25 @@
+[project]
+name = "lance-namespace-workspace"
+version = "0.1.0"
+description = "Lance Namespace workspace with all Python packages"
+requires-python = ">=3.9"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "openapi-spec-validator==0.7.1",
+    "openapi-generator-cli==7.12.0",
+    "mkdocs-material",
+    "mkdocs-linkcheck",
+    "mkdocs-macros-plugin"
+]
+
+[tool.uv.workspace]
+members = [
+    "python/lance_namespace_urllib3_client",
+    "python/lance_namespace",
+]
+
+[tool.uv.sources]
+lance-namespace-urllib3-client = { workspace = true }
+lance-namespace = { workspace = true }

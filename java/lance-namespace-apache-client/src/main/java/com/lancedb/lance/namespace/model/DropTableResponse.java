@@ -28,8 +28,7 @@ import java.util.StringJoiner;
 
 /** DropTableResponse */
 @JsonPropertyOrder({
-  DropTableResponse.JSON_PROPERTY_NAME,
-  DropTableResponse.JSON_PROPERTY_NAMESPACE,
+  DropTableResponse.JSON_PROPERTY_ID,
   DropTableResponse.JSON_PROPERTY_LOCATION,
   DropTableResponse.JSON_PROPERTY_PROPERTIES,
   DropTableResponse.JSON_PROPERTY_TRANSACTION_ID
@@ -38,11 +37,8 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DropTableResponse {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nullable private String name;
-
-  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nullable private List<String> namespace = new ArrayList<>();
+  public static final String JSON_PROPERTY_ID = "id";
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nullable private String location;
@@ -51,64 +47,40 @@ public class DropTableResponse {
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public static final String JSON_PROPERTY_TRANSACTION_ID = "transactionId";
-  @javax.annotation.Nullable private String transactionId;
+  @javax.annotation.Nullable private List<String> transactionId = new ArrayList<>();
 
   public DropTableResponse() {}
 
-  public DropTableResponse name(@javax.annotation.Nullable String name) {
+  public DropTableResponse id(@javax.annotation.Nullable List<String> id) {
 
-    this.name = name;
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setName(@javax.annotation.Nullable String name) {
-    this.name = name;
-  }
-
-  public DropTableResponse namespace(@javax.annotation.Nullable List<String> namespace) {
-
-    this.namespace = namespace;
-    return this;
-  }
-
-  public DropTableResponse addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public DropTableResponse addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get namespace
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getNamespace() {
-    return namespace;
+  public List<String> getId() {
+    return id;
   }
 
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setNamespace(@javax.annotation.Nullable List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(@javax.annotation.Nullable List<String> id) {
+    this.id = id;
   }
 
   public DropTableResponse location(@javax.annotation.Nullable String location) {
@@ -167,27 +139,35 @@ public class DropTableResponse {
     this.properties = properties;
   }
 
-  public DropTableResponse transactionId(@javax.annotation.Nullable String transactionId) {
+  public DropTableResponse transactionId(@javax.annotation.Nullable List<String> transactionId) {
 
     this.transactionId = transactionId;
     return this;
   }
 
+  public DropTableResponse addTransactionIdItem(String transactionIdItem) {
+    if (this.transactionId == null) {
+      this.transactionId = new ArrayList<>();
+    }
+    this.transactionId.add(transactionIdItem);
+    return this;
+  }
+
   /**
-   * Get transactionId
+   * If present, indicating the operation is long running and should be tracked using GetTransaction
    *
    * @return transactionId
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getTransactionId() {
+  public List<String> getTransactionId() {
     return transactionId;
   }
 
   @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setTransactionId(@javax.annotation.Nullable String transactionId) {
+  public void setTransactionId(@javax.annotation.Nullable List<String> transactionId) {
     this.transactionId = transactionId;
   }
 
@@ -200,8 +180,7 @@ public class DropTableResponse {
       return false;
     }
     DropTableResponse dropTableResponse = (DropTableResponse) o;
-    return Objects.equals(this.name, dropTableResponse.name)
-        && Objects.equals(this.namespace, dropTableResponse.namespace)
+    return Objects.equals(this.id, dropTableResponse.id)
         && Objects.equals(this.location, dropTableResponse.location)
         && Objects.equals(this.properties, dropTableResponse.properties)
         && Objects.equals(this.transactionId, dropTableResponse.transactionId);
@@ -209,15 +188,14 @@ public class DropTableResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, location, properties, transactionId);
+    return Objects.hash(id, location, properties, transactionId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DropTableResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
@@ -267,34 +245,19 @@ public class DropTableResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `namespace` to the URL query string
-    if (getNamespace() != null) {
-      for (int i = 0; i < getNamespace().size(); i++) {
+    // add `id` to the URL query string
+    if (getId() != null) {
+      for (int i = 0; i < getId().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%snamespace%s%s=%s",
+                  "%sid%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported
@@ -343,17 +306,22 @@ public class DropTableResponse {
 
     // add `transactionId` to the URL query string
     if (getTransactionId() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%stransactionId%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getTransactionId()), "UTF-8")
-                    .replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
+      for (int i = 0; i < getTransactionId().size(); i++) {
+        try {
+          joiner.add(
+              String.format(
+                  "%stransactionId%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
+                  URLEncoder.encode(String.valueOf(getTransactionId().get(i)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 

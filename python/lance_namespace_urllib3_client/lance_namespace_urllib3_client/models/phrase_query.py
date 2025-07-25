@@ -71,11 +71,6 @@ class PhraseQuery(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if column (nullable) is None
-        # and model_fields_set contains the field
-        if self.column is None and "column" in self.model_fields_set:
-            _dict['column'] = None
-
         return _dict
 
     @classmethod

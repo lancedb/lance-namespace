@@ -13,15 +13,12 @@
  */
 package com.lancedb.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -36,7 +33,7 @@ import java.util.StringJoiner;
     comments = "Generator version: 7.12.0")
 public class PhraseQuery {
   public static final String JSON_PROPERTY_COLUMN = "column";
-  @javax.annotation.Nullable private JsonNullable<String> column = JsonNullable.<String>undefined();
+  @javax.annotation.Nullable private String column;
 
   public static final String JSON_PROPERTY_SLOP = "slop";
   @javax.annotation.Nullable private Integer slop;
@@ -47,8 +44,8 @@ public class PhraseQuery {
   public PhraseQuery() {}
 
   public PhraseQuery column(@javax.annotation.Nullable String column) {
-    this.column = JsonNullable.<String>of(column);
 
+    this.column = column;
     return this;
   }
 
@@ -58,24 +55,16 @@ public class PhraseQuery {
    * @return column
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public String getColumn() {
-    return column.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_COLUMN)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<String> getColumn_JsonNullable() {
+  public String getColumn() {
     return column;
   }
 
   @JsonProperty(JSON_PROPERTY_COLUMN)
-  public void setColumn_JsonNullable(JsonNullable<String> column) {
-    this.column = column;
-  }
-
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setColumn(@javax.annotation.Nullable String column) {
-    this.column = JsonNullable.<String>of(column);
+    this.column = column;
   }
 
   public PhraseQuery slop(@javax.annotation.Nullable Integer slop) {
@@ -135,30 +124,14 @@ public class PhraseQuery {
       return false;
     }
     PhraseQuery phraseQuery = (PhraseQuery) o;
-    return equalsNullable(this.column, phraseQuery.column)
+    return Objects.equals(this.column, phraseQuery.column)
         && Objects.equals(this.slop, phraseQuery.slop)
         && Objects.equals(this.terms, phraseQuery.terms);
   }
 
-  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
-    return a == b
-        || (a != null
-            && b != null
-            && a.isPresent()
-            && b.isPresent()
-            && Objects.deepEquals(a.get(), b.get()));
-  }
-
   @Override
   public int hashCode() {
-    return Objects.hash(hashCodeNullable(column), slop, terms);
-  }
-
-  private static <T> int hashCodeNullable(JsonNullable<T> a) {
-    if (a == null) {
-      return 1;
-    }
-    return a.isPresent() ? Arrays.deepHashCode(new Object[] {a.get()}) : 31;
+    return Objects.hash(column, slop, terms);
   }
 
   @Override

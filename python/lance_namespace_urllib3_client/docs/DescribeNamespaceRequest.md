@@ -5,8 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** |  | [optional] 
-**parent** | **List[str]** |  | [optional] 
+**id** | **List[str]** |  | [optional] 
 
 ## Example
 

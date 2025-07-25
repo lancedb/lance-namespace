@@ -35,7 +35,7 @@ public class DescribeTableResponse {
 
   private String location;
 
-  private JsonSchema schema;
+  private JsonArrowSchema schema;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
@@ -46,8 +46,8 @@ public class DescribeTableResponse {
   }
 
   /** Constructor with only required parameters */
-  public DescribeTableResponse(String location, JsonSchema schema) {
-    this.location = location;
+  public DescribeTableResponse(Long version, JsonArrowSchema schema) {
+    this.version = version;
     this.schema = schema;
   }
 
@@ -61,8 +61,9 @@ public class DescribeTableResponse {
    *
    * @return version
    */
+  @NotNull
   @Min(0L)
-  @Schema(name = "version", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "version", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("version")
   public Long getVersion() {
     return version;
@@ -82,8 +83,7 @@ public class DescribeTableResponse {
    *
    * @return location
    */
-  @NotNull
-  @Schema(name = "location", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "location", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("location")
   public String getLocation() {
     return location;
@@ -93,7 +93,7 @@ public class DescribeTableResponse {
     this.location = location;
   }
 
-  public DescribeTableResponse schema(JsonSchema schema) {
+  public DescribeTableResponse schema(JsonArrowSchema schema) {
     this.schema = schema;
     return this;
   }
@@ -107,11 +107,11 @@ public class DescribeTableResponse {
   @Valid
   @Schema(name = "schema", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("schema")
-  public JsonSchema getSchema() {
+  public JsonArrowSchema getSchema() {
     return schema;
   }
 
-  public void setSchema(JsonSchema schema) {
+  public void setSchema(JsonArrowSchema schema) {
     this.schema = schema;
   }
 

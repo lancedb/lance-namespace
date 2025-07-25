@@ -35,8 +35,7 @@ class TestDescribeTableRequest(unittest.TestCase):
         model = DescribeTableRequest()
         if include_optional:
             return DescribeTableRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ],
                 version = 0

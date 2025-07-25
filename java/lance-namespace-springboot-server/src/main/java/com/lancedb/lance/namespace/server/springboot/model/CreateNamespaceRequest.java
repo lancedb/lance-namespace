@@ -35,11 +35,14 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CreateNamespaceRequest {
 
-  private String name;
+  @Valid private List<String> id = new ArrayList<>();
 
-  @Valid private List<String> parent = new ArrayList<>();
-
-  /** Gets or Sets mode */
+  /**
+   * There are three modes when trying to create a namespace, to differentiate the behavior when a
+   * namespace of the same name already exists: * CREATE: the operation fails with 400. * EXIST_OK:
+   * the operation succeeds and the existing namespace is kept. * OVERWRITE: the existing namespace
+   * is dropped and a new empty namespace with this name is created.
+   */
   public enum ModeEnum {
     CREATE("CREATE"),
 
@@ -76,63 +79,34 @@ public class CreateNamespaceRequest {
 
   private ModeEnum mode;
 
-  @Valid private Map<String, String> options = new HashMap<>();
+  @Valid private Map<String, String> properties = new HashMap<>();
 
-  public CreateNamespaceRequest() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public CreateNamespaceRequest(ModeEnum mode) {
-    this.mode = mode;
-  }
-
-  public CreateNamespaceRequest name(String name) {
-    this.name = name;
+  public CreateNamespaceRequest id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public CreateNamespaceRequest parent(List<String> parent) {
-    this.parent = parent;
-    return this;
-  }
-
-  public CreateNamespaceRequest addParentItem(String parentItem) {
-    if (this.parent == null) {
-      this.parent = new ArrayList<>();
+  public CreateNamespaceRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.parent.add(parentItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get parent
+   * Get id
    *
-   * @return parent
+   * @return id
    */
-  @Schema(name = "parent", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("parent")
-  public List<String> getParent() {
-    return parent;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setParent(List<String> parent) {
-    this.parent = parent;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   public CreateNamespaceRequest mode(ModeEnum mode) {
@@ -141,12 +115,18 @@ public class CreateNamespaceRequest {
   }
 
   /**
-   * Get mode
+   * There are three modes when trying to create a namespace, to differentiate the behavior when a
+   * namespace of the same name already exists: * CREATE: the operation fails with 400. * EXIST_OK:
+   * the operation succeeds and the existing namespace is kept. * OVERWRITE: the existing namespace
+   * is dropped and a new empty namespace with this name is created.
    *
    * @return mode
    */
-  @NotNull
-  @Schema(name = "mode", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(
+      name = "mode",
+      description =
+          "There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
   public ModeEnum getMode() {
     return mode;
@@ -156,32 +136,32 @@ public class CreateNamespaceRequest {
     this.mode = mode;
   }
 
-  public CreateNamespaceRequest options(Map<String, String> options) {
-    this.options = options;
+  public CreateNamespaceRequest properties(Map<String, String> properties) {
+    this.properties = properties;
     return this;
   }
 
-  public CreateNamespaceRequest putOptionsItem(String key, String optionsItem) {
-    if (this.options == null) {
-      this.options = new HashMap<>();
+  public CreateNamespaceRequest putPropertiesItem(String key, String propertiesItem) {
+    if (this.properties == null) {
+      this.properties = new HashMap<>();
     }
-    this.options.put(key, optionsItem);
+    this.properties.put(key, propertiesItem);
     return this;
   }
 
   /**
-   * Get options
+   * Get properties
    *
-   * @return options
+   * @return properties
    */
-  @Schema(name = "options", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("options")
-  public Map<String, String> getOptions() {
-    return options;
+  @Schema(name = "properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("properties")
+  public Map<String, String> getProperties() {
+    return properties;
   }
 
-  public void setOptions(Map<String, String> options) {
-    this.options = options;
+  public void setProperties(Map<String, String> properties) {
+    this.properties = properties;
   }
 
   @Override
@@ -193,25 +173,23 @@ public class CreateNamespaceRequest {
       return false;
     }
     CreateNamespaceRequest createNamespaceRequest = (CreateNamespaceRequest) o;
-    return Objects.equals(this.name, createNamespaceRequest.name)
-        && Objects.equals(this.parent, createNamespaceRequest.parent)
+    return Objects.equals(this.id, createNamespaceRequest.id)
         && Objects.equals(this.mode, createNamespaceRequest.mode)
-        && Objects.equals(this.options, createNamespaceRequest.options);
+        && Objects.equals(this.properties, createNamespaceRequest.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent, mode, options);
+    return Objects.hash(id, mode, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateNamespaceRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
-    sb.append("    options: ").append(toIndentedString(options)).append("\n");
+    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
   }

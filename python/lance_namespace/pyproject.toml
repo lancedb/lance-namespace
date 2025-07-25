@@ -1,0 +1,29 @@
+[project]
+name = "lance-namespace"
+version = "0.1.0"
+description = "Python client for Lance Namespace API"
+readme = "README.md"
+authors = [
+    { name = "Jack Ye", email = "yezhaoqin@gmail.com" }
+]
+requires-python = ">=3.9"
+dependencies = [
+    "lance-namespace-urllib3-client",
+    "typing-extensions>=4.0.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

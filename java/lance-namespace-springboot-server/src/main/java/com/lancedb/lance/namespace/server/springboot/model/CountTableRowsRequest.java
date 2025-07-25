@@ -31,60 +31,38 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CountTableRowsRequest {
 
-  private String name;
-
-  @Valid private List<String> namespace = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   private Long version;
 
   private String filter;
 
-  public CountTableRowsRequest name(String name) {
-    this.name = name;
+  public CountTableRowsRequest id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public CountTableRowsRequest namespace(List<String> namespace) {
-    this.namespace = namespace;
-    return this;
-  }
-
-  public CountTableRowsRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public CountTableRowsRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get namespace
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
-  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("namespace")
-  public List<String> getNamespace() {
-    return namespace;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setNamespace(List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   public CountTableRowsRequest version(Long version) {
@@ -145,23 +123,21 @@ public class CountTableRowsRequest {
       return false;
     }
     CountTableRowsRequest countTableRowsRequest = (CountTableRowsRequest) o;
-    return Objects.equals(this.name, countTableRowsRequest.name)
-        && Objects.equals(this.namespace, countTableRowsRequest.namespace)
+    return Objects.equals(this.id, countTableRowsRequest.id)
         && Objects.equals(this.version, countTableRowsRequest.version)
         && Objects.equals(this.filter, countTableRowsRequest.filter);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, version, filter);
+    return Objects.hash(id, version, filter);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CountTableRowsRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    filter: ").append(toIndentedString(filter)).append("\n");
     sb.append("}");

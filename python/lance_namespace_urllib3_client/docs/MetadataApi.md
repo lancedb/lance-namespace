@@ -7,16 +7,16 @@ Method | HTTP request | Description
 [**alter_transaction**](MetadataApi.md#alter_transaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
 [**create_namespace**](MetadataApi.md#create_namespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
 [**create_table_index**](MetadataApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
-[**deregister_table**](MetadataApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
-[**describe_namespace**](MetadataApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace
-[**describe_table**](MetadataApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
+[**deregister_table**](MetadataApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table
+[**describe_namespace**](MetadataApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe a namespace
+[**describe_table**](MetadataApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe information of a table
 [**describe_table_index_stats**](MetadataApi.md#describe_table_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get table index statistics
 [**describe_transaction**](MetadataApi.md#describe_transaction) | **POST** /v1/transaction/{id}/describe | Describe information about a transaction
 [**drop_namespace**](MetadataApi.md#drop_namespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace
-[**drop_table**](MetadataApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
-[**list_namespaces**](MetadataApi.md#list_namespaces) | **POST** /v1/namespace/{id}/list | List namespaces
+[**drop_table**](MetadataApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table
+[**list_namespaces**](MetadataApi.md#list_namespaces) | **GET** /v1/namespace/{id}/list | List namespaces
 [**list_table_indices**](MetadataApi.md#list_table_indices) | **POST** /v1/table/{id}/index/list | List indexes on a table
-[**list_tables**](MetadataApi.md#list_tables) | **POST** /v1/namespace/{id}/table/list | List tables in a namespace
+[**list_tables**](MetadataApi.md#list_tables) | **GET** /v1/namespace/{id}/table/list | List tables in a namespace
 [**namespace_exists**](MetadataApi.md#namespace_exists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
 [**register_table**](MetadataApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
 [**table_exists**](MetadataApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
@@ -26,6 +26,10 @@ Method | HTTP request | Description
 > AlterTransactionResponse alter_transaction(id, alter_transaction_request, delimiter=delimiter)
 
 Alter information of a transaction.
+
+Alter a transaction with a list of actions such as setting status or properties.
+The server should either succeed and apply all actions, or fail and apply no action.
+
 
 ### Example
 
@@ -105,17 +109,11 @@ No authorization required
 
 Create a new namespace
 
-Create a new namespace.
+Create new namespace `id`.
 
-A namespace can manage either a collection of child namespaces, or a collection of tables.
-
-The namespace in the API route should be the parent namespace to create the new namespace.
-
-There are three modes when trying to create a namespace,
-to differentiate the behavior when a namespace of the same name already exists:
-  * CREATE: the operation fails with 400.
-  * EXIST_OK: the operation succeeds and the existing namespace is kept.
-  * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created.
+During the creation process, the implementation may modify user-provided `properties`, 
+such as adding additional properties like `created_at` to user-provided properties, 
+omitting any specific property, or performing actions based on any property value.
 
 
 ### Example
@@ -278,9 +276,9 @@ No authorization required
 # **deregister_table**
 > DeregisterTableResponse deregister_table(id, deregister_table_request, delimiter=delimiter)
 
-Deregister a table from its namespace
+Deregister a table
 
-Deregister a table from its namespace. The table content remains available in the storage.
+Deregister table `id` from its namespace.
 
 
 ### Example
@@ -309,7 +307,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
-        # Deregister a table from its namespace
+        # Deregister a table
         api_response = api_instance.deregister_table(id, deregister_table_request, delimiter=delimiter)
         print("The response of MetadataApi->deregister_table:\n")
         pprint(api_response)
@@ -358,9 +356,9 @@ No authorization required
 # **describe_namespace**
 > DescribeNamespaceResponse describe_namespace(id, describe_namespace_request, delimiter=delimiter)
 
-Describe information about a namespace
+Describe a namespace
 
-Return the detailed information for a given namespace
+Describe the detailed information for namespace `id`.
 
 
 ### Example
@@ -389,7 +387,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
-        # Describe information about a namespace
+        # Describe a namespace
         api_response = api_instance.describe_namespace(id, describe_namespace_request, delimiter=delimiter)
         print("The response of MetadataApi->describe_namespace:\n")
         pprint(api_response)
@@ -438,10 +436,9 @@ No authorization required
 # **describe_table**
 > DescribeTableResponse describe_table(id, describe_table_request, delimiter=delimiter)
 
-Describe a table from the namespace
+Describe information of a table
 
-Get a table's detailed information under a specified namespace.
-Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+Describe the detailed information for table `id`.
 
 
 ### Example
@@ -470,7 +467,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
-        # Describe a table from the namespace
+        # Describe information of a table
         api_response = api_instance.describe_table(id, describe_table_request, delimiter=delimiter)
         print("The response of MetadataApi->describe_table:\n")
         pprint(api_response)
@@ -606,6 +603,7 @@ Describe information about a transaction
 
 Return a detailed information for a given transaction
 
+
 ### Example
 
 
@@ -683,7 +681,7 @@ No authorization required
 
 Drop a namespace
 
-Drop a namespace. The namespace must be empty.
+Drop namespace `id` from its parent namespace.
 
 
 ### Example
@@ -762,11 +760,9 @@ No authorization required
 # **drop_table**
 > DropTableResponse drop_table(id, drop_table_request, delimiter=delimiter)
 
-Drop a table from its namespace
+Drop a table
 
-Drop a table from its namespace and delete its data.
-If the table and its data can be immediately deleted, return information of the deleted table.
-Otherwise, return a transaction ID that client can use to track deletion progress.
+Drop table `id` and delete its data.
 
 
 ### Example
@@ -795,7 +791,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
-        # Drop a table from its namespace
+        # Drop a table
         api_response = api_instance.drop_table(id, drop_table_request, delimiter=delimiter)
         print("The response of MetadataApi->drop_table:\n")
         pprint(api_response)
@@ -842,11 +838,18 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_namespaces**
-> ListNamespacesResponse list_namespaces(id, list_namespaces_request, delimiter=delimiter)
+> ListNamespacesResponse list_namespaces(id, delimiter=delimiter, page_token=page_token, limit=limit)
 
 List namespaces
 
-List all child namespace names of the root namespace or a given parent namespace.
+List all child namespace names of the parent namespace `id`.
+
+REST NAMESPACE ONLY
+REST namespace uses GET to perform this operation without a request body.
+It passes in the `ListNamespacesRequest` information in the following way:
+- `id`: pass through path parameter of the same name
+- `page_token`: pass through query parameter of the same name
+- `limit`: pass through query parameter of the same name
 
 
 ### Example
@@ -854,7 +857,6 @@ List all child namespace names of the root namespace or a given parent namespace
 
 ```python
 import lance_namespace_urllib3_client
-from lance_namespace_urllib3_client.models.list_namespaces_request import ListNamespacesRequest
 from lance_namespace_urllib3_client.models.list_namespaces_response import ListNamespacesResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
@@ -871,12 +873,13 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.MetadataApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-    list_namespaces_request = lance_namespace_urllib3_client.ListNamespacesRequest() # ListNamespacesRequest | 
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
+    page_token = 'page_token_example' # str |  (optional)
+    limit = 56 # int |  (optional)
 
     try:
         # List namespaces
-        api_response = api_instance.list_namespaces(id, list_namespaces_request, delimiter=delimiter)
+        api_response = api_instance.list_namespaces(id, delimiter=delimiter, page_token=page_token, limit=limit)
         print("The response of MetadataApi->list_namespaces:\n")
         pprint(api_response)
     except Exception as e:
@@ -891,8 +894,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
- **list_namespaces_request** | [**ListNamespacesRequest**](ListNamespacesRequest.md)|  | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
+ **page_token** | **str**|  | [optional] 
+ **limit** | **int**|  | [optional] 
 
 ### Return type
 
@@ -904,7 +908,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 ### HTTP response details
@@ -1004,11 +1008,18 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_tables**
-> ListTablesResponse list_tables(id, list_tables_request, delimiter=delimiter)
+> ListTablesResponse list_tables(id, delimiter=delimiter, page_token=page_token, limit=limit)
 
 List tables in a namespace
 
-List all child table names of the root namespace or a given parent namespace.
+List all child table names of the parent namespace `id`.
+
+REST NAMESPACE ONLY
+REST namespace uses GET to perform this operation without a request body.
+It passes in the `ListTablesRequest` information in the following way:
+- `id`: pass through path parameter of the same name
+- `page_token`: pass through query parameter of the same name
+- `limit`: pass through query parameter of the same name
 
 
 ### Example
@@ -1016,7 +1027,6 @@ List all child table names of the root namespace or a given parent namespace.
 
 ```python
 import lance_namespace_urllib3_client
-from lance_namespace_urllib3_client.models.list_tables_request import ListTablesRequest
 from lance_namespace_urllib3_client.models.list_tables_response import ListTablesResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
@@ -1033,12 +1043,13 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.MetadataApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-    list_tables_request = lance_namespace_urllib3_client.ListTablesRequest() # ListTablesRequest | 
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
+    page_token = 'page_token_example' # str |  (optional)
+    limit = 56 # int |  (optional)
 
     try:
         # List tables in a namespace
-        api_response = api_instance.list_tables(id, list_tables_request, delimiter=delimiter)
+        api_response = api_instance.list_tables(id, delimiter=delimiter, page_token=page_token, limit=limit)
         print("The response of MetadataApi->list_tables:\n")
         pprint(api_response)
     except Exception as e:
@@ -1053,8 +1064,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
- **list_tables_request** | [**ListTablesRequest**](ListTablesRequest.md)|  | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
+ **page_token** | **str**|  | [optional] 
+ **limit** | **int**|  | [optional] 
 
 ### Return type
 
@@ -1066,7 +1078,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 ### HTTP response details
@@ -1089,9 +1101,10 @@ No authorization required
 
 Check if a namespace exists
 
-Check if a namespace exists.
+Check if namespace `id` exists.
 
-This API should behave exactly like the DescribeNamespace API, except it does not contain a body.
+This operation must behave exactly like the DescribeNamespace API, 
+except it does not contain a response body.
 
 
 ### Example
@@ -1168,7 +1181,7 @@ No authorization required
 
 Register a table to a namespace
 
-Register an existing table at a given storage location to a namespace.
+Register an existing table at a given storage location as `id`.
 
 
 ### Example
@@ -1250,9 +1263,10 @@ No authorization required
 
 Check if a table exists
 
-Check if a table exists.
+Check if table `id` exists.
 
-This API should behave exactly like the DescribeTable API, except it does not contain a body.
+This operation should behave exactly like DescribeTable, 
+except it does not contain a response body.
 
 
 ### Example

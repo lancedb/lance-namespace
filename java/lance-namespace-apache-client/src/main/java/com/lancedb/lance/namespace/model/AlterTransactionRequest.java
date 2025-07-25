@@ -37,16 +37,24 @@ import java.util.StringJoiner;
     comments = "Generator version: 7.12.0")
 public class AlterTransactionRequest {
   public static final String JSON_PROPERTY_ID = "id";
-  @javax.annotation.Nonnull private String id;
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public static final String JSON_PROPERTY_ACTIONS = "actions";
   @javax.annotation.Nonnull private List<AlterTransactionAction> actions = new ArrayList<>();
 
   public AlterTransactionRequest() {}
 
-  public AlterTransactionRequest id(@javax.annotation.Nonnull String id) {
+  public AlterTransactionRequest id(@javax.annotation.Nullable List<String> id) {
 
     this.id = id;
+    return this;
+  }
+
+  public AlterTransactionRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
+    }
+    this.id.add(idItem);
     return this;
   }
 
@@ -55,16 +63,16 @@ public class AlterTransactionRequest {
    *
    * @return id
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_ID)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getId() {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<String> getId() {
     return id;
   }
 
   @JsonProperty(JSON_PROPERTY_ID)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setId(@javax.annotation.Nonnull String id) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setId(@javax.annotation.Nullable List<String> id) {
     this.id = id;
   }
 
@@ -173,16 +181,22 @@ public class AlterTransactionRequest {
 
     // add `id` to the URL query string
     if (getId() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sid%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getId()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
+      for (int i = 0; i < getId().size(); i++) {
+        try {
+          joiner.add(
+              String.format(
+                  "%sid%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
+                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 

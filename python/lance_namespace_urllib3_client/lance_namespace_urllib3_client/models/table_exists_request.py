@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,9 +27,9 @@ class TableExistsRequest(BaseModel):
     """
     TableExistsRequest
     """ # noqa: E501
-    name: StrictStr
-    namespace: List[StrictStr]
-    __properties: ClassVar[List[str]] = ["name", "namespace"]
+    id: Optional[List[StrictStr]] = None
+    version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Version of the table to check existence. If not specified, server should resolve it to the latest version. ")
+    __properties: ClassVar[List[str]] = ["id", "version"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,8 +82,8 @@ class TableExistsRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace")
+            "id": obj.get("id"),
+            "version": obj.get("version")
         })
         return _obj
 

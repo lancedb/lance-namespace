@@ -19,7 +19,7 @@ Method | HTTP request | Description
 > i64 count_table_rows(id, count_table_rows_request, delimiter)
 Count rows in a table
 
-Count the number of rows in a table. 
+Count the number of rows in table `id` 
 
 ### Parameters
 
@@ -48,10 +48,10 @@ No authorization required
 
 ## create_table
 
-> models::CreateTableResponse create_table(id, x_lance_table_location, body, delimiter, x_lance_table_properties)
+> models::CreateTableResponse create_table(id, body, delimiter, x_lance_table_location, x_lance_table_properties)
 Create a table with the given name
 
-Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. 
+Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
 
 ### Parameters
 
@@ -59,9 +59,9 @@ Create a new table in the namespace with the given data in Arrow IPC stream.  Th
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
-**x_lance_table_location** | **String** | URI pointing to root location to create the table at | [required] |
 **body** | **Vec<u8>** | Arrow IPC data | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
+**x_lance_table_location** | Option<**String**> | URI pointing to root location to create the table at |  |
 **x_lance_table_properties** | Option<**String**> | JSON-encoded string map (e.g. { \"owner\": \"jack\" })  |  |
 
 ### Return type
@@ -85,7 +85,7 @@ No authorization required
 > models::DeleteFromTableResponse delete_from_table(id, delete_from_table_request, delimiter)
 Delete rows from a table
 
-Delete rows from a table based on a SQL predicate. Returns the number of rows that were deleted. 
+Delete rows from table `id`. 
 
 ### Parameters
 
@@ -117,7 +117,7 @@ No authorization required
 > models::InsertIntoTableResponse insert_into_table(id, body, delimiter, mode)
 Insert records into a table
 
-Insert new records into an existing table using Arrow IPC format. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+Insert new records into table `id`.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `InsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
 
 ### Parameters
 
@@ -125,9 +125,9 @@ Insert new records into an existing table using Arrow IPC format. Supports both 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
-**body** | **Vec<u8>** | Arrow IPC data | [required] |
+**body** | **Vec<u8>** | Arrow IPC stream containing the records to insert | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
-**mode** | Option<**String**> | Insert mode: \"append\" (default) or \"overwrite\" |  |[default to append]
+**mode** | Option<**String**> | How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it  |  |[default to append]
 
 ### Return type
 
@@ -150,7 +150,7 @@ No authorization required
 > models::MergeInsertIntoTableResponse merge_insert_into_table(id, on, body, delimiter, when_matched_update_all, when_matched_update_all_filt, when_not_matched_insert_all, when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt)
 Merge insert (upsert) records into a table
 
-Performs a merge insert (upsert) operation on a table. This operation updates existing rows based on a matching column and inserts new rows that don't match. Returns the number of rows inserted and updated. 
+Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don't match. It returns the number of rows inserted and updated.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
 
 ### Parameters
 
@@ -159,7 +159,7 @@ Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
 **on** | **String** | Column name to use for matching rows (required) | [required] |
-**body** | **Vec<u8>** | Arrow IPC data containing the records to merge | [required] |
+**body** | **Vec<u8>** | Arrow IPC stream containing the records to merge | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
 **when_matched_update_all** | Option<**bool**> | Update all columns when rows match |  |[default to false]
 **when_matched_update_all_filt** | Option<**String**> | The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true |  |
@@ -188,7 +188,7 @@ No authorization required
 > Vec<u8> query_table(id, query_table_request, delimiter)
 Query a table
 
-Query a table with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
+Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
 
 ### Parameters
 
@@ -220,7 +220,7 @@ No authorization required
 > models::UpdateTableResponse update_table(id, update_table_request, delimiter)
 Update rows in a table
 
-Update existing rows in a table using SQL expressions. Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
+Update existing rows in table `id`. 
 
 ### Parameters
 

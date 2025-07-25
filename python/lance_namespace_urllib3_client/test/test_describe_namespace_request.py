@@ -35,8 +35,7 @@ class TestDescribeNamespaceRequest(unittest.TestCase):
         model = DescribeNamespaceRequest()
         if include_optional:
             return DescribeNamespaceRequest(
-                name = '',
-                parent = [
+                id = [
                     ''
                     ]
             )

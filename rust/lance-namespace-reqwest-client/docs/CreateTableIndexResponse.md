@@ -4,8 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **String** | The table name | 
-**namespace** | **Vec<String>** | The namespace identifier | 
+**id** | Option<**Vec<String>**> |  | [optional]
 **location** | **String** | Table location (usually empty) | 
 **properties** | Option<**std::collections::HashMap<String, String>**> | Additional properties (usually empty) | [optional]
 

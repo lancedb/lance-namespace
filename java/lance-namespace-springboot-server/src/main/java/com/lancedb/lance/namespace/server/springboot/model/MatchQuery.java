@@ -31,9 +31,9 @@ public class MatchQuery {
 
   private Float boost;
 
-  private String column = null;
+  private String column;
 
-  private Integer fuzziness = null;
+  private Integer fuzziness;
 
   private Integer maxExpansions;
 

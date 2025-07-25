@@ -20,85 +20,63 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 /** RegisterTableRequest */
 @JsonPropertyOrder({
-  RegisterTableRequest.JSON_PROPERTY_NAME,
-  RegisterTableRequest.JSON_PROPERTY_NAMESPACE,
-  RegisterTableRequest.JSON_PROPERTY_LOCATION
+  RegisterTableRequest.JSON_PROPERTY_ID,
+  RegisterTableRequest.JSON_PROPERTY_LOCATION,
+  RegisterTableRequest.JSON_PROPERTY_PROPERTIES
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class RegisterTableRequest {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nullable private String name;
-
-  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nullable private List<String> namespace = new ArrayList<>();
+  public static final String JSON_PROPERTY_ID = "id";
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nonnull private String location;
 
+  public static final String JSON_PROPERTY_PROPERTIES = "properties";
+  @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
+
   public RegisterTableRequest() {}
 
-  public RegisterTableRequest name(@javax.annotation.Nullable String name) {
+  public RegisterTableRequest id(@javax.annotation.Nullable List<String> id) {
 
-    this.name = name;
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setName(@javax.annotation.Nullable String name) {
-    this.name = name;
-  }
-
-  public RegisterTableRequest namespace(@javax.annotation.Nullable List<String> namespace) {
-
-    this.namespace = namespace;
-    return this;
-  }
-
-  public RegisterTableRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public RegisterTableRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get namespace
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getNamespace() {
-    return namespace;
+  public List<String> getId() {
+    return id;
   }
 
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setNamespace(@javax.annotation.Nullable List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(@javax.annotation.Nullable List<String> id) {
+    this.id = id;
   }
 
   public RegisterTableRequest location(@javax.annotation.Nonnull String location) {
@@ -125,6 +103,39 @@ public class RegisterTableRequest {
     this.location = location;
   }
 
+  public RegisterTableRequest properties(
+      @javax.annotation.Nullable Map<String, String> properties) {
+
+    this.properties = properties;
+    return this;
+  }
+
+  public RegisterTableRequest putPropertiesItem(String key, String propertiesItem) {
+    if (this.properties == null) {
+      this.properties = new HashMap<>();
+    }
+    this.properties.put(key, propertiesItem);
+    return this;
+  }
+
+  /**
+   * Get properties
+   *
+   * @return properties
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_PROPERTIES)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Map<String, String> getProperties() {
+    return properties;
+  }
+
+  @JsonProperty(JSON_PROPERTY_PROPERTIES)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setProperties(@javax.annotation.Nullable Map<String, String> properties) {
+    this.properties = properties;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -134,23 +145,23 @@ public class RegisterTableRequest {
       return false;
     }
     RegisterTableRequest registerTableRequest = (RegisterTableRequest) o;
-    return Objects.equals(this.name, registerTableRequest.name)
-        && Objects.equals(this.namespace, registerTableRequest.namespace)
-        && Objects.equals(this.location, registerTableRequest.location);
+    return Objects.equals(this.id, registerTableRequest.id)
+        && Objects.equals(this.location, registerTableRequest.location)
+        && Objects.equals(this.properties, registerTableRequest.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, location);
+    return Objects.hash(id, location, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class RegisterTableRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -197,34 +208,19 @@ public class RegisterTableRequest {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `namespace` to the URL query string
-    if (getNamespace() != null) {
-      for (int i = 0; i < getNamespace().size(); i++) {
+    // add `id` to the URL query string
+    if (getId() != null) {
+      for (int i = 0; i < getId().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%snamespace%s%s=%s",
+                  "%sid%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported
@@ -246,6 +242,28 @@ public class RegisterTableRequest {
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);
+      }
+    }
+
+    // add `properties` to the URL query string
+    if (getProperties() != null) {
+      for (String _key : getProperties().keySet()) {
+        try {
+          joiner.add(
+              String.format(
+                  "%sproperties%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
+                  getProperties().get(_key),
+                  URLEncoder.encode(String.valueOf(getProperties().get(_key)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 

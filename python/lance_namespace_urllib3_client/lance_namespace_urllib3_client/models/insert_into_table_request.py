@@ -24,12 +24,11 @@ from typing_extensions import Self
 
 class InsertIntoTableRequest(BaseModel):
     """
-    Request for inserting records into a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `mode`: pass through query parameter of the same name 
+    Request for inserting records into a table, excluding the Arrow IPC stream. 
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    namespace: Optional[List[StrictStr]] = None
+    id: Optional[List[StrictStr]] = None
     mode: Optional[StrictStr] = 'append'
-    __properties: ClassVar[List[str]] = ["name", "namespace", "mode"]
+    __properties: ClassVar[List[str]] = ["id", "mode"]
 
     @field_validator('mode')
     def mode_validate_enum(cls, value):
@@ -92,8 +91,7 @@ class InsertIntoTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace"),
+            "id": obj.get("id"),
             "mode": obj.get("mode") if obj.get("mode") is not None else 'append'
         })
         return _obj

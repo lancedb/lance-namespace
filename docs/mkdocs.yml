@@ -24,8 +24,11 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
   features:
+    - navigation.tabs
     - navigation.sections
-    - navigation.expand
+    - navigation.instant
+    - navigation.indexes
+    - navigation.tracking
     - navigation.top
     - search.highlight
     - search.share
@@ -68,16 +71,45 @@ nav:
   - Introduction: index.md
   - Spec:
       - Concepts: spec/concepts.md
-      - Operations: spec/operations.md
-      - Implementations: spec/implementations.md
+      - Operations:
+          - Overview: spec/operations/index.md
+          - CreateNamespace: spec/operations/create-namespace.md
+          - ListNamespaces: spec/operations/list-namespaces.md
+          - DescribeNamespace: spec/operations/describe-namespace.md
+          - DropNamespace: spec/operations/drop-namespace.md
+          - NamespaceExists: spec/operations/namespace-exists.md
+          - ListTables: spec/operations/list-tables.md
+          - RegisterTable: spec/operations/register-table.md
+          - DescribeTable: spec/operations/describe-table.md
+          - TableExists: spec/operations/table-exists.md
+          - DropTable: spec/operations/drop-table.md
+          - DeregisterTable: spec/operations/deregister-table.md
+          - CreateTableIndex: spec/operations/create-table-index.md
+          - ListTableIndices: spec/operations/list-table-indices.md
+          - DescribeTableIndexStats: spec/operations/describe-table-index-stats.md
+          - CreateTable: spec/operations/create-table.md
+          - InsertIntoTable: spec/operations/insert-into-table.md
+          - MergeInsertIntoTable: spec/operations/merge-insert-into-table.md
+          - UpdateTable: spec/operations/update-table.md
+          - DeleteFromTable: spec/operations/delete-from-table.md
+          - QueryTable: spec/operations/query-table.md
+          - CountTableRows: spec/operations/count-table-rows.md
+          - DescribeTransaction: spec/operations/describe-transaction.md
+          - AlterTransaction: spec/operations/alter-transaction.md
+      - Implementations:
+          - Overview: spec/impls/index.md
+          - REST: 
+              - Overview: spec/impls/rest/index.md
+              - ListNamespaces: spec/impls/rest/list-namespaces.md
+              - ListTables: spec/impls/rest/list-tables.md
+              - InsertIntoTable: spec/impls/rest/insert-into-table.md
+              - MergeInsertIntoTable: spec/impls/rest/merge-insert-into-table.md
+              - CreateTable: spec/impls/rest/create-table.md
+          - Directory: spec/impls/dir.md
+          - Apache Hive MetaStore: spec/impls/hive.md
+          - Apache Iceberg REST Catalog: spec/impls/iceberg.md
       - Tool Integration: spec/tools.md
       - OpenAPI: https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/lancedb/lance-namespace/refs/heads/main/docs/src/spec/rest.yaml
-  - Native Implementations:
-      - Overview: spec/impls/overview.md
-      - REST: spec/impls/rest.md
-      - Directory: spec/impls/dir.md
-      - Apache Hive MetaStore: spec/impls/hive.md
-      - Apache Iceberg REST Catalog: spec/impls/iceberg.md
   - User Guide:
       - Java SDK: user-guide/java-sdk.md
   - Contributing: contributing.md

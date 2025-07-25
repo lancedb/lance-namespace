@@ -33,61 +33,9 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DropNamespaceResponse {
 
-  private String name;
-
-  @Valid private List<String> parent = new ArrayList<>();
-
   @Valid private Map<String, String> properties = new HashMap<>();
 
-  private String transactionId;
-
-  public DropNamespaceResponse name(String name) {
-    this.name = name;
-    return this;
-  }
-
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public DropNamespaceResponse parent(List<String> parent) {
-    this.parent = parent;
-    return this;
-  }
-
-  public DropNamespaceResponse addParentItem(String parentItem) {
-    if (this.parent == null) {
-      this.parent = new ArrayList<>();
-    }
-    this.parent.add(parentItem);
-    return this;
-  }
-
-  /**
-   * Get parent
-   *
-   * @return parent
-   */
-  @Schema(name = "parent", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("parent")
-  public List<String> getParent() {
-    return parent;
-  }
-
-  public void setParent(List<String> parent) {
-    this.parent = parent;
-  }
+  @Valid private List<String> transactionId = new ArrayList<>();
 
   public DropNamespaceResponse properties(Map<String, String> properties) {
     this.properties = properties;
@@ -117,8 +65,16 @@ public class DropNamespaceResponse {
     this.properties = properties;
   }
 
-  public DropNamespaceResponse transactionId(String transactionId) {
+  public DropNamespaceResponse transactionId(List<String> transactionId) {
     this.transactionId = transactionId;
+    return this;
+  }
+
+  public DropNamespaceResponse addTransactionIdItem(String transactionIdItem) {
+    if (this.transactionId == null) {
+      this.transactionId = new ArrayList<>();
+    }
+    this.transactionId.add(transactionIdItem);
     return this;
   }
 
@@ -133,11 +89,11 @@ public class DropNamespaceResponse {
           "If present, indicating the operation is long running and should be tracked using GetTransaction ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("transactionId")
-  public String getTransactionId() {
+  public List<String> getTransactionId() {
     return transactionId;
   }
 
-  public void setTransactionId(String transactionId) {
+  public void setTransactionId(List<String> transactionId) {
     this.transactionId = transactionId;
   }
 
@@ -150,23 +106,19 @@ public class DropNamespaceResponse {
       return false;
     }
     DropNamespaceResponse dropNamespaceResponse = (DropNamespaceResponse) o;
-    return Objects.equals(this.name, dropNamespaceResponse.name)
-        && Objects.equals(this.parent, dropNamespaceResponse.parent)
-        && Objects.equals(this.properties, dropNamespaceResponse.properties)
+    return Objects.equals(this.properties, dropNamespaceResponse.properties)
         && Objects.equals(this.transactionId, dropNamespaceResponse.transactionId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent, properties, transactionId);
+    return Objects.hash(properties, transactionId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DropNamespaceResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("}");

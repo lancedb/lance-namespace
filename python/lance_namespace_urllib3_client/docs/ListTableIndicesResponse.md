@@ -5,10 +5,6 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** | The table name | 
-**namespace** | **List[str]** | The namespace identifier | 
-**location** | **str** | Table location (usually empty) | 
-**properties** | **Dict[str, str]** | Additional properties (usually empty) | [optional] 
 **indexes** | [**List[IndexListItemResponse]**](IndexListItemResponse.md) | List of indexes on the table | 
 
 ## Example

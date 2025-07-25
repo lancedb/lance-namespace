@@ -13,17 +13,17 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AlterTransactionResponse {
-    #[serde(rename = "id")]
-    pub id: String,
     #[serde(rename = "status")]
     pub status: models::TransactionStatus,
+    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
+    pub properties: Option<std::collections::HashMap<String, String>>,
 }
 
 impl AlterTransactionResponse {
-    pub fn new(id: String, status: models::TransactionStatus) -> AlterTransactionResponse {
+    pub fn new(status: models::TransactionStatus) -> AlterTransactionResponse {
         AlterTransactionResponse {
-            id,
             status,
+            properties: None,
         }
     }
 }

@@ -13,8 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct StringFtsQuery {
-    #[serde(rename = "columns", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
-    pub columns: Option<Option<Vec<String>>>,
+    #[serde(rename = "columns", skip_serializing_if = "Option::is_none")]
+    pub columns: Option<Vec<String>>,
     #[serde(rename = "query")]
     pub query: String,
 }

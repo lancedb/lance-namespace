@@ -1,12 +1,12 @@
 # DeregisterTableRequest
 
+The table content remains available in the storage. 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** |  | 
-**namespace** | **List[str]** |  | [optional] 
+**id** | **List[str]** |  | [optional] 
 
 ## Example
 

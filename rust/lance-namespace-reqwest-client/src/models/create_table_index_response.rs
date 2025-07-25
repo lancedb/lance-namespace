@@ -13,12 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateTableIndexResponse {
-    /// The table name
-    #[serde(rename = "name")]
-    pub name: String,
-    /// The namespace identifier
-    #[serde(rename = "namespace")]
-    pub namespace: Vec<String>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
     /// Table location (usually empty)
     #[serde(rename = "location")]
     pub location: String,
@@ -28,10 +24,9 @@ pub struct CreateTableIndexResponse {
 }
 
 impl CreateTableIndexResponse {
-    pub fn new(name: String, namespace: Vec<String>, location: String) -> CreateTableIndexResponse {
+    pub fn new(location: String) -> CreateTableIndexResponse {
         CreateTableIndexResponse {
-            name,
-            namespace,
+            id: None,
             location,
             properties: None,
         }

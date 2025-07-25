@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -26,10 +26,8 @@ class CreateNamespaceResponse(BaseModel):
     """
     CreateNamespaceResponse
     """ # noqa: E501
-    name: StrictStr
-    parent: Optional[List[StrictStr]] = None
-    properties: Optional[Dict[str, StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["name", "parent", "properties"]
+    properties: Optional[Dict[str, StrictStr]] = Field(default=None, description="Properties after the namespace is created.  If the server does not support namespace properties, it should return null for this field. If namespace properties are supported, but none are set, it should return an empty object. ")
+    __properties: ClassVar[List[str]] = ["properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -82,8 +80,6 @@ class CreateNamespaceResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "parent": obj.get("parent"),
             "properties": obj.get("properties")
         })
         return _obj

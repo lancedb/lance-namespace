@@ -13,22 +13,18 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ListTableIndicesRequest {
-    /// The table name
-    #[serde(rename = "name")]
-    pub name: String,
     /// The namespace identifier
-    #[serde(rename = "namespace")]
-    pub namespace: Vec<String>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
     /// Optional table version to list indexes from
     #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
     pub version: Option<i64>,
 }
 
 impl ListTableIndicesRequest {
-    pub fn new(name: String, namespace: Vec<String>) -> ListTableIndicesRequest {
+    pub fn new() -> ListTableIndicesRequest {
         ListTableIndicesRequest {
-            name,
-            namespace,
+            id: None,
             version: None,
         }
     }

@@ -28,8 +28,6 @@ import java.util.StringJoiner;
 
 /** DropNamespaceResponse */
 @JsonPropertyOrder({
-  DropNamespaceResponse.JSON_PROPERTY_NAME,
-  DropNamespaceResponse.JSON_PROPERTY_PARENT,
   DropNamespaceResponse.JSON_PROPERTY_PROPERTIES,
   DropNamespaceResponse.JSON_PROPERTY_TRANSACTION_ID
 })
@@ -37,75 +35,13 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DropNamespaceResponse {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nullable private String name;
-
-  public static final String JSON_PROPERTY_PARENT = "parent";
-  @javax.annotation.Nullable private List<String> parent = new ArrayList<>();
-
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public static final String JSON_PROPERTY_TRANSACTION_ID = "transactionId";
-  @javax.annotation.Nullable private String transactionId;
+  @javax.annotation.Nullable private List<String> transactionId = new ArrayList<>();
 
   public DropNamespaceResponse() {}
-
-  public DropNamespaceResponse name(@javax.annotation.Nullable String name) {
-
-    this.name = name;
-    return this;
-  }
-
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setName(@javax.annotation.Nullable String name) {
-    this.name = name;
-  }
-
-  public DropNamespaceResponse parent(@javax.annotation.Nullable List<String> parent) {
-
-    this.parent = parent;
-    return this;
-  }
-
-  public DropNamespaceResponse addParentItem(String parentItem) {
-    if (this.parent == null) {
-      this.parent = new ArrayList<>();
-    }
-    this.parent.add(parentItem);
-    return this;
-  }
-
-  /**
-   * Get parent
-   *
-   * @return parent
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_PARENT)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getParent() {
-    return parent;
-  }
-
-  @JsonProperty(JSON_PROPERTY_PARENT)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setParent(@javax.annotation.Nullable List<String> parent) {
-    this.parent = parent;
-  }
 
   public DropNamespaceResponse properties(
       @javax.annotation.Nullable Map<String, String> properties) {
@@ -140,9 +76,18 @@ public class DropNamespaceResponse {
     this.properties = properties;
   }
 
-  public DropNamespaceResponse transactionId(@javax.annotation.Nullable String transactionId) {
+  public DropNamespaceResponse transactionId(
+      @javax.annotation.Nullable List<String> transactionId) {
 
     this.transactionId = transactionId;
+    return this;
+  }
+
+  public DropNamespaceResponse addTransactionIdItem(String transactionIdItem) {
+    if (this.transactionId == null) {
+      this.transactionId = new ArrayList<>();
+    }
+    this.transactionId.add(transactionIdItem);
     return this;
   }
 
@@ -154,13 +99,13 @@ public class DropNamespaceResponse {
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getTransactionId() {
+  public List<String> getTransactionId() {
     return transactionId;
   }
 
   @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setTransactionId(@javax.annotation.Nullable String transactionId) {
+  public void setTransactionId(@javax.annotation.Nullable List<String> transactionId) {
     this.transactionId = transactionId;
   }
 
@@ -173,23 +118,19 @@ public class DropNamespaceResponse {
       return false;
     }
     DropNamespaceResponse dropNamespaceResponse = (DropNamespaceResponse) o;
-    return Objects.equals(this.name, dropNamespaceResponse.name)
-        && Objects.equals(this.parent, dropNamespaceResponse.parent)
-        && Objects.equals(this.properties, dropNamespaceResponse.properties)
+    return Objects.equals(this.properties, dropNamespaceResponse.properties)
         && Objects.equals(this.transactionId, dropNamespaceResponse.transactionId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent, properties, transactionId);
+    return Objects.hash(properties, transactionId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DropNamespaceResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("}");
@@ -238,42 +179,6 @@ public class DropNamespaceResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `parent` to the URL query string
-    if (getParent() != null) {
-      for (int i = 0; i < getParent().size(); i++) {
-        try {
-          joiner.add(
-              String.format(
-                  "%sparent%s%s=%s",
-                  prefix,
-                  suffix,
-                  "".equals(suffix)
-                      ? ""
-                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getParent().get(i)), "UTF-8")
-                      .replaceAll("\\+", "%20")));
-        } catch (UnsupportedEncodingException e) {
-          // Should never happen, UTF-8 is always supported
-          throw new RuntimeException(e);
-        }
-      }
-    }
-
     // add `properties` to the URL query string
     if (getProperties() != null) {
       for (String _key : getProperties().keySet()) {
@@ -298,17 +203,22 @@ public class DropNamespaceResponse {
 
     // add `transactionId` to the URL query string
     if (getTransactionId() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%stransactionId%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getTransactionId()), "UTF-8")
-                    .replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
+      for (int i = 0; i < getTransactionId().size(); i++) {
+        try {
+          joiner.add(
+              String.format(
+                  "%stransactionId%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
+                  URLEncoder.encode(String.valueOf(getTransactionId().get(i)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 

@@ -11,13 +11,11 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// CreateTableRequest : Request for creating a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
+/// CreateTableRequest : Request for creating a table, excluding the Arrow IPC stream. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateTableRequest {
-    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
-    #[serde(rename = "namespace", skip_serializing_if = "Option::is_none")]
-    pub namespace: Option<Vec<String>>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
@@ -25,11 +23,10 @@ pub struct CreateTableRequest {
 }
 
 impl CreateTableRequest {
-    /// Request for creating a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
+    /// Request for creating a table, excluding the Arrow IPC stream. 
     pub fn new() -> CreateTableRequest {
         CreateTableRequest {
-            name: None,
-            namespace: None,
+            id: None,
             location: None,
             properties: None,
         }

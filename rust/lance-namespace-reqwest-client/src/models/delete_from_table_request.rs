@@ -11,24 +11,22 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
+/// DeleteFromTableRequest : Delete data from table based on a SQL predicate. Returns the number of rows that were deleted. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DeleteFromTableRequest {
-    /// The table name
-    #[serde(rename = "name")]
-    pub name: String,
     /// The namespace identifier
-    #[serde(rename = "namespace")]
-    pub namespace: Vec<String>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
     /// SQL predicate to filter rows for deletion
     #[serde(rename = "predicate")]
     pub predicate: String,
 }
 
 impl DeleteFromTableRequest {
-    pub fn new(name: String, namespace: Vec<String>, predicate: String) -> DeleteFromTableRequest {
+    /// Delete data from table based on a SQL predicate. Returns the number of rows that were deleted. 
+    pub fn new(predicate: String) -> DeleteFromTableRequest {
         DeleteFromTableRequest {
-            name,
-            namespace,
+            id: None,
             predicate,
         }
     }

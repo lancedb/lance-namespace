@@ -31,56 +31,34 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DescribeNamespaceRequest {
 
-  private String name;
+  @Valid private List<String> id = new ArrayList<>();
 
-  @Valid private List<String> parent = new ArrayList<>();
-
-  public DescribeNamespaceRequest name(String name) {
-    this.name = name;
+  public DescribeNamespaceRequest id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public DescribeNamespaceRequest parent(List<String> parent) {
-    this.parent = parent;
-    return this;
-  }
-
-  public DescribeNamespaceRequest addParentItem(String parentItem) {
-    if (this.parent == null) {
-      this.parent = new ArrayList<>();
+  public DescribeNamespaceRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.parent.add(parentItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get parent
+   * Get id
    *
-   * @return parent
+   * @return id
    */
-  @Schema(name = "parent", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("parent")
-  public List<String> getParent() {
-    return parent;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setParent(List<String> parent) {
-    this.parent = parent;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   @Override
@@ -92,21 +70,19 @@ public class DescribeNamespaceRequest {
       return false;
     }
     DescribeNamespaceRequest describeNamespaceRequest = (DescribeNamespaceRequest) o;
-    return Objects.equals(this.name, describeNamespaceRequest.name)
-        && Objects.equals(this.parent, describeNamespaceRequest.parent);
+    return Objects.equals(this.id, describeNamespaceRequest.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent);
+    return Objects.hash(id);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeNamespaceRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("}");
     return sb.toString();
   }

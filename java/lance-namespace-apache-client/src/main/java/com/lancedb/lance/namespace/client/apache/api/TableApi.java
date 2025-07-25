@@ -35,7 +35,6 @@ import com.lancedb.lance.namespace.model.DropTableResponse;
 import com.lancedb.lance.namespace.model.InsertIntoTableResponse;
 import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
 import com.lancedb.lance.namespace.model.ListTableIndicesResponse;
-import com.lancedb.lance.namespace.model.ListTablesRequest;
 import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.MergeInsertIntoTableResponse;
 import com.lancedb.lance.namespace.model.QueryTableRequest;
@@ -68,7 +67,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Count rows in a table Count the number of rows in a table.
+   * Count rows in a table Count the number of rows in table &#x60;id&#x60;
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -88,7 +87,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Count rows in a table Count the number of rows in a table.
+   * Count rows in a table Count the number of rows in table &#x60;id&#x60;
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -167,19 +166,23 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Create a table with the given name Create a new table in the namespace with the given data in
-   * Arrow IPC stream. The schema of the Arrow IPC stream is used as the table schema. If the stream
-   * is empty, the API creates a new empty table.
+   * Create a table with the given name Create table &#x60;id&#x60; in the namespace with the given
+   * data in Arrow IPC stream. The schema of the Arrow IPC stream is used as the table schema. If
+   * the stream is empty, the API creates a new empty table. REST NAMESPACE ONLY REST namespace uses
+   * Arrow IPC stream as the request body. It passes in the &#x60;CreateTableRequest&#x60;
+   * information in the following way: - &#x60;id&#x60;: pass through path parameter of the same
+   * name - &#x60;location&#x60;: pass through header &#x60;x-lance-table-location&#x60; -
+   * &#x60;properties&#x60;: pass through header &#x60;x-lance-table-properties&#x60;
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param xLanceTableLocation URI pointing to root location to create the table at (required)
    * @param body Arrow IPC data (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
+   * @param xLanceTableLocation URI pointing to root location to create the table at (optional)
    * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
    *     \&quot;jack\&quot; }) (optional)
    * @return CreateTableResponse
@@ -187,29 +190,33 @@ public class TableApi extends BaseApi {
    */
   public CreateTableResponse createTable(
       String id,
-      String xLanceTableLocation,
       byte[] body,
       String delimiter,
+      String xLanceTableLocation,
       String xLanceTableProperties)
       throws ApiException {
     return this.createTable(
-        id, xLanceTableLocation, body, delimiter, xLanceTableProperties, Collections.emptyMap());
+        id, body, delimiter, xLanceTableLocation, xLanceTableProperties, Collections.emptyMap());
   }
 
   /**
-   * Create a table with the given name Create a new table in the namespace with the given data in
-   * Arrow IPC stream. The schema of the Arrow IPC stream is used as the table schema. If the stream
-   * is empty, the API creates a new empty table.
+   * Create a table with the given name Create table &#x60;id&#x60; in the namespace with the given
+   * data in Arrow IPC stream. The schema of the Arrow IPC stream is used as the table schema. If
+   * the stream is empty, the API creates a new empty table. REST NAMESPACE ONLY REST namespace uses
+   * Arrow IPC stream as the request body. It passes in the &#x60;CreateTableRequest&#x60;
+   * information in the following way: - &#x60;id&#x60;: pass through path parameter of the same
+   * name - &#x60;location&#x60;: pass through header &#x60;x-lance-table-location&#x60; -
+   * &#x60;properties&#x60;: pass through header &#x60;x-lance-table-properties&#x60;
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param xLanceTableLocation URI pointing to root location to create the table at (required)
    * @param body Arrow IPC data (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
+   * @param xLanceTableLocation URI pointing to root location to create the table at (optional)
    * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
    *     \&quot;jack\&quot; }) (optional)
    * @param additionalHeaders additionalHeaders for this call
@@ -218,9 +225,9 @@ public class TableApi extends BaseApi {
    */
   public CreateTableResponse createTable(
       String id,
-      String xLanceTableLocation,
       byte[] body,
       String delimiter,
+      String xLanceTableLocation,
       String xLanceTableProperties,
       Map<String, String> additionalHeaders)
       throws ApiException {
@@ -229,12 +236,6 @@ public class TableApi extends BaseApi {
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(400, "Missing the required parameter 'id' when calling createTable");
-    }
-
-    // verify the required parameter 'xLanceTableLocation' is set
-    if (xLanceTableLocation == null) {
-      throw new ApiException(
-          400, "Missing the required parameter 'xLanceTableLocation' when calling createTable");
     }
 
     // verify the required parameter 'body' is set
@@ -401,8 +402,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Delete rows from a table Delete rows from a table based on a SQL predicate. Returns the number
-   * of rows that were deleted.
+   * Delete rows from a table Delete rows from table &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -422,8 +422,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Delete rows from a table Delete rows from a table based on a SQL predicate. Returns the number
-   * of rows that were deleted.
+   * Delete rows from a table Delete rows from table &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -503,8 +502,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Deregister a table from its namespace Deregister a table from its namespace. The table content
-   * remains available in the storage.
+   * Deregister a table Deregister table &#x60;id&#x60; from its namespace.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -524,8 +522,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Deregister a table from its namespace Deregister a table from its namespace. The table content
-   * remains available in the storage.
+   * Deregister a table Deregister table &#x60;id&#x60; from its namespace.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -605,9 +602,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Describe a table from the namespace Get a table&#39;s detailed information under a specified
-   * namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format
-   * (with database in headers).
+   * Describe information of a table Describe the detailed information for table &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -626,9 +621,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Describe a table from the namespace Get a table&#39;s detailed information under a specified
-   * namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format
-   * (with database in headers).
+   * Describe information of a table Describe the detailed information for table &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -824,9 +817,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Drop a table from its namespace Drop a table from its namespace and delete its data. If the
-   * table and its data can be immediately deleted, return information of the deleted table.
-   * Otherwise, return a transaction ID that client can use to track deletion progress.
+   * Drop a table Drop table &#x60;id&#x60; and delete its data.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -845,9 +836,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Drop a table from its namespace Drop a table from its namespace and delete its data. If the
-   * table and its data can be immediately deleted, return information of the deleted table.
-   * Otherwise, return a transaction ID that client can use to track deletion progress.
+   * Drop a table Drop table &#x60;id&#x60; and delete its data.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -924,20 +913,23 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Insert records into a table Insert new records into an existing table using Arrow IPC format.
-   * Supports both lance-namespace format (with namespace in body) and LanceDB format (with database
-   * in headers).
+   * Insert records into a table Insert new records into table &#x60;id&#x60;. REST NAMESPACE ONLY
+   * REST namespace uses Arrow IPC stream as the request body. It passes in the
+   * &#x60;InsertIntoTableRequest&#x60; information in the following way: - &#x60;id&#x60;: pass
+   * through path parameter of the same name - &#x60;mode&#x60;: pass through query parameter of the
+   * same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param body Arrow IPC data (required)
+   * @param body Arrow IPC stream containing the records to insert (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
-   * @param mode Insert mode: \&quot;append\&quot; (default) or \&quot;overwrite\&quot; (optional,
-   *     default to append)
+   * @param mode How the insert should behave: - append (default): insert data to the existing table
+   *     - overwrite: remove all data in the table and then insert data to it (optional, default to
+   *     append)
    * @return InsertIntoTableResponse
    * @throws ApiException if fails to make API call
    */
@@ -947,20 +939,23 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Insert records into a table Insert new records into an existing table using Arrow IPC format.
-   * Supports both lance-namespace format (with namespace in body) and LanceDB format (with database
-   * in headers).
+   * Insert records into a table Insert new records into table &#x60;id&#x60;. REST NAMESPACE ONLY
+   * REST namespace uses Arrow IPC stream as the request body. It passes in the
+   * &#x60;InsertIntoTableRequest&#x60; information in the following way: - &#x60;id&#x60;: pass
+   * through path parameter of the same name - &#x60;mode&#x60;: pass through query parameter of the
+   * same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param body Arrow IPC data (required)
+   * @param body Arrow IPC stream containing the records to insert (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
-   * @param mode Insert mode: \&quot;append\&quot; (default) or \&quot;overwrite\&quot; (optional,
-   *     default to append)
+   * @param mode How the insert should behave: - append (default): insert data to the existing table
+   *     - overwrite: remove all data in the table and then insert data to it (optional, default to
+   *     append)
    * @param additionalHeaders additionalHeaders for this call
    * @return InsertIntoTableResponse
    * @throws ApiException if fails to make API call
@@ -1130,58 +1125,63 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * List tables in a namespace List all child table names of the root namespace or a given parent
-   * namespace.
+   * List tables in a namespace List all child table names of the parent namespace &#x60;id&#x60;.
+   * REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body.
+   * It passes in the &#x60;ListTablesRequest&#x60; information in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass
+   * through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of
+   * the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param listTablesRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
+   * @param pageToken (optional)
+   * @param limit (optional)
    * @return ListTablesResponse
    * @throws ApiException if fails to make API call
    */
-  public ListTablesResponse listTables(
-      String id, ListTablesRequest listTablesRequest, String delimiter) throws ApiException {
-    return this.listTables(id, listTablesRequest, delimiter, Collections.emptyMap());
+  public ListTablesResponse listTables(String id, String delimiter, String pageToken, Integer limit)
+      throws ApiException {
+    return this.listTables(id, delimiter, pageToken, limit, Collections.emptyMap());
   }
 
   /**
-   * List tables in a namespace List all child table names of the root namespace or a given parent
-   * namespace.
+   * List tables in a namespace List all child table names of the parent namespace &#x60;id&#x60;.
+   * REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body.
+   * It passes in the &#x60;ListTablesRequest&#x60; information in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass
+   * through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of
+   * the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param listTablesRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
+   * @param pageToken (optional)
+   * @param limit (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return ListTablesResponse
    * @throws ApiException if fails to make API call
    */
   public ListTablesResponse listTables(
       String id,
-      ListTablesRequest listTablesRequest,
       String delimiter,
+      String pageToken,
+      Integer limit,
       Map<String, String> additionalHeaders)
       throws ApiException {
-    Object localVarPostBody = listTablesRequest;
+    Object localVarPostBody = null;
 
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(400, "Missing the required parameter 'id' when calling listTables");
-    }
-
-    // verify the required parameter 'listTablesRequest' is set
-    if (listTablesRequest == null) {
-      throw new ApiException(
-          400, "Missing the required parameter 'listTablesRequest' when calling listTables");
     }
 
     // create path and map variables
@@ -1199,13 +1199,16 @@ public class TableApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("page_token", pageToken));
+    localVarQueryParams.addAll(apiClient.parameterToPair("limit", limit));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {"application/json"};
+    final String[] localVarContentTypes = {};
+
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
     String[] localVarAuthNames = new String[] {};
@@ -1214,7 +1217,7 @@ public class TableApi extends BaseApi {
         new TypeReference<ListTablesResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
-        "POST",
+        "GET",
         localVarQueryParams,
         localVarCollectionQueryParams,
         localVarQueryStringJoiner.toString(),
@@ -1229,16 +1232,25 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Merge insert (upsert) records into a table Performs a merge insert (upsert) operation on a
-   * table. This operation updates existing rows based on a matching column and inserts new rows
-   * that don&#39;t match. Returns the number of rows inserted and updated.
+   * Merge insert (upsert) records into a table Performs a merge insert (upsert) operation on table
+   * &#x60;id&#x60;. This operation updates existing rows based on a matching column and inserts new
+   * rows that don&#39;t match. It returns the number of rows inserted and updated. REST NAMESPACE
+   * ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the
+   * &#x60;MergeInsertIntoTableRequest&#x60; information in the following way: - &#x60;id&#x60;:
+   * pass through path parameter of the same name - &#x60;on&#x60;: pass through query parameter of
+   * the same name - &#x60;when_matched_update_all&#x60;: pass through query parameter of the same
+   * name - &#x60;when_matched_update_all_filt&#x60;: pass through query parameter of the same name
+   * - &#x60;when_not_matched_insert_all&#x60;: pass through query parameter of the same name -
+   * &#x60;when_not_matched_by_source_delete&#x60;: pass through query parameter of the same name -
+   * &#x60;when_not_matched_by_source_delete_filt&#x60;: pass through query parameter of the same
+   * name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param on Column name to use for matching rows (required) (required)
-   * @param body Arrow IPC data containing the records to merge (required)
+   * @param body Arrow IPC stream containing the records to merge (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
@@ -1279,16 +1291,25 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Merge insert (upsert) records into a table Performs a merge insert (upsert) operation on a
-   * table. This operation updates existing rows based on a matching column and inserts new rows
-   * that don&#39;t match. Returns the number of rows inserted and updated.
+   * Merge insert (upsert) records into a table Performs a merge insert (upsert) operation on table
+   * &#x60;id&#x60;. This operation updates existing rows based on a matching column and inserts new
+   * rows that don&#39;t match. It returns the number of rows inserted and updated. REST NAMESPACE
+   * ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the
+   * &#x60;MergeInsertIntoTableRequest&#x60; information in the following way: - &#x60;id&#x60;:
+   * pass through path parameter of the same name - &#x60;on&#x60;: pass through query parameter of
+   * the same name - &#x60;when_matched_update_all&#x60;: pass through query parameter of the same
+   * name - &#x60;when_matched_update_all_filt&#x60;: pass through query parameter of the same name
+   * - &#x60;when_not_matched_insert_all&#x60;: pass through query parameter of the same name -
+   * &#x60;when_not_matched_by_source_delete&#x60;: pass through query parameter of the same name -
+   * &#x60;when_not_matched_by_source_delete_filt&#x60;: pass through query parameter of the same
+   * name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param on Column name to use for matching rows (required) (required)
-   * @param body Arrow IPC data containing the records to merge (required)
+   * @param body Arrow IPC stream containing the records to merge (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
@@ -1395,8 +1416,8 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Query a table Query a table with vector search, full text search and optional SQL filtering.
-   * Returns results in Arrow IPC file or stream format.
+   * Query a table Query table &#x60;id&#x60; with vector search, full text search and optional SQL
+   * filtering. Returns results in Arrow IPC file or stream format.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1415,8 +1436,8 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Query a table Query a table with vector search, full text search and optional SQL filtering.
-   * Returns results in Arrow IPC file or stream format.
+   * Query a table Query table &#x60;id&#x60; with vector search, full text search and optional SQL
+   * filtering. Returns results in Arrow IPC file or stream format.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1495,8 +1516,8 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Register a table to a namespace Register an existing table at a given storage location to a
-   * namespace.
+   * Register a table to a namespace Register an existing table at a given storage location as
+   * &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1515,8 +1536,8 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Register a table to a namespace Register an existing table at a given storage location to a
-   * namespace.
+   * Register a table to a namespace Register an existing table at a given storage location as
+   * &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1594,8 +1615,8 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Check if a table exists Check if a table exists. This API should behave exactly like the
-   * DescribeTable API, except it does not contain a body.
+   * Check if a table exists Check if table &#x60;id&#x60; exists. This operation should behave
+   * exactly like DescribeTable, except it does not contain a response body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1613,8 +1634,8 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Check if a table exists Check if a table exists. This API should behave exactly like the
-   * DescribeTable API, except it does not contain a body.
+   * Check if a table exists Check if table &#x60;id&#x60; exists. This operation should behave
+   * exactly like DescribeTable, except it does not contain a response body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1689,9 +1710,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Update rows in a table Update existing rows in a table using SQL expressions. Each update
-   * consists of a column name and an SQL expression that will be evaluated against the current
-   * row&#39;s value. Optionally, a predicate can be provided to filter which rows to update.
+   * Update rows in a table Update existing rows in table &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1710,9 +1729,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Update rows in a table Update existing rows in a table using SQL expressions. Each update
-   * consists of a column name and an SQL expression that will be evaluated against the current
-   * row&#39;s value. Optionally, a predicate can be provided to filter which rows to update.
+   * Update rows in a table Update existing rows in table &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.

@@ -26,9 +26,8 @@ class NamespaceExistsRequest(BaseModel):
     """
     NamespaceExistsRequest
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    parent: Optional[List[StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["name", "parent"]
+    id: Optional[List[StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,8 +80,7 @@ class NamespaceExistsRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "parent": obj.get("parent")
+            "id": obj.get("id")
         })
         return _obj
 

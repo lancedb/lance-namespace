@@ -89,17 +89,11 @@ paths:
       summary: Create a new namespace
       operationId: CreateNamespace
       description: |
-        Create a new namespace.
+        Create new namespace `id`.
         
-        A namespace can manage either a collection of child namespaces, or a collection of tables.
-        
-        The namespace in the API route should be the parent namespace to create the new namespace.
-
-        There are three modes when trying to create a namespace,
-        to differentiate the behavior when a namespace of the same name already exists:
-          * CREATE: the operation fails with 400.
-          * EXIST_OK: the operation succeeds and the existing namespace is kept.
-          * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created.
+        During the creation process, the implementation may modify user-provided `properties`, 
+        such as adding additional properties like `created_at` to user-provided properties, 
+        omitting any specific property, or performing actions based on any property value.
       requestBody:
         required: true
         content:
@@ -130,20 +124,29 @@ paths:
     parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
-    post:
+      - name: 'page_token'
+        in: query
+        schema:
+          $ref: '#/components/schemas/PageToken'
+      - name: 'limit'
+        in: query
+        schema:
+          $ref: '#/components/schemas/PageLimit'
+    get:
       tags:
         - Namespace
         - Metadata
       summary: List namespaces
       operationId: ListNamespaces
       description: |
-        List all child namespace names of the root namespace or a given parent namespace.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ListNamespacesRequest'
+        List all child namespace names of the parent namespace `id`.
+        
+        REST NAMESPACE ONLY
+        REST namespace uses GET to perform this operation without a request body.
+        It passes in the `ListNamespacesRequest` information in the following way:
+        - `id`: pass through path parameter of the same name
+        - `page_token`: pass through query parameter of the same name
+        - `limit`: pass through query parameter of the same name
       responses:
         200:
           $ref: '#/components/responses/ListNamespacesResponse'
@@ -170,10 +173,10 @@ paths:
       tags:
         - Namespace
         - Metadata
-      summary: Describe information about a namespace
+      summary: Describe a namespace
       operationId: DescribeNamespace
       description: |
-        Return the detailed information for a given namespace
+        Describe the detailed information for namespace `id`.
       requestBody:
         required: true
         content:
@@ -207,7 +210,7 @@ paths:
       summary: Drop a namespace
       operationId: DropNamespace
       description: |
-        Drop a namespace. The namespace must be empty.
+        Drop namespace `id` from its parent namespace.
       requestBody:
         required: true
         content:
@@ -243,9 +246,10 @@ paths:
       summary: Check if a namespace exists
       operationId: NamespaceExists
       description: |
-        Check if a namespace exists.
+        Check if namespace `id` exists.
         
-        This API should behave exactly like the DescribeNamespace API, except it does not contain a body.
+        This operation must behave exactly like the DescribeNamespace API, 
+        except it does not contain a response body.
       requestBody:
         required: true
         content:
@@ -272,7 +276,15 @@ paths:
     parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
-    post:
+      - name: 'page_token'
+        in: query
+        schema:
+          $ref: '#/components/schemas/PageToken'
+      - name: 'limit'
+        in: query
+        schema:
+          $ref: '#/components/schemas/PageLimit'
+    get:
       tags:
         - Namespace
         - Table
@@ -280,13 +292,14 @@ paths:
       summary: List tables in a namespace
       operationId: ListTables
       description: |
-        List all child table names of the root namespace or a given parent namespace.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ListTablesRequest'
+        List all child table names of the parent namespace `id`.
+        
+        REST NAMESPACE ONLY
+        REST namespace uses GET to perform this operation without a request body.
+        It passes in the `ListTablesRequest` information in the following way:
+        - `id`: pass through path parameter of the same name
+        - `page_token`: pass through query parameter of the same name
+        - `limit`: pass through query parameter of the same name
       responses:
         200:
           $ref: '#/components/responses/ListTablesResponse'
@@ -318,7 +331,7 @@ paths:
       summary: Register a table to a namespace
       operationId: RegisterTable
       description: |
-        Register an existing table at a given storage location to a namespace.
+        Register an existing table at a given storage location as `id`.
       requestBody:
         required: true
         content:
@@ -353,11 +366,10 @@ paths:
       tags:
         - Table
         - Metadata
-      summary: Describe a table from the namespace
+      summary: Describe information of a table
       operationId: DescribeTable
       description: |
-        Get a table's detailed information under a specified namespace.
-        Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+        Describe the detailed information for table `id`.
       requestBody:
         required: true
         content:
@@ -391,9 +403,10 @@ paths:
       summary: Check if a table exists
       operationId: TableExists
       description: |
-        Check if a table exists.
+        Check if table `id` exists.
         
-        This API should behave exactly like the DescribeTable API, except it does not contain a body.
+        This operation should behave exactly like DescribeTable, 
+        except it does not contain a response body.
       requestBody:
         required: true
         content:
@@ -424,12 +437,10 @@ paths:
       tags:
         - Table
         - Metadata
-      summary: Drop a table from its namespace
+      summary: Drop a table
       operationId: DropTable
       description: |
-        Drop a table from its namespace and delete its data.
-        If the table and its data can be immediately deleted, return information of the deleted table.
-        Otherwise, return a transaction ID that client can use to track deletion progress.
+        Drop table `id` and delete its data.
       requestBody:
         required: true
         content:
@@ -460,10 +471,10 @@ paths:
       tags:
         - Table
         - Metadata
-      summary: Deregister a table from its namespace
+      summary: Deregister a table
       operationId: DeregisterTable
       description: |
-        Deregister a table from its namespace. The table content remains available in the storage.
+        Deregister table `id` from its namespace.
       requestBody:
         required: true
         content:
@@ -494,7 +505,10 @@ paths:
       - $ref: '#/components/parameters/delimiter'
       - name: mode
         in: query
-        description: 'Insert mode: "append" (default) or "overwrite"'
+        description: |
+          How the insert should behave:
+          - append (default): insert data to the existing table
+          - overwrite: remove all data in the table and then insert data to it
         required: false
         schema:
           type: string
@@ -509,10 +523,15 @@ paths:
       summary: Insert records into a table
       operationId: InsertIntoTable
       description: |
-        Insert new records into an existing table using Arrow IPC format.
-        Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+        Insert new records into table `id`.
+        
+        REST NAMESPACE ONLY
+        REST namespace uses Arrow IPC stream as the request body.
+        It passes in the `InsertIntoTableRequest` information in the following way:
+        - `id`: pass through path parameter of the same name
+        - `mode`: pass through query parameter of the same name
       requestBody:
-        description: Arrow IPC data
+        description: Arrow IPC stream containing the records to insert
         content:
           application/vnd.apache.arrow.stream:
             schema:
@@ -584,11 +603,23 @@ paths:
       summary: Merge insert (upsert) records into a table
       operationId: MergeInsertIntoTable
       description: |
-        Performs a merge insert (upsert) operation on a table. This operation updates existing rows
+        Performs a merge insert (upsert) operation on table `id`.
+        This operation updates existing rows
         based on a matching column and inserts new rows that don't match.
-        Returns the number of rows inserted and updated.
+        It returns the number of rows inserted and updated.
+        
+        REST NAMESPACE ONLY
+        REST namespace uses Arrow IPC stream as the request body.
+        It passes in the `MergeInsertIntoTableRequest` information in the following way:
+        - `id`: pass through path parameter of the same name
+        - `on`: pass through query parameter of the same name
+        - `when_matched_update_all`: pass through query parameter of the same name
+        - `when_matched_update_all_filt`: pass through query parameter of the same name
+        - `when_not_matched_insert_all`: pass through query parameter of the same name
+        - `when_not_matched_by_source_delete`: pass through query parameter of the same name
+        - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name
       requestBody:
-        description: Arrow IPC data containing the records to merge
+        description: Arrow IPC stream containing the records to merge
         content:
           application/vnd.apache.arrow.stream:
             schema:
@@ -622,10 +653,7 @@ paths:
       summary: Update rows in a table
       operationId: UpdateTable
       description: |
-        Update existing rows in a table using SQL expressions.
-        Each update consists of a column name and an SQL expression that will be
-        evaluated against the current row's value. Optionally, a predicate can be
-        provided to filter which rows to update.
+        Update existing rows in table `id`.
       requestBody:
         description: Update request
         content:
@@ -660,8 +688,7 @@ paths:
       summary: Delete rows from a table
       operationId: DeleteFromTable
       description: |
-        Delete rows from a table based on a SQL predicate.
-        Returns the number of rows that were deleted.
+        Delete rows from table `id`.
       requestBody:
         description: Delete request
         content:
@@ -696,7 +723,7 @@ paths:
       summary: Query a table
       operationId: QueryTable
       description: |
-        Query a table with vector search, full text search and optional SQL filtering.
+        Query table `id` with vector search, full text search and optional SQL filtering.
         Returns results in Arrow IPC file or stream format.
       requestBody:
         description: Query request
@@ -732,7 +759,7 @@ paths:
       summary: Count rows in a table
       operationId: CountTableRows
       description: |
-        Count the number of rows in a table.
+        Count the number of rows in table `id`
       requestBody:
         required: true
         content:
@@ -761,7 +788,7 @@ paths:
       - $ref: '#/components/parameters/delimiter'
       - name: "x-lance-table-location"
         in: header
-        required: true
+        required: false
         schema:
           type: string
         description: URI pointing to root location to create the table at
@@ -779,10 +806,17 @@ paths:
       summary: Create a table with the given name
       operationId: CreateTable
       description: |
-        Create a new table in the namespace with the given data in Arrow IPC stream.
+        Create table `id` in the namespace with the given data in Arrow IPC stream.
     
         The schema of the Arrow IPC stream is used as the table schema.    
         If the stream is empty, the API creates a new empty table.
+        
+        REST NAMESPACE ONLY
+        REST namespace uses Arrow IPC stream as the request body.
+        It passes in the `CreateTableRequest` information in the following way:
+        - `id`: pass through path parameter of the same name
+        - `location`: pass through header `x-lance-table-location`
+        - `properties`: pass through header `x-lance-table-properties`
       requestBody:
         description: Arrow IPC data
         content:
@@ -940,7 +974,8 @@ paths:
         - Metadata
       summary: Describe information about a transaction
       operationId: DescribeTransaction
-      description: Return a detailed information for a given transaction
+      description: |
+        Return a detailed information for a given transaction
       requestBody:
         required: true
         content:
@@ -973,6 +1008,9 @@ paths:
         - Metadata
       summary: Alter information of a transaction.
       operationId: AlterTransaction
+      description: |
+        Alter a transaction with a list of actions such as setting status or properties.
+        The server should either succeed and apply all actions, or fail and apply no action.
       requestBody:
         required: true
         content:
@@ -1051,38 +1089,37 @@ components:
 
     CreateNamespaceRequest:
       type: object
-      required:
-        - mode
       properties:
-        name:
-          type: string
-        parent:
+        id:
           type: array
           items:
             type: string
         mode:
           type: string
+          description: |
+            There are three modes when trying to create a namespace,
+            to differentiate the behavior when a namespace of the same name already exists:
+              * CREATE: the operation fails with 400.
+              * EXIST_OK: the operation succeeds and the existing namespace is kept.
+              * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created.
           enum:
             - CREATE
             - EXIST_OK
             - OVERWRITE
-        options:
+        properties:
           type: object
           additionalProperties:
             type: string
 
     CreateNamespaceResponse:
       type: object
-      required:
-        - name
       properties:
-        name:
-          type: string
-        parent:
-          type: array
-          items:
-            type: string
         properties:
+          description: |
+            Properties after the namespace is created.
+            
+            If the server does not support namespace properties, it should return null for this field.
+            If namespace properties are supported, but none are set, it should return an empty object.
           type: object
           additionalProperties:
             type: string
@@ -1090,14 +1127,14 @@ components:
     ListNamespacesRequest:
       type: object
       properties:
-        parent:
+        id:
           type: array
           items:
             type: string
-        pageToken:
+        page_token:
           $ref: "#/components/schemas/PageToken"
-        pageSize:
-          $ref: "#/components/schemas/PageSize"
+        limit:
+          $ref: "#/components/schemas/PageLimit"
 
     ListNamespacesResponse:
       type: object
@@ -1107,33 +1144,24 @@ components:
         namespaces:
           type: array
           uniqueItems: true
+          description: |
+            The list of names of the child namespaces relative to the parent namespace `id` in the request.
           items:
             type: string
-            example: "accounting"
-        nextPageToken:
+        page_token:
           $ref: "#/components/schemas/PageToken"
 
     DescribeNamespaceRequest:
       type: object
       properties:
-        name:
-          type: string
-        parent:
+        id:
           type: array
           items:
             type: string
 
     DescribeNamespaceResponse:
       type: object
-      required:
-        - name
       properties:
-        name:
-          type: string
-        parent:
-          type: array
-          items:
-            type: string
         properties:
           type: object
           description:
@@ -1149,9 +1177,7 @@ components:
     DropNamespaceRequest:
       type: object
       properties:
-        name:
-          type: string
-        parent:
+        id:
           type: array
           items:
             type: string
@@ -1178,12 +1204,6 @@ components:
     DropNamespaceResponse:
       type: object
       properties:
-        name:
-          type: string
-        parent:
-          type: array
-          items:
-            type: string
         properties:
           type: object
           additionalProperties:
@@ -1191,36 +1211,42 @@ components:
         transactionId:
           description: |
             If present, indicating the operation is long running and should be tracked using GetTransaction
-          type: string
+          type: array
+          items:
+            type: string
 
     NamespaceExistsRequest:
       type: object
       properties:
-        name:
-          type: string
-        parent:
+        id:
           type: array
           items:
             type: string
 
     PageToken:
-      description:
-        An opaque token that allows pagination for list APIs (e.g. ListNamespaces).
+      description: |
+        An opaque token that allows pagination for list operations (e.g. ListNamespaces).
         
-        For an initial client request for a list API, if the server cannot return all items in one response,
-        or if there are more items than the `pageSize` specified in the client request,
-        the server must return a `nextPageToken` in the response indicating there are more results available.
+        For an initial request of a list operation, 
+        if the implementation cannot return all items in one response,
+        or if there are more items than the page limit specified in the request,
+        the implementation must return a page token in the response,
+        indicating there are more results available.
         
-        After the initial request, the value of `nextPageToken` from each response must be used by the client
-        as the `pageToken` parameter value for the next request.
+        After the initial request, 
+        the value of the page token from each response must be used
+        as the page token value for the next request.
         
-        Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from
-        a server response as the end of the listing results.
+        Caller must interpret either `null`, 
+        missing value or empty string value of the page token from
+        the implementation's response as the end of the listing results.
       type: string
       nullable: true
 
-    PageSize:
-      description: An inclusive upper bound of the number of results that a client will receive.
+    PageLimit:
+      description: |
+        An inclusive upper bound of the 
+        number of results that a caller will receive.
       type: integer
       nullable: true
 
@@ -1229,28 +1255,22 @@ components:
       required:
         - location
       properties:
-        name:
-          type: string
-        namespace:
+        id:
           type: array
           items:
             type: string
         location:
           type: string
+        properties:
+          type: object
+          additionalProperties:
+            type: string
 
     RegisterTableResponse:
       type: object
       required:
-        - name
-        - namespace
         - location
       properties:
-        name:
-          type: string
-        namespace:
-          type: array
-          items:
-            type: string
         location:
           type: string
         properties:
@@ -1261,14 +1281,14 @@ components:
     ListTablesRequest:
       type: object
       properties:
-        parent:
+        id:
           type: array
           items:
             type: string
-        pageToken:
+        page_token:
           $ref: "#/components/schemas/PageToken"
-        pageSize:
-          $ref: "#/components/schemas/PageSize"
+        limit:
+          $ref: "#/components/schemas/PageLimit"
 
     ListTablesResponse:
       type: object
@@ -1278,18 +1298,17 @@ components:
         tables:
           type: array
           uniqueItems: true
+          description: |
+            The list of names of the tables relative to the parent namespace `id` in the request.
           items:
             type: string
-            example: "cart"
-        nextPageToken:
+        page_token:
           $ref: "#/components/schemas/PageToken"
 
     DescribeTableRequest:
       type: object
       properties:
-        name:
-          type: string
-        namespace:
+        id:
           type: array
           items:
             type: string
@@ -1304,8 +1323,8 @@ components:
     DescribeTableResponse:
       type: object
       required:
-        - location
         - schema
+        - version
       properties:
         version:
           type: integer
@@ -1314,7 +1333,7 @@ components:
         location:
           type: string
         schema:
-          $ref: '#/components/schemas/JsonSchema'
+          $ref: '#/components/schemas/JsonArrowSchema'
         properties:
           type: object
           additionalProperties:
@@ -1331,9 +1350,7 @@ components:
     CountTableRowsRequest:
       type: object
       properties:
-        name:
-          type: string
-        namespace:
+        id:
           type: array
           items:
             type: string
@@ -1361,15 +1378,8 @@ components:
       type: object
       description: |
         Request for inserting records into a table, excluding the Arrow IPC stream.
-        Note that this is only used for non-REST implementations.
-        For REST, pass in the information in the following way:
-        - `name`: pass as a part of the path parameter `id`
-        - `namespace`: pass as a part of the path parameter `namespace`
-        - `mode`: pass through query parameter of the same name
       properties:
-        name:
-          type: string
-        namespace:
+        id:
           type: array
           items:
             type: string
@@ -1394,25 +1404,11 @@ components:
       type: object
       description: |
         Request for merging or inserting records into a table, excluding the Arrow IPC stream.
-        Note that this is only used for non-REST implementations.
-        For REST, pass in the information in the following way:
-        - `name`: pass as a part of the path parameter `id`
-        - `namespace`: pass as a part of the path parameter `namespace`
-        - `on`: pass through query parameter of the same name
-        - `when_matched_update_all`: pass through query parameter of the same name
-        - `when_matched_update_all_filt`: pass through query parameter of the same name
-        - `when_not_matched_insert_all`: pass through query parameter of the same name
-        - `when_not_matched_by_source_delete`: pass through query parameter of the same name
-        - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name
       properties:
-        name:
-          type: string
-          description: The table name
-        namespace:
+        id:
           type: array
           items:
             type: string
-          description: The namespace identifier
         "on":
           description: Column name to use for matching rows (required)
           type: string
@@ -1462,19 +1458,17 @@ components:
 
     UpdateTableRequest:
       type: object
+      description: |
+        Each update consists of a column name and an SQL expression that will be
+        evaluated against the current row's value. Optionally, a predicate can be
+        provided to filter which rows to update.
       required:
-        - name
-        - namespace
         - updates
       properties:
-        name:
-          type: string
-          description: The table name
-        namespace:
+        id:
           type: array
           items:
             type: string
-          description: The namespace identifier
         predicate:
           type: string
           nullable: true
@@ -1508,15 +1502,13 @@ components:
 
     DeleteFromTableRequest:
       type: object
+      description: |
+        Delete data from table based on a SQL predicate.
+        Returns the number of rows that were deleted.
       required:
-        - name
-        - namespace
         - predicate
       properties:
-        name:
-          type: string
-          description: The table name
-        namespace:
+        id:
           type: array
           items:
             type: string
@@ -1539,21 +1531,15 @@ components:
     QueryTableRequest:
       type: object
       required:
-        - name
-        - namespace
         - vector
         - k
       properties:
-        name:
-          type: string
-        namespace:
+        id:
           type: array
           items:
             type: string
         bypass_vector_index:
-          type:
-          - boolean
-          - 'null'
+          type: boolean
           description: Whether to bypass vector index
         columns:
           type: array
@@ -1562,25 +1548,17 @@ components:
             type: string
           description: Optional list of columns to return
         distance_type:
-          type:
-          - string
-          - 'null'
+          type: string
           description: Distance metric to use
         ef:
-          type:
-          - integer
-          - 'null'
+          type: integer
           minimum: 0
           description: Search effort parameter for HNSW index
         fast_search:
-          type:
-          - boolean
-          - 'null'
+          type: boolean
           description: Whether to use fast search
         filter:
-          type:
-          - string
-          - 'null'
+          type: string
           description: Optional SQL filter expression
         full_text_query:
           type: object
@@ -1596,39 +1574,27 @@ components:
           minimum: 0
           description: Number of results to return
         lower_bound:
-          type:
-          - number
-          - 'null'
+          type: number
           format: float
           description: Lower bound for search
         nprobes:
-          type:
-          - integer
-          - 'null'
+          type: integer
           minimum: 0
           description: Number of probes for IVF index
         offset:
-          type:
-          - integer
-          - 'null'
+          type: integer
           minimum: 0
           description: Number of results to skip
         prefilter:
-          type:
-          - boolean
-          - 'null'
+          type: boolean
           description: Whether to apply filtering before vector search
         refine_factor:
-          type:
-          - integer
-          - 'null'
+          type: integer
           format: int32
           minimum: 0
           description: Refine factor for search
         upper_bound:
-          type:
-          - number
-          - 'null'
+          type: number
           format: float
           description: Upper bound for search
         vector:
@@ -1651,49 +1617,47 @@ components:
                   format: float
               description: Multiple query vectors for batch search
         vector_column:
-          type:
-          - string
-          - 'null'
+          type: string
           description: Name of the vector column to search
         version:
-          type:
-          - integer
-          - 'null'
+          type: integer
           format: int64
           minimum: 0
           description: Table version to query
         with_row_id:
-          type:
-          - boolean
-          - 'null'
+          type: boolean
           description: If true, return the row id as a column called `_rowid`
 
     CreateTableIndexRequest:
       type: object
       required:
-        - name
-        - namespace
         - column
         - index_type
       properties:
-        name:
-          type: string
-          description: The table name
-        namespace:
+        id:
           type: array
           items:
             type: string
-          description: The namespace identifier
         column:
           type: string
           description: Name of the column to create index on
         index_type:
           type: string
-          enum: ["BTREE", "BITMAP", "LABEL_LIST", "IVF_FLAT", "IVF_HNSW_SQ", "IVF_PQ", "FTS"]
+          enum: 
+            - BTREE
+            - BITMAP
+            - LABEL_LIST
+            - IVF_FLAT
+            - IVF_PQ
+            - IVF_HNSW_SQ
+            - FTS
           description: Type of index to create
         metric_type:
           type: string
-          enum: ["l2", "cosine", "dot"]
+          enum: 
+            - l2
+            - cosine
+            - dot
           nullable: true
           description: Distance metric type for vector indexes
         with_position:
@@ -1733,18 +1697,12 @@ components:
     CreateTableIndexResponse:
       type: object
       required:
-        - name
-        - namespace
         - location
       properties:
-        name:
-          type: string
-          description: The table name
-        namespace:
+        id:
           type: array
           items:
             type: string
-          description: The namespace identifier
         location:
           type: string
           description: Table location (usually empty)
@@ -1756,14 +1714,8 @@ components:
 
     ListTableIndicesRequest:
       type: object
-      required:
-        - name
-        - namespace
       properties:
-        name:
-          type: string
-          description: The table name
-        namespace:
+        id:
           type: array
           items:
             type: string
@@ -1778,27 +1730,8 @@ components:
     ListTableIndicesResponse:
       type: object
       required:
-        - name
-        - namespace
-        - location
         - indexes
       properties:
-        name:
-          type: string
-          description: The table name
-        namespace:
-          type: array
-          items:
-            type: string
-          description: The namespace identifier
-        location:
-          type: string
-          description: Table location (usually empty)
-        properties:
-          type: object
-          additionalProperties:
-            type: string
-          description: Additional properties (usually empty)
         indexes:
           type: array
           items:
@@ -1830,24 +1763,20 @@ components:
 
     DescribeTableIndexStatsRequest:
       type: object
-      required:
-        - name
-        - namespace
       properties:
-        name:
-          type: string
-          description: The table name
-        namespace:
+        id:
           type: array
           items:
             type: string
-          description: The namespace identifier
         version:
           type: integer
           format: int64
           minimum: 0
           nullable: true
           description: Optional table version to get stats for
+        index_name:
+          type: string
+          description: Name of the index
 
     DescribeTableIndexStatsResponse:
       type: object
@@ -1873,36 +1802,35 @@ components:
           nullable: true
           description: Number of unindexed rows
 
-    JsonSchema:
+    JsonArrowSchema:
       type: object
-      description: JSON representation of a Apache Arrow [Schema].
+      description: |
+        JSON representation of a Apache Arrow schema.
       required:
       - fields
       properties:
         fields:
           type: array
           items:
-            $ref: '#/components/schemas/JsonField'
+            $ref: '#/components/schemas/JsonArrowField'
         metadata:
-          type:
-          - object
-          - 'null'
+          type: object
           additionalProperties:
             type: string
           propertyNames:
             type: string
-    JsonField:
+
+    JsonArrowField:
       type: object
-      description: JSON representation of an Apache Arrow [Field].
+      description: |
+        JSON representation of an Apache Arrow field.
       required:
       - name
       - type
       - nullable
       properties:
         metadata:
-          type:
-          - object
-          - 'null'
+          type: object
           additionalProperties:
             type: string
           propertyNames:
@@ -1922,7 +1850,7 @@ components:
         fields:
           type: array
           items:
-            $ref: '#/components/schemas/JsonField'
+            $ref: '#/components/schemas/JsonArrowField'
           description: Fields for complex types like Struct, Union, etc.
         length:
           type: integer
@@ -1941,16 +1869,8 @@ components:
       type: object
       description: |
         Request for creating a table, excluding the Arrow IPC stream.
-        Note that this is only used for non-REST implementations.
-        For REST, pass in the information in the following way:
-        - `name`: pass as a part of the path parameter `id`
-        - `namespace`: pass as a part of the path parameter `namespace`
-        - `location`: pass through header `x-lance-table-location`
-        - `properties`: pass through header `x-lance-table-properties`
       properties:
-        name:
-          type: string
-        namespace:
+        id:
           type: array
           items:
             type: string
@@ -1964,18 +1884,16 @@ components:
     CreateTableResponse:
       type: object
       required:
-        - name
-        - namespace
         - location
       properties:
-        name:
-          type: string
-        namespace:
-          type: array
-          items:
-            type: string
         location:
           type: string
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+        schema:
+          $ref: '#/components/schemas/JsonArrowSchema'
         properties:
           type: object
           additionalProperties:
@@ -1991,16 +1909,18 @@ components:
 
     TableExistsRequest:
       type: object
-      required:
-        - name
-        - namespace
       properties:
-        name:
-          type: string
-        namespace:
+        id:
           type: array
           items:
             type: string
+        version:
+          description: |
+            Version of the table to check existence.
+            If not specified, server should resolve it to the latest version.
+          type: integer
+          format: int64
+          minimum: 0
 
     TransactionStatus:
       type: string
@@ -2013,20 +1933,17 @@ components:
 
     DescribeTransactionRequest:
       type: object
-      required:
-        - id
       properties:
         id:
-          type: string
+          type: array
+          items:
+            type: string
 
     DescribeTransactionResponse:
       type: object
       required:
-        - id
         - status
       properties:
-        id:
-          type: string
         status:
           $ref: '#/components/schemas/TransactionStatus'
         properties:
@@ -2102,11 +2019,12 @@ components:
         Alter a transaction with a list of actions.
         The server should either succeed and apply all actions, or fail and apply no action.
       required:
-        - id
         - actions
       properties:
         id:
-          type: string
+          type: array
+          items:
+            type: string
         actions:
           type: array
           minItems: 1
@@ -2116,22 +2034,22 @@ components:
     AlterTransactionResponse:
       type: object
       required:
-        - id
         - status
       properties:
-        id:
-          type: string
         status:
           $ref: '#/components/schemas/TransactionStatus'
+        properties:
+          type: object
+          additionalProperties:
+            type: string
 
     DropTableRequest:
       type: object
-      required:
-        - name
+      description: |
+        If the table and its data can be immediately deleted, return information of the deleted table.
+        Otherwise, return a transaction ID that client can use to track deletion progress.
       properties:
-        name:
-          type: string
-        namespace:
+        id:
           type: array
           items:
             type: string
@@ -2139,9 +2057,7 @@ components:
     DropTableResponse:
       type: object
       properties:
-        name:
-          type: string
-        namespace:
+        id:
           type: array
           items:
             type: string
@@ -2152,16 +2068,18 @@ components:
           additionalProperties:
             type: string
         transactionId:
-          type: string
+          type: array
+          description: |
+            If present, indicating the operation is long running and should be tracked using GetTransaction
+          items:
+            type: string
 
     DeregisterTableRequest:
       type: object
-      required:
-        - name
+      description: |
+         The table content remains available in the storage.
       properties:
-        name:
-          type: string
-        namespace:
+        id:
           type: array
           items:
             type: string
@@ -2169,9 +2087,7 @@ components:
     DeregisterTableResponse:
       type: object
       properties:
-        name:
-          type: string
-        namespace:
+        id:
           type: array
           items:
             type: string
@@ -2188,9 +2104,7 @@ components:
       - query
       properties:
         columns:
-          type:
-          - array
-          - 'null'
+          type: array
           items:
             type: string
         query:
@@ -2232,13 +2146,9 @@ components:
           type: number
           format: float
         column:
-          type:
-          - string
-          - 'null'
+          type: string
         fuzziness:
-          type:
-          - integer
-          - 'null'
+          type: integer
           format: int32
           minimum: 0
         max_expansions:
@@ -2270,9 +2180,7 @@ components:
       - terms
       properties:
         column:
-          type:
-          - string
-          - 'null'
+          type: string
         slop:
           type: integer
           format: int32

@@ -25,15 +25,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/** UpdateTableRequest */
+/**
+ * Each update consists of a column name and an SQL expression that will be evaluated against the
+ * current row&#39;s value. Optionally, a predicate can be provided to filter which rows to update.
+ */
+@Schema(
+    name = "UpdateTableRequest",
+    description =
+        "Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. ")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class UpdateTableRequest {
 
-  private String name;
-
-  @Valid private List<String> namespace = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   private String predicate;
 
@@ -44,66 +49,36 @@ public class UpdateTableRequest {
   }
 
   /** Constructor with only required parameters */
-  public UpdateTableRequest(String name, List<String> namespace, List<List<String>> updates) {
-    this.name = name;
-    this.namespace = namespace;
+  public UpdateTableRequest(List<List<String>> updates) {
     this.updates = updates;
   }
 
-  public UpdateTableRequest name(String name) {
-    this.name = name;
+  public UpdateTableRequest id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  /**
-   * The table name
-   *
-   * @return name
-   */
-  @NotNull
-  @Schema(
-      name = "name",
-      description = "The table name",
-      requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public UpdateTableRequest namespace(List<String> namespace) {
-    this.namespace = namespace;
-    return this;
-  }
-
-  public UpdateTableRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public UpdateTableRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * The namespace identifier
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
-  @NotNull
-  @Schema(
-      name = "namespace",
-      description = "The namespace identifier",
-      requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("namespace")
-  public List<String> getNamespace() {
-    return namespace;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setNamespace(List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   public UpdateTableRequest predicate(String predicate) {
@@ -171,23 +146,21 @@ public class UpdateTableRequest {
       return false;
     }
     UpdateTableRequest updateTableRequest = (UpdateTableRequest) o;
-    return Objects.equals(this.name, updateTableRequest.name)
-        && Objects.equals(this.namespace, updateTableRequest.namespace)
+    return Objects.equals(this.id, updateTableRequest.id)
         && Objects.equals(this.predicate, updateTableRequest.predicate)
         && Objects.equals(this.updates, updateTableRequest.updates);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, predicate, updates);
+    return Objects.hash(id, predicate, updates);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UpdateTableRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    predicate: ").append(toIndentedString(predicate)).append("\n");
     sb.append("    updates: ").append(toIndentedString(updates)).append("\n");
     sb.append("}");

@@ -13,10 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DescribeTableRequest {
-    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
-    #[serde(rename = "namespace", skip_serializing_if = "Option::is_none")]
-    pub namespace: Option<Vec<String>>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
     /// Version of the table to describe. If not specified, server should resolve it to the latest version. 
     #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
     pub version: Option<i64>,
@@ -25,8 +23,7 @@ pub struct DescribeTableRequest {
 impl DescribeTableRequest {
     pub fn new() -> DescribeTableRequest {
         DescribeTableRequest {
-            name: None,
-            namespace: None,
+            id: None,
             version: None,
         }
     }

@@ -4,8 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **String** |  | 
-**namespace** | **Vec<String>** |  | 
+**id** | Option<**Vec<String>**> |  | [optional]
 **bypass_vector_index** | Option<**bool**> | Whether to bypass vector index | [optional]
 **columns** | Option<**Vec<String>**> | Optional list of columns to return | [optional]
 **distance_type** | Option<**String**> | Distance metric to use | [optional]

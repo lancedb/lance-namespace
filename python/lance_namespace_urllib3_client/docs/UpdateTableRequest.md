@@ -1,12 +1,12 @@
 # UpdateTableRequest
 
+Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** | The table name | 
-**namespace** | **List[str]** | The namespace identifier | 
+**id** | **List[str]** |  | [optional] 
 **predicate** | **str** | Optional SQL predicate to filter rows for update | [optional] 
 **updates** | **List[List[str]]** | List of column updates as [column_name, expression] pairs | 
 

@@ -16,7 +16,7 @@ clean-rust-reqwest-client:
 	rm -rf lance-namespace-reqwest-client/**
 
 gen-rust-reqwest-client: clean-rust-reqwest-client
-	openapi-generator-cli generate \
+	uv run openapi-generator-cli generate \
 	  -i ../docs/src/spec/rest.yaml \
 	  -g rust \
 	  -o lance-namespace-reqwest-client \

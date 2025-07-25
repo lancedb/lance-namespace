@@ -28,8 +28,7 @@ import java.util.StringJoiner;
 
 /** DropNamespaceRequest */
 @JsonPropertyOrder({
-  DropNamespaceRequest.JSON_PROPERTY_NAME,
-  DropNamespaceRequest.JSON_PROPERTY_PARENT,
+  DropNamespaceRequest.JSON_PROPERTY_ID,
   DropNamespaceRequest.JSON_PROPERTY_MODE,
   DropNamespaceRequest.JSON_PROPERTY_BEHAVIOR
 })
@@ -37,11 +36,8 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DropNamespaceRequest {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nullable private String name;
-
-  public static final String JSON_PROPERTY_PARENT = "parent";
-  @javax.annotation.Nullable private List<String> parent = new ArrayList<>();
+  public static final String JSON_PROPERTY_ID = "id";
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   /**
    * The mode for dropping a namespace, deciding the server behavior when the namespace to drop is
@@ -126,60 +122,36 @@ public class DropNamespaceRequest {
 
   public DropNamespaceRequest() {}
 
-  public DropNamespaceRequest name(@javax.annotation.Nullable String name) {
+  public DropNamespaceRequest id(@javax.annotation.Nullable List<String> id) {
 
-    this.name = name;
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setName(@javax.annotation.Nullable String name) {
-    this.name = name;
-  }
-
-  public DropNamespaceRequest parent(@javax.annotation.Nullable List<String> parent) {
-
-    this.parent = parent;
-    return this;
-  }
-
-  public DropNamespaceRequest addParentItem(String parentItem) {
-    if (this.parent == null) {
-      this.parent = new ArrayList<>();
+  public DropNamespaceRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.parent.add(parentItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get parent
+   * Get id
    *
-   * @return parent
+   * @return id
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_PARENT)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getParent() {
-    return parent;
+  public List<String> getId() {
+    return id;
   }
 
-  @JsonProperty(JSON_PROPERTY_PARENT)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setParent(@javax.annotation.Nullable List<String> parent) {
-    this.parent = parent;
+  public void setId(@javax.annotation.Nullable List<String> id) {
+    this.id = id;
   }
 
   public DropNamespaceRequest mode(@javax.annotation.Nullable ModeEnum mode) {
@@ -244,23 +216,21 @@ public class DropNamespaceRequest {
       return false;
     }
     DropNamespaceRequest dropNamespaceRequest = (DropNamespaceRequest) o;
-    return Objects.equals(this.name, dropNamespaceRequest.name)
-        && Objects.equals(this.parent, dropNamespaceRequest.parent)
+    return Objects.equals(this.id, dropNamespaceRequest.id)
         && Objects.equals(this.mode, dropNamespaceRequest.mode)
         && Objects.equals(this.behavior, dropNamespaceRequest.behavior);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent, mode, behavior);
+    return Objects.hash(id, mode, behavior);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DropNamespaceRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    behavior: ").append(toIndentedString(behavior)).append("\n");
     sb.append("}");
@@ -309,34 +279,19 @@ public class DropNamespaceRequest {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `parent` to the URL query string
-    if (getParent() != null) {
-      for (int i = 0; i < getParent().size(); i++) {
+    // add `id` to the URL query string
+    if (getId() != null) {
+      for (int i = 0; i < getId().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%sparent%s%s=%s",
+                  "%sid%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getParent().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

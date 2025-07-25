@@ -107,7 +107,7 @@ pub enum UpdateTableError {
 }
 
 
-/// Count the number of rows in a table. 
+/// Count the number of rows in table `id` 
 pub async fn count_table_rows(configuration: &configuration::Configuration, id: &str, count_table_rows_request: models::CountTableRowsRequest, delimiter: Option<&str>) -> Result<i64, Error<CountTableRowsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -150,13 +150,13 @@ pub async fn count_table_rows(configuration: &configuration::Configuration, id: 
     }
 }
 
-/// Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. 
-pub async fn create_table(configuration: &configuration::Configuration, id: &str, x_lance_table_location: &str, body: Vec<u8>, delimiter: Option<&str>, x_lance_table_properties: Option<&str>) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
+/// Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
+pub async fn create_table(configuration: &configuration::Configuration, id: &str, body: Vec<u8>, delimiter: Option<&str>, x_lance_table_location: Option<&str>, x_lance_table_properties: Option<&str>) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
-    let p_x_lance_table_location = x_lance_table_location;
     let p_body = body;
     let p_delimiter = delimiter;
+    let p_x_lance_table_location = x_lance_table_location;
     let p_x_lance_table_properties = x_lance_table_properties;
 
     let uri_str = format!("{}/v1/table/{id}/create", configuration.base_path, id=crate::apis::urlencode(p_id));
@@ -168,7 +168,9 @@ pub async fn create_table(configuration: &configuration::Configuration, id: &str
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    req_builder = req_builder.header("x-lance-table-location", p_x_lance_table_location.to_string());
+    if let Some(param_value) = p_x_lance_table_location {
+        req_builder = req_builder.header("x-lance-table-location", param_value.to_string());
+    }
     if let Some(param_value) = p_x_lance_table_properties {
         req_builder = req_builder.header("x-lance-table-properties", param_value.to_string());
     }
@@ -199,7 +201,7 @@ pub async fn create_table(configuration: &configuration::Configuration, id: &str
     }
 }
 
-/// Delete rows from a table based on a SQL predicate. Returns the number of rows that were deleted. 
+/// Delete rows from table `id`. 
 pub async fn delete_from_table(configuration: &configuration::Configuration, id: &str, delete_from_table_request: models::DeleteFromTableRequest, delimiter: Option<&str>) -> Result<models::DeleteFromTableResponse, Error<DeleteFromTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -242,7 +244,7 @@ pub async fn delete_from_table(configuration: &configuration::Configuration, id:
     }
 }
 
-/// Insert new records into an existing table using Arrow IPC format. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+/// Insert new records into table `id`.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `InsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
 pub async fn insert_into_table(configuration: &configuration::Configuration, id: &str, body: Vec<u8>, delimiter: Option<&str>, mode: Option<&str>) -> Result<models::InsertIntoTableResponse, Error<InsertIntoTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -289,7 +291,7 @@ pub async fn insert_into_table(configuration: &configuration::Configuration, id:
     }
 }
 
-/// Performs a merge insert (upsert) operation on a table. This operation updates existing rows based on a matching column and inserts new rows that don't match. Returns the number of rows inserted and updated. 
+/// Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don't match. It returns the number of rows inserted and updated.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
 pub async fn merge_insert_into_table(configuration: &configuration::Configuration, id: &str, on: &str, body: Vec<u8>, delimiter: Option<&str>, when_matched_update_all: Option<bool>, when_matched_update_all_filt: Option<&str>, when_not_matched_insert_all: Option<bool>, when_not_matched_by_source_delete: Option<bool>, when_not_matched_by_source_delete_filt: Option<&str>) -> Result<models::MergeInsertIntoTableResponse, Error<MergeInsertIntoTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -354,7 +356,7 @@ pub async fn merge_insert_into_table(configuration: &configuration::Configuratio
     }
 }
 
-/// Query a table with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
+/// Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
 pub async fn query_table(configuration: &configuration::Configuration, id: &str, query_table_request: models::QueryTableRequest, delimiter: Option<&str>) -> Result<reqwest::Response, Error<QueryTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -386,7 +388,7 @@ pub async fn query_table(configuration: &configuration::Configuration, id: &str,
     }
 }
 
-/// Update existing rows in a table using SQL expressions. Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
+/// Update existing rows in table `id`. 
 pub async fn update_table(configuration: &configuration::Configuration, id: &str, update_table_request: models::UpdateTableRequest, delimiter: Option<&str>) -> Result<models::UpdateTableResponse, Error<UpdateTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;

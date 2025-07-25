@@ -13,23 +13,22 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DescribeTableIndexStatsRequest {
-    /// The table name
-    #[serde(rename = "name")]
-    pub name: String,
-    /// The namespace identifier
-    #[serde(rename = "namespace")]
-    pub namespace: Vec<String>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
     /// Optional table version to get stats for
     #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
     pub version: Option<i64>,
+    /// Name of the index
+    #[serde(rename = "index_name", skip_serializing_if = "Option::is_none")]
+    pub index_name: Option<String>,
 }
 
 impl DescribeTableIndexStatsRequest {
-    pub fn new(name: String, namespace: Vec<String>) -> DescribeTableIndexStatsRequest {
+    pub fn new() -> DescribeTableIndexStatsRequest {
         DescribeTableIndexStatsRequest {
-            name,
-            namespace,
+            id: None,
             version: None,
+            index_name: None,
         }
     }
 }

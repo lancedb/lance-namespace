@@ -43,6 +43,7 @@ pub enum DescribeTransactionError {
 }
 
 
+/// Alter a transaction with a list of actions such as setting status or properties. The server should either succeed and apply all actions, or fail and apply no action. 
 pub async fn alter_transaction(configuration: &configuration::Configuration, id: &str, alter_transaction_request: models::AlterTransactionRequest, delimiter: Option<&str>) -> Result<models::AlterTransactionResponse, Error<AlterTransactionError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -85,7 +86,7 @@ pub async fn alter_transaction(configuration: &configuration::Configuration, id:
     }
 }
 
-/// Return a detailed information for a given transaction
+/// Return a detailed information for a given transaction 
 pub async fn describe_transaction(configuration: &configuration::Configuration, id: &str, describe_transaction_request: models::DescribeTransactionRequest, delimiter: Option<&str>) -> Result<models::DescribeTransactionResponse, Error<DescribeTransactionError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;

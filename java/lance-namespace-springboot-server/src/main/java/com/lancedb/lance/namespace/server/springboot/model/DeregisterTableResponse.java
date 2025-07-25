@@ -33,60 +33,38 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DeregisterTableResponse {
 
-  private String name;
-
-  @Valid private List<String> namespace = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   private String location;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
-  public DeregisterTableResponse name(String name) {
-    this.name = name;
+  public DeregisterTableResponse id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public DeregisterTableResponse namespace(List<String> namespace) {
-    this.namespace = namespace;
-    return this;
-  }
-
-  public DeregisterTableResponse addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public DeregisterTableResponse addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get namespace
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
-  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("namespace")
-  public List<String> getNamespace() {
-    return namespace;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setNamespace(List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   public DeregisterTableResponse location(String location) {
@@ -146,23 +124,21 @@ public class DeregisterTableResponse {
       return false;
     }
     DeregisterTableResponse deregisterTableResponse = (DeregisterTableResponse) o;
-    return Objects.equals(this.name, deregisterTableResponse.name)
-        && Objects.equals(this.namespace, deregisterTableResponse.namespace)
+    return Objects.equals(this.id, deregisterTableResponse.id)
         && Objects.equals(this.location, deregisterTableResponse.location)
         && Objects.equals(this.properties, deregisterTableResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, location, properties);
+    return Objects.hash(id, location, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeregisterTableResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");

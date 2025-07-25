@@ -13,10 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DeregisterTableResponse {
-    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
-    #[serde(rename = "namespace", skip_serializing_if = "Option::is_none")]
-    pub namespace: Option<Vec<String>>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
@@ -26,8 +24,7 @@ pub struct DeregisterTableResponse {
 impl DeregisterTableResponse {
     pub fn new() -> DeregisterTableResponse {
         DeregisterTableResponse {
-            name: None,
-            namespace: None,
+            id: None,
             location: None,
             properties: None,
         }

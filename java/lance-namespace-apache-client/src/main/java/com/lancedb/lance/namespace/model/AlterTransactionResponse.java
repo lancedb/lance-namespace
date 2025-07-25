@@ -19,49 +19,27 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 /** AlterTransactionResponse */
 @JsonPropertyOrder({
-  AlterTransactionResponse.JSON_PROPERTY_ID,
-  AlterTransactionResponse.JSON_PROPERTY_STATUS
+  AlterTransactionResponse.JSON_PROPERTY_STATUS,
+  AlterTransactionResponse.JSON_PROPERTY_PROPERTIES
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class AlterTransactionResponse {
-  public static final String JSON_PROPERTY_ID = "id";
-  @javax.annotation.Nonnull private String id;
-
   public static final String JSON_PROPERTY_STATUS = "status";
   @javax.annotation.Nonnull private TransactionStatus status;
 
+  public static final String JSON_PROPERTY_PROPERTIES = "properties";
+  @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
+
   public AlterTransactionResponse() {}
-
-  public AlterTransactionResponse id(@javax.annotation.Nonnull String id) {
-
-    this.id = id;
-    return this;
-  }
-
-  /**
-   * Get id
-   *
-   * @return id
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_ID)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getId() {
-    return id;
-  }
-
-  @JsonProperty(JSON_PROPERTY_ID)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setId(@javax.annotation.Nonnull String id) {
-    this.id = id;
-  }
 
   public AlterTransactionResponse status(@javax.annotation.Nonnull TransactionStatus status) {
 
@@ -87,6 +65,39 @@ public class AlterTransactionResponse {
     this.status = status;
   }
 
+  public AlterTransactionResponse properties(
+      @javax.annotation.Nullable Map<String, String> properties) {
+
+    this.properties = properties;
+    return this;
+  }
+
+  public AlterTransactionResponse putPropertiesItem(String key, String propertiesItem) {
+    if (this.properties == null) {
+      this.properties = new HashMap<>();
+    }
+    this.properties.put(key, propertiesItem);
+    return this;
+  }
+
+  /**
+   * Get properties
+   *
+   * @return properties
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_PROPERTIES)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Map<String, String> getProperties() {
+    return properties;
+  }
+
+  @JsonProperty(JSON_PROPERTY_PROPERTIES)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setProperties(@javax.annotation.Nullable Map<String, String> properties) {
+    this.properties = properties;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -96,21 +107,21 @@ public class AlterTransactionResponse {
       return false;
     }
     AlterTransactionResponse alterTransactionResponse = (AlterTransactionResponse) o;
-    return Objects.equals(this.id, alterTransactionResponse.id)
-        && Objects.equals(this.status, alterTransactionResponse.status);
+    return Objects.equals(this.status, alterTransactionResponse.status)
+        && Objects.equals(this.properties, alterTransactionResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, status);
+    return Objects.hash(status, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTransactionResponse {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -157,21 +168,6 @@ public class AlterTransactionResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `id` to the URL query string
-    if (getId() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sid%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getId()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
     // add `status` to the URL query string
     if (getStatus() != null) {
       try {
@@ -184,6 +180,28 @@ public class AlterTransactionResponse {
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);
+      }
+    }
+
+    // add `properties` to the URL query string
+    if (getProperties() != null) {
+      for (String _key : getProperties().keySet()) {
+        try {
+          joiner.add(
+              String.format(
+                  "%sproperties%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
+                  getProperties().get(_key),
+                  URLEncoder.encode(String.valueOf(getProperties().get(_key)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 

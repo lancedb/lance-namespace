@@ -35,18 +35,14 @@ class TestDescribeTableIndexStatsRequest(unittest.TestCase):
         model = DescribeTableIndexStatsRequest()
         if include_optional:
             return DescribeTableIndexStatsRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ],
-                version = 0
+                version = 0,
+                index_name = ''
             )
         else:
             return DescribeTableIndexStatsRequest(
-                name = '',
-                namespace = [
-                    ''
-                    ],
         )
         """
 

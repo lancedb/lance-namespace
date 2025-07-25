@@ -26,11 +26,9 @@ class RegisterTableResponse(BaseModel):
     """
     RegisterTableResponse
     """ # noqa: E501
-    name: StrictStr
-    namespace: List[StrictStr]
     location: StrictStr
     properties: Optional[Dict[str, StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["name", "namespace", "location", "properties"]
+    __properties: ClassVar[List[str]] = ["location", "properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,8 +81,6 @@ class RegisterTableResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace"),
             "location": obj.get("location"),
             "properties": obj.get("properties")
         })

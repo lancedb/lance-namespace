@@ -8,13 +8,13 @@ Method | HTTP request | Description
 [**create_table**](TableApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 [**create_table_index**](TableApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
 [**delete_from_table**](TableApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
-[**deregister_table**](TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
-[**describe_table**](TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
+[**deregister_table**](TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table
+[**describe_table**](TableApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe information of a table
 [**describe_table_index_stats**](TableApi.md#describe_table_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get table index statistics
-[**drop_table**](TableApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
+[**drop_table**](TableApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table
 [**insert_into_table**](TableApi.md#insert_into_table) | **POST** /v1/table/{id}/insert | Insert records into a table
 [**list_table_indices**](TableApi.md#list_table_indices) | **POST** /v1/table/{id}/index/list | List indexes on a table
-[**list_tables**](TableApi.md#list_tables) | **POST** /v1/namespace/{id}/table/list | List tables in a namespace
+[**list_tables**](TableApi.md#list_tables) | **GET** /v1/namespace/{id}/table/list | List tables in a namespace
 [**merge_insert_into_table**](TableApi.md#merge_insert_into_table) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 [**query_table**](TableApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
 [**register_table**](TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
@@ -27,7 +27,7 @@ Method | HTTP request | Description
 
 Count rows in a table
 
-Count the number of rows in a table.
+Count the number of rows in table `id`
 
 
 ### Example
@@ -102,14 +102,21 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **create_table**
-> CreateTableResponse create_table(id, x_lance_table_location, body, delimiter=delimiter, x_lance_table_properties=x_lance_table_properties)
+> CreateTableResponse create_table(id, body, delimiter=delimiter, x_lance_table_location=x_lance_table_location, x_lance_table_properties=x_lance_table_properties)
 
 Create a table with the given name
 
-Create a new table in the namespace with the given data in Arrow IPC stream.
+Create table `id` in the namespace with the given data in Arrow IPC stream.
 
 The schema of the Arrow IPC stream is used as the table schema.    
 If the stream is empty, the API creates a new empty table.
+
+REST NAMESPACE ONLY
+REST namespace uses Arrow IPC stream as the request body.
+It passes in the `CreateTableRequest` information in the following way:
+- `id`: pass through path parameter of the same name
+- `location`: pass through header `x-lance-table-location`
+- `properties`: pass through header `x-lance-table-properties`
 
 
 ### Example
@@ -133,14 +140,14 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.TableApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-    x_lance_table_location = 'x_lance_table_location_example' # str | URI pointing to root location to create the table at
     body = None # bytearray | Arrow IPC data
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
+    x_lance_table_location = 'x_lance_table_location_example' # str | URI pointing to root location to create the table at (optional)
     x_lance_table_properties = 'x_lance_table_properties_example' # str | JSON-encoded string map (e.g. { \"owner\": \"jack\" })  (optional)
 
     try:
         # Create a table with the given name
-        api_response = api_instance.create_table(id, x_lance_table_location, body, delimiter=delimiter, x_lance_table_properties=x_lance_table_properties)
+        api_response = api_instance.create_table(id, body, delimiter=delimiter, x_lance_table_location=x_lance_table_location, x_lance_table_properties=x_lance_table_properties)
         print("The response of TableApi->create_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -155,9 +162,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
- **x_lance_table_location** | **str**| URI pointing to root location to create the table at | 
  **body** | **bytearray**| Arrow IPC data | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
+ **x_lance_table_location** | **str**| URI pointing to root location to create the table at | [optional] 
  **x_lance_table_properties** | **str**| JSON-encoded string map (e.g. { \&quot;owner\&quot;: \&quot;jack\&quot; })  | [optional] 
 
 ### Return type
@@ -275,8 +282,7 @@ No authorization required
 
 Delete rows from a table
 
-Delete rows from a table based on a SQL predicate.
-Returns the number of rows that were deleted.
+Delete rows from table `id`.
 
 
 ### Example
@@ -354,9 +360,9 @@ No authorization required
 # **deregister_table**
 > DeregisterTableResponse deregister_table(id, deregister_table_request, delimiter=delimiter)
 
-Deregister a table from its namespace
+Deregister a table
 
-Deregister a table from its namespace. The table content remains available in the storage.
+Deregister table `id` from its namespace.
 
 
 ### Example
@@ -385,7 +391,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
-        # Deregister a table from its namespace
+        # Deregister a table
         api_response = api_instance.deregister_table(id, deregister_table_request, delimiter=delimiter)
         print("The response of TableApi->deregister_table:\n")
         pprint(api_response)
@@ -434,10 +440,9 @@ No authorization required
 # **describe_table**
 > DescribeTableResponse describe_table(id, describe_table_request, delimiter=delimiter)
 
-Describe a table from the namespace
+Describe information of a table
 
-Get a table's detailed information under a specified namespace.
-Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+Describe the detailed information for table `id`.
 
 
 ### Example
@@ -466,7 +471,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
-        # Describe a table from the namespace
+        # Describe information of a table
         api_response = api_instance.describe_table(id, describe_table_request, delimiter=delimiter)
         print("The response of TableApi->describe_table:\n")
         pprint(api_response)
@@ -598,11 +603,9 @@ No authorization required
 # **drop_table**
 > DropTableResponse drop_table(id, drop_table_request, delimiter=delimiter)
 
-Drop a table from its namespace
+Drop a table
 
-Drop a table from its namespace and delete its data.
-If the table and its data can be immediately deleted, return information of the deleted table.
-Otherwise, return a transaction ID that client can use to track deletion progress.
+Drop table `id` and delete its data.
 
 
 ### Example
@@ -631,7 +634,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
-        # Drop a table from its namespace
+        # Drop a table
         api_response = api_instance.drop_table(id, drop_table_request, delimiter=delimiter)
         print("The response of TableApi->drop_table:\n")
         pprint(api_response)
@@ -682,8 +685,13 @@ No authorization required
 
 Insert records into a table
 
-Insert new records into an existing table using Arrow IPC format.
-Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers).
+Insert new records into table `id`.
+
+REST NAMESPACE ONLY
+REST namespace uses Arrow IPC stream as the request body.
+It passes in the `InsertIntoTableRequest` information in the following way:
+- `id`: pass through path parameter of the same name
+- `mode`: pass through query parameter of the same name
 
 
 ### Example
@@ -707,9 +715,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.TableApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-    body = None # bytearray | Arrow IPC data
+    body = None # bytearray | Arrow IPC stream containing the records to insert
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
-    mode = append # str | Insert mode: \"append\" (default) or \"overwrite\" (optional) (default to append)
+    mode = append # str | How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it  (optional) (default to append)
 
     try:
         # Insert records into a table
@@ -728,9 +736,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
- **body** | **bytearray**| Arrow IPC data | 
+ **body** | **bytearray**| Arrow IPC stream containing the records to insert | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
- **mode** | **str**| Insert mode: \&quot;append\&quot; (default) or \&quot;overwrite\&quot; | [optional] [default to append]
+ **mode** | **str**| How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it  | [optional] [default to append]
 
 ### Return type
 
@@ -841,11 +849,18 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_tables**
-> ListTablesResponse list_tables(id, list_tables_request, delimiter=delimiter)
+> ListTablesResponse list_tables(id, delimiter=delimiter, page_token=page_token, limit=limit)
 
 List tables in a namespace
 
-List all child table names of the root namespace or a given parent namespace.
+List all child table names of the parent namespace `id`.
+
+REST NAMESPACE ONLY
+REST namespace uses GET to perform this operation without a request body.
+It passes in the `ListTablesRequest` information in the following way:
+- `id`: pass through path parameter of the same name
+- `page_token`: pass through query parameter of the same name
+- `limit`: pass through query parameter of the same name
 
 
 ### Example
@@ -853,7 +868,6 @@ List all child table names of the root namespace or a given parent namespace.
 
 ```python
 import lance_namespace_urllib3_client
-from lance_namespace_urllib3_client.models.list_tables_request import ListTablesRequest
 from lance_namespace_urllib3_client.models.list_tables_response import ListTablesResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
@@ -870,12 +884,13 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.TableApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-    list_tables_request = lance_namespace_urllib3_client.ListTablesRequest() # ListTablesRequest | 
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
+    page_token = 'page_token_example' # str |  (optional)
+    limit = 56 # int |  (optional)
 
     try:
         # List tables in a namespace
-        api_response = api_instance.list_tables(id, list_tables_request, delimiter=delimiter)
+        api_response = api_instance.list_tables(id, delimiter=delimiter, page_token=page_token, limit=limit)
         print("The response of TableApi->list_tables:\n")
         pprint(api_response)
     except Exception as e:
@@ -890,8 +905,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
- **list_tables_request** | [**ListTablesRequest**](ListTablesRequest.md)|  | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
+ **page_token** | **str**|  | [optional] 
+ **limit** | **int**|  | [optional] 
 
 ### Return type
 
@@ -903,7 +919,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 ### HTTP response details
@@ -926,9 +942,21 @@ No authorization required
 
 Merge insert (upsert) records into a table
 
-Performs a merge insert (upsert) operation on a table. This operation updates existing rows
+Performs a merge insert (upsert) operation on table `id`.
+This operation updates existing rows
 based on a matching column and inserts new rows that don't match.
-Returns the number of rows inserted and updated.
+It returns the number of rows inserted and updated.
+
+REST NAMESPACE ONLY
+REST namespace uses Arrow IPC stream as the request body.
+It passes in the `MergeInsertIntoTableRequest` information in the following way:
+- `id`: pass through path parameter of the same name
+- `on`: pass through query parameter of the same name
+- `when_matched_update_all`: pass through query parameter of the same name
+- `when_matched_update_all_filt`: pass through query parameter of the same name
+- `when_not_matched_insert_all`: pass through query parameter of the same name
+- `when_not_matched_by_source_delete`: pass through query parameter of the same name
+- `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name
 
 
 ### Example
@@ -953,7 +981,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     api_instance = lance_namespace_urllib3_client.TableApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     on = 'on_example' # str | Column name to use for matching rows (required)
-    body = None # bytearray | Arrow IPC data containing the records to merge
+    body = None # bytearray | Arrow IPC stream containing the records to merge
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
     when_matched_update_all = False # bool | Update all columns when rows match (optional) (default to False)
     when_matched_update_all_filt = 'when_matched_update_all_filt_example' # str | The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true (optional)
@@ -979,7 +1007,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **on** | **str**| Column name to use for matching rows (required) | 
- **body** | **bytearray**| Arrow IPC data containing the records to merge | 
+ **body** | **bytearray**| Arrow IPC stream containing the records to merge | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
  **when_matched_update_all** | **bool**| Update all columns when rows match | [optional] [default to False]
  **when_matched_update_all_filt** | **str**| The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true | [optional] 
@@ -1019,7 +1047,7 @@ No authorization required
 
 Query a table
 
-Query a table with vector search, full text search and optional SQL filtering.
+Query table `id` with vector search, full text search and optional SQL filtering.
 Returns results in Arrow IPC file or stream format.
 
 
@@ -1099,7 +1127,7 @@ No authorization required
 
 Register a table to a namespace
 
-Register an existing table at a given storage location to a namespace.
+Register an existing table at a given storage location as `id`.
 
 
 ### Example
@@ -1181,9 +1209,10 @@ No authorization required
 
 Check if a table exists
 
-Check if a table exists.
+Check if table `id` exists.
 
-This API should behave exactly like the DescribeTable API, except it does not contain a body.
+This operation should behave exactly like DescribeTable, 
+except it does not contain a response body.
 
 
 ### Example
@@ -1260,10 +1289,7 @@ No authorization required
 
 Update rows in a table
 
-Update existing rows in a table using SQL expressions.
-Each update consists of a column name and an SQL expression that will be
-evaluated against the current row's value. Optionally, a predicate can be
-provided to filter which rows to update.
+Update existing rows in table `id`.
 
 
 ### Example

@@ -21,6 +21,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /** AlterTransactionResponse */
@@ -29,39 +31,17 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class AlterTransactionResponse {
 
-  private String id;
-
   private TransactionStatus status;
+
+  @Valid private Map<String, String> properties = new HashMap<>();
 
   public AlterTransactionResponse() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public AlterTransactionResponse(String id, TransactionStatus status) {
-    this.id = id;
+  public AlterTransactionResponse(TransactionStatus status) {
     this.status = status;
-  }
-
-  public AlterTransactionResponse id(String id) {
-    this.id = id;
-    return this;
-  }
-
-  /**
-   * Get id
-   *
-   * @return id
-   */
-  @NotNull
-  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("id")
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
   }
 
   public AlterTransactionResponse status(TransactionStatus status) {
@@ -86,6 +66,34 @@ public class AlterTransactionResponse {
     this.status = status;
   }
 
+  public AlterTransactionResponse properties(Map<String, String> properties) {
+    this.properties = properties;
+    return this;
+  }
+
+  public AlterTransactionResponse putPropertiesItem(String key, String propertiesItem) {
+    if (this.properties == null) {
+      this.properties = new HashMap<>();
+    }
+    this.properties.put(key, propertiesItem);
+    return this;
+  }
+
+  /**
+   * Get properties
+   *
+   * @return properties
+   */
+  @Schema(name = "properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("properties")
+  public Map<String, String> getProperties() {
+    return properties;
+  }
+
+  public void setProperties(Map<String, String> properties) {
+    this.properties = properties;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -95,21 +103,21 @@ public class AlterTransactionResponse {
       return false;
     }
     AlterTransactionResponse alterTransactionResponse = (AlterTransactionResponse) o;
-    return Objects.equals(this.id, alterTransactionResponse.id)
-        && Objects.equals(this.status, alterTransactionResponse.status);
+    return Objects.equals(this.status, alterTransactionResponse.status)
+        && Objects.equals(this.properties, alterTransactionResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, status);
+    return Objects.hash(status, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTransactionResponse {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
   }

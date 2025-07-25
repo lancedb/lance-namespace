@@ -27,11 +27,10 @@ class CountTableRowsRequest(BaseModel):
     """
     CountTableRowsRequest
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    namespace: Optional[List[StrictStr]] = None
+    id: Optional[List[StrictStr]] = None
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Version of the table to describe. If not specified, server should resolve it to the latest version. ")
     filter: Optional[StrictStr] = Field(default=None, description="SQL filter expression to be applied ")
-    __properties: ClassVar[List[str]] = ["name", "namespace", "version", "filter"]
+    __properties: ClassVar[List[str]] = ["id", "version", "filter"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -84,8 +83,7 @@ class CountTableRowsRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace"),
+            "id": obj.get("id"),
             "version": obj.get("version"),
             "filter": obj.get("filter")
         })

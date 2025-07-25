@@ -21,9 +21,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -33,69 +31,7 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DescribeNamespaceResponse {
 
-  private String name;
-
-  @Valid private List<String> parent = new ArrayList<>();
-
   @Valid private Map<String, String> properties = new HashMap<>();
-
-  public DescribeNamespaceResponse() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public DescribeNamespaceResponse(String name) {
-    this.name = name;
-  }
-
-  public DescribeNamespaceResponse name(String name) {
-    this.name = name;
-    return this;
-  }
-
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @NotNull
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public DescribeNamespaceResponse parent(List<String> parent) {
-    this.parent = parent;
-    return this;
-  }
-
-  public DescribeNamespaceResponse addParentItem(String parentItem) {
-    if (this.parent == null) {
-      this.parent = new ArrayList<>();
-    }
-    this.parent.add(parentItem);
-    return this;
-  }
-
-  /**
-   * Get parent
-   *
-   * @return parent
-   */
-  @Schema(name = "parent", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("parent")
-  public List<String> getParent() {
-    return parent;
-  }
-
-  public void setParent(List<String> parent) {
-    this.parent = parent;
-  }
 
   public DescribeNamespaceResponse properties(Map<String, String> properties) {
     this.properties = properties;
@@ -141,22 +77,18 @@ public class DescribeNamespaceResponse {
       return false;
     }
     DescribeNamespaceResponse describeNamespaceResponse = (DescribeNamespaceResponse) o;
-    return Objects.equals(this.name, describeNamespaceResponse.name)
-        && Objects.equals(this.parent, describeNamespaceResponse.parent)
-        && Objects.equals(this.properties, describeNamespaceResponse.properties);
+    return Objects.equals(this.properties, describeNamespaceResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent, properties);
+    return Objects.hash(properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeNamespaceResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();

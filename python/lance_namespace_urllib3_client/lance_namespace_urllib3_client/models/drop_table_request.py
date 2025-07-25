@@ -24,11 +24,10 @@ from typing_extensions import Self
 
 class DropTableRequest(BaseModel):
     """
-    DropTableRequest
+    If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. 
     """ # noqa: E501
-    name: StrictStr
-    namespace: Optional[List[StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["name", "namespace"]
+    id: Optional[List[StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,8 +80,7 @@ class DropTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace")
+            "id": obj.get("id")
         })
         return _obj
 

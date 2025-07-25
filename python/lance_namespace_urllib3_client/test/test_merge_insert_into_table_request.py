@@ -35,8 +35,7 @@ class TestMergeInsertIntoTableRequest(unittest.TestCase):
         model = MergeInsertIntoTableRequest()
         if include_optional:
             return MergeInsertIntoTableRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ],
                 on = '',

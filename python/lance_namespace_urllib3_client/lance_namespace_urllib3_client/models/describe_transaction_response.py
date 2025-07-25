@@ -27,10 +27,9 @@ class DescribeTransactionResponse(BaseModel):
     """
     DescribeTransactionResponse
     """ # noqa: E501
-    id: StrictStr
     status: TransactionStatus
     properties: Optional[Dict[str, StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["id", "status", "properties"]
+    __properties: ClassVar[List[str]] = ["status", "properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,7 +82,6 @@ class DescribeTransactionResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
             "status": obj.get("status"),
             "properties": obj.get("properties")
         })

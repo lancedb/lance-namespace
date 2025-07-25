@@ -60,23 +60,11 @@ jobs:
       - uses: rui314/setup-mold@v1
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
-      - name: Checkout lance repo
-        uses: actions/checkout@v4
-        with:
-          repository: lancedb/lance
-          path: lance
       - name: Checkout lance-namespace repo
         uses: actions/checkout@v4
-        with:
-          path: lance-namespace
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: |
-            lance
-            lance-namespace/rust
-      - name: Install lance
-        working-directory: lance
-        run: cargo build
+          workspaces: rust
       - name: Running lance-namespace tests
-        working-directory: lance-namespace/rust
+        working-directory: rust
         run: cargo test

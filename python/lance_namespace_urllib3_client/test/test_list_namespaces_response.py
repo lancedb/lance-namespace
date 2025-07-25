@@ -36,14 +36,14 @@ class TestListNamespacesResponse(unittest.TestCase):
         if include_optional:
             return ListNamespacesResponse(
                 namespaces = [
-                    'accounting'
+                    ''
                     ],
-                next_page_token = ''
+                page_token = ''
             )
         else:
             return ListNamespacesResponse(
                 namespaces = [
-                    'accounting'
+                    ''
                     ],
         )
         """

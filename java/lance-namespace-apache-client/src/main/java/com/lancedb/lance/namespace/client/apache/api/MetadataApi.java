@@ -38,11 +38,9 @@ import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
-import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
 import com.lancedb.lance.namespace.model.ListTableIndicesResponse;
-import com.lancedb.lance.namespace.model.ListTablesRequest;
 import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
@@ -72,7 +70,9 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Alter information of a transaction.
+   * Alter information of a transaction. Alter a transaction with a list of actions such as setting
+   * status or properties. The server should either succeed and apply all actions, or fail and apply
+   * no action.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -92,7 +92,9 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Alter information of a transaction.
+   * Alter information of a transaction. Alter a transaction with a list of actions such as setting
+   * status or properties. The server should either succeed and apply all actions, or fail and apply
+   * no action.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -172,13 +174,10 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Create a new namespace Create a new namespace. A namespace can manage either a collection of
-   * child namespaces, or a collection of tables. The namespace in the API route should be the
-   * parent namespace to create the new namespace. There are three modes when trying to create a
-   * namespace, to differentiate the behavior when a namespace of the same name already exists: *
-   * CREATE: the operation fails with 400. * EXIST_OK: the operation succeeds and the existing
-   * namespace is kept. * OVERWRITE: the existing namespace is dropped and a new empty namespace
-   * with this name is created.
+   * Create a new namespace Create new namespace &#x60;id&#x60;. During the creation process, the
+   * implementation may modify user-provided &#x60;properties&#x60;, such as adding additional
+   * properties like &#x60;created_at&#x60; to user-provided properties, omitting any specific
+   * property, or performing actions based on any property value.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -198,13 +197,10 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Create a new namespace Create a new namespace. A namespace can manage either a collection of
-   * child namespaces, or a collection of tables. The namespace in the API route should be the
-   * parent namespace to create the new namespace. There are three modes when trying to create a
-   * namespace, to differentiate the behavior when a namespace of the same name already exists: *
-   * CREATE: the operation fails with 400. * EXIST_OK: the operation succeeds and the existing
-   * namespace is kept. * OVERWRITE: the existing namespace is dropped and a new empty namespace
-   * with this name is created.
+   * Create a new namespace Create new namespace &#x60;id&#x60;. During the creation process, the
+   * implementation may modify user-provided &#x60;properties&#x60;, such as adding additional
+   * properties like &#x60;created_at&#x60; to user-provided properties, omitting any specific
+   * property, or performing actions based on any property value.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -392,8 +388,7 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Deregister a table from its namespace Deregister a table from its namespace. The table content
-   * remains available in the storage.
+   * Deregister a table Deregister table &#x60;id&#x60; from its namespace.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -413,8 +408,7 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Deregister a table from its namespace Deregister a table from its namespace. The table content
-   * remains available in the storage.
+   * Deregister a table Deregister table &#x60;id&#x60; from its namespace.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -494,7 +488,7 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Describe information about a namespace Return the detailed information for a given namespace
+   * Describe a namespace Describe the detailed information for namespace &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -514,7 +508,7 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Describe information about a namespace Return the detailed information for a given namespace
+   * Describe a namespace Describe the detailed information for namespace &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -594,9 +588,7 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Describe a table from the namespace Get a table&#39;s detailed information under a specified
-   * namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format
-   * (with database in headers).
+   * Describe information of a table Describe the detailed information for table &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -615,9 +607,7 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Describe a table from the namespace Get a table&#39;s detailed information under a specified
-   * namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format
-   * (with database in headers).
+   * Describe information of a table Describe the detailed information for table &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -914,7 +904,7 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Drop a namespace Drop a namespace. The namespace must be empty.
+   * Drop a namespace Drop namespace &#x60;id&#x60; from its parent namespace.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -933,7 +923,7 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Drop a namespace Drop a namespace. The namespace must be empty.
+   * Drop a namespace Drop namespace &#x60;id&#x60; from its parent namespace.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1011,9 +1001,7 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Drop a table from its namespace Drop a table from its namespace and delete its data. If the
-   * table and its data can be immediately deleted, return information of the deleted table.
-   * Otherwise, return a transaction ID that client can use to track deletion progress.
+   * Drop a table Drop table &#x60;id&#x60; and delete its data.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1032,9 +1020,7 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Drop a table from its namespace Drop a table from its namespace and delete its data. If the
-   * table and its data can be immediately deleted, return information of the deleted table.
-   * Otherwise, return a transaction ID that client can use to track deletion progress.
+   * Drop a table Drop table &#x60;id&#x60; and delete its data.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1111,61 +1097,64 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * List namespaces List all child namespace names of the root namespace or a given parent
-   * namespace.
+   * List namespaces List all child namespace names of the parent namespace &#x60;id&#x60;. REST
+   * NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It
+   * passes in the &#x60;ListNamespacesRequest&#x60; information in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass
+   * through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of
+   * the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param listNamespacesRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
+   * @param pageToken (optional)
+   * @param limit (optional)
    * @return ListNamespacesResponse
    * @throws ApiException if fails to make API call
    */
   public ListNamespacesResponse listNamespaces(
-      String id, ListNamespacesRequest listNamespacesRequest, String delimiter)
-      throws ApiException {
-    return this.listNamespaces(id, listNamespacesRequest, delimiter, Collections.emptyMap());
+      String id, String delimiter, String pageToken, Integer limit) throws ApiException {
+    return this.listNamespaces(id, delimiter, pageToken, limit, Collections.emptyMap());
   }
 
   /**
-   * List namespaces List all child namespace names of the root namespace or a given parent
-   * namespace.
+   * List namespaces List all child namespace names of the parent namespace &#x60;id&#x60;. REST
+   * NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It
+   * passes in the &#x60;ListNamespacesRequest&#x60; information in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass
+   * through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of
+   * the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param listNamespacesRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
+   * @param pageToken (optional)
+   * @param limit (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return ListNamespacesResponse
    * @throws ApiException if fails to make API call
    */
   public ListNamespacesResponse listNamespaces(
       String id,
-      ListNamespacesRequest listNamespacesRequest,
       String delimiter,
+      String pageToken,
+      Integer limit,
       Map<String, String> additionalHeaders)
       throws ApiException {
-    Object localVarPostBody = listNamespacesRequest;
+    Object localVarPostBody = null;
 
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(
           400, "Missing the required parameter 'id' when calling listNamespaces");
-    }
-
-    // verify the required parameter 'listNamespacesRequest' is set
-    if (listNamespacesRequest == null) {
-      throw new ApiException(
-          400,
-          "Missing the required parameter 'listNamespacesRequest' when calling listNamespaces");
     }
 
     // create path and map variables
@@ -1183,13 +1172,16 @@ public class MetadataApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("page_token", pageToken));
+    localVarQueryParams.addAll(apiClient.parameterToPair("limit", limit));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {"application/json"};
+    final String[] localVarContentTypes = {};
+
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
     String[] localVarAuthNames = new String[] {};
@@ -1198,7 +1190,7 @@ public class MetadataApi extends BaseApi {
         new TypeReference<ListNamespacesResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
-        "POST",
+        "GET",
         localVarQueryParams,
         localVarCollectionQueryParams,
         localVarQueryStringJoiner.toString(),
@@ -1315,58 +1307,63 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * List tables in a namespace List all child table names of the root namespace or a given parent
-   * namespace.
+   * List tables in a namespace List all child table names of the parent namespace &#x60;id&#x60;.
+   * REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body.
+   * It passes in the &#x60;ListTablesRequest&#x60; information in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass
+   * through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of
+   * the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param listTablesRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
+   * @param pageToken (optional)
+   * @param limit (optional)
    * @return ListTablesResponse
    * @throws ApiException if fails to make API call
    */
-  public ListTablesResponse listTables(
-      String id, ListTablesRequest listTablesRequest, String delimiter) throws ApiException {
-    return this.listTables(id, listTablesRequest, delimiter, Collections.emptyMap());
+  public ListTablesResponse listTables(String id, String delimiter, String pageToken, Integer limit)
+      throws ApiException {
+    return this.listTables(id, delimiter, pageToken, limit, Collections.emptyMap());
   }
 
   /**
-   * List tables in a namespace List all child table names of the root namespace or a given parent
-   * namespace.
+   * List tables in a namespace List all child table names of the parent namespace &#x60;id&#x60;.
+   * REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body.
+   * It passes in the &#x60;ListTablesRequest&#x60; information in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass
+   * through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of
+   * the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param listTablesRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
+   * @param pageToken (optional)
+   * @param limit (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return ListTablesResponse
    * @throws ApiException if fails to make API call
    */
   public ListTablesResponse listTables(
       String id,
-      ListTablesRequest listTablesRequest,
       String delimiter,
+      String pageToken,
+      Integer limit,
       Map<String, String> additionalHeaders)
       throws ApiException {
-    Object localVarPostBody = listTablesRequest;
+    Object localVarPostBody = null;
 
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(400, "Missing the required parameter 'id' when calling listTables");
-    }
-
-    // verify the required parameter 'listTablesRequest' is set
-    if (listTablesRequest == null) {
-      throw new ApiException(
-          400, "Missing the required parameter 'listTablesRequest' when calling listTables");
     }
 
     // create path and map variables
@@ -1384,13 +1381,16 @@ public class MetadataApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("page_token", pageToken));
+    localVarQueryParams.addAll(apiClient.parameterToPair("limit", limit));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {"application/json"};
+    final String[] localVarContentTypes = {};
+
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
     String[] localVarAuthNames = new String[] {};
@@ -1399,7 +1399,7 @@ public class MetadataApi extends BaseApi {
         new TypeReference<ListTablesResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
-        "POST",
+        "GET",
         localVarQueryParams,
         localVarCollectionQueryParams,
         localVarQueryStringJoiner.toString(),
@@ -1414,8 +1414,8 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Check if a namespace exists Check if a namespace exists. This API should behave exactly like
-   * the DescribeNamespace API, except it does not contain a body.
+   * Check if a namespace exists Check if namespace &#x60;id&#x60; exists. This operation must
+   * behave exactly like the DescribeNamespace API, except it does not contain a response body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1434,8 +1434,8 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Check if a namespace exists Check if a namespace exists. This API should behave exactly like
-   * the DescribeNamespace API, except it does not contain a body.
+   * Check if a namespace exists Check if namespace &#x60;id&#x60; exists. This operation must
+   * behave exactly like the DescribeNamespace API, except it does not contain a response body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1512,8 +1512,8 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Register a table to a namespace Register an existing table at a given storage location to a
-   * namespace.
+   * Register a table to a namespace Register an existing table at a given storage location as
+   * &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1532,8 +1532,8 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Register a table to a namespace Register an existing table at a given storage location to a
-   * namespace.
+   * Register a table to a namespace Register an existing table at a given storage location as
+   * &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1611,8 +1611,8 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Check if a table exists Check if a table exists. This API should behave exactly like the
-   * DescribeTable API, except it does not contain a body.
+   * Check if a table exists Check if table &#x60;id&#x60; exists. This operation should behave
+   * exactly like DescribeTable, except it does not contain a response body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1630,8 +1630,8 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Check if a table exists Check if a table exists. This API should behave exactly like the
-   * DescribeTable API, except it does not contain a body.
+   * Check if a table exists Check if table &#x60;id&#x60; exists. This operation should behave
+   * exactly like DescribeTable, except it does not contain a response body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.

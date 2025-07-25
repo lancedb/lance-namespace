@@ -2,13 +2,13 @@
 
 # DeregisterTableRequest
 
+The table content remains available in the storage. 
 
 ## Properties
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**name** | **String** |  |  |
-|**namespace** | **List&lt;String&gt;** |  |  [optional] |
+|**id** | **List&lt;String&gt;** |  |  [optional] |
 
 
 

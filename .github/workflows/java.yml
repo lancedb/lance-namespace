@@ -63,51 +63,16 @@ jobs:
       - uses: rui314/setup-mold@v1
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
-      - name: Checkout lance repo
-        uses: actions/checkout@v4
-        with:
-          repository: lancedb/lance
-          path: lance
       - name: Checkout lance-namespace repo
         uses: actions/checkout@v4
-        with:
-          path: lance-namespace
-      - uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: lance/java/core/lance-jni -> ../target/rust-maven-plugin/lance-jni
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: ${{ matrix.java-version }}
           cache: "maven"
-      - name: Install Lance Java SDK
-        working-directory: lance/java
-        run: |
-          if [ "${{ matrix.java-version }}" == "17" ]; then
-            export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS \
-            -XX:+IgnoreUnrecognizedVMOptions \
-            --add-opens=java.base/java.lang=ALL-UNNAMED \
-            --add-opens=java.base/java.lang.invoke=ALL-UNNAMED \
-            --add-opens=java.base/java.lang.reflect=ALL-UNNAMED \
-            --add-opens=java.base/java.io=ALL-UNNAMED \
-            --add-opens=java.base/java.net=ALL-UNNAMED \
-            --add-opens=java.base/java.nio=ALL-UNNAMED \
-            --add-opens=java.base/java.util=ALL-UNNAMED \
-            --add-opens=java.base/java.util.concurrent=ALL-UNNAMED \
-            --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED \
-            --add-opens=java.base/jdk.internal.ref=ALL-UNNAMED \
-            --add-opens=java.base/sun.nio.ch=ALL-UNNAMED \
-            --add-opens=java.base/sun.nio.cs=ALL-UNNAMED \
-            --add-opens=java.base/sun.security.action=ALL-UNNAMED \
-            --add-opens=java.base/sun.util.calendar=ALL-UNNAMED \
-            --add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED \
-            -Djdk.reflect.useDirectMethodHandle=false \
-            -Dio.netty.tryReflectionSetAccessible=true"
-          fi
-          mvn install -pl :lance-core -DskipTests -am
       - name: Check code style
-        working-directory: lance-namespace/java
+        working-directory: java
         run: |
           if [ "${{ matrix.java-version }}" == "17" ]; then
             export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS \
@@ -132,7 +97,7 @@ jobs:
           fi
           mvn checkstyle:check spotless:check
       - name: Running tests with Java ${{ matrix.java-version }}
-        working-directory: lance-namespace/java
+        working-directory: java
         run: |
           if [ "${{ matrix.java-version }}" == "17" ]; then
             export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS \

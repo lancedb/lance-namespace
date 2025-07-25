@@ -31,107 +31,80 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class QueryTableRequest {
 
-  private String name;
+  @Valid private List<String> id = new ArrayList<>();
 
-  @Valid private List<String> namespace = new ArrayList<>();
-
-  private Boolean bypassVectorIndex = null;
+  private Boolean bypassVectorIndex;
 
   @Valid private List<String> columns = new ArrayList<>();
 
-  private String distanceType = null;
+  private String distanceType;
 
-  private Integer ef = null;
+  private Integer ef;
 
-  private Boolean fastSearch = null;
+  private Boolean fastSearch;
 
-  private String filter = null;
+  private String filter;
 
   private QueryTableRequestFullTextQuery fullTextQuery;
 
   private Integer k;
 
-  private Float lowerBound = null;
+  private Float lowerBound;
 
-  private Integer nprobes = null;
+  private Integer nprobes;
 
-  private Integer offset = null;
+  private Integer offset;
 
-  private Boolean prefilter = null;
+  private Boolean prefilter;
 
-  private Integer refineFactor = null;
+  private Integer refineFactor;
 
-  private Float upperBound = null;
+  private Float upperBound;
 
   private QueryTableRequestVector vector;
 
-  private String vectorColumn = null;
+  private String vectorColumn;
 
-  private Long version = null;
+  private Long version;
 
-  private Boolean withRowId = null;
+  private Boolean withRowId;
 
   public QueryTableRequest() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public QueryTableRequest(
-      String name, List<String> namespace, Integer k, QueryTableRequestVector vector) {
-    this.name = name;
-    this.namespace = namespace;
+  public QueryTableRequest(Integer k, QueryTableRequestVector vector) {
     this.k = k;
     this.vector = vector;
   }
 
-  public QueryTableRequest name(String name) {
-    this.name = name;
+  public QueryTableRequest id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @NotNull
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public QueryTableRequest namespace(List<String> namespace) {
-    this.namespace = namespace;
-    return this;
-  }
-
-  public QueryTableRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public QueryTableRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get namespace
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
-  @NotNull
-  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("namespace")
-  public List<String> getNamespace() {
-    return namespace;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setNamespace(List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   public QueryTableRequest bypassVectorIndex(Boolean bypassVectorIndex) {
@@ -569,8 +542,7 @@ public class QueryTableRequest {
       return false;
     }
     QueryTableRequest queryTableRequest = (QueryTableRequest) o;
-    return Objects.equals(this.name, queryTableRequest.name)
-        && Objects.equals(this.namespace, queryTableRequest.namespace)
+    return Objects.equals(this.id, queryTableRequest.id)
         && Objects.equals(this.bypassVectorIndex, queryTableRequest.bypassVectorIndex)
         && Objects.equals(this.columns, queryTableRequest.columns)
         && Objects.equals(this.distanceType, queryTableRequest.distanceType)
@@ -594,8 +566,7 @@ public class QueryTableRequest {
   @Override
   public int hashCode() {
     return Objects.hash(
-        name,
-        namespace,
+        id,
         bypassVectorIndex,
         columns,
         distanceType,
@@ -620,8 +591,7 @@ public class QueryTableRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class QueryTableRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    bypassVectorIndex: ").append(toIndentedString(bypassVectorIndex)).append("\n");
     sb.append("    columns: ").append(toIndentedString(columns)).append("\n");
     sb.append("    distanceType: ").append(toIndentedString(distanceType)).append("\n");

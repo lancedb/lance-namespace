@@ -71,7 +71,8 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/table/{id}/count_rows : Count rows in a table Count the number of rows in a table.
+   * POST /v1/table/{id}/count_rows : Count rows in a table Count the number of rows in table
+   * &#x60;id&#x60;
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -97,7 +98,7 @@ public interface TableApi {
   @Operation(
       operationId = "countTableRows",
       summary = "Count rows in a table",
-      description = "Count the number of rows in a table. ",
+      description = "Count the number of rows in table `id` ",
       tags = {"Table", "Data"},
       responses = {
         @ApiResponse(
@@ -233,19 +234,24 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/table/{id}/create : Create a table with the given name Create a new table in the
-   * namespace with the given data in Arrow IPC stream. The schema of the Arrow IPC stream is used
-   * as the table schema. If the stream is empty, the API creates a new empty table.
+   * POST /v1/table/{id}/create : Create a table with the given name Create table &#x60;id&#x60; in
+   * the namespace with the given data in Arrow IPC stream. The schema of the Arrow IPC stream is
+   * used as the table schema. If the stream is empty, the API creates a new empty table. REST
+   * NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the
+   * &#x60;CreateTableRequest&#x60; information in the following way: - &#x60;id&#x60;: pass through
+   * path parameter of the same name - &#x60;location&#x60;: pass through header
+   * &#x60;x-lance-table-location&#x60; - &#x60;properties&#x60;: pass through header
+   * &#x60;x-lance-table-properties&#x60;
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param xLanceTableLocation URI pointing to root location to create the table at (required)
    * @param body Arrow IPC data (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
+   * @param xLanceTableLocation URI pointing to root location to create the table at (optional)
    * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
    *     \&quot;jack\&quot; }) (optional)
    * @return Table properties result when creating a table (status code 200) or Indicates a bad
@@ -265,7 +271,7 @@ public interface TableApi {
       operationId = "createTable",
       summary = "Create a table with the given name",
       description =
-          "Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. ",
+          "Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` ",
       tags = {"Table", "Data"},
       responses = {
         @ApiResponse(
@@ -343,14 +349,6 @@ public interface TableApi {
               in = ParameterIn.PATH)
           @PathVariable("id")
           String id,
-      @NotNull
-          @Parameter(
-              name = "x-lance-table-location",
-              description = "URI pointing to root location to create the table at",
-              required = true,
-              in = ParameterIn.HEADER)
-          @RequestHeader(value = "x-lance-table-location", required = true)
-          String xLanceTableLocation,
       @Parameter(name = "body", description = "Arrow IPC data", required = true) @Valid @RequestBody
           org.springframework.core.io.Resource body,
       @Parameter(
@@ -361,6 +359,12 @@ public interface TableApi {
           @Valid
           @RequestParam(value = "delimiter", required = false)
           Optional<String> delimiter,
+      @Parameter(
+              name = "x-lance-table-location",
+              description = "URI pointing to root location to create the table at",
+              in = ParameterIn.HEADER)
+          @RequestHeader(value = "x-lance-table-location", required = false)
+          Optional<String> xLanceTableLocation,
       @Parameter(
               name = "x-lance-table-properties",
               description = "JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ",
@@ -373,7 +377,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"name\" : \"name\", \"namespace\" : [ \"namespace\", \"namespace\" ], \"location\" : \"location\", \"properties\" : { \"key\" : \"properties\" }, \"storage_options\" : { \"key\" : \"storage_options\" } }";
+                      "{ \"schema\" : { \"metadata\" : { \"key\" : \"metadata\" }, \"fields\" : [ { \"metadata\" : { \"key\" : \"metadata\" }, \"nullable\" : true, \"name\" : \"name\", \"type\" : { \"length\" : 0, \"fields\" : [ null, null ], \"type\" : \"type\" } }, { \"metadata\" : { \"key\" : \"metadata\" }, \"nullable\" : true, \"name\" : \"name\", \"type\" : { \"length\" : 0, \"fields\" : [ null, null ], \"type\" : \"type\" } } ] }, \"location\" : \"location\", \"version\" : 0, \"properties\" : { \"key\" : \"properties\" }, \"storage_options\" : { \"key\" : \"storage_options\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -549,7 +553,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"name\" : \"name\", \"namespace\" : [ \"namespace\", \"namespace\" ], \"location\" : \"location\", \"properties\" : { \"key\" : \"properties\" } }";
+                      "{ \"location\" : \"location\", \"id\" : [ \"id\", \"id\" ], \"properties\" : { \"key\" : \"properties\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -595,8 +599,7 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/table/{id}/delete : Delete rows from a table Delete rows from a table based on a SQL
-   * predicate. Returns the number of rows that were deleted.
+   * POST /v1/table/{id}/delete : Delete rows from a table Delete rows from table &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -622,8 +625,7 @@ public interface TableApi {
   @Operation(
       operationId = "deleteFromTable",
       summary = "Delete rows from a table",
-      description =
-          "Delete rows from a table based on a SQL predicate. Returns the number of rows that were deleted. ",
+      description = "Delete rows from table `id`. ",
       tags = {"Table", "Data"},
       responses = {
         @ApiResponse(
@@ -764,8 +766,8 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/table/{id}/deregister : Deregister a table from its namespace Deregister a table from
-   * its namespace. The table content remains available in the storage.
+   * POST /v1/table/{id}/deregister : Deregister a table Deregister table &#x60;id&#x60; from its
+   * namespace.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -790,9 +792,8 @@ public interface TableApi {
    */
   @Operation(
       operationId = "deregisterTable",
-      summary = "Deregister a table from its namespace",
-      description =
-          "Deregister a table from its namespace. The table content remains available in the storage. ",
+      summary = "Deregister a table",
+      description = "Deregister table `id` from its namespace. ",
       tags = {"Table", "Metadata"},
       responses = {
         @ApiResponse(
@@ -888,7 +889,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"name\" : \"name\", \"namespace\" : [ \"namespace\", \"namespace\" ], \"location\" : \"location\", \"properties\" : { \"key\" : \"properties\" } }";
+                      "{ \"location\" : \"location\", \"id\" : [ \"id\", \"id\" ], \"properties\" : { \"key\" : \"properties\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -934,9 +935,8 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/table/{id}/describe : Describe a table from the namespace Get a table&#39;s detailed
-   * information under a specified namespace. Supports both lance-namespace format (with namespace
-   * in body) and LanceDB format (with database in headers).
+   * POST /v1/table/{id}/describe : Describe information of a table Describe the detailed
+   * information for table &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -961,9 +961,8 @@ public interface TableApi {
    */
   @Operation(
       operationId = "describeTable",
-      summary = "Describe a table from the namespace",
-      description =
-          "Get a table's detailed information under a specified namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). ",
+      summary = "Describe information of a table",
+      description = "Describe the detailed information for table `id`. ",
       tags = {"Table", "Metadata"},
       responses = {
         @ApiResponse(
@@ -1287,10 +1286,7 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/table/{id}/drop : Drop a table from its namespace Drop a table from its namespace and
-   * delete its data. If the table and its data can be immediately deleted, return information of
-   * the deleted table. Otherwise, return a transaction ID that client can use to track deletion
-   * progress.
+   * POST /v1/table/{id}/drop : Drop a table Drop table &#x60;id&#x60; and delete its data.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1315,9 +1311,8 @@ public interface TableApi {
    */
   @Operation(
       operationId = "dropTable",
-      summary = "Drop a table from its namespace",
-      description =
-          "Drop a table from its namespace and delete its data. If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. ",
+      summary = "Drop a table",
+      description = "Drop table `id` and delete its data. ",
       tags = {"Table", "Metadata"},
       responses = {
         @ApiResponse(
@@ -1411,7 +1406,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"name\" : \"name\", \"namespace\" : [ \"namespace\", \"namespace\" ], \"location\" : \"location\", \"properties\" : { \"key\" : \"properties\" }, \"transactionId\" : \"transactionId\" }";
+                      "{ \"location\" : \"location\", \"id\" : [ \"id\", \"id\" ], \"properties\" : { \"key\" : \"properties\" }, \"transactionId\" : [ \"transactionId\", \"transactionId\" ] }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1457,20 +1452,23 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/table/{id}/insert : Insert records into a table Insert new records into an existing
-   * table using Arrow IPC format. Supports both lance-namespace format (with namespace in body) and
-   * LanceDB format (with database in headers).
+   * POST /v1/table/{id}/insert : Insert records into a table Insert new records into table
+   * &#x60;id&#x60;. REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body.
+   * It passes in the &#x60;InsertIntoTableRequest&#x60; information in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;mode&#x60;: pass through
+   * query parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param body Arrow IPC data (required)
+   * @param body Arrow IPC stream containing the records to insert (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
-   * @param mode Insert mode: \&quot;append\&quot; (default) or \&quot;overwrite\&quot; (optional,
-   *     default to append)
+   * @param mode How the insert should behave: - append (default): insert data to the existing table
+   *     - overwrite: remove all data in the table and then insert data to it (optional, default to
+   *     append)
    * @return Result of inserting records into a table (status code 200) or Indicates a bad request
    *     error. It could be caused by an unexpected request body format or other forms of request
    *     validation failure, such as invalid json. Usually serves application/json content, although
@@ -1488,7 +1486,7 @@ public interface TableApi {
       operationId = "insertIntoTable",
       summary = "Insert records into a table",
       description =
-          "Insert new records into an existing table using Arrow IPC format. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). ",
+          "Insert new records into table `id`.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `InsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name ",
       tags = {"Table", "Data"},
       responses = {
         @ApiResponse(
@@ -1566,7 +1564,12 @@ public interface TableApi {
               in = ParameterIn.PATH)
           @PathVariable("id")
           String id,
-      @Parameter(name = "body", description = "Arrow IPC data", required = true) @Valid @RequestBody
+      @Parameter(
+              name = "body",
+              description = "Arrow IPC stream containing the records to insert",
+              required = true)
+          @Valid
+          @RequestBody
           org.springframework.core.io.Resource body,
       @Parameter(
               name = "delimiter",
@@ -1578,7 +1581,8 @@ public interface TableApi {
           Optional<String> delimiter,
       @Parameter(
               name = "mode",
-              description = "Insert mode: \"append\" (default) or \"overwrite\"",
+              description =
+                  "How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "mode", required = false, defaultValue = "append")
@@ -1761,7 +1765,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"indexes\" : [ { \"index_uuid\" : \"index_uuid\", \"columns\" : [ \"columns\", \"columns\" ], \"index_name\" : \"index_name\", \"status\" : \"status\" }, { \"index_uuid\" : \"index_uuid\", \"columns\" : [ \"columns\", \"columns\" ], \"index_name\" : \"index_name\", \"status\" : \"status\" } ], \"name\" : \"name\", \"namespace\" : [ \"namespace\", \"namespace\" ], \"location\" : \"location\", \"properties\" : { \"key\" : \"properties\" } }";
+                      "{ \"indexes\" : [ { \"index_uuid\" : \"index_uuid\", \"columns\" : [ \"columns\", \"columns\" ], \"index_name\" : \"index_name\", \"status\" : \"status\" }, { \"index_uuid\" : \"index_uuid\", \"columns\" : [ \"columns\", \"columns\" ], \"index_name\" : \"index_name\", \"status\" : \"status\" } ] }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1808,16 +1812,24 @@ public interface TableApi {
 
   /**
    * POST /v1/table/{id}/merge_insert : Merge insert (upsert) records into a table Performs a merge
-   * insert (upsert) operation on a table. This operation updates existing rows based on a matching
-   * column and inserts new rows that don&#39;t match. Returns the number of rows inserted and
-   * updated.
+   * insert (upsert) operation on table &#x60;id&#x60;. This operation updates existing rows based
+   * on a matching column and inserts new rows that don&#39;t match. It returns the number of rows
+   * inserted and updated. REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request
+   * body. It passes in the &#x60;MergeInsertIntoTableRequest&#x60; information in the following
+   * way: - &#x60;id&#x60;: pass through path parameter of the same name - &#x60;on&#x60;: pass
+   * through query parameter of the same name - &#x60;when_matched_update_all&#x60;: pass through
+   * query parameter of the same name - &#x60;when_matched_update_all_filt&#x60;: pass through query
+   * parameter of the same name - &#x60;when_not_matched_insert_all&#x60;: pass through query
+   * parameter of the same name - &#x60;when_not_matched_by_source_delete&#x60;: pass through query
+   * parameter of the same name - &#x60;when_not_matched_by_source_delete_filt&#x60;: pass through
+   * query parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param on Column name to use for matching rows (required) (required)
-   * @param body Arrow IPC data containing the records to merge (required)
+   * @param body Arrow IPC stream containing the records to merge (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
@@ -1847,7 +1859,7 @@ public interface TableApi {
       operationId = "mergeInsertIntoTable",
       summary = "Merge insert (upsert) records into a table",
       description =
-          "Performs a merge insert (upsert) operation on a table. This operation updates existing rows based on a matching column and inserts new rows that don't match. Returns the number of rows inserted and updated. ",
+          "Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don't match. It returns the number of rows inserted and updated.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name ",
       tags = {"Table", "Data"},
       responses = {
         @ApiResponse(
@@ -1936,7 +1948,7 @@ public interface TableApi {
           String on,
       @Parameter(
               name = "body",
-              description = "Arrow IPC data containing the records to merge",
+              description = "Arrow IPC stream containing the records to merge",
               required = true)
           @Valid
           @RequestBody
@@ -2045,8 +2057,8 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/table/{id}/query : Query a table Query a table with vector search, full text search
-   * and optional SQL filtering. Returns results in Arrow IPC file or stream format.
+   * POST /v1/table/{id}/query : Query a table Query table &#x60;id&#x60; with vector search, full
+   * text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -2073,7 +2085,7 @@ public interface TableApi {
       operationId = "queryTable",
       summary = "Query a table",
       description =
-          "Query a table with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. ",
+          "Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. ",
       tags = {"Table", "Data"},
       responses = {
         @ApiResponse(
@@ -2256,7 +2268,7 @@ public interface TableApi {
 
   /**
    * POST /v1/table/{id}/register : Register a table to a namespace Register an existing table at a
-   * given storage location to a namespace.
+   * given storage location as &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -2284,7 +2296,7 @@ public interface TableApi {
   @Operation(
       operationId = "registerTable",
       summary = "Register a table to a namespace",
-      description = "Register an existing table at a given storage location to a namespace. ",
+      description = "Register an existing table at a given storage location as `id`. ",
       tags = {"Table", "Metadata"},
       responses = {
         @ApiResponse(
@@ -2397,7 +2409,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"name\" : \"name\", \"namespace\" : [ \"namespace\", \"namespace\" ], \"location\" : \"location\", \"properties\" : { \"key\" : \"properties\" } }";
+                      "{ \"location\" : \"location\", \"properties\" : { \"key\" : \"properties\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2455,8 +2467,8 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/table/{id}/exists : Check if a table exists Check if a table exists. This API should
-   * behave exactly like the DescribeTable API, except it does not contain a body.
+   * POST /v1/table/{id}/exists : Check if a table exists Check if table &#x60;id&#x60; exists. This
+   * operation should behave exactly like DescribeTable, except it does not contain a response body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -2483,7 +2495,7 @@ public interface TableApi {
       operationId = "tableExists",
       summary = "Check if a table exists",
       description =
-          "Check if a table exists.  This API should behave exactly like the DescribeTable API, except it does not contain a body. ",
+          "Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body. ",
       tags = {"Table", "Metadata"},
       responses = {
         @ApiResponse(responseCode = "200", description = "Success, no content"),
@@ -2610,10 +2622,8 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/table/{id}/update : Update rows in a table Update existing rows in a table using SQL
-   * expressions. Each update consists of a column name and an SQL expression that will be evaluated
-   * against the current row&#39;s value. Optionally, a predicate can be provided to filter which
-   * rows to update.
+   * POST /v1/table/{id}/update : Update rows in a table Update existing rows in table
+   * &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -2639,8 +2649,7 @@ public interface TableApi {
   @Operation(
       operationId = "updateTable",
       summary = "Update rows in a table",
-      description =
-          "Update existing rows in a table using SQL expressions. Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. ",
+      description = "Update existing rows in table `id`. ",
       tags = {"Table", "Data"},
       responses = {
         @ApiResponse(

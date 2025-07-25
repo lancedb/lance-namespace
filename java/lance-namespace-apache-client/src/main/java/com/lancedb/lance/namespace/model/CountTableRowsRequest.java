@@ -26,8 +26,7 @@ import java.util.StringJoiner;
 
 /** CountTableRowsRequest */
 @JsonPropertyOrder({
-  CountTableRowsRequest.JSON_PROPERTY_NAME,
-  CountTableRowsRequest.JSON_PROPERTY_NAMESPACE,
+  CountTableRowsRequest.JSON_PROPERTY_ID,
   CountTableRowsRequest.JSON_PROPERTY_VERSION,
   CountTableRowsRequest.JSON_PROPERTY_FILTER
 })
@@ -35,11 +34,8 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class CountTableRowsRequest {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nullable private String name;
-
-  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nullable private List<String> namespace = new ArrayList<>();
+  public static final String JSON_PROPERTY_ID = "id";
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nullable private Long version;
@@ -49,60 +45,36 @@ public class CountTableRowsRequest {
 
   public CountTableRowsRequest() {}
 
-  public CountTableRowsRequest name(@javax.annotation.Nullable String name) {
+  public CountTableRowsRequest id(@javax.annotation.Nullable List<String> id) {
 
-    this.name = name;
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setName(@javax.annotation.Nullable String name) {
-    this.name = name;
-  }
-
-  public CountTableRowsRequest namespace(@javax.annotation.Nullable List<String> namespace) {
-
-    this.namespace = namespace;
-    return this;
-  }
-
-  public CountTableRowsRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public CountTableRowsRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get namespace
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getNamespace() {
-    return namespace;
+  public List<String> getId() {
+    return id;
   }
 
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setNamespace(@javax.annotation.Nullable List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(@javax.annotation.Nullable List<String> id) {
+    this.id = id;
   }
 
   public CountTableRowsRequest version(@javax.annotation.Nullable Long version) {
@@ -163,23 +135,21 @@ public class CountTableRowsRequest {
       return false;
     }
     CountTableRowsRequest countTableRowsRequest = (CountTableRowsRequest) o;
-    return Objects.equals(this.name, countTableRowsRequest.name)
-        && Objects.equals(this.namespace, countTableRowsRequest.namespace)
+    return Objects.equals(this.id, countTableRowsRequest.id)
         && Objects.equals(this.version, countTableRowsRequest.version)
         && Objects.equals(this.filter, countTableRowsRequest.filter);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, version, filter);
+    return Objects.hash(id, version, filter);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CountTableRowsRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    filter: ").append(toIndentedString(filter)).append("\n");
     sb.append("}");
@@ -228,34 +198,19 @@ public class CountTableRowsRequest {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `namespace` to the URL query string
-    if (getNamespace() != null) {
-      for (int i = 0; i < getNamespace().size(); i++) {
+    // add `id` to the URL query string
+    if (getId() != null) {
+      for (int i = 0; i < getId().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%snamespace%s%s=%s",
+                  "%sid%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

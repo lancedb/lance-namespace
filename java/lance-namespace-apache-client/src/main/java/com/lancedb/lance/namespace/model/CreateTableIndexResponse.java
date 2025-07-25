@@ -28,8 +28,7 @@ import java.util.StringJoiner;
 
 /** CreateTableIndexResponse */
 @JsonPropertyOrder({
-  CreateTableIndexResponse.JSON_PROPERTY_NAME,
-  CreateTableIndexResponse.JSON_PROPERTY_NAMESPACE,
+  CreateTableIndexResponse.JSON_PROPERTY_ID,
   CreateTableIndexResponse.JSON_PROPERTY_LOCATION,
   CreateTableIndexResponse.JSON_PROPERTY_PROPERTIES
 })
@@ -37,11 +36,8 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class CreateTableIndexResponse {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nonnull private String name;
-
-  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
+  public static final String JSON_PROPERTY_ID = "id";
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nonnull private String location;
@@ -51,60 +47,36 @@ public class CreateTableIndexResponse {
 
   public CreateTableIndexResponse() {}
 
-  public CreateTableIndexResponse name(@javax.annotation.Nonnull String name) {
+  public CreateTableIndexResponse id(@javax.annotation.Nullable List<String> id) {
 
-    this.name = name;
+    this.id = id;
     return this;
   }
 
-  /**
-   * The table name
-   *
-   * @return name
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setName(@javax.annotation.Nonnull String name) {
-    this.name = name;
-  }
-
-  public CreateTableIndexResponse namespace(@javax.annotation.Nonnull List<String> namespace) {
-
-    this.namespace = namespace;
-    return this;
-  }
-
-  public CreateTableIndexResponse addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public CreateTableIndexResponse addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * The namespace identifier
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public List<String> getNamespace() {
-    return namespace;
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<String> getId() {
+    return id;
   }
 
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setNamespace(@javax.annotation.Nonnull List<String> namespace) {
-    this.namespace = namespace;
+  @JsonProperty(JSON_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setId(@javax.annotation.Nullable List<String> id) {
+    this.id = id;
   }
 
   public CreateTableIndexResponse location(@javax.annotation.Nonnull String location) {
@@ -173,23 +145,21 @@ public class CreateTableIndexResponse {
       return false;
     }
     CreateTableIndexResponse createTableIndexResponse = (CreateTableIndexResponse) o;
-    return Objects.equals(this.name, createTableIndexResponse.name)
-        && Objects.equals(this.namespace, createTableIndexResponse.namespace)
+    return Objects.equals(this.id, createTableIndexResponse.id)
         && Objects.equals(this.location, createTableIndexResponse.location)
         && Objects.equals(this.properties, createTableIndexResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, location, properties);
+    return Objects.hash(id, location, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableIndexResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
@@ -238,34 +208,19 @@ public class CreateTableIndexResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `namespace` to the URL query string
-    if (getNamespace() != null) {
-      for (int i = 0; i < getNamespace().size(); i++) {
+    // add `id` to the URL query string
+    if (getId() != null) {
+      for (int i = 0; i < getId().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%snamespace%s%s=%s",
+                  "%sid%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

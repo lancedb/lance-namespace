@@ -35,11 +35,12 @@ class TestDescribeTransactionRequest(unittest.TestCase):
         model = DescribeTransactionRequest()
         if include_optional:
             return DescribeTransactionRequest(
-                id = ''
+                id = [
+                    ''
+                    ]
             )
         else:
             return DescribeTransactionRequest(
-                id = '',
         )
         """
 

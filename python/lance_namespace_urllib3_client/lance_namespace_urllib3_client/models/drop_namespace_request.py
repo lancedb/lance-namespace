@@ -26,11 +26,10 @@ class DropNamespaceRequest(BaseModel):
     """
     DropNamespaceRequest
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    parent: Optional[List[StrictStr]] = None
+    id: Optional[List[StrictStr]] = None
     mode: Optional[StrictStr] = Field(default=None, description="The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. - FAIL (default): the server must return 400 indicating the namespace to drop does not exist. - SKIP: the server must return 204 indicating the drop operation has succeeded. ")
     behavior: Optional[StrictStr] = Field(default=None, description="The behavior for dropping a namespace. - RESTRICT (default): the namespace should not contain any table or child namespace when drop is initiated.     If tables are found, the server should return error and not drop the namespace. - CASCADE: all tables and child namespaces in the namespace are dropped before the namespace is dropped. ")
-    __properties: ClassVar[List[str]] = ["name", "parent", "mode", "behavior"]
+    __properties: ClassVar[List[str]] = ["id", "mode", "behavior"]
 
     @field_validator('mode')
     def mode_validate_enum(cls, value):
@@ -103,8 +102,7 @@ class DropNamespaceRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "parent": obj.get("parent"),
+            "id": obj.get("id"),
             "mode": obj.get("mode"),
             "behavior": obj.get("behavior")
         })

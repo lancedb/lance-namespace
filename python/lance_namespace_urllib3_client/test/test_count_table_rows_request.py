@@ -35,8 +35,7 @@ class TestCountTableRowsRequest(unittest.TestCase):
         model = CountTableRowsRequest()
         if include_optional:
             return CountTableRowsRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ],
                 version = 0,

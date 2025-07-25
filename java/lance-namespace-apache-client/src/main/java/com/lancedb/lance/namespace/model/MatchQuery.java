@@ -13,15 +13,12 @@
  */
 package com.lancedb.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -43,12 +40,10 @@ public class MatchQuery {
   @javax.annotation.Nullable private Float boost;
 
   public static final String JSON_PROPERTY_COLUMN = "column";
-  @javax.annotation.Nullable private String column;
+  @javax.annotation.Nonnull private String column;
 
   public static final String JSON_PROPERTY_FUZZINESS = "fuzziness";
-
-  @javax.annotation.Nullable
-  private JsonNullable<Integer> fuzziness = JsonNullable.<Integer>undefined();
+  @javax.annotation.Nullable private Integer fuzziness;
 
   public static final String JSON_PROPERTY_MAX_EXPANSIONS = "max_expansions";
   @javax.annotation.Nullable private Integer maxExpansions;
@@ -88,7 +83,7 @@ public class MatchQuery {
     this.boost = boost;
   }
 
-  public MatchQuery column(@javax.annotation.Nullable String column) {
+  public MatchQuery column(@javax.annotation.Nonnull String column) {
 
     this.column = column;
     return this;
@@ -99,7 +94,7 @@ public class MatchQuery {
    *
    * @return column
    */
-  @javax.annotation.Nullable
+  @javax.annotation.Nonnull
   @JsonProperty(JSON_PROPERTY_COLUMN)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public String getColumn() {
@@ -108,13 +103,13 @@ public class MatchQuery {
 
   @JsonProperty(JSON_PROPERTY_COLUMN)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setColumn(@javax.annotation.Nullable String column) {
+  public void setColumn(@javax.annotation.Nonnull String column) {
     this.column = column;
   }
 
   public MatchQuery fuzziness(@javax.annotation.Nullable Integer fuzziness) {
-    this.fuzziness = JsonNullable.<Integer>of(fuzziness);
 
+    this.fuzziness = fuzziness;
     return this;
   }
 
@@ -124,24 +119,16 @@ public class MatchQuery {
    * @return fuzziness
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Integer getFuzziness() {
-    return fuzziness.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_FUZZINESS)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Integer> getFuzziness_JsonNullable() {
+  public Integer getFuzziness() {
     return fuzziness;
   }
 
   @JsonProperty(JSON_PROPERTY_FUZZINESS)
-  public void setFuzziness_JsonNullable(JsonNullable<Integer> fuzziness) {
-    this.fuzziness = fuzziness;
-  }
-
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setFuzziness(@javax.annotation.Nullable Integer fuzziness) {
-    this.fuzziness = JsonNullable.<Integer>of(fuzziness);
+    this.fuzziness = fuzziness;
   }
 
   public MatchQuery maxExpansions(@javax.annotation.Nullable Integer maxExpansions) {
@@ -253,33 +240,16 @@ public class MatchQuery {
     MatchQuery matchQuery = (MatchQuery) o;
     return Objects.equals(this.boost, matchQuery.boost)
         && Objects.equals(this.column, matchQuery.column)
-        && equalsNullable(this.fuzziness, matchQuery.fuzziness)
+        && Objects.equals(this.fuzziness, matchQuery.fuzziness)
         && Objects.equals(this.maxExpansions, matchQuery.maxExpansions)
         && Objects.equals(this.operator, matchQuery.operator)
         && Objects.equals(this.prefixLength, matchQuery.prefixLength)
         && Objects.equals(this.terms, matchQuery.terms);
   }
 
-  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
-    return a == b
-        || (a != null
-            && b != null
-            && a.isPresent()
-            && b.isPresent()
-            && Objects.deepEquals(a.get(), b.get()));
-  }
-
   @Override
   public int hashCode() {
-    return Objects.hash(
-        boost, column, hashCodeNullable(fuzziness), maxExpansions, operator, prefixLength, terms);
-  }
-
-  private static <T> int hashCodeNullable(JsonNullable<T> a) {
-    if (a == null) {
-      return 1;
-    }
-    return a.isPresent() ? Arrays.deepHashCode(new Object[] {a.get()}) : 31;
+    return Objects.hash(boost, column, fuzziness, maxExpansions, operator, prefixLength, terms);
   }
 
   @Override

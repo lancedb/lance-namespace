@@ -13,27 +13,25 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateNamespaceRequest {
-    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
-    #[serde(rename = "parent", skip_serializing_if = "Option::is_none")]
-    pub parent: Option<Vec<String>>,
-    #[serde(rename = "mode")]
-    pub mode: Mode,
-    #[serde(rename = "options", skip_serializing_if = "Option::is_none")]
-    pub options: Option<std::collections::HashMap<String, String>>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
+    /// There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
+    #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
+    pub mode: Option<Mode>,
+    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
+    pub properties: Option<std::collections::HashMap<String, String>>,
 }
 
 impl CreateNamespaceRequest {
-    pub fn new(mode: Mode) -> CreateNamespaceRequest {
+    pub fn new() -> CreateNamespaceRequest {
         CreateNamespaceRequest {
-            name: None,
-            parent: None,
-            mode,
-            options: None,
+            id: None,
+            mode: None,
+            properties: None,
         }
     }
 }
-/// 
+/// There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum Mode {
     #[serde(rename = "CREATE")]

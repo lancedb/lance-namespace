@@ -4,8 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **String** | The table name | 
-**namespace** | **Vec<String>** | The namespace identifier | 
+**id** | Option<**Vec<String>**> |  | [optional]
 **column** | **String** | Name of the column to create index on | 
 **index_type** | **String** | Type of index to create | 
 **metric_type** | Option<**String**> | Distance metric type for vector indexes | [optional]

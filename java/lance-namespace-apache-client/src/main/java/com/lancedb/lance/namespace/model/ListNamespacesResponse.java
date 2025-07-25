@@ -28,7 +28,7 @@ import java.util.StringJoiner;
 /** ListNamespacesResponse */
 @JsonPropertyOrder({
   ListNamespacesResponse.JSON_PROPERTY_NAMESPACES,
-  ListNamespacesResponse.JSON_PROPERTY_NEXT_PAGE_TOKEN
+  ListNamespacesResponse.JSON_PROPERTY_PAGE_TOKEN
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -37,8 +37,8 @@ public class ListNamespacesResponse {
   public static final String JSON_PROPERTY_NAMESPACES = "namespaces";
   @javax.annotation.Nonnull private Set<String> namespaces = new LinkedHashSet<>();
 
-  public static final String JSON_PROPERTY_NEXT_PAGE_TOKEN = "nextPageToken";
-  @javax.annotation.Nullable private String nextPageToken;
+  public static final String JSON_PROPERTY_PAGE_TOKEN = "page_token";
+  @javax.annotation.Nullable private String pageToken;
 
   public ListNamespacesResponse() {}
 
@@ -57,7 +57,8 @@ public class ListNamespacesResponse {
   }
 
   /**
-   * Get namespaces
+   * The list of names of the child namespaces relative to the parent namespace &#x60;id&#x60; in
+   * the request.
    *
    * @return namespaces
    */
@@ -75,35 +76,35 @@ public class ListNamespacesResponse {
     this.namespaces = namespaces;
   }
 
-  public ListNamespacesResponse nextPageToken(@javax.annotation.Nullable String nextPageToken) {
+  public ListNamespacesResponse pageToken(@javax.annotation.Nullable String pageToken) {
 
-    this.nextPageToken = nextPageToken;
+    this.pageToken = pageToken;
     return this;
   }
 
   /**
-   * An opaque token that allows pagination for list APIs (e.g. ListNamespaces). For an initial
-   * client request for a list API, if the server cannot return all items in one response, or if
-   * there are more items than the &#x60;pageSize&#x60; specified in the client request, the server
-   * must return a &#x60;nextPageToken&#x60; in the response indicating there are more results
-   * available. After the initial request, the value of &#x60;nextPageToken&#x60; from each response
-   * must be used by the client as the &#x60;pageToken&#x60; parameter value for the next request.
-   * Clients must interpret either &#x60;null&#x60;, missing value or empty string value of
-   * &#x60;nextPageToken&#x60; from a server response as the end of the listing results.
+   * An opaque token that allows pagination for list operations (e.g. ListNamespaces). For an
+   * initial request of a list operation, if the implementation cannot return all items in one
+   * response, or if there are more items than the page limit specified in the request, the
+   * implementation must return a page token in the response, indicating there are more results
+   * available. After the initial request, the value of the page token from each response must be
+   * used as the page token value for the next request. Caller must interpret either
+   * &#x60;null&#x60;, missing value or empty string value of the page token from the
+   * implementation&#39;s response as the end of the listing results.
    *
-   * @return nextPageToken
+   * @return pageToken
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NEXT_PAGE_TOKEN)
+  @JsonProperty(JSON_PROPERTY_PAGE_TOKEN)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getNextPageToken() {
-    return nextPageToken;
+  public String getPageToken() {
+    return pageToken;
   }
 
-  @JsonProperty(JSON_PROPERTY_NEXT_PAGE_TOKEN)
+  @JsonProperty(JSON_PROPERTY_PAGE_TOKEN)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setNextPageToken(@javax.annotation.Nullable String nextPageToken) {
-    this.nextPageToken = nextPageToken;
+  public void setPageToken(@javax.annotation.Nullable String pageToken) {
+    this.pageToken = pageToken;
   }
 
   @Override
@@ -116,12 +117,12 @@ public class ListNamespacesResponse {
     }
     ListNamespacesResponse listNamespacesResponse = (ListNamespacesResponse) o;
     return Objects.equals(this.namespaces, listNamespacesResponse.namespaces)
-        && Objects.equals(this.nextPageToken, listNamespacesResponse.nextPageToken);
+        && Objects.equals(this.pageToken, listNamespacesResponse.pageToken);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(namespaces, nextPageToken);
+    return Objects.hash(namespaces, pageToken);
   }
 
   @Override
@@ -129,7 +130,7 @@ public class ListNamespacesResponse {
     StringBuilder sb = new StringBuilder();
     sb.append("class ListNamespacesResponse {\n");
     sb.append("    namespaces: ").append(toIndentedString(namespaces)).append("\n");
-    sb.append("    nextPageToken: ").append(toIndentedString(nextPageToken)).append("\n");
+    sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -198,15 +199,15 @@ public class ListNamespacesResponse {
       i++;
     }
 
-    // add `nextPageToken` to the URL query string
-    if (getNextPageToken() != null) {
+    // add `page_token` to the URL query string
+    if (getPageToken() != null) {
       try {
         joiner.add(
             String.format(
-                "%snextPageToken%s=%s",
+                "%spage_token%s=%s",
                 prefix,
                 suffix,
-                URLEncoder.encode(String.valueOf(getNextPageToken()), "UTF-8")
+                URLEncoder.encode(String.valueOf(getPageToken()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported

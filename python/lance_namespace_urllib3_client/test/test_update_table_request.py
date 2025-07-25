@@ -35,8 +35,7 @@ class TestUpdateTableRequest(unittest.TestCase):
         model = UpdateTableRequest()
         if include_optional:
             return UpdateTableRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ],
                 predicate = '',
@@ -48,10 +47,6 @@ class TestUpdateTableRequest(unittest.TestCase):
             )
         else:
             return UpdateTableRequest(
-                name = '',
-                namespace = [
-                    ''
-                    ],
                 updates = [
                     [
                         ''

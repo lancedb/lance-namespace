@@ -26,10 +26,10 @@ class RegisterTableRequest(BaseModel):
     """
     RegisterTableRequest
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    namespace: Optional[List[StrictStr]] = None
+    id: Optional[List[StrictStr]] = None
     location: StrictStr
-    __properties: ClassVar[List[str]] = ["name", "namespace", "location"]
+    properties: Optional[Dict[str, StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["id", "location", "properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -82,9 +82,9 @@ class RegisterTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace"),
-            "location": obj.get("location")
+            "id": obj.get("id"),
+            "location": obj.get("location"),
+            "properties": obj.get("properties")
         })
         return _obj
 

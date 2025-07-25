@@ -37,9 +37,9 @@ class TestDescribeTableResponse(unittest.TestCase):
             return DescribeTableResponse(
                 version = 0,
                 location = '',
-                var_schema = lance_namespace_urllib3_client.models.json_schema.JsonSchema(
+                var_schema = lance_namespace_urllib3_client.models.json_arrow_schema.JsonArrowSchema(
                     fields = [
-                        lance_namespace_urllib3_client.models.json_field.JsonField(
+                        lance_namespace_urllib3_client.models.json_arrow_field.JsonArrowField(
                             metadata = {
                                 'key' : ''
                                 }, 
@@ -61,10 +61,10 @@ class TestDescribeTableResponse(unittest.TestCase):
             )
         else:
             return DescribeTableResponse(
-                location = '',
-                var_schema = lance_namespace_urllib3_client.models.json_schema.JsonSchema(
+                version = 0,
+                var_schema = lance_namespace_urllib3_client.models.json_arrow_schema.JsonArrowSchema(
                     fields = [
-                        lance_namespace_urllib3_client.models.json_field.JsonField(
+                        lance_namespace_urllib3_client.models.json_arrow_field.JsonArrowField(
                             metadata = {
                                 'key' : ''
                                 }, 

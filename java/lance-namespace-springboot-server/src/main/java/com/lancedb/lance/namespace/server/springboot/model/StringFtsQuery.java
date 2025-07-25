@@ -31,7 +31,7 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class StringFtsQuery {
 
-  @Valid private List<String> columns;
+  @Valid private List<String> columns = new ArrayList<>();
 
   private String query;
 

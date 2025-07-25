@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -26,15 +26,17 @@ class CreateNamespaceRequest(BaseModel):
     """
     CreateNamespaceRequest
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    parent: Optional[List[StrictStr]] = None
-    mode: StrictStr
-    options: Optional[Dict[str, StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["name", "parent", "mode", "options"]
+    id: Optional[List[StrictStr]] = None
+    mode: Optional[StrictStr] = Field(default=None, description="There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. ")
+    properties: Optional[Dict[str, StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["id", "mode", "properties"]
 
     @field_validator('mode')
     def mode_validate_enum(cls, value):
         """Validates the enum"""
+        if value is None:
+            return value
+
         if value not in set(['CREATE', 'EXIST_OK', 'OVERWRITE']):
             raise ValueError("must be one of enum values ('CREATE', 'EXIST_OK', 'OVERWRITE')")
         return value
@@ -90,10 +92,9 @@ class CreateNamespaceRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "parent": obj.get("parent"),
+            "id": obj.get("id"),
             "mode": obj.get("mode"),
-            "options": obj.get("options")
+            "properties": obj.get("properties")
         })
         return _obj
 

@@ -35,14 +35,12 @@ class TestDeregisterTableRequest(unittest.TestCase):
         model = DeregisterTableRequest()
         if include_optional:
             return DeregisterTableRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ]
             )
         else:
             return DeregisterTableRequest(
-                name = '',
         )
         """
 

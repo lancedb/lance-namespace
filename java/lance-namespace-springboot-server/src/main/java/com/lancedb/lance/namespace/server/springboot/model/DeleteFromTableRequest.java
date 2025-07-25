@@ -25,15 +25,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/** DeleteFromTableRequest */
+/**
+ * Delete data from table based on a SQL predicate. Returns the number of rows that were deleted.
+ */
+@Schema(
+    name = "DeleteFromTableRequest",
+    description =
+        "Delete data from table based on a SQL predicate. Returns the number of rows that were deleted. ")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class DeleteFromTableRequest {
 
-  private String name;
-
-  @Valid private List<String> namespace = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   private String predicate;
 
@@ -42,66 +46,39 @@ public class DeleteFromTableRequest {
   }
 
   /** Constructor with only required parameters */
-  public DeleteFromTableRequest(String name, List<String> namespace, String predicate) {
-    this.name = name;
-    this.namespace = namespace;
+  public DeleteFromTableRequest(String predicate) {
     this.predicate = predicate;
   }
 
-  public DeleteFromTableRequest name(String name) {
-    this.name = name;
+  public DeleteFromTableRequest id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  /**
-   * The table name
-   *
-   * @return name
-   */
-  @NotNull
-  @Schema(
-      name = "name",
-      description = "The table name",
-      requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public DeleteFromTableRequest namespace(List<String> namespace) {
-    this.namespace = namespace;
-    return this;
-  }
-
-  public DeleteFromTableRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public DeleteFromTableRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
    * The namespace identifier
    *
-   * @return namespace
+   * @return id
    */
-  @NotNull
   @Schema(
-      name = "namespace",
+      name = "id",
       description = "The namespace identifier",
-      requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("namespace")
-  public List<String> getNamespace() {
-    return namespace;
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setNamespace(List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   public DeleteFromTableRequest predicate(String predicate) {
@@ -137,22 +114,20 @@ public class DeleteFromTableRequest {
       return false;
     }
     DeleteFromTableRequest deleteFromTableRequest = (DeleteFromTableRequest) o;
-    return Objects.equals(this.name, deleteFromTableRequest.name)
-        && Objects.equals(this.namespace, deleteFromTableRequest.namespace)
+    return Objects.equals(this.id, deleteFromTableRequest.id)
         && Objects.equals(this.predicate, deleteFromTableRequest.predicate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, predicate);
+    return Objects.hash(id, predicate);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeleteFromTableRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    predicate: ").append(toIndentedString(predicate)).append("\n");
     sb.append("}");
     return sb.toString();

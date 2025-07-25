@@ -24,74 +24,50 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** DropTableRequest */
-@JsonPropertyOrder({DropTableRequest.JSON_PROPERTY_NAME, DropTableRequest.JSON_PROPERTY_NAMESPACE})
+/**
+ * If the table and its data can be immediately deleted, return information of the deleted table.
+ * Otherwise, return a transaction ID that client can use to track deletion progress.
+ */
+@JsonPropertyOrder({DropTableRequest.JSON_PROPERTY_ID})
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DropTableRequest {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nonnull private String name;
-
-  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nullable private List<String> namespace = new ArrayList<>();
+  public static final String JSON_PROPERTY_ID = "id";
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public DropTableRequest() {}
 
-  public DropTableRequest name(@javax.annotation.Nonnull String name) {
+  public DropTableRequest id(@javax.annotation.Nullable List<String> id) {
 
-    this.name = name;
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setName(@javax.annotation.Nonnull String name) {
-    this.name = name;
-  }
-
-  public DropTableRequest namespace(@javax.annotation.Nullable List<String> namespace) {
-
-    this.namespace = namespace;
-    return this;
-  }
-
-  public DropTableRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public DropTableRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get namespace
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getNamespace() {
-    return namespace;
+  public List<String> getId() {
+    return id;
   }
 
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setNamespace(@javax.annotation.Nullable List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(@javax.annotation.Nullable List<String> id) {
+    this.id = id;
   }
 
   @Override
@@ -103,21 +79,19 @@ public class DropTableRequest {
       return false;
     }
     DropTableRequest dropTableRequest = (DropTableRequest) o;
-    return Objects.equals(this.name, dropTableRequest.name)
-        && Objects.equals(this.namespace, dropTableRequest.namespace);
+    return Objects.equals(this.id, dropTableRequest.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace);
+    return Objects.hash(id);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DropTableRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -164,34 +138,19 @@ public class DropTableRequest {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `namespace` to the URL query string
-    if (getNamespace() != null) {
-      for (int i = 0; i < getNamespace().size(); i++) {
+    // add `id` to the URL query string
+    if (getId() != null) {
+      for (int i = 0; i < getId().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%snamespace%s%s=%s",
+                  "%sid%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

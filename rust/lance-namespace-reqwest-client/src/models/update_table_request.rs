@@ -11,14 +11,11 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
+/// UpdateTableRequest : Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct UpdateTableRequest {
-    /// The table name
-    #[serde(rename = "name")]
-    pub name: String,
-    /// The namespace identifier
-    #[serde(rename = "namespace")]
-    pub namespace: Vec<String>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
     /// Optional SQL predicate to filter rows for update
     #[serde(rename = "predicate", skip_serializing_if = "Option::is_none")]
     pub predicate: Option<String>,
@@ -28,10 +25,10 @@ pub struct UpdateTableRequest {
 }
 
 impl UpdateTableRequest {
-    pub fn new(name: String, namespace: Vec<String>, updates: Vec<Vec<String>>) -> UpdateTableRequest {
+    /// Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
+    pub fn new(updates: Vec<Vec<String>>) -> UpdateTableRequest {
         UpdateTableRequest {
-            name,
-            namespace,
+            id: None,
             predicate: None,
             updates,
         }

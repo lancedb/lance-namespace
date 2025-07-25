@@ -5,11 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** |  | [optional] 
-**namespace** | **List[str]** |  | [optional] 
+**id** | **List[str]** |  | [optional] 
 **location** | **str** |  | [optional] 
 **properties** | **Dict[str, str]** |  | [optional] 
-**transaction_id** | **str** |  | [optional] 
+**transaction_id** | **List[str]** | If present, indicating the operation is long running and should be tracked using GetTransaction  | [optional] 
 
 ## Example
 

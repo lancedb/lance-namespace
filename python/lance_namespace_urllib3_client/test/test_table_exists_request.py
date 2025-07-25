@@ -35,17 +35,13 @@ class TestTableExistsRequest(unittest.TestCase):
         model = TableExistsRequest()
         if include_optional:
             return TableExistsRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
-                    ]
+                    ],
+                version = 0
             )
         else:
             return TableExistsRequest(
-                name = '',
-                namespace = [
-                    ''
-                    ],
         )
         """
 

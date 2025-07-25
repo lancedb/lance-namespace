@@ -5,10 +5,10 @@ All URIs are relative to *http://localhost:2333*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**create_namespace**](NamespaceApi.md#create_namespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
-[**describe_namespace**](NamespaceApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace
+[**describe_namespace**](NamespaceApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe a namespace
 [**drop_namespace**](NamespaceApi.md#drop_namespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace
-[**list_namespaces**](NamespaceApi.md#list_namespaces) | **POST** /v1/namespace/{id}/list | List namespaces
-[**list_tables**](NamespaceApi.md#list_tables) | **POST** /v1/namespace/{id}/table/list | List tables in a namespace
+[**list_namespaces**](NamespaceApi.md#list_namespaces) | **GET** /v1/namespace/{id}/list | List namespaces
+[**list_tables**](NamespaceApi.md#list_tables) | **GET** /v1/namespace/{id}/table/list | List tables in a namespace
 [**namespace_exists**](NamespaceApi.md#namespace_exists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
 
 
@@ -17,17 +17,11 @@ Method | HTTP request | Description
 
 Create a new namespace
 
-Create a new namespace.
+Create new namespace `id`.
 
-A namespace can manage either a collection of child namespaces, or a collection of tables.
-
-The namespace in the API route should be the parent namespace to create the new namespace.
-
-There are three modes when trying to create a namespace,
-to differentiate the behavior when a namespace of the same name already exists:
-  * CREATE: the operation fails with 400.
-  * EXIST_OK: the operation succeeds and the existing namespace is kept.
-  * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created.
+During the creation process, the implementation may modify user-provided `properties`, 
+such as adding additional properties like `created_at` to user-provided properties, 
+omitting any specific property, or performing actions based on any property value.
 
 
 ### Example
@@ -107,9 +101,9 @@ No authorization required
 # **describe_namespace**
 > DescribeNamespaceResponse describe_namespace(id, describe_namespace_request, delimiter=delimiter)
 
-Describe information about a namespace
+Describe a namespace
 
-Return the detailed information for a given namespace
+Describe the detailed information for namespace `id`.
 
 
 ### Example
@@ -138,7 +132,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
 
     try:
-        # Describe information about a namespace
+        # Describe a namespace
         api_response = api_instance.describe_namespace(id, describe_namespace_request, delimiter=delimiter)
         print("The response of NamespaceApi->describe_namespace:\n")
         pprint(api_response)
@@ -189,7 +183,7 @@ No authorization required
 
 Drop a namespace
 
-Drop a namespace. The namespace must be empty.
+Drop namespace `id` from its parent namespace.
 
 
 ### Example
@@ -266,11 +260,18 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_namespaces**
-> ListNamespacesResponse list_namespaces(id, list_namespaces_request, delimiter=delimiter)
+> ListNamespacesResponse list_namespaces(id, delimiter=delimiter, page_token=page_token, limit=limit)
 
 List namespaces
 
-List all child namespace names of the root namespace or a given parent namespace.
+List all child namespace names of the parent namespace `id`.
+
+REST NAMESPACE ONLY
+REST namespace uses GET to perform this operation without a request body.
+It passes in the `ListNamespacesRequest` information in the following way:
+- `id`: pass through path parameter of the same name
+- `page_token`: pass through query parameter of the same name
+- `limit`: pass through query parameter of the same name
 
 
 ### Example
@@ -278,7 +279,6 @@ List all child namespace names of the root namespace or a given parent namespace
 
 ```python
 import lance_namespace_urllib3_client
-from lance_namespace_urllib3_client.models.list_namespaces_request import ListNamespacesRequest
 from lance_namespace_urllib3_client.models.list_namespaces_response import ListNamespacesResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
@@ -295,12 +295,13 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.NamespaceApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-    list_namespaces_request = lance_namespace_urllib3_client.ListNamespacesRequest() # ListNamespacesRequest | 
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
+    page_token = 'page_token_example' # str |  (optional)
+    limit = 56 # int |  (optional)
 
     try:
         # List namespaces
-        api_response = api_instance.list_namespaces(id, list_namespaces_request, delimiter=delimiter)
+        api_response = api_instance.list_namespaces(id, delimiter=delimiter, page_token=page_token, limit=limit)
         print("The response of NamespaceApi->list_namespaces:\n")
         pprint(api_response)
     except Exception as e:
@@ -315,8 +316,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
- **list_namespaces_request** | [**ListNamespacesRequest**](ListNamespacesRequest.md)|  | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
+ **page_token** | **str**|  | [optional] 
+ **limit** | **int**|  | [optional] 
 
 ### Return type
 
@@ -328,7 +330,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 ### HTTP response details
@@ -347,11 +349,18 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_tables**
-> ListTablesResponse list_tables(id, list_tables_request, delimiter=delimiter)
+> ListTablesResponse list_tables(id, delimiter=delimiter, page_token=page_token, limit=limit)
 
 List tables in a namespace
 
-List all child table names of the root namespace or a given parent namespace.
+List all child table names of the parent namespace `id`.
+
+REST NAMESPACE ONLY
+REST namespace uses GET to perform this operation without a request body.
+It passes in the `ListTablesRequest` information in the following way:
+- `id`: pass through path parameter of the same name
+- `page_token`: pass through query parameter of the same name
+- `limit`: pass through query parameter of the same name
 
 
 ### Example
@@ -359,7 +368,6 @@ List all child table names of the root namespace or a given parent namespace.
 
 ```python
 import lance_namespace_urllib3_client
-from lance_namespace_urllib3_client.models.list_tables_request import ListTablesRequest
 from lance_namespace_urllib3_client.models.list_tables_response import ListTablesResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
@@ -376,12 +384,13 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.NamespaceApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-    list_tables_request = lance_namespace_urllib3_client.ListTablesRequest() # ListTablesRequest | 
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
+    page_token = 'page_token_example' # str |  (optional)
+    limit = 56 # int |  (optional)
 
     try:
         # List tables in a namespace
-        api_response = api_instance.list_tables(id, list_tables_request, delimiter=delimiter)
+        api_response = api_instance.list_tables(id, delimiter=delimiter, page_token=page_token, limit=limit)
         print("The response of NamespaceApi->list_tables:\n")
         pprint(api_response)
     except Exception as e:
@@ -396,8 +405,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
- **list_tables_request** | [**ListTablesRequest**](ListTablesRequest.md)|  | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
+ **page_token** | **str**|  | [optional] 
+ **limit** | **int**|  | [optional] 
 
 ### Return type
 
@@ -409,7 +419,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 ### HTTP response details
@@ -432,9 +442,10 @@ No authorization required
 
 Check if a namespace exists
 
-Check if a namespace exists.
+Check if namespace `id` exists.
 
-This API should behave exactly like the DescribeNamespace API, except it does not contain a body.
+This operation must behave exactly like the DescribeNamespace API, 
+except it does not contain a response body.
 
 
 ### Example

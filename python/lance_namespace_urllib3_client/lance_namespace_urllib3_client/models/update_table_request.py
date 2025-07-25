@@ -25,13 +25,12 @@ from typing_extensions import Self
 
 class UpdateTableRequest(BaseModel):
     """
-    UpdateTableRequest
+    Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
     """ # noqa: E501
-    name: StrictStr = Field(description="The table name")
-    namespace: List[StrictStr] = Field(description="The namespace identifier")
+    id: Optional[List[StrictStr]] = None
     predicate: Optional[StrictStr] = Field(default=None, description="Optional SQL predicate to filter rows for update")
     updates: List[Annotated[List[StrictStr], Field(min_length=2, max_length=2)]] = Field(description="List of column updates as [column_name, expression] pairs")
-    __properties: ClassVar[List[str]] = ["name", "namespace", "predicate", "updates"]
+    __properties: ClassVar[List[str]] = ["id", "predicate", "updates"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -84,8 +83,7 @@ class UpdateTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace"),
+            "id": obj.get("id"),
             "predicate": obj.get("predicate"),
             "updates": obj.get("updates")
         })

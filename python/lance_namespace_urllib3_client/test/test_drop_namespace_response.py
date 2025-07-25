@@ -35,14 +35,12 @@ class TestDropNamespaceResponse(unittest.TestCase):
         model = DropNamespaceResponse()
         if include_optional:
             return DropNamespaceResponse(
-                name = '',
-                parent = [
-                    ''
-                    ],
                 properties = {
                     'key' : ''
                     },
-                transaction_id = ''
+                transaction_id = [
+                    ''
+                    ]
             )
         else:
             return DropNamespaceResponse(

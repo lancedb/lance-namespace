@@ -13,17 +13,18 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct TableExistsRequest {
-    #[serde(rename = "name")]
-    pub name: String,
-    #[serde(rename = "namespace")]
-    pub namespace: Vec<String>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
+    /// Version of the table to check existence. If not specified, server should resolve it to the latest version. 
+    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
+    pub version: Option<i64>,
 }
 
 impl TableExistsRequest {
-    pub fn new(name: String, namespace: Vec<String>) -> TableExistsRequest {
+    pub fn new() -> TableExistsRequest {
         TableExistsRequest {
-            name,
-            namespace,
+            id: None,
+            version: None,
         }
     }
 }

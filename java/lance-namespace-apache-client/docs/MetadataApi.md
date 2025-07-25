@@ -7,16 +7,16 @@ All URIs are relative to *http://localhost:2333*
 | [**alterTransaction**](MetadataApi.md#alterTransaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction. |
 | [**createNamespace**](MetadataApi.md#createNamespace) | **POST** /v1/namespace/{id}/create | Create a new namespace |
 | [**createTableIndex**](MetadataApi.md#createTableIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table |
-| [**deregisterTable**](MetadataApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace |
-| [**describeNamespace**](MetadataApi.md#describeNamespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace |
-| [**describeTable**](MetadataApi.md#describeTable) | **POST** /v1/table/{id}/describe | Describe a table from the namespace |
+| [**deregisterTable**](MetadataApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table |
+| [**describeNamespace**](MetadataApi.md#describeNamespace) | **POST** /v1/namespace/{id}/describe | Describe a namespace |
+| [**describeTable**](MetadataApi.md#describeTable) | **POST** /v1/table/{id}/describe | Describe information of a table |
 | [**describeTableIndexStats**](MetadataApi.md#describeTableIndexStats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get table index statistics |
 | [**describeTransaction**](MetadataApi.md#describeTransaction) | **POST** /v1/transaction/{id}/describe | Describe information about a transaction |
 | [**dropNamespace**](MetadataApi.md#dropNamespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace |
-| [**dropTable**](MetadataApi.md#dropTable) | **POST** /v1/table/{id}/drop | Drop a table from its namespace |
-| [**listNamespaces**](MetadataApi.md#listNamespaces) | **POST** /v1/namespace/{id}/list | List namespaces |
+| [**dropTable**](MetadataApi.md#dropTable) | **POST** /v1/table/{id}/drop | Drop a table |
+| [**listNamespaces**](MetadataApi.md#listNamespaces) | **GET** /v1/namespace/{id}/list | List namespaces |
 | [**listTableIndices**](MetadataApi.md#listTableIndices) | **POST** /v1/table/{id}/index/list | List indexes on a table |
-| [**listTables**](MetadataApi.md#listTables) | **POST** /v1/namespace/{id}/table/list | List tables in a namespace |
+| [**listTables**](MetadataApi.md#listTables) | **GET** /v1/namespace/{id}/table/list | List tables in a namespace |
 | [**namespaceExists**](MetadataApi.md#namespaceExists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists |
 | [**registerTable**](MetadataApi.md#registerTable) | **POST** /v1/table/{id}/register | Register a table to a namespace |
 | [**tableExists**](MetadataApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists |
@@ -28,6 +28,8 @@ All URIs are relative to *http://localhost:2333*
 > AlterTransactionResponse alterTransaction(id, alterTransactionRequest, delimiter)
 
 Alter information of a transaction.
+
+Alter a transaction with a list of actions such as setting status or properties. The server should either succeed and apply all actions, or fail and apply no action. 
 
 ### Example
 
@@ -104,7 +106,7 @@ No authorization required
 
 Create a new namespace
 
-Create a new namespace.  A namespace can manage either a collection of child namespaces, or a collection of tables.  The namespace in the API route should be the parent namespace to create the new namespace.  There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
+Create new namespace &#x60;id&#x60;.  During the creation process, the implementation may modify user-provided &#x60;properties&#x60;,  such as adding additional properties like &#x60;created_at&#x60; to user-provided properties,  omitting any specific property, or performing actions based on any property value. 
 
 ### Example
 
@@ -256,9 +258,9 @@ No authorization required
 
 > DeregisterTableResponse deregisterTable(id, deregisterTableRequest, delimiter)
 
-Deregister a table from its namespace
+Deregister a table
 
-Deregister a table from its namespace. The table content remains available in the storage. 
+Deregister table &#x60;id&#x60; from its namespace. 
 
 ### Example
 
@@ -332,9 +334,9 @@ No authorization required
 
 > DescribeNamespaceResponse describeNamespace(id, describeNamespaceRequest, delimiter)
 
-Describe information about a namespace
+Describe a namespace
 
-Return the detailed information for a given namespace 
+Describe the detailed information for namespace &#x60;id&#x60;. 
 
 ### Example
 
@@ -408,9 +410,9 @@ No authorization required
 
 > DescribeTableResponse describeTable(id, describeTableRequest, delimiter)
 
-Describe a table from the namespace
+Describe information of a table
 
-Get a table&#39;s detailed information under a specified namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+Describe the detailed information for table &#x60;id&#x60;. 
 
 ### Example
 
@@ -564,7 +566,7 @@ No authorization required
 
 Describe information about a transaction
 
-Return a detailed information for a given transaction
+Return a detailed information for a given transaction 
 
 ### Example
 
@@ -640,7 +642,7 @@ No authorization required
 
 Drop a namespace
 
-Drop a namespace. The namespace must be empty. 
+Drop namespace &#x60;id&#x60; from its parent namespace. 
 
 ### Example
 
@@ -715,9 +717,9 @@ No authorization required
 
 > DropTableResponse dropTable(id, dropTableRequest, delimiter)
 
-Drop a table from its namespace
+Drop a table
 
-Drop a table from its namespace and delete its data. If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. 
+Drop table &#x60;id&#x60; and delete its data. 
 
 ### Example
 
@@ -789,11 +791,11 @@ No authorization required
 
 ## listNamespaces
 
-> ListNamespacesResponse listNamespaces(id, listNamespacesRequest, delimiter)
+> ListNamespacesResponse listNamespaces(id, delimiter, pageToken, limit)
 
 List namespaces
 
-List all child namespace names of the root namespace or a given parent namespace. 
+List all child namespace names of the parent namespace &#x60;id&#x60;.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the &#x60;ListNamespacesRequest&#x60; information in the following way: - &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of the same name 
 
 ### Example
 
@@ -812,10 +814,11 @@ public class Example {
 
         MetadataApi apiInstance = new MetadataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-        ListNamespacesRequest listNamespacesRequest = new ListNamespacesRequest(); // ListNamespacesRequest | 
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        String pageToken = "pageToken_example"; // String | 
+        Integer limit = 56; // Integer | 
         try {
-            ListNamespacesResponse result = apiInstance.listNamespaces(id, listNamespacesRequest, delimiter);
+            ListNamespacesResponse result = apiInstance.listNamespaces(id, delimiter, pageToken, limit);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling MetadataApi#listNamespaces");
@@ -834,8 +837,9 @@ public class Example {
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
-| **listNamespacesRequest** | [**ListNamespacesRequest**](ListNamespacesRequest.md)|  | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
+| **pageToken** | **String**|  | [optional] |
+| **limit** | **Integer**|  | [optional] |
 
 ### Return type
 
@@ -847,7 +851,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 
@@ -942,11 +946,11 @@ No authorization required
 
 ## listTables
 
-> ListTablesResponse listTables(id, listTablesRequest, delimiter)
+> ListTablesResponse listTables(id, delimiter, pageToken, limit)
 
 List tables in a namespace
 
-List all child table names of the root namespace or a given parent namespace. 
+List all child table names of the parent namespace &#x60;id&#x60;.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the &#x60;ListTablesRequest&#x60; information in the following way: - &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of the same name 
 
 ### Example
 
@@ -965,10 +969,11 @@ public class Example {
 
         MetadataApi apiInstance = new MetadataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-        ListTablesRequest listTablesRequest = new ListTablesRequest(); // ListTablesRequest | 
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        String pageToken = "pageToken_example"; // String | 
+        Integer limit = 56; // Integer | 
         try {
-            ListTablesResponse result = apiInstance.listTables(id, listTablesRequest, delimiter);
+            ListTablesResponse result = apiInstance.listTables(id, delimiter, pageToken, limit);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling MetadataApi#listTables");
@@ -987,8 +992,9 @@ public class Example {
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
-| **listTablesRequest** | [**ListTablesRequest**](ListTablesRequest.md)|  | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
+| **pageToken** | **String**|  | [optional] |
+| **limit** | **Integer**|  | [optional] |
 
 ### Return type
 
@@ -1000,7 +1006,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 
@@ -1023,7 +1029,7 @@ No authorization required
 
 Check if a namespace exists
 
-Check if a namespace exists.  This API should behave exactly like the DescribeNamespace API, except it does not contain a body. 
+Check if namespace &#x60;id&#x60; exists.  This operation must behave exactly like the DescribeNamespace API,  except it does not contain a response body. 
 
 ### Example
 
@@ -1098,7 +1104,7 @@ No authorization required
 
 Register a table to a namespace
 
-Register an existing table at a given storage location to a namespace. 
+Register an existing table at a given storage location as &#x60;id&#x60;. 
 
 ### Example
 
@@ -1176,7 +1182,7 @@ No authorization required
 
 Check if a table exists
 
-Check if a table exists.  This API should behave exactly like the DescribeTable API, except it does not contain a body. 
+Check if table &#x60;id&#x60; exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body. 
 
 ### Example
 

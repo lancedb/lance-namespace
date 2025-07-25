@@ -18,18 +18,17 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
 class DeleteFromTableRequest(BaseModel):
     """
-    DeleteFromTableRequest
+    Delete data from table based on a SQL predicate. Returns the number of rows that were deleted. 
     """ # noqa: E501
-    name: StrictStr = Field(description="The table name")
-    namespace: List[StrictStr] = Field(description="The namespace identifier")
+    id: Optional[List[StrictStr]] = Field(default=None, description="The namespace identifier")
     predicate: StrictStr = Field(description="SQL predicate to filter rows for deletion")
-    __properties: ClassVar[List[str]] = ["name", "namespace", "predicate"]
+    __properties: ClassVar[List[str]] = ["id", "predicate"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -82,8 +81,7 @@ class DeleteFromTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace"),
+            "id": obj.get("id"),
             "predicate": obj.get("predicate")
         })
         return _obj

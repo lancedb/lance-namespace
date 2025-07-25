@@ -11,23 +11,20 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// InsertIntoTableRequest : Request for inserting records into a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `mode`: pass through query parameter of the same name 
+/// InsertIntoTableRequest : Request for inserting records into a table, excluding the Arrow IPC stream. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct InsertIntoTableRequest {
-    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
-    #[serde(rename = "namespace", skip_serializing_if = "Option::is_none")]
-    pub namespace: Option<Vec<String>>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
     #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
     pub mode: Option<Mode>,
 }
 
 impl InsertIntoTableRequest {
-    /// Request for inserting records into a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `mode`: pass through query parameter of the same name 
+    /// Request for inserting records into a table, excluding the Arrow IPC stream. 
     pub fn new() -> InsertIntoTableRequest {
         InsertIntoTableRequest {
-            name: None,
-            namespace: None,
+            id: None,
             mode: None,
         }
     }

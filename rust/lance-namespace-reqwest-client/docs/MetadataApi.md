@@ -7,16 +7,16 @@ Method | HTTP request | Description
 [**alter_transaction**](MetadataApi.md#alter_transaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
 [**create_namespace**](MetadataApi.md#create_namespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
 [**create_table_index**](MetadataApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
-[**deregister_table**](MetadataApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table from its namespace
-[**describe_namespace**](MetadataApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe information about a namespace
-[**describe_table**](MetadataApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe a table from the namespace
+[**deregister_table**](MetadataApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table
+[**describe_namespace**](MetadataApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe a namespace
+[**describe_table**](MetadataApi.md#describe_table) | **POST** /v1/table/{id}/describe | Describe information of a table
 [**describe_table_index_stats**](MetadataApi.md#describe_table_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get table index statistics
 [**describe_transaction**](MetadataApi.md#describe_transaction) | **POST** /v1/transaction/{id}/describe | Describe information about a transaction
 [**drop_namespace**](MetadataApi.md#drop_namespace) | **POST** /v1/namespace/{id}/drop | Drop a namespace
-[**drop_table**](MetadataApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table from its namespace
-[**list_namespaces**](MetadataApi.md#list_namespaces) | **POST** /v1/namespace/{id}/list | List namespaces
+[**drop_table**](MetadataApi.md#drop_table) | **POST** /v1/table/{id}/drop | Drop a table
+[**list_namespaces**](MetadataApi.md#list_namespaces) | **GET** /v1/namespace/{id}/list | List namespaces
 [**list_table_indices**](MetadataApi.md#list_table_indices) | **POST** /v1/table/{id}/index/list | List indexes on a table
-[**list_tables**](MetadataApi.md#list_tables) | **POST** /v1/namespace/{id}/table/list | List tables in a namespace
+[**list_tables**](MetadataApi.md#list_tables) | **GET** /v1/namespace/{id}/table/list | List tables in a namespace
 [**namespace_exists**](MetadataApi.md#namespace_exists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
 [**register_table**](MetadataApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
 [**table_exists**](MetadataApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
@@ -27,6 +27,8 @@ Method | HTTP request | Description
 
 > models::AlterTransactionResponse alter_transaction(id, alter_transaction_request, delimiter)
 Alter information of a transaction.
+
+Alter a transaction with a list of actions such as setting status or properties. The server should either succeed and apply all actions, or fail and apply no action. 
 
 ### Parameters
 
@@ -58,7 +60,7 @@ No authorization required
 > models::CreateNamespaceResponse create_namespace(id, create_namespace_request, delimiter)
 Create a new namespace
 
-Create a new namespace.  A namespace can manage either a collection of child namespaces, or a collection of tables.  The namespace in the API route should be the parent namespace to create the new namespace.  There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
+Create new namespace `id`.  During the creation process, the implementation may modify user-provided `properties`,  such as adding additional properties like `created_at` to user-provided properties,  omitting any specific property, or performing actions based on any property value. 
 
 ### Parameters
 
@@ -120,9 +122,9 @@ No authorization required
 ## deregister_table
 
 > models::DeregisterTableResponse deregister_table(id, deregister_table_request, delimiter)
-Deregister a table from its namespace
+Deregister a table
 
-Deregister a table from its namespace. The table content remains available in the storage. 
+Deregister table `id` from its namespace. 
 
 ### Parameters
 
@@ -152,9 +154,9 @@ No authorization required
 ## describe_namespace
 
 > models::DescribeNamespaceResponse describe_namespace(id, describe_namespace_request, delimiter)
-Describe information about a namespace
+Describe a namespace
 
-Return the detailed information for a given namespace 
+Describe the detailed information for namespace `id`. 
 
 ### Parameters
 
@@ -184,9 +186,9 @@ No authorization required
 ## describe_table
 
 > models::DescribeTableResponse describe_table(id, describe_table_request, delimiter)
-Describe a table from the namespace
+Describe information of a table
 
-Get a table's detailed information under a specified namespace. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+Describe the detailed information for table `id`. 
 
 ### Parameters
 
@@ -251,7 +253,7 @@ No authorization required
 > models::DescribeTransactionResponse describe_transaction(id, describe_transaction_request, delimiter)
 Describe information about a transaction
 
-Return a detailed information for a given transaction
+Return a detailed information for a given transaction 
 
 ### Parameters
 
@@ -283,7 +285,7 @@ No authorization required
 > models::DropNamespaceResponse drop_namespace(id, drop_namespace_request, delimiter)
 Drop a namespace
 
-Drop a namespace. The namespace must be empty. 
+Drop namespace `id` from its parent namespace. 
 
 ### Parameters
 
@@ -313,9 +315,9 @@ No authorization required
 ## drop_table
 
 > models::DropTableResponse drop_table(id, drop_table_request, delimiter)
-Drop a table from its namespace
+Drop a table
 
-Drop a table from its namespace and delete its data. If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. 
+Drop table `id` and delete its data. 
 
 ### Parameters
 
@@ -344,10 +346,10 @@ No authorization required
 
 ## list_namespaces
 
-> models::ListNamespacesResponse list_namespaces(id, list_namespaces_request, delimiter)
+> models::ListNamespacesResponse list_namespaces(id, delimiter, page_token, limit)
 List namespaces
 
-List all child namespace names of the root namespace or a given parent namespace. 
+List all child namespace names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListNamespacesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
 ### Parameters
 
@@ -355,8 +357,9 @@ List all child namespace names of the root namespace or a given parent namespace
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
-**list_namespaces_request** | [**ListNamespacesRequest**](ListNamespacesRequest.md) |  | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
+**page_token** | Option<**String**> |  |  |
+**limit** | Option<**i32**> |  |  |
 
 ### Return type
 
@@ -368,7 +371,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -408,10 +411,10 @@ No authorization required
 
 ## list_tables
 
-> models::ListTablesResponse list_tables(id, list_tables_request, delimiter)
+> models::ListTablesResponse list_tables(id, delimiter, page_token, limit)
 List tables in a namespace
 
-List all child table names of the root namespace or a given parent namespace. 
+List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
 ### Parameters
 
@@ -419,8 +422,9 @@ List all child table names of the root namespace or a given parent namespace.
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
-**list_tables_request** | [**ListTablesRequest**](ListTablesRequest.md) |  | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
+**page_token** | Option<**String**> |  |  |
+**limit** | Option<**i32**> |  |  |
 
 ### Return type
 
@@ -432,7 +436,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -443,7 +447,7 @@ No authorization required
 > namespace_exists(id, namespace_exists_request, delimiter)
 Check if a namespace exists
 
-Check if a namespace exists.  This API should behave exactly like the DescribeNamespace API, except it does not contain a body. 
+Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API,  except it does not contain a response body. 
 
 ### Parameters
 
@@ -475,7 +479,7 @@ No authorization required
 > models::RegisterTableResponse register_table(id, register_table_request, delimiter)
 Register a table to a namespace
 
-Register an existing table at a given storage location to a namespace. 
+Register an existing table at a given storage location as `id`. 
 
 ### Parameters
 
@@ -507,7 +511,7 @@ No authorization required
 > table_exists(id, table_exists_request, delimiter)
 Check if a table exists
 
-Check if a table exists.  This API should behave exactly like the DescribeTable API, except it does not contain a body. 
+Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body. 
 
 ### Parameters
 

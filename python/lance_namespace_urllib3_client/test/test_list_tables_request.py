@@ -35,11 +35,11 @@ class TestListTablesRequest(unittest.TestCase):
         model = ListTablesRequest()
         if include_optional:
             return ListTablesRequest(
-                parent = [
+                id = [
                     ''
                     ],
                 page_token = '',
-                page_size = 56
+                limit = 56
             )
         else:
             return ListTablesRequest(

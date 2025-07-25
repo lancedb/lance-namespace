@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 pub struct JsonDataType {
     /// Fields for complex types like Struct, Union, etc.
     #[serde(rename = "fields", skip_serializing_if = "Option::is_none")]
-    pub fields: Option<Vec<models::JsonField>>,
+    pub fields: Option<Vec<models::JsonArrowField>>,
     /// Length for fixed-size types
     #[serde(rename = "length", skip_serializing_if = "Option::is_none")]
     pub length: Option<i64>,

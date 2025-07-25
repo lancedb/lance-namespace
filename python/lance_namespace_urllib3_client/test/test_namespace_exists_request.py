@@ -35,8 +35,7 @@ class TestNamespaceExistsRequest(unittest.TestCase):
         model = NamespaceExistsRequest()
         if include_optional:
             return NamespaceExistsRequest(
-                name = '',
-                parent = [
+                id = [
                     ''
                     ]
             )

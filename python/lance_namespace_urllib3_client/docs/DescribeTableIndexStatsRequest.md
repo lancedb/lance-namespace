@@ -5,9 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** | The table name | 
-**namespace** | **List[str]** | The namespace identifier | 
+**id** | **List[str]** |  | [optional] 
 **version** | **int** | Optional table version to get stats for | [optional] 
+**index_name** | **str** | Name of the index | [optional] 
 
 ## Example
 

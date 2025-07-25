@@ -27,8 +27,7 @@ class CreateTableIndexRequest(BaseModel):
     """
     CreateTableIndexRequest
     """ # noqa: E501
-    name: StrictStr = Field(description="The table name")
-    namespace: List[StrictStr] = Field(description="The namespace identifier")
+    id: Optional[List[StrictStr]] = None
     column: StrictStr = Field(description="Name of the column to create index on")
     index_type: StrictStr = Field(description="Type of index to create")
     metric_type: Optional[StrictStr] = Field(default=None, description="Distance metric type for vector indexes")
@@ -40,13 +39,13 @@ class CreateTableIndexRequest(BaseModel):
     stem: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for stemming")
     remove_stop_words: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for stop word removal")
     ascii_folding: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for ASCII folding")
-    __properties: ClassVar[List[str]] = ["name", "namespace", "column", "index_type", "metric_type", "with_position", "base_tokenizer", "language", "max_token_length", "lower_case", "stem", "remove_stop_words", "ascii_folding"]
+    __properties: ClassVar[List[str]] = ["id", "column", "index_type", "metric_type", "with_position", "base_tokenizer", "language", "max_token_length", "lower_case", "stem", "remove_stop_words", "ascii_folding"]
 
     @field_validator('index_type')
     def index_type_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['BTREE', 'BITMAP', 'LABEL_LIST', 'IVF_FLAT', 'IVF_HNSW_SQ', 'IVF_PQ', 'FTS']):
-            raise ValueError("must be one of enum values ('BTREE', 'BITMAP', 'LABEL_LIST', 'IVF_FLAT', 'IVF_HNSW_SQ', 'IVF_PQ', 'FTS')")
+        if value not in set(['BTREE', 'BITMAP', 'LABEL_LIST', 'IVF_FLAT', 'IVF_PQ', 'IVF_HNSW_SQ', 'FTS']):
+            raise ValueError("must be one of enum values ('BTREE', 'BITMAP', 'LABEL_LIST', 'IVF_FLAT', 'IVF_PQ', 'IVF_HNSW_SQ', 'FTS')")
         return value
 
     @field_validator('metric_type')
@@ -110,8 +109,7 @@ class CreateTableIndexRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace"),
+            "id": obj.get("id"),
             "column": obj.get("column"),
             "index_type": obj.get("index_type"),
             "metric_type": obj.get("metric_type"),

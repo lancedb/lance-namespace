@@ -26,11 +26,9 @@ class DropNamespaceResponse(BaseModel):
     """
     DropNamespaceResponse
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    parent: Optional[List[StrictStr]] = None
     properties: Optional[Dict[str, StrictStr]] = None
-    transaction_id: Optional[StrictStr] = Field(default=None, description="If present, indicating the operation is long running and should be tracked using GetTransaction ", alias="transactionId")
-    __properties: ClassVar[List[str]] = ["name", "parent", "properties", "transactionId"]
+    transaction_id: Optional[List[StrictStr]] = Field(default=None, description="If present, indicating the operation is long running and should be tracked using GetTransaction ", alias="transactionId")
+    __properties: ClassVar[List[str]] = ["properties", "transactionId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,8 +81,6 @@ class DropNamespaceResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "parent": obj.get("parent"),
             "properties": obj.get("properties"),
             "transactionId": obj.get("transactionId")
         })

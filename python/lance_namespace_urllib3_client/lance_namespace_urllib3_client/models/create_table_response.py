@@ -19,6 +19,8 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
+from lance_namespace_urllib3_client.models.json_arrow_schema import JsonArrowSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,12 +28,12 @@ class CreateTableResponse(BaseModel):
     """
     CreateTableResponse
     """ # noqa: E501
-    name: StrictStr
-    namespace: List[StrictStr]
     location: StrictStr
+    version: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
+    var_schema: Optional[JsonArrowSchema] = Field(default=None, alias="schema")
     properties: Optional[Dict[str, StrictStr]] = None
     storage_options: Optional[Dict[str, StrictStr]] = Field(default=None, description="Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. ")
-    __properties: ClassVar[List[str]] = ["name", "namespace", "location", "properties", "storage_options"]
+    __properties: ClassVar[List[str]] = ["location", "version", "schema", "properties", "storage_options"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -72,6 +74,9 @@ class CreateTableResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of var_schema
+        if self.var_schema:
+            _dict['schema'] = self.var_schema.to_dict()
         return _dict
 
     @classmethod
@@ -84,9 +89,9 @@ class CreateTableResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace"),
             "location": obj.get("location"),
+            "version": obj.get("version"),
+            "schema": JsonArrowSchema.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
             "properties": obj.get("properties"),
             "storage_options": obj.get("storage_options")
         })

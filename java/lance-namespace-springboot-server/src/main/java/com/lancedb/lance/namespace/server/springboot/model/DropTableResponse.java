@@ -33,62 +33,40 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DropTableResponse {
 
-  private String name;
-
-  @Valid private List<String> namespace = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   private String location;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
-  private String transactionId;
+  @Valid private List<String> transactionId = new ArrayList<>();
 
-  public DropTableResponse name(String name) {
-    this.name = name;
+  public DropTableResponse id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public DropTableResponse namespace(List<String> namespace) {
-    this.namespace = namespace;
-    return this;
-  }
-
-  public DropTableResponse addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public DropTableResponse addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get namespace
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
-  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("namespace")
-  public List<String> getNamespace() {
-    return namespace;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setNamespace(List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   public DropTableResponse location(String location) {
@@ -139,23 +117,35 @@ public class DropTableResponse {
     this.properties = properties;
   }
 
-  public DropTableResponse transactionId(String transactionId) {
+  public DropTableResponse transactionId(List<String> transactionId) {
     this.transactionId = transactionId;
     return this;
   }
 
+  public DropTableResponse addTransactionIdItem(String transactionIdItem) {
+    if (this.transactionId == null) {
+      this.transactionId = new ArrayList<>();
+    }
+    this.transactionId.add(transactionIdItem);
+    return this;
+  }
+
   /**
-   * Get transactionId
+   * If present, indicating the operation is long running and should be tracked using GetTransaction
    *
    * @return transactionId
    */
-  @Schema(name = "transactionId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "transactionId",
+      description =
+          "If present, indicating the operation is long running and should be tracked using GetTransaction ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("transactionId")
-  public String getTransactionId() {
+  public List<String> getTransactionId() {
     return transactionId;
   }
 
-  public void setTransactionId(String transactionId) {
+  public void setTransactionId(List<String> transactionId) {
     this.transactionId = transactionId;
   }
 
@@ -168,8 +158,7 @@ public class DropTableResponse {
       return false;
     }
     DropTableResponse dropTableResponse = (DropTableResponse) o;
-    return Objects.equals(this.name, dropTableResponse.name)
-        && Objects.equals(this.namespace, dropTableResponse.namespace)
+    return Objects.equals(this.id, dropTableResponse.id)
         && Objects.equals(this.location, dropTableResponse.location)
         && Objects.equals(this.properties, dropTableResponse.properties)
         && Objects.equals(this.transactionId, dropTableResponse.transactionId);
@@ -177,15 +166,14 @@ public class DropTableResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, location, properties, transactionId);
+    return Objects.hash(id, location, properties, transactionId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DropTableResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");

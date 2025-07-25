@@ -20,9 +20,7 @@ import com.lancedb.lance.namespace.server.springboot.model.DescribeNamespaceResp
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ErrorResponse;
-import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
-import com.lancedb.lance.namespace.server.springboot.model.ListTablesRequest;
 import com.lancedb.lance.namespace.server.springboot.model.ListTablesResponse;
 import com.lancedb.lance.namespace.server.springboot.model.NamespaceExistsRequest;
 
@@ -58,13 +56,11 @@ public interface NamespaceApi {
   }
 
   /**
-   * POST /v1/namespace/{id}/create : Create a new namespace Create a new namespace. A namespace can
-   * manage either a collection of child namespaces, or a collection of tables. The namespace in the
-   * API route should be the parent namespace to create the new namespace. There are three modes
-   * when trying to create a namespace, to differentiate the behavior when a namespace of the same
-   * name already exists: * CREATE: the operation fails with 400. * EXIST_OK: the operation succeeds
-   * and the existing namespace is kept. * OVERWRITE: the existing namespace is dropped and a new
-   * empty namespace with this name is created.
+   * POST /v1/namespace/{id}/create : Create a new namespace Create new namespace &#x60;id&#x60;.
+   * During the creation process, the implementation may modify user-provided
+   * &#x60;properties&#x60;, such as adding additional properties like &#x60;created_at&#x60; to
+   * user-provided properties, omitting any specific property, or performing actions based on any
+   * property value.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -93,7 +89,7 @@ public interface NamespaceApi {
       operationId = "createNamespace",
       summary = "Create a new namespace",
       description =
-          "Create a new namespace.  A namespace can manage either a collection of child namespaces, or a collection of tables.  The namespace in the API route should be the parent namespace to create the new namespace.  There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. ",
+          "Create new namespace `id`.  During the creation process, the implementation may modify user-provided `properties`,  such as adding additional properties like `created_at` to user-provided properties,  omitting any specific property, or performing actions based on any property value. ",
       tags = {"Namespace", "Metadata"},
       responses = {
         @ApiResponse(
@@ -205,8 +201,7 @@ public interface NamespaceApi {
             request -> {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"parent\" : [ \"parent\", \"parent\" ], \"name\" : \"name\", \"properties\" : { \"key\" : \"properties\" } }";
+                  String exampleString = "{ \"properties\" : { \"key\" : \"properties\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -264,8 +259,8 @@ public interface NamespaceApi {
   }
 
   /**
-   * POST /v1/namespace/{id}/describe : Describe information about a namespace Return the detailed
-   * information for a given namespace
+   * POST /v1/namespace/{id}/describe : Describe a namespace Describe the detailed information for
+   * namespace &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -291,8 +286,8 @@ public interface NamespaceApi {
    */
   @Operation(
       operationId = "describeNamespace",
-      summary = "Describe information about a namespace",
-      description = "Return the detailed information for a given namespace ",
+      summary = "Describe a namespace",
+      description = "Describe the detailed information for namespace `id`. ",
       tags = {"Namespace", "Metadata"},
       responses = {
         @ApiResponse(
@@ -389,7 +384,7 @@ public interface NamespaceApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"parent\" : [ \"parent\", \"parent\" ], \"name\" : \"name\", \"properties\" : { \"owner\" : \"Ralph\", \"created_at\" : \"1452120468\" } }";
+                      "{ \"properties\" : { \"owner\" : \"Ralph\", \"created_at\" : \"1452120468\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -435,7 +430,8 @@ public interface NamespaceApi {
   }
 
   /**
-   * POST /v1/namespace/{id}/drop : Drop a namespace Drop a namespace. The namespace must be empty.
+   * POST /v1/namespace/{id}/drop : Drop a namespace Drop namespace &#x60;id&#x60; from its parent
+   * namespace.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -462,7 +458,7 @@ public interface NamespaceApi {
   @Operation(
       operationId = "dropNamespace",
       summary = "Drop a namespace",
-      description = "Drop a namespace. The namespace must be empty. ",
+      description = "Drop namespace `id` from its parent namespace. ",
       tags = {"Namespace", "Metadata"},
       responses = {
         @ApiResponse(
@@ -566,7 +562,7 @@ public interface NamespaceApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"parent\" : [ \"parent\", \"parent\" ], \"name\" : \"name\", \"properties\" : { \"key\" : \"properties\" }, \"transactionId\" : \"transactionId\" }";
+                      "{ \"properties\" : { \"key\" : \"properties\" }, \"transactionId\" : [ \"transactionId\", \"transactionId\" ] }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -618,17 +614,22 @@ public interface NamespaceApi {
   }
 
   /**
-   * POST /v1/namespace/{id}/list : List namespaces List all child namespace names of the root
-   * namespace or a given parent namespace.
+   * GET /v1/namespace/{id}/list : List namespaces List all child namespace names of the parent
+   * namespace &#x60;id&#x60;. REST NAMESPACE ONLY REST namespace uses GET to perform this operation
+   * without a request body. It passes in the &#x60;ListNamespacesRequest&#x60; information in the
+   * following way: - &#x60;id&#x60;: pass through path parameter of the same name -
+   * &#x60;page_token&#x60;: pass through query parameter of the same name - &#x60;limit&#x60;: pass
+   * through query parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param listNamespacesRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
+   * @param pageToken (optional)
+   * @param limit (optional)
    * @return A list of namespaces (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
    *     such as invalid json. Usually serves application/json content, although in some cases
@@ -647,7 +648,7 @@ public interface NamespaceApi {
       operationId = "listNamespaces",
       summary = "List namespaces",
       description =
-          "List all child namespace names of the root namespace or a given parent namespace. ",
+          "List all child namespace names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListNamespacesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name ",
       tags = {"Namespace", "Metadata"},
       responses = {
         @ApiResponse(
@@ -721,10 +722,9 @@ public interface NamespaceApi {
             })
       })
   @RequestMapping(
-      method = RequestMethod.POST,
+      method = RequestMethod.GET,
       value = "/v1/namespace/{id}/list",
-      produces = {"application/json"},
-      consumes = {"application/json"})
+      produces = {"application/json"})
   default ResponseEntity<ListNamespacesResponse> listNamespaces(
       @Parameter(
               name = "id",
@@ -734,10 +734,6 @@ public interface NamespaceApi {
               in = ParameterIn.PATH)
           @PathVariable("id")
           String id,
-      @Parameter(name = "ListNamespacesRequest", description = "", required = true)
-          @Valid
-          @RequestBody
-          ListNamespacesRequest listNamespacesRequest,
       @Parameter(
               name = "delimiter",
               description =
@@ -745,14 +741,22 @@ public interface NamespaceApi {
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
-          Optional<String> delimiter) {
+          Optional<String> delimiter,
+      @Parameter(name = "page_token", description = "", in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "page_token", required = false)
+          Optional<String> pageToken,
+      @Parameter(name = "limit", description = "", in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "limit", required = false)
+          Optional<Integer> limit) {
     getRequest()
         .ifPresent(
             request -> {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"nextPageToken\" : \"nextPageToken\", \"namespaces\" : [ \"accounting\", \"accounting\" ] }";
+                      "{ \"page_token\" : \"page_token\", \"namespaces\" : [ \"namespaces\", \"namespaces\" ] }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -804,17 +808,22 @@ public interface NamespaceApi {
   }
 
   /**
-   * POST /v1/namespace/{id}/table/list : List tables in a namespace List all child table names of
-   * the root namespace or a given parent namespace.
+   * GET /v1/namespace/{id}/table/list : List tables in a namespace List all child table names of
+   * the parent namespace &#x60;id&#x60;. REST NAMESPACE ONLY REST namespace uses GET to perform
+   * this operation without a request body. It passes in the &#x60;ListTablesRequest&#x60;
+   * information in the following way: - &#x60;id&#x60;: pass through path parameter of the same
+   * name - &#x60;page_token&#x60;: pass through query parameter of the same name -
+   * &#x60;limit&#x60;: pass through query parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param listTablesRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
+   * @param pageToken (optional)
+   * @param limit (optional)
    * @return A list of tables (status code 200) or Indicates a bad request error. It could be caused
    *     by an unexpected request body format or other forms of request validation failure, such as
    *     invalid json. Usually serves application/json content, although in some cases simple
@@ -833,7 +842,7 @@ public interface NamespaceApi {
       operationId = "listTables",
       summary = "List tables in a namespace",
       description =
-          "List all child table names of the root namespace or a given parent namespace. ",
+          "List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name ",
       tags = {"Namespace", "Table", "Metadata"},
       responses = {
         @ApiResponse(
@@ -907,10 +916,9 @@ public interface NamespaceApi {
             })
       })
   @RequestMapping(
-      method = RequestMethod.POST,
+      method = RequestMethod.GET,
       value = "/v1/namespace/{id}/table/list",
-      produces = {"application/json"},
-      consumes = {"application/json"})
+      produces = {"application/json"})
   default ResponseEntity<ListTablesResponse> listTables(
       @Parameter(
               name = "id",
@@ -920,8 +928,6 @@ public interface NamespaceApi {
               in = ParameterIn.PATH)
           @PathVariable("id")
           String id,
-      @Parameter(name = "ListTablesRequest", description = "", required = true) @Valid @RequestBody
-          ListTablesRequest listTablesRequest,
       @Parameter(
               name = "delimiter",
               description =
@@ -929,14 +935,22 @@ public interface NamespaceApi {
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
-          Optional<String> delimiter) {
+          Optional<String> delimiter,
+      @Parameter(name = "page_token", description = "", in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "page_token", required = false)
+          Optional<String> pageToken,
+      @Parameter(name = "limit", description = "", in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "limit", required = false)
+          Optional<Integer> limit) {
     getRequest()
         .ifPresent(
             request -> {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"tables\" : [ \"cart\", \"cart\" ], \"nextPageToken\" : \"nextPageToken\" }";
+                      "{ \"tables\" : [ \"tables\", \"tables\" ], \"page_token\" : \"page_token\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -988,8 +1002,9 @@ public interface NamespaceApi {
   }
 
   /**
-   * POST /v1/namespace/{id}/exists : Check if a namespace exists Check if a namespace exists. This
-   * API should behave exactly like the DescribeNamespace API, except it does not contain a body.
+   * POST /v1/namespace/{id}/exists : Check if a namespace exists Check if namespace &#x60;id&#x60;
+   * exists. This operation must behave exactly like the DescribeNamespace API, except it does not
+   * contain a response body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1016,7 +1031,7 @@ public interface NamespaceApi {
       operationId = "namespaceExists",
       summary = "Check if a namespace exists",
       description =
-          "Check if a namespace exists.  This API should behave exactly like the DescribeNamespace API, except it does not contain a body. ",
+          "Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API,  except it does not contain a response body. ",
       tags = {"Namespace", "Metadata"},
       responses = {
         @ApiResponse(responseCode = "200", description = "Success, no content"),

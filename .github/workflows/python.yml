@@ -63,37 +63,18 @@ jobs:
       - uses: rui314/setup-mold@v1
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
-      - name: Checkout lance repo
-        uses: actions/checkout@v4
-        with:
-          repository: lancedb/lance
-          path: lance
       - name: Checkout lance-namespace repo
         uses: actions/checkout@v4
-        with:
-          path: lance-namespace
-      - uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: lance/python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
-      - name: Set up Python virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install maturin
-          pip install poetry
-      - name: Install Lance Python SDK
-        working-directory: lance/python
-        run: |
-          source ../../venv/bin/activate
-          maturin develop
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+      - name: Install dependencies
+        run: uv tool install maturin
       - name: Test lance_namespace_urllib3_client with Python ${{ matrix.python-version }}
-        working-directory: lance-namespace/python/lance_namespace_urllib3_client
+        working-directory: python/lance_namespace_urllib3_client
         run: |
-          source ../../../venv/bin/activate
-          poetry install
-          poetry run pytest
+          uv sync
+          uv run pytest

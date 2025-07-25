@@ -19,15 +19,20 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ObjectIdentifier {
-  private String[] levels;
+
+  private static final String DELIMITER_DEFAULT = ".";
+
+  private final String[] levels;
 
   private ObjectIdentifier(String[] levels) {
     this.levels = levels;
   }
 
   public static ObjectIdentifier of(List<String> levels) {
+    ValidationUtil.checkNotNull(levels, "Identifier must not be null");
     levels.stream()
         .forEach(
             level ->
@@ -36,25 +41,68 @@ public class ObjectIdentifier {
     return new ObjectIdentifier(levels.toArray(new String[0]));
   }
 
+  public static ObjectIdentifier of(String id) {
+    return of(id, DELIMITER_DEFAULT);
+  }
+
+  public static ObjectIdentifier of(String id, String delimiter) {
+    ValidationUtil.checkNotNull(id, "Identifier must not be null");
+    ValidationUtil.checkNotNull(delimiter, "Identifier must not be null");
+    if (id.equals(delimiter)) {
+      return new ObjectIdentifier(new String[0]);
+    }
+    return new ObjectIdentifier(id.split(delimiter));
+  }
+
   public String level(int pos) {
     return levels[pos];
   }
 
-  public String name() {
-    return empty() ? "" : levels[levels.length - 1];
+  public String strId() {
+    return strId(DELIMITER_DEFAULT);
+  }
+
+  public String strId(String delimiter) {
+    if (levels.length == 0) {
+      return delimiter;
+    }
+    return String.join(delimiter, levels);
+  }
+
+  public List<String> listId() {
+    return ImmutableList.copyOf(levels);
   }
 
   public List<String> parent() {
-    return size() < 2
-        ? ImmutableList.of()
-        : ImmutableList.copyOf(Arrays.copyOfRange(levels, 0, levels.length - 1));
+    ValidationUtil.checkArgument(levels.length > 0, "Root namespace does not have a parent");
+    if (levels.length == 1) {
+      return ImmutableList.of();
+    }
+    return ImmutableList.copyOf(Arrays.copyOfRange(levels, 0, levels.length - 1));
   }
 
-  public int size() {
-    return levels == null ? 0 : levels.length;
+  public int levels() {
+    return levels.length + 1;
   }
 
-  public boolean empty() {
-    return size() == 0;
+  public boolean isRoot() {
+    return levels.length == 0;
+  }
+
+  @Override
+  public String toString() {
+    return "[root -> " + String.join(" -> ", levels) + "]";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    ObjectIdentifier that = (ObjectIdentifier) o;
+    return Objects.deepEquals(levels, that.levels);
+  }
+
+  @Override
+  public int hashCode() {
+    return Arrays.hashCode(levels);
   }
 }

@@ -46,7 +46,9 @@ public class TransactionApi extends BaseApi {
   }
 
   /**
-   * Alter information of a transaction.
+   * Alter information of a transaction. Alter a transaction with a list of actions such as setting
+   * status or properties. The server should either succeed and apply all actions, or fail and apply
+   * no action.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -66,7 +68,9 @@ public class TransactionApi extends BaseApi {
   }
 
   /**
-   * Alter information of a transaction.
+   * Alter information of a transaction. Alter a transaction with a list of actions such as setting
+   * status or properties. The server should either succeed and apply all actions, or fail and apply
+   * no action.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.

@@ -19,89 +19,21 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 /** DescribeNamespaceResponse */
-@JsonPropertyOrder({
-  DescribeNamespaceResponse.JSON_PROPERTY_NAME,
-  DescribeNamespaceResponse.JSON_PROPERTY_PARENT,
-  DescribeNamespaceResponse.JSON_PROPERTY_PROPERTIES
-})
+@JsonPropertyOrder({DescribeNamespaceResponse.JSON_PROPERTY_PROPERTIES})
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DescribeNamespaceResponse {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nonnull private String name;
-
-  public static final String JSON_PROPERTY_PARENT = "parent";
-  @javax.annotation.Nullable private List<String> parent = new ArrayList<>();
-
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public DescribeNamespaceResponse() {}
-
-  public DescribeNamespaceResponse name(@javax.annotation.Nonnull String name) {
-
-    this.name = name;
-    return this;
-  }
-
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setName(@javax.annotation.Nonnull String name) {
-    this.name = name;
-  }
-
-  public DescribeNamespaceResponse parent(@javax.annotation.Nullable List<String> parent) {
-
-    this.parent = parent;
-    return this;
-  }
-
-  public DescribeNamespaceResponse addParentItem(String parentItem) {
-    if (this.parent == null) {
-      this.parent = new ArrayList<>();
-    }
-    this.parent.add(parentItem);
-    return this;
-  }
-
-  /**
-   * Get parent
-   *
-   * @return parent
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_PARENT)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getParent() {
-    return parent;
-  }
-
-  @JsonProperty(JSON_PROPERTY_PARENT)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setParent(@javax.annotation.Nullable List<String> parent) {
-    this.parent = parent;
-  }
 
   public DescribeNamespaceResponse properties(
       @javax.annotation.Nullable Map<String, String> properties) {
@@ -147,22 +79,18 @@ public class DescribeNamespaceResponse {
       return false;
     }
     DescribeNamespaceResponse describeNamespaceResponse = (DescribeNamespaceResponse) o;
-    return Objects.equals(this.name, describeNamespaceResponse.name)
-        && Objects.equals(this.parent, describeNamespaceResponse.parent)
-        && Objects.equals(this.properties, describeNamespaceResponse.properties);
+    return Objects.equals(this.properties, describeNamespaceResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent, properties);
+    return Objects.hash(properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeNamespaceResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -209,42 +137,6 @@ public class DescribeNamespaceResponse {
     }
 
     StringJoiner joiner = new StringJoiner("&");
-
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `parent` to the URL query string
-    if (getParent() != null) {
-      for (int i = 0; i < getParent().size(); i++) {
-        try {
-          joiner.add(
-              String.format(
-                  "%sparent%s%s=%s",
-                  prefix,
-                  suffix,
-                  "".equals(suffix)
-                      ? ""
-                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getParent().get(i)), "UTF-8")
-                      .replaceAll("\\+", "%20")));
-        } catch (UnsupportedEncodingException e) {
-          // Should never happen, UTF-8 is always supported
-          throw new RuntimeException(e);
-        }
-      }
-    }
 
     // add `properties` to the URL query string
     if (getProperties() != null) {

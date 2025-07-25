@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**fields** | Option<[**Vec<models::JsonField>**](JsonField.md)> | Fields for complex types like Struct, Union, etc. | [optional]
+**fields** | Option<[**Vec<models::JsonArrowField>**](JsonArrowField.md)> | Fields for complex types like Struct, Union, etc. | [optional]
 **length** | Option<**i64**> | Length for fixed-size types | [optional]
 **r#type** | **String** | The data type name | 
 

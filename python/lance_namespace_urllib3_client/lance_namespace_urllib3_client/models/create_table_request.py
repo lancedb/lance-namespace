@@ -24,13 +24,12 @@ from typing_extensions import Self
 
 class CreateTableRequest(BaseModel):
     """
-    Request for creating a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
+    Request for creating a table, excluding the Arrow IPC stream. 
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    namespace: Optional[List[StrictStr]] = None
+    id: Optional[List[StrictStr]] = None
     location: Optional[StrictStr] = None
     properties: Optional[Dict[str, StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["name", "namespace", "location", "properties"]
+    __properties: ClassVar[List[str]] = ["id", "location", "properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,8 +82,7 @@ class CreateTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace"),
+            "id": obj.get("id"),
             "location": obj.get("location"),
             "properties": obj.get("properties")
         })

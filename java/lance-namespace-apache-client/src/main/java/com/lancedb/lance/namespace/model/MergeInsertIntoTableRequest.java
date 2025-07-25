@@ -24,21 +24,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/**
- * Request for merging or inserting records into a table, excluding the Arrow IPC stream. Note that
- * this is only used for non-REST implementations. For REST, pass in the information in the
- * following way: - &#x60;name&#x60;: pass as a part of the path parameter &#x60;id&#x60; -
- * &#x60;namespace&#x60;: pass as a part of the path parameter &#x60;namespace&#x60; -
- * &#x60;on&#x60;: pass through query parameter of the same name -
- * &#x60;when_matched_update_all&#x60;: pass through query parameter of the same name -
- * &#x60;when_matched_update_all_filt&#x60;: pass through query parameter of the same name -
- * &#x60;when_not_matched_insert_all&#x60;: pass through query parameter of the same name -
- * &#x60;when_not_matched_by_source_delete&#x60;: pass through query parameter of the same name -
- * &#x60;when_not_matched_by_source_delete_filt&#x60;: pass through query parameter of the same name
- */
+/** Request for merging or inserting records into a table, excluding the Arrow IPC stream. */
 @JsonPropertyOrder({
-  MergeInsertIntoTableRequest.JSON_PROPERTY_NAME,
-  MergeInsertIntoTableRequest.JSON_PROPERTY_NAMESPACE,
+  MergeInsertIntoTableRequest.JSON_PROPERTY_ID,
   MergeInsertIntoTableRequest.JSON_PROPERTY_ON,
   MergeInsertIntoTableRequest.JSON_PROPERTY_WHEN_MATCHED_UPDATE_ALL,
   MergeInsertIntoTableRequest.JSON_PROPERTY_WHEN_MATCHED_UPDATE_ALL_FILT,
@@ -50,11 +38,8 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class MergeInsertIntoTableRequest {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nullable private String name;
-
-  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nullable private List<String> namespace = new ArrayList<>();
+  public static final String JSON_PROPERTY_ID = "id";
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public static final String JSON_PROPERTY_ON = "on";
   @javax.annotation.Nullable private String on;
@@ -80,60 +65,36 @@ public class MergeInsertIntoTableRequest {
 
   public MergeInsertIntoTableRequest() {}
 
-  public MergeInsertIntoTableRequest name(@javax.annotation.Nullable String name) {
+  public MergeInsertIntoTableRequest id(@javax.annotation.Nullable List<String> id) {
 
-    this.name = name;
+    this.id = id;
     return this;
   }
 
-  /**
-   * The table name
-   *
-   * @return name
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setName(@javax.annotation.Nullable String name) {
-    this.name = name;
-  }
-
-  public MergeInsertIntoTableRequest namespace(@javax.annotation.Nullable List<String> namespace) {
-
-    this.namespace = namespace;
-    return this;
-  }
-
-  public MergeInsertIntoTableRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public MergeInsertIntoTableRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * The namespace identifier
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getNamespace() {
-    return namespace;
+  public List<String> getId() {
+    return id;
   }
 
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
+  @JsonProperty(JSON_PROPERTY_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setNamespace(@javax.annotation.Nullable List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(@javax.annotation.Nullable List<String> id) {
+    this.id = id;
   }
 
   public MergeInsertIntoTableRequest on(@javax.annotation.Nullable String on) {
@@ -299,8 +260,7 @@ public class MergeInsertIntoTableRequest {
       return false;
     }
     MergeInsertIntoTableRequest mergeInsertIntoTableRequest = (MergeInsertIntoTableRequest) o;
-    return Objects.equals(this.name, mergeInsertIntoTableRequest.name)
-        && Objects.equals(this.namespace, mergeInsertIntoTableRequest.namespace)
+    return Objects.equals(this.id, mergeInsertIntoTableRequest.id)
         && Objects.equals(this.on, mergeInsertIntoTableRequest.on)
         && Objects.equals(
             this.whenMatchedUpdateAll, mergeInsertIntoTableRequest.whenMatchedUpdateAll)
@@ -319,8 +279,7 @@ public class MergeInsertIntoTableRequest {
   @Override
   public int hashCode() {
     return Objects.hash(
-        name,
-        namespace,
+        id,
         on,
         whenMatchedUpdateAll,
         whenMatchedUpdateAllFilt,
@@ -333,8 +292,7 @@ public class MergeInsertIntoTableRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class MergeInsertIntoTableRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    on: ").append(toIndentedString(on)).append("\n");
     sb.append("    whenMatchedUpdateAll: ")
         .append(toIndentedString(whenMatchedUpdateAll))
@@ -397,34 +355,19 @@ public class MergeInsertIntoTableRequest {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `namespace` to the URL query string
-    if (getNamespace() != null) {
-      for (int i = 0; i < getNamespace().size(); i++) {
+    // add `id` to the URL query string
+    if (getId() != null) {
+      for (int i = 0; i < getId().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%snamespace%s%s=%s",
+                  "%sid%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

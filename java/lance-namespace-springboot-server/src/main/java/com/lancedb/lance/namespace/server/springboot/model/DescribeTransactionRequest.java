@@ -17,9 +17,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.annotation.Generated;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /** DescribeTransactionRequest */
@@ -28,19 +31,18 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DescribeTransactionRequest {
 
-  private String id;
+  @Valid private List<String> id = new ArrayList<>();
 
-  public DescribeTransactionRequest() {
-    super();
+  public DescribeTransactionRequest id(List<String> id) {
+    this.id = id;
+    return this;
   }
 
-  /** Constructor with only required parameters */
-  public DescribeTransactionRequest(String id) {
-    this.id = id;
-  }
-
-  public DescribeTransactionRequest id(String id) {
-    this.id = id;
+  public DescribeTransactionRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
+    }
+    this.id.add(idItem);
     return this;
   }
 
@@ -49,14 +51,13 @@ public class DescribeTransactionRequest {
    *
    * @return id
    */
-  @NotNull
-  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
-  public String getId() {
+  public List<String> getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(List<String> id) {
     this.id = id;
   }
 

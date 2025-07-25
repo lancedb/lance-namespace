@@ -13,10 +13,6 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RegisterTableResponse {
-    #[serde(rename = "name")]
-    pub name: String,
-    #[serde(rename = "namespace")]
-    pub namespace: Vec<String>,
     #[serde(rename = "location")]
     pub location: String,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
@@ -24,10 +20,8 @@ pub struct RegisterTableResponse {
 }
 
 impl RegisterTableResponse {
-    pub fn new(name: String, namespace: Vec<String>, location: String) -> RegisterTableResponse {
+    pub fn new(location: String) -> RegisterTableResponse {
         RegisterTableResponse {
-            name,
-            namespace,
             location,
             properties: None,
         }

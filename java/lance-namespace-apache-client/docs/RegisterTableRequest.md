@@ -7,9 +7,9 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**name** | **String** |  |  [optional] |
-|**namespace** | **List&lt;String&gt;** |  |  [optional] |
+|**id** | **List&lt;String&gt;** |  |  [optional] |
 |**location** | **String** |  |  |
+|**properties** | **Map&lt;String, String&gt;** |  |  [optional] |
 
 
 

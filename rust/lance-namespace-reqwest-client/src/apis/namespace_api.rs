@@ -99,7 +99,7 @@ pub enum NamespaceExistsError {
 }
 
 
-/// Create a new namespace.  A namespace can manage either a collection of child namespaces, or a collection of tables.  The namespace in the API route should be the parent namespace to create the new namespace.  There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
+/// Create new namespace `id`.  During the creation process, the implementation may modify user-provided `properties`,  such as adding additional properties like `created_at` to user-provided properties,  omitting any specific property, or performing actions based on any property value. 
 pub async fn create_namespace(configuration: &configuration::Configuration, id: &str, create_namespace_request: models::CreateNamespaceRequest, delimiter: Option<&str>) -> Result<models::CreateNamespaceResponse, Error<CreateNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -142,7 +142,7 @@ pub async fn create_namespace(configuration: &configuration::Configuration, id: 
     }
 }
 
-/// Return the detailed information for a given namespace 
+/// Describe the detailed information for namespace `id`. 
 pub async fn describe_namespace(configuration: &configuration::Configuration, id: &str, describe_namespace_request: models::DescribeNamespaceRequest, delimiter: Option<&str>) -> Result<models::DescribeNamespaceResponse, Error<DescribeNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -185,7 +185,7 @@ pub async fn describe_namespace(configuration: &configuration::Configuration, id
     }
 }
 
-/// Drop a namespace. The namespace must be empty. 
+/// Drop namespace `id` from its parent namespace. 
 pub async fn drop_namespace(configuration: &configuration::Configuration, id: &str, drop_namespace_request: models::DropNamespaceRequest, delimiter: Option<&str>) -> Result<models::DropNamespaceResponse, Error<DropNamespaceError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -228,23 +228,29 @@ pub async fn drop_namespace(configuration: &configuration::Configuration, id: &s
     }
 }
 
-/// List all child namespace names of the root namespace or a given parent namespace. 
-pub async fn list_namespaces(configuration: &configuration::Configuration, id: &str, list_namespaces_request: models::ListNamespacesRequest, delimiter: Option<&str>) -> Result<models::ListNamespacesResponse, Error<ListNamespacesError>> {
+/// List all child namespace names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListNamespacesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+pub async fn list_namespaces(configuration: &configuration::Configuration, id: &str, delimiter: Option<&str>, page_token: Option<&str>, limit: Option<i32>) -> Result<models::ListNamespacesResponse, Error<ListNamespacesError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
-    let p_list_namespaces_request = list_namespaces_request;
     let p_delimiter = delimiter;
+    let p_page_token = page_token;
+    let p_limit = limit;
 
     let uri_str = format!("{}/v1/namespace/{id}/list", configuration.base_path, id=crate::apis::urlencode(p_id));
-    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
 
     if let Some(ref param_value) = p_delimiter {
         req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
     }
+    if let Some(ref param_value) = p_page_token {
+        req_builder = req_builder.query(&[("page_token", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_limit {
+        req_builder = req_builder.query(&[("limit", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    req_builder = req_builder.json(&p_list_namespaces_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
@@ -271,23 +277,29 @@ pub async fn list_namespaces(configuration: &configuration::Configuration, id: &
     }
 }
 
-/// List all child table names of the root namespace or a given parent namespace. 
-pub async fn list_tables(configuration: &configuration::Configuration, id: &str, list_tables_request: models::ListTablesRequest, delimiter: Option<&str>) -> Result<models::ListTablesResponse, Error<ListTablesError>> {
+/// List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+pub async fn list_tables(configuration: &configuration::Configuration, id: &str, delimiter: Option<&str>, page_token: Option<&str>, limit: Option<i32>) -> Result<models::ListTablesResponse, Error<ListTablesError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
-    let p_list_tables_request = list_tables_request;
     let p_delimiter = delimiter;
+    let p_page_token = page_token;
+    let p_limit = limit;
 
     let uri_str = format!("{}/v1/namespace/{id}/table/list", configuration.base_path, id=crate::apis::urlencode(p_id));
-    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
 
     if let Some(ref param_value) = p_delimiter {
         req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
     }
+    if let Some(ref param_value) = p_page_token {
+        req_builder = req_builder.query(&[("page_token", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_limit {
+        req_builder = req_builder.query(&[("limit", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    req_builder = req_builder.json(&p_list_tables_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
@@ -314,7 +326,7 @@ pub async fn list_tables(configuration: &configuration::Configuration, id: &str,
     }
 }
 
-/// Check if a namespace exists.  This API should behave exactly like the DescribeNamespace API, except it does not contain a body. 
+/// Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API,  except it does not contain a response body. 
 pub async fn namespace_exists(configuration: &configuration::Configuration, id: &str, namespace_exists_request: models::NamespaceExistsRequest, delimiter: Option<&str>) -> Result<(), Error<NamespaceExistsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;

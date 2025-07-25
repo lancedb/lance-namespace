@@ -1,12 +1,12 @@
 # DropTableRequest
 
+If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** |  | 
-**namespace** | **List[str]** |  | [optional] 
+**id** | **List[str]** |  | [optional] 
 
 ## Example
 

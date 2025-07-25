@@ -13,14 +13,14 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DescribeTransactionRequest {
-    #[serde(rename = "id")]
-    pub id: String,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
 }
 
 impl DescribeTransactionRequest {
-    pub fn new(id: String) -> DescribeTransactionRequest {
+    pub fn new() -> DescribeTransactionRequest {
         DescribeTransactionRequest {
-            id,
+            id: None,
         }
     }
 }

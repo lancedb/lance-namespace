@@ -20,7 +20,7 @@ All URIs are relative to *http://localhost:2333*
 
 Count rows in a table
 
-Count the number of rows in a table. 
+Count the number of rows in table &#x60;id&#x60; 
 
 ### Example
 
@@ -92,11 +92,11 @@ No authorization required
 
 ## createTable
 
-> CreateTableResponse createTable(id, xLanceTableLocation, body, delimiter, xLanceTableProperties)
+> CreateTableResponse createTable(id, body, delimiter, xLanceTableLocation, xLanceTableProperties)
 
 Create a table with the given name
 
-Create a new table in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table. 
+Create table &#x60;id&#x60; in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the &#x60;CreateTableRequest&#x60; information in the following way: - &#x60;id&#x60;: pass through path parameter of the same name - &#x60;location&#x60;: pass through header &#x60;x-lance-table-location&#x60; - &#x60;properties&#x60;: pass through header &#x60;x-lance-table-properties&#x60; 
 
 ### Example
 
@@ -115,12 +115,12 @@ public class Example {
 
         DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-        String xLanceTableLocation = "xLanceTableLocation_example"; // String | URI pointing to root location to create the table at
         byte[] body = null; // byte[] | Arrow IPC data
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        String xLanceTableLocation = "xLanceTableLocation_example"; // String | URI pointing to root location to create the table at
         String xLanceTableProperties = "xLanceTableProperties_example"; // String | JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
         try {
-            CreateTableResponse result = apiInstance.createTable(id, xLanceTableLocation, body, delimiter, xLanceTableProperties);
+            CreateTableResponse result = apiInstance.createTable(id, body, delimiter, xLanceTableLocation, xLanceTableProperties);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DataApi#createTable");
@@ -139,9 +139,9 @@ public class Example {
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
-| **xLanceTableLocation** | **String**| URI pointing to root location to create the table at | |
 | **body** | **byte[]**| Arrow IPC data | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
+| **xLanceTableLocation** | **String**| URI pointing to root location to create the table at | [optional] |
 | **xLanceTableProperties** | **String**| JSON-encoded string map (e.g. { \&quot;owner\&quot;: \&quot;jack\&quot; })  | [optional] |
 
 ### Return type
@@ -176,7 +176,7 @@ No authorization required
 
 Delete rows from a table
 
-Delete rows from a table based on a SQL predicate. Returns the number of rows that were deleted. 
+Delete rows from table &#x60;id&#x60;. 
 
 ### Example
 
@@ -252,7 +252,7 @@ No authorization required
 
 Insert records into a table
 
-Insert new records into an existing table using Arrow IPC format. Supports both lance-namespace format (with namespace in body) and LanceDB format (with database in headers). 
+Insert new records into table &#x60;id&#x60;.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the &#x60;InsertIntoTableRequest&#x60; information in the following way: - &#x60;id&#x60;: pass through path parameter of the same name - &#x60;mode&#x60;: pass through query parameter of the same name 
 
 ### Example
 
@@ -271,9 +271,9 @@ public class Example {
 
         DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
-        byte[] body = null; // byte[] | Arrow IPC data
+        byte[] body = null; // byte[] | Arrow IPC stream containing the records to insert
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
-        String mode = "append"; // String | Insert mode: \"append\" (default) or \"overwrite\"
+        String mode = "append"; // String | How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it 
         try {
             InsertIntoTableResponse result = apiInstance.insertIntoTable(id, body, delimiter, mode);
             System.out.println(result);
@@ -294,9 +294,9 @@ public class Example {
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
-| **body** | **byte[]**| Arrow IPC data | |
+| **body** | **byte[]**| Arrow IPC stream containing the records to insert | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
-| **mode** | **String**| Insert mode: \&quot;append\&quot; (default) or \&quot;overwrite\&quot; | [optional] [default to append] [enum: append, overwrite] |
+| **mode** | **String**| How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it  | [optional] [default to append] [enum: append, overwrite] |
 
 ### Return type
 
@@ -330,7 +330,7 @@ No authorization required
 
 Merge insert (upsert) records into a table
 
-Performs a merge insert (upsert) operation on a table. This operation updates existing rows based on a matching column and inserts new rows that don&#39;t match. Returns the number of rows inserted and updated. 
+Performs a merge insert (upsert) operation on table &#x60;id&#x60;. This operation updates existing rows based on a matching column and inserts new rows that don&#39;t match. It returns the number of rows inserted and updated.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the &#x60;MergeInsertIntoTableRequest&#x60; information in the following way: - &#x60;id&#x60;: pass through path parameter of the same name - &#x60;on&#x60;: pass through query parameter of the same name - &#x60;when_matched_update_all&#x60;: pass through query parameter of the same name - &#x60;when_matched_update_all_filt&#x60;: pass through query parameter of the same name - &#x60;when_not_matched_insert_all&#x60;: pass through query parameter of the same name - &#x60;when_not_matched_by_source_delete&#x60;: pass through query parameter of the same name - &#x60;when_not_matched_by_source_delete_filt&#x60;: pass through query parameter of the same name 
 
 ### Example
 
@@ -350,7 +350,7 @@ public class Example {
         DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         String on = "on_example"; // String | Column name to use for matching rows (required)
-        byte[] body = null; // byte[] | Arrow IPC data containing the records to merge
+        byte[] body = null; // byte[] | Arrow IPC stream containing the records to merge
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         Boolean whenMatchedUpdateAll = false; // Boolean | Update all columns when rows match
         String whenMatchedUpdateAllFilt = "whenMatchedUpdateAllFilt_example"; // String | The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
@@ -378,7 +378,7 @@ public class Example {
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **on** | **String**| Column name to use for matching rows (required) | |
-| **body** | **byte[]**| Arrow IPC data containing the records to merge | |
+| **body** | **byte[]**| Arrow IPC stream containing the records to merge | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
 | **whenMatchedUpdateAll** | **Boolean**| Update all columns when rows match | [optional] [default to false] |
 | **whenMatchedUpdateAllFilt** | **String**| The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true | [optional] |
@@ -418,7 +418,7 @@ No authorization required
 
 Query a table
 
-Query a table with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
+Query table &#x60;id&#x60; with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
 
 ### Example
 
@@ -494,7 +494,7 @@ No authorization required
 
 Update rows in a table
 
-Update existing rows in a table using SQL expressions. Each update consists of a column name and an SQL expression that will be evaluated against the current row&#39;s value. Optionally, a predicate can be provided to filter which rows to update. 
+Update existing rows in table &#x60;id&#x60;. 
 
 ### Example
 

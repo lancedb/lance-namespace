@@ -27,25 +27,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Request for inserting records into a table, excluding the Arrow IPC stream. Note that this is
- * only used for non-REST implementations. For REST, pass in the information in the following way: -
- * &#x60;name&#x60;: pass as a part of the path parameter &#x60;id&#x60; - &#x60;namespace&#x60;:
- * pass as a part of the path parameter &#x60;namespace&#x60; - &#x60;mode&#x60;: pass through query
- * parameter of the same name
- */
+/** Request for inserting records into a table, excluding the Arrow IPC stream. */
 @Schema(
     name = "InsertIntoTableRequest",
-    description =
-        "Request for inserting records into a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `mode`: pass through query parameter of the same name ")
+    description = "Request for inserting records into a table, excluding the Arrow IPC stream. ")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class InsertIntoTableRequest {
 
-  private String name;
-
-  @Valid private List<String> namespace = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   /** Gets or Sets mode */
   public enum ModeEnum {
@@ -82,52 +73,32 @@ public class InsertIntoTableRequest {
 
   private ModeEnum mode = ModeEnum.APPEND;
 
-  public InsertIntoTableRequest name(String name) {
-    this.name = name;
+  public InsertIntoTableRequest id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public InsertIntoTableRequest namespace(List<String> namespace) {
-    this.namespace = namespace;
-    return this;
-  }
-
-  public InsertIntoTableRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public InsertIntoTableRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get namespace
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
-  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("namespace")
-  public List<String> getNamespace() {
-    return namespace;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setNamespace(List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   public InsertIntoTableRequest mode(ModeEnum mode) {
@@ -159,22 +130,20 @@ public class InsertIntoTableRequest {
       return false;
     }
     InsertIntoTableRequest insertIntoTableRequest = (InsertIntoTableRequest) o;
-    return Objects.equals(this.name, insertIntoTableRequest.name)
-        && Objects.equals(this.namespace, insertIntoTableRequest.namespace)
+    return Objects.equals(this.id, insertIntoTableRequest.id)
         && Objects.equals(this.mode, insertIntoTableRequest.mode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, mode);
+    return Objects.hash(id, mode);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class InsertIntoTableRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("}");
     return sb.toString();

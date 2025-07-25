@@ -5,8 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** | The table name | 
-**namespace** | **List[str]** | The namespace identifier | 
+**id** | **List[str]** |  | [optional] 
 **column** | **str** | Name of the column to create index on | 
 **index_type** | **str** | Type of index to create | 
 **metric_type** | **str** | Distance metric type for vector indexes | [optional] 

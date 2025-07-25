@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from lance_namespace_urllib3_client.models.json_schema import JsonSchema
+from lance_namespace_urllib3_client.models.json_arrow_schema import JsonArrowSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,9 +28,9 @@ class DescribeTableResponse(BaseModel):
     """
     DescribeTableResponse
     """ # noqa: E501
-    version: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
-    location: StrictStr
-    var_schema: JsonSchema = Field(alias="schema")
+    version: Annotated[int, Field(strict=True, ge=0)]
+    location: Optional[StrictStr] = None
+    var_schema: JsonArrowSchema = Field(alias="schema")
     properties: Optional[Dict[str, StrictStr]] = None
     storage_options: Optional[Dict[str, StrictStr]] = Field(default=None, description="Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. ")
     __properties: ClassVar[List[str]] = ["version", "location", "schema", "properties", "storage_options"]
@@ -91,7 +91,7 @@ class DescribeTableResponse(BaseModel):
         _obj = cls.model_validate({
             "version": obj.get("version"),
             "location": obj.get("location"),
-            "schema": JsonSchema.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
+            "schema": JsonArrowSchema.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
             "properties": obj.get("properties"),
             "storage_options": obj.get("storage_options")
         })

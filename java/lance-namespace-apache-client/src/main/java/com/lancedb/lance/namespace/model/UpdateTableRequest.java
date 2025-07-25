@@ -24,10 +24,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** UpdateTableRequest */
+/**
+ * Each update consists of a column name and an SQL expression that will be evaluated against the
+ * current row&#39;s value. Optionally, a predicate can be provided to filter which rows to update.
+ */
 @JsonPropertyOrder({
-  UpdateTableRequest.JSON_PROPERTY_NAME,
-  UpdateTableRequest.JSON_PROPERTY_NAMESPACE,
+  UpdateTableRequest.JSON_PROPERTY_ID,
   UpdateTableRequest.JSON_PROPERTY_PREDICATE,
   UpdateTableRequest.JSON_PROPERTY_UPDATES
 })
@@ -35,11 +37,8 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class UpdateTableRequest {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nonnull private String name;
-
-  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
+  public static final String JSON_PROPERTY_ID = "id";
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public static final String JSON_PROPERTY_PREDICATE = "predicate";
   @javax.annotation.Nullable private String predicate;
@@ -49,60 +48,36 @@ public class UpdateTableRequest {
 
   public UpdateTableRequest() {}
 
-  public UpdateTableRequest name(@javax.annotation.Nonnull String name) {
+  public UpdateTableRequest id(@javax.annotation.Nullable List<String> id) {
 
-    this.name = name;
+    this.id = id;
     return this;
   }
 
-  /**
-   * The table name
-   *
-   * @return name
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setName(@javax.annotation.Nonnull String name) {
-    this.name = name;
-  }
-
-  public UpdateTableRequest namespace(@javax.annotation.Nonnull List<String> namespace) {
-
-    this.namespace = namespace;
-    return this;
-  }
-
-  public UpdateTableRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public UpdateTableRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * The namespace identifier
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public List<String> getNamespace() {
-    return namespace;
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<String> getId() {
+    return id;
   }
 
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setNamespace(@javax.annotation.Nonnull List<String> namespace) {
-    this.namespace = namespace;
+  @JsonProperty(JSON_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setId(@javax.annotation.Nullable List<String> id) {
+    this.id = id;
   }
 
   public UpdateTableRequest predicate(@javax.annotation.Nullable String predicate) {
@@ -170,23 +145,21 @@ public class UpdateTableRequest {
       return false;
     }
     UpdateTableRequest updateTableRequest = (UpdateTableRequest) o;
-    return Objects.equals(this.name, updateTableRequest.name)
-        && Objects.equals(this.namespace, updateTableRequest.namespace)
+    return Objects.equals(this.id, updateTableRequest.id)
         && Objects.equals(this.predicate, updateTableRequest.predicate)
         && Objects.equals(this.updates, updateTableRequest.updates);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, predicate, updates);
+    return Objects.hash(id, predicate, updates);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UpdateTableRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    predicate: ").append(toIndentedString(predicate)).append("\n");
     sb.append("    updates: ").append(toIndentedString(updates)).append("\n");
     sb.append("}");
@@ -235,34 +208,19 @@ public class UpdateTableRequest {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `namespace` to the URL query string
-    if (getNamespace() != null) {
-      for (int i = 0; i < getNamespace().size(); i++) {
+    // add `id` to the URL query string
+    if (getId() != null) {
+      for (int i = 0; i < getId().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%snamespace%s%s=%s",
+                  "%sid%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

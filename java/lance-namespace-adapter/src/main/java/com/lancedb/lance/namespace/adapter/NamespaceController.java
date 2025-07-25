@@ -21,8 +21,8 @@ import com.lancedb.lance.namespace.server.springboot.model.DescribeNamespaceRequ
 import com.lancedb.lance.namespace.server.springboot.model.DescribeNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceResponse;
-import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
+import com.lancedb.lance.namespace.server.springboot.model.ListTablesResponse;
 import com.lancedb.lance.namespace.server.springboot.model.NamespaceExistsRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -67,10 +67,20 @@ public class NamespaceController implements NamespaceApi {
 
   @Override
   public ResponseEntity<ListNamespacesResponse> listNamespaces(
-      String id, ListNamespacesRequest listNamespacesRequest, Optional<String> delimiter) {
+      String id, Optional<String> delimiter, Optional<String> pageToken, Optional<Integer> limit) {
     return ResponseEntity.ok(
         ClientToServerResponse.listNamespaces(
-            delegate.listNamespaces(ServerToClientRequest.listNamespaces(listNamespacesRequest))));
+            delegate.listNamespaces(
+                ServerToClientRequest.listNamespaces(id, delimiter, pageToken, limit))));
+  }
+
+  @Override
+  public ResponseEntity<ListTablesResponse> listTables(
+      String id, Optional<String> delimiter, Optional<String> pageToken, Optional<Integer> limit) {
+    return ResponseEntity.ok(
+        ClientToServerResponse.listTables(
+            delegate.listTables(
+                ServerToClientRequest.listTables(id, delimiter, pageToken, limit))));
   }
 
   @Override

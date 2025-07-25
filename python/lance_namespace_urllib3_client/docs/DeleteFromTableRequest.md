@@ -1,12 +1,12 @@
 # DeleteFromTableRequest
 
+Delete data from table based on a SQL predicate. Returns the number of rows that were deleted. 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** | The table name | 
-**namespace** | **List[str]** | The namespace identifier | 
+**id** | **List[str]** | The namespace identifier | [optional] 
 **predicate** | **str** | SQL predicate to filter rows for deletion | 
 
 ## Example

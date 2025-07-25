@@ -35,11 +35,11 @@ class TestListNamespacesRequest(unittest.TestCase):
         model = ListNamespacesRequest()
         if include_optional:
             return ListNamespacesRequest(
-                parent = [
+                id = [
                     ''
                     ],
                 page_token = '',
-                page_size = 56
+                limit = 56
             )
         else:
             return ListNamespacesRequest(

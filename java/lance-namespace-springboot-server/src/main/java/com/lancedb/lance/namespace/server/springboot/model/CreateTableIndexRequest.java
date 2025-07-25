@@ -33,9 +33,7 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CreateTableIndexRequest {
 
-  private String name;
-
-  @Valid private List<String> namespace = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   private String column;
 
@@ -49,9 +47,9 @@ public class CreateTableIndexRequest {
 
     IVF_FLAT("IVF_FLAT"),
 
-    IVF_HNSW_SQ("IVF_HNSW_SQ"),
-
     IVF_PQ("IVF_PQ"),
+
+    IVF_HNSW_SQ("IVF_HNSW_SQ"),
 
     FTS("FTS");
 
@@ -142,68 +140,37 @@ public class CreateTableIndexRequest {
   }
 
   /** Constructor with only required parameters */
-  public CreateTableIndexRequest(
-      String name, List<String> namespace, String column, IndexTypeEnum indexType) {
-    this.name = name;
-    this.namespace = namespace;
+  public CreateTableIndexRequest(String column, IndexTypeEnum indexType) {
     this.column = column;
     this.indexType = indexType;
   }
 
-  public CreateTableIndexRequest name(String name) {
-    this.name = name;
+  public CreateTableIndexRequest id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  /**
-   * The table name
-   *
-   * @return name
-   */
-  @NotNull
-  @Schema(
-      name = "name",
-      description = "The table name",
-      requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public CreateTableIndexRequest namespace(List<String> namespace) {
-    this.namespace = namespace;
-    return this;
-  }
-
-  public CreateTableIndexRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public CreateTableIndexRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * The namespace identifier
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
-  @NotNull
-  @Schema(
-      name = "namespace",
-      description = "The namespace identifier",
-      requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("namespace")
-  public List<String> getNamespace() {
-    return namespace;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setNamespace(List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   public CreateTableIndexRequest column(String column) {
@@ -471,8 +438,7 @@ public class CreateTableIndexRequest {
       return false;
     }
     CreateTableIndexRequest createTableIndexRequest = (CreateTableIndexRequest) o;
-    return Objects.equals(this.name, createTableIndexRequest.name)
-        && Objects.equals(this.namespace, createTableIndexRequest.namespace)
+    return Objects.equals(this.id, createTableIndexRequest.id)
         && Objects.equals(this.column, createTableIndexRequest.column)
         && Objects.equals(this.indexType, createTableIndexRequest.indexType)
         && Objects.equals(this.metricType, createTableIndexRequest.metricType)
@@ -489,8 +455,7 @@ public class CreateTableIndexRequest {
   @Override
   public int hashCode() {
     return Objects.hash(
-        name,
-        namespace,
+        id,
         column,
         indexType,
         metricType,
@@ -508,8 +473,7 @@ public class CreateTableIndexRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableIndexRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
     sb.append("    metricType: ").append(toIndentedString(metricType)).append("\n");

@@ -21,9 +21,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -33,69 +31,7 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CreateNamespaceResponse {
 
-  private String name;
-
-  @Valid private List<String> parent = new ArrayList<>();
-
   @Valid private Map<String, String> properties = new HashMap<>();
-
-  public CreateNamespaceResponse() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public CreateNamespaceResponse(String name) {
-    this.name = name;
-  }
-
-  public CreateNamespaceResponse name(String name) {
-    this.name = name;
-    return this;
-  }
-
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @NotNull
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public CreateNamespaceResponse parent(List<String> parent) {
-    this.parent = parent;
-    return this;
-  }
-
-  public CreateNamespaceResponse addParentItem(String parentItem) {
-    if (this.parent == null) {
-      this.parent = new ArrayList<>();
-    }
-    this.parent.add(parentItem);
-    return this;
-  }
-
-  /**
-   * Get parent
-   *
-   * @return parent
-   */
-  @Schema(name = "parent", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("parent")
-  public List<String> getParent() {
-    return parent;
-  }
-
-  public void setParent(List<String> parent) {
-    this.parent = parent;
-  }
 
   public CreateNamespaceResponse properties(Map<String, String> properties) {
     this.properties = properties;
@@ -111,11 +47,17 @@ public class CreateNamespaceResponse {
   }
 
   /**
-   * Get properties
+   * Properties after the namespace is created. If the server does not support namespace properties,
+   * it should return null for this field. If namespace properties are supported, but none are set,
+   * it should return an empty object.
    *
    * @return properties
    */
-  @Schema(name = "properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "properties",
+      description =
+          "Properties after the namespace is created.  If the server does not support namespace properties, it should return null for this field. If namespace properties are supported, but none are set, it should return an empty object. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("properties")
   public Map<String, String> getProperties() {
     return properties;
@@ -134,22 +76,18 @@ public class CreateNamespaceResponse {
       return false;
     }
     CreateNamespaceResponse createNamespaceResponse = (CreateNamespaceResponse) o;
-    return Objects.equals(this.name, createNamespaceResponse.name)
-        && Objects.equals(this.parent, createNamespaceResponse.parent)
-        && Objects.equals(this.properties, createNamespaceResponse.properties);
+    return Objects.equals(this.properties, createNamespaceResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parent, properties);
+    return Objects.hash(properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateNamespaceResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -14,7 +14,7 @@
 
     <artifactId>lance-namespace-glue</artifactId>
     <name>${project.artifactId}</name>
-    <description>Lance Namespace AWS Glue Impl</description>
+    <description>Lance Namespace AWS Glue Data Catalog Implementation</description>
     <packaging>jar</packaging>
 
     <properties>

@@ -36,14 +36,14 @@ class TestListTablesResponse(unittest.TestCase):
         if include_optional:
             return ListTablesResponse(
                 tables = [
-                    'cart'
+                    ''
                     ],
-                next_page_token = ''
+                page_token = ''
             )
         else:
             return ListTablesResponse(
                 tables = [
-                    'cart'
+                    ''
                     ],
         )
         """

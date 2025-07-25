@@ -57,14 +57,14 @@ class TestTableApi(unittest.TestCase):
     def test_deregister_table(self) -> None:
         """Test case for deregister_table
 
-        Deregister a table from its namespace
+        Deregister a table
         """
         pass
 
     def test_describe_table(self) -> None:
         """Test case for describe_table
 
-        Describe a table from the namespace
+        Describe information of a table
         """
         pass
 
@@ -78,7 +78,7 @@ class TestTableApi(unittest.TestCase):
     def test_drop_table(self) -> None:
         """Test case for drop_table
 
-        Drop a table from its namespace
+        Drop a table
         """
         pass
 

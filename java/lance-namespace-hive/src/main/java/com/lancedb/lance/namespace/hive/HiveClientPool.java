@@ -68,18 +68,18 @@ public class HiveClientPool extends ClientPoolImpl<IMetaStoreClient, TException>
         throw e;
       }
     } catch (MetaException e) {
-      throw new RuntimeMetaException(e, "Failed to connect to Hive Metastore");
+      throw new HiveMetaException(e, "Failed to connect to Hive Metastore");
     } catch (Throwable t) {
       if (t.getMessage() != null
           && t.getMessage().contains("Another instance of Derby may have already booted")) {
-        throw new RuntimeMetaException(
+        throw new HiveMetaException(
             t,
             "Failed to start an embedded metastore because embedded "
                 + "Derby supports only one client at a time. To fix this, use a metastore that"
                 + " supports multiple clients.");
       }
 
-      throw new RuntimeMetaException(t, "Failed to connect to Hive Metastore");
+      throw new HiveMetaException(t, "Failed to connect to Hive Metastore");
     }
   }
 
@@ -89,7 +89,7 @@ public class HiveClientPool extends ClientPoolImpl<IMetaStoreClient, TException>
       client.close();
       client.reconnect();
     } catch (MetaException e) {
-      throw new RuntimeMetaException(e, "Failed to reconnect to Hive Metastore");
+      throw new HiveMetaException(e, "Failed to reconnect to Hive Metastore");
     }
     return client;
   }

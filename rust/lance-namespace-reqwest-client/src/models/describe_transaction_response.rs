@@ -13,8 +13,6 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DescribeTransactionResponse {
-    #[serde(rename = "id")]
-    pub id: String,
     #[serde(rename = "status")]
     pub status: models::TransactionStatus,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
@@ -22,9 +20,8 @@ pub struct DescribeTransactionResponse {
 }
 
 impl DescribeTransactionResponse {
-    pub fn new(id: String, status: models::TransactionStatus) -> DescribeTransactionResponse {
+    pub fn new(status: models::TransactionStatus) -> DescribeTransactionResponse {
         DescribeTransactionResponse {
-            id,
             status,
             properties: None,
         }

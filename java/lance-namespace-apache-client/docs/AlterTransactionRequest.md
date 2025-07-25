@@ -8,7 +8,7 @@ Alter a transaction with a list of actions. The server should either succeed and
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**id** | **String** |  |  |
+|**id** | **List&lt;String&gt;** |  |  [optional] |
 |**actions** | [**List&lt;AlterTransactionAction&gt;**](AlterTransactionAction.md) |  |  |
 
 

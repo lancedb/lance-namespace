@@ -29,7 +29,7 @@ class MatchQuery(BaseModel):
     MatchQuery
     """ # noqa: E501
     boost: Optional[Union[StrictFloat, StrictInt]] = None
-    column: Optional[StrictStr]
+    column: StrictStr
     fuzziness: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
     max_expansions: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="The maximum number of terms to expand for fuzzy matching. Default to 50.")
     operator: Optional[Operator] = Field(default=None, description="The operator to use for combining terms. This can be either `And` or `Or`, it's 'Or' by default. - `And`: All terms must match. - `Or`: At least one term must match.")
@@ -76,16 +76,6 @@ class MatchQuery(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if column (nullable) is None
-        # and model_fields_set contains the field
-        if self.column is None and "column" in self.model_fields_set:
-            _dict['column'] = None
-
-        # set to None if fuzziness (nullable) is None
-        # and model_fields_set contains the field
-        if self.fuzziness is None and "fuzziness" in self.model_fields_set:
-            _dict['fuzziness'] = None
-
         return _dict
 
     @classmethod

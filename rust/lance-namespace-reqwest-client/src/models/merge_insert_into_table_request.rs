@@ -11,15 +11,11 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// MergeInsertIntoTableRequest : Request for merging or inserting records into a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
+/// MergeInsertIntoTableRequest : Request for merging or inserting records into a table, excluding the Arrow IPC stream. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MergeInsertIntoTableRequest {
-    /// The table name
-    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
-    /// The namespace identifier
-    #[serde(rename = "namespace", skip_serializing_if = "Option::is_none")]
-    pub namespace: Option<Vec<String>>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
     /// Column name to use for matching rows (required)
     #[serde(rename = "on", skip_serializing_if = "Option::is_none")]
     pub on: Option<String>,
@@ -41,11 +37,10 @@ pub struct MergeInsertIntoTableRequest {
 }
 
 impl MergeInsertIntoTableRequest {
-    /// Request for merging or inserting records into a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
+    /// Request for merging or inserting records into a table, excluding the Arrow IPC stream. 
     pub fn new() -> MergeInsertIntoTableRequest {
         MergeInsertIntoTableRequest {
-            name: None,
-            namespace: None,
+            id: None,
             on: None,
             when_matched_update_all: None,
             when_matched_update_all_filt: None,

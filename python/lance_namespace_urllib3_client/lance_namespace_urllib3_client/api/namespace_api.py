@@ -16,7 +16,7 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field, StrictInt, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.create_namespace_request import CreateNamespaceRequest
@@ -25,9 +25,7 @@ from lance_namespace_urllib3_client.models.describe_namespace_request import Des
 from lance_namespace_urllib3_client.models.describe_namespace_response import DescribeNamespaceResponse
 from lance_namespace_urllib3_client.models.drop_namespace_request import DropNamespaceRequest
 from lance_namespace_urllib3_client.models.drop_namespace_response import DropNamespaceResponse
-from lance_namespace_urllib3_client.models.list_namespaces_request import ListNamespacesRequest
 from lance_namespace_urllib3_client.models.list_namespaces_response import ListNamespacesResponse
-from lance_namespace_urllib3_client.models.list_tables_request import ListTablesRequest
 from lance_namespace_urllib3_client.models.list_tables_response import ListTablesResponse
 from lance_namespace_urllib3_client.models.namespace_exists_request import NamespaceExistsRequest
 
@@ -70,7 +68,7 @@ class NamespaceApi:
     ) -> CreateNamespaceResponse:
         """Create a new namespace
 
-        Create a new namespace.  A namespace can manage either a collection of child namespaces, or a collection of tables.  The namespace in the API route should be the parent namespace to create the new namespace.  There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
+        Create new namespace `id`.  During the creation process, the implementation may modify user-provided `properties`,  such as adding additional properties like `created_at` to user-provided properties,  omitting any specific property, or performing actions based on any property value. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -153,7 +151,7 @@ class NamespaceApi:
     ) -> ApiResponse[CreateNamespaceResponse]:
         """Create a new namespace
 
-        Create a new namespace.  A namespace can manage either a collection of child namespaces, or a collection of tables.  The namespace in the API route should be the parent namespace to create the new namespace.  There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
+        Create new namespace `id`.  During the creation process, the implementation may modify user-provided `properties`,  such as adding additional properties like `created_at` to user-provided properties,  omitting any specific property, or performing actions based on any property value. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -236,7 +234,7 @@ class NamespaceApi:
     ) -> RESTResponseType:
         """Create a new namespace
 
-        Create a new namespace.  A namespace can manage either a collection of child namespaces, or a collection of tables.  The namespace in the API route should be the parent namespace to create the new namespace.  There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
+        Create new namespace `id`.  During the creation process, the implementation may modify user-provided `properties`,  such as adding additional properties like `created_at` to user-provided properties,  omitting any specific property, or performing actions based on any property value. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -397,9 +395,9 @@ class NamespaceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> DescribeNamespaceResponse:
-        """Describe information about a namespace
+        """Describe a namespace
 
-        Return the detailed information for a given namespace 
+        Describe the detailed information for namespace `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -478,9 +476,9 @@ class NamespaceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[DescribeNamespaceResponse]:
-        """Describe information about a namespace
+        """Describe a namespace
 
-        Return the detailed information for a given namespace 
+        Describe the detailed information for namespace `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -559,9 +557,9 @@ class NamespaceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Describe information about a namespace
+        """Describe a namespace
 
-        Return the detailed information for a given namespace 
+        Describe the detailed information for namespace `id`. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -722,7 +720,7 @@ class NamespaceApi:
     ) -> DropNamespaceResponse:
         """Drop a namespace
 
-        Drop a namespace. The namespace must be empty. 
+        Drop namespace `id` from its parent namespace. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -804,7 +802,7 @@ class NamespaceApi:
     ) -> ApiResponse[DropNamespaceResponse]:
         """Drop a namespace
 
-        Drop a namespace. The namespace must be empty. 
+        Drop namespace `id` from its parent namespace. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -886,7 +884,7 @@ class NamespaceApi:
     ) -> RESTResponseType:
         """Drop a namespace
 
-        Drop a namespace. The namespace must be empty. 
+        Drop namespace `id` from its parent namespace. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1031,8 +1029,9 @@ class NamespaceApi:
     def list_namespaces(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        list_namespaces_request: ListNamespacesRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        page_token: Optional[StrictStr] = None,
+        limit: Optional[StrictInt] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1048,14 +1047,16 @@ class NamespaceApi:
     ) -> ListNamespacesResponse:
         """List namespaces
 
-        List all child namespace names of the root namespace or a given parent namespace. 
+        List all child namespace names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListNamespacesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param list_namespaces_request: (required)
-        :type list_namespaces_request: ListNamespacesRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param page_token:
+        :type page_token: str
+        :param limit:
+        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1080,8 +1081,9 @@ class NamespaceApi:
 
         _param = self._list_namespaces_serialize(
             id=id,
-            list_namespaces_request=list_namespaces_request,
             delimiter=delimiter,
+            page_token=page_token,
+            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1113,8 +1115,9 @@ class NamespaceApi:
     def list_namespaces_with_http_info(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        list_namespaces_request: ListNamespacesRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        page_token: Optional[StrictStr] = None,
+        limit: Optional[StrictInt] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1130,14 +1133,16 @@ class NamespaceApi:
     ) -> ApiResponse[ListNamespacesResponse]:
         """List namespaces
 
-        List all child namespace names of the root namespace or a given parent namespace. 
+        List all child namespace names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListNamespacesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param list_namespaces_request: (required)
-        :type list_namespaces_request: ListNamespacesRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param page_token:
+        :type page_token: str
+        :param limit:
+        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1162,8 +1167,9 @@ class NamespaceApi:
 
         _param = self._list_namespaces_serialize(
             id=id,
-            list_namespaces_request=list_namespaces_request,
             delimiter=delimiter,
+            page_token=page_token,
+            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1195,8 +1201,9 @@ class NamespaceApi:
     def list_namespaces_without_preload_content(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        list_namespaces_request: ListNamespacesRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        page_token: Optional[StrictStr] = None,
+        limit: Optional[StrictInt] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1212,14 +1219,16 @@ class NamespaceApi:
     ) -> RESTResponseType:
         """List namespaces
 
-        List all child namespace names of the root namespace or a given parent namespace. 
+        List all child namespace names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListNamespacesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param list_namespaces_request: (required)
-        :type list_namespaces_request: ListNamespacesRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param page_token:
+        :type page_token: str
+        :param limit:
+        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1244,8 +1253,9 @@ class NamespaceApi:
 
         _param = self._list_namespaces_serialize(
             id=id,
-            list_namespaces_request=list_namespaces_request,
             delimiter=delimiter,
+            page_token=page_token,
+            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1272,8 +1282,9 @@ class NamespaceApi:
     def _list_namespaces_serialize(
         self,
         id,
-        list_namespaces_request,
         delimiter,
+        page_token,
+        limit,
         _request_auth,
         _content_type,
         _headers,
@@ -1302,11 +1313,17 @@ class NamespaceApi:
             
             _query_params.append(('delimiter', delimiter))
             
+        if page_token is not None:
+            
+            _query_params.append(('page_token', page_token))
+            
+        if limit is not None:
+            
+            _query_params.append(('limit', limit))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if list_namespaces_request is not None:
-            _body_params = list_namespaces_request
 
 
         # set the HTTP header `Accept`
@@ -1317,26 +1334,13 @@ class NamespaceApi:
                 ]
             )
 
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
         ]
 
         return self.api_client.param_serialize(
-            method='POST',
+            method='GET',
             resource_path='/v1/namespace/{id}/list',
             path_params=_path_params,
             query_params=_query_params,
@@ -1357,8 +1361,9 @@ class NamespaceApi:
     def list_tables(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        list_tables_request: ListTablesRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        page_token: Optional[StrictStr] = None,
+        limit: Optional[StrictInt] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1374,14 +1379,16 @@ class NamespaceApi:
     ) -> ListTablesResponse:
         """List tables in a namespace
 
-        List all child table names of the root namespace or a given parent namespace. 
+        List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param list_tables_request: (required)
-        :type list_tables_request: ListTablesRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param page_token:
+        :type page_token: str
+        :param limit:
+        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1406,8 +1413,9 @@ class NamespaceApi:
 
         _param = self._list_tables_serialize(
             id=id,
-            list_tables_request=list_tables_request,
             delimiter=delimiter,
+            page_token=page_token,
+            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1439,8 +1447,9 @@ class NamespaceApi:
     def list_tables_with_http_info(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        list_tables_request: ListTablesRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        page_token: Optional[StrictStr] = None,
+        limit: Optional[StrictInt] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1456,14 +1465,16 @@ class NamespaceApi:
     ) -> ApiResponse[ListTablesResponse]:
         """List tables in a namespace
 
-        List all child table names of the root namespace or a given parent namespace. 
+        List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param list_tables_request: (required)
-        :type list_tables_request: ListTablesRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param page_token:
+        :type page_token: str
+        :param limit:
+        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1488,8 +1499,9 @@ class NamespaceApi:
 
         _param = self._list_tables_serialize(
             id=id,
-            list_tables_request=list_tables_request,
             delimiter=delimiter,
+            page_token=page_token,
+            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1521,8 +1533,9 @@ class NamespaceApi:
     def list_tables_without_preload_content(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
-        list_tables_request: ListTablesRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        page_token: Optional[StrictStr] = None,
+        limit: Optional[StrictInt] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1538,14 +1551,16 @@ class NamespaceApi:
     ) -> RESTResponseType:
         """List tables in a namespace
 
-        List all child table names of the root namespace or a given parent namespace. 
+        List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param list_tables_request: (required)
-        :type list_tables_request: ListTablesRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param page_token:
+        :type page_token: str
+        :param limit:
+        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1570,8 +1585,9 @@ class NamespaceApi:
 
         _param = self._list_tables_serialize(
             id=id,
-            list_tables_request=list_tables_request,
             delimiter=delimiter,
+            page_token=page_token,
+            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1598,8 +1614,9 @@ class NamespaceApi:
     def _list_tables_serialize(
         self,
         id,
-        list_tables_request,
         delimiter,
+        page_token,
+        limit,
         _request_auth,
         _content_type,
         _headers,
@@ -1628,11 +1645,17 @@ class NamespaceApi:
             
             _query_params.append(('delimiter', delimiter))
             
+        if page_token is not None:
+            
+            _query_params.append(('page_token', page_token))
+            
+        if limit is not None:
+            
+            _query_params.append(('limit', limit))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if list_tables_request is not None:
-            _body_params = list_tables_request
 
 
         # set the HTTP header `Accept`
@@ -1643,26 +1666,13 @@ class NamespaceApi:
                 ]
             )
 
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
         ]
 
         return self.api_client.param_serialize(
-            method='POST',
+            method='GET',
             resource_path='/v1/namespace/{id}/table/list',
             path_params=_path_params,
             query_params=_query_params,
@@ -1700,7 +1710,7 @@ class NamespaceApi:
     ) -> None:
         """Check if a namespace exists
 
-        Check if a namespace exists.  This API should behave exactly like the DescribeNamespace API, except it does not contain a body. 
+        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API,  except it does not contain a response body. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1781,7 +1791,7 @@ class NamespaceApi:
     ) -> ApiResponse[None]:
         """Check if a namespace exists
 
-        Check if a namespace exists.  This API should behave exactly like the DescribeNamespace API, except it does not contain a body. 
+        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API,  except it does not contain a response body. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1862,7 +1872,7 @@ class NamespaceApi:
     ) -> RESTResponseType:
         """Check if a namespace exists
 
-        Check if a namespace exists.  This API should behave exactly like the DescribeNamespace API, except it does not contain a body. 
+        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API,  except it does not contain a response body. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str

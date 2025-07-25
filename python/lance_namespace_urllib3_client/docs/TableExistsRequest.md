@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** |  | 
-**namespace** | **List[str]** |  | 
+**id** | **List[str]** |  | [optional] 
+**version** | **int** | Version of the table to check existence. If not specified, server should resolve it to the latest version.  | [optional] 
 
 ## Example
 

@@ -22,7 +22,9 @@ import javax.validation.constraints.*;
 
 import java.util.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /** RegisterTableRequest */
@@ -31,11 +33,11 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class RegisterTableRequest {
 
-  private String name;
-
-  @Valid private List<String> namespace = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   private String location;
+
+  @Valid private Map<String, String> properties = new HashMap<>();
 
   public RegisterTableRequest() {
     super();
@@ -46,52 +48,32 @@ public class RegisterTableRequest {
     this.location = location;
   }
 
-  public RegisterTableRequest name(String name) {
-    this.name = name;
+  public RegisterTableRequest id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public RegisterTableRequest namespace(List<String> namespace) {
-    this.namespace = namespace;
-    return this;
-  }
-
-  public RegisterTableRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public RegisterTableRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get namespace
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
-  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("namespace")
-  public List<String> getNamespace() {
-    return namespace;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setNamespace(List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   public RegisterTableRequest location(String location) {
@@ -115,6 +97,34 @@ public class RegisterTableRequest {
     this.location = location;
   }
 
+  public RegisterTableRequest properties(Map<String, String> properties) {
+    this.properties = properties;
+    return this;
+  }
+
+  public RegisterTableRequest putPropertiesItem(String key, String propertiesItem) {
+    if (this.properties == null) {
+      this.properties = new HashMap<>();
+    }
+    this.properties.put(key, propertiesItem);
+    return this;
+  }
+
+  /**
+   * Get properties
+   *
+   * @return properties
+   */
+  @Schema(name = "properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("properties")
+  public Map<String, String> getProperties() {
+    return properties;
+  }
+
+  public void setProperties(Map<String, String> properties) {
+    this.properties = properties;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -124,23 +134,23 @@ public class RegisterTableRequest {
       return false;
     }
     RegisterTableRequest registerTableRequest = (RegisterTableRequest) o;
-    return Objects.equals(this.name, registerTableRequest.name)
-        && Objects.equals(this.namespace, registerTableRequest.namespace)
-        && Objects.equals(this.location, registerTableRequest.location);
+    return Objects.equals(this.id, registerTableRequest.id)
+        && Objects.equals(this.location, registerTableRequest.location)
+        && Objects.equals(this.properties, registerTableRequest.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, location);
+    return Objects.hash(id, location, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class RegisterTableRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
   }

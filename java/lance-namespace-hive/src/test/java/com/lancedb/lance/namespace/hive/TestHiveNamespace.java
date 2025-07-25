@@ -13,7 +13,7 @@
  */
 package com.lancedb.lance.namespace.hive;
 
-import com.lancedb.lance.namespace.LanceNamespace;
+import com.lancedb.lance.namespace.LanceNamespaces;
 import com.lancedb.lance.namespace.ObjectIdentifier;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
@@ -93,17 +93,17 @@ public class TestHiveNamespace {
     initNamespaces(namespaces);
 
     HiveConf hiveConf = metastore.hiveConf();
-    LanceHiveNamespace namespace =
-        (LanceHiveNamespace) LanceNamespace.create("test", Maps.newHashMap(), hiveConf);
+    HiveNamespace namespace =
+        (HiveNamespace) LanceNamespaces.create("hive", Maps.newHashMap(), hiveConf);
 
     // Case 1: list root.
     ListNamespacesRequest request = new ListNamespacesRequest();
-    request.setParent(Lists.list());
+    request.setId(Lists.list());
     assertEquals(namespaces.keySet(), namespace.listNamespaces(request).getNamespaces());
 
     // Case 2: list catalog.
     for (String catalog : namespaces.keySet()) {
-      request.setParent(Lists.list(catalog));
+      request.setId(Lists.list(catalog));
       assertEquals(
           namespaces.get(catalog).keySet(), namespace.listNamespaces(request).getNamespaces());
     }
@@ -111,27 +111,27 @@ public class TestHiveNamespace {
     // Case 3: list database.
     for (String catalog : namespaces.keySet()) {
       for (String db : namespaces.get(catalog).keySet()) {
-        request.setParent(Lists.list(catalog, db));
+        request.setId(Lists.list(catalog, db));
         assertEquals(Sets.newHashSet(), namespace.listNamespaces(request).getNamespaces());
       }
     }
 
     // Case 4: list table.
-    request.setParent(Lists.list("mycatalog", "mydb", "table3"));
-    assertEquals(Sets.newHashSet(), namespace.listNamespaces(request).getNamespaces());
+    request.setId(Lists.list("mycatalog", "mydb", "table3"));
+    assertThrows(IllegalArgumentException.class, () -> namespace.listNamespaces(request));
 
     // Case 5: non-existing catalog, database, table.
-    request.setParent(Lists.list("nonexistedcatalog"));
+    request.setId(Lists.list("nonexistedcatalog"));
     assertEquals(Sets.newHashSet(), namespace.listNamespaces(request).getNamespaces());
 
-    request.setParent(Lists.list("hive", "nonexisteddb"));
+    request.setId(Lists.list("hive", "nonexisteddb"));
     assertEquals(Sets.newHashSet(), namespace.listNamespaces(request).getNamespaces());
 
-    request.setParent(Lists.list("hive", "default", "nonexistedtable"));
-    assertEquals(Sets.newHashSet(), namespace.listNamespaces(request).getNamespaces());
+    request.setId(Lists.list("hive", "default", "nonexistedtable"));
+    assertThrows(IllegalArgumentException.class, () -> namespace.listNamespaces(request));
 
     // Case 6: list long namespace.
-    request.setParent(Lists.list("mycatalog", "mydb", "table3", "a", "b", "c"));
+    request.setId(Lists.list("mycatalog", "mydb", "table3", "a", "b", "c"));
     assertThrows(RuntimeException.class, () -> namespace.listNamespaces(request));
   }
 
@@ -140,9 +140,9 @@ public class TestHiveNamespace {
     for (List<String> ns : nsList) {
       ObjectIdentifier oid = ObjectIdentifier.of(ns);
 
-      String catalog = oid.size() < 1 ? null : oid.level(0);
-      String db = oid.size() < 2 ? null : oid.level(1);
-      String table = oid.size() < 3 ? null : oid.level(2);
+      String catalog = oid.levels() <= 1 ? null : oid.level(0);
+      String db = oid.levels() <= 2 ? null : oid.level(1);
+      String table = oid.levels() <= 3 ? null : oid.level(2);
 
       if (catalog != null) {
         namespaces.putIfAbsent(catalog, Maps.newHashMap());
@@ -173,12 +173,12 @@ public class TestHiveNamespace {
     initNamespaces(namespaces);
 
     HiveConf hiveConf = metastore.hiveConf();
-    LanceHiveNamespace namespace =
-        (LanceHiveNamespace) LanceNamespace.create("test", Maps.newHashMap(), hiveConf);
+    HiveNamespace namespace =
+        (HiveNamespace) LanceNamespaces.create("hive", Maps.newHashMap(), hiveConf);
 
     ListNamespacesRequest request = new ListNamespacesRequest();
-    request.setParent(Lists.list("hive"));
-    request.setPageSize(2);
+    request.setId(Lists.list("hive"));
+    request.setLimit(2);
 
     // Case 1: List by pages.
     Set<String> nss = Sets.newHashSet();
@@ -191,9 +191,9 @@ public class TestHiveNamespace {
         assertTrue(nss.add(ns));
       }
 
-      request.setPageToken(response.getNextPageToken());
+      request.setPageToken(response.getPageToken());
       if (i == 2) {
-        assertNull(response.getNextPageToken());
+        assertNull(response.getPageToken());
       }
     }
 
@@ -211,9 +211,9 @@ public class TestHiveNamespace {
     assertEquals(0, response.getNamespaces().size());
 
     // Case 4: invalid page size.
-    request.setPageSize(0);
+    request.setLimit(0);
     assertThrows(IllegalArgumentException.class, () -> namespace.listNamespaces(request));
-    request.setPageSize(-1);
+    request.setLimit(-1);
     assertThrows(IllegalArgumentException.class, () -> namespace.listNamespaces(request));
   }
 

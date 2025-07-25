@@ -38,7 +38,7 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class AlterTransactionRequest {
 
-  private String id;
+  @Valid private List<String> id = new ArrayList<>();
 
   @Valid private List<@Valid AlterTransactionAction> actions = new ArrayList<>();
 
@@ -47,13 +47,20 @@ public class AlterTransactionRequest {
   }
 
   /** Constructor with only required parameters */
-  public AlterTransactionRequest(String id, List<@Valid AlterTransactionAction> actions) {
-    this.id = id;
+  public AlterTransactionRequest(List<@Valid AlterTransactionAction> actions) {
     this.actions = actions;
   }
 
-  public AlterTransactionRequest id(String id) {
+  public AlterTransactionRequest id(List<String> id) {
     this.id = id;
+    return this;
+  }
+
+  public AlterTransactionRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
+    }
+    this.id.add(idItem);
     return this;
   }
 
@@ -62,14 +69,13 @@ public class AlterTransactionRequest {
    *
    * @return id
    */
-  @NotNull
-  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
-  public String getId() {
+  public List<String> getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(List<String> id) {
     this.id = id;
   }
 

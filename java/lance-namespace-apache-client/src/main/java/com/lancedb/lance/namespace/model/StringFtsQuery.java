@@ -13,16 +13,13 @@
  */
 package com.lancedb.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -34,9 +31,7 @@ import java.util.StringJoiner;
     comments = "Generator version: 7.12.0")
 public class StringFtsQuery {
   public static final String JSON_PROPERTY_COLUMNS = "columns";
-
-  @javax.annotation.Nullable
-  private JsonNullable<List<String>> columns = JsonNullable.<List<String>>undefined();
+  @javax.annotation.Nullable private List<String> columns = new ArrayList<>();
 
   public static final String JSON_PROPERTY_QUERY = "query";
   @javax.annotation.Nonnull private String query;
@@ -44,20 +39,16 @@ public class StringFtsQuery {
   public StringFtsQuery() {}
 
   public StringFtsQuery columns(@javax.annotation.Nullable List<String> columns) {
-    this.columns = JsonNullable.<List<String>>of(columns);
 
+    this.columns = columns;
     return this;
   }
 
   public StringFtsQuery addColumnsItem(String columnsItem) {
-    if (this.columns == null || !this.columns.isPresent()) {
-      this.columns = JsonNullable.<List<String>>of(new ArrayList<>());
+    if (this.columns == null) {
+      this.columns = new ArrayList<>();
     }
-    try {
-      this.columns.get().add(columnsItem);
-    } catch (java.util.NoSuchElementException e) {
-      // this can never happen, as we make sure above that the value is present
-    }
+    this.columns.add(columnsItem);
     return this;
   }
 
@@ -67,24 +58,16 @@ public class StringFtsQuery {
    * @return columns
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public List<String> getColumns() {
-    return columns.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_COLUMNS)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<List<String>> getColumns_JsonNullable() {
+  public List<String> getColumns() {
     return columns;
   }
 
   @JsonProperty(JSON_PROPERTY_COLUMNS)
-  public void setColumns_JsonNullable(JsonNullable<List<String>> columns) {
-    this.columns = columns;
-  }
-
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setColumns(@javax.annotation.Nullable List<String> columns) {
-    this.columns = JsonNullable.<List<String>>of(columns);
+    this.columns = columns;
   }
 
   public StringFtsQuery query(@javax.annotation.Nonnull String query) {
@@ -120,29 +103,13 @@ public class StringFtsQuery {
       return false;
     }
     StringFtsQuery stringFtsQuery = (StringFtsQuery) o;
-    return equalsNullable(this.columns, stringFtsQuery.columns)
+    return Objects.equals(this.columns, stringFtsQuery.columns)
         && Objects.equals(this.query, stringFtsQuery.query);
-  }
-
-  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
-    return a == b
-        || (a != null
-            && b != null
-            && a.isPresent()
-            && b.isPresent()
-            && Objects.deepEquals(a.get(), b.get()));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(hashCodeNullable(columns), query);
-  }
-
-  private static <T> int hashCodeNullable(JsonNullable<T> a) {
-    if (a == null) {
-      return 1;
-    }
-    return a.isPresent() ? Arrays.deepHashCode(new Object[] {a.get()}) : 31;
+    return Objects.hash(columns, query);
   }
 
   @Override

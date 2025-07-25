@@ -11,7 +11,7 @@
 # limitations under the License.
 
 lint:
-	openapi-spec-validator --errors all docs/src/spec/rest.yaml
+	uv run openapi-spec-validator --errors all docs/src/spec/rest.yaml
 
 clean-rust:
 	cd rust; make clean
@@ -40,8 +40,12 @@ gen-java:
 build-java:
 	cd java; make build
 
+gen-docs:
+	cd docs/src/spec; \
+		uv run update_line_numbers.py
+
 clean: clean-rust clean-python clean-java
 
-gen: lint gen-rust gen-python gen-java
+gen: lint gen-docs gen-rust gen-python gen-java
 
-build: build-rust build-python build-java
+build: lint gen-docs build-rust build-python build-java

@@ -7,8 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**name** | **String** |  |  |
-|**namespace** | **List&lt;String&gt;** |  |  |
+|**id** | **List&lt;String&gt;** |  |  [optional] |
 |**bypassVectorIndex** | **Boolean** | Whether to bypass vector index |  [optional] |
 |**columns** | **List&lt;String&gt;** | Optional list of columns to return |  [optional] |
 |**distanceType** | **String** | Distance metric to use |  [optional] |

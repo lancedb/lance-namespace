@@ -1,10 +1,6 @@
-# Introduction
+# Lance Namespace
 
-![logo](./logo/wide.png)
-
-## Lance Namespace Specification
-
-**Lance Namespace Specification** is an open specification on top of the storage-based Lance data format
+**Lance Namespace** is an open specification on top of the storage-based Lance data format
 to standardize access to a collection of Lance tables (a.k.a. Lance datasets).
 It describes how a metadata service like Apache Hive MetaStore (HMS), Apache Iceberg REST Catalog (IRC),
 Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, 
@@ -26,5 +22,5 @@ and categorize them using flexible systems like tagging, rather than rigid hiera
 
 To better support this usage pattern, Lance adopts the term **_namespace_** to represent all container concepts 
 — including what would traditionally be called a catalog. 
-With the **Lance Namespace Specification**, we provide a flexible, multi-level namespace abstraction 
+With **Lance Namespace**, we provide a flexible, multi-level namespace abstraction 
 that allows users to structure and manage Lance datasets in ways that best align with their data organization strategies.

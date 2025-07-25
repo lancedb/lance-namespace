@@ -13,19 +13,14 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateNamespaceResponse {
-    #[serde(rename = "name")]
-    pub name: String,
-    #[serde(rename = "parent", skip_serializing_if = "Option::is_none")]
-    pub parent: Option<Vec<String>>,
+    /// Properties after the namespace is created.  If the server does not support namespace properties, it should return null for this field. If namespace properties are supported, but none are set, it should return an empty object. 
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
 }
 
 impl CreateNamespaceResponse {
-    pub fn new(name: String) -> CreateNamespaceResponse {
+    pub fn new() -> CreateNamespaceResponse {
         CreateNamespaceResponse {
-            name,
-            parent: None,
             properties: None,
         }
     }

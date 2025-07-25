@@ -13,30 +13,14 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ListTableIndicesResponse {
-    /// The table name
-    #[serde(rename = "name")]
-    pub name: String,
-    /// The namespace identifier
-    #[serde(rename = "namespace")]
-    pub namespace: Vec<String>,
-    /// Table location (usually empty)
-    #[serde(rename = "location")]
-    pub location: String,
-    /// Additional properties (usually empty)
-    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
-    pub properties: Option<std::collections::HashMap<String, String>>,
     /// List of indexes on the table
     #[serde(rename = "indexes")]
     pub indexes: Vec<models::IndexListItemResponse>,
 }
 
 impl ListTableIndicesResponse {
-    pub fn new(name: String, namespace: Vec<String>, location: String, indexes: Vec<models::IndexListItemResponse>) -> ListTableIndicesResponse {
+    pub fn new(indexes: Vec<models::IndexListItemResponse>) -> ListTableIndicesResponse {
         ListTableIndicesResponse {
-            name,
-            namespace,
-            location,
-            properties: None,
             indexes,
         }
     }

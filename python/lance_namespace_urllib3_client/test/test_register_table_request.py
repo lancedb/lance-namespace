@@ -35,11 +35,13 @@ class TestRegisterTableRequest(unittest.TestCase):
         model = RegisterTableRequest()
         if include_optional:
             return RegisterTableRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ],
-                location = ''
+                location = '',
+                properties = {
+                    'key' : ''
+                    }
             )
         else:
             return RegisterTableRequest(

@@ -22,10 +22,11 @@ import com.lancedb.lance.namespace.server.springboot.model.DescribeTransactionRe
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ErrorResponse;
+import com.lancedb.lance.namespace.server.springboot.model.JsonArrowField;
+import com.lancedb.lance.namespace.server.springboot.model.JsonArrowSchema;
 import com.lancedb.lance.namespace.server.springboot.model.JsonDataType;
-import com.lancedb.lance.namespace.server.springboot.model.JsonField;
-import com.lancedb.lance.namespace.server.springboot.model.JsonSchema;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
+import com.lancedb.lance.namespace.server.springboot.model.ListTablesResponse;
 import com.lancedb.lance.namespace.server.springboot.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.TransactionStatus;
 
@@ -36,9 +37,7 @@ public class ClientToServerResponse {
   public static DescribeNamespaceResponse describeNamespace(
       com.lancedb.lance.namespace.model.DescribeNamespaceResponse response) {
     DescribeNamespaceResponse converted = new DescribeNamespaceResponse();
-    converted.setParent(response.getParent());
     converted.setProperties(response.getProperties());
-    converted.setName(response.getName());
     return converted;
   }
 
@@ -46,24 +45,29 @@ public class ClientToServerResponse {
       com.lancedb.lance.namespace.model.ListNamespacesResponse response) {
     ListNamespacesResponse converted = new ListNamespacesResponse();
     converted.setNamespaces(response.getNamespaces());
+    converted.setPageToken(response.getPageToken());
+    return converted;
+  }
+
+  public static ListTablesResponse listTables(
+      com.lancedb.lance.namespace.model.ListTablesResponse response) {
+    ListTablesResponse converted = new ListTablesResponse();
+    converted.setTables(response.getTables());
+    converted.setPageToken(response.getPageToken());
     return converted;
   }
 
   public static CreateNamespaceResponse createNamespace(
       com.lancedb.lance.namespace.model.CreateNamespaceResponse response) {
     CreateNamespaceResponse converted = new CreateNamespaceResponse();
-    converted.setParent(response.getParent());
     converted.setProperties(response.getProperties());
-    converted.setName(response.getName());
     return converted;
   }
 
   public static DropNamespaceResponse dropNamespace(
       com.lancedb.lance.namespace.model.DropNamespaceResponse response) {
     DropNamespaceResponse converted = new DropNamespaceResponse();
-    converted.setParent(response.getParent());
     converted.setProperties(response.getProperties());
-    converted.setName(response.getName());
     converted.setTransactionId(response.getTransactionId());
     return converted;
   }
@@ -81,20 +85,18 @@ public class ClientToServerResponse {
   public static RegisterTableResponse registerTable(
       com.lancedb.lance.namespace.model.RegisterTableResponse response) {
     RegisterTableResponse converted = new RegisterTableResponse();
-    converted.setNamespace(response.getNamespace());
-    converted.setName(response.getName());
     converted.setLocation(response.getLocation());
     converted.setProperties(response.getProperties());
     return converted;
   }
 
-  private static JsonSchema convertJsonSchema(
-      com.lancedb.lance.namespace.model.JsonSchema clientSchema) {
+  private static JsonArrowSchema convertJsonSchema(
+      com.lancedb.lance.namespace.model.JsonArrowSchema clientSchema) {
     if (clientSchema == null) {
       return null;
     }
 
-    JsonSchema serverSchema = new JsonSchema();
+    JsonArrowSchema serverSchema = new JsonArrowSchema();
     if (clientSchema.getFields() != null) {
       serverSchema.setFields(
           clientSchema.getFields().stream()
@@ -105,13 +107,13 @@ public class ClientToServerResponse {
     return serverSchema;
   }
 
-  private static JsonField convertJsonField(
-      com.lancedb.lance.namespace.model.JsonField clientField) {
+  private static JsonArrowField convertJsonField(
+      com.lancedb.lance.namespace.model.JsonArrowField clientField) {
     if (clientField == null) {
       return null;
     }
 
-    JsonField serverField = new JsonField();
+    JsonArrowField serverField = new JsonArrowField();
     serverField.setName(clientField.getName());
     serverField.setNullable(clientField.getNullable());
     serverField.setType(convertJsonDataType(clientField.getType()));
@@ -140,8 +142,7 @@ public class ClientToServerResponse {
   public static DropTableResponse dropTable(
       com.lancedb.lance.namespace.model.DropTableResponse response) {
     DropTableResponse converted = new DropTableResponse();
-    converted.setName(response.getName());
-    converted.setNamespace(response.getNamespace());
+    converted.setId(response.getId());
     converted.setLocation(response.getLocation());
     converted.setProperties(response.getProperties());
     converted.setTransactionId(response.getTransactionId());
@@ -151,8 +152,7 @@ public class ClientToServerResponse {
   public static DeregisterTableResponse deregisterTable(
       com.lancedb.lance.namespace.model.DeregisterTableResponse response) {
     DeregisterTableResponse converted = new DeregisterTableResponse();
-    converted.setName(response.getName());
-    converted.setNamespace(response.getNamespace());
+    converted.setId(response.getId());
     converted.setLocation(response.getLocation());
     converted.setProperties(response.getProperties());
     return converted;
@@ -172,7 +172,6 @@ public class ClientToServerResponse {
   public static DescribeTransactionResponse describeTransaction(
       com.lancedb.lance.namespace.model.DescribeTransactionResponse response) {
     DescribeTransactionResponse converted = new DescribeTransactionResponse();
-    converted.setId(response.getId());
     converted.setStatus(TransactionStatus.valueOf(response.getStatus().name()));
     converted.setProperties(response.getProperties());
     return converted;
@@ -181,7 +180,6 @@ public class ClientToServerResponse {
   public static AlterTransactionResponse alterTransaction(
       com.lancedb.lance.namespace.model.AlterTransactionResponse response) {
     AlterTransactionResponse converted = new AlterTransactionResponse();
-    converted.setId(response.getId());
     converted.setStatus(TransactionStatus.valueOf(response.getStatus().name()));
     return converted;
   }

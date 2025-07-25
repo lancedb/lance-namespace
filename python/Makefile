@@ -14,23 +14,30 @@ VERSION = 0.0.2
 
 clean-python-urllib3-client:
 	rm -rf lance_namespace_urllib3_client/**
+	mkdir -p lance_namespace_urllib3_client
+	cp pyproject.urllib3_client.toml lance_namespace_urllib3_client/pyproject.toml
 
 gen-python-urllib3-client: clean-python-urllib3-client
-	openapi-generator-cli generate \
+	uv run openapi-generator-cli generate \
 	  -i ../docs/src/spec/rest.yaml \
 	  -g python \
 	  -o lance_namespace_urllib3_client \
-	  --additional-properties=packageName=lance_namespace_urllib3_client,packageVersion=$(VERSION),library=urllib3 \
-	# Clean up OpenAPI Generator metadata after generation
+	  --additional-properties=packageName=lance_namespace_urllib3_client,packageVersion=$(VERSION),library=urllib3
 	rm -rf lance_namespace_urllib3_client/.openapi-generator
+	rm -f lance_namespace_urllib3_client/poetry.lock
+	# Replace poetry pyproject.toml with uv-compatible version
+	cp pyproject.urllib3_client.toml lance_namespace_urllib3_client/pyproject.toml
 
 build-python-urllib3-client: gen-python-urllib3-client
 	cd lance_namespace_urllib3_client; \
-		poetry install; \
-		poetry run pytest
+		uv run pytest
+
+build-python-lance-namespace:
+	cd lance_namespace; \
+		uv run pytest
 
 clean: clean-python-urllib3-client
 
 gen: gen-python-urllib3-client
 
-build: build-python-urllib3-client
+build: build-python-urllib3-client build-python-lance-namespace

@@ -6,7 +6,7 @@ JSON representation of an Apache Arrow DataType
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**fields** | [**List[JsonField]**](JsonField.md) | Fields for complex types like Struct, Union, etc. | [optional] 
+**fields** | [**List[JsonArrowField]**](JsonArrowField.md) | Fields for complex types like Struct, Union, etc. | [optional] 
 **length** | **int** | Length for fixed-size types | [optional] 
 **type** | **str** | The data type name | 
 

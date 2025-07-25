@@ -15,6 +15,8 @@ All URIs are relative to *http://localhost:2333*
 
 Alter information of a transaction.
 
+Alter a transaction with a list of actions such as setting status or properties. The server should either succeed and apply all actions, or fail and apply no action. 
+
 ### Example
 
 ```java
@@ -90,7 +92,7 @@ No authorization required
 
 Describe information about a transaction
 
-Return a detailed information for a given transaction
+Return a detailed information for a given transaction 
 
 ### Example
 

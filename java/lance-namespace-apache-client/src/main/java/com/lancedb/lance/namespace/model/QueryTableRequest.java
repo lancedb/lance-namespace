@@ -13,24 +13,20 @@
  */
 package com.lancedb.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 /** QueryTableRequest */
 @JsonPropertyOrder({
-  QueryTableRequest.JSON_PROPERTY_NAME,
-  QueryTableRequest.JSON_PROPERTY_NAMESPACE,
+  QueryTableRequest.JSON_PROPERTY_ID,
   QueryTableRequest.JSON_PROPERTY_BYPASS_VECTOR_INDEX,
   QueryTableRequest.JSON_PROPERTY_COLUMNS,
   QueryTableRequest.JSON_PROPERTY_DISTANCE_TYPE,
@@ -54,35 +50,26 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class QueryTableRequest {
-  public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nonnull private String name;
-
-  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
-  @javax.annotation.Nonnull private List<String> namespace = new ArrayList<>();
+  public static final String JSON_PROPERTY_ID = "id";
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public static final String JSON_PROPERTY_BYPASS_VECTOR_INDEX = "bypass_vector_index";
-
-  @javax.annotation.Nullable
-  private JsonNullable<Boolean> bypassVectorIndex = JsonNullable.<Boolean>undefined();
+  @javax.annotation.Nullable private Boolean bypassVectorIndex;
 
   public static final String JSON_PROPERTY_COLUMNS = "columns";
   @javax.annotation.Nullable private List<String> columns = new ArrayList<>();
 
   public static final String JSON_PROPERTY_DISTANCE_TYPE = "distance_type";
-
-  @javax.annotation.Nullable
-  private JsonNullable<String> distanceType = JsonNullable.<String>undefined();
+  @javax.annotation.Nullable private String distanceType;
 
   public static final String JSON_PROPERTY_EF = "ef";
-  @javax.annotation.Nullable private JsonNullable<Integer> ef = JsonNullable.<Integer>undefined();
+  @javax.annotation.Nullable private Integer ef;
 
   public static final String JSON_PROPERTY_FAST_SEARCH = "fast_search";
-
-  @javax.annotation.Nullable
-  private JsonNullable<Boolean> fastSearch = JsonNullable.<Boolean>undefined();
+  @javax.annotation.Nullable private Boolean fastSearch;
 
   public static final String JSON_PROPERTY_FILTER = "filter";
-  @javax.annotation.Nullable private JsonNullable<String> filter = JsonNullable.<String>undefined();
+  @javax.annotation.Nullable private String filter;
 
   public static final String JSON_PROPERTY_FULL_TEXT_QUERY = "full_text_query";
   @javax.annotation.Nullable private QueryTableRequestFullTextQuery fullTextQuery;
@@ -91,112 +78,72 @@ public class QueryTableRequest {
   @javax.annotation.Nonnull private Integer k;
 
   public static final String JSON_PROPERTY_LOWER_BOUND = "lower_bound";
-
-  @javax.annotation.Nullable
-  private JsonNullable<Float> lowerBound = JsonNullable.<Float>undefined();
+  @javax.annotation.Nullable private Float lowerBound;
 
   public static final String JSON_PROPERTY_NPROBES = "nprobes";
-
-  @javax.annotation.Nullable
-  private JsonNullable<Integer> nprobes = JsonNullable.<Integer>undefined();
+  @javax.annotation.Nullable private Integer nprobes;
 
   public static final String JSON_PROPERTY_OFFSET = "offset";
-
-  @javax.annotation.Nullable
-  private JsonNullable<Integer> offset = JsonNullable.<Integer>undefined();
+  @javax.annotation.Nullable private Integer offset;
 
   public static final String JSON_PROPERTY_PREFILTER = "prefilter";
-
-  @javax.annotation.Nullable
-  private JsonNullable<Boolean> prefilter = JsonNullable.<Boolean>undefined();
+  @javax.annotation.Nullable private Boolean prefilter;
 
   public static final String JSON_PROPERTY_REFINE_FACTOR = "refine_factor";
-
-  @javax.annotation.Nullable
-  private JsonNullable<Integer> refineFactor = JsonNullable.<Integer>undefined();
+  @javax.annotation.Nullable private Integer refineFactor;
 
   public static final String JSON_PROPERTY_UPPER_BOUND = "upper_bound";
-
-  @javax.annotation.Nullable
-  private JsonNullable<Float> upperBound = JsonNullable.<Float>undefined();
+  @javax.annotation.Nullable private Float upperBound;
 
   public static final String JSON_PROPERTY_VECTOR = "vector";
   @javax.annotation.Nonnull private QueryTableRequestVector vector;
 
   public static final String JSON_PROPERTY_VECTOR_COLUMN = "vector_column";
-
-  @javax.annotation.Nullable
-  private JsonNullable<String> vectorColumn = JsonNullable.<String>undefined();
+  @javax.annotation.Nullable private String vectorColumn;
 
   public static final String JSON_PROPERTY_VERSION = "version";
-  @javax.annotation.Nullable private JsonNullable<Long> version = JsonNullable.<Long>undefined();
+  @javax.annotation.Nullable private Long version;
 
   public static final String JSON_PROPERTY_WITH_ROW_ID = "with_row_id";
-
-  @javax.annotation.Nullable
-  private JsonNullable<Boolean> withRowId = JsonNullable.<Boolean>undefined();
+  @javax.annotation.Nullable private Boolean withRowId;
 
   public QueryTableRequest() {}
 
-  public QueryTableRequest name(@javax.annotation.Nonnull String name) {
+  public QueryTableRequest id(@javax.annotation.Nullable List<String> id) {
 
-    this.name = name;
+    this.id = id;
     return this;
   }
 
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty(JSON_PROPERTY_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setName(@javax.annotation.Nonnull String name) {
-    this.name = name;
-  }
-
-  public QueryTableRequest namespace(@javax.annotation.Nonnull List<String> namespace) {
-
-    this.namespace = namespace;
-    return this;
-  }
-
-  public QueryTableRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public QueryTableRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * Get namespace
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public List<String> getNamespace() {
-    return namespace;
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public List<String> getId() {
+    return id;
   }
 
-  @JsonProperty(JSON_PROPERTY_NAMESPACE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setNamespace(@javax.annotation.Nonnull List<String> namespace) {
-    this.namespace = namespace;
+  @JsonProperty(JSON_PROPERTY_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setId(@javax.annotation.Nullable List<String> id) {
+    this.id = id;
   }
 
   public QueryTableRequest bypassVectorIndex(@javax.annotation.Nullable Boolean bypassVectorIndex) {
-    this.bypassVectorIndex = JsonNullable.<Boolean>of(bypassVectorIndex);
 
+    this.bypassVectorIndex = bypassVectorIndex;
     return this;
   }
 
@@ -206,24 +153,16 @@ public class QueryTableRequest {
    * @return bypassVectorIndex
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Boolean getBypassVectorIndex() {
-    return bypassVectorIndex.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_BYPASS_VECTOR_INDEX)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Boolean> getBypassVectorIndex_JsonNullable() {
+  public Boolean getBypassVectorIndex() {
     return bypassVectorIndex;
   }
 
   @JsonProperty(JSON_PROPERTY_BYPASS_VECTOR_INDEX)
-  public void setBypassVectorIndex_JsonNullable(JsonNullable<Boolean> bypassVectorIndex) {
-    this.bypassVectorIndex = bypassVectorIndex;
-  }
-
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setBypassVectorIndex(@javax.annotation.Nullable Boolean bypassVectorIndex) {
-    this.bypassVectorIndex = JsonNullable.<Boolean>of(bypassVectorIndex);
+    this.bypassVectorIndex = bypassVectorIndex;
   }
 
   public QueryTableRequest columns(@javax.annotation.Nullable List<String> columns) {
@@ -259,8 +198,8 @@ public class QueryTableRequest {
   }
 
   public QueryTableRequest distanceType(@javax.annotation.Nullable String distanceType) {
-    this.distanceType = JsonNullable.<String>of(distanceType);
 
+    this.distanceType = distanceType;
     return this;
   }
 
@@ -270,29 +209,21 @@ public class QueryTableRequest {
    * @return distanceType
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public String getDistanceType() {
-    return distanceType.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_DISTANCE_TYPE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<String> getDistanceType_JsonNullable() {
+  public String getDistanceType() {
     return distanceType;
   }
 
   @JsonProperty(JSON_PROPERTY_DISTANCE_TYPE)
-  public void setDistanceType_JsonNullable(JsonNullable<String> distanceType) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDistanceType(@javax.annotation.Nullable String distanceType) {
     this.distanceType = distanceType;
   }
 
-  public void setDistanceType(@javax.annotation.Nullable String distanceType) {
-    this.distanceType = JsonNullable.<String>of(distanceType);
-  }
-
   public QueryTableRequest ef(@javax.annotation.Nullable Integer ef) {
-    this.ef = JsonNullable.<Integer>of(ef);
 
+    this.ef = ef;
     return this;
   }
 
@@ -302,29 +233,21 @@ public class QueryTableRequest {
    * @return ef
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Integer getEf() {
-    return ef.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_EF)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Integer> getEf_JsonNullable() {
+  public Integer getEf() {
     return ef;
   }
 
   @JsonProperty(JSON_PROPERTY_EF)
-  public void setEf_JsonNullable(JsonNullable<Integer> ef) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setEf(@javax.annotation.Nullable Integer ef) {
     this.ef = ef;
   }
 
-  public void setEf(@javax.annotation.Nullable Integer ef) {
-    this.ef = JsonNullable.<Integer>of(ef);
-  }
-
   public QueryTableRequest fastSearch(@javax.annotation.Nullable Boolean fastSearch) {
-    this.fastSearch = JsonNullable.<Boolean>of(fastSearch);
 
+    this.fastSearch = fastSearch;
     return this;
   }
 
@@ -334,29 +257,21 @@ public class QueryTableRequest {
    * @return fastSearch
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Boolean getFastSearch() {
-    return fastSearch.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_FAST_SEARCH)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Boolean> getFastSearch_JsonNullable() {
+  public Boolean getFastSearch() {
     return fastSearch;
   }
 
   @JsonProperty(JSON_PROPERTY_FAST_SEARCH)
-  public void setFastSearch_JsonNullable(JsonNullable<Boolean> fastSearch) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setFastSearch(@javax.annotation.Nullable Boolean fastSearch) {
     this.fastSearch = fastSearch;
   }
 
-  public void setFastSearch(@javax.annotation.Nullable Boolean fastSearch) {
-    this.fastSearch = JsonNullable.<Boolean>of(fastSearch);
-  }
-
   public QueryTableRequest filter(@javax.annotation.Nullable String filter) {
-    this.filter = JsonNullable.<String>of(filter);
 
+    this.filter = filter;
     return this;
   }
 
@@ -366,24 +281,16 @@ public class QueryTableRequest {
    * @return filter
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public String getFilter() {
-    return filter.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_FILTER)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<String> getFilter_JsonNullable() {
+  public String getFilter() {
     return filter;
   }
 
   @JsonProperty(JSON_PROPERTY_FILTER)
-  public void setFilter_JsonNullable(JsonNullable<String> filter) {
-    this.filter = filter;
-  }
-
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setFilter(@javax.annotation.Nullable String filter) {
-    this.filter = JsonNullable.<String>of(filter);
+    this.filter = filter;
   }
 
   public QueryTableRequest fullTextQuery(
@@ -437,8 +344,8 @@ public class QueryTableRequest {
   }
 
   public QueryTableRequest lowerBound(@javax.annotation.Nullable Float lowerBound) {
-    this.lowerBound = JsonNullable.<Float>of(lowerBound);
 
+    this.lowerBound = lowerBound;
     return this;
   }
 
@@ -448,29 +355,21 @@ public class QueryTableRequest {
    * @return lowerBound
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Float getLowerBound() {
-    return lowerBound.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_LOWER_BOUND)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Float> getLowerBound_JsonNullable() {
+  public Float getLowerBound() {
     return lowerBound;
   }
 
   @JsonProperty(JSON_PROPERTY_LOWER_BOUND)
-  public void setLowerBound_JsonNullable(JsonNullable<Float> lowerBound) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setLowerBound(@javax.annotation.Nullable Float lowerBound) {
     this.lowerBound = lowerBound;
   }
 
-  public void setLowerBound(@javax.annotation.Nullable Float lowerBound) {
-    this.lowerBound = JsonNullable.<Float>of(lowerBound);
-  }
-
   public QueryTableRequest nprobes(@javax.annotation.Nullable Integer nprobes) {
-    this.nprobes = JsonNullable.<Integer>of(nprobes);
 
+    this.nprobes = nprobes;
     return this;
   }
 
@@ -480,29 +379,21 @@ public class QueryTableRequest {
    * @return nprobes
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Integer getNprobes() {
-    return nprobes.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_NPROBES)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Integer> getNprobes_JsonNullable() {
+  public Integer getNprobes() {
     return nprobes;
   }
 
   @JsonProperty(JSON_PROPERTY_NPROBES)
-  public void setNprobes_JsonNullable(JsonNullable<Integer> nprobes) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNprobes(@javax.annotation.Nullable Integer nprobes) {
     this.nprobes = nprobes;
   }
 
-  public void setNprobes(@javax.annotation.Nullable Integer nprobes) {
-    this.nprobes = JsonNullable.<Integer>of(nprobes);
-  }
-
   public QueryTableRequest offset(@javax.annotation.Nullable Integer offset) {
-    this.offset = JsonNullable.<Integer>of(offset);
 
+    this.offset = offset;
     return this;
   }
 
@@ -512,29 +403,21 @@ public class QueryTableRequest {
    * @return offset
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Integer getOffset() {
-    return offset.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_OFFSET)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Integer> getOffset_JsonNullable() {
+  public Integer getOffset() {
     return offset;
   }
 
   @JsonProperty(JSON_PROPERTY_OFFSET)
-  public void setOffset_JsonNullable(JsonNullable<Integer> offset) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setOffset(@javax.annotation.Nullable Integer offset) {
     this.offset = offset;
   }
 
-  public void setOffset(@javax.annotation.Nullable Integer offset) {
-    this.offset = JsonNullable.<Integer>of(offset);
-  }
-
   public QueryTableRequest prefilter(@javax.annotation.Nullable Boolean prefilter) {
-    this.prefilter = JsonNullable.<Boolean>of(prefilter);
 
+    this.prefilter = prefilter;
     return this;
   }
 
@@ -544,29 +427,21 @@ public class QueryTableRequest {
    * @return prefilter
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Boolean getPrefilter() {
-    return prefilter.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_PREFILTER)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Boolean> getPrefilter_JsonNullable() {
+  public Boolean getPrefilter() {
     return prefilter;
   }
 
   @JsonProperty(JSON_PROPERTY_PREFILTER)
-  public void setPrefilter_JsonNullable(JsonNullable<Boolean> prefilter) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setPrefilter(@javax.annotation.Nullable Boolean prefilter) {
     this.prefilter = prefilter;
   }
 
-  public void setPrefilter(@javax.annotation.Nullable Boolean prefilter) {
-    this.prefilter = JsonNullable.<Boolean>of(prefilter);
-  }
-
   public QueryTableRequest refineFactor(@javax.annotation.Nullable Integer refineFactor) {
-    this.refineFactor = JsonNullable.<Integer>of(refineFactor);
 
+    this.refineFactor = refineFactor;
     return this;
   }
 
@@ -576,29 +451,21 @@ public class QueryTableRequest {
    * @return refineFactor
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Integer getRefineFactor() {
-    return refineFactor.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_REFINE_FACTOR)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Integer> getRefineFactor_JsonNullable() {
+  public Integer getRefineFactor() {
     return refineFactor;
   }
 
   @JsonProperty(JSON_PROPERTY_REFINE_FACTOR)
-  public void setRefineFactor_JsonNullable(JsonNullable<Integer> refineFactor) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setRefineFactor(@javax.annotation.Nullable Integer refineFactor) {
     this.refineFactor = refineFactor;
   }
 
-  public void setRefineFactor(@javax.annotation.Nullable Integer refineFactor) {
-    this.refineFactor = JsonNullable.<Integer>of(refineFactor);
-  }
-
   public QueryTableRequest upperBound(@javax.annotation.Nullable Float upperBound) {
-    this.upperBound = JsonNullable.<Float>of(upperBound);
 
+    this.upperBound = upperBound;
     return this;
   }
 
@@ -608,24 +475,16 @@ public class QueryTableRequest {
    * @return upperBound
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Float getUpperBound() {
-    return upperBound.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_UPPER_BOUND)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Float> getUpperBound_JsonNullable() {
+  public Float getUpperBound() {
     return upperBound;
   }
 
   @JsonProperty(JSON_PROPERTY_UPPER_BOUND)
-  public void setUpperBound_JsonNullable(JsonNullable<Float> upperBound) {
-    this.upperBound = upperBound;
-  }
-
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setUpperBound(@javax.annotation.Nullable Float upperBound) {
-    this.upperBound = JsonNullable.<Float>of(upperBound);
+    this.upperBound = upperBound;
   }
 
   public QueryTableRequest vector(@javax.annotation.Nonnull QueryTableRequestVector vector) {
@@ -653,8 +512,8 @@ public class QueryTableRequest {
   }
 
   public QueryTableRequest vectorColumn(@javax.annotation.Nullable String vectorColumn) {
-    this.vectorColumn = JsonNullable.<String>of(vectorColumn);
 
+    this.vectorColumn = vectorColumn;
     return this;
   }
 
@@ -664,29 +523,21 @@ public class QueryTableRequest {
    * @return vectorColumn
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public String getVectorColumn() {
-    return vectorColumn.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_VECTOR_COLUMN)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<String> getVectorColumn_JsonNullable() {
+  public String getVectorColumn() {
     return vectorColumn;
   }
 
   @JsonProperty(JSON_PROPERTY_VECTOR_COLUMN)
-  public void setVectorColumn_JsonNullable(JsonNullable<String> vectorColumn) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setVectorColumn(@javax.annotation.Nullable String vectorColumn) {
     this.vectorColumn = vectorColumn;
   }
 
-  public void setVectorColumn(@javax.annotation.Nullable String vectorColumn) {
-    this.vectorColumn = JsonNullable.<String>of(vectorColumn);
-  }
-
   public QueryTableRequest version(@javax.annotation.Nullable Long version) {
-    this.version = JsonNullable.<Long>of(version);
 
+    this.version = version;
     return this;
   }
 
@@ -696,29 +547,21 @@ public class QueryTableRequest {
    * @return version
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Long getVersion() {
-    return version.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_VERSION)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Long> getVersion_JsonNullable() {
+  public Long getVersion() {
     return version;
   }
 
   @JsonProperty(JSON_PROPERTY_VERSION)
-  public void setVersion_JsonNullable(JsonNullable<Long> version) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setVersion(@javax.annotation.Nullable Long version) {
     this.version = version;
   }
 
-  public void setVersion(@javax.annotation.Nullable Long version) {
-    this.version = JsonNullable.<Long>of(version);
-  }
-
   public QueryTableRequest withRowId(@javax.annotation.Nullable Boolean withRowId) {
-    this.withRowId = JsonNullable.<Boolean>of(withRowId);
 
+    this.withRowId = withRowId;
     return this;
   }
 
@@ -728,24 +571,16 @@ public class QueryTableRequest {
    * @return withRowId
    */
   @javax.annotation.Nullable
-  @JsonIgnore
-  public Boolean getWithRowId() {
-    return withRowId.orElse(null);
-  }
-
   @JsonProperty(JSON_PROPERTY_WITH_ROW_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonNullable<Boolean> getWithRowId_JsonNullable() {
+  public Boolean getWithRowId() {
     return withRowId;
   }
 
   @JsonProperty(JSON_PROPERTY_WITH_ROW_ID)
-  public void setWithRowId_JsonNullable(JsonNullable<Boolean> withRowId) {
-    this.withRowId = withRowId;
-  }
-
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setWithRowId(@javax.annotation.Nullable Boolean withRowId) {
-    this.withRowId = JsonNullable.<Boolean>of(withRowId);
+    this.withRowId = withRowId;
   }
 
   @Override
@@ -757,75 +592,56 @@ public class QueryTableRequest {
       return false;
     }
     QueryTableRequest queryTableRequest = (QueryTableRequest) o;
-    return Objects.equals(this.name, queryTableRequest.name)
-        && Objects.equals(this.namespace, queryTableRequest.namespace)
-        && equalsNullable(this.bypassVectorIndex, queryTableRequest.bypassVectorIndex)
+    return Objects.equals(this.id, queryTableRequest.id)
+        && Objects.equals(this.bypassVectorIndex, queryTableRequest.bypassVectorIndex)
         && Objects.equals(this.columns, queryTableRequest.columns)
-        && equalsNullable(this.distanceType, queryTableRequest.distanceType)
-        && equalsNullable(this.ef, queryTableRequest.ef)
-        && equalsNullable(this.fastSearch, queryTableRequest.fastSearch)
-        && equalsNullable(this.filter, queryTableRequest.filter)
+        && Objects.equals(this.distanceType, queryTableRequest.distanceType)
+        && Objects.equals(this.ef, queryTableRequest.ef)
+        && Objects.equals(this.fastSearch, queryTableRequest.fastSearch)
+        && Objects.equals(this.filter, queryTableRequest.filter)
         && Objects.equals(this.fullTextQuery, queryTableRequest.fullTextQuery)
         && Objects.equals(this.k, queryTableRequest.k)
-        && equalsNullable(this.lowerBound, queryTableRequest.lowerBound)
-        && equalsNullable(this.nprobes, queryTableRequest.nprobes)
-        && equalsNullable(this.offset, queryTableRequest.offset)
-        && equalsNullable(this.prefilter, queryTableRequest.prefilter)
-        && equalsNullable(this.refineFactor, queryTableRequest.refineFactor)
-        && equalsNullable(this.upperBound, queryTableRequest.upperBound)
+        && Objects.equals(this.lowerBound, queryTableRequest.lowerBound)
+        && Objects.equals(this.nprobes, queryTableRequest.nprobes)
+        && Objects.equals(this.offset, queryTableRequest.offset)
+        && Objects.equals(this.prefilter, queryTableRequest.prefilter)
+        && Objects.equals(this.refineFactor, queryTableRequest.refineFactor)
+        && Objects.equals(this.upperBound, queryTableRequest.upperBound)
         && Objects.equals(this.vector, queryTableRequest.vector)
-        && equalsNullable(this.vectorColumn, queryTableRequest.vectorColumn)
-        && equalsNullable(this.version, queryTableRequest.version)
-        && equalsNullable(this.withRowId, queryTableRequest.withRowId);
-  }
-
-  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
-    return a == b
-        || (a != null
-            && b != null
-            && a.isPresent()
-            && b.isPresent()
-            && Objects.deepEquals(a.get(), b.get()));
+        && Objects.equals(this.vectorColumn, queryTableRequest.vectorColumn)
+        && Objects.equals(this.version, queryTableRequest.version)
+        && Objects.equals(this.withRowId, queryTableRequest.withRowId);
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(
-        name,
-        namespace,
-        hashCodeNullable(bypassVectorIndex),
+        id,
+        bypassVectorIndex,
         columns,
-        hashCodeNullable(distanceType),
-        hashCodeNullable(ef),
-        hashCodeNullable(fastSearch),
-        hashCodeNullable(filter),
+        distanceType,
+        ef,
+        fastSearch,
+        filter,
         fullTextQuery,
         k,
-        hashCodeNullable(lowerBound),
-        hashCodeNullable(nprobes),
-        hashCodeNullable(offset),
-        hashCodeNullable(prefilter),
-        hashCodeNullable(refineFactor),
-        hashCodeNullable(upperBound),
+        lowerBound,
+        nprobes,
+        offset,
+        prefilter,
+        refineFactor,
+        upperBound,
         vector,
-        hashCodeNullable(vectorColumn),
-        hashCodeNullable(version),
-        hashCodeNullable(withRowId));
-  }
-
-  private static <T> int hashCodeNullable(JsonNullable<T> a) {
-    if (a == null) {
-      return 1;
-    }
-    return a.isPresent() ? Arrays.deepHashCode(new Object[] {a.get()}) : 31;
+        vectorColumn,
+        version,
+        withRowId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class QueryTableRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    bypassVectorIndex: ").append(toIndentedString(bypassVectorIndex)).append("\n");
     sb.append("    columns: ").append(toIndentedString(columns)).append("\n");
     sb.append("    distanceType: ").append(toIndentedString(distanceType)).append("\n");
@@ -890,34 +706,19 @@ public class QueryTableRequest {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `name` to the URL query string
-    if (getName() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sname%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `namespace` to the URL query string
-    if (getNamespace() != null) {
-      for (int i = 0; i < getNamespace().size(); i++) {
+    // add `id` to the URL query string
+    if (getId() != null) {
+      for (int i = 0; i < getId().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%snamespace%s%s=%s",
+                  "%sid%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)
                       ? ""
                       : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getNamespace().get(i)), "UTF-8")
+                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

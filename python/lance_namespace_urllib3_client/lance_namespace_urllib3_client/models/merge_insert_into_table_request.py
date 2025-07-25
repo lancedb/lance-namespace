@@ -24,17 +24,16 @@ from typing_extensions import Self
 
 class MergeInsertIntoTableRequest(BaseModel):
     """
-    Request for merging or inserting records into a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
+    Request for merging or inserting records into a table, excluding the Arrow IPC stream. 
     """ # noqa: E501
-    name: Optional[StrictStr] = Field(default=None, description="The table name")
-    namespace: Optional[List[StrictStr]] = Field(default=None, description="The namespace identifier")
+    id: Optional[List[StrictStr]] = None
     on: Optional[StrictStr] = Field(default=None, description="Column name to use for matching rows (required)")
     when_matched_update_all: Optional[StrictBool] = Field(default=False, description="Update all columns when rows match")
     when_matched_update_all_filt: Optional[StrictStr] = Field(default=None, description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true")
     when_not_matched_insert_all: Optional[StrictBool] = Field(default=False, description="Insert all columns when rows don't match")
     when_not_matched_by_source_delete: Optional[StrictBool] = Field(default=False, description="Delete all rows from target table that don't match a row in the source table")
     when_not_matched_by_source_delete_filt: Optional[StrictStr] = Field(default=None, description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true")
-    __properties: ClassVar[List[str]] = ["name", "namespace", "on", "when_matched_update_all", "when_matched_update_all_filt", "when_not_matched_insert_all", "when_not_matched_by_source_delete", "when_not_matched_by_source_delete_filt"]
+    __properties: ClassVar[List[str]] = ["id", "on", "when_matched_update_all", "when_matched_update_all_filt", "when_not_matched_insert_all", "when_not_matched_by_source_delete", "when_not_matched_by_source_delete_filt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -87,8 +86,7 @@ class MergeInsertIntoTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace"),
+            "id": obj.get("id"),
             "on": obj.get("on"),
             "when_matched_update_all": obj.get("when_matched_update_all") if obj.get("when_matched_update_all") is not None else False,
             "when_matched_update_all_filt": obj.get("when_matched_update_all_filt"),

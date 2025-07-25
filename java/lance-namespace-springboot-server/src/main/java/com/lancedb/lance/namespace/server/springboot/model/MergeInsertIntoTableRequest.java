@@ -25,30 +25,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Request for merging or inserting records into a table, excluding the Arrow IPC stream. Note that
- * this is only used for non-REST implementations. For REST, pass in the information in the
- * following way: - &#x60;name&#x60;: pass as a part of the path parameter &#x60;id&#x60; -
- * &#x60;namespace&#x60;: pass as a part of the path parameter &#x60;namespace&#x60; -
- * &#x60;on&#x60;: pass through query parameter of the same name -
- * &#x60;when_matched_update_all&#x60;: pass through query parameter of the same name -
- * &#x60;when_matched_update_all_filt&#x60;: pass through query parameter of the same name -
- * &#x60;when_not_matched_insert_all&#x60;: pass through query parameter of the same name -
- * &#x60;when_not_matched_by_source_delete&#x60;: pass through query parameter of the same name -
- * &#x60;when_not_matched_by_source_delete_filt&#x60;: pass through query parameter of the same name
- */
+/** Request for merging or inserting records into a table, excluding the Arrow IPC stream. */
 @Schema(
     name = "MergeInsertIntoTableRequest",
     description =
-        "Request for merging or inserting records into a table, excluding the Arrow IPC stream. Note that this is only used for non-REST implementations. For REST, pass in the information in the following way: - `name`: pass as a part of the path parameter `id` - `namespace`: pass as a part of the path parameter `namespace` - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name ")
+        "Request for merging or inserting records into a table, excluding the Arrow IPC stream. ")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class MergeInsertIntoTableRequest {
 
-  private String name;
-
-  @Valid private List<String> namespace = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   private String on;
 
@@ -62,58 +49,32 @@ public class MergeInsertIntoTableRequest {
 
   private String whenNotMatchedBySourceDeleteFilt;
 
-  public MergeInsertIntoTableRequest name(String name) {
-    this.name = name;
+  public MergeInsertIntoTableRequest id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  /**
-   * The table name
-   *
-   * @return name
-   */
-  @Schema(
-      name = "name",
-      description = "The table name",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public MergeInsertIntoTableRequest namespace(List<String> namespace) {
-    this.namespace = namespace;
-    return this;
-  }
-
-  public MergeInsertIntoTableRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public MergeInsertIntoTableRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * The namespace identifier
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
-  @Schema(
-      name = "namespace",
-      description = "The namespace identifier",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("namespace")
-  public List<String> getNamespace() {
-    return namespace;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setNamespace(List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   public MergeInsertIntoTableRequest on(String on) {
@@ -268,8 +229,7 @@ public class MergeInsertIntoTableRequest {
       return false;
     }
     MergeInsertIntoTableRequest mergeInsertIntoTableRequest = (MergeInsertIntoTableRequest) o;
-    return Objects.equals(this.name, mergeInsertIntoTableRequest.name)
-        && Objects.equals(this.namespace, mergeInsertIntoTableRequest.namespace)
+    return Objects.equals(this.id, mergeInsertIntoTableRequest.id)
         && Objects.equals(this.on, mergeInsertIntoTableRequest.on)
         && Objects.equals(
             this.whenMatchedUpdateAll, mergeInsertIntoTableRequest.whenMatchedUpdateAll)
@@ -288,8 +248,7 @@ public class MergeInsertIntoTableRequest {
   @Override
   public int hashCode() {
     return Objects.hash(
-        name,
-        namespace,
+        id,
         on,
         whenMatchedUpdateAll,
         whenMatchedUpdateAllFilt,
@@ -302,8 +261,7 @@ public class MergeInsertIntoTableRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class MergeInsertIntoTableRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    on: ").append(toIndentedString(on)).append("\n");
     sb.append("    whenMatchedUpdateAll: ")
         .append(toIndentedString(whenMatchedUpdateAll))

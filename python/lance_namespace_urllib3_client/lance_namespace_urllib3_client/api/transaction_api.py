@@ -63,6 +63,7 @@ class TransactionApi:
     ) -> AlterTransactionResponse:
         """Alter information of a transaction.
 
+        Alter a transaction with a list of actions such as setting status or properties. The server should either succeed and apply all actions, or fail and apply no action. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -144,6 +145,7 @@ class TransactionApi:
     ) -> ApiResponse[AlterTransactionResponse]:
         """Alter information of a transaction.
 
+        Alter a transaction with a list of actions such as setting status or properties. The server should either succeed and apply all actions, or fail and apply no action. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -225,6 +227,7 @@ class TransactionApi:
     ) -> RESTResponseType:
         """Alter information of a transaction.
 
+        Alter a transaction with a list of actions such as setting status or properties. The server should either succeed and apply all actions, or fail and apply no action. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -386,7 +389,7 @@ class TransactionApi:
     ) -> DescribeTransactionResponse:
         """Describe information about a transaction
 
-        Return a detailed information for a given transaction
+        Return a detailed information for a given transaction 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -467,7 +470,7 @@ class TransactionApi:
     ) -> ApiResponse[DescribeTransactionResponse]:
         """Describe information about a transaction
 
-        Return a detailed information for a given transaction
+        Return a detailed information for a given transaction 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -548,7 +551,7 @@ class TransactionApi:
     ) -> RESTResponseType:
         """Describe information about a transaction
 
-        Return a detailed information for a given transaction
+        Return a detailed information for a given transaction 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str

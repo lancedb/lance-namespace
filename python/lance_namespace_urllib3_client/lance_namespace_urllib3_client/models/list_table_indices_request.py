@@ -27,10 +27,9 @@ class ListTableIndicesRequest(BaseModel):
     """
     ListTableIndicesRequest
     """ # noqa: E501
-    name: StrictStr = Field(description="The table name")
-    namespace: List[StrictStr] = Field(description="The namespace identifier")
+    id: Optional[List[StrictStr]] = Field(default=None, description="The namespace identifier")
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Optional table version to list indexes from")
-    __properties: ClassVar[List[str]] = ["name", "namespace", "version"]
+    __properties: ClassVar[List[str]] = ["id", "version"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,8 +82,7 @@ class ListTableIndicesRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace"),
+            "id": obj.get("id"),
             "version": obj.get("version")
         })
         return _obj

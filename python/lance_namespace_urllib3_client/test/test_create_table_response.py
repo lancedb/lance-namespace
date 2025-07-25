@@ -35,11 +35,23 @@ class TestCreateTableResponse(unittest.TestCase):
         model = CreateTableResponse()
         if include_optional:
             return CreateTableResponse(
-                name = '',
-                namespace = [
-                    ''
-                    ],
                 location = '',
+                version = 0,
+                var_schema = lance_namespace_urllib3_client.models.json_arrow_schema.JsonArrowSchema(
+                    fields = [
+                        lance_namespace_urllib3_client.models.json_arrow_field.JsonArrowField(
+                            metadata = {
+                                'key' : ''
+                                }, 
+                            name = '', 
+                            nullable = True, 
+                            type = lance_namespace_urllib3_client.models.json_data_type.JsonDataType(
+                                length = 0, 
+                                type = '', ), )
+                        ], 
+                    metadata = {
+                        'key' : ''
+                        }, ),
                 properties = {
                     'key' : ''
                     },
@@ -49,10 +61,6 @@ class TestCreateTableResponse(unittest.TestCase):
             )
         else:
             return CreateTableResponse(
-                name = '',
-                namespace = [
-                    ''
-                    ],
                 location = '',
         )
         """

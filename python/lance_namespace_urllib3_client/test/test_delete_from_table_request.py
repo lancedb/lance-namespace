@@ -35,18 +35,13 @@ class TestDeleteFromTableRequest(unittest.TestCase):
         model = DeleteFromTableRequest()
         if include_optional:
             return DeleteFromTableRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ],
                 predicate = ''
             )
         else:
             return DeleteFromTableRequest(
-                name = '',
-                namespace = [
-                    ''
-                    ],
                 predicate = '',
         )
         """

@@ -35,7 +35,7 @@ import java.util.StringJoiner;
     comments = "Generator version: 7.12.0")
 public class JsonDataType {
   public static final String JSON_PROPERTY_FIELDS = "fields";
-  @javax.annotation.Nullable private List<JsonField> fields = new ArrayList<>();
+  @javax.annotation.Nullable private List<JsonArrowField> fields = new ArrayList<>();
 
   public static final String JSON_PROPERTY_LENGTH = "length";
   @javax.annotation.Nullable private Long length;
@@ -45,13 +45,13 @@ public class JsonDataType {
 
   public JsonDataType() {}
 
-  public JsonDataType fields(@javax.annotation.Nullable List<JsonField> fields) {
+  public JsonDataType fields(@javax.annotation.Nullable List<JsonArrowField> fields) {
 
     this.fields = fields;
     return this;
   }
 
-  public JsonDataType addFieldsItem(JsonField fieldsItem) {
+  public JsonDataType addFieldsItem(JsonArrowField fieldsItem) {
     if (this.fields == null) {
       this.fields = new ArrayList<>();
     }
@@ -67,13 +67,13 @@ public class JsonDataType {
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_FIELDS)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<JsonField> getFields() {
+  public List<JsonArrowField> getFields() {
     return fields;
   }
 
   @JsonProperty(JSON_PROPERTY_FIELDS)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setFields(@javax.annotation.Nullable List<JsonField> fields) {
+  public void setFields(@javax.annotation.Nullable List<JsonArrowField> fields) {
     this.fields = fields;
   }
 

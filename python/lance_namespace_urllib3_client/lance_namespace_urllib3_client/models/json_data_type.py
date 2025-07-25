@@ -27,7 +27,7 @@ class JsonDataType(BaseModel):
     """
     JSON representation of an Apache Arrow DataType
     """ # noqa: E501
-    fields: Optional[List[JsonField]] = Field(default=None, description="Fields for complex types like Struct, Union, etc.")
+    fields: Optional[List[JsonArrowField]] = Field(default=None, description="Fields for complex types like Struct, Union, etc.")
     length: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Length for fixed-size types")
     type: StrictStr = Field(description="The data type name")
     __properties: ClassVar[List[str]] = ["fields", "length", "type"]
@@ -90,13 +90,13 @@ class JsonDataType(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "fields": [JsonField.from_dict(_item) for _item in obj["fields"]] if obj.get("fields") is not None else None,
+            "fields": [JsonArrowField.from_dict(_item) for _item in obj["fields"]] if obj.get("fields") is not None else None,
             "length": obj.get("length"),
             "type": obj.get("type")
         })
         return _obj
 
-from lance_namespace_urllib3_client.models.json_field import JsonField
+from lance_namespace_urllib3_client.models.json_arrow_field import JsonArrowField
 # TODO: Rewrite to not use raise_errors
 JsonDataType.model_rebuild(raise_errors=False)
 

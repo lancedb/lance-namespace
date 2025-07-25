@@ -35,8 +35,7 @@ class TestDropNamespaceRequest(unittest.TestCase):
         model = DropNamespaceRequest()
         if include_optional:
             return DropNamespaceRequest(
-                name = '',
-                parent = [
+                id = [
                     ''
                     ],
                 mode = 'SKIP',

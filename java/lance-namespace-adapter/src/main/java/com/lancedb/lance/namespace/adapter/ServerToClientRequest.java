@@ -13,6 +13,7 @@
  */
 package com.lancedb.lance.namespace.adapter;
 
+import com.lancedb.lance.namespace.ObjectIdentifier;
 import com.lancedb.lance.namespace.model.AlterTransactionAction;
 import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.AlterTransactionSetProperty;
@@ -26,6 +27,7 @@ import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
+import com.lancedb.lance.namespace.model.ListTablesRequest;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.SetPropertyMode;
@@ -33,23 +35,23 @@ import com.lancedb.lance.namespace.model.TableExistsRequest;
 import com.lancedb.lance.namespace.model.TransactionStatus;
 import com.lancedb.lance.namespace.model.UnsetPropertyMode;
 
+import java.util.Optional;
+
 public class ServerToClientRequest {
 
   public static CreateNamespaceRequest createNamespace(
       com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceRequest request) {
     CreateNamespaceRequest converted = new CreateNamespaceRequest();
     converted.setMode(CreateNamespaceRequest.ModeEnum.valueOf(request.getMode().name()));
-    converted.setParent(request.getParent());
-    converted.setOptions(request.getOptions());
-    converted.setName(request.getName());
+    converted.setId(request.getId());
+    converted.setProperties(request.getProperties());
     return converted;
   }
 
   public static DropNamespaceRequest dropNamespace(
       com.lancedb.lance.namespace.server.springboot.model.DropNamespaceRequest request) {
     DropNamespaceRequest converted = new DropNamespaceRequest();
-    converted.setName(request.getName());
-    converted.setParent(request.getParent());
+    converted.setId(request.getId());
     converted.setMode(DropNamespaceRequest.ModeEnum.valueOf(request.getMode().name()));
     converted.setBehavior(DropNamespaceRequest.BehaviorEnum.valueOf(request.getBehavior().name()));
     return converted;
@@ -58,29 +60,39 @@ public class ServerToClientRequest {
   public static DescribeNamespaceRequest describeNamespace(
       com.lancedb.lance.namespace.server.springboot.model.DescribeNamespaceRequest request) {
     DescribeNamespaceRequest converted = new DescribeNamespaceRequest();
-    converted.setName(request.getName());
+    converted.setId(request.getId());
     return converted;
   }
 
   public static ListNamespacesRequest listNamespaces(
-      com.lancedb.lance.namespace.server.springboot.model.ListNamespacesRequest request) {
+      String id, Optional<String> delimiter, Optional<String> pageToken, Optional<Integer> limit) {
     ListNamespacesRequest converted = new ListNamespacesRequest();
-    converted.setParent(request.getParent());
+    converted.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listId());
+    converted.setPageToken(pageToken.orElse(null));
+    converted.setLimit(limit.orElse(null));
+    return converted;
+  }
+
+  public static ListTablesRequest listTables(
+      String id, Optional<String> delimiter, Optional<String> pageToken, Optional<Integer> limit) {
+    ListTablesRequest converted = new ListTablesRequest();
+    converted.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listId());
+    converted.setPageToken(pageToken.orElse(null));
+    converted.setLimit(limit.orElse(null));
     return converted;
   }
 
   public static NamespaceExistsRequest namespaceExists(
       com.lancedb.lance.namespace.server.springboot.model.NamespaceExistsRequest request) {
     NamespaceExistsRequest converted = new NamespaceExistsRequest();
-    converted.setName(request.getName());
+    converted.setId(request.getId());
     return converted;
   }
 
   public static DescribeTableRequest describeTable(
       com.lancedb.lance.namespace.server.springboot.model.DescribeTableRequest request) {
     DescribeTableRequest converted = new DescribeTableRequest();
-    converted.setNamespace(request.getNamespace());
-    converted.setName(request.getName());
+    converted.setId(request.getId());
     converted.setVersion(request.getVersion());
     return converted;
   }
@@ -88,8 +100,7 @@ public class ServerToClientRequest {
   public static RegisterTableRequest registerTable(
       com.lancedb.lance.namespace.server.springboot.model.RegisterTableRequest request) {
     RegisterTableRequest converted = new RegisterTableRequest();
-    converted.setNamespace(request.getNamespace());
-    converted.setName(request.getName());
+    converted.setId(request.getId());
     converted.setLocation(request.getLocation());
     return converted;
   }
@@ -97,24 +108,21 @@ public class ServerToClientRequest {
   public static TableExistsRequest tableExists(
       com.lancedb.lance.namespace.server.springboot.model.TableExistsRequest request) {
     TableExistsRequest converted = new TableExistsRequest();
-    converted.setNamespace(request.getNamespace());
-    converted.setName(request.getName());
+    converted.setId(request.getId());
     return converted;
   }
 
   public static DropTableRequest dropTable(
       com.lancedb.lance.namespace.server.springboot.model.DropTableRequest request) {
     DropTableRequest converted = new DropTableRequest();
-    converted.setName(request.getName());
-    converted.setNamespace(request.getNamespace());
+    converted.setId(request.getId());
     return converted;
   }
 
   public static DeregisterTableRequest deregisterTable(
       com.lancedb.lance.namespace.server.springboot.model.DeregisterTableRequest request) {
     DeregisterTableRequest converted = new DeregisterTableRequest();
-    converted.setName(request.getName());
-    converted.setNamespace(request.getNamespace());
+    converted.setId(request.getId());
     return converted;
   }
 

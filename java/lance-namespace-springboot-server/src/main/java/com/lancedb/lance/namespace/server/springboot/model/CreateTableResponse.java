@@ -21,9 +21,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import java.util.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -33,11 +31,11 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CreateTableResponse {
 
-  private String name;
-
-  @Valid private List<String> namespace = new ArrayList<>();
-
   private String location;
+
+  private Long version;
+
+  private JsonArrowSchema schema;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
@@ -48,60 +46,8 @@ public class CreateTableResponse {
   }
 
   /** Constructor with only required parameters */
-  public CreateTableResponse(String name, List<String> namespace, String location) {
-    this.name = name;
-    this.namespace = namespace;
+  public CreateTableResponse(String location) {
     this.location = location;
-  }
-
-  public CreateTableResponse name(String name) {
-    this.name = name;
-    return this;
-  }
-
-  /**
-   * Get name
-   *
-   * @return name
-   */
-  @NotNull
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public CreateTableResponse namespace(List<String> namespace) {
-    this.namespace = namespace;
-    return this;
-  }
-
-  public CreateTableResponse addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
-    }
-    this.namespace.add(namespaceItem);
-    return this;
-  }
-
-  /**
-   * Get namespace
-   *
-   * @return namespace
-   */
-  @NotNull
-  @Schema(name = "namespace", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("namespace")
-  public List<String> getNamespace() {
-    return namespace;
-  }
-
-  public void setNamespace(List<String> namespace) {
-    this.namespace = namespace;
   }
 
   public CreateTableResponse location(String location) {
@@ -123,6 +69,48 @@ public class CreateTableResponse {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public CreateTableResponse version(Long version) {
+    this.version = version;
+    return this;
+  }
+
+  /**
+   * Get version minimum: 0
+   *
+   * @return version
+   */
+  @Min(0L)
+  @Schema(name = "version", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("version")
+  public Long getVersion() {
+    return version;
+  }
+
+  public void setVersion(Long version) {
+    this.version = version;
+  }
+
+  public CreateTableResponse schema(JsonArrowSchema schema) {
+    this.schema = schema;
+    return this;
+  }
+
+  /**
+   * Get schema
+   *
+   * @return schema
+   */
+  @Valid
+  @Schema(name = "schema", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("schema")
+  public JsonArrowSchema getSchema() {
+    return schema;
+  }
+
+  public void setSchema(JsonArrowSchema schema) {
+    this.schema = schema;
   }
 
   public CreateTableResponse properties(Map<String, String> properties) {
@@ -195,25 +183,25 @@ public class CreateTableResponse {
       return false;
     }
     CreateTableResponse createTableResponse = (CreateTableResponse) o;
-    return Objects.equals(this.name, createTableResponse.name)
-        && Objects.equals(this.namespace, createTableResponse.namespace)
-        && Objects.equals(this.location, createTableResponse.location)
+    return Objects.equals(this.location, createTableResponse.location)
+        && Objects.equals(this.version, createTableResponse.version)
+        && Objects.equals(this.schema, createTableResponse.schema)
         && Objects.equals(this.properties, createTableResponse.properties)
         && Objects.equals(this.storageOptions, createTableResponse.storageOptions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, location, properties, storageOptions);
+    return Objects.hash(location, version, schema, properties, storageOptions);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableResponse {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
     sb.append("}");

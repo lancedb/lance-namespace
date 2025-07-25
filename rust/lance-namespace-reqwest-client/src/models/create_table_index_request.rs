@@ -13,12 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateTableIndexRequest {
-    /// The table name
-    #[serde(rename = "name")]
-    pub name: String,
-    /// The namespace identifier
-    #[serde(rename = "namespace")]
-    pub namespace: Vec<String>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
     /// Name of the column to create index on
     #[serde(rename = "column")]
     pub column: String,
@@ -55,10 +51,9 @@ pub struct CreateTableIndexRequest {
 }
 
 impl CreateTableIndexRequest {
-    pub fn new(name: String, namespace: Vec<String>, column: String, index_type: IndexType) -> CreateTableIndexRequest {
+    pub fn new(column: String, index_type: IndexType) -> CreateTableIndexRequest {
         CreateTableIndexRequest {
-            name,
-            namespace,
+            id: None,
             column,
             index_type,
             metric_type: None,
@@ -84,10 +79,10 @@ pub enum IndexType {
     LabelList,
     #[serde(rename = "IVF_FLAT")]
     IvfFlat,
-    #[serde(rename = "IVF_HNSW_SQ")]
-    IvfHnswSq,
     #[serde(rename = "IVF_PQ")]
     IvfPq,
+    #[serde(rename = "IVF_HNSW_SQ")]
+    IvfHnswSq,
     #[serde(rename = "FTS")]
     Fts,
 }

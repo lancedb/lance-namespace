@@ -13,23 +13,21 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DropTableResponse {
-    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
-    #[serde(rename = "namespace", skip_serializing_if = "Option::is_none")]
-    pub namespace: Option<Vec<String>>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
+    /// If present, indicating the operation is long running and should be tracked using GetTransaction 
     #[serde(rename = "transactionId", skip_serializing_if = "Option::is_none")]
-    pub transaction_id: Option<String>,
+    pub transaction_id: Option<Vec<String>>,
 }
 
 impl DropTableResponse {
     pub fn new() -> DropTableResponse {
         DropTableResponse {
-            name: None,
-            namespace: None,
+            id: None,
             location: None,
             properties: None,
             transaction_id: None,

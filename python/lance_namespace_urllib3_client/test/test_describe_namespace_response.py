@@ -35,15 +35,10 @@ class TestDescribeNamespaceResponse(unittest.TestCase):
         model = DescribeNamespaceResponse()
         if include_optional:
             return DescribeNamespaceResponse(
-                name = '',
-                parent = [
-                    ''
-                    ],
                 properties = {owner=Ralph, created_at=1452120468}
             )
         else:
             return DescribeNamespaceResponse(
-                name = '',
         )
         """
 

@@ -31,76 +31,38 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DescribeTableIndexStatsRequest {
 
-  private String name;
-
-  @Valid private List<String> namespace = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   private Long version;
 
-  public DescribeTableIndexStatsRequest() {
-    super();
-  }
+  private String indexName;
 
-  /** Constructor with only required parameters */
-  public DescribeTableIndexStatsRequest(String name, List<String> namespace) {
-    this.name = name;
-    this.namespace = namespace;
-  }
-
-  public DescribeTableIndexStatsRequest name(String name) {
-    this.name = name;
+  public DescribeTableIndexStatsRequest id(List<String> id) {
+    this.id = id;
     return this;
   }
 
-  /**
-   * The table name
-   *
-   * @return name
-   */
-  @NotNull
-  @Schema(
-      name = "name",
-      description = "The table name",
-      requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public DescribeTableIndexStatsRequest namespace(List<String> namespace) {
-    this.namespace = namespace;
-    return this;
-  }
-
-  public DescribeTableIndexStatsRequest addNamespaceItem(String namespaceItem) {
-    if (this.namespace == null) {
-      this.namespace = new ArrayList<>();
+  public DescribeTableIndexStatsRequest addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
     }
-    this.namespace.add(namespaceItem);
+    this.id.add(idItem);
     return this;
   }
 
   /**
-   * The namespace identifier
+   * Get id
    *
-   * @return namespace
+   * @return id
    */
-  @NotNull
-  @Schema(
-      name = "namespace",
-      description = "The namespace identifier",
-      requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("namespace")
-  public List<String> getNamespace() {
-    return namespace;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
   }
 
-  public void setNamespace(List<String> namespace) {
-    this.namespace = namespace;
+  public void setId(List<String> id) {
+    this.id = id;
   }
 
   public DescribeTableIndexStatsRequest version(Long version) {
@@ -127,6 +89,29 @@ public class DescribeTableIndexStatsRequest {
     this.version = version;
   }
 
+  public DescribeTableIndexStatsRequest indexName(String indexName) {
+    this.indexName = indexName;
+    return this;
+  }
+
+  /**
+   * Name of the index
+   *
+   * @return indexName
+   */
+  @Schema(
+      name = "index_name",
+      description = "Name of the index",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("index_name")
+  public String getIndexName() {
+    return indexName;
+  }
+
+  public void setIndexName(String indexName) {
+    this.indexName = indexName;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -137,23 +122,23 @@ public class DescribeTableIndexStatsRequest {
     }
     DescribeTableIndexStatsRequest describeTableIndexStatsRequest =
         (DescribeTableIndexStatsRequest) o;
-    return Objects.equals(this.name, describeTableIndexStatsRequest.name)
-        && Objects.equals(this.namespace, describeTableIndexStatsRequest.namespace)
-        && Objects.equals(this.version, describeTableIndexStatsRequest.version);
+    return Objects.equals(this.id, describeTableIndexStatsRequest.id)
+        && Objects.equals(this.version, describeTableIndexStatsRequest.version)
+        && Objects.equals(this.indexName, describeTableIndexStatsRequest.indexName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, namespace, version);
+    return Objects.hash(id, version, indexName);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeTableIndexStatsRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    indexName: ").append(toIndentedString(indexName)).append("\n");
     sb.append("}");
     return sb.toString();
   }

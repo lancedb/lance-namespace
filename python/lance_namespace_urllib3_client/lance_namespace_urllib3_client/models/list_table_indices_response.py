@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field
+from typing import Any, ClassVar, Dict, List
 from lance_namespace_urllib3_client.models.index_list_item_response import IndexListItemResponse
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,12 +27,8 @@ class ListTableIndicesResponse(BaseModel):
     """
     ListTableIndicesResponse
     """ # noqa: E501
-    name: StrictStr = Field(description="The table name")
-    namespace: List[StrictStr] = Field(description="The namespace identifier")
-    location: StrictStr = Field(description="Table location (usually empty)")
-    properties: Optional[Dict[str, StrictStr]] = Field(default=None, description="Additional properties (usually empty)")
     indexes: List[IndexListItemResponse] = Field(description="List of indexes on the table")
-    __properties: ClassVar[List[str]] = ["name", "namespace", "location", "properties", "indexes"]
+    __properties: ClassVar[List[str]] = ["indexes"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -92,10 +88,6 @@ class ListTableIndicesResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "namespace": obj.get("namespace"),
-            "location": obj.get("location"),
-            "properties": obj.get("properties"),
             "indexes": [IndexListItemResponse.from_dict(_item) for _item in obj["indexes"]] if obj.get("indexes") is not None else None
         })
         return _obj

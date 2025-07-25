@@ -26,7 +26,6 @@ import java.util.StringJoiner;
 
 /** DescribeTransactionResponse */
 @JsonPropertyOrder({
-  DescribeTransactionResponse.JSON_PROPERTY_ID,
   DescribeTransactionResponse.JSON_PROPERTY_STATUS,
   DescribeTransactionResponse.JSON_PROPERTY_PROPERTIES
 })
@@ -34,9 +33,6 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DescribeTransactionResponse {
-  public static final String JSON_PROPERTY_ID = "id";
-  @javax.annotation.Nonnull private String id;
-
   public static final String JSON_PROPERTY_STATUS = "status";
   @javax.annotation.Nonnull private TransactionStatus status;
 
@@ -44,30 +40,6 @@ public class DescribeTransactionResponse {
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public DescribeTransactionResponse() {}
-
-  public DescribeTransactionResponse id(@javax.annotation.Nonnull String id) {
-
-    this.id = id;
-    return this;
-  }
-
-  /**
-   * Get id
-   *
-   * @return id
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_ID)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getId() {
-    return id;
-  }
-
-  @JsonProperty(JSON_PROPERTY_ID)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setId(@javax.annotation.Nonnull String id) {
-    this.id = id;
-  }
 
   public DescribeTransactionResponse status(@javax.annotation.Nonnull TransactionStatus status) {
 
@@ -135,21 +107,19 @@ public class DescribeTransactionResponse {
       return false;
     }
     DescribeTransactionResponse describeTransactionResponse = (DescribeTransactionResponse) o;
-    return Objects.equals(this.id, describeTransactionResponse.id)
-        && Objects.equals(this.status, describeTransactionResponse.status)
+    return Objects.equals(this.status, describeTransactionResponse.status)
         && Objects.equals(this.properties, describeTransactionResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, status, properties);
+    return Objects.hash(status, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeTransactionResponse {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
@@ -197,21 +167,6 @@ public class DescribeTransactionResponse {
     }
 
     StringJoiner joiner = new StringJoiner("&");
-
-    // add `id` to the URL query string
-    if (getId() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sid%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getId()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
 
     // add `status` to the URL query string
     if (getStatus() != null) {

@@ -32,7 +32,7 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class JsonDataType {
 
-  @Valid private List<@Valid JsonField> fields = new ArrayList<>();
+  @Valid private List<@Valid JsonArrowField> fields = new ArrayList<>();
 
   private Long length;
 
@@ -47,12 +47,12 @@ public class JsonDataType {
     this.type = type;
   }
 
-  public JsonDataType fields(List<@Valid JsonField> fields) {
+  public JsonDataType fields(List<@Valid JsonArrowField> fields) {
     this.fields = fields;
     return this;
   }
 
-  public JsonDataType addFieldsItem(JsonField fieldsItem) {
+  public JsonDataType addFieldsItem(JsonArrowField fieldsItem) {
     if (this.fields == null) {
       this.fields = new ArrayList<>();
     }
@@ -71,11 +71,11 @@ public class JsonDataType {
       description = "Fields for complex types like Struct, Union, etc.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("fields")
-  public List<@Valid JsonField> getFields() {
+  public List<@Valid JsonArrowField> getFields() {
     return fields;
   }
 
-  public void setFields(List<@Valid JsonField> fields) {
+  public void setFields(List<@Valid JsonArrowField> fields) {
     this.fields = fields;
   }
 

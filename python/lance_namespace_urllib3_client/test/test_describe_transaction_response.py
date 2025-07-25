@@ -35,7 +35,6 @@ class TestDescribeTransactionResponse(unittest.TestCase):
         model = DescribeTransactionResponse()
         if include_optional:
             return DescribeTransactionResponse(
-                id = '',
                 status = 'QUEUED',
                 properties = {
                     'key' : ''
@@ -43,7 +42,6 @@ class TestDescribeTransactionResponse(unittest.TestCase):
             )
         else:
             return DescribeTransactionResponse(
-                id = '',
                 status = 'QUEUED',
         )
         """

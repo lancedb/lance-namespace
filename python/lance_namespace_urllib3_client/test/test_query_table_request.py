@@ -35,8 +35,7 @@ class TestQueryTableRequest(unittest.TestCase):
         model = QueryTableRequest()
         if include_optional:
             return QueryTableRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ],
                 bypass_vector_index = True,
@@ -126,10 +125,6 @@ class TestQueryTableRequest(unittest.TestCase):
             )
         else:
             return QueryTableRequest(
-                name = '',
-                namespace = [
-                    ''
-                    ],
                 k = 0,
                 vector = lance_namespace_urllib3_client.models.query_table_request_vector.QueryTableRequest_vector(
                     single_vector = [

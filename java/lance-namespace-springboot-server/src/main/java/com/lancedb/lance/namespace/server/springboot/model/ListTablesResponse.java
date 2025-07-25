@@ -34,7 +34,7 @@ public class ListTablesResponse {
 
   @Valid private Set<String> tables = new LinkedHashSet<>();
 
-  private String nextPageToken;
+  private String pageToken;
 
   public ListTablesResponse() {
     super();
@@ -59,12 +59,16 @@ public class ListTablesResponse {
   }
 
   /**
-   * Get tables
+   * The list of names of the tables relative to the parent namespace `id` in the request.
    *
    * @return tables
    */
   @NotNull
-  @Schema(name = "tables", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(
+      name = "tables",
+      description =
+          "The list of names of the tables relative to the parent namespace `id` in the request. ",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tables")
   public Set<String> getTables() {
     return tables;
@@ -75,35 +79,35 @@ public class ListTablesResponse {
     this.tables = tables;
   }
 
-  public ListTablesResponse nextPageToken(String nextPageToken) {
-    this.nextPageToken = nextPageToken;
+  public ListTablesResponse pageToken(String pageToken) {
+    this.pageToken = pageToken;
     return this;
   }
 
   /**
-   * An opaque token that allows pagination for list APIs (e.g. ListNamespaces). For an initial
-   * client request for a list API, if the server cannot return all items in one response, or if
-   * there are more items than the `pageSize` specified in the client request, the server must
-   * return a `nextPageToken` in the response indicating there are more results available. After the
-   * initial request, the value of `nextPageToken` from each response must be used by the client as
-   * the `pageToken` parameter value for the next request. Clients must interpret either `null`,
-   * missing value or empty string value of `nextPageToken` from a server response as the end of the
-   * listing results.
+   * An opaque token that allows pagination for list operations (e.g. ListNamespaces). For an
+   * initial request of a list operation, if the implementation cannot return all items in one
+   * response, or if there are more items than the page limit specified in the request, the
+   * implementation must return a page token in the response, indicating there are more results
+   * available. After the initial request, the value of the page token from each response must be
+   * used as the page token value for the next request. Caller must interpret either `null`, missing
+   * value or empty string value of the page token from the implementation's response as the end of
+   * the listing results.
    *
-   * @return nextPageToken
+   * @return pageToken
    */
   @Schema(
-      name = "nextPageToken",
+      name = "page_token",
       description =
-          "An opaque token that allows pagination for list APIs (e.g. ListNamespaces). For an initial client request for a list API, if the server cannot return all items in one response, or if there are more items than the `pageSize` specified in the client request, the server must return a `nextPageToken` in the response indicating there are more results available. After the initial request, the value of `nextPageToken` from each response must be used by the client as the `pageToken` parameter value for the next request. Clients must interpret either `null`, missing value or empty string value of `nextPageToken` from a server response as the end of the listing results.",
+          "An opaque token that allows pagination for list operations (e.g. ListNamespaces).  For an initial request of a list operation,  if the implementation cannot return all items in one response, or if there are more items than the page limit specified in the request, the implementation must return a page token in the response, indicating there are more results available.  After the initial request,  the value of the page token from each response must be used as the page token value for the next request.  Caller must interpret either `null`,  missing value or empty string value of the page token from the implementation's response as the end of the listing results. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("nextPageToken")
-  public String getNextPageToken() {
-    return nextPageToken;
+  @JsonProperty("page_token")
+  public String getPageToken() {
+    return pageToken;
   }
 
-  public void setNextPageToken(String nextPageToken) {
-    this.nextPageToken = nextPageToken;
+  public void setPageToken(String pageToken) {
+    this.pageToken = pageToken;
   }
 
   @Override
@@ -116,12 +120,12 @@ public class ListTablesResponse {
     }
     ListTablesResponse listTablesResponse = (ListTablesResponse) o;
     return Objects.equals(this.tables, listTablesResponse.tables)
-        && Objects.equals(this.nextPageToken, listTablesResponse.nextPageToken);
+        && Objects.equals(this.pageToken, listTablesResponse.pageToken);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(tables, nextPageToken);
+    return Objects.hash(tables, pageToken);
   }
 
   @Override
@@ -129,7 +133,7 @@ public class ListTablesResponse {
     StringBuilder sb = new StringBuilder();
     sb.append("class ListTablesResponse {\n");
     sb.append("    tables: ").append(toIndentedString(tables)).append("\n");
-    sb.append("    nextPageToken: ").append(toIndentedString(nextPageToken)).append("\n");
+    sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
     sb.append("}");
     return sb.toString();
   }

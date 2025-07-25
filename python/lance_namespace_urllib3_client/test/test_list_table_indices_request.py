@@ -35,18 +35,13 @@ class TestListTableIndicesRequest(unittest.TestCase):
         model = ListTableIndicesRequest()
         if include_optional:
             return ListTableIndicesRequest(
-                name = '',
-                namespace = [
+                id = [
                     ''
                     ],
                 version = 0
             )
         else:
             return ListTableIndicesRequest(
-                name = '',
-                namespace = [
-                    ''
-                    ],
         )
         """
 

@@ -5,9 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** |  | [optional] 
-**namespace** | **List[str]** |  | [optional] 
+**id** | **List[str]** |  | [optional] 
 **location** | **str** |  | 
+**properties** | **Dict[str, str]** |  | [optional] 
 
 ## Example
 

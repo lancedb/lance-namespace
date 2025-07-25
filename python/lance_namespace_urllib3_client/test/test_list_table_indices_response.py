@@ -35,14 +35,6 @@ class TestListTableIndicesResponse(unittest.TestCase):
         model = ListTableIndicesResponse()
         if include_optional:
             return ListTableIndicesResponse(
-                name = '',
-                namespace = [
-                    ''
-                    ],
-                location = '',
-                properties = {
-                    'key' : ''
-                    },
                 indexes = [
                     lance_namespace_urllib3_client.models.index_list_item_response.IndexListItemResponse(
                         index_name = '', 
@@ -55,11 +47,6 @@ class TestListTableIndicesResponse(unittest.TestCase):
             )
         else:
             return ListTableIndicesResponse(
-                name = '',
-                namespace = [
-                    ''
-                    ],
-                location = '',
                 indexes = [
                     lance_namespace_urllib3_client.models.index_list_item_response.IndexListItemResponse(
                         index_name = '', 

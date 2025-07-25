@@ -4,8 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **String** | The table name | 
-**namespace** | **Vec<String>** | The namespace identifier | 
+**id** | Option<**Vec<String>**> |  | [optional]
 **predicate** | Option<**String**> | Optional SQL predicate to filter rows for update | [optional]
 **updates** | [**Vec<Vec<String>>**](Vec.md) | List of column updates as [column_name, expression] pairs | 
 
