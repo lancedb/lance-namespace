@@ -27,7 +27,13 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/** Tests for table lifecycle operations: create, describe, insert, drop. */
+/**
+ * Tests for table lifecycle operations: create, describe, insert, drop.
+ *
+ * <p>Note: All table creation operations require a location parameter to be set. This specifies
+ * where the table data will be stored (e.g., local filesystem, S3, GCS). For tests, we use file://
+ * URIs pointing to /tmp/lance/ directory.
+ */
 public class TableLifecycleTest extends BaseNamespaceTest {
 
   @Test
@@ -44,6 +50,9 @@ public class TableLifecycleTest extends BaseNamespaceTest {
 
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      // IMPORTANT: location is required for table creation. Use a unique path for each table.
+      // For local testing, use file:// URIs. For production, use appropriate cloud storage URIs.
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create response should not be null");
       System.out.println("✓ Table created successfully: " + tableName);
@@ -156,6 +165,9 @@ public class TableLifecycleTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 5).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      // IMPORTANT: location is required for table creation. Use a unique path for each table.
+      // For local testing, use file:// URIs. For production, use appropriate cloud storage URIs.
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create response should not be null");
 

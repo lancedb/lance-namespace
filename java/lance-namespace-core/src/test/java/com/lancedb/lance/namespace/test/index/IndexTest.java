@@ -42,6 +42,8 @@ public class IndexTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      // Location is required - specifies where table data is stored
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
 
@@ -130,6 +132,8 @@ public class IndexTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      // Location is required - specifies where table data is stored
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
 
@@ -205,6 +209,8 @@ public class IndexTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
       CreateTableRequest createRequest2 = new CreateTableRequest();
       createRequest2.setName(tableName);
+      // Location is required - specifies where table data is stored
+      createRequest2.setLocation("file:///tmp/lance/" + tableName);
       namespace.createTable(createRequest2, tableData);
 
       // Create vector index
@@ -279,6 +285,8 @@ public class IndexTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
       CreateTableRequest createRequest2 = new CreateTableRequest();
       createRequest2.setName(tableName);
+      // Location is required - specifies where table data is stored
+      createRequest2.setLocation("file:///tmp/lance/" + tableName);
       namespace.createTable(createRequest2, tableData);
 
       // Test COSINE metric

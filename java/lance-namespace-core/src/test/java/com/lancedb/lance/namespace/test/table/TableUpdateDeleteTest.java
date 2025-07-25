@@ -43,6 +43,7 @@ public class TableUpdateDeleteTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 3).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
 
@@ -107,6 +108,7 @@ public class TableUpdateDeleteTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 3).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
 

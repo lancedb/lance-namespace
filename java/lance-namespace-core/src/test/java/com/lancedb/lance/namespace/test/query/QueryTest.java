@@ -46,6 +46,8 @@ public class QueryTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 10).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      // Location is required - specifies where table data is stored
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       namespace.createTable(createRequest, tableData);
 
       // Create vector query
@@ -96,6 +98,8 @@ public class QueryTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 100).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      // Location is required - specifies where table data is stored
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       namespace.createTable(createRequest, tableData);
 
       // Test 1: Filter-only query (no vector)
@@ -143,6 +147,8 @@ public class QueryTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 50).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      // Location is required - specifies where table data is stored
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       namespace.createTable(createRequest, tableData);
 
       // Test prefilter = true
@@ -195,6 +201,8 @@ public class QueryTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 100).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      // Location is required - specifies where table data is stored
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       namespace.createTable(createRequest, tableData);
 
       // Test fast_search = true
@@ -238,6 +246,8 @@ public class QueryTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 20).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      // Location is required - specifies where table data is stored
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       namespace.createTable(createRequest, tableData);
 
       // Query with specific columns

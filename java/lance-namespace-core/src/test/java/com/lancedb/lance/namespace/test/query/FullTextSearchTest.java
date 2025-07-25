@@ -55,6 +55,7 @@ public class FullTextSearchTest extends BaseNamespaceTest {
 
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create response should not be null");
 
@@ -159,6 +160,7 @@ public class FullTextSearchTest extends BaseNamespaceTest {
 
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       namespace.createTable(createRequest, tableData);
 
       // Create FTS index
@@ -265,6 +267,7 @@ public class FullTextSearchTest extends BaseNamespaceTest {
 
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       namespace.createTable(createRequest, tableData);
 
       // Create FTS index with position for phrase queries

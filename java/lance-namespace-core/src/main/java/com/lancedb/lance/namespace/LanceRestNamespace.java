@@ -209,7 +209,7 @@ public class LanceRestNamespace implements LanceNamespace {
   public InsertIntoTableResponse insertIntoTable(
       InsertIntoTableRequest request, byte[] requestData) {
     try {
-      String modeStr = request.getMode() == null ? null : request.getMode().name();
+      String modeStr = request.getMode() == null ? null : request.getMode().getValue();
       return tableApi.insertIntoTable(
           ObjectIdentifiers.stringFrom(request, config.delimiter()),
           requestData,

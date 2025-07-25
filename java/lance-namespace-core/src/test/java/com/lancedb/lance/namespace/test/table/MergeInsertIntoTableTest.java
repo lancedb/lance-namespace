@@ -49,6 +49,7 @@ public class MergeInsertIntoTableTest extends BaseNamespaceTest {
 
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
 
@@ -159,6 +160,7 @@ public class MergeInsertIntoTableTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 5).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
+      createRequest.setLocation("file:///tmp/lance/" + tableName);
       namespace.createTable(createRequest, tableData);
 
       // Try to merge with when_not_matched_insert_all = false
