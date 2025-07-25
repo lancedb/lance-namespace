@@ -46,7 +46,7 @@ public class QueryTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 10).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
-      // Location is required - specifies where table data is stored
+      // Location is required by interface, but not used by server, put in random value
       createRequest.setLocation("random value");
       namespace.createTable(createRequest, tableData);
 
@@ -98,7 +98,7 @@ public class QueryTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 100).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
-      // Location is required - specifies where table data is stored
+      // Location is required by interface, but not used by server, put in random value
       createRequest.setLocation("random value");
       namespace.createTable(createRequest, tableData);
 
@@ -147,7 +147,7 @@ public class QueryTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 50).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
-      // Location is required - specifies where table data is stored
+      // Location is required by interface, but not used by server, put in random value
       createRequest.setLocation("random value");
       namespace.createTable(createRequest, tableData);
 
@@ -201,7 +201,7 @@ public class QueryTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 100).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
-      // Location is required - specifies where table data is stored
+      // Location is required by interface, but not used by server, put in random value
       createRequest.setLocation("random value");
       namespace.createTable(createRequest, tableData);
 
@@ -246,7 +246,7 @@ public class QueryTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 20).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
-      // Location is required - specifies where table data is stored
+      // Location is required by interface, but not used by server, put in random value
       createRequest.setLocation("random value");
       namespace.createTable(createRequest, tableData);
 

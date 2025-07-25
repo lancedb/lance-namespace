@@ -33,9 +33,6 @@ import java.util.StringJoiner;
  * pass as a part of the path parameter &#x60;namespace&#x60; - &#x60;location&#x60;: pass through
  * header &#x60;x-lance-table-location&#x60; - &#x60;properties&#x60;: pass through header
  * &#x60;x-lance-table-properties&#x60;
- * 
- * IMPORTANT: The location field is required and must be set before calling createTable().
- * Example: createRequest.setLocation("file:///tmp/lance/mytable")
  */
 @JsonPropertyOrder({
   CreateTableRequest.JSON_PROPERTY_NAME,
@@ -124,9 +121,7 @@ public class CreateTableRequest {
   }
 
   /**
-   * Get location - The storage location for the table. This is a required field when creating tables.
-   * For local file storage, use a file URI like "file:///tmp/lance/tablename".
-   * For cloud storage, use appropriate URIs like "s3://bucket/path" or "gs://bucket/path".
+   * Get location
    *
    * @return location
    */

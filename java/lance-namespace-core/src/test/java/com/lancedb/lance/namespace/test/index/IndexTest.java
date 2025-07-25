@@ -13,18 +13,23 @@
  */
 package com.lancedb.lance.namespace.test.index;
 
-import com.lancedb.lance.namespace.model.*;
-import com.lancedb.lance.namespace.test.BaseNamespaceTest;
-import com.lancedb.lance.namespace.test.utils.ArrowTestUtils;
-import com.lancedb.lance.namespace.test.utils.TestUtils;
-
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.io.IOException;
+import org.junit.jupiter.api.Test;
+import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
+import com.lancedb.lance.namespace.model.CreateTableIndexResponse;
+import com.lancedb.lance.namespace.model.CreateTableRequest;
+import com.lancedb.lance.namespace.model.CreateTableResponse;
+import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
+import com.lancedb.lance.namespace.model.DescribeTableIndexStatsResponse;
+import com.lancedb.lance.namespace.model.IndexListItemResponse;
+import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
+import com.lancedb.lance.namespace.model.ListTableIndicesResponse;
+import com.lancedb.lance.namespace.test.BaseNamespaceTest;
+import com.lancedb.lance.namespace.test.utils.ArrowTestUtils;
+import com.lancedb.lance.namespace.test.utils.TestUtils;
 
 /** Tests for index operations: create, list, stats. */
 public class IndexTest extends BaseNamespaceTest {
@@ -42,7 +47,7 @@ public class IndexTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
-      // Location is required - specifies where table data is stored
+      // Location is required by interface, but not used by server, put in random value
       createRequest.setLocation("random value");
       CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
@@ -132,7 +137,7 @@ public class IndexTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
-      // Location is required - specifies where table data is stored
+      // Location is required
       createRequest.setLocation("random value");
       CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
@@ -209,7 +214,7 @@ public class IndexTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
       CreateTableRequest createRequest2 = new CreateTableRequest();
       createRequest2.setName(tableName);
-      // Location is required - specifies where table data is stored
+      // Location is required by interface, but not used by server, put in random value
       createRequest2.setLocation("random value");
       namespace.createTable(createRequest2, tableData);
 
@@ -285,7 +290,7 @@ public class IndexTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
       CreateTableRequest createRequest2 = new CreateTableRequest();
       createRequest2.setName(tableName);
-      // Location is required - specifies where table data is stored
+      // Location is required by interface, but not used by server, put in random value
       createRequest2.setLocation("random value");
       namespace.createTable(createRequest2, tableData);
 

@@ -50,7 +50,7 @@ public class TableLifecycleTest extends BaseNamespaceTest {
 
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
-      // Location is required - specifies where table data is stored
+      // Location is required by interface, but not used by server, put in random value
       createRequest.setLocation("random value");
       CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create response should not be null");
@@ -164,7 +164,7 @@ public class TableLifecycleTest extends BaseNamespaceTest {
       byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 5).build();
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
-      // Location is required - specifies where table data is stored
+      // Location is required by interface, but not used by server, put in random value
       createRequest.setLocation("random value");
       CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create response should not be null");
