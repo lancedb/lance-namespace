@@ -3,42 +3,32 @@
 ## Lance Contributing Guide
 
 This is a sub-project of the Lance project. 
-Please read [its contributing guide](https://jackye1995.github.io/lance/community/contributing/) first. 
+Please read [its contributing guide](https://lancedb.github.io/lance/community/contributing/) first. 
 
 ## Repository structure
 
-| Component                    | Language | Path                                   | Description                                                |
-|------------------------------|----------|----------------------------------------|------------------------------------------------------------|
-| spec                         |          | docs/src/spec                          | Lance Namespace Specification                              |
-| Rust Reqwest Client          | Rust     | rust/lance-namespace-reqwest-client    | Generated Rust reqwest client for Lance REST Namespace     |
-| Python UrlLib3 Client        | Python   | python/lance_namespace_urllib3_client  | Generated Python urllib3 client for Lance REST Namespace   |
-| Java Apache Client           | Java     | java/lance-namespace-apache-client     | Generated Java Apache HTTP client for Lance REST Namespace |
-| Java Springboot Server       | Java     | java/lance-namespace-springboot-server | Generated Java SpringBoot server for Lance REST Namespace  |
-| Java Lance Namespace Core    | Java     | java/lance-namespace-core              | Lance Namespace Java Core SDK                              |
-| Java Lance Namespace Adapter | Java     | java/lance-namespace-adaptor           | Lance Namespace adapter server implementation              |
+| Component                    | Language | Path                                   | Description                                                               |
+|------------------------------|----------|----------------------------------------|---------------------------------------------------------------------------|
+| spec                         |          | docs/src/spec                          | Lance Namespace Specification                                             |
+| Rust Reqwest Client          | Rust     | rust/lance-namespace-reqwest-client    | Generated Rust reqwest client for Lance REST Namespace                    |
+| Python UrlLib3 Client        | Python   | python/lance_namespace_urllib3_client  | Generated Python urllib3 client for Lance REST Namespace                  |
+| Python Lance Namespace Core  | Python   | python/lance_namespace                 | Lance Namespace Python Core SDK                                           |
+| Java Apache Client           | Java     | java/lance-namespace-apache-client     | Generated Java Apache HTTP client for Lance REST Namespace                |
+| Java Springboot Server       | Java     | java/lance-namespace-springboot-server | Generated Java SpringBoot server for Lance REST Namespace                 |
+| Java Lance Namespace Core    | Java     | java/lance-namespace-core              | Lance Namespace Java Core SDK                                             |
+| Java Lance Namespace Adapter | Java     | java/lance-namespace-adaptor           | Lance Namespace adapter server implementation                             |
+| Java Lance Namespace Hive    | Java     | java/lance-namespace-hive              | Java Lance Namespace Apache Hive Metastore Implementation                 |
+| Java Lance Namespace Glue    | Java     | java/lance-namespace-glue              | Java Lance Namespace AWS Glue Data Catalog Implementation                 |
+| Java Lance Namespace LanceDB | Java     | java/lance-namespace-lancedb           | Java Utilities to use Lance Namespace SDK with LanceDB Cloud & Enterprise |
 
-## Install OpenAPI Generator
 
-We use [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator)
-to generate various clients and servers for the namespace specification.
-We recommend installing the tool through [pip](https://pypi.org/project/openapi-generator-cli/)
-for consistent experience across platforms.
-First time setup of virtual environment and installation:
+## Install uv
 
-```bash
-python3 -m venv .env
-source .env/bin/activate
-pip install -r requirements.txt
-```
-
-## Install Poetry for Python
-
-If you want to build the entire project, or develop python specifically,
-you need to install [poetry](https://python-poetry.org/).
-To quickly install it in your virtual environment:
+We use [uv](https://docs.astral.sh/uv/getting-started/installation/) for development.
+Make sure it is installed, and run:
 
 ```bash
-pip install -r python/requirements.txt
+uv sync --all-packages
 ```
 
 ## Lint
