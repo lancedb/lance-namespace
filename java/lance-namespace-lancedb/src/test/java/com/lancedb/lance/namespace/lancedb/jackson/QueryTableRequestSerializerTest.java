@@ -40,7 +40,7 @@ public class QueryTableRequestSerializerTest {
   public void testSingleVectorSerialization() throws Exception {
     // Create a query request with a single vector
     QueryTableRequest request = new QueryTableRequest();
-    request.setId(Arrays.asList("test", "test_table"));
+    request.setId(Arrays.asList("test_table"));
     request.setK(10);
 
     // Set single vector
@@ -55,7 +55,7 @@ public class QueryTableRequestSerializerTest {
 
     // Verify the vector is serialized as a direct array
     assertTrue(json.contains("\"vector\":[1.0,2.0,3.0,4.0]"));
-    assertTrue(json.contains("\"name\":\"test_table\""));
+    assertTrue(json.contains("\"id\":[\"test_table\"]"));
     assertTrue(json.contains("\"k\":10"));
   }
 

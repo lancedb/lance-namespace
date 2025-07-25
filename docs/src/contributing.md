@@ -1,9 +1,4 @@
-# Contributing
-
-## Lance Contributing Guide
-
-This is a sub-project of the Lance project. 
-Please read [its contributing guide](https://lancedb.github.io/lance/community/contributing/) first. 
+# Contributing to Lance Namespace
 
 ## Repository structure
 
