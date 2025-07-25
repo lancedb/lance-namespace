@@ -45,15 +45,17 @@ jobs:
           distribution: temurin
           java-version: 11
           cache: "maven"
-      - name: Install openapi-generator
-        run: pip install -r requirements.txt
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+      - name: Install dependencies
+        run: uv sync --all-packages
       - name: Codegen
         run: | 
           make clean
           make gen
       - name: Check no difference in codegen
         run: |
-          output=$(git diff -- . ':(exclude)python/lance_namespace_urllib3_client/poetry.lock')
+          output=$(git diff)
           if [ -z "$output" ]; then
             echo "There is no difference in codegen"
           else
