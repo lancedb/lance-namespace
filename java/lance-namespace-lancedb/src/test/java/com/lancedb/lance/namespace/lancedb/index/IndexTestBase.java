@@ -13,7 +13,6 @@
  */
 package com.lancedb.lance.namespace.lancedb.index;
 
-import com.google.common.collect.Lists;
 import com.lancedb.lance.namespace.lancedb.LanceDbRestNamespaceTestBase;
 import com.lancedb.lance.namespace.lancedb.utils.ArrowTestUtils;
 import com.lancedb.lance.namespace.lancedb.utils.TestUtils;
@@ -26,6 +25,8 @@ import com.lancedb.lance.namespace.model.DescribeTableIndexStatsResponse;
 import com.lancedb.lance.namespace.model.IndexListItemResponse;
 import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
 import com.lancedb.lance.namespace.model.ListTableIndicesResponse;
+
+import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

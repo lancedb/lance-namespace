@@ -13,11 +13,12 @@
  */
 package com.lancedb.lance.namespace.lancedb.jackson;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lancedb.lance.namespace.client.apache.ApiClient;
 import com.lancedb.lance.namespace.model.QueryTableRequest;
 import com.lancedb.lance.namespace.model.QueryTableRequestFullTextQuery;
 import com.lancedb.lance.namespace.model.StringFtsQuery;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

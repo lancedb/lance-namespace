@@ -13,8 +13,6 @@
  */
 package com.lancedb.lance.namespace.lancedb.utils;
 
-import com.google.common.collect.Lists;
-import com.lancedb.lance.namespace.rest.RestNamespace;
 import com.lancedb.lance.namespace.model.CountTableRowsRequest;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsResponse;
@@ -25,6 +23,9 @@ import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
 import com.lancedb.lance.namespace.model.ListTableIndicesResponse;
 import com.lancedb.lance.namespace.model.QueryTableRequest;
 import com.lancedb.lance.namespace.model.QueryTableRequestVector;
+import com.lancedb.lance.namespace.rest.RestNamespace;
+
+import com.google.common.collect.Lists;
 
 import java.util.Optional;
 import java.util.UUID;

@@ -13,9 +13,10 @@
  */
 package com.lancedb.lance.namespace.lancedb.jackson;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lancedb.lance.namespace.model.QueryTableRequest;
 import com.lancedb.lance.namespace.model.QueryTableRequestVector;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

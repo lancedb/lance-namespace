@@ -14,6 +14,7 @@
 package com.lancedb.lance.namespace.lancedb;
 
 import com.lancedb.lance.namespace.rest.RestNamespace;
+
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
 import org.junit.jupiter.api.AfterEach;
@@ -90,9 +91,8 @@ public abstract class LanceDbRestNamespaceTestBase {
    * @return Configured Lance RestNamespace instance
    */
   private RestNamespace initializeClient() {
-    LanceDbRestNamespaceBuilder builder = LanceDbRestNamespaceBuilder.newBuilder()
-            .apiKey(API_KEY)
-            .database(DATABASE);
+    LanceDbRestNamespaceBuilder builder =
+        LanceDbRestNamespaceBuilder.newBuilder().apiKey(API_KEY).database(DATABASE);
 
     if (HOST_OVERRIDE != null) {
       builder.hostOverride(HOST_OVERRIDE);

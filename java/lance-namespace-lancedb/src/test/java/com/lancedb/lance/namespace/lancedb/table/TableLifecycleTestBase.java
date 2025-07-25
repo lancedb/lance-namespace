@@ -13,7 +13,6 @@
  */
 package com.lancedb.lance.namespace.lancedb.table;
 
-import com.google.common.collect.Lists;
 import com.lancedb.lance.namespace.LanceNamespaceException;
 import com.lancedb.lance.namespace.lancedb.LanceDbRestNamespaceTestBase;
 import com.lancedb.lance.namespace.lancedb.utils.ArrowTestUtils;
@@ -27,6 +26,8 @@ import com.lancedb.lance.namespace.model.InsertIntoTableResponse;
 import com.lancedb.lance.namespace.model.JsonArrowField;
 import com.lancedb.lance.namespace.model.JsonArrowSchema;
 import com.lancedb.lance.namespace.model.JsonDataType;
+
+import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -78,7 +79,9 @@ public class TableLifecycleTestBase extends LanceDbRestNamespaceTestBase {
       assertEquals(4, responseSchema.getFields().size(), "Schema should have 4 fields");
 
       List<String> fieldNames =
-          responseSchema.getFields().stream().map(JsonArrowField::getName).collect(Collectors.toList());
+          responseSchema.getFields().stream()
+              .map(JsonArrowField::getName)
+              .collect(Collectors.toList());
       assertTrue(fieldNames.contains("id"), "Schema should contain 'id' field");
       assertTrue(fieldNames.contains("name"), "Schema should contain 'name' field");
       assertTrue(fieldNames.contains("category"), "Schema should contain 'category' field");

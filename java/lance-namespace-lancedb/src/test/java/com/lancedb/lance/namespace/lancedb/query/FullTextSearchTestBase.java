@@ -13,7 +13,6 @@
  */
 package com.lancedb.lance.namespace.lancedb.query;
 
-import com.google.common.collect.Lists;
 import com.lancedb.lance.namespace.lancedb.LanceDbRestNamespaceTestBase;
 import com.lancedb.lance.namespace.lancedb.utils.ArrowTestUtils;
 import com.lancedb.lance.namespace.lancedb.utils.TestUtils;
@@ -30,6 +29,8 @@ import com.lancedb.lance.namespace.model.QueryTableRequestFullTextQuery;
 import com.lancedb.lance.namespace.model.QueryTableRequestVector;
 import com.lancedb.lance.namespace.model.StringFtsQuery;
 import com.lancedb.lance.namespace.model.StructuredFtsQuery;
+
+import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

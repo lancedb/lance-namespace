@@ -13,12 +13,13 @@
  */
 package com.lancedb.lance.namespace.lancedb.query;
 
-import com.google.common.collect.Lists;
 import com.lancedb.lance.namespace.lancedb.LanceDbRestNamespaceTestBase;
 import com.lancedb.lance.namespace.lancedb.utils.ArrowTestUtils;
 import com.lancedb.lance.namespace.lancedb.utils.TestUtils;
 import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.QueryTableRequest;
+
+import com.google.common.collect.Lists;
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
 import org.apache.arrow.vector.types.pojo.Field;
