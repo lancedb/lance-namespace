@@ -43,7 +43,7 @@ public class IndexTest extends BaseNamespaceTest {
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
       // Location is required - specifies where table data is stored
-      createRequest.setLocation("file:///tmp/lance/" + tableName);
+      createRequest.setLocation("random value");
       CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
 
@@ -133,7 +133,7 @@ public class IndexTest extends BaseNamespaceTest {
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
       // Location is required - specifies where table data is stored
-      createRequest.setLocation("file:///tmp/lance/" + tableName);
+      createRequest.setLocation("random value");
       CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
 
@@ -210,7 +210,7 @@ public class IndexTest extends BaseNamespaceTest {
       CreateTableRequest createRequest2 = new CreateTableRequest();
       createRequest2.setName(tableName);
       // Location is required - specifies where table data is stored
-      createRequest2.setLocation("file:///tmp/lance/" + tableName);
+      createRequest2.setLocation("random value");
       namespace.createTable(createRequest2, tableData);
 
       // Create vector index
@@ -286,7 +286,7 @@ public class IndexTest extends BaseNamespaceTest {
       CreateTableRequest createRequest2 = new CreateTableRequest();
       createRequest2.setName(tableName);
       // Location is required - specifies where table data is stored
-      createRequest2.setLocation("file:///tmp/lance/" + tableName);
+      createRequest2.setLocation("random value");
       namespace.createTable(createRequest2, tableData);
 
       // Test COSINE metric

@@ -47,7 +47,7 @@ public class QueryTest extends BaseNamespaceTest {
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
       // Location is required - specifies where table data is stored
-      createRequest.setLocation("file:///tmp/lance/" + tableName);
+      createRequest.setLocation("random value");
       namespace.createTable(createRequest, tableData);
 
       // Create vector query
@@ -99,7 +99,7 @@ public class QueryTest extends BaseNamespaceTest {
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
       // Location is required - specifies where table data is stored
-      createRequest.setLocation("file:///tmp/lance/" + tableName);
+      createRequest.setLocation("random value");
       namespace.createTable(createRequest, tableData);
 
       // Test 1: Filter-only query (no vector)
@@ -148,7 +148,7 @@ public class QueryTest extends BaseNamespaceTest {
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
       // Location is required - specifies where table data is stored
-      createRequest.setLocation("file:///tmp/lance/" + tableName);
+      createRequest.setLocation("random value");
       namespace.createTable(createRequest, tableData);
 
       // Test prefilter = true
@@ -202,7 +202,7 @@ public class QueryTest extends BaseNamespaceTest {
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
       // Location is required - specifies where table data is stored
-      createRequest.setLocation("file:///tmp/lance/" + tableName);
+      createRequest.setLocation("random value");
       namespace.createTable(createRequest, tableData);
 
       // Test fast_search = true
@@ -247,7 +247,7 @@ public class QueryTest extends BaseNamespaceTest {
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setName(tableName);
       // Location is required - specifies where table data is stored
-      createRequest.setLocation("file:///tmp/lance/" + tableName);
+      createRequest.setLocation("random value");
       namespace.createTable(createRequest, tableData);
 
       // Query with specific columns
