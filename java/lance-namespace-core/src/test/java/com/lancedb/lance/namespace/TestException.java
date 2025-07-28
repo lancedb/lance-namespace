@@ -22,8 +22,8 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestException {
 
@@ -32,21 +32,21 @@ public class TestException {
     // Case 1: default ApiException
     ApiException apiError = new ApiException();
     LanceNamespaceException nsError = new LanceNamespaceException(apiError);
-    assertTrue(nsError.getErrorResponse().isEmpty());
+    assertFalse(nsError.getErrorResponse().isPresent());
     assertEquals(0, nsError.getCode());
     assertNull(nsError.getResponseBody());
 
     // Case 2: ApiException from io error
     apiError = new ApiException(new IOException("connect timeout"));
     nsError = new LanceNamespaceException(apiError);
-    assertTrue(nsError.getErrorResponse().isEmpty());
+    assertFalse(nsError.getErrorResponse().isPresent());
     assertEquals(0, nsError.getCode());
     assertNull(nsError.getResponseBody());
 
     // Case 3: ApiException from message
     apiError = new ApiException("connect timeout");
     nsError = new LanceNamespaceException(apiError);
-    assertTrue(nsError.getErrorResponse().isEmpty());
+    assertFalse(nsError.getErrorResponse().isPresent());
     assertEquals(0, nsError.getCode());
     assertNull(nsError.getResponseBody());
 
@@ -56,7 +56,7 @@ public class TestException {
         new ApiException(
             "message", new IOException("connect timeout"), 123, Maps.newHashMap(), jsonResponse);
     nsError = new LanceNamespaceException(apiError);
-    assertTrue(nsError.getErrorResponse().isEmpty());
+    assertFalse(nsError.getErrorResponse().isPresent());
     assertEquals(123, nsError.getCode());
     assertEquals(jsonResponse, nsError.getResponseBody());
 

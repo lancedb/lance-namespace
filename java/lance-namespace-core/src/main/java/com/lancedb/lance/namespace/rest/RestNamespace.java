@@ -93,7 +93,7 @@ public class RestNamespace implements LanceNamespace {
   public CreateNamespaceResponse createNamespace(CreateNamespaceRequest request) {
     try {
       return namespaceApi.createNamespace(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -107,7 +107,7 @@ public class RestNamespace implements LanceNamespace {
     try {
       // TODO: add pagination
       return namespaceApi.listNamespaces(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           config.getDelimiter(),
           request.getPageToken(),
           request.getLimit(),
@@ -121,7 +121,7 @@ public class RestNamespace implements LanceNamespace {
   public DescribeNamespaceResponse describeNamespace(DescribeNamespaceRequest request) {
     try {
       return namespaceApi.describeNamespace(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -134,7 +134,7 @@ public class RestNamespace implements LanceNamespace {
   public DropNamespaceResponse dropNamespace(DropNamespaceRequest request) {
     try {
       return namespaceApi.dropNamespace(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -147,7 +147,7 @@ public class RestNamespace implements LanceNamespace {
   public void namespaceExists(NamespaceExistsRequest request) {
     try {
       namespaceApi.namespaceExists(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -160,7 +160,7 @@ public class RestNamespace implements LanceNamespace {
   public DescribeTableResponse describeTable(DescribeTableRequest request) {
     try {
       return tableApi.describeTable(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -173,7 +173,7 @@ public class RestNamespace implements LanceNamespace {
   public Long countTableRows(CountTableRowsRequest request) {
     try {
       return tableApi.countTableRows(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -188,7 +188,7 @@ public class RestNamespace implements LanceNamespace {
       String serializedTableProperties =
           JsonUtil.generate(gen -> JsonUtil.writeStringMap(request.getProperties(), gen), false);
       return tableApi.createTable(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           requestData,
           config.getDelimiter(),
           request.getLocation(),
@@ -205,7 +205,7 @@ public class RestNamespace implements LanceNamespace {
     try {
       String modeStr = request.getMode() == null ? null : request.getMode().name();
       return tableApi.insertIntoTable(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           requestData,
           config.getDelimiter(),
           modeStr,
@@ -220,7 +220,7 @@ public class RestNamespace implements LanceNamespace {
       MergeInsertIntoTableRequest request, byte[] requestData) {
     try {
       return tableApi.mergeInsertIntoTable(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request.getOn(),
           requestData,
           config.getDelimiter(),
@@ -239,7 +239,7 @@ public class RestNamespace implements LanceNamespace {
   public UpdateTableResponse updateTable(UpdateTableRequest request) {
     try {
       return tableApi.updateTable(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -252,7 +252,7 @@ public class RestNamespace implements LanceNamespace {
   public DeleteFromTableResponse deleteFromTable(DeleteFromTableRequest request) {
     try {
       return tableApi.deleteFromTable(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -265,7 +265,7 @@ public class RestNamespace implements LanceNamespace {
   public byte[] queryTable(QueryTableRequest request) {
     try {
       return tableApi.queryTable(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -278,7 +278,7 @@ public class RestNamespace implements LanceNamespace {
   public ListTablesResponse listTables(ListTablesRequest request) {
     try {
       return tableApi.listTables(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           config.getDelimiter(),
           request.getPageToken(),
           request.getLimit(),
@@ -292,7 +292,7 @@ public class RestNamespace implements LanceNamespace {
   public CreateTableIndexResponse createTableIndex(CreateTableIndexRequest request) {
     try {
       return tableApi.createTableIndex(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -305,7 +305,7 @@ public class RestNamespace implements LanceNamespace {
   public ListTableIndicesResponse listTableIndices(ListTableIndicesRequest request) {
     try {
       return tableApi.listTableIndices(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -319,7 +319,7 @@ public class RestNamespace implements LanceNamespace {
       DescribeTableIndexStatsRequest request, String indexName) {
     try {
       return tableApi.describeTableIndexStats(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           indexName,
           request,
           config.getDelimiter(),
@@ -333,7 +333,7 @@ public class RestNamespace implements LanceNamespace {
   public RegisterTableResponse registerTable(RegisterTableRequest request) {
     try {
       return tableApi.registerTable(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -346,7 +346,7 @@ public class RestNamespace implements LanceNamespace {
   public void tableExists(TableExistsRequest request) {
     try {
       tableApi.tableExists(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -359,7 +359,7 @@ public class RestNamespace implements LanceNamespace {
   public DeregisterTableResponse deregisterTable(DeregisterTableRequest request) {
     try {
       return tableApi.deregisterTable(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -372,7 +372,7 @@ public class RestNamespace implements LanceNamespace {
   public DropTableResponse dropTable(DropTableRequest request) {
     try {
       return tableApi.dropTable(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -385,7 +385,7 @@ public class RestNamespace implements LanceNamespace {
   public AlterTransactionResponse alterTransaction(AlterTransactionRequest request) {
     try {
       return transactionApi.alterTransaction(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());
@@ -398,7 +398,7 @@ public class RestNamespace implements LanceNamespace {
   public DescribeTransactionResponse describeTransaction(DescribeTransactionRequest request) {
     try {
       return transactionApi.describeTransaction(
-          ObjectIdentifier.of(request.getId()).strId(config.getDelimiter()),
+          ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           request,
           config.getDelimiter(),
           config.getAdditionalHeaders());

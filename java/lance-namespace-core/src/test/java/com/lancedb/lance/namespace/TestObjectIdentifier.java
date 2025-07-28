@@ -47,13 +47,13 @@ public class TestObjectIdentifier {
 
     // Case 3: parse name
     oid = ObjectIdentifier.of(Lists.newArrayList());
-    assertEquals(".", oid.strId());
+    assertEquals(".", oid.idStringStyle());
 
     oid = ObjectIdentifier.of(Lists.newArrayList("a"));
-    assertEquals("a", oid.strId());
+    assertEquals("a", oid.idStringStyle());
 
     oid = ObjectIdentifier.of(Lists.newArrayList("a", "b"));
-    assertEquals("a.b", oid.strId());
+    assertEquals("a.b", oid.idStringStyle());
 
     // Case 4: parse parent
     oid = ObjectIdentifier.of(Lists.newArrayList());

@@ -58,18 +58,18 @@ public class ObjectIdentifier {
     return levels[pos];
   }
 
-  public String strId() {
-    return strId(DELIMITER_DEFAULT);
+  public String idStringStyle() {
+    return idStringStyle(DELIMITER_DEFAULT);
   }
 
-  public String strId(String delimiter) {
+  public String idStringStyle(String delimiter) {
     if (levels.length == 0) {
       return delimiter;
     }
     return String.join(delimiter, levels);
   }
 
-  public List<String> listId() {
+  public List<String> idListStyle() {
     return ImmutableList.copyOf(levels);
   }
 

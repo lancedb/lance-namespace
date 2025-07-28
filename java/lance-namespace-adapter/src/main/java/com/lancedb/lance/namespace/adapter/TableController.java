@@ -115,10 +115,10 @@ public class TableController implements TableApi {
       Optional<String> xLanceTableLocation,
       Optional<String> xLanceTableProperties) {
     try {
-      byte[] data = body.getInputStream().readAllBytes();
+      byte[] data = readAllBytes(body.getInputStream());
       com.lancedb.lance.namespace.server.springboot.model.CreateTableRequest request =
           new com.lancedb.lance.namespace.server.springboot.model.CreateTableRequest();
-      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listId());
+      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).idListStyle());
       xLanceTableLocation.ifPresent(request::setLocation);
       if (xLanceTableProperties.isPresent()) {
         // Parse JSON properties
@@ -174,10 +174,10 @@ public class TableController implements TableApi {
   public ResponseEntity<InsertIntoTableResponse> insertIntoTable(
       String id, Resource body, Optional<String> delimiter, Optional<String> mode) {
     try {
-      byte[] data = body.getInputStream().readAllBytes();
+      byte[] data = readAllBytes(body.getInputStream());
       com.lancedb.lance.namespace.server.springboot.model.InsertIntoTableRequest request =
           new com.lancedb.lance.namespace.server.springboot.model.InsertIntoTableRequest();
-      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listId());
+      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).idListStyle());
       request.setMode(
           com.lancedb.lance.namespace.server.springboot.model.InsertIntoTableRequest.ModeEnum
               .fromValue(mode.orElse("append")));
@@ -210,10 +210,10 @@ public class TableController implements TableApi {
       Optional<Boolean> whenNotMatchedBySourceDelete,
       Optional<String> whenNotMatchedBySourceDeleteFilt) {
     try {
-      byte[] data = body.getInputStream().readAllBytes();
+      byte[] data = readAllBytes(body.getInputStream());
       com.lancedb.lance.namespace.server.springboot.model.MergeInsertIntoTableRequest request =
           new com.lancedb.lance.namespace.server.springboot.model.MergeInsertIntoTableRequest();
-      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listId());
+      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).idListStyle());
       request.setOn(on);
       request.setWhenMatchedUpdateAll(whenMatchedUpdateAll.orElse(false));
       whenMatchedUpdateAllFilt.ifPresent(request::setWhenMatchedUpdateAllFilt);
@@ -244,5 +244,16 @@ public class TableController implements TableApi {
     return ResponseEntity.ok(
         ClientToServerResponse.updateTable(
             delegate.updateTable(ServerToClientRequest.updateTable(updateTableRequest))));
+  }
+
+  // JDK8 compatibility: readAllBytes() was added in JDK9
+  private static byte[] readAllBytes(java.io.InputStream inputStream) throws IOException {
+    java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+    int nRead;
+    byte[] data = new byte[16384];
+    while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+      buffer.write(data, 0, nRead);
+    }
+    return buffer.toByteArray();
   }
 }
