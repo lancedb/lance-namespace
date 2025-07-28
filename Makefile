@@ -52,8 +52,11 @@ build-java:
 
 .PHONY: gen-docs
 gen-docs:
-	cd docs/src/spec; \
-		uv run update_line_numbers.py
+	cd docs; make gen
+
+.PHONY: build-docs
+build-docs:
+	cd docs; make build
 
 .PHONY: clean
 clean: clean-rust clean-python clean-java
@@ -62,4 +65,4 @@ clean: clean-rust clean-python clean-java
 gen: lint gen-docs gen-rust gen-python gen-java
 
 .PHONY: build
-build: lint gen-docs build-rust build-python build-java
+build: lint build-docs build-rust build-python build-java

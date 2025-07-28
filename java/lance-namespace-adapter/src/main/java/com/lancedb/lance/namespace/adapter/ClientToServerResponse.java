@@ -15,20 +15,29 @@ package com.lancedb.lance.namespace.adapter;
 
 import com.lancedb.lance.namespace.server.springboot.model.AlterTransactionResponse;
 import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceResponse;
+import com.lancedb.lance.namespace.server.springboot.model.CreateTableIndexResponse;
+import com.lancedb.lance.namespace.server.springboot.model.CreateTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DeleteFromTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DescribeNamespaceResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTableIndexStatsResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DescribeTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DescribeTransactionResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ErrorResponse;
+import com.lancedb.lance.namespace.server.springboot.model.IndexListItemResponse;
+import com.lancedb.lance.namespace.server.springboot.model.InsertIntoTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.JsonArrowField;
 import com.lancedb.lance.namespace.server.springboot.model.JsonArrowSchema;
 import com.lancedb.lance.namespace.server.springboot.model.JsonDataType;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
+import com.lancedb.lance.namespace.server.springboot.model.ListTableIndicesResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ListTablesResponse;
+import com.lancedb.lance.namespace.server.springboot.model.MergeInsertIntoTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.TransactionStatus;
+import com.lancedb.lance.namespace.server.springboot.model.UpdateTableResponse;
 
 import java.util.stream.Collectors;
 
@@ -79,6 +88,7 @@ public class ClientToServerResponse {
     converted.setLocation(response.getLocation());
     converted.setSchema(convertJsonSchema(response.getSchema()));
     converted.setProperties(response.getProperties());
+    converted.setStorageOptions(response.getStorageOptions());
     return converted;
   }
 
@@ -181,6 +191,88 @@ public class ClientToServerResponse {
       com.lancedb.lance.namespace.model.AlterTransactionResponse response) {
     AlterTransactionResponse converted = new AlterTransactionResponse();
     converted.setStatus(TransactionStatus.valueOf(response.getStatus().name()));
+    return converted;
+  }
+
+  public static CreateTableResponse createTable(
+      com.lancedb.lance.namespace.model.CreateTableResponse response) {
+    CreateTableResponse converted = new CreateTableResponse();
+    converted.setLocation(response.getLocation());
+    converted.setVersion(response.getVersion());
+    converted.setSchema(convertJsonSchema(response.getSchema()));
+    converted.setProperties(response.getProperties());
+    converted.setStorageOptions(response.getStorageOptions());
+    return converted;
+  }
+
+  public static InsertIntoTableResponse insertIntoTable(
+      com.lancedb.lance.namespace.model.InsertIntoTableResponse response) {
+    InsertIntoTableResponse converted = new InsertIntoTableResponse();
+    converted.setVersion(response.getVersion());
+    return converted;
+  }
+
+  public static MergeInsertIntoTableResponse mergeInsertIntoTable(
+      com.lancedb.lance.namespace.model.MergeInsertIntoTableResponse response) {
+    MergeInsertIntoTableResponse converted = new MergeInsertIntoTableResponse();
+    converted.setNumUpdatedRows(response.getNumUpdatedRows());
+    converted.setNumInsertedRows(response.getNumInsertedRows());
+    converted.setNumDeletedRows(response.getNumDeletedRows());
+    converted.setVersion(response.getVersion());
+    return converted;
+  }
+
+  public static UpdateTableResponse updateTable(
+      com.lancedb.lance.namespace.model.UpdateTableResponse response) {
+    UpdateTableResponse converted = new UpdateTableResponse();
+    converted.setUpdatedRows(response.getUpdatedRows());
+    converted.setVersion(response.getVersion());
+    return converted;
+  }
+
+  public static DeleteFromTableResponse deleteFromTable(
+      com.lancedb.lance.namespace.model.DeleteFromTableResponse response) {
+    DeleteFromTableResponse converted = new DeleteFromTableResponse();
+    converted.setVersion(response.getVersion());
+    return converted;
+  }
+
+  public static CreateTableIndexResponse createTableIndex(
+      com.lancedb.lance.namespace.model.CreateTableIndexResponse response) {
+    CreateTableIndexResponse converted = new CreateTableIndexResponse();
+    converted.setId(response.getId());
+    converted.setLocation(response.getLocation());
+    converted.setProperties(response.getProperties());
+    return converted;
+  }
+
+  public static ListTableIndicesResponse listTableIndices(
+      com.lancedb.lance.namespace.model.ListTableIndicesResponse response) {
+    ListTableIndicesResponse converted = new ListTableIndicesResponse();
+    converted.setIndexes(
+        response.getIndexes().stream()
+            .map(ClientToServerResponse::convertIndexListItem)
+            .collect(Collectors.toList()));
+    return converted;
+  }
+
+  private static IndexListItemResponse convertIndexListItem(
+      com.lancedb.lance.namespace.model.IndexListItemResponse item) {
+    IndexListItemResponse converted = new IndexListItemResponse();
+    converted.setIndexName(item.getIndexName());
+    converted.setIndexUuid(item.getIndexUuid());
+    converted.setColumns(item.getColumns());
+    converted.setStatus(item.getStatus());
+    return converted;
+  }
+
+  public static DescribeTableIndexStatsResponse describeTableIndexStats(
+      com.lancedb.lance.namespace.model.DescribeTableIndexStatsResponse response) {
+    DescribeTableIndexStatsResponse converted = new DescribeTableIndexStatsResponse();
+    converted.setDistanceType(response.getDistanceType());
+    converted.setIndexType(response.getIndexType());
+    converted.setNumIndexedRows(response.getNumIndexedRows());
+    converted.setNumUnindexedRows(response.getNumUnindexedRows());
     return converted;
   }
 }

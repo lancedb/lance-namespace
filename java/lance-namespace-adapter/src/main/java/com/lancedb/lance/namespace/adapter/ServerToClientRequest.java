@@ -19,21 +19,31 @@ import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.AlterTransactionSetProperty;
 import com.lancedb.lance.namespace.model.AlterTransactionSetStatus;
 import com.lancedb.lance.namespace.model.AlterTransactionUnsetProperty;
+import com.lancedb.lance.namespace.model.CountTableRowsRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
+import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
+import com.lancedb.lance.namespace.model.CreateTableRequest;
+import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
+import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
 import com.lancedb.lance.namespace.model.DescribeTransactionRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropTableRequest;
+import com.lancedb.lance.namespace.model.InsertIntoTableRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
+import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
 import com.lancedb.lance.namespace.model.ListTablesRequest;
+import com.lancedb.lance.namespace.model.MergeInsertIntoTableRequest;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
+import com.lancedb.lance.namespace.model.QueryTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.SetPropertyMode;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
 import com.lancedb.lance.namespace.model.TransactionStatus;
 import com.lancedb.lance.namespace.model.UnsetPropertyMode;
+import com.lancedb.lance.namespace.model.UpdateTableRequest;
 
 import java.util.Optional;
 
@@ -102,6 +112,7 @@ public class ServerToClientRequest {
     RegisterTableRequest converted = new RegisterTableRequest();
     converted.setId(request.getId());
     converted.setLocation(request.getLocation());
+    converted.setProperties(request.getProperties());
     return converted;
   }
 
@@ -176,5 +187,285 @@ public class ServerToClientRequest {
     }
 
     throw new IllegalArgumentException("Unexpected action: " + action);
+  }
+
+  public static CountTableRowsRequest countTableRows(
+      com.lancedb.lance.namespace.server.springboot.model.CountTableRowsRequest request) {
+    CountTableRowsRequest converted = new CountTableRowsRequest();
+    converted.setId(request.getId());
+    converted.setVersion(request.getVersion());
+    converted.setFilter(request.getFilter());
+    return converted;
+  }
+
+  public static CreateTableRequest createTable(
+      com.lancedb.lance.namespace.server.springboot.model.CreateTableRequest request) {
+    CreateTableRequest converted = new CreateTableRequest();
+    converted.setId(request.getId());
+    converted.setLocation(request.getLocation());
+    converted.setProperties(request.getProperties());
+    return converted;
+  }
+
+  public static InsertIntoTableRequest insertIntoTable(
+      com.lancedb.lance.namespace.server.springboot.model.InsertIntoTableRequest request) {
+    InsertIntoTableRequest converted = new InsertIntoTableRequest();
+    converted.setId(request.getId());
+    converted.setMode(InsertIntoTableRequest.ModeEnum.valueOf(request.getMode().name()));
+    return converted;
+  }
+
+  public static MergeInsertIntoTableRequest mergeInsertIntoTable(
+      com.lancedb.lance.namespace.server.springboot.model.MergeInsertIntoTableRequest request) {
+    MergeInsertIntoTableRequest converted = new MergeInsertIntoTableRequest();
+    converted.setId(request.getId());
+    converted.setOn(request.getOn());
+    converted.setWhenMatchedUpdateAll(request.getWhenMatchedUpdateAll());
+    converted.setWhenMatchedUpdateAllFilt(request.getWhenMatchedUpdateAllFilt());
+    converted.setWhenNotMatchedInsertAll(request.getWhenNotMatchedInsertAll());
+    converted.setWhenNotMatchedBySourceDelete(request.getWhenNotMatchedBySourceDelete());
+    converted.setWhenNotMatchedBySourceDeleteFilt(request.getWhenNotMatchedBySourceDeleteFilt());
+    return converted;
+  }
+
+  public static UpdateTableRequest updateTable(
+      com.lancedb.lance.namespace.server.springboot.model.UpdateTableRequest request) {
+    UpdateTableRequest converted = new UpdateTableRequest();
+    converted.setId(request.getId());
+    converted.setPredicate(request.getPredicate());
+    converted.setUpdates(request.getUpdates());
+    return converted;
+  }
+
+  public static DeleteFromTableRequest deleteFromTable(
+      com.lancedb.lance.namespace.server.springboot.model.DeleteFromTableRequest request) {
+    DeleteFromTableRequest converted = new DeleteFromTableRequest();
+    converted.setId(request.getId());
+    converted.setPredicate(request.getPredicate());
+    return converted;
+  }
+
+  public static QueryTableRequest queryTable(
+      com.lancedb.lance.namespace.server.springboot.model.QueryTableRequest request) {
+    QueryTableRequest converted = new QueryTableRequest();
+    converted.setId(request.getId());
+    converted.setBypassVectorIndex(request.getBypassVectorIndex());
+    converted.setColumns(request.getColumns());
+    converted.setDistanceType(request.getDistanceType());
+    converted.setEf(request.getEf());
+    converted.setFastSearch(request.getFastSearch());
+    converted.setFilter(request.getFilter());
+    converted.setFullTextQuery(convertFullTextQuery(request.getFullTextQuery()));
+    converted.setK(request.getK());
+    converted.setLowerBound(request.getLowerBound());
+    converted.setNprobes(request.getNprobes());
+    converted.setOffset(request.getOffset());
+    converted.setPrefilter(request.getPrefilter());
+    converted.setRefineFactor(request.getRefineFactor());
+    converted.setUpperBound(request.getUpperBound());
+    converted.setVector(convertVector(request.getVector()));
+    converted.setVectorColumn(request.getVectorColumn());
+    converted.setVersion(request.getVersion());
+    converted.setWithRowId(request.getWithRowId());
+    return converted;
+  }
+
+  public static CreateTableIndexRequest createTableIndex(
+      com.lancedb.lance.namespace.server.springboot.model.CreateTableIndexRequest request) {
+    CreateTableIndexRequest converted = new CreateTableIndexRequest();
+    converted.setId(request.getId());
+    converted.setColumn(request.getColumn());
+    converted.setIndexType(
+        CreateTableIndexRequest.IndexTypeEnum.valueOf(request.getIndexType().name()));
+    converted.setMetricType(
+        request.getMetricType() != null
+            ? CreateTableIndexRequest.MetricTypeEnum.valueOf(request.getMetricType().name())
+            : null);
+    converted.setWithPosition(request.getWithPosition());
+    converted.setBaseTokenizer(request.getBaseTokenizer());
+    converted.setLanguage(request.getLanguage());
+    converted.setMaxTokenLength(request.getMaxTokenLength());
+    converted.setLowerCase(request.getLowerCase());
+    converted.setStem(request.getStem());
+    converted.setRemoveStopWords(request.getRemoveStopWords());
+    converted.setAsciiFolding(request.getAsciiFolding());
+    return converted;
+  }
+
+  public static ListTableIndicesRequest listTableIndices(
+      com.lancedb.lance.namespace.server.springboot.model.ListTableIndicesRequest request) {
+    ListTableIndicesRequest converted = new ListTableIndicesRequest();
+    converted.setId(request.getId());
+    converted.setVersion(request.getVersion());
+    return converted;
+  }
+
+  public static DescribeTableIndexStatsRequest describeTableIndexStats(
+      com.lancedb.lance.namespace.server.springboot.model.DescribeTableIndexStatsRequest request) {
+    DescribeTableIndexStatsRequest converted = new DescribeTableIndexStatsRequest();
+    converted.setId(request.getId());
+    converted.setVersion(request.getVersion());
+    converted.setIndexName(request.getIndexName());
+    return converted;
+  }
+
+  private static com.lancedb.lance.namespace.model.QueryTableRequestFullTextQuery
+      convertFullTextQuery(
+          com.lancedb.lance.namespace.server.springboot.model.QueryTableRequestFullTextQuery
+              query) {
+    if (query == null) {
+      return null;
+    }
+    com.lancedb.lance.namespace.model.QueryTableRequestFullTextQuery converted =
+        new com.lancedb.lance.namespace.model.QueryTableRequestFullTextQuery();
+    converted.setStringQuery(convertStringFtsQuery(query.getStringQuery()));
+    converted.setStructuredQuery(convertStructuredFtsQuery(query.getStructuredQuery()));
+    return converted;
+  }
+
+  private static com.lancedb.lance.namespace.model.StringFtsQuery convertStringFtsQuery(
+      com.lancedb.lance.namespace.server.springboot.model.StringFtsQuery query) {
+    if (query == null) {
+      return null;
+    }
+    com.lancedb.lance.namespace.model.StringFtsQuery converted =
+        new com.lancedb.lance.namespace.model.StringFtsQuery();
+    converted.setQuery(query.getQuery());
+    converted.setColumns(query.getColumns());
+    return converted;
+  }
+
+  private static com.lancedb.lance.namespace.model.StructuredFtsQuery convertStructuredFtsQuery(
+      com.lancedb.lance.namespace.server.springboot.model.StructuredFtsQuery query) {
+    if (query == null) {
+      return null;
+    }
+    com.lancedb.lance.namespace.model.StructuredFtsQuery converted =
+        new com.lancedb.lance.namespace.model.StructuredFtsQuery();
+    converted.setQuery(convertFtsQuery(query.getQuery()));
+    return converted;
+  }
+
+  private static com.lancedb.lance.namespace.model.QueryTableRequestVector convertVector(
+      com.lancedb.lance.namespace.server.springboot.model.QueryTableRequestVector vector) {
+    if (vector == null) {
+      return null;
+    }
+    com.lancedb.lance.namespace.model.QueryTableRequestVector converted =
+        new com.lancedb.lance.namespace.model.QueryTableRequestVector();
+    converted.setSingleVector(vector.getSingleVector());
+    converted.setMultiVector(vector.getMultiVector());
+    return converted;
+  }
+
+  private static com.lancedb.lance.namespace.model.FtsQuery convertFtsQuery(
+      com.lancedb.lance.namespace.server.springboot.model.FtsQuery query) {
+    if (query == null) {
+      return null;
+    }
+    com.lancedb.lance.namespace.model.FtsQuery converted =
+        new com.lancedb.lance.namespace.model.FtsQuery();
+
+    converted.setMatch(convertMatchQuery(query.getMatch()));
+    converted.setPhrase(convertPhraseQuery(query.getPhrase()));
+    converted.setBoost(convertBoostQuery(query.getBoost()));
+    converted.setMultiMatch(convertMultiMatchQuery(query.getMultiMatch()));
+    converted.setBoolean(convertBooleanQuery(query.getBoolean()));
+
+    return converted;
+  }
+
+  private static com.lancedb.lance.namespace.model.MatchQuery convertMatchQuery(
+      com.lancedb.lance.namespace.server.springboot.model.MatchQuery query) {
+    if (query == null) {
+      return null;
+    }
+    com.lancedb.lance.namespace.model.MatchQuery converted =
+        new com.lancedb.lance.namespace.model.MatchQuery();
+    converted.setBoost(query.getBoost());
+    converted.setColumn(query.getColumn());
+    converted.setFuzziness(query.getFuzziness());
+    converted.setMaxExpansions(query.getMaxExpansions());
+    converted.setOperator(
+        query.getOperator() != null
+            ? com.lancedb.lance.namespace.model.Operator.valueOf(query.getOperator().name())
+            : null);
+    converted.setPrefixLength(query.getPrefixLength());
+    converted.setTerms(query.getTerms());
+    return converted;
+  }
+
+  private static com.lancedb.lance.namespace.model.PhraseQuery convertPhraseQuery(
+      com.lancedb.lance.namespace.server.springboot.model.PhraseQuery query) {
+    if (query == null) {
+      return null;
+    }
+    com.lancedb.lance.namespace.model.PhraseQuery converted =
+        new com.lancedb.lance.namespace.model.PhraseQuery();
+    converted.setColumn(query.getColumn());
+    converted.setSlop(query.getSlop());
+    converted.setTerms(query.getTerms());
+    return converted;
+  }
+
+  private static com.lancedb.lance.namespace.model.BoostQuery convertBoostQuery(
+      com.lancedb.lance.namespace.server.springboot.model.BoostQuery query) {
+    if (query == null) {
+      return null;
+    }
+    com.lancedb.lance.namespace.model.BoostQuery converted =
+        new com.lancedb.lance.namespace.model.BoostQuery();
+    converted.setPositive(convertFtsQuery(query.getPositive()));
+    converted.setNegative(convertFtsQuery(query.getNegative()));
+    converted.setNegativeBoost(query.getNegativeBoost());
+    return converted;
+  }
+
+  private static com.lancedb.lance.namespace.model.MultiMatchQuery convertMultiMatchQuery(
+      com.lancedb.lance.namespace.server.springboot.model.MultiMatchQuery query) {
+    if (query == null) {
+      return null;
+    }
+    com.lancedb.lance.namespace.model.MultiMatchQuery converted =
+        new com.lancedb.lance.namespace.model.MultiMatchQuery();
+    if (query.getMatchQueries() != null) {
+      converted.setMatchQueries(
+          query.getMatchQueries().stream()
+              .map(ServerToClientRequest::convertMatchQuery)
+              .collect(java.util.stream.Collectors.toList()));
+    }
+    return converted;
+  }
+
+  private static com.lancedb.lance.namespace.model.BooleanQuery convertBooleanQuery(
+      com.lancedb.lance.namespace.server.springboot.model.BooleanQuery query) {
+    if (query == null) {
+      return null;
+    }
+    com.lancedb.lance.namespace.model.BooleanQuery converted =
+        new com.lancedb.lance.namespace.model.BooleanQuery();
+
+    if (query.getMust() != null) {
+      converted.setMust(
+          query.getMust().stream()
+              .map(ServerToClientRequest::convertFtsQuery)
+              .collect(java.util.stream.Collectors.toList()));
+    }
+
+    if (query.getMustNot() != null) {
+      converted.setMustNot(
+          query.getMustNot().stream()
+              .map(ServerToClientRequest::convertFtsQuery)
+              .collect(java.util.stream.Collectors.toList()));
+    }
+
+    if (query.getShould() != null) {
+      converted.setShould(
+          query.getShould().stream()
+              .map(ServerToClientRequest::convertFtsQuery)
+              .collect(java.util.stream.Collectors.toList()));
+    }
+
+    return converted;
   }
 }

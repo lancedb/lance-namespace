@@ -14,20 +14,40 @@
 package com.lancedb.lance.namespace.adapter;
 
 import com.lancedb.lance.namespace.LanceNamespace;
+import com.lancedb.lance.namespace.ObjectIdentifier;
 import com.lancedb.lance.namespace.server.springboot.api.TableApi;
+import com.lancedb.lance.namespace.server.springboot.model.CountTableRowsRequest;
+import com.lancedb.lance.namespace.server.springboot.model.CreateTableIndexRequest;
+import com.lancedb.lance.namespace.server.springboot.model.CreateTableIndexResponse;
+import com.lancedb.lance.namespace.server.springboot.model.CreateTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DeleteFromTableRequest;
+import com.lancedb.lance.namespace.server.springboot.model.DeleteFromTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.DeregisterTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTableIndexStatsRequest;
+import com.lancedb.lance.namespace.server.springboot.model.DescribeTableIndexStatsResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DescribeTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.DescribeTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.DropTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.InsertIntoTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.ListTableIndicesRequest;
+import com.lancedb.lance.namespace.server.springboot.model.ListTableIndicesResponse;
+import com.lancedb.lance.namespace.server.springboot.model.MergeInsertIntoTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.QueryTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.TableExistsRequest;
+import com.lancedb.lance.namespace.server.springboot.model.UpdateTableRequest;
+import com.lancedb.lance.namespace.server.springboot.model.UpdateTableResponse;
 
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Controller
@@ -77,5 +97,152 @@ public class TableController implements TableApi {
         ClientToServerResponse.deregisterTable(
             delegate.deregisterTable(
                 ServerToClientRequest.deregisterTable(deregisterTableRequest))));
+  }
+
+  @Override
+  public ResponseEntity<Long> countTableRows(
+      String id, CountTableRowsRequest countTableRowsRequest, Optional<String> delimiter) {
+    Long count =
+        delegate.countTableRows(ServerToClientRequest.countTableRows(countTableRowsRequest));
+    return ResponseEntity.ok(count);
+  }
+
+  @Override
+  public ResponseEntity<CreateTableResponse> createTable(
+      String id,
+      Resource body,
+      Optional<String> delimiter,
+      Optional<String> xLanceTableLocation,
+      Optional<String> xLanceTableProperties) {
+    try {
+      byte[] data = body.getInputStream().readAllBytes();
+      com.lancedb.lance.namespace.server.springboot.model.CreateTableRequest request =
+          new com.lancedb.lance.namespace.server.springboot.model.CreateTableRequest();
+      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listId());
+      xLanceTableLocation.ifPresent(request::setLocation);
+      if (xLanceTableProperties.isPresent()) {
+        // Parse JSON properties
+        com.fasterxml.jackson.databind.ObjectMapper mapper =
+            new com.fasterxml.jackson.databind.ObjectMapper();
+        java.util.Map<String, String> props =
+            mapper.readValue(
+                xLanceTableProperties.get(),
+                new com.fasterxml.jackson.core.type.TypeReference<
+                    java.util.Map<String, String>>() {});
+        request.setProperties(props);
+      }
+      return ResponseEntity.ok(
+          ClientToServerResponse.createTable(
+              delegate.createTable(ServerToClientRequest.createTable(request), data)));
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to read request body", e);
+    }
+  }
+
+  @Override
+  public ResponseEntity<CreateTableIndexResponse> createTableIndex(
+      String id, CreateTableIndexRequest createTableIndexRequest, Optional<String> delimiter) {
+    return ResponseEntity.ok(
+        ClientToServerResponse.createTableIndex(
+            delegate.createTableIndex(
+                ServerToClientRequest.createTableIndex(createTableIndexRequest))));
+  }
+
+  @Override
+  public ResponseEntity<DeleteFromTableResponse> deleteFromTable(
+      String id, DeleteFromTableRequest deleteFromTableRequest, Optional<String> delimiter) {
+    return ResponseEntity.ok(
+        ClientToServerResponse.deleteFromTable(
+            delegate.deleteFromTable(
+                ServerToClientRequest.deleteFromTable(deleteFromTableRequest))));
+  }
+
+  @Override
+  public ResponseEntity<DescribeTableIndexStatsResponse> describeTableIndexStats(
+      String id,
+      String indexName,
+      DescribeTableIndexStatsRequest describeTableIndexStatsRequest,
+      Optional<String> delimiter) {
+    return ResponseEntity.ok(
+        ClientToServerResponse.describeTableIndexStats(
+            delegate.describeTableIndexStats(
+                ServerToClientRequest.describeTableIndexStats(describeTableIndexStatsRequest),
+                indexName)));
+  }
+
+  @Override
+  public ResponseEntity<InsertIntoTableResponse> insertIntoTable(
+      String id, Resource body, Optional<String> delimiter, Optional<String> mode) {
+    try {
+      byte[] data = body.getInputStream().readAllBytes();
+      com.lancedb.lance.namespace.server.springboot.model.InsertIntoTableRequest request =
+          new com.lancedb.lance.namespace.server.springboot.model.InsertIntoTableRequest();
+      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listId());
+      request.setMode(
+          com.lancedb.lance.namespace.server.springboot.model.InsertIntoTableRequest.ModeEnum
+              .fromValue(mode.orElse("append")));
+      return ResponseEntity.ok(
+          ClientToServerResponse.insertIntoTable(
+              delegate.insertIntoTable(ServerToClientRequest.insertIntoTable(request), data)));
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to read request body", e);
+    }
+  }
+
+  @Override
+  public ResponseEntity<ListTableIndicesResponse> listTableIndices(
+      String id, ListTableIndicesRequest listTableIndicesRequest, Optional<String> delimiter) {
+    return ResponseEntity.ok(
+        ClientToServerResponse.listTableIndices(
+            delegate.listTableIndices(
+                ServerToClientRequest.listTableIndices(listTableIndicesRequest))));
+  }
+
+  @Override
+  public ResponseEntity<MergeInsertIntoTableResponse> mergeInsertIntoTable(
+      String id,
+      String on,
+      Resource body,
+      Optional<String> delimiter,
+      Optional<Boolean> whenMatchedUpdateAll,
+      Optional<String> whenMatchedUpdateAllFilt,
+      Optional<Boolean> whenNotMatchedInsertAll,
+      Optional<Boolean> whenNotMatchedBySourceDelete,
+      Optional<String> whenNotMatchedBySourceDeleteFilt) {
+    try {
+      byte[] data = body.getInputStream().readAllBytes();
+      com.lancedb.lance.namespace.server.springboot.model.MergeInsertIntoTableRequest request =
+          new com.lancedb.lance.namespace.server.springboot.model.MergeInsertIntoTableRequest();
+      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listId());
+      request.setOn(on);
+      request.setWhenMatchedUpdateAll(whenMatchedUpdateAll.orElse(false));
+      whenMatchedUpdateAllFilt.ifPresent(request::setWhenMatchedUpdateAllFilt);
+      request.setWhenNotMatchedInsertAll(whenNotMatchedInsertAll.orElse(false));
+      request.setWhenNotMatchedBySourceDelete(whenNotMatchedBySourceDelete.orElse(false));
+      whenNotMatchedBySourceDeleteFilt.ifPresent(request::setWhenNotMatchedBySourceDeleteFilt);
+      return ResponseEntity.ok(
+          ClientToServerResponse.mergeInsertIntoTable(
+              delegate.mergeInsertIntoTable(
+                  ServerToClientRequest.mergeInsertIntoTable(request), data)));
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to read request body", e);
+    }
+  }
+
+  @Override
+  public ResponseEntity<Resource> queryTable(
+      String id, QueryTableRequest queryTableRequest, Optional<String> delimiter) {
+    byte[] result = delegate.queryTable(ServerToClientRequest.queryTable(queryTableRequest));
+    return ResponseEntity.ok()
+        .contentType(MediaType.parseMediaType("application/vnd.apache.arrow.stream"))
+        .body(new ByteArrayResource(result));
+  }
+
+  @Override
+  public ResponseEntity<UpdateTableResponse> updateTable(
+      String id, UpdateTableRequest updateTableRequest, Optional<String> delimiter) {
+    return ResponseEntity.ok(
+        ClientToServerResponse.updateTable(
+            delegate.updateTable(ServerToClientRequest.updateTable(updateTableRequest))));
   }
 }
