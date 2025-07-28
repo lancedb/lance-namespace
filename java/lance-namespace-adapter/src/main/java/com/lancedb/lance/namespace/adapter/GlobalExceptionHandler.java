@@ -31,8 +31,8 @@ public class GlobalExceptionHandler {
 
     if (errorResponse.isPresent()) {
       com.lancedb.lance.namespace.model.ErrorResponse response = errorResponse.get();
-      if (response.getStatus() != null) {
-        return ResponseEntity.status(response.getStatus())
+      if (response.getCode() != null) {
+        return ResponseEntity.status(response.getCode())
             .body(ClientToServerResponse.errorResponse(errorResponse.get()));
       }
     }
@@ -40,11 +40,8 @@ public class GlobalExceptionHandler {
     // Transform error info into ErrorResponse
     com.lancedb.lance.namespace.model.ErrorResponse errResp =
         new com.lancedb.lance.namespace.model.ErrorResponse();
-    errResp.setStatus(500);
-    errResp.type("Internal Server Error");
-    errResp.setTitle(String.format("Lance Namespace Error Status: %d", ex.getCode()));
-    errResp.setDetail(ex.getResponseBody());
-
-    return ResponseEntity.status(500).body(ClientToServerResponse.errorResponse(errResp));
+    errResp.setCode(ex.getCode());
+    errResp.setError(ex.getMessage());
+    return ResponseEntity.status(ex.getCode()).body(ClientToServerResponse.errorResponse(errResp));
   }
 }

@@ -11,33 +11,33 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// ErrorResponse : JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)
+/// ErrorResponse : Common JSON error response model
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ErrorResponse {
-    /// a URI identifier that categorizes the error
-    #[serde(rename = "type")]
-    pub r#type: String,
     /// a brief, human-readable message about the error
-    #[serde(rename = "title", skip_serializing_if = "Option::is_none")]
-    pub title: Option<String>,
-    /// HTTP response code, (if present) it must match the actual HTTP code returned by the service
-    #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
-    pub status: Option<i32>,
-    /// a human-readable explanation of the error
+    #[serde(rename = "error", skip_serializing_if = "Option::is_none")]
+    pub error: Option<String>,
+    /// HTTP style response code, where 4XX represents client side errors  and 5XX represents server side errors.  For implementations that uses HTTP (e.g. REST namespace), this field can be optional in favor of the HTTP response status code. In case both values exist and do not match, the HTTP response status code should be used. 
+    #[serde(rename = "code", skip_serializing_if = "Option::is_none")]
+    pub code: Option<i32>,
+    /// An optional type identifier string for the error. This allows the implementation to specify their internal error type, which could be more detailed than the HTTP standard status code. 
+    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    pub r#type: Option<String>,
+    /// an optional human-readable explanation of the error. This can be used to record information such as stack trace. 
     #[serde(rename = "detail", skip_serializing_if = "Option::is_none")]
     pub detail: Option<String>,
-    /// a URI that identifies the specific occurrence of the error
+    /// a string that identifies the specific occurrence of the error. This can be a URI, a request or response ID,  or anything that the implementation can recognize to trace specific occurrence of the error. 
     #[serde(rename = "instance", skip_serializing_if = "Option::is_none")]
     pub instance: Option<String>,
 }
 
 impl ErrorResponse {
-    /// JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)
-    pub fn new(r#type: String) -> ErrorResponse {
+    /// Common JSON error response model
+    pub fn new() -> ErrorResponse {
         ErrorResponse {
-            r#type,
-            title: None,
-            status: None,
+            error: None,
+            code: None,
+            r#type: None,
             detail: None,
             instance: None,
         }

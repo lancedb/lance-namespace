@@ -25,14 +25,14 @@ from typing_extensions import Self
 
 class ErrorResponse(BaseModel):
     """
-    JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)
+    Common JSON error response model
     """ # noqa: E501
-    type: StrictStr = Field(description="a URI identifier that categorizes the error")
-    title: Optional[StrictStr] = Field(default=None, description="a brief, human-readable message about the error")
-    status: Optional[Annotated[int, Field(le=600, strict=True, ge=400)]] = Field(default=None, description="HTTP response code, (if present) it must match the actual HTTP code returned by the service")
-    detail: Optional[StrictStr] = Field(default=None, description="a human-readable explanation of the error")
-    instance: Optional[StrictStr] = Field(default=None, description="a URI that identifies the specific occurrence of the error")
-    __properties: ClassVar[List[str]] = ["type", "title", "status", "detail", "instance"]
+    error: Optional[StrictStr] = Field(default=None, description="a brief, human-readable message about the error")
+    code: Optional[Annotated[int, Field(le=600, strict=True, ge=400)]] = Field(default=None, description="HTTP style response code, where 4XX represents client side errors  and 5XX represents server side errors.  For implementations that uses HTTP (e.g. REST namespace), this field can be optional in favor of the HTTP response status code. In case both values exist and do not match, the HTTP response status code should be used. ")
+    type: Optional[StrictStr] = Field(default=None, description="An optional type identifier string for the error. This allows the implementation to specify their internal error type, which could be more detailed than the HTTP standard status code. ")
+    detail: Optional[StrictStr] = Field(default=None, description="an optional human-readable explanation of the error. This can be used to record information such as stack trace. ")
+    instance: Optional[StrictStr] = Field(default=None, description="a string that identifies the specific occurrence of the error. This can be a URI, a request or response ID,  or anything that the implementation can recognize to trace specific occurrence of the error. ")
+    __properties: ClassVar[List[str]] = ["error", "code", "type", "detail", "instance"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -85,9 +85,9 @@ class ErrorResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "error": obj.get("error"),
+            "code": obj.get("code"),
             "type": obj.get("type"),
-            "title": obj.get("title"),
-            "status": obj.get("status"),
             "detail": obj.get("detail"),
             "instance": obj.get("instance")
         })

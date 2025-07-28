@@ -172,9 +172,9 @@ public class ClientToServerResponse {
       com.lancedb.lance.namespace.model.ErrorResponse errorResponse) {
     ErrorResponse converted = new ErrorResponse();
     converted.setType(errorResponse.getType());
-    converted.setTitle(errorResponse.getTitle());
+    converted.setError(errorResponse.getError());
     converted.setDetail(errorResponse.getDetail());
-    converted.setStatus(errorResponse.getStatus());
+    converted.setCode(errorResponse.getCode());
     converted.setInstance(errorResponse.getInstance());
     return converted;
   }

@@ -102,11 +102,23 @@
                 <groupId>org.apache.arrow</groupId>
                 <artifactId>arrow-vector</artifactId>
                 <version>${arrow.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.arrow</groupId>
                 <artifactId>arrow-memory-netty</artifactId>
                 <version>${arrow.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -126,6 +138,11 @@
     </dependencyManagement>
 
     <build>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>

@@ -15,6 +15,7 @@ package com.lancedb.lance.namespace.util;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -40,6 +41,11 @@ public class JsonUtil {
 
   private static final JsonFactory FACTORY = new JsonFactory();
   private static final ObjectMapper MAPPER = new ObjectMapper(FACTORY);
+
+  static {
+    // Configure ObjectMapper to ignore unknown properties
+    MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  }
 
   public static JsonFactory factory() {
     return FACTORY;

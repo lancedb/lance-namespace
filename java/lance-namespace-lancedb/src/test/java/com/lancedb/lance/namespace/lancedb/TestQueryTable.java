@@ -11,12 +11,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.lancedb.query;
+package com.lancedb.lance.namespace.lancedb;
 
-import com.lancedb.lance.namespace.lancedb.LanceDbRestNamespaceTestBase;
-import com.lancedb.lance.namespace.lancedb.utils.ArrowTestUtils;
-import com.lancedb.lance.namespace.lancedb.utils.TestUtils;
-import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.QueryTableRequest;
 
 import com.google.common.collect.Lists;
@@ -25,6 +21,8 @@ import org.apache.arrow.memory.RootAllocator;
 import org.apache.arrow.vector.types.pojo.Field;
 import org.apache.arrow.vector.types.pojo.Schema;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,24 +32,23 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /** Tests for query operations including vector search, filters, and various query options. */
-public class QueryTestBase extends LanceDbRestNamespaceTestBase {
+public class TestQueryTable extends LanceDbRestNamespaceTestBase {
+  private static final Logger log = LoggerFactory.getLogger(TestQueryTable.class);
 
   @Test
   public void testBasicVectorQuery() throws IOException {
     skipIfNotConfigured();
 
-    System.out.println("=== Test: Basic Vector Query ===");
-    String tableName = TestUtils.generateTableName("test_vector_query");
+    log.info("=== Test: Basic Vector Query ===");
+    String tableName = Utils.generateTableName("test_vector_query");
 
     try {
       // Create table with 10 rows
-      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 10).build();
-      CreateTableRequest createRequest = new CreateTableRequest();
-      createRequest.setId(Lists.newArrayList(tableName));
-      namespace.createTable(createRequest, tableData);
+      log.info("--- Creating table {} with 10 rows ---", tableName);
+      Utils.createTable(namespace, allocator, tableName, 10);
 
       // Create vector query
-      QueryTableRequest QueryTableRequest = TestUtils.createVectorQuery(tableName, 5, 128);
+      QueryTableRequest QueryTableRequest = Utils.createVectorQuery(tableName, 5, 128);
 
       QueryTableRequest.setK(5);
 
@@ -60,7 +57,7 @@ public class QueryTestBase extends LanceDbRestNamespaceTestBase {
 
       // Verify results
       try (BufferAllocator verifyAllocator = new RootAllocator()) {
-        ArrowTestUtils.readArrowFile(
+        Utils.readArrowFile(
             queryResult,
             verifyAllocator,
             root -> {
@@ -69,20 +66,20 @@ public class QueryTestBase extends LanceDbRestNamespaceTestBase {
               for (Field field : resultSchema.getFields()) {
                 resultColumns.add(field.getName());
               }
-              System.out.println("Result columns: " + resultColumns);
+              log.debug("Result columns: {}", resultColumns);
 
               // Verify columns
               assertTrue(resultColumns.contains("id"), "Result should contain 'id' column");
               assertTrue(resultColumns.contains("name"), "Result should contain 'name' column");
             });
 
-        int totalRows = ArrowTestUtils.countRows(queryResult, verifyAllocator);
-        System.out.println("Query returned " + totalRows + " rows");
+        int totalRows = Utils.countRows(queryResult, verifyAllocator);
+        log.info("Query returned {} rows", totalRows);
         assertTrue(totalRows == 5, "Query should return exactly 5 rows");
       }
 
     } finally {
-      TestUtils.dropTable(namespace, tableName);
+      Utils.dropTable(namespace, tableName);
     }
   }
 
@@ -90,18 +87,16 @@ public class QueryTestBase extends LanceDbRestNamespaceTestBase {
   public void testQueryWithFilter() throws IOException {
     skipIfNotConfigured();
 
-    System.out.println("=== Test: Query with Filter ===");
-    String tableName = TestUtils.generateTableName("test_query_filter");
+    log.info("=== Test: Query with Filter ===");
+    String tableName = Utils.generateTableName("test_query_filter");
 
     try {
       // Create table with 100 rows for better filter testing
-      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 100).build();
-      CreateTableRequest createRequest = new CreateTableRequest();
-      createRequest.setId(Lists.newArrayList(tableName));
-      namespace.createTable(createRequest, tableData);
+      log.info("--- Creating table {} with 100 rows ---", tableName);
+      Utils.createTable(namespace, allocator, tableName, 100);
 
       // Test 1: Filter-only query (no vector)
-      System.out.println("\n--- Test 1: Filter-only query ---");
+      log.info("--- Test 1: Filter-only query ---");
       QueryTableRequest filterQuery = new QueryTableRequest();
       filterQuery.setId(Lists.newArrayList(tableName));
       filterQuery.setK(10);
@@ -111,25 +106,24 @@ public class QueryTestBase extends LanceDbRestNamespaceTestBase {
       byte[] filterResult = namespace.queryTable(filterQuery);
       assertNotNull(filterResult, "Filter query result should not be null");
 
-      int rowCount = ArrowTestUtils.countRows(filterResult, allocator);
+      int rowCount = Utils.countRows(filterResult, allocator);
       assertEquals(10, rowCount, "Filter query should return exactly 10 rows");
-      System.out.println("✓ Filter-only query returned " + rowCount + " rows");
+      log.info("✓ Filter-only query returned {} rows", rowCount);
 
       // Test 2: Vector query with filter
-      System.out.println("\n--- Test 2: Vector query with filter ---");
-      QueryTableRequest vectorFilterQuery = TestUtils.createVectorQuery(tableName, 5, 128);
+      log.info("--- Test 2: Vector query with filter ---");
+      QueryTableRequest vectorFilterQuery = Utils.createVectorQuery(tableName, 5, 128);
       vectorFilterQuery.setFilter("id < 20");
 
       byte[] vectorFilterResult = namespace.queryTable(vectorFilterQuery);
       assertNotNull(vectorFilterResult, "Vector filter query result should not be null");
 
-      List<Integer> ids =
-          ArrowTestUtils.extractColumn(vectorFilterResult, allocator, "id", Integer.class);
+      List<Integer> ids = Utils.extractColumn(vectorFilterResult, allocator, "id", Integer.class);
       assertTrue(ids.stream().allMatch(id -> id < 20), "All IDs should be less than 20");
-      System.out.println("✓ Vector query with filter returned IDs: " + ids);
+      log.info("✓ Vector query with filter returned IDs: {}", ids);
 
     } finally {
-      TestUtils.dropTable(namespace, tableName);
+      Utils.dropTable(namespace, tableName);
     }
   }
 
@@ -137,18 +131,16 @@ public class QueryTestBase extends LanceDbRestNamespaceTestBase {
   public void testQueryWithPrefilter() throws IOException {
     skipIfNotConfigured();
 
-    System.out.println("=== Test: Query with Prefilter ===");
-    String tableName = TestUtils.generateTableName("test_prefilter");
+    log.info("=== Test: Query with Prefilter ===");
+    String tableName = Utils.generateTableName("test_prefilter");
 
     try {
       // Create table
-      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 50).build();
-      CreateTableRequest createRequest = new CreateTableRequest();
-      createRequest.setId(Lists.newArrayList(tableName));
-      namespace.createTable(createRequest, tableData);
+      log.info("--- Creating table {} with 50 rows ---", tableName);
+      Utils.createTable(namespace, allocator, tableName, 50);
 
       // Test prefilter = true
-      System.out.println("\n--- Testing prefilter = true ---");
+      log.info("--- Testing prefilter = true ---");
       QueryTableRequest prefilterQuery = new QueryTableRequest();
       prefilterQuery.setId(Lists.newArrayList(tableName));
       prefilterQuery.setK(5);
@@ -159,29 +151,27 @@ public class QueryTestBase extends LanceDbRestNamespaceTestBase {
       byte[] prefilterResult = namespace.queryTable(prefilterQuery);
       assertNotNull(prefilterResult, "Prefilter query result should not be null");
 
-      List<Integer> ids =
-          ArrowTestUtils.extractColumn(prefilterResult, allocator, "id", Integer.class);
+      List<Integer> ids = Utils.extractColumn(prefilterResult, allocator, "id", Integer.class);
       assertTrue(
           ids.stream().allMatch(id -> id < 20), "All IDs should be less than 20 with prefilter");
-      System.out.println("✓ Prefilter query returned " + ids.size() + " rows");
+      log.info("✓ Prefilter query returned {} rows", ids.size());
 
       // Test prefilter = false (postfilter)
-      System.out.println("\n--- Testing prefilter = false (postfilter) ---");
-      QueryTableRequest postfilterQuery = TestUtils.createVectorQuery(tableName, 10, 128);
+      log.info("--- Testing prefilter = false (postfilter) ---");
+      QueryTableRequest postfilterQuery = Utils.createVectorQuery(tableName, 10, 128);
       postfilterQuery.setPrefilter(false);
       postfilterQuery.setFilter("id % 2 = 0"); // Even IDs only
 
       byte[] postfilterResult = namespace.queryTable(postfilterQuery);
       assertNotNull(postfilterResult, "Postfilter query result should not be null");
 
-      List<Integer> evenIds =
-          ArrowTestUtils.extractColumn(postfilterResult, allocator, "id", Integer.class);
+      List<Integer> evenIds = Utils.extractColumn(postfilterResult, allocator, "id", Integer.class);
       assertTrue(
           evenIds.stream().allMatch(id -> id % 2 == 0), "All IDs should be even with postfilter");
-      System.out.println("✓ Postfilter query returned " + evenIds.size() + " even IDs");
+      log.info("✓ Postfilter query returned {} even IDs", evenIds.size());
 
     } finally {
-      TestUtils.dropTable(namespace, tableName);
+      Utils.dropTable(namespace, tableName);
     }
   }
 
@@ -189,42 +179,40 @@ public class QueryTestBase extends LanceDbRestNamespaceTestBase {
   public void testQueryWithFastSearch() throws IOException {
     skipIfNotConfigured();
 
-    System.out.println("=== Test: Query with Fast Search ===");
-    String tableName = TestUtils.generateTableName("test_fast_search");
+    log.info("=== Test: Query with Fast Search ===");
+    String tableName = Utils.generateTableName("test_fast_search");
 
     try {
       // Create table
-      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 100).build();
-      CreateTableRequest createRequest = new CreateTableRequest();
-      createRequest.setId(Lists.newArrayList(tableName));
-      namespace.createTable(createRequest, tableData);
+      log.info("--- Creating table {} with 100 rows ---", tableName);
+      Utils.createTable(namespace, allocator, tableName, 100);
 
       // Test fast_search = true
-      System.out.println("\n--- Testing fast_search = true ---");
-      QueryTableRequest fastSearchQuery = TestUtils.createVectorQuery(tableName, 10, 128);
+      log.info("--- Testing fast_search = true ---");
+      QueryTableRequest fastSearchQuery = Utils.createVectorQuery(tableName, 10, 128);
       fastSearchQuery.setFastSearch(true);
 
       byte[] fastSearchResult = namespace.queryTable(fastSearchQuery);
       assertNotNull(fastSearchResult, "Fast search query result should not be null");
 
-      int fastSearchRows = ArrowTestUtils.countRows(fastSearchResult, allocator);
+      int fastSearchRows = Utils.countRows(fastSearchResult, allocator);
       assertEquals(10, fastSearchRows, "Fast search should return requested k rows");
-      System.out.println("✓ Fast search returned " + fastSearchRows + " rows");
+      log.info("✓ Fast search returned {} rows", fastSearchRows);
 
       // Test fast_search = false
-      System.out.println("\n--- Testing fast_search = false ---");
-      QueryTableRequest noFastSearchQuery = TestUtils.createVectorQuery(tableName, 10, 128);
+      log.info("--- Testing fast_search = false ---");
+      QueryTableRequest noFastSearchQuery = Utils.createVectorQuery(tableName, 10, 128);
       noFastSearchQuery.setFastSearch(false);
 
       byte[] noFastSearchResult = namespace.queryTable(noFastSearchQuery);
       assertNotNull(noFastSearchResult, "No fast search query result should not be null");
 
-      int noFastSearchRows = ArrowTestUtils.countRows(noFastSearchResult, allocator);
+      int noFastSearchRows = Utils.countRows(noFastSearchResult, allocator);
       assertEquals(10, noFastSearchRows, "No fast search should also return requested k rows");
-      System.out.println("✓ No fast search returned " + noFastSearchRows + " rows");
+      log.info("✓ No fast search returned {} rows", noFastSearchRows);
 
     } finally {
-      TestUtils.dropTable(namespace, tableName);
+      Utils.dropTable(namespace, tableName);
     }
   }
 
@@ -232,15 +220,13 @@ public class QueryTestBase extends LanceDbRestNamespaceTestBase {
   public void testQueryWithColumnSelection() throws IOException {
     skipIfNotConfigured();
 
-    System.out.println("=== Test: Query with Column Selection ===");
-    String tableName = TestUtils.generateTableName("test_column_selection");
+    log.info("=== Test: Query with Column Selection ===");
+    String tableName = Utils.generateTableName("test_column_selection");
 
     try {
       // Create table
-      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 20).build();
-      CreateTableRequest createRequest = new CreateTableRequest();
-      createRequest.setId(Lists.newArrayList(tableName));
-      namespace.createTable(createRequest, tableData);
+      log.info("--- Creating table {} with 20 rows ---", tableName);
+      Utils.createTable(namespace, allocator, tableName, 20);
 
       // Query with specific columns
       QueryTableRequest columnQuery = new QueryTableRequest();
@@ -253,7 +239,7 @@ public class QueryTestBase extends LanceDbRestNamespaceTestBase {
 
       // Verify only requested columns are returned
       try (BufferAllocator verifyAllocator = new RootAllocator()) {
-        ArrowTestUtils.readArrowFile(
+        Utils.readArrowFile(
             result,
             verifyAllocator,
             root -> {
@@ -268,12 +254,12 @@ public class QueryTestBase extends LanceDbRestNamespaceTestBase {
               assertFalse(
                   fieldNames.contains("embedding"), "Result should NOT contain 'embedding' column");
 
-              System.out.println("✓ Query returned only requested columns: " + fieldNames);
+              log.info("✓ Query returned only requested columns: {}", fieldNames);
             });
       }
 
     } finally {
-      TestUtils.dropTable(namespace, tableName);
+      Utils.dropTable(namespace, tableName);
     }
   }
 }

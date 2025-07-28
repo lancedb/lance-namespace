@@ -22,11 +22,11 @@ import java.net.URLEncoder;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807) */
+/** Common JSON error response model */
 @JsonPropertyOrder({
+  ErrorResponse.JSON_PROPERTY_ERROR,
+  ErrorResponse.JSON_PROPERTY_CODE,
   ErrorResponse.JSON_PROPERTY_TYPE,
-  ErrorResponse.JSON_PROPERTY_TITLE,
-  ErrorResponse.JSON_PROPERTY_STATUS,
   ErrorResponse.JSON_PROPERTY_DETAIL,
   ErrorResponse.JSON_PROPERTY_INSTANCE
 })
@@ -34,14 +34,14 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class ErrorResponse {
+  public static final String JSON_PROPERTY_ERROR = "error";
+  @javax.annotation.Nullable private String error;
+
+  public static final String JSON_PROPERTY_CODE = "code";
+  @javax.annotation.Nullable private Integer code;
+
   public static final String JSON_PROPERTY_TYPE = "type";
-  @javax.annotation.Nonnull private String type;
-
-  public static final String JSON_PROPERTY_TITLE = "title";
-  @javax.annotation.Nullable private String title;
-
-  public static final String JSON_PROPERTY_STATUS = "status";
-  @javax.annotation.Nullable private Integer status;
+  @javax.annotation.Nullable private String type;
 
   public static final String JSON_PROPERTY_DETAIL = "detail";
   @javax.annotation.Nullable private String detail;
@@ -51,77 +51,80 @@ public class ErrorResponse {
 
   public ErrorResponse() {}
 
-  public ErrorResponse type(@javax.annotation.Nonnull String type) {
+  public ErrorResponse error(@javax.annotation.Nullable String error) {
 
-    this.type = type;
-    return this;
-  }
-
-  /**
-   * a URI identifier that categorizes the error
-   *
-   * @return type
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_TYPE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getType() {
-    return type;
-  }
-
-  @JsonProperty(JSON_PROPERTY_TYPE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull String type) {
-    this.type = type;
-  }
-
-  public ErrorResponse title(@javax.annotation.Nullable String title) {
-
-    this.title = title;
+    this.error = error;
     return this;
   }
 
   /**
    * a brief, human-readable message about the error
    *
-   * @return title
+   * @return error
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_TITLE)
+  @JsonProperty(JSON_PROPERTY_ERROR)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getTitle() {
-    return title;
+  public String getError() {
+    return error;
   }
 
-  @JsonProperty(JSON_PROPERTY_TITLE)
+  @JsonProperty(JSON_PROPERTY_ERROR)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setTitle(@javax.annotation.Nullable String title) {
-    this.title = title;
+  public void setError(@javax.annotation.Nullable String error) {
+    this.error = error;
   }
 
-  public ErrorResponse status(@javax.annotation.Nullable Integer status) {
+  public ErrorResponse code(@javax.annotation.Nullable Integer code) {
 
-    this.status = status;
+    this.code = code;
     return this;
   }
 
   /**
-   * HTTP response code, (if present) it must match the actual HTTP code returned by the service
-   * minimum: 400 maximum: 600
+   * HTTP style response code, where 4XX represents client side errors and 5XX represents server
+   * side errors. For implementations that uses HTTP (e.g. REST namespace), this field can be
+   * optional in favor of the HTTP response status code. In case both values exist and do not match,
+   * the HTTP response status code should be used. minimum: 400 maximum: 600
    *
-   * @return status
+   * @return code
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_STATUS)
+  @JsonProperty(JSON_PROPERTY_CODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Integer getStatus() {
-    return status;
+  public Integer getCode() {
+    return code;
   }
 
-  @JsonProperty(JSON_PROPERTY_STATUS)
+  @JsonProperty(JSON_PROPERTY_CODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setStatus(@javax.annotation.Nullable Integer status) {
-    this.status = status;
+  public void setCode(@javax.annotation.Nullable Integer code) {
+    this.code = code;
+  }
+
+  public ErrorResponse type(@javax.annotation.Nullable String type) {
+
+    this.type = type;
+    return this;
+  }
+
+  /**
+   * An optional type identifier string for the error. This allows the implementation to specify
+   * their internal error type, which could be more detailed than the HTTP standard status code.
+   *
+   * @return type
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TYPE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getType() {
+    return type;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TYPE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setType(@javax.annotation.Nullable String type) {
+    this.type = type;
   }
 
   public ErrorResponse detail(@javax.annotation.Nullable String detail) {
@@ -131,7 +134,8 @@ public class ErrorResponse {
   }
 
   /**
-   * a human-readable explanation of the error
+   * an optional human-readable explanation of the error. This can be used to record information
+   * such as stack trace.
    *
    * @return detail
    */
@@ -155,7 +159,9 @@ public class ErrorResponse {
   }
 
   /**
-   * a URI that identifies the specific occurrence of the error
+   * a string that identifies the specific occurrence of the error. This can be a URI, a request or
+   * response ID, or anything that the implementation can recognize to trace specific occurrence of
+   * the error.
    *
    * @return instance
    */
@@ -181,25 +187,25 @@ public class ErrorResponse {
       return false;
     }
     ErrorResponse errorResponse = (ErrorResponse) o;
-    return Objects.equals(this.type, errorResponse.type)
-        && Objects.equals(this.title, errorResponse.title)
-        && Objects.equals(this.status, errorResponse.status)
+    return Objects.equals(this.error, errorResponse.error)
+        && Objects.equals(this.code, errorResponse.code)
+        && Objects.equals(this.type, errorResponse.type)
         && Objects.equals(this.detail, errorResponse.detail)
         && Objects.equals(this.instance, errorResponse.instance);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, title, status, detail, instance);
+    return Objects.hash(error, code, type, detail, instance);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ErrorResponse {\n");
+    sb.append("    error: ").append(toIndentedString(error)).append("\n");
+    sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    title: ").append(toIndentedString(title)).append("\n");
-    sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    detail: ").append(toIndentedString(detail)).append("\n");
     sb.append("    instance: ").append(toIndentedString(instance)).append("\n");
     sb.append("}");
@@ -248,6 +254,36 @@ public class ErrorResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
+    // add `error` to the URL query string
+    if (getError() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%serror%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getError()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `code` to the URL query string
+    if (getCode() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%scode%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getCode()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
     // add `type` to the URL query string
     if (getType() != null) {
       try {
@@ -257,36 +293,6 @@ public class ErrorResponse {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getType()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `title` to the URL query string
-    if (getTitle() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%stitle%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getTitle()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `status` to the URL query string
-    if (getStatus() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sstatus%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getStatus()), "UTF-8").replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

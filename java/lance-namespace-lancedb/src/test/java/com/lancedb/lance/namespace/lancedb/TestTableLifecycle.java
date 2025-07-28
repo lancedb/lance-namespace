@@ -11,13 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.lancedb.table;
+package com.lancedb.lance.namespace.lancedb;
 
 import com.lancedb.lance.namespace.LanceNamespaceException;
-import com.lancedb.lance.namespace.lancedb.LanceDbRestNamespaceTestBase;
-import com.lancedb.lance.namespace.lancedb.utils.ArrowTestUtils;
-import com.lancedb.lance.namespace.lancedb.utils.TestUtils;
-import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
@@ -29,6 +25,8 @@ import com.lancedb.lance.namespace.model.JsonDataType;
 
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,34 +35,29 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 /** Tests for table lifecycle operations: create, describe, insert, drop. */
-public class TableLifecycleTestBase extends LanceDbRestNamespaceTestBase {
+public class TestTableLifecycle extends LanceDbRestNamespaceTestBase {
+  private static final Logger log = LoggerFactory.getLogger(TestTableLifecycle.class);
 
   @Test
   public void testTableLifecycle() throws IOException {
     skipIfNotConfigured();
 
-    System.out.println("=== Test: Table Lifecycle ===");
-    String tableName = TestUtils.generateTableName("test_lifecycle");
+    log.info("=== Test: Table Lifecycle ===");
+    String tableName = Utils.generateTableName("test_lifecycle");
 
     try {
       // Create table with 3 rows
-      System.out.println("\n--- Creating table ---");
-      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 3).build();
-
-      CreateTableRequest createRequest = new CreateTableRequest();
-      createRequest.setId(Lists.newArrayList(tableName));
-      CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
+      CreateTableResponse createResponse = Utils.createTable(namespace, allocator, tableName, 3);
       assertNotNull(createResponse, "Create response should not be null");
-      System.out.println("✓ Table created successfully: " + tableName);
 
       // Test count rows
-      System.out.println("\n--- Testing count rows ---");
-      long count = TestUtils.countRows(namespace, tableName);
+      log.info("--- Testing count rows ---");
+      long count = Utils.countRows(namespace, tableName);
       assertEquals(3, count, "Row count should match expected number");
-      System.out.println("✓ Count rows verified: " + count);
+      log.info("✓ Count rows verified: {}", count);
 
       // Test describe table
-      System.out.println("\n--- Testing describe table ---");
+      log.info("--- Testing describe table ---");
       DescribeTableRequest describeRequest = new DescribeTableRequest();
       describeRequest.setId(Lists.newArrayList(tableName));
 
@@ -86,17 +79,17 @@ public class TableLifecycleTestBase extends LanceDbRestNamespaceTestBase {
       assertTrue(fieldNames.contains("name"), "Schema should contain 'name' field");
       assertTrue(fieldNames.contains("category"), "Schema should contain 'category' field");
       assertTrue(fieldNames.contains("embedding"), "Schema should contain 'embedding' field");
-      System.out.println("✓ Table schema verified with fields: " + fieldNames);
+      log.info("✓ Table schema verified with fields: {}", fieldNames);
 
       // Verify version and stats
       assertNotNull(describeResponse.getVersion(), "Version should not be null");
       assertTrue(describeResponse.getVersion() >= 1, "Version should be at least 1 for new table");
-      System.out.println("✓ Table version: " + describeResponse.getVersion());
+      log.info("✓ Table version: {}", describeResponse.getVersion());
 
       // Test insert table
-      System.out.println("\n--- Testing insert table ---");
+      log.info("--- Testing insert table ---");
       byte[] insertData1 =
-          new ArrowTestUtils.TableDataBuilder(allocator)
+          new Utils.TableDataBuilder(allocator)
               .addRows(1000, 2) // Start IDs from 1000 to differentiate
               .build();
 
@@ -107,17 +100,17 @@ public class TableLifecycleTestBase extends LanceDbRestNamespaceTestBase {
           namespace.insertIntoTable(insertRequest, insertData1);
       assertNotNull(insertResponse, "Insert response should not be null");
       assertNotNull(insertResponse.getVersion(), "Insert response version should not be null");
-      System.out.println("✓ Inserted 2 rows, new version: " + insertResponse.getVersion());
+      log.info("✓ Inserted 2 rows, new version: {}", insertResponse.getVersion());
 
       // Verify row count after first insert
-      long count2 = TestUtils.countRows(namespace, tableName);
+      long count2 = Utils.countRows(namespace, tableName);
       assertEquals(5, count2, "Row count should be 5 after first insert");
-      System.out.println("✓ Verified row count after first insert: " + count2);
+      log.info("✓ Verified row count after first insert: {}", count2);
 
       // Second insert
-      System.out.println("\n--- Testing second insert ---");
+      log.info("--- Testing second insert ---");
       byte[] insertData2 =
-          new ArrowTestUtils.TableDataBuilder(allocator)
+          new Utils.TableDataBuilder(allocator)
               .addRows(2000, 3) // Start IDs from 2000
               .build();
 
@@ -127,22 +120,21 @@ public class TableLifecycleTestBase extends LanceDbRestNamespaceTestBase {
       InsertIntoTableResponse secondInsertResponse =
           namespace.insertIntoTable(insertRequest2, insertData2);
       assertNotNull(secondInsertResponse, "Second insert response should not be null");
-      System.out.println(
-          "✓ Inserted 3 more rows, new version: " + secondInsertResponse.getVersion());
+      log.info("✓ Inserted 3 more rows, new version: {}", secondInsertResponse.getVersion());
 
       // Verify final row count
-      long finalCount = TestUtils.countRows(namespace, tableName);
+      long finalCount = Utils.countRows(namespace, tableName);
       assertEquals(8, finalCount, "Row count should be 8 after second insert");
-      System.out.println("✓ Verified final row count: " + finalCount);
+      log.info("✓ Verified final row count: {}", finalCount);
 
-      System.out.println("\n✓ Table lifecycle test passed!");
+      log.info("✓ Table lifecycle test passed!");
 
     } finally {
       // Clean up
-      TestUtils.dropTable(namespace, tableName);
+      Utils.dropTable(namespace, tableName);
 
       // Verify table was dropped
-      System.out.println("\n--- Verifying table was dropped ---");
+      log.info("--- Verifying table was dropped ---");
       try {
         DescribeTableRequest verifyDropRequest = new DescribeTableRequest();
         verifyDropRequest.setId(Lists.newArrayList(tableName));
@@ -150,7 +142,7 @@ public class TableLifecycleTestBase extends LanceDbRestNamespaceTestBase {
         fail("Expected exception when describing dropped table");
       } catch (LanceNamespaceException e) {
         assertEquals(404, e.getCode(), "Should get 404 error code for non-existent table");
-        System.out.println("✓ Confirmed table no longer exists (404 error code)");
+        log.info("✓ Confirmed table no longer exists (404 error code)");
       }
     }
   }
@@ -159,15 +151,12 @@ public class TableLifecycleTestBase extends LanceDbRestNamespaceTestBase {
   public void testDescribeTableWithVersion() throws IOException {
     skipIfNotConfigured();
 
-    System.out.println("\n=== Test: Describe Table With Version ===");
-    String tableName = TestUtils.generateTableName("test_describe_version");
+    log.info("=== Test: Describe Table With Version ===");
+    String tableName = Utils.generateTableName("test_describe_version");
 
     try {
       // Create table
-      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 5).build();
-      CreateTableRequest createRequest = new CreateTableRequest();
-      createRequest.setId(Lists.newArrayList(tableName));
-      CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
+      CreateTableResponse createResponse = Utils.createTable(namespace, allocator, tableName, 5);
       assertNotNull(createResponse, "Create response should not be null");
 
       // Get initial version
@@ -175,10 +164,10 @@ public class TableLifecycleTestBase extends LanceDbRestNamespaceTestBase {
       describeV1.setId(Lists.newArrayList(tableName));
       DescribeTableResponse v1Response = namespace.describeTable(describeV1);
       Long version1 = v1Response.getVersion();
-      System.out.println("Initial version: " + version1);
+      log.info("Initial version: {}", version1);
 
       // Insert more data to create new version
-      byte[] insertData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(100, 5).build();
+      byte[] insertData = new Utils.TableDataBuilder(allocator).addRows(100, 5).build();
       InsertIntoTableRequest insertRequest = new InsertIntoTableRequest();
       insertRequest.setId(Lists.newArrayList(tableName));
       insertRequest.setMode(InsertIntoTableRequest.ModeEnum.APPEND);
@@ -189,7 +178,7 @@ public class TableLifecycleTestBase extends LanceDbRestNamespaceTestBase {
       describeCurrent.setId(Lists.newArrayList(tableName));
       DescribeTableResponse currentResponse = namespace.describeTable(describeCurrent);
       Long currentVersion = currentResponse.getVersion();
-      System.out.println("Current version after insert: " + currentVersion);
+      log.info("Current version after insert: {}", currentVersion);
       assertTrue(currentVersion > version1, "Version should increase after insert");
 
       // Describe specific older version
@@ -223,10 +212,10 @@ public class TableLifecycleTestBase extends LanceDbRestNamespaceTestBase {
 
       // Stats are not part of the response according to the current API
 
-      System.out.println("✓ Describe table with version tested successfully");
+      log.info("✓ Describe table with version tested successfully");
 
     } finally {
-      TestUtils.dropTable(namespace, tableName);
+      Utils.dropTable(namespace, tableName);
     }
   }
 }

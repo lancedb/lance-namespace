@@ -1060,31 +1060,43 @@ components:
   schemas:
     ErrorResponse:
       type: object
-      description: JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)
-      required:
-        - type
+      description: Common JSON error response model
       properties:
-        type:
-          type: string
-          description: a URI identifier that categorizes the error
-          example: /errors/incorrect-user-pass
-        title:
+        error:
           type: string
           description: a brief, human-readable message about the error
           example: Incorrect username or password
-        status:
+        code:
           type: integer
           minimum: 400
           maximum: 600
-          description: HTTP response code, (if present) it must match the actual HTTP code returned by the service
+          description: |
+            HTTP style response code, where 4XX represents client side errors 
+            and 5XX represents server side errors.
+            
+            For implementations that uses HTTP (e.g. REST namespace),
+            this field can be optional in favor of the HTTP response status code.
+            In case both values exist and do not match, the HTTP response status code should be used.
           example: 404
+        type:
+          type: string
+          description: |
+            An optional type identifier string for the error.
+            This allows the implementation to specify their internal error type,
+            which could be more detailed than the HTTP standard status code.
+          example: /errors/incorrect-user-pass
         detail:
           type: string
-          description: a human-readable explanation of the error
+          description: |
+            an optional human-readable explanation of the error.
+            This can be used to record information such as stack trace.
           example: Authentication failed due to incorrect username or password
         instance:
           type: string
-          description: a URI that identifies the specific occurrence of the error
+          description: |
+            a string that identifies the specific occurrence of the error.
+            This can be a URI, a request or response ID, 
+            or anything that the implementation can recognize to trace specific occurrence of the error.
           example: /login/log/abc123
 
     CreateNamespaceRequest:

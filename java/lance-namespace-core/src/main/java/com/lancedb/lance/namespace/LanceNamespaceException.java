@@ -27,56 +27,38 @@ public class LanceNamespaceException extends RuntimeException {
   private static final Logger LOG = LoggerFactory.getLogger(LanceNamespaceException.class);
 
   private final int code;
-  private final String responseBody;
   private final Optional<ErrorResponse> errorResponse;
 
   public LanceNamespaceException(int code, String responseBody) {
+    super(responseBody);
     this.code = code;
-    this.responseBody = responseBody;
     this.errorResponse = Optional.empty();
   }
 
   public LanceNamespaceException(ApiException e) {
-    super(e.getResponseBody(), e);
+    super(e.getResponseBody() == null ? e.getMessage() : e.getResponseBody(), e);
 
-    ErrorResponse eResp = parse(e);
-    if (eResp != null) {
-      this.code = 0;
-      this.responseBody = null;
-      this.errorResponse = Optional.of(eResp);
-    } else {
-      this.code = e.getCode();
-      this.responseBody = e.getResponseBody();
-      this.errorResponse = Optional.empty();
-    }
-  }
-
-  public LanceNamespaceException(ErrorResponse errorResponse) {
-    super(errorResponse.getType());
-
-    this.code = 0;
-    this.responseBody = null;
-    this.errorResponse = Optional.of(errorResponse);
-  }
-
-  private static ErrorResponse parse(ApiException e) {
+    Optional<ErrorResponse> res = Optional.empty();
+    this.code = e.getCode();
     if (e.getResponseBody() != null) {
       try {
-        return JsonUtil.mapper().readValue(e.getResponseBody(), ErrorResponse.class);
+        res = Optional.of(JsonUtil.mapper().readValue(e.getResponseBody(), ErrorResponse.class));
       } catch (JsonProcessingException ex) {
-        LOG.warn("Response body in wrong format. body={}", e.getResponseBody(), ex);
+        // ignore
       }
     }
 
-    return null;
+    this.errorResponse = res;
+  }
+
+  public LanceNamespaceException(ErrorResponse errorResponse) {
+    super(errorResponse.getError());
+    this.code = 0;
+    this.errorResponse = Optional.of(errorResponse);
   }
 
   public int getCode() {
-    return errorResponse.isPresent() ? errorResponse.get().getStatus() : code;
-  }
-
-  public String getResponseBody() {
-    return responseBody;
+    return code;
   }
 
   public Optional<ErrorResponse> getErrorResponse() {
@@ -84,88 +66,88 @@ public class LanceNamespaceException extends RuntimeException {
   }
 
   public static LanceNamespaceException badRequest(
-      String type, String title, String instance, String detail) {
+      String error, String type, String instance, String detail) {
     ErrorResponse errorResponse = new ErrorResponse();
+    errorResponse.setError(error);
     errorResponse.type(type);
-    errorResponse.setTitle(title);
-    errorResponse.setStatus(400);
+    errorResponse.setCode(400);
     errorResponse.setDetail(detail);
     errorResponse.setInstance(instance);
     return new LanceNamespaceException(errorResponse);
   }
 
   public static LanceNamespaceException unauthorized(
-      String type, String title, String instance, String detail) {
+      String error, String type, String instance, String detail) {
     ErrorResponse errorResponse = new ErrorResponse();
+    errorResponse.setError(error);
     errorResponse.type(type);
-    errorResponse.setTitle(title);
-    errorResponse.setStatus(401);
+    errorResponse.setCode(401);
     errorResponse.setDetail(detail);
     errorResponse.setInstance(instance);
     return new LanceNamespaceException(errorResponse);
   }
 
   public static LanceNamespaceException forbidden(
-      String type, String title, String instance, String detail) {
+      String error, String type, String instance, String detail) {
     ErrorResponse errorResponse = new ErrorResponse();
+    errorResponse.setError(error);
     errorResponse.type(type);
-    errorResponse.setTitle(title);
-    errorResponse.setStatus(403);
+    errorResponse.setCode(403);
     errorResponse.setDetail(detail);
     errorResponse.setInstance(instance);
     return new LanceNamespaceException(errorResponse);
   }
 
   public static LanceNamespaceException notFound(
-      String type, String title, String instance, String detail) {
+      String error, String type, String instance, String detail) {
     ErrorResponse errorResponse = new ErrorResponse();
+    errorResponse.setError(error);
     errorResponse.type(type);
-    errorResponse.setTitle(title);
-    errorResponse.setStatus(404);
+    errorResponse.setCode(404);
     errorResponse.setDetail(detail);
     errorResponse.setInstance(instance);
     return new LanceNamespaceException(errorResponse);
   }
 
   public static LanceNamespaceException unsupportedOperation(
-      String type, String title, String instance, String detail) {
+      String error, String type, String instance, String detail) {
     ErrorResponse errorResponse = new ErrorResponse();
+    errorResponse.setError(error);
     errorResponse.type(type);
-    errorResponse.setTitle(title);
-    errorResponse.setStatus(406);
+    errorResponse.setCode(406);
     errorResponse.setDetail(detail);
     errorResponse.setInstance(instance);
     return new LanceNamespaceException(errorResponse);
   }
 
   public static LanceNamespaceException conflict(
-      String type, String title, String instance, String detail) {
+      String error, String type, String instance, String detail) {
     ErrorResponse errorResponse = new ErrorResponse();
+    errorResponse.setError(error);
     errorResponse.type(type);
-    errorResponse.setTitle(title);
-    errorResponse.setStatus(409);
+    errorResponse.setCode(409);
     errorResponse.setDetail(detail);
     errorResponse.setInstance(instance);
     return new LanceNamespaceException(errorResponse);
   }
 
   public static LanceNamespaceException serviceUnavailable(
-      String type, String title, String instance, String detail) {
+      String error, String type, String instance, String detail) {
     ErrorResponse errorResponse = new ErrorResponse();
+    errorResponse.setError(error);
     errorResponse.type(type);
-    errorResponse.setTitle(title);
-    errorResponse.setStatus(504);
+    errorResponse.setCode(504);
     errorResponse.setDetail(detail);
     errorResponse.setInstance(instance);
     return new LanceNamespaceException(errorResponse);
   }
 
   public static LanceNamespaceException serverError(
-      String type, String title, String instance, String detail) {
+      String error, String type, String instance, String detail) {
     ErrorResponse errorResponse = new ErrorResponse();
+    errorResponse.setError(error);
     errorResponse.type(type);
-    errorResponse.setTitle(title);
-    errorResponse.setStatus(500);
+    errorResponse.setCode(500);
     errorResponse.setDetail(detail);
     errorResponse.setInstance(instance);
     return new LanceNamespaceException(errorResponse);

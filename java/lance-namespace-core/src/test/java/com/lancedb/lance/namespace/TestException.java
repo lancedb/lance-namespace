@@ -23,61 +23,91 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TestException {
 
   @Test
-  public void testParseApiException() {
-    // Case 1: default ApiException
+  public void testDefaultApiException() {
     ApiException apiError = new ApiException();
     LanceNamespaceException nsError = new LanceNamespaceException(apiError);
     assertFalse(nsError.getErrorResponse().isPresent());
     assertEquals(0, nsError.getCode());
-    assertNull(nsError.getResponseBody());
+  }
 
-    // Case 2: ApiException from io error
-    apiError = new ApiException(new IOException("connect timeout"));
-    nsError = new LanceNamespaceException(apiError);
+  @Test
+  public void testApiExceptionFromIOError() {
+    ApiException apiError = new ApiException(new IOException("connect timeout"));
+    LanceNamespaceException nsError = new LanceNamespaceException(apiError);
     assertFalse(nsError.getErrorResponse().isPresent());
     assertEquals(0, nsError.getCode());
-    assertNull(nsError.getResponseBody());
+  }
 
-    // Case 3: ApiException from message
-    apiError = new ApiException("connect timeout");
-    nsError = new LanceNamespaceException(apiError);
+  @Test
+  public void testApiExceptionFromMessage() {
+    ApiException apiError = new ApiException("connect timeout");
+    LanceNamespaceException nsError = new LanceNamespaceException(apiError);
     assertFalse(nsError.getErrorResponse().isPresent());
     assertEquals(0, nsError.getCode());
-    assertNull(nsError.getResponseBody());
+    assertEquals("connect timeout", nsError.getMessage());
+  }
 
-    // Case 4: ApiException with response body in wrong format
+  @Test
+  public void testApiExceptionWithInvalidJsonResponse() {
     String jsonResponse = "{,,}"; // bad json
-    apiError =
+    ApiException apiError =
         new ApiException(
             "message", new IOException("connect timeout"), 123, Maps.newHashMap(), jsonResponse);
-    nsError = new LanceNamespaceException(apiError);
+    LanceNamespaceException nsError = new LanceNamespaceException(apiError);
     assertFalse(nsError.getErrorResponse().isPresent());
     assertEquals(123, nsError.getCode());
-    assertEquals(jsonResponse, nsError.getResponseBody());
+    assertEquals("{,,}", nsError.getMessage());
+  }
 
-    // Case 5: ApiException with response body in correct format
-    jsonResponse =
+  @Test
+  public void testApiExceptionWithValidJsonResponse() {
+    String jsonResponse =
         "{"
             + "\"type\":\"/errors/not-found-error\","
-            + "\"title\":\"Not found Error\","
-            + "\"status\":\"404\","
+            + "\"error\":\"Not found Error\","
+            + "\"code\":\"404\","
             + "\"instance\":\"/v1/namespaces\","
             + "\"detail\":\"Namespace not found\""
             + "}";
-    apiError =
+    ApiException apiError =
         new ApiException(
             "message", new IOException("connect timeout"), 123, Maps.newHashMap(), jsonResponse);
-    nsError = new LanceNamespaceException(apiError);
+    LanceNamespaceException nsError = new LanceNamespaceException(apiError);
     ErrorResponse errorResponse = nsError.getErrorResponse().get();
+    assertEquals("Not found Error", errorResponse.getError());
     assertEquals("/errors/not-found-error", errorResponse.getType());
-    assertEquals("Not found Error", errorResponse.getTitle());
-    assertEquals(404, errorResponse.getStatus());
+    assertEquals(404, errorResponse.getCode());
     assertEquals("/v1/namespaces", errorResponse.getInstance());
     assertEquals("Namespace not found", errorResponse.getDetail());
+  }
+
+  @Test
+  public void testApiExceptionWithUnknownFields() {
+    String jsonResponse =
+        "{"
+            + "\"type\":\"/errors/validation-error\","
+            + "\"error\":\"Validation Error\","
+            + "\"code\":\"400\","
+            + "\"instance\":\"/v1/tables\","
+            + "\"detail\":\"Invalid table name\","
+            + "\"unknownField\":\"should_be_ignored\","
+            + "\"futureExtension\":123,"
+            + "\"nestedUnknown\":{\"some\":\"data\"},"
+            + "\"arrayUnknown\":[\"item1\",\"item2\"]"
+            + "}";
+    ApiException apiError =
+        new ApiException(
+            "message", new IOException("validation error"), 400, Maps.newHashMap(), jsonResponse);
+    LanceNamespaceException nsError = new LanceNamespaceException(apiError);
+    ErrorResponse errorResponse = nsError.getErrorResponse().get();
+    assertEquals("Validation Error", errorResponse.getError());
+    assertEquals("/errors/validation-error", errorResponse.getType());
+    assertEquals(400, errorResponse.getCode());
+    assertEquals("/v1/tables", errorResponse.getInstance());
+    assertEquals("Invalid table name", errorResponse.getDetail());
   }
 }

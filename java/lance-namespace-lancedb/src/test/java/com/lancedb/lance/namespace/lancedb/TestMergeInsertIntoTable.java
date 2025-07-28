@@ -11,12 +11,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.lancedb.table;
+package com.lancedb.lance.namespace.lancedb;
 
-import com.lancedb.lance.namespace.lancedb.LanceDbRestNamespaceTestBase;
-import com.lancedb.lance.namespace.lancedb.utils.ArrowTestUtils;
-import com.lancedb.lance.namespace.lancedb.utils.TestUtils;
-import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.MergeInsertIntoTableRequest;
 import com.lancedb.lance.namespace.model.MergeInsertIntoTableResponse;
@@ -24,6 +20,8 @@ import com.lancedb.lance.namespace.model.QueryTableRequest;
 
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,39 +31,38 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /** Tests for merge insert (upsert) operations. */
-public class MergeInsertIntoTableTestBase extends LanceDbRestNamespaceTestBase {
+public class TestMergeInsertIntoTable extends LanceDbRestNamespaceTestBase {
+  private static final Logger log = LoggerFactory.getLogger(TestMergeInsertIntoTable.class);
 
   @Test
   public void testMergeInsert() throws IOException {
     skipIfNotConfigured();
 
-    System.out.println("=== Test: Merge Insert (Upsert) ===");
-    String tableName = TestUtils.generateTableName("test_merge");
+    log.info("=== Test: Merge Insert (Upsert) ===");
+    String tableName = Utils.generateTableName("test_merge");
 
     try {
       // Step 1: Create table with 3 rows
-      System.out.println("\n--- Step 1: Creating table with 3 rows ---");
+      log.info("--- Step 1: Creating table {} with 3 rows ---", tableName);
       byte[] tableData =
-          new ArrowTestUtils.TableDataBuilder(allocator)
+          new Utils.TableDataBuilder(allocator)
               .addRow(1, "Alice", generateVector(1))
               .addRow(2, "Bob", generateVector(2))
               .addRow(3, "Charlie", generateVector(3))
               .build();
 
-      CreateTableRequest createRequest = new CreateTableRequest();
-      createRequest.setId(Lists.newArrayList(tableName));
-      CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
+      CreateTableResponse createResponse = Utils.createTable(namespace, tableName, tableData);
       assertNotNull(createResponse, "Create table response should not be null");
 
       // Verify initial data
-      long initialCount = TestUtils.countRows(namespace, tableName);
+      long initialCount = Utils.countRows(namespace, tableName);
       assertEquals(3, initialCount, "Initial row count should be 3");
 
       // Step 2: Merge insert with some matching and some new rows
-      System.out.println("\n--- Step 2: Merge insert with mixed rows ---");
+      log.info("--- Step 2: Merge insert with mixed rows ---");
       // Create batch with rows: id=2,3,4 (2,3 exist, 4 is new)
       byte[] mergeData =
-          new ArrowTestUtils.TableDataBuilder(allocator)
+          new Utils.TableDataBuilder(allocator)
               .addRow(2, "Bob Updated", generateVector(20))
               .addRow(3, "Charlie Updated", generateVector(30))
               .addRow(4, "David", generateVector(4))
@@ -85,27 +82,24 @@ public class MergeInsertIntoTableTestBase extends LanceDbRestNamespaceTestBase {
       assertNotNull(mergeResponse, "Merge response should not be null");
       assertEquals(2, mergeResponse.getNumUpdatedRows().longValue(), "Should have updated 2 rows");
       assertEquals(1, mergeResponse.getNumInsertedRows().longValue(), "Should have inserted 1 row");
-      System.out.println(
-          "✓ Merge insert completed: "
-              + mergeResponse.getNumUpdatedRows()
-              + " updated, "
-              + mergeResponse.getNumInsertedRows()
-              + " inserted");
+      log.info(
+          "✓ Merge insert completed: {} updated, {} inserted",
+          mergeResponse.getNumUpdatedRows(),
+          mergeResponse.getNumInsertedRows());
 
       // Verify final count
-      long finalCount = TestUtils.countRows(namespace, tableName);
+      long finalCount = Utils.countRows(namespace, tableName);
       assertEquals(4, finalCount, "Final row count should be 4");
 
       // Step 3: Verify the updates by querying the table
-      System.out.println("\n--- Step 3: Verifying merged data ---");
-      QueryTableRequest QueryTableRequest = TestUtils.createSimpleQuery(tableName, 4);
+      log.info("--- Step 3: Verifying merged data ---");
+      QueryTableRequest QueryTableRequest = Utils.createSimpleQuery(tableName, 4);
       byte[] queryResult = namespace.queryTable(QueryTableRequest);
       assertNotNull(queryResult, "Query result should not be null");
 
       // Extract and verify the data
-      List<Integer> ids = ArrowTestUtils.extractColumn(queryResult, allocator, "id", Integer.class);
-      List<String> names =
-          ArrowTestUtils.extractColumn(queryResult, allocator, "name", String.class);
+      List<Integer> ids = Utils.extractColumn(queryResult, allocator, "id", Integer.class);
+      List<String> names = Utils.extractColumn(queryResult, allocator, "name", String.class);
 
       Map<Integer, String> idToName = new HashMap<>();
       for (int i = 0; i < ids.size(); i++) {
@@ -118,12 +112,12 @@ public class MergeInsertIntoTableTestBase extends LanceDbRestNamespaceTestBase {
       assertEquals("Bob Updated", idToName.get(2), "ID 2 should be updated");
       assertEquals("Charlie Updated", idToName.get(3), "ID 3 should be updated");
       assertEquals("David", idToName.get(4), "ID 4 should be new");
-      System.out.println("✓ Merge insert data verified successfully");
+      log.info("✓ Merge insert data verified successfully");
 
       // Test merge with only inserts
-      System.out.println("\n--- Step 4: Testing merge with only new rows ---");
+      log.info("--- Step 4: Testing merge with only new rows ---");
       byte[] insertOnlyData =
-          new ArrowTestUtils.TableDataBuilder(allocator)
+          new Utils.TableDataBuilder(allocator)
               .addRow(5, "Eve", generateVector(5))
               .addRow(6, "Frank", generateVector(6))
               .build();
@@ -142,13 +136,13 @@ public class MergeInsertIntoTableTestBase extends LanceDbRestNamespaceTestBase {
           0, insertOnlyResponse.getNumUpdatedRows().longValue(), "Should have updated 0 rows");
       assertEquals(
           2, insertOnlyResponse.getNumInsertedRows().longValue(), "Should have inserted 2 rows");
-      System.out.println("✓ Insert-only merge completed successfully");
+      log.info("✓ Insert-only merge completed successfully");
 
-      long finalCount2 = TestUtils.countRows(namespace, tableName);
+      long finalCount2 = Utils.countRows(namespace, tableName);
       assertEquals(6, finalCount2, "Final row count should be 6");
 
     } finally {
-      TestUtils.dropTable(namespace, tableName);
+      Utils.dropTable(namespace, tableName);
     }
   }
 
@@ -156,19 +150,16 @@ public class MergeInsertIntoTableTestBase extends LanceDbRestNamespaceTestBase {
   public void testMergeInsertWithUpdateOnly() throws IOException {
     skipIfNotConfigured();
 
-    System.out.println("=== Test: Merge Insert with Update Only ===");
-    String tableName = TestUtils.generateTableName("test_merge_update_only");
+    log.info("=== Test: Merge Insert with Update Only ===");
+    String tableName = Utils.generateTableName("test_merge_update_only");
 
     try {
       // Create initial table
-      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 5).build();
-      CreateTableRequest createRequest = new CreateTableRequest();
-      createRequest.setId(Lists.newArrayList(tableName));
-      namespace.createTable(createRequest, tableData);
+      Utils.createTable(namespace, allocator, tableName, 5);
 
       // Try to merge with when_not_matched_insert_all = false
       byte[] mergeData =
-          new ArrowTestUtils.TableDataBuilder(allocator)
+          new Utils.TableDataBuilder(allocator)
               .addRow(3, "Updated Three", generateVector(30))
               .addRow(6, "New Six", generateVector(6)) // This should NOT be inserted
               .build();
@@ -188,13 +179,13 @@ public class MergeInsertIntoTableTestBase extends LanceDbRestNamespaceTestBase {
           0, mergeResponse.getNumInsertedRows().longValue(), "Should have inserted 0 rows");
 
       // Verify count remains 5
-      long finalCount = TestUtils.countRows(namespace, tableName);
+      long finalCount = Utils.countRows(namespace, tableName);
       assertEquals(5, finalCount, "Row count should remain 5");
 
-      System.out.println("✓ Update-only merge completed successfully");
+      log.info("✓ Update-only merge completed successfully");
 
     } finally {
-      TestUtils.dropTable(namespace, tableName);
+      Utils.dropTable(namespace, tableName);
     }
   }
 

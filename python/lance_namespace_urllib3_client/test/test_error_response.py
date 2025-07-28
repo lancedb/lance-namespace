@@ -35,15 +35,14 @@ class TestErrorResponse(unittest.TestCase):
         model = ErrorResponse()
         if include_optional:
             return ErrorResponse(
+                error = 'Incorrect username or password',
+                code = 404,
                 type = '/errors/incorrect-user-pass',
-                title = 'Incorrect username or password',
-                status = 404,
                 detail = 'Authentication failed due to incorrect username or password',
                 instance = '/login/log/abc123'
             )
         else:
             return ErrorResponse(
-                type = '/errors/incorrect-user-pass',
         )
         """
 

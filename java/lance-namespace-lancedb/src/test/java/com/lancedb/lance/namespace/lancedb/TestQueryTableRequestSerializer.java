@@ -11,14 +11,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.lancedb.jackson;
+package com.lancedb.lance.namespace.lancedb;
 
+import com.lancedb.lance.namespace.client.apache.ApiClient;
+import com.lancedb.lance.namespace.lancedb.jackson.LanceNamespaceJacksonModule;
 import com.lancedb.lance.namespace.model.QueryTableRequest;
+import com.lancedb.lance.namespace.model.QueryTableRequestFullTextQuery;
 import com.lancedb.lance.namespace.model.QueryTableRequestVector;
+import com.lancedb.lance.namespace.model.StringFtsQuery;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,13 +33,15 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class QueryTableRequestSerializerTest {
+public class TestQueryTableRequestSerializer {
+  private static final Logger log = LoggerFactory.getLogger(TestQueryTableRequestSerializer.class);
 
   private ObjectMapper objectMapper;
 
   @BeforeEach
   public void setUp() {
     objectMapper = new ObjectMapper();
+    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     objectMapper.registerModule(new LanceNamespaceJacksonModule());
   }
 
@@ -51,7 +60,7 @@ public class QueryTableRequestSerializerTest {
 
     // Serialize to JSON
     String json = objectMapper.writeValueAsString(request);
-    System.out.println("Serialized JSON: " + json);
+    log.debug("Serialized JSON: {}", json);
 
     // Verify the vector is serialized as a direct array
     assertTrue(json.contains("\"vector\":[1.0,2.0,3.0,4.0]"));
@@ -76,7 +85,7 @@ public class QueryTableRequestSerializerTest {
 
     // Serialize to JSON
     String json = objectMapper.writeValueAsString(request);
-    System.out.println("Serialized JSON: " + json);
+    log.debug("Serialized JSON: {}", json);
 
     // Verify the vector is serialized as an array of arrays
     assertTrue(json.contains("\"vector\":[[1.0,2.0],[3.0,4.0],[5.0,6.0]]"));
@@ -101,7 +110,7 @@ public class QueryTableRequestSerializerTest {
 
     // Serialize to JSON
     String json = objectMapper.writeValueAsString(request);
-    System.out.println("Serialized JSON: " + json);
+    log.debug("Serialized JSON: {}", json);
 
     // Verify optional fields are included
     assertTrue(json.contains("\"filter\":\"id > 10\""));
@@ -123,9 +132,10 @@ public class QueryTableRequestSerializerTest {
 
     // Serialize to JSON
     ObjectMapper customMapper = new ObjectMapper();
+    customMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     customMapper.registerModule(new LanceNamespaceJacksonModule());
     String json = customMapper.writeValueAsString(request);
-    System.out.println("Serialized JSON with empty vector: " + json);
+    log.debug("Serialized JSON with empty vector: {}", json);
 
     // Verify the vector is serialized as an empty array
     assertTrue(json.contains("\"vector\":[]"));
@@ -141,11 +151,50 @@ public class QueryTableRequestSerializerTest {
 
     // Serialize to JSON
     ObjectMapper customMapper = new ObjectMapper();
+    customMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     customMapper.registerModule(new LanceNamespaceJacksonModule());
     String json = customMapper.writeValueAsString(request);
-    System.out.println("Serialized JSON with null vector: " + json);
+    log.debug("Serialized JSON with null vector: {}", json);
 
     // Verify the vector is serialized as an empty array
     assertTrue(json.contains("\"vector\":[]"));
+  }
+
+  @Test
+  public void debugFullTextQuerySerialization() throws Exception {
+    // Create the same structure as in the failing test
+    QueryTableRequest ftsPrefilterQuery = new QueryTableRequest();
+    ftsPrefilterQuery.setId(Arrays.asList("test", "test_table"));
+    ftsPrefilterQuery.setK(20);
+    ftsPrefilterQuery.setPrefilter(true);
+    ftsPrefilterQuery.setFilter("id < 25");
+    ftsPrefilterQuery.setColumns(Arrays.asList("id", "text"));
+
+    StringFtsQuery fts = new StringFtsQuery();
+    fts.setQuery("document");
+    QueryTableRequestFullTextQuery fullTextQuery = new QueryTableRequestFullTextQuery();
+    fullTextQuery.setStringQuery(fts);
+    ftsPrefilterQuery.setFullTextQuery(fullTextQuery);
+
+    // Test with default ObjectMapper (no custom serializer)
+    ObjectMapper defaultMapper = new ObjectMapper();
+    String defaultJson = defaultMapper.writeValueAsString(ftsPrefilterQuery);
+    log.debug("Default JSON (without custom serializer):");
+    log.debug(defaultJson);
+
+    // Test with custom serializer
+    ObjectMapper customMapper = new ObjectMapper();
+    customMapper.registerModule(new LanceNamespaceJacksonModule());
+    String customJson = customMapper.writeValueAsString(ftsPrefilterQuery);
+    log.debug("Custom JSON (with custom serializer):");
+    log.debug(customJson);
+
+    // Test with ApiClient's ObjectMapper
+    ApiClient apiClient = new ApiClient();
+    ObjectMapper apiClientMapper = apiClient.getObjectMapper();
+    apiClientMapper.registerModule(new LanceNamespaceJacksonModule());
+    String apiClientJson = apiClientMapper.writeValueAsString(ftsPrefilterQuery);
+    log.debug("ApiClient JSON (with custom serializer):");
+    log.debug(apiClientJson);
   }
 }

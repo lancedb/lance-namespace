@@ -22,33 +22,75 @@ import javax.validation.constraints.*;
 import java.util.*;
 import java.util.Objects;
 
-/** JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807) */
-@Schema(
-    name = "ErrorResponse",
-    description =
-        "JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807)")
+/** Common JSON error response model */
+@Schema(name = "ErrorResponse", description = "Common JSON error response model")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class ErrorResponse {
 
+  private String error;
+
+  private Integer code;
+
   private String type;
-
-  private String title;
-
-  private Integer status;
 
   private String detail;
 
   private String instance;
 
-  public ErrorResponse() {
-    super();
+  public ErrorResponse error(String error) {
+    this.error = error;
+    return this;
   }
 
-  /** Constructor with only required parameters */
-  public ErrorResponse(String type) {
-    this.type = type;
+  /**
+   * a brief, human-readable message about the error
+   *
+   * @return error
+   */
+  @Schema(
+      name = "error",
+      example = "Incorrect username or password",
+      description = "a brief, human-readable message about the error",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("error")
+  public String getError() {
+    return error;
+  }
+
+  public void setError(String error) {
+    this.error = error;
+  }
+
+  public ErrorResponse code(Integer code) {
+    this.code = code;
+    return this;
+  }
+
+  /**
+   * HTTP style response code, where 4XX represents client side errors and 5XX represents server
+   * side errors. For implementations that uses HTTP (e.g. REST namespace), this field can be
+   * optional in favor of the HTTP response status code. In case both values exist and do not match,
+   * the HTTP response status code should be used. minimum: 400 maximum: 600
+   *
+   * @return code
+   */
+  @Min(400)
+  @Max(600)
+  @Schema(
+      name = "code",
+      example = "404",
+      description =
+          "HTTP style response code, where 4XX represents client side errors  and 5XX represents server side errors.  For implementations that uses HTTP (e.g. REST namespace), this field can be optional in favor of the HTTP response status code. In case both values exist and do not match, the HTTP response status code should be used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("code")
+  public Integer getCode() {
+    return code;
+  }
+
+  public void setCode(Integer code) {
+    this.code = code;
   }
 
   public ErrorResponse type(String type) {
@@ -57,16 +99,17 @@ public class ErrorResponse {
   }
 
   /**
-   * a URI identifier that categorizes the error
+   * An optional type identifier string for the error. This allows the implementation to specify
+   * their internal error type, which could be more detailed than the HTTP standard status code.
    *
    * @return type
    */
-  @NotNull
   @Schema(
       name = "type",
       example = "/errors/incorrect-user-pass",
-      description = "a URI identifier that categorizes the error",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+      description =
+          "An optional type identifier string for the error. This allows the implementation to specify their internal error type, which could be more detailed than the HTTP standard status code. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("type")
   public String getType() {
     return type;
@@ -76,72 +119,22 @@ public class ErrorResponse {
     this.type = type;
   }
 
-  public ErrorResponse title(String title) {
-    this.title = title;
-    return this;
-  }
-
-  /**
-   * a brief, human-readable message about the error
-   *
-   * @return title
-   */
-  @Schema(
-      name = "title",
-      example = "Incorrect username or password",
-      description = "a brief, human-readable message about the error",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("title")
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public ErrorResponse status(Integer status) {
-    this.status = status;
-    return this;
-  }
-
-  /**
-   * HTTP response code, (if present) it must match the actual HTTP code returned by the service
-   * minimum: 400 maximum: 600
-   *
-   * @return status
-   */
-  @Min(400)
-  @Max(600)
-  @Schema(
-      name = "status",
-      example = "404",
-      description =
-          "HTTP response code, (if present) it must match the actual HTTP code returned by the service",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("status")
-  public Integer getStatus() {
-    return status;
-  }
-
-  public void setStatus(Integer status) {
-    this.status = status;
-  }
-
   public ErrorResponse detail(String detail) {
     this.detail = detail;
     return this;
   }
 
   /**
-   * a human-readable explanation of the error
+   * an optional human-readable explanation of the error. This can be used to record information
+   * such as stack trace.
    *
    * @return detail
    */
   @Schema(
       name = "detail",
       example = "Authentication failed due to incorrect username or password",
-      description = "a human-readable explanation of the error",
+      description =
+          "an optional human-readable explanation of the error. This can be used to record information such as stack trace. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("detail")
   public String getDetail() {
@@ -158,14 +151,17 @@ public class ErrorResponse {
   }
 
   /**
-   * a URI that identifies the specific occurrence of the error
+   * a string that identifies the specific occurrence of the error. This can be a URI, a request or
+   * response ID, or anything that the implementation can recognize to trace specific occurrence of
+   * the error.
    *
    * @return instance
    */
   @Schema(
       name = "instance",
       example = "/login/log/abc123",
-      description = "a URI that identifies the specific occurrence of the error",
+      description =
+          "a string that identifies the specific occurrence of the error. This can be a URI, a request or response ID,  or anything that the implementation can recognize to trace specific occurrence of the error. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("instance")
   public String getInstance() {
@@ -185,25 +181,25 @@ public class ErrorResponse {
       return false;
     }
     ErrorResponse errorResponse = (ErrorResponse) o;
-    return Objects.equals(this.type, errorResponse.type)
-        && Objects.equals(this.title, errorResponse.title)
-        && Objects.equals(this.status, errorResponse.status)
+    return Objects.equals(this.error, errorResponse.error)
+        && Objects.equals(this.code, errorResponse.code)
+        && Objects.equals(this.type, errorResponse.type)
         && Objects.equals(this.detail, errorResponse.detail)
         && Objects.equals(this.instance, errorResponse.instance);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, title, status, detail, instance);
+    return Objects.hash(error, code, type, detail, instance);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ErrorResponse {\n");
+    sb.append("    error: ").append(toIndentedString(error)).append("\n");
+    sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    title: ").append(toIndentedString(title)).append("\n");
-    sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    detail: ").append(toIndentedString(detail)).append("\n");
     sb.append("    instance: ").append(toIndentedString(instance)).append("\n");
     sb.append("}");

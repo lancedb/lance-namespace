@@ -20,6 +20,8 @@ import org.apache.arrow.memory.RootAllocator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -28,6 +30,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  * classes.
  */
 public abstract class LanceDbRestNamespaceTestBase {
+  private static final Logger log = LoggerFactory.getLogger(LanceDbRestNamespaceTestBase.class);
 
   // Configuration from environment variables
   protected static String DATABASE;
@@ -53,10 +56,10 @@ public abstract class LanceDbRestNamespaceTestBase {
 
     // TODO(claude) only API_KEY is required. DATABASE can be a random database name
     if (DATABASE != null && API_KEY != null) {
-      System.out.println("Using configuration:");
-      System.out.println("  Database: " + DATABASE);
-      System.out.println("  Region: " + REGION);
-      System.out.println("  Host Override: " + (HOST_OVERRIDE != null ? HOST_OVERRIDE : "none"));
+      log.info("Using configuration:");
+      log.info("  Database: {}", DATABASE);
+      log.info("  Region: {}", REGION);
+      log.info("  Host Override: {}", HOST_OVERRIDE != null ? HOST_OVERRIDE : "none");
     }
   }
 
@@ -107,7 +110,7 @@ public abstract class LanceDbRestNamespaceTestBase {
         HOST_OVERRIDE != null
             ? HOST_OVERRIDE
             : String.format("https://%s.%s.api.lancedb.com", DATABASE, REGION);
-    System.out.println("Initialized client with base URL: " + baseUrl);
+    log.info("Initialized client with base URL: {}", baseUrl);
 
     return namespace;
   }

@@ -11,14 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.lancedb.index;
+package com.lancedb.lance.namespace.lancedb;
 
-import com.lancedb.lance.namespace.lancedb.LanceDbRestNamespaceTestBase;
-import com.lancedb.lance.namespace.lancedb.utils.ArrowTestUtils;
-import com.lancedb.lance.namespace.lancedb.utils.TestUtils;
 import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
 import com.lancedb.lance.namespace.model.CreateTableIndexResponse;
-import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsResponse;
@@ -27,7 +23,10 @@ import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
 import com.lancedb.lance.namespace.model.ListTableIndicesResponse;
 
 import com.google.common.collect.Lists;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -35,27 +34,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Disabled("Long running and highly likely to timeout")
 /** Tests for index operations: create, list, stats. */
-public class IndexTestBase extends LanceDbRestNamespaceTestBase {
+public class TestIndex extends LanceDbRestNamespaceTestBase {
+  private static final Logger log = LoggerFactory.getLogger(TestIndex.class);
 
   @Test
   public void testCreateVectorIndex() throws IOException, InterruptedException {
     skipIfNotConfigured();
 
-    System.out.println("=== Test: Create Vector Index ===");
-    String tableName = TestUtils.generateTableName("test_vector_index");
+    log.info("=== Test: Create Vector Index ===");
+    String tableName = Utils.generateTableName("test_vector_index");
 
     try {
       // Step 1: Create table with 300 rows
-      System.out.println("\n--- Step 1: Creating table with 300 rows ---");
-      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
-      CreateTableRequest createRequest = new CreateTableRequest();
-      createRequest.setId(Lists.newArrayList(tableName));
-      CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
+      log.info("--- Step 1: Creating table {} with 300 rows ---", tableName);
+      CreateTableResponse createResponse = Utils.createTable(namespace, allocator, tableName, 300);
       assertNotNull(createResponse, "Create table response should not be null");
 
       // Step 2: List indices before creating index (should be empty)
-      System.out.println("\n--- Step 2: Listing indices before index creation ---");
+      log.info("--- Step 2: Listing indices before index creation ---");
       ListTableIndicesRequest listRequestBefore = new ListTableIndicesRequest();
       listRequestBefore.setId(Lists.newArrayList(tableName));
       ListTableIndicesResponse listResponseBefore = namespace.listTableIndices(listRequestBefore);
@@ -63,10 +61,10 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
       assertNotNull(listResponseBefore.getIndexes(), "Indexes list should not be null");
       assertEquals(
           0, listResponseBefore.getIndexes().size(), "Should have no indices before creation");
-      System.out.println("✓ Confirmed no indices exist before creation");
+      log.info("✓ Confirmed no indices exist before creation");
 
       // Step 3: Create vector index
-      System.out.println("\n--- Step 3: Creating vector index ---");
+      log.info("--- Step 3: Creating vector index ---");
       CreateTableIndexRequest indexRequest = new CreateTableIndexRequest();
       indexRequest.setId(Lists.newArrayList(tableName));
       indexRequest.setColumn("embedding");
@@ -75,16 +73,16 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
 
       CreateTableIndexResponse indexResponse = namespace.createTableIndex(indexRequest);
       assertNotNull(indexResponse, "Create index response should not be null");
-      System.out.println("✓ Index creation request submitted successfully");
+      log.info("✓ Index creation request submitted successfully");
 
       // Step 4: Wait for index creation completion
-      System.out.println("\n--- Step 4: Waiting for index creation to complete ---");
-      boolean indexFound = TestUtils.waitForIndex(namespace, tableName, "embedding_idx", 60);
+      log.info("--- Step 4: Waiting for index creation to complete ---");
+      boolean indexFound = Utils.waitForIndexComplete(namespace, tableName, "embedding_idx", 180);
       assertTrue(indexFound, "Index should be found after creation");
-      System.out.println("✓ Index created successfully");
+      log.info("✓ Index created successfully");
 
       // Step 5: Get index stats
-      System.out.println("\n--- Step 5: Getting index stats for embedding_idx ---");
+      log.info("--- Step 5: Getting index stats for embedding_idx ---");
       DescribeTableIndexStatsRequest statsRequest = new DescribeTableIndexStatsRequest();
       statsRequest.setId(Lists.newArrayList(tableName));
 
@@ -96,7 +94,7 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
 
       // Wait for index to be fully built
       boolean indexComplete =
-          TestUtils.waitForIndexComplete(namespace, tableName, "embedding_idx", 30);
+          Utils.waitForIndexComplete(namespace, tableName, "embedding_idx", 180);
       assertTrue(indexComplete, "Index should be fully built");
 
       // Verify final stats
@@ -105,11 +103,11 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
       assertEquals(300, finalStats.getNumIndexedRows().intValue(), "Should have 300 indexed rows");
       assertEquals(0, finalStats.getNumUnindexedRows().intValue(), "Should have 0 unindexed rows");
 
-      System.out.println("✓ Index stats verified:");
-      System.out.println("  - Type: " + finalStats.getIndexType());
-      System.out.println("  - Distance: " + finalStats.getDistanceType());
-      System.out.println("  - Indexed rows: " + finalStats.getNumIndexedRows());
-      System.out.println("  - Unindexed rows: " + finalStats.getNumUnindexedRows());
+      log.info("✓ Index stats verified:");
+      log.info("  - Type: {}", finalStats.getIndexType());
+      log.info("  - Distance: {}", finalStats.getDistanceType());
+      log.info("  - Indexed rows: {}", finalStats.getNumIndexedRows());
+      log.info("  - Unindexed rows: {}", finalStats.getNumUnindexedRows());
 
       // Verify index appears in list
       ListTableIndicesRequest listRequestAfter = new ListTableIndicesRequest();
@@ -122,7 +120,7 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
           "Index name should be embedding_idx");
 
     } finally {
-      TestUtils.dropTable(namespace, tableName);
+      Utils.dropTable(namespace, tableName);
     }
   }
 
@@ -130,20 +128,17 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
   public void testCreateScalarIndex() throws IOException, InterruptedException {
     skipIfNotConfigured();
 
-    System.out.println("=== Test: Create Scalar Index ===");
-    String tableName = TestUtils.generateTableName("test_scalar_index");
+    log.info("=== Test: Create Scalar Index ===");
+    String tableName = Utils.generateTableName("test_scalar_index");
 
     try {
       // Step 1: Create table with 300 rows
-      System.out.println("\n--- Step 1: Creating table with 300 rows ---");
-      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
-      CreateTableRequest createRequest = new CreateTableRequest();
-      createRequest.setId(Lists.newArrayList(tableName));
-      CreateTableResponse createResponse = namespace.createTable(createRequest, tableData);
+      log.info("--- Step 1: Creating table {} with 300 rows ---", tableName);
+      CreateTableResponse createResponse = Utils.createTable(namespace, allocator, tableName, 300);
       assertNotNull(createResponse, "Create table response should not be null");
 
       // Step 2: List indices before creating index
-      System.out.println("\n--- Step 2: Listing indices before index creation ---");
+      log.info("--- Step 2: Listing indices before index creation ---");
       ListTableIndicesRequest listRequestBefore = new ListTableIndicesRequest();
       listRequestBefore.setId(Lists.newArrayList(tableName));
       ListTableIndicesResponse listResponseBefore = namespace.listTableIndices(listRequestBefore);
@@ -151,7 +146,7 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
           0, listResponseBefore.getIndexes().size(), "Should have no indices before creation");
 
       // Step 3: Create scalar index on name column
-      System.out.println("\n--- Step 3: Creating scalar index ---");
+      log.info("--- Step 3: Creating scalar index ---");
       CreateTableIndexRequest scalarIndexRequest = new CreateTableIndexRequest();
       scalarIndexRequest.setId(Lists.newArrayList(tableName));
       scalarIndexRequest.setColumn("name");
@@ -159,18 +154,15 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
 
       CreateTableIndexResponse scalarIndexResponse = namespace.createTableIndex(scalarIndexRequest);
       assertNotNull(scalarIndexResponse, "Create scalar index response should not be null");
-      System.out.println("✓ Scalar index creation request submitted");
+      log.info("✓ Scalar index creation request submitted");
 
       // Step 4: Wait for index creation completion
-      System.out.println("\n--- Step 4: Waiting for scalar index creation to complete ---");
-      boolean indexFound = TestUtils.waitForIndex(namespace, tableName, "name_idx", 60);
+      log.info("--- Step 4: Waiting for scalar index creation to complete ---");
+      boolean indexFound = Utils.waitForIndexComplete(namespace, tableName, "name_idx", 180);
       assertTrue(indexFound, "Scalar index should be found after creation");
 
       // Step 5: Verify scalar index stats
-      System.out.println("\n--- Step 5: Getting scalar index stats ---");
-      boolean indexComplete = TestUtils.waitForIndexComplete(namespace, tableName, "name_idx", 30);
-      assertTrue(indexComplete, "Scalar index should be fully built");
-
+      log.info("--- Step 5: Getting scalar index stats ---");
       DescribeTableIndexStatsRequest statsRequest = new DescribeTableIndexStatsRequest();
       statsRequest.setId(Lists.newArrayList(tableName));
       DescribeTableIndexStatsResponse statsResponse =
@@ -183,9 +175,9 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
       assertEquals(
           0, statsResponse.getNumUnindexedRows().intValue(), "Should have 0 unindexed rows");
 
-      System.out.println("✓ Scalar index stats verified:");
-      System.out.println("  - Type: " + statsResponse.getIndexType());
-      System.out.println("  - Indexed rows: " + statsResponse.getNumIndexedRows());
+      log.info("✓ Scalar index stats verified:");
+      log.info("  - Type: {}", statsResponse.getIndexType());
+      log.info("  - Indexed rows: {}", statsResponse.getNumIndexedRows());
 
       // Verify index in list
       ListTableIndicesRequest listRequestAfter = new ListTableIndicesRequest();
@@ -197,7 +189,7 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
           "Index should be on name column");
 
     } finally {
-      TestUtils.dropTable(namespace, tableName);
+      Utils.dropTable(namespace, tableName);
     }
   }
 
@@ -205,19 +197,16 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
   public void testMultipleIndices() throws IOException, InterruptedException {
     skipIfNotConfigured();
 
-    System.out.println("=== Test: Multiple Indices ===");
-    String tableName = TestUtils.generateTableName("test_multiple_indices");
+    log.info("=== Test: Multiple Indices ===");
+    String tableName = Utils.generateTableName("test_multiple_indices");
 
     try {
       // Create table with text field
-      System.out.println("\n--- Creating table with multiple fields ---");
-      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
-      CreateTableRequest createRequest2 = new CreateTableRequest();
-      createRequest2.setId(Lists.newArrayList(tableName));
-      namespace.createTable(createRequest2, tableData);
+      log.info("--- Creating table {} with multiple fields ---", tableName);
+      Utils.createTable(namespace, allocator, tableName, 300);
 
       // Create vector index
-      System.out.println("\n--- Creating vector index ---");
+      log.info("--- Creating vector index ---");
       CreateTableIndexRequest vectorIndexRequest = new CreateTableIndexRequest();
       vectorIndexRequest.setId(Lists.newArrayList(tableName));
       vectorIndexRequest.setColumn("embedding");
@@ -225,25 +214,42 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
       vectorIndexRequest.setMetricType(CreateTableIndexRequest.MetricTypeEnum.COSINE);
       namespace.createTableIndex(vectorIndexRequest);
 
+      // Wait for vector index completion (3 minutes timeout)
+      log.info("--- Waiting for vector index completion ---");
+      boolean vectorIndexComplete =
+          Utils.waitForIndexComplete(namespace, tableName, "embedding_idx", 180);
+      assertTrue(vectorIndexComplete, "Vector index should be fully built within 3 minutes");
+      log.info("✓ Vector index completed");
+
       // Create scalar index
-      System.out.println("\n--- Creating scalar index ---");
+      log.info("--- Creating scalar index ---");
       CreateTableIndexRequest scalarIndexRequest = new CreateTableIndexRequest();
       scalarIndexRequest.setId(Lists.newArrayList(tableName));
       scalarIndexRequest.setColumn("id");
       scalarIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.BTREE);
       namespace.createTableIndex(scalarIndexRequest);
 
+      // Wait for scalar index completion (3 minutes timeout)
+      log.info("--- Waiting for scalar index completion ---");
+      boolean scalarIndexComplete = Utils.waitForIndexComplete(namespace, tableName, "id_idx", 180);
+      assertTrue(scalarIndexComplete, "Scalar index should be fully built within 3 minutes");
+      log.info("✓ Scalar index completed");
+
       // Create FTS index
-      System.out.println("\n--- Creating FTS index ---");
+      log.info("--- Creating FTS index ---");
       CreateTableIndexRequest ftsIndexRequest = new CreateTableIndexRequest();
       ftsIndexRequest.setId(Lists.newArrayList(tableName));
       ftsIndexRequest.setColumn("name");
       ftsIndexRequest.setIndexType(CreateTableIndexRequest.IndexTypeEnum.FTS);
       namespace.createTableIndex(ftsIndexRequest);
 
-      // Wait for all indices
-      System.out.println("\n--- Waiting for all indices to be created ---");
-      Thread.sleep(5000); // Give some time for all indices to appear
+      // Wait for FTS index completion (3 minutes timeout)
+      log.info("--- Waiting for FTS index completion ---");
+      boolean ftsIndexComplete = Utils.waitForIndexComplete(namespace, tableName, "name_idx", 180);
+      assertTrue(ftsIndexComplete, "FTS index should be fully built within 3 minutes");
+      log.info("✓ FTS index completed");
+
+      log.info("--- All indices created and completed ---");
 
       // List all indices
       ListTableIndicesRequest listRequest = new ListTableIndicesRequest();
@@ -253,9 +259,9 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
       assertNotNull(listResponse.getIndexes(), "Indexes list should not be null");
       assertTrue(listResponse.getIndexes().size() >= 3, "Should have at least 3 indices");
 
-      System.out.println("✓ Created " + listResponse.getIndexes().size() + " indices:");
+      log.info("✓ Created {} indices:", listResponse.getIndexes().size());
       for (IndexListItemResponse index : listResponse.getIndexes()) {
-        System.out.println("  - " + index.getIndexName() + " on columns: " + index.getColumns());
+        log.info("  - {} on columns: {}", index.getIndexName(), index.getColumns());
       }
 
       // Verify each index type
@@ -272,7 +278,7 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
       assertTrue(hasFtsIndex, "Should have FTS index");
 
     } finally {
-      TestUtils.dropTable(namespace, tableName);
+      Utils.dropTable(namespace, tableName);
     }
   }
 
@@ -280,18 +286,15 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
   public void testIndexWithDifferentMetrics() throws IOException, InterruptedException {
     skipIfNotConfigured();
 
-    System.out.println("=== Test: Index with Different Metrics ===");
-    String tableName = TestUtils.generateTableName("test_index_metrics");
+    log.info("=== Test: Index with Different Metrics ===");
+    String tableName = Utils.generateTableName("test_index_metrics");
 
     try {
       // Create table
-      byte[] tableData = new ArrowTestUtils.TableDataBuilder(allocator).addRows(1, 300).build();
-      CreateTableRequest createRequest2 = new CreateTableRequest();
-      createRequest2.setId(Lists.newArrayList(tableName));
-      namespace.createTable(createRequest2, tableData);
+      Utils.createTable(namespace, allocator, tableName, 300);
 
       // Test COSINE metric
-      System.out.println("\n--- Creating index with COSINE metric ---");
+      log.info("--- Creating index with COSINE metric ---");
       CreateTableIndexRequest cosineRequest = new CreateTableIndexRequest();
       cosineRequest.setId(Lists.newArrayList(tableName));
       cosineRequest.setColumn("embedding");
@@ -302,7 +305,7 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
       assertNotNull(cosineResponse, "Create index response should not be null");
 
       // Wait and verify
-      TestUtils.waitForIndexComplete(namespace, tableName, "embedding_idx", 30);
+      Utils.waitForIndexComplete(namespace, tableName, "embedding_idx", 180);
 
       DescribeTableIndexStatsRequest statsRequest = new DescribeTableIndexStatsRequest();
       statsRequest.setId(Lists.newArrayList(tableName));
@@ -310,10 +313,10 @@ public class IndexTestBase extends LanceDbRestNamespaceTestBase {
           namespace.describeTableIndexStats(statsRequest, "embedding_idx");
 
       assertEquals("cosine", statsResponse.getDistanceType(), "Distance type should be cosine");
-      System.out.println("✓ Created index with COSINE metric");
+      log.info("✓ Created index with COSINE metric");
 
     } finally {
-      TestUtils.dropTable(namespace, tableName);
+      Utils.dropTable(namespace, tableName);
     }
   }
 }

@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = ExceptionController.class)
+@WebMvcTest(controllers = MockExceptionController.class)
 public class TestGlobalExceptionHandler {
   @MockBean private LanceNamespace lanceNamespace;
 
@@ -36,8 +36,9 @@ public class TestGlobalExceptionHandler {
     mockMvc
         .perform(get("/testNotFound").queryParam("param", "foo"))
         .andExpect(status().is(404))
-        .andExpect(jsonPath("$.type").value("Mock resource not found"))
-        .andExpect(jsonPath("$.title").value("Not found Error"))
+        .andExpect(jsonPath("$.error").value("Mock resource not found"))
+        .andExpect(jsonPath("$.type").value("Not found Error"))
+        .andExpect(jsonPath("$.code").value(404))
         .andExpect(jsonPath("$.instance").value("/v1/namespaces"))
         .andExpect(jsonPath("$.detail").value("foo not found"));
   }
@@ -47,10 +48,8 @@ public class TestGlobalExceptionHandler {
     mockMvc
         .perform(
             get("/testInternalError").queryParam("param", "foo").queryParam("errorCode", "101"))
-        .andExpect(status().is(500))
-        .andExpect(jsonPath("$.type").value("Internal Server Error"))
-        .andExpect(
-            jsonPath("$.title").value(String.format("Lance Namespace Error Status: %d", 101)))
-        .andExpect(jsonPath("$.detail").value("foo not found"));
+        .andExpect(status().is(101))
+        .andExpect(jsonPath("$.code").value(101))
+        .andExpect(jsonPath("$.error").value("foo not found"));
   }
 }

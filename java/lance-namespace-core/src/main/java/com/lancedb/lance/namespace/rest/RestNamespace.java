@@ -203,7 +203,7 @@ public class RestNamespace implements LanceNamespace {
   public InsertIntoTableResponse insertIntoTable(
       InsertIntoTableRequest request, byte[] requestData) {
     try {
-      String modeStr = request.getMode() == null ? null : request.getMode().name();
+      String modeStr = request.getMode() == null ? null : request.getMode().getValue();
       return tableApi.insertIntoTable(
           ObjectIdentifier.of(request.getId()).idStringStyle(config.getDelimiter()),
           requestData,
