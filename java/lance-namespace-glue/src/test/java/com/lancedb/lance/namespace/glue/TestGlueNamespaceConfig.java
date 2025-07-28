@@ -47,21 +47,19 @@ public class TestGlueNamespaceConfig {
 
   @Test
   public void testPropertiesFromMap() {
-    Map<String, String> props =
-        Map.of(
-            GlueNamespaceConfig.CATALOG_ID, "1234567890",
-            GlueNamespaceConfig.REGION, "us-west-2",
-            GlueNamespaceConfig.ENDPOINT, "https://glue.us-west-2.api.aws");
+    Map<String, String> props = new java.util.HashMap<>();
+    props.put(GlueNamespaceConfig.CATALOG_ID, "1234567890");
+    props.put(GlueNamespaceConfig.REGION, "us-west-2");
+    props.put(GlueNamespaceConfig.ENDPOINT, "https://glue.us-west-2.api.aws");
     GlueNamespaceConfig properties = new GlueNamespaceConfig(props);
     assertEquals("1234567890", properties.glueCatalogId());
   }
 
   @Test
   public void testBasicCredentials() {
-    Map<String, String> props =
-        Map.of(
-            GlueNamespaceConfig.ACCESS_KEY_ID, "mykey",
-            GlueNamespaceConfig.SECRET_ACCESS_KEY, "secret");
+    Map<String, String> props = new java.util.HashMap<>();
+    props.put(GlueNamespaceConfig.ACCESS_KEY_ID, "mykey");
+    props.put(GlueNamespaceConfig.SECRET_ACCESS_KEY, "secret");
 
     GlueNamespaceConfig properties = new GlueNamespaceConfig(props);
     GlueClientBuilder mockBuilder = mockGlueClientBuilder();
@@ -80,11 +78,10 @@ public class TestGlueNamespaceConfig {
 
   @Test
   public void testSessionCredentials() {
-    Map<String, String> props =
-        Map.of(
-            GlueNamespaceConfig.ACCESS_KEY_ID, "mykey",
-            GlueNamespaceConfig.SECRET_ACCESS_KEY, "secret",
-            GlueNamespaceConfig.SESSION_TOKEN, "token");
+    Map<String, String> props = new java.util.HashMap<>();
+    props.put(GlueNamespaceConfig.ACCESS_KEY_ID, "mykey");
+    props.put(GlueNamespaceConfig.SECRET_ACCESS_KEY, "secret");
+    props.put(GlueNamespaceConfig.SESSION_TOKEN, "token");
 
     GlueNamespaceConfig properties = new GlueNamespaceConfig(props);
     GlueClientBuilder mockBuilder = mockGlueClientBuilder();
@@ -104,13 +101,12 @@ public class TestGlueNamespaceConfig {
 
   @Test
   public void testConfigureGlueClientBuilder() {
-    Map<String, String> props =
-        Map.of(
-            GlueNamespaceConfig.CATALOG_ID, "1234567890",
-            GlueNamespaceConfig.REGION, "us-west-2",
-            GlueNamespaceConfig.ENDPOINT, "https://glue.us-west-2.api.aws",
-            GlueNamespaceConfig.ACCESS_KEY_ID, "mykey",
-            GlueNamespaceConfig.SECRET_ACCESS_KEY, "secret");
+    Map<String, String> props = new java.util.HashMap<>();
+    props.put(GlueNamespaceConfig.CATALOG_ID, "1234567890");
+    props.put(GlueNamespaceConfig.REGION, "us-west-2");
+    props.put(GlueNamespaceConfig.ENDPOINT, "https://glue.us-west-2.api.aws");
+    props.put(GlueNamespaceConfig.ACCESS_KEY_ID, "mykey");
+    props.put(GlueNamespaceConfig.SECRET_ACCESS_KEY, "secret");
 
     GlueNamespaceConfig properties = new GlueNamespaceConfig(props);
     GlueClientBuilder mockBuilder = mockGlueClientBuilder();
