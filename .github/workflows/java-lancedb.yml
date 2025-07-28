@@ -72,4 +72,4 @@ jobs:
         env:
           LANCEDB_DB: ${{ secrets.LANCEDB_CLOUD_DATABASE }}
           LANCEDB_API_KEY: ${{ secrets.LANCEDB_CLOUD_API_KEY }}
-        run: mvn test -pl lance-namespace-lancedb
+        run: make build-java-lancedb
