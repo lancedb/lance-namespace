@@ -10,13 +10,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VERSION = 0.0.2
+VERSION = 0.0.3
 
+.PHONY: clean-python-urllib3-client
 clean-python-urllib3-client:
 	rm -rf lance_namespace_urllib3_client/**
 	mkdir -p lance_namespace_urllib3_client
 	cp pyproject.urllib3_client.toml lance_namespace_urllib3_client/pyproject.toml
 
+.PHONY: gen-python-urllib3-client
 gen-python-urllib3-client: clean-python-urllib3-client
 	uv run openapi-generator-cli generate \
 	  -i ../docs/src/spec/rest.yaml \
@@ -28,16 +30,21 @@ gen-python-urllib3-client: clean-python-urllib3-client
 	# Replace poetry pyproject.toml with uv-compatible version
 	cp pyproject.urllib3_client.toml lance_namespace_urllib3_client/pyproject.toml
 
+.PHONY: build-python-urllib3-client
 build-python-urllib3-client: gen-python-urllib3-client
 	cd lance_namespace_urllib3_client; \
 		uv run pytest
 
+.PHONY: build-python-lance-namespace
 build-python-lance-namespace:
 	cd lance_namespace; \
 		uv run pytest
 
+.PHONY: clean
 clean: clean-python-urllib3-client
 
+.PHONY: gen
 gen: gen-python-urllib3-client
 
+.PHONY: build
 build: build-python-urllib3-client build-python-lance-namespace

@@ -7,7 +7,7 @@
 
     <groupId>com.lancedb</groupId>
     <artifactId>lance-namespace-root</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
@@ -55,7 +55,7 @@
     </distributionManagement>
 
     <properties>
-        <lance-namespace.version>0.0.2</lance-namespace.version>
+        <lance-namespace.version>0.0.3</lance-namespace.version>
         <arrow.version>15.0.0</arrow.version>
         <springboot.version>2.7.18</springboot.version>
         <junit-version>5.8.2</junit-version>

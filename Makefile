@@ -10,42 +10,56 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+.PHONY: lint
 lint:
 	uv run openapi-spec-validator --errors all docs/src/spec/rest.yaml
 
+.PHONY: clean-rust
 clean-rust:
 	cd rust; make clean
 
+.PHONY: gen-rust
 gen-rust:
 	cd rust; make gen
 
+.PHONY: build-rust
 build-rust:
 	cd rust; make build
 
+.PHONY: clean-python
 clean-python:
 	cd python; make clean
 
+.PHONY: gen-python
 gen-python:
 	cd python; make gen
 
+.PHONY: build-python
 build-python:
 	cd python; make build
 
+.PHONY: clean-java
 clean-java:
 	cd java; make clean
 
+.PHONY: gen-java
 gen-java:
 	cd java; make gen
 
+.PHONY: build-java
 build-java:
 	cd java; make build
 
+.PHONY: gen-docs
 gen-docs:
 	cd docs/src/spec; \
 		uv run update_line_numbers.py
 
+.PHONY: clean
 clean: clean-rust clean-python clean-java
 
+.PHONY: gen
 gen: lint gen-docs gen-rust gen-python gen-java
 
+.PHONY: build
 build: lint gen-docs build-rust build-python build-java

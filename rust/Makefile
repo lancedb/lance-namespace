@@ -10,11 +10,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VERSION = 0.0.2
+VERSION = 0.0.3
 
+.PHONY: clean-rust-reqwest-client
 clean-rust-reqwest-client:
 	rm -rf lance-namespace-reqwest-client/**
 
+.PHONY: gen-rust-reqwest-client
 gen-rust-reqwest-client: clean-rust-reqwest-client
 	uv run openapi-generator-cli generate \
 	  -i ../docs/src/spec/rest.yaml \
@@ -28,11 +30,15 @@ gen-rust-reqwest-client: clean-rust-reqwest-client
 	rm -rf lance-namespace-reqwest-client/.travis.yml
 	rm -rf lance-namespace-reqwest-client/git_push.sh
 
+.PHONY: build-rust-reqwest-client
 build-rust-reqwest-client: gen-rust-reqwest-client
 	cargo test
 
+.PHONY: clean
 clean: clean-rust-reqwest-client
 
+.PHONY: gen
 gen: gen-rust-reqwest-client
 
+.PHONY: build
 build: build-rust-reqwest-client
