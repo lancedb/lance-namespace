@@ -50,23 +50,22 @@ public abstract class LanceDbRestNamespaceTestBase {
     REGION = System.getenv("LANCEDB_REGION");
 
     // Default values if not set
-    if (REGION == null) {
+    if (isNullOrEmpty(REGION)) {
       REGION = "us-east-1";
     }
 
-    // TODO(claude) only API_KEY is required. DATABASE can be a random database name
     if (DATABASE != null && API_KEY != null) {
       log.info("Using configuration:");
       log.info("  Database: {}", DATABASE);
       log.info("  Region: {}", REGION);
-      log.info("  Host Override: {}", HOST_OVERRIDE != null ? HOST_OVERRIDE : "none");
+      log.info("  Host Override: {}", isNullOrEmpty(HOST_OVERRIDE) ? "none" : HOST_OVERRIDE);
     }
   }
 
   @BeforeEach
   public void setUp() {
     // Only initialize if required environment variables are set
-    if (DATABASE != null && API_KEY != null) {
+    if (!isNullOrEmpty(DATABASE) && !isNullOrEmpty(API_KEY)) {
       namespace = initializeClient();
       allocator = new RootAllocator();
     }
@@ -84,7 +83,7 @@ public abstract class LanceDbRestNamespaceTestBase {
    */
   protected void skipIfNotConfigured() {
     assumeTrue(
-        DATABASE != null && API_KEY != null,
+        !isNullOrEmpty(DATABASE) && !isNullOrEmpty(API_KEY),
         "Skipping test: LANCEDB_DB and LANCEDB_API_KEY environment variables must be set");
   }
 
@@ -97,9 +96,11 @@ public abstract class LanceDbRestNamespaceTestBase {
     LanceDbRestNamespaceBuilder builder =
         LanceDbRestNamespaceBuilder.newBuilder().apiKey(API_KEY).database(DATABASE);
 
-    if (HOST_OVERRIDE != null) {
+    if (!isNullOrEmpty(HOST_OVERRIDE)) {
       builder.hostOverride(HOST_OVERRIDE);
-    } else if (REGION != null) {
+    }
+
+    if (!isNullOrEmpty(REGION)) {
       builder.region(REGION);
     }
 
@@ -107,11 +108,15 @@ public abstract class LanceDbRestNamespaceTestBase {
 
     // Log the configuration for debugging
     String baseUrl =
-        HOST_OVERRIDE != null
+        !isNullOrEmpty(HOST_OVERRIDE)
             ? HOST_OVERRIDE
             : String.format("https://%s.%s.api.lancedb.com", DATABASE, REGION);
     log.info("Initialized client with base URL: {}", baseUrl);
 
     return namespace;
+  }
+
+  private static boolean isNullOrEmpty(String s) {
+    return s == null || s.isEmpty();
   }
 }
