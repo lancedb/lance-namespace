@@ -16,20 +16,36 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - ready_for_review
-      - reopened
     paths:
       - docs/src/spec/**
       - java/**
-      - .github/workflows/java-lancedb-cloud.yml
+      - .github/workflows/java-lancedb.yml
+  workflow_dispatch:
+    inputs:
+      database:
+        description: 'LanceDB Database name'
+        required: false
+        default: ''
+        type: string
+      api_key:
+        description: 'LanceDB API Key'
+        required: false
+        default: ''
+        type: string
+      region:
+        description: 'LanceDB Region'
+        required: false
+        default: 'us-east-1'
+        type: string
+      host_override:
+        description: 'LanceDB Host Override (optional)'
+        required: false
+        default: ''
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  cancel-in-progress: true
 
 env:
   # This env var is used by Swatinem/rust-cache@v2 for the cache
@@ -45,10 +61,9 @@ env:
   CARGO_BUILD_JOBS: "1"
 
 jobs:
-  lancedb-integ-tests:
+  cloud-tests:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
-    if: github.event_name == 'push' || github.event.pull_request.draft == false
     steps:
       - name: Install dependencies
         run: |
@@ -67,9 +82,11 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: "maven"
-      - name: Running LanceDB Cloud tests
+      - name: Running LanceDB tests
         working-directory: java
         env:
-          LANCEDB_DB: ${{ secrets.LANCEDB_CLOUD_DATABASE }}
-          LANCEDB_API_KEY: ${{ secrets.LANCEDB_CLOUD_API_KEY }}
+          LANCEDB_DB: ${{ inputs.database || secrets.LANCEDB_CLOUD_DATABASE }}
+          LANCEDB_API_KEY: ${{ inputs.api_key || secrets.LANCEDB_CLOUD_API_KEY }}
+          LANCEDB_REGION: ${{ inputs.region }}
+          LANCEDB_HOST_OVERRIDE: ${{ inputs.host_override }}
         run: make build-java-lancedb
