@@ -16,9 +16,14 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+      - reopened
     paths:
-      - docs/src/spec/**
-      - java/**
+      - java/lance-namespace-lancedb/**
       - .github/workflows/java-lancedb.yml
   workflow_dispatch:
     inputs:
@@ -45,7 +50,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   # This env var is used by Swatinem/rust-cache@v2 for the cache
