@@ -94,6 +94,7 @@
         <module>lance-namespace-hive</module>
         <module>lance-namespace-glue</module>
         <module>lance-namespace-lancedb</module>
+        <module>lance-namespace-dir</module>
     </modules>
 
     <dependencyManagement>

@@ -106,9 +106,4 @@ public class HiveClientPool extends ClientPoolImpl<IMetaStoreClient, TException>
   protected void close(IMetaStoreClient client) {
     client.close();
   }
-
-  @VisibleForTesting
-  HiveConf hiveConf() {
-    return hiveConf;
-  }
 }

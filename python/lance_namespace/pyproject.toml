@@ -10,6 +10,7 @@ requires-python = ">=3.9"
 dependencies = [
     "lance-namespace-urllib3-client",
     "typing-extensions>=4.0.0",
+    "opendal>=0.50.0",
 ]
 
 [project.optional-dependencies]

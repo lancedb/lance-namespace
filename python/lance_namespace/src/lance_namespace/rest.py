@@ -59,18 +59,19 @@ from lance_namespace_urllib3_client.models import (
 from .namespace import LanceNamespace
 
 
-class RestConfig:
+class RestNamespaceConfig:
     """Configuration for REST namespace."""
+
+    DELIMITER = "delimiter"
+    HEADER_PREFIX = "header."
     
     def __init__(self, properties: Dict[str, str]):
-        self._delimiter = properties.get("delimiter", ".")
+        self._delimiter = properties.get(self.DELIMITER, ".")
         self._headers = {}
-        
-        # Extract additional headers from properties
-        header_prefix = "header."
+
         for key, value in properties.items():
-            if key.startswith(header_prefix):
-                header_name = key[len(header_prefix):]
+            if key.startswith(self.HEADER_PREFIX):
+                header_name = key[len(self.HEADER_PREFIX):]
                 self._headers[header_name] = value
     
     def delimiter(self) -> str:
@@ -115,7 +116,7 @@ class LanceRestNamespace(LanceNamespace):
         self.namespace_api = NamespaceApi(self.api_client)
         self.table_api = TableApi(self.api_client)
         self.transaction_api = TransactionApi(self.api_client)
-        self.config = RestConfig(kwargs)
+        self.config = RestNamespaceConfig(kwargs)
     
     def list_namespaces(self, request: ListNamespacesRequest) -> ListNamespacesResponse:
         return self.namespace_api.list_namespaces(
