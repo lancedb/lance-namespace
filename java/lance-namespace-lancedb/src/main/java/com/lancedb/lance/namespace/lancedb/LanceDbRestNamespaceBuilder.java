@@ -15,6 +15,7 @@ package com.lancedb.lance.namespace.lancedb;
 
 import com.lancedb.lance.namespace.client.apache.ApiClient;
 import com.lancedb.lance.namespace.rest.RestNamespace;
+import com.lancedb.lance.namespace.rest.RestNamespaceConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -153,20 +154,16 @@ public class LanceDbRestNamespaceBuilder {
     config.put("headers.x-api-key", apiKey);
 
     // Determine base URL
-    String baseUrl;
+    String uri;
     if (hostOverride.isPresent()) {
-      baseUrl = hostOverride.get();
-      config.put("host_override", hostOverride.get());
+      uri = hostOverride.get();
     } else {
       String effectiveRegion = region.orElse(DEFAULT_REGION);
-      baseUrl = String.format(CLOUD_URL_PATTERN, database, effectiveRegion);
-      config.put("region", effectiveRegion);
+      uri = String.format(CLOUD_URL_PATTERN, database, effectiveRegion);
     }
-
-    // Create and configure ApiClient
-    ApiClient apiClient = new ApiClient();
-    apiClient.setBasePath(baseUrl);
-
-    return new RestNamespace(apiClient, config);
+    config.put(RestNamespaceConfig.URI, uri);
+    RestNamespace ns = new RestNamespace();
+    ns.initialize(config);
+    return ns;
   }
 }

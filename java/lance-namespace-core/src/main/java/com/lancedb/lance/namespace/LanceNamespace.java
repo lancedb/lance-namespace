@@ -62,10 +62,13 @@ public interface LanceNamespace {
 
   /**
    * Initialize namespace with custom configuration properties.
+   * <p>
+   * Any implementation must have an empty constructor and implement this method
+   * to initialize itself from the config properties.
    *
-   * @param properties namespace conf properties
+   * @param configProperties namespace conf properties
    */
-  default void initialize(Map<String, String> properties) {}
+  void initialize(Map<String, String> configProperties);
 
   default ListNamespacesResponse listNamespaces(ListNamespacesRequest request) {
     throw new UnsupportedOperationException("Not supported: listNamespaces");

@@ -19,6 +19,9 @@ import java.util.Map;
 
 public class RestNamespaceConfig {
 
+  /** The URI endpoint for the REST API */
+  public static final String URI = "uri";
+
   /** The delimiter that is used to parse object string identifiers in REST routes */
   public static final String DELIMITER = "delimiter";
 
@@ -29,10 +32,12 @@ public class RestNamespaceConfig {
 
   private final String delimiter;
   private final Map<String, String> additionalHeaders;
+  private final String uri;
 
   public RestNamespaceConfig(Map<String, String> input) {
     this.delimiter = PropertyUtil.propertyAsString(input, DELIMITER, DELIMITER_DEFAULT);
     this.additionalHeaders = PropertyUtil.propertiesWithPrefix(input, HEADERS_PREFIX);
+    this.uri = PropertyUtil.propertyAsString(input, URI, null);
   }
 
   public String getDelimiter() {
@@ -41,5 +46,9 @@ public class RestNamespaceConfig {
 
   public Map<String, String> getAdditionalHeaders() {
     return additionalHeaders;
+  }
+
+  public String getUri() {
+    return uri;
   }
 }

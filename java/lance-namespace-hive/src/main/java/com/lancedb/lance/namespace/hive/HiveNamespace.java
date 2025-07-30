@@ -42,13 +42,13 @@ public class HiveNamespace implements LanceNamespace, Configurable<Configuration
   public HiveNamespace() {}
 
   @Override
-  public void initialize(Map<String, String> properties) {
+  public void initialize(Map<String, String> configProperties) {
     if (hadoopConf == null) {
       LOG.warn("Hadoop configuration not set, using the default configuration.");
       hadoopConf = new Configuration();
     }
 
-    HiveNamespaceConfig config = new HiveNamespaceConfig(properties);
+    HiveNamespaceConfig config = new HiveNamespaceConfig(configProperties);
     this.clientPool = new HiveClientPool(config.getClientPoolSize(), hadoopConf);
   }
 

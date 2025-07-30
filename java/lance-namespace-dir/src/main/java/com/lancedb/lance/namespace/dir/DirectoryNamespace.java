@@ -41,7 +41,6 @@ import java.util.Map;
 import org.apache.opendal.Entry;
 import org.apache.opendal.Metadata;
 import org.apache.opendal.Operator;
-import org.apache.opendal.layer.BlockingLayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,8 +51,8 @@ public class DirectoryNamespace implements LanceNamespace {
   private Operator operator;
 
   @Override
-  public void initialize(Map<String, String> properties) {
-    this.config = new DirectoryNamespaceConfig(properties);
+  public void initialize(Map<String, String> configProperties) {
+    this.config = new DirectoryNamespaceConfig(configProperties);
     String root = this.config.getRoot();
     
     // Use current directory if root is not specified
@@ -97,7 +96,7 @@ public class DirectoryNamespace implements LanceNamespace {
 
   @Override
   public RegisterTableResponse registerTable(RegisterTableRequest request) {
-    String tableName = request.getTable();
+    String tableName = request.getId().get(0);
     Preconditions.checkNotNull(tableName, "table name is required");
 
     String tablePath = getTablePath(tableName);
@@ -179,39 +178,34 @@ public class DirectoryNamespace implements LanceNamespace {
   }
 
   private Operator initializeOperator(String path, Map<String, String> opendalConfig) {
-    try {
-      URI uri = new URI(path);
-      String scheme = normalizeScheme(uri.getScheme());
-      
-      Map<String, String> config = new HashMap<>(opendalConfig);
-      
-      // Set basic config based on scheme
-      if ("fs".equals(scheme)) {
-        config.put("root", uri.getPath());
-      } else if (uri.getHost() != null) {
-        // For cloud storage, set bucket/container and root
-        if ("s3".equals(scheme)) {
-          config.put("bucket", uri.getHost());
-        } else if ("gcs".equals(scheme)) {
-          config.put("bucket", uri.getHost());
-        } else if ("azblob".equals(scheme)) {
-          config.put("container", uri.getHost());
-        } else {
-          // For other schemes, try to set a generic "bucket" config
-          config.put("bucket", uri.getHost());
-        }
-        
-        if (uri.getPath() != null && !uri.getPath().isEmpty()) {
-          config.put("root", uri.getPath());
-        }
+    URI uri = new URI(path);
+    String scheme = normalizeScheme(uri.getScheme());
+
+    Map<String, String> config = new HashMap<>(opendalConfig);
+
+    // Set basic config based on scheme
+    if ("fs".equals(scheme)) {
+      config.put("root", uri.getPath());
+    } else if (uri.getHost() != null) {
+      // For cloud storage, set bucket/container and root
+      if ("s3".equals(scheme)) {
+        config.put("bucket", uri.getHost());
+      } else if ("gcs".equals(scheme)) {
+        config.put("bucket", uri.getHost());
+      } else if ("azblob".equals(scheme)) {
+        config.put("container", uri.getHost());
+      } else {
+        // For other schemes, try to set a generic "bucket" config
+        config.put("bucket", uri.getHost());
       }
 
-      // Create operator with blocking layer for synchronous operations
-      Operator asyncOperator = Operator.of(scheme, config);
-      return new BlockingLayer().layer(asyncOperator);
-    } catch (Exception e) {
-      throw new LanceNamespaceException("Failed to initialize operator for path: " + path, e);
+      if (uri.getPath() != null && !uri.getPath().isEmpty()) {
+        config.put("root", uri.getPath());
+      }
     }
+
+    // Create operator with blocking layer for synchronous operations
+    return Operator.of(scheme, config);
   }
 
   private String normalizeScheme(String scheme) {

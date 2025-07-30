@@ -38,8 +38,8 @@ public class GlueNamespace implements LanceNamespace, Closeable {
   public GlueNamespace() {}
 
   @Override
-  public void initialize(Map<String, String> properties) {
-    GlueNamespaceConfig glueProperties = new GlueNamespaceConfig(properties);
+  public void initialize(Map<String, String> configProperties) {
+    GlueNamespaceConfig glueProperties = new GlueNamespaceConfig(configProperties);
     GlueClient glueClient =
         GlueClient.builder().applyMutation(glueProperties::configureClientBuilder).build();
     initialize(glueProperties, glueClient);
