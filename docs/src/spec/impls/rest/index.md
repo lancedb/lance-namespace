@@ -70,3 +70,23 @@ here are some criteria to consider:
 3. **Security**: if you have security concerns about the adapter being a man-in-the-middle, you should choose an implementation
 4. **Performance**: after all, adapter adds one layer of indirection and is thus not the most performant solution.
    If you are performance sensitive, you should choose an implementation
+
+## Configuration
+
+The Lance REST namespace accepts the following configuration properties:
+
+| Property    | Required | Description                                                            | Default | Example                           |
+|-------------|----------|------------------------------------------------------------------------|---------|-----------------------------------|
+| `uri`       | Yes      | The URI endpoint for the REST API                                      |         | `https://api.example.com/lance`   |
+| `delimiter` | No       | The delimiter used to parse object string identifiers in REST routes   | `.`     | `.`, `/`, `::`, `#`               |
+| `headers.*` | No       | Additional headers to send with every request                          |         | `headers.Authorization=Bearer...` |
+
+### Headers
+
+Properties with the `headers.` prefix are passed as HTTP headers with every request to the REST server
+after removing the prefix. For example, `headers.Authorization` becomes the `Authorization` header.
+
+Common header configurations include:
+- `headers.Authorization`: Authentication tokens (Bearer, Basic, etc.)
+- `headers.X-API-Key`: API key authentication
+- `headers.X-Request-ID`: Request tracking

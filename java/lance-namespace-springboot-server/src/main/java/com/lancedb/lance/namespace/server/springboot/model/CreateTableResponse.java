@@ -31,45 +31,15 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CreateTableResponse {
 
-  private String location;
-
   private Long version;
+
+  private String location;
 
   private JsonArrowSchema schema;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
   @Valid private Map<String, String> storageOptions = new HashMap<>();
-
-  public CreateTableResponse() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public CreateTableResponse(String location) {
-    this.location = location;
-  }
-
-  public CreateTableResponse location(String location) {
-    this.location = location;
-    return this;
-  }
-
-  /**
-   * Get location
-   *
-   * @return location
-   */
-  @NotNull
-  @Schema(name = "location", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("location")
-  public String getLocation() {
-    return location;
-  }
-
-  public void setLocation(String location) {
-    this.location = location;
-  }
 
   public CreateTableResponse version(Long version) {
     this.version = version;
@@ -90,6 +60,26 @@ public class CreateTableResponse {
 
   public void setVersion(Long version) {
     this.version = version;
+  }
+
+  public CreateTableResponse location(String location) {
+    this.location = location;
+    return this;
+  }
+
+  /**
+   * Get location
+   *
+   * @return location
+   */
+  @Schema(name = "location", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("location")
+  public String getLocation() {
+    return location;
+  }
+
+  public void setLocation(String location) {
+    this.location = location;
   }
 
   public CreateTableResponse schema(JsonArrowSchema schema) {
@@ -183,8 +173,8 @@ public class CreateTableResponse {
       return false;
     }
     CreateTableResponse createTableResponse = (CreateTableResponse) o;
-    return Objects.equals(this.location, createTableResponse.location)
-        && Objects.equals(this.version, createTableResponse.version)
+    return Objects.equals(this.version, createTableResponse.version)
+        && Objects.equals(this.location, createTableResponse.location)
         && Objects.equals(this.schema, createTableResponse.schema)
         && Objects.equals(this.properties, createTableResponse.properties)
         && Objects.equals(this.storageOptions, createTableResponse.storageOptions);
@@ -192,15 +182,15 @@ public class CreateTableResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(location, version, schema, properties, storageOptions);
+    return Objects.hash(version, location, schema, properties, storageOptions);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableResponse {\n");
-    sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");

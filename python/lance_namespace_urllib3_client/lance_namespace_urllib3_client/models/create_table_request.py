@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from lance_namespace_urllib3_client.models.json_arrow_schema import JsonArrowSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,8 +29,9 @@ class CreateTableRequest(BaseModel):
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
     location: Optional[StrictStr] = None
+    var_schema: Optional[JsonArrowSchema] = Field(default=None, alias="schema")
     properties: Optional[Dict[str, StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["id", "location", "properties"]
+    __properties: ClassVar[List[str]] = ["id", "location", "schema", "properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -70,6 +72,9 @@ class CreateTableRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of var_schema
+        if self.var_schema:
+            _dict['schema'] = self.var_schema.to_dict()
         return _dict
 
     @classmethod
@@ -84,6 +89,7 @@ class CreateTableRequest(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "location": obj.get("location"),
+            "schema": JsonArrowSchema.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
             "properties": obj.get("properties")
         })
         return _obj

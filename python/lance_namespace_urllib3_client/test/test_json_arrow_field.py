@@ -40,7 +40,7 @@ class TestJsonArrowField(unittest.TestCase):
                     },
                 name = '',
                 nullable = True,
-                type = lance_namespace_urllib3_client.models.json_data_type.JsonDataType(
+                type = lance_namespace_urllib3_client.models.json_arrow_data_type.JsonArrowDataType(
                     fields = [
                         lance_namespace_urllib3_client.models.json_arrow_field.JsonArrowField(
                             metadata = {
@@ -48,7 +48,7 @@ class TestJsonArrowField(unittest.TestCase):
                                 }, 
                             name = '', 
                             nullable = True, 
-                            type = lance_namespace_urllib3_client.models.json_data_type.JsonDataType(
+                            type = lance_namespace_urllib3_client.models.json_arrow_data_type.JsonArrowDataType(
                                 length = 0, 
                                 type = '', ), )
                         ], 
@@ -59,7 +59,7 @@ class TestJsonArrowField(unittest.TestCase):
             return JsonArrowField(
                 name = '',
                 nullable = True,
-                type = lance_namespace_urllib3_client.models.json_data_type.JsonDataType(
+                type = lance_namespace_urllib3_client.models.json_arrow_data_type.JsonArrowDataType(
                     fields = [
                         lance_namespace_urllib3_client.models.json_arrow_field.JsonArrowField(
                             metadata = {
@@ -67,7 +67,7 @@ class TestJsonArrowField(unittest.TestCase):
                                 }, 
                             name = '', 
                             nullable = True, 
-                            type = lance_namespace_urllib3_client.models.json_data_type.JsonDataType(
+                            type = lance_namespace_urllib3_client.models.json_arrow_data_type.JsonArrowDataType(
                                 length = 0, 
                                 type = '', ), )
                         ], 

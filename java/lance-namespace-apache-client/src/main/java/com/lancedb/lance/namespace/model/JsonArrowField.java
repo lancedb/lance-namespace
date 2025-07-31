@@ -45,7 +45,7 @@ public class JsonArrowField {
   @javax.annotation.Nonnull private Boolean nullable;
 
   public static final String JSON_PROPERTY_TYPE = "type";
-  @javax.annotation.Nonnull private JsonDataType type;
+  @javax.annotation.Nonnull private JsonArrowDataType type;
 
   public JsonArrowField() {}
 
@@ -129,7 +129,7 @@ public class JsonArrowField {
     this.nullable = nullable;
   }
 
-  public JsonArrowField type(@javax.annotation.Nonnull JsonDataType type) {
+  public JsonArrowField type(@javax.annotation.Nonnull JsonArrowDataType type) {
 
     this.type = type;
     return this;
@@ -143,13 +143,13 @@ public class JsonArrowField {
   @javax.annotation.Nonnull
   @JsonProperty(JSON_PROPERTY_TYPE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public JsonDataType getType() {
+  public JsonArrowDataType getType() {
     return type;
   }
 
   @JsonProperty(JSON_PROPERTY_TYPE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull JsonDataType type) {
+  public void setType(@javax.annotation.Nonnull JsonArrowDataType type) {
     this.type = type;
   }
 

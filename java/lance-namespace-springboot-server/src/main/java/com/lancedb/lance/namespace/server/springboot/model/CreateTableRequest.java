@@ -40,6 +40,8 @@ public class CreateTableRequest {
 
   private String location;
 
+  private JsonArrowSchema schema;
+
   @Valid private Map<String, String> properties = new HashMap<>();
 
   public CreateTableRequest id(List<String> id) {
@@ -90,6 +92,27 @@ public class CreateTableRequest {
     this.location = location;
   }
 
+  public CreateTableRequest schema(JsonArrowSchema schema) {
+    this.schema = schema;
+    return this;
+  }
+
+  /**
+   * Get schema
+   *
+   * @return schema
+   */
+  @Valid
+  @Schema(name = "schema", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("schema")
+  public JsonArrowSchema getSchema() {
+    return schema;
+  }
+
+  public void setSchema(JsonArrowSchema schema) {
+    this.schema = schema;
+  }
+
   public CreateTableRequest properties(Map<String, String> properties) {
     this.properties = properties;
     return this;
@@ -129,12 +152,13 @@ public class CreateTableRequest {
     CreateTableRequest createTableRequest = (CreateTableRequest) o;
     return Objects.equals(this.id, createTableRequest.id)
         && Objects.equals(this.location, createTableRequest.location)
+        && Objects.equals(this.schema, createTableRequest.schema)
         && Objects.equals(this.properties, createTableRequest.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location, properties);
+    return Objects.hash(id, location, schema, properties);
   }
 
   @Override
@@ -143,6 +167,7 @@ public class CreateTableRequest {
     sb.append("class CreateTableRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();

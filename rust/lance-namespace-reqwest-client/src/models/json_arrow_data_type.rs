@@ -11,9 +11,9 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// JsonDataType : JSON representation of an Apache Arrow DataType
+/// JsonArrowDataType : JSON representation of an Apache Arrow DataType
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct JsonDataType {
+pub struct JsonArrowDataType {
     /// Fields for complex types like Struct, Union, etc.
     #[serde(rename = "fields", skip_serializing_if = "Option::is_none")]
     pub fields: Option<Vec<models::JsonArrowField>>,
@@ -25,10 +25,10 @@ pub struct JsonDataType {
     pub r#type: String,
 }
 
-impl JsonDataType {
+impl JsonArrowDataType {
     /// JSON representation of an Apache Arrow DataType
-    pub fn new(r#type: String) -> JsonDataType {
-        JsonDataType {
+    pub fn new(r#type: String) -> JsonArrowDataType {
+        JsonArrowDataType {
             fields: None,
             length: None,
             r#type,

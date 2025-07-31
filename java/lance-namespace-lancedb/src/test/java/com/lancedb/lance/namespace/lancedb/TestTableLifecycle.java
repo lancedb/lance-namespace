@@ -19,9 +19,9 @@ import com.lancedb.lance.namespace.model.DescribeTableRequest;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
 import com.lancedb.lance.namespace.model.InsertIntoTableRequest;
 import com.lancedb.lance.namespace.model.InsertIntoTableResponse;
+import com.lancedb.lance.namespace.model.JsonArrowDataType;
 import com.lancedb.lance.namespace.model.JsonArrowField;
 import com.lancedb.lance.namespace.model.JsonArrowSchema;
-import com.lancedb.lance.namespace.model.JsonDataType;
 
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
@@ -199,8 +199,8 @@ public class TestTableLifecycle extends LanceDbRestNamespaceTestBase {
         assertNotNull(field.getType(), "Field type should not be null");
         assertNotNull(field.getNullable(), "Field nullable should not be null");
 
-        // Check JsonDataType structure
-        JsonDataType dataType = field.getType();
+        // Check JsonArrowDataType structure
+        JsonArrowDataType dataType = field.getType();
         assertNotNull(dataType.getType(), "Data type name should not be null");
 
         // For FixedSizeList (embedding field), check nested fields

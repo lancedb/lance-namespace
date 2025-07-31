@@ -41,16 +41,6 @@ public class DescribeTableResponse {
 
   @Valid private Map<String, String> storageOptions = new HashMap<>();
 
-  public DescribeTableResponse() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public DescribeTableResponse(Long version, JsonArrowSchema schema) {
-    this.version = version;
-    this.schema = schema;
-  }
-
   public DescribeTableResponse version(Long version) {
     this.version = version;
     return this;
@@ -61,9 +51,8 @@ public class DescribeTableResponse {
    *
    * @return version
    */
-  @NotNull
   @Min(0L)
-  @Schema(name = "version", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "version", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("version")
   public Long getVersion() {
     return version;
@@ -103,9 +92,8 @@ public class DescribeTableResponse {
    *
    * @return schema
    */
-  @NotNull
   @Valid
-  @Schema(name = "schema", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "schema", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("schema")
   public JsonArrowSchema getSchema() {
     return schema;

@@ -18,6 +18,8 @@ pub struct CreateTableRequest {
     pub id: Option<Vec<String>>,
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
+    #[serde(rename = "schema", skip_serializing_if = "Option::is_none")]
+    pub schema: Option<Box<models::JsonArrowSchema>>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
 }
@@ -28,6 +30,7 @@ impl CreateTableRequest {
         CreateTableRequest {
             id: None,
             location: None,
+            schema: None,
             properties: None,
         }
     }

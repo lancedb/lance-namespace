@@ -28,12 +28,12 @@ class CreateTableResponse(BaseModel):
     """
     CreateTableResponse
     """ # noqa: E501
-    location: StrictStr
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
+    location: Optional[StrictStr] = None
     var_schema: Optional[JsonArrowSchema] = Field(default=None, alias="schema")
     properties: Optional[Dict[str, StrictStr]] = None
     storage_options: Optional[Dict[str, StrictStr]] = Field(default=None, description="Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. ")
-    __properties: ClassVar[List[str]] = ["location", "version", "schema", "properties", "storage_options"]
+    __properties: ClassVar[List[str]] = ["version", "location", "schema", "properties", "storage_options"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,8 +89,8 @@ class CreateTableResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "location": obj.get("location"),
             "version": obj.get("version"),
+            "location": obj.get("location"),
             "schema": JsonArrowSchema.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
             "properties": obj.get("properties"),
             "storage_options": obj.get("storage_options")

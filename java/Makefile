@@ -12,12 +12,12 @@
 
 VERSION = 0.0.4
 
-.PHONY: clean-java-apache-client
-clean-java-apache-client:
+.PHONY: clean-apache-client
+clean-apache-client:
 	rm -rf lance-namespace-apache-client
 
-.PHONY: gen-java-apache-client
-gen-java-apache-client: clean-java-apache-client
+.PHONY: gen-apache-client
+gen-apache-client: clean-apache-client
 	uv run openapi-generator-cli generate \
 	  -i ../docs/src/spec/rest.yaml \
 	  -g java \
@@ -30,20 +30,20 @@ gen-java-apache-client: clean-java-apache-client
 	rm -rf lance-namespace-apache-client/.openapi-generator-ignore
 	rm -rf lance-namespace-apache-client/.openapi-generator
 
-.PHONY: lint-java-apache-client
-lint-java-apache-client: gen-java-apache-client gen-java-springboot-server
+.PHONY: lint-apache-client
+lint-apache-client: gen-apache-client gen-springboot-server
 	./mvnw spotless:apply -pl lance-namespace-apache-client -am
 
-.PHONY: build-java-apache-client
-build-java-apache-client: gen-java-apache-client lint-java-apache-client
+.PHONY: build-apache-client
+build-apache-client: gen-apache-client lint-apache-client
 	./mvnw install -pl lance-namespace-apache-client -am
 
-.PHONY: clean-java-springboot-server
-clean-java-springboot-server:
+.PHONY: clean-springboot-server
+clean-springboot-server:
 	rm -rf lance-namespace-springboot-server
 
-.PHONY: gen-java-springboot-server
-gen-java-springboot-server: clean-java-springboot-server
+.PHONY: gen-springboot-server
+gen-springboot-server: clean-springboot-server
 	uv run openapi-generator-cli generate \
 	  -i ../docs/src/spec/rest.yaml \
 	  -g spring \
@@ -52,44 +52,49 @@ gen-java-springboot-server: clean-java-springboot-server
 	rm -rf lance-namespace-springboot-server/.openapi-generator-ignore
 	rm -rf lance-namespace-springboot-server/.openapi-generator
 
-.PHONY: lint-java-springboot-server
-lint-java-springboot-server: gen-java-apache-client gen-java-springboot-server
+.PHONY: lint-springboot-server
+lint-springboot-server: gen-apache-client gen-springboot-server
 	./mvnw spotless:apply -pl lance-namespace-springboot-server -am
 
-.PHONY: build-java-springboot-server
-build-java-springboot-server: gen-java-springboot-server lint-java-springboot-server
+.PHONY: build-springboot-server
+build-springboot-server: gen-springboot-server lint-springboot-server
 	./mvnw install -pl lance-namespace-springboot-server -am
 
-.PHONY: build-java-core
-build-java-core:
+.PHONY: build-core
+build-core:
 	./mvnw spotless:apply -pl lance-namespace-core -am
 	./mvnw install -pl lance-namespace-core -am
 
-.PHONY: build-java-adapter
-build-java-adapter:
+.PHONY: build-adapter
+build-adapter:
 	./mvnw spotless:apply -pl lance-namespace-adapter -am
 	./mvnw install -pl lance-namespace-adapter -am
 
-.PHONY: build-java-hive
-build-java-hive:
+.PHONY: build-hive
+build-hive:
 	./mvnw spotless:apply -pl lance-namespace-hive -am
 	./mvnw install -pl lance-namespace-hive -am
 
-.PHONY: build-java-glue
-build-java-glue:
+.PHONY: build-glue
+build-glue:
 	./mvnw spotless:apply -pl lance-namespace-glue -am
 	./mvnw install -pl lance-namespace-glue -am
 
-.PHONY: build-java-lancedb
-build-java-lancedb:
+.PHONY: build-lancedb
+build-lancedb:
 	./mvnw spotless:apply -pl lance-namespace-lancedb -am
 	./mvnw install -pl lance-namespace-lancedb -am
 
+.PHONY: build-dir
+build-dir:
+	./mvnw spotless:apply -pl lance-namespace-dir -am
+	./mvnw install -pl lance-namespace-dir -am
+
 .PHONY: clean
-clean: clean-java-apache-client clean-java-springboot-server
+clean: clean-apache-client clean-springboot-server
 
 .PHONY: gen
-gen: gen-java-apache-client gen-java-springboot-server lint-java-apache-client lint-java-springboot-server
+gen: gen-apache-client gen-springboot-server lint-apache-client lint-springboot-server
 
 .PHONY: build
-build: build-java-apache-client build-java-springboot-server build-java-core build-java-adapter build-java-hive build-java-glue build-java-lancedb
+build: build-apache-client build-springboot-server build-core build-adapter build-hive build-glue build-lancedb

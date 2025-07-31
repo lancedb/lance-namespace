@@ -29,7 +29,7 @@ class JsonArrowField(BaseModel):
     metadata: Optional[Dict[str, StrictStr]] = None
     name: StrictStr
     nullable: StrictBool
-    type: JsonDataType
+    type: JsonArrowDataType
     __properties: ClassVar[List[str]] = ["metadata", "name", "nullable", "type"]
 
     model_config = ConfigDict(
@@ -89,11 +89,11 @@ class JsonArrowField(BaseModel):
             "metadata": obj.get("metadata"),
             "name": obj.get("name"),
             "nullable": obj.get("nullable"),
-            "type": JsonDataType.from_dict(obj["type"]) if obj.get("type") is not None else None
+            "type": JsonArrowDataType.from_dict(obj["type"]) if obj.get("type") is not None else None
         })
         return _obj
 
-from lance_namespace_urllib3_client.models.json_data_type import JsonDataType
+from lance_namespace_urllib3_client.models.json_arrow_data_type import JsonArrowDataType
 # TODO: Rewrite to not use raise_errors
 JsonArrowField.model_rebuild(raise_errors=False)
 

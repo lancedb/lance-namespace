@@ -28,9 +28,9 @@ class DescribeTableResponse(BaseModel):
     """
     DescribeTableResponse
     """ # noqa: E501
-    version: Annotated[int, Field(strict=True, ge=0)]
+    version: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
     location: Optional[StrictStr] = None
-    var_schema: JsonArrowSchema = Field(alias="schema")
+    var_schema: Optional[JsonArrowSchema] = Field(default=None, alias="schema")
     properties: Optional[Dict[str, StrictStr]] = None
     storage_options: Optional[Dict[str, StrictStr]] = Field(default=None, description="Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. ")
     __properties: ClassVar[List[str]] = ["version", "location", "schema", "properties", "storage_options"]

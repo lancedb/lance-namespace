@@ -26,11 +26,11 @@ import java.util.List;
 import java.util.Objects;
 
 /** JSON representation of an Apache Arrow DataType */
-@Schema(name = "JsonDataType", description = "JSON representation of an Apache Arrow DataType")
+@Schema(name = "JsonArrowDataType", description = "JSON representation of an Apache Arrow DataType")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
-public class JsonDataType {
+public class JsonArrowDataType {
 
   @Valid private List<@Valid JsonArrowField> fields = new ArrayList<>();
 
@@ -38,21 +38,21 @@ public class JsonDataType {
 
   private String type;
 
-  public JsonDataType() {
+  public JsonArrowDataType() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public JsonDataType(String type) {
+  public JsonArrowDataType(String type) {
     this.type = type;
   }
 
-  public JsonDataType fields(List<@Valid JsonArrowField> fields) {
+  public JsonArrowDataType fields(List<@Valid JsonArrowField> fields) {
     this.fields = fields;
     return this;
   }
 
-  public JsonDataType addFieldsItem(JsonArrowField fieldsItem) {
+  public JsonArrowDataType addFieldsItem(JsonArrowField fieldsItem) {
     if (this.fields == null) {
       this.fields = new ArrayList<>();
     }
@@ -79,7 +79,7 @@ public class JsonDataType {
     this.fields = fields;
   }
 
-  public JsonDataType length(Long length) {
+  public JsonArrowDataType length(Long length) {
     this.length = length;
     return this;
   }
@@ -103,7 +103,7 @@ public class JsonDataType {
     this.length = length;
   }
 
-  public JsonDataType type(String type) {
+  public JsonArrowDataType type(String type) {
     this.type = type;
     return this;
   }
@@ -135,10 +135,10 @@ public class JsonDataType {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    JsonDataType jsonDataType = (JsonDataType) o;
-    return Objects.equals(this.fields, jsonDataType.fields)
-        && Objects.equals(this.length, jsonDataType.length)
-        && Objects.equals(this.type, jsonDataType.type);
+    JsonArrowDataType jsonArrowDataType = (JsonArrowDataType) o;
+    return Objects.equals(this.fields, jsonArrowDataType.fields)
+        && Objects.equals(this.length, jsonArrowDataType.length)
+        && Objects.equals(this.type, jsonArrowDataType.type);
   }
 
   @Override
@@ -149,7 +149,7 @@ public class JsonDataType {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class JsonDataType {\n");
+    sb.append("class JsonArrowDataType {\n");
     sb.append("    fields: ").append(toIndentedString(fields)).append("\n");
     sb.append("    length: ").append(toIndentedString(length)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");

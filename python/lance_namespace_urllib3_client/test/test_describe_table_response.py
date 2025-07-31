@@ -45,7 +45,7 @@ class TestDescribeTableResponse(unittest.TestCase):
                                 }, 
                             name = '', 
                             nullable = True, 
-                            type = lance_namespace_urllib3_client.models.json_data_type.JsonDataType(
+                            type = lance_namespace_urllib3_client.models.json_arrow_data_type.JsonArrowDataType(
                                 length = 0, 
                                 type = '', ), )
                         ], 
@@ -61,22 +61,6 @@ class TestDescribeTableResponse(unittest.TestCase):
             )
         else:
             return DescribeTableResponse(
-                version = 0,
-                var_schema = lance_namespace_urllib3_client.models.json_arrow_schema.JsonArrowSchema(
-                    fields = [
-                        lance_namespace_urllib3_client.models.json_arrow_field.JsonArrowField(
-                            metadata = {
-                                'key' : ''
-                                }, 
-                            name = '', 
-                            nullable = True, 
-                            type = lance_namespace_urllib3_client.models.json_data_type.JsonDataType(
-                                length = 0, 
-                                type = '', ), )
-                        ], 
-                    metadata = {
-                        'key' : ''
-                        }, ),
         )
         """
 

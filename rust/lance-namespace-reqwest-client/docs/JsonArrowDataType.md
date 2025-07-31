@@ -1,4 +1,4 @@
-# JsonDataType
+# JsonArrowDataType
 
 ## Properties
 

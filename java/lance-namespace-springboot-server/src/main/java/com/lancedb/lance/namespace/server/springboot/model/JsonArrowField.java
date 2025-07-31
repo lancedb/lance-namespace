@@ -38,14 +38,14 @@ public class JsonArrowField {
 
   private Boolean nullable;
 
-  private JsonDataType type;
+  private JsonArrowDataType type;
 
   public JsonArrowField() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public JsonArrowField(String name, Boolean nullable, JsonDataType type) {
+  public JsonArrowField(String name, Boolean nullable, JsonArrowDataType type) {
     this.name = name;
     this.nullable = nullable;
     this.type = type;
@@ -121,7 +121,7 @@ public class JsonArrowField {
     this.nullable = nullable;
   }
 
-  public JsonArrowField type(JsonDataType type) {
+  public JsonArrowField type(JsonArrowDataType type) {
     this.type = type;
     return this;
   }
@@ -135,11 +135,11 @@ public class JsonArrowField {
   @Valid
   @Schema(name = "type", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("type")
-  public JsonDataType getType() {
+  public JsonArrowDataType getType() {
     return type;
   }
 
-  public void setType(JsonDataType type) {
+  public void setType(JsonArrowDataType type) {
     this.type = type;
   }
 

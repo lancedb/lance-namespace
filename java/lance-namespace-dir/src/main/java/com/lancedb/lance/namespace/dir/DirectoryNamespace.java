@@ -13,207 +13,217 @@
  */
 package com.lancedb.lance.namespace.dir;
 
-import com.google.common.base.Preconditions;
+import com.lancedb.lance.Dataset;
+import com.lancedb.lance.WriteParams;
 import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.LanceNamespaceException;
-import com.lancedb.lance.namespace.model.DeregisterTableRequest;
-import com.lancedb.lance.namespace.model.DeregisterTableResponse;
-import com.lancedb.lance.namespace.model.ListTablesRequest;
-import com.lancedb.lance.namespace.model.ListTablesResponse;
-import com.lancedb.lance.namespace.model.RegisterTableRequest;
-import com.lancedb.lance.namespace.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
+import com.lancedb.lance.namespace.model.CreateTableRequest;
+import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
 import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
+import com.lancedb.lance.namespace.model.DescribeTableRequest;
+import com.lancedb.lance.namespace.model.DescribeTableResponse;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
+import com.lancedb.lance.namespace.model.DropTableRequest;
+import com.lancedb.lance.namespace.model.DropTableResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
+import com.lancedb.lance.namespace.model.ListTablesRequest;
+import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.lancedb.lance.namespace.util.JsonArrowSchemaConverter;
+import com.lancedb.lance.namespace.util.ValidationUtil;
+
+import com.google.common.collect.ImmutableMap;
+import org.apache.arrow.memory.BufferAllocator;
+import org.apache.arrow.vector.types.pojo.Schema;
 import org.apache.opendal.Entry;
 import org.apache.opendal.Metadata;
 import org.apache.opendal.Operator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DirectoryNamespace implements LanceNamespace {
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class DirectoryNamespace implements LanceNamespace, Closeable {
   private static final Logger LOG = LoggerFactory.getLogger(DirectoryNamespace.class);
 
   private DirectoryNamespaceConfig config;
   private Operator operator;
+  private BufferAllocator allocator;
+  private String namespacePath;
 
   @Override
-  public void initialize(Map<String, String> configProperties) {
+  public void initialize(Map<String, String> configProperties, BufferAllocator allocator) {
     this.config = new DirectoryNamespaceConfig(configProperties);
-    String root = this.config.getRoot();
-    
-    // Use current directory if root is not specified
-    if (root == null) {
-      root = System.getProperty("user.dir");
-    }
-
-    String namespacePath = parsePath(root);
-    this.operator = initializeOperator(namespacePath, this.config.getOpendalConfig());
+    this.allocator = allocator;
+    this.operator = initializeOperator(this.config.getRoot());
   }
 
   @Override
   public CreateNamespaceResponse createNamespace(CreateNamespaceRequest request) {
     throw new UnsupportedOperationException(
-        "Directory namespace only contains a flat list of tables and does not support creating namespaces");
+        "Directory namespace only contains a flat list of tables");
   }
 
   @Override
   public ListNamespacesResponse listNamespaces(ListNamespacesRequest request) {
     throw new UnsupportedOperationException(
-        "Directory namespace only contains a flat list of tables and does not support listing namespaces");
+        "Directory namespace only contains a flat list of tables");
   }
 
   @Override
   public DescribeNamespaceResponse describeNamespace(DescribeNamespaceRequest request) {
     throw new UnsupportedOperationException(
-        "Directory namespace only contains a flat list of tables and does not support describing namespaces");
+        "Directory namespace only contains a flat list of tables");
   }
 
   @Override
   public DropNamespaceResponse dropNamespace(DropNamespaceRequest request) {
     throw new UnsupportedOperationException(
-        "Directory namespace only contains a flat list of tables and does not support dropping namespaces");
+        "Directory namespace only contains a flat list of tables");
   }
 
   @Override
   public void namespaceExists(NamespaceExistsRequest request) {
     throw new UnsupportedOperationException(
-        "Directory namespace only contains a flat list of tables and does not support namespace existence checks");
+        "Directory namespace only contains a flat list of tables");
   }
 
   @Override
-  public RegisterTableResponse registerTable(RegisterTableRequest request) {
-    String tableName = request.getId().get(0);
-    Preconditions.checkNotNull(tableName, "table name is required");
+  public CreateTableResponse createTable(CreateTableRequest request, byte[] requestData) {
+    String tableName = tableNameFromId(request.getId());
+    ValidationUtil.checkNotNull(request.getSchema(), "Schema is required in CreateTableRequest");
+    Schema schema = JsonArrowSchemaConverter.convertToArrowSchema(request.getSchema());
+
+    WriteParams writeParams =
+        new WriteParams.Builder()
+            .withMode(WriteParams.WriteMode.CREATE)
+            .withStorageOptions(config.getStorageOptions())
+            .build();
 
     String tablePath = getTablePath(tableName);
-    LOG.debug("Registering table {} at path {}", tableName, tablePath);
+    ValidationUtil.checkArgument(
+        request.getLocation() == null || request.getLocation().equals(tablePath),
+        "Cannot create table {} at location {}, must be at location {}",
+        tableName,
+        request.getLocation(),
+        tablePath);
 
-    try {
-      operator.createDir(tablePath);
-      RegisterTableResponse response = new RegisterTableResponse();
-      response.setTable(tableName);
-      response.setTableUri(tablePath);
-      return response;
-    } catch (Exception e) {
-      throw new LanceNamespaceException("Failed to register table: " + tableName, e);
-    }
+    // Create the Lance dataset
+    Dataset.create(allocator, tablePath, schema, writeParams);
+    CreateTableResponse response = new CreateTableResponse();
+    response.setLocation(tablePath);
+    response.setVersion(1L);
+    return response;
   }
 
   @Override
-  public DeregisterTableResponse deregisterTable(DeregisterTableRequest request) {
-    String tableName = request.getTable();
-    Preconditions.checkNotNull(tableName, "table name is required");
-
+  public DropTableResponse dropTable(DropTableRequest request) {
+    String tableName = tableNameFromId(request.getId());
     String tablePath = getTablePath(tableName);
-    LOG.debug("Deregistering table {} at path {}", tableName, tablePath);
+
+    LOG.debug("Dropping table {} at path {}", tableName, tablePath);
 
     try {
-      operator.removeAll(tablePath);
-      DeregisterTableResponse response = new DeregisterTableResponse();
-      response.setTable(tableName);
+      // Use Lance Dataset.drop to remove the dataset
+      Dataset.drop(tablePath, config.getStorageOptions());
+
+      DropTableResponse response = new DropTableResponse();
       return response;
     } catch (Exception e) {
-      throw new LanceNamespaceException("Failed to deregister table: " + tableName, e);
+      throw new LanceNamespaceException("Failed to drop table: " + tableName, e);
     }
   }
 
   @Override
   public ListTablesResponse listTables(ListTablesRequest request) {
-    LOG.debug("Listing tables in namespace {}", namespacePath);
+    Set<String> tables = new HashSet<>();
+    List<Entry> entries = operator.list("");
 
-    try {
-      List<String> tables = new ArrayList<>();
-      List<Entry> entries = operator.list("");
+    for (Entry entry : entries) {
+      Metadata metadata = operator.stat(entry.getPath());
+      if (metadata.getMode() == Metadata.EntryMode.DIR) {
+        String tableName = entry.getPath();
+        if (tableName.endsWith("/")) {
+          tableName = tableName.substring(0, tableName.length() - 1);
+        }
 
-      for (Entry entry : entries) {
-        Metadata metadata = operator.stat(entry.getPath());
-        if (metadata.getMode() == Metadata.EntryMode.DIR) {
-          String tableName = entry.getPath();
-          if (tableName.endsWith("/")) {
-            tableName = tableName.substring(0, tableName.length() - 1);
+        // Check if it's a Lance dataset by looking for _versions directory
+        try {
+          String versionsPath = getTableVersionsPath(tableName);
+          Metadata versionsMetadata = operator.stat(versionsPath);
+          if (versionsMetadata.getMode() == Metadata.EntryMode.DIR) {
+            tables.add(tableName);
           }
-          tables.add(tableName);
+        } catch (Exception e) {
+          // If _versions doesn't exist or error accessing it, skip this directory
+          LOG.debug("Directory {} does not contain _versions, skipping", tableName);
         }
       }
-
-      ListTablesResponse response = new ListTablesResponse();
-      response.setTables(tables);
-      return response;
-    } catch (Exception e) {
-      throw new LanceNamespaceException("Failed to list tables", e);
     }
+
+    ListTablesResponse response = new ListTablesResponse();
+    response.setTables(tables);
+    return response;
   }
 
-  private String parsePath(String path) {
+  @Override
+  public DescribeTableResponse describeTable(DescribeTableRequest request) {
+    String tableName = tableNameFromId(request.getId());
+    String tablePath = getTablePath(tableName);
+
+    LOG.debug("Describing table {} at path {}", tableName, tablePath);
+
+    // Check if table exists by verifying _versions directory
     try {
-      URI uri = new URI(path);
-      if (uri.getScheme() != null) {
-        return path;
+      String versionsPath = getTableVersionsPath(tableName);
+      Metadata versionsMetadata = operator.stat(versionsPath);
+      if (versionsMetadata.getMode() != Metadata.EntryMode.DIR) {
+        throw new LanceNamespaceException("Table does not exist: " + tableName);
       }
-    } catch (URISyntaxException e) {
-      // Not a URI, treat as file path
+    } catch (Exception e) {
+      throw new LanceNamespaceException("Table does not exist: " + tableName, e);
     }
 
-    // Handle absolute and relative POSIX paths
-    if (path.startsWith("/")) {
-      return "file://" + path;
-    } else {
-      String currentDir = System.getProperty("user.dir");
-      return "file://" + Paths.get(currentDir, path).toAbsolutePath().normalize();
-    }
+    DescribeTableResponse response = new DescribeTableResponse();
+    response.setLocation(tablePath);
+    return response;
   }
 
-  private Operator initializeOperator(String path, Map<String, String> opendalConfig) {
-    URI uri = new URI(path);
-    String scheme = normalizeScheme(uri.getScheme());
+  private Operator initializeOperator(String root) {
+    String[] schemeSplit = root.split("://", -1);
 
-    Map<String, String> config = new HashMap<>(opendalConfig);
-
-    // Set basic config based on scheme
-    if ("fs".equals(scheme)) {
-      config.put("root", uri.getPath());
-    } else if (uri.getHost() != null) {
-      // For cloud storage, set bucket/container and root
-      if ("s3".equals(scheme)) {
-        config.put("bucket", uri.getHost());
-      } else if ("gcs".equals(scheme)) {
-        config.put("bucket", uri.getHost());
-      } else if ("azblob".equals(scheme)) {
-        config.put("container", uri.getHost());
-      } else {
-        // For other schemes, try to set a generic "bucket" config
-        config.put("bucket", uri.getHost());
-      }
-
-      if (uri.getPath() != null && !uri.getPath().isEmpty()) {
-        config.put("root", uri.getPath());
-      }
+    // local file system path
+    if (schemeSplit.length < 2) {
+      return Operator.of("fs", ImmutableMap.of("root", root));
     }
 
-    // Create operator with blocking layer for synchronous operations
-    return Operator.of(scheme, config);
+    String scheme = normalizeScheme(schemeSplit[0]);
+    String[] authoritySplit = schemeSplit[1].split("/", 2);
+    String authority = authoritySplit[0];
+    String path = authoritySplit.length > 1 ? authoritySplit[1] : "";
+
+    switch (scheme) {
+      case "s3":
+      case "gcs":
+        return Operator.of(scheme, ImmutableMap.of("root", path, "bucket", authority));
+      case "azblob":
+        return Operator.of(scheme, ImmutableMap.of("root", path, "CONTAINER", authority));
+      default:
+        return Operator.of(scheme, ImmutableMap.of("root", schemeSplit[1]));
+    }
   }
 
   private String normalizeScheme(String scheme) {
-    if (scheme == null) {
-      return "fs";
-    }
-    
-    // Handle scheme aliases
     switch (scheme.toLowerCase()) {
       case "s3a":
       case "s3n":
@@ -227,7 +237,22 @@ public class DirectoryNamespace implements LanceNamespace {
     }
   }
 
+  private String tableNameFromId(List<String> id) {
+    ValidationUtil.checkArgument(
+        id.size() == 1, "Directory namespace table ID must have only 1 level, but got %s", id);
+    return id.get(0);
+  }
+
   private String getTablePath(String tableName) {
-    return tableName + "/";
+    return String.format("%s/%s", config.getRoot(), tableName);
+  }
+
+  private String getTableVersionsPath(String tableName) {
+    return String.format("%s/_versions/", tableName);
+  }
+
+  @Override
+  public void close() throws IOException {
+    operator.close();
   }
 }

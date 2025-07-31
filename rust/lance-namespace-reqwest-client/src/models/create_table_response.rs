@@ -13,10 +13,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateTableResponse {
-    #[serde(rename = "location")]
-    pub location: String,
     #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
     pub version: Option<i64>,
+    #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
+    pub location: Option<String>,
     #[serde(rename = "schema", skip_serializing_if = "Option::is_none")]
     pub schema: Option<Box<models::JsonArrowSchema>>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
@@ -27,10 +27,10 @@ pub struct CreateTableResponse {
 }
 
 impl CreateTableResponse {
-    pub fn new(location: String) -> CreateTableResponse {
+    pub fn new() -> CreateTableResponse {
         CreateTableResponse {
-            location,
             version: None,
+            location: None,
             schema: None,
             properties: None,
             storage_options: None,

@@ -15,7 +15,6 @@ package com.lancedb.lance.namespace.hive;
 
 import com.lancedb.lance.namespace.util.DynMethods;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.HiveMetaHookLoader;

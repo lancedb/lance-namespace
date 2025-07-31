@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **List[str]** |  | [optional] 
 **location** | **str** |  | [optional] 
+**var_schema** | [**JsonArrowSchema**](JsonArrowSchema.md) |  | [optional] 
 **properties** | **Dict[str, str]** |  | [optional] 
 
 ## Example

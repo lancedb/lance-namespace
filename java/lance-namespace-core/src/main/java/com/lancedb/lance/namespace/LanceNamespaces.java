@@ -16,6 +16,7 @@ package com.lancedb.lance.namespace;
 import com.lancedb.lance.namespace.util.DynConstructors;
 
 import com.google.common.collect.ImmutableMap;
+import org.apache.arrow.memory.BufferAllocator;
 
 import java.util.Map;
 
@@ -36,9 +37,11 @@ public class LanceNamespaces {
    *     implements {@link LanceNamespace}
    * @param properties input properties
    * @param conf additional system-specific configurations like Hadoop Configuration
+   * @param allocator BufferAllocator for Arrow operations
    * @return a Lance namespace implementation
    */
-  public static LanceNamespace create(String impl, Map<String, String> properties, Object conf) {
+  public static LanceNamespace create(
+      String impl, Map<String, String> properties, Object conf, BufferAllocator allocator) {
     String resolvedImpl = NATIVE_IMPLEMENTATIONS.getOrDefault(impl, impl);
 
     LanceNamespace ns;
@@ -58,7 +61,7 @@ public class LanceNamespaces {
       ((Configurable) ns).setConf(conf);
     }
 
-    ns.initialize(properties);
+    ns.initialize(properties, allocator);
     return ns;
   }
 }

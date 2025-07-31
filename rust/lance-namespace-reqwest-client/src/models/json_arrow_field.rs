@@ -21,12 +21,12 @@ pub struct JsonArrowField {
     #[serde(rename = "nullable")]
     pub nullable: bool,
     #[serde(rename = "type")]
-    pub r#type: Box<models::JsonDataType>,
+    pub r#type: Box<models::JsonArrowDataType>,
 }
 
 impl JsonArrowField {
     /// JSON representation of an Apache Arrow field. 
-    pub fn new(name: String, nullable: bool, r#type: models::JsonDataType) -> JsonArrowField {
+    pub fn new(name: String, nullable: bool, r#type: models::JsonArrowDataType) -> JsonArrowField {
         JsonArrowField {
             metadata: None,
             name,

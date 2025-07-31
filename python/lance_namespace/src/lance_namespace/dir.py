@@ -6,6 +6,8 @@ from urllib.parse import urlparse
 import os
 
 import opendal
+import lance
+import pyarrow as pa
 
 from lance_namespace.namespace import LanceNamespace
 from lance_namespace_urllib3_client.models import (
@@ -20,10 +22,15 @@ from lance_namespace_urllib3_client.models import (
     NamespaceExistsRequest,
     ListTablesRequest,
     ListTablesResponse,
-    RegisterTableRequest,
-    RegisterTableResponse,
-    DeregisterTableRequest,
-    DeregisterTableResponse,
+    CreateTableRequest,
+    CreateTableResponse,
+    DropTableRequest,
+    DropTableResponse,
+    DescribeTableRequest,
+    DescribeTableResponse,
+    JsonArrowSchema,
+    JsonArrowField,
+    JsonArrowDataType,
 )
 
 
@@ -45,7 +52,7 @@ class DirectoryNamespace(LanceNamespace):
             root = os.getcwd()
         
         self.namespace_path = self._parse_path(root)
-        self.operator = self._initialize_operator(self.namespace_path, self.config.opendal_config)
+        self.operator = self._initialize_operator(root)
     
     def create_namespace(self, request: CreateNamespaceRequest) -> CreateNamespaceResponse:
         """Create a namespace - not supported for directory namespace."""
@@ -85,48 +92,141 @@ class DirectoryNamespace(LanceNamespace):
             
             for entry in entries:
                 metadata = self.operator.stat(entry.path)
-                if metadata.is_dir():
+                if metadata.is_dir:
                     table_name = entry.path.rstrip('/')
-                    tables.append(table_name)
+                    # Check if it's a Lance dataset by looking for _versions directory
+                    try:
+                        versions_path = f"{entry.path}_versions/"
+                        versions_metadata = self.operator.stat(versions_path)
+                        if versions_metadata.is_dir:
+                            tables.append(table_name)
+                    except:
+                        # If _versions doesn't exist, it's not a Lance dataset
+                        pass
             
-            response = ListTablesResponse()
-            response.tables = tables
+            response = ListTablesResponse(tables=tables)
             return response
         except Exception as e:
             raise RuntimeError(f"Failed to list tables: {e}")
     
-    def register_table(self, request: RegisterTableRequest) -> RegisterTableResponse:
-        """Register a table by creating its directory."""
-        table_name = request.table
-        if not table_name:
-            raise ValueError("table name is required")
-        
-        table_path = self._get_table_path(table_name)
-        
-        try:
-            self.operator.create_dir(table_path)
-            response = RegisterTableResponse()
-            response.table = table_name
-            response.table_uri = table_path
-            return response
-        except Exception as e:
-            raise RuntimeError(f"Failed to register table {table_name}: {e}")
     
-    def deregister_table(self, request: DeregisterTableRequest) -> DeregisterTableResponse:
-        """Deregister a table by removing its directory."""
-        table_name = request.table
-        if not table_name:
-            raise ValueError("table name is required")
+    def create_table(self, request: CreateTableRequest, request_data: bytes) -> CreateTableResponse:
+        """Create a table using Lance dataset."""
+        if not request.id or len(request.id) != 1:
+            raise ValueError("table ID must have exactly 1 level")
         
+        if not request.var_schema:
+            raise ValueError("Schema is required in CreateTableRequest")
+        
+        table_name = request.id[0]
+        table_path = self._get_table_path(table_name)
+        
+        if request.location and request.location != table_path:
+            raise ValueError(f"Cannot create table {table_name} at location {request.location}, must be at location {table_path}")
+        
+        # Convert JsonArrowSchema to PyArrow Schema
+        schema = self._convert_json_arrow_schema_to_pyarrow(request.var_schema)
+        
+        # Create empty table with schema
+        arrays = []
+        for field in schema:
+            # Create empty array for each field
+            empty_array = pa.array([], type=field.type)
+            arrays.append(empty_array)
+        
+        empty_table = pa.Table.from_arrays(arrays, schema=schema)
+        
+        # Create Lance dataset
+        lance.write_dataset(empty_table, table_path, storage_options=self.config.storage_options)
+        
+        response = CreateTableResponse(location=table_path, version=1)
+        return response
+    
+    def drop_table(self, request: DropTableRequest) -> DropTableResponse:
+        """Drop a table by removing its Lance dataset."""
+        if not request.id or len(request.id) != 1:
+            raise ValueError("table ID must have exactly 1 level")
+        
+        table_name = request.id[0]
         table_path = self._get_table_path(table_name)
         
         try:
-            self.operator.remove_all(table_path)
-            response = DeregisterTableResponse()
-            response.table = table_name
+            # Remove the entire table directory
+            self.operator.remove_all(f"{table_name}/")
+            response = DropTableResponse()
             return response
         except Exception as e:
-            raise RuntimeError(f"Failed to deregister table {table_name}: {e}")
+            raise RuntimeError(f"Failed to drop table {table_name}: {e}")
+
+    def describe_table(self, request: DescribeTableRequest) -> DescribeTableResponse:
+        """Describe a table by checking its existence and returning location."""
+        if not request.id or len(request.id) != 1:
+            raise ValueError("table ID must have exactly 1 level")
+        
+        table_name = request.id[0]
+        table_path = self._get_table_path(table_name)
+        
+        try:
+            # Check if it's a Lance dataset by looking for _versions directory
+            versions_path = f"{table_name}/_versions/"
+            versions_metadata = self.operator.stat(versions_path)
+            if not versions_metadata.is_dir:
+                raise RuntimeError(f"Table does not exist: {table_name}")
+        except Exception as e:
+            raise RuntimeError(f"Table does not exist: {table_name}: {e}")
+        
+        response = DescribeTableResponse(location=table_path)
+        return response
+    
+    def _get_table_path(self, table_name: str) -> str:
+        """Get the full path for a table."""
+        root = self.config.root if self.config.root else os.getcwd()
+        return f"{root}/{table_name}"
+    
+    def _convert_json_arrow_schema_to_pyarrow(self, json_schema: JsonArrowSchema) -> pa.Schema:
+        """Convert JsonArrowSchema to PyArrow Schema."""
+        fields = []
+        for json_field in json_schema.fields:
+            arrow_type = self._convert_json_arrow_type_to_pyarrow(json_field.type)
+            field = pa.field(json_field.name, arrow_type, nullable=json_field.nullable)
+            fields.append(field)
+        
+        return pa.schema(fields, metadata=json_schema.metadata)
+    
+    def _convert_json_arrow_type_to_pyarrow(self, json_type: JsonArrowDataType) -> pa.DataType:
+        """Convert JsonArrowDataType to PyArrow DataType."""
+        type_name = json_type.type.lower()
+        
+        if type_name == "null":
+            return pa.null()
+        elif type_name in ["bool", "boolean"]:
+            return pa.bool_()
+        elif type_name == "int8":
+            return pa.int8()
+        elif type_name == "uint8":
+            return pa.uint8()
+        elif type_name == "int16":
+            return pa.int16()
+        elif type_name == "uint16":
+            return pa.uint16()
+        elif type_name == "int32":
+            return pa.int32()
+        elif type_name == "uint32":
+            return pa.uint32()
+        elif type_name == "int64":
+            return pa.int64()
+        elif type_name == "uint64":
+            return pa.uint64()
+        elif type_name == "float32":
+            return pa.float32()
+        elif type_name == "float64":
+            return pa.float64()
+        elif type_name == "utf8":
+            return pa.utf8()
+        elif type_name == "binary":
+            return pa.binary()
+        else:
+            raise ValueError(f"Unsupported Arrow type: {type_name}")
     
     def _parse_path(self, path: str) -> str:
         """Parse the path and convert to a proper URI if needed."""
@@ -158,49 +258,33 @@ class DirectoryNamespace(LanceNamespace):
         else:
             return scheme_lower
     
-    def _initialize_operator(self, path: str, opendal_config: Dict[str, str]) -> opendal.Operator:
-        """Initialize the OpenDAL operator based on the URI scheme."""
-        parsed = urlparse(path)
-        scheme = self._normalize_scheme(parsed.scheme)
+    def _initialize_operator(self, root: str) -> opendal.Operator:
+        """Initialize the OpenDAL operator based on the root path."""
+        scheme_split = root.split("://", 1)
         
-        config = {}
+        # Local file system path
+        if len(scheme_split) < 2:
+            return opendal.Operator("fs", root=root)
         
-        # Set basic config based on scheme
-        if scheme == 'fs':
-            config['root'] = parsed.path
-        elif parsed.netloc:
-            # For cloud storage, set bucket/container and root
-            if scheme == 's3':
-                config['bucket'] = parsed.netloc
-            elif scheme == 'gcs':
-                config['bucket'] = parsed.netloc
-            elif scheme == 'azblob':
-                config['container'] = parsed.netloc
-            else:
-                # For other schemes, try to set a generic "bucket" config
-                config['bucket'] = parsed.netloc
-            
-            if parsed.path:
-                config['root'] = parsed.path
+        scheme = self._normalize_scheme(scheme_split[0])
+        authority_split = scheme_split[1].split("/", 1)
+        authority = authority_split[0]
+        path = authority_split[1] if len(authority_split) > 1 else ""
         
-        # Add OpenDAL configuration
-        config.update(opendal_config)
-        
-        try:
-            return opendal.Operator(scheme, **config)
-        except Exception as e:
-            raise RuntimeError(f"Failed to initialize operator for path {path}: {e}")
+        if scheme in ["s3", "gcs"]:
+            return opendal.Operator(scheme, root=path, bucket=authority)
+        elif scheme == "azblob":
+            return opendal.Operator(scheme, root=path, container=authority)
+        else:
+            return opendal.Operator(scheme, root=scheme_split[1])
     
-    def _get_table_path(self, table_name: str) -> str:
-        """Get the path for a table directory."""
-        return f"{table_name}/"
 
 
 class DirectoryNamespaceConfig:
     """Configuration for DirectoryNamespace."""
     
     ROOT = "root"
-    OPENDAL_PREFIX = "opendal."
+    STORAGE_OPTIONS_PREFIX = "storage."
     
     def __init__(self, properties: Optional[Dict[str, str]] = None):
         """Initialize configuration from properties.
@@ -212,16 +296,16 @@ class DirectoryNamespaceConfig:
             properties = {}
             
         self._root = properties.get(self.ROOT)
-        self._opendal_config = self._extract_opendal_config(properties)
+        self._storage_options = self._extract_storage_options(properties)
     
-    def _extract_opendal_config(self, properties: Dict[str, str]) -> Dict[str, str]:
-        """Extract OpenDAL configuration properties by removing the prefix."""
-        opendal_config = {}
+    def _extract_storage_options(self, properties: Dict[str, str]) -> Dict[str, str]:
+        """Extract storage configuration properties by removing the prefix."""
+        storage_options = {}
         for key, value in properties.items():
-            if key.startswith(self.OPENDAL_PREFIX):
-                opendal_key = key[len(self.OPENDAL_PREFIX):]
-                opendal_config[opendal_key] = value
-        return opendal_config
+            if key.startswith(self.STORAGE_OPTIONS_PREFIX):
+                storage_key = key[len(self.STORAGE_OPTIONS_PREFIX):]
+                storage_options[storage_key] = value
+        return storage_options
     
     @property
     def root(self) -> Optional[str]:
@@ -229,6 +313,6 @@ class DirectoryNamespaceConfig:
         return self._root
     
     @property
-    def opendal_config(self) -> Dict[str, str]:
-        """Get the OpenDAL configuration properties."""
-        return self._opendal_config.copy()
+    def storage_options(self) -> Dict[str, str]:
+        """Get the storage configuration properties."""
+        return self._storage_options.copy()

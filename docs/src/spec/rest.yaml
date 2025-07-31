@@ -1334,9 +1334,6 @@ components:
 
     DescribeTableResponse:
       type: object
-      required:
-        - schema
-        - version
       properties:
         version:
           type: integer
@@ -1852,8 +1849,8 @@ components:
         nullable:
           type: boolean
         type:
-          $ref: '#/components/schemas/JsonDataType'
-    JsonDataType:
+          $ref: '#/components/schemas/JsonArrowDataType'
+    JsonArrowDataType:
       type: object
       description: JSON representation of an Apache Arrow DataType
       required:
@@ -1888,6 +1885,8 @@ components:
             type: string
         location:
           type: string
+        schema:
+          $ref: '#/components/schemas/JsonArrowSchema'
         properties:
           type: object
           additionalProperties:
@@ -1895,8 +1894,6 @@ components:
 
     CreateTableResponse:
       type: object
-      required:
-        - location
       properties:
         location:
           type: string

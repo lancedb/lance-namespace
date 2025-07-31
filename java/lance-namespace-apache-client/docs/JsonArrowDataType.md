@@ -1,6 +1,6 @@
 
 
-# JsonDataType
+# JsonArrowDataType
 
 JSON representation of an Apache Arrow DataType
 

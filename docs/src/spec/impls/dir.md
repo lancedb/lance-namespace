@@ -40,11 +40,31 @@ There are 3 ways to specify a directory path:
 3. **Relative POSIX storage path**: a relative file path in a POSIX standard storage, e.g. `my/dir2`, `./my/dir3`.
    The absolute path of the directory should be based on the current directory of the running process.
 
-## Table Existence
+## Table Existence and Listing
 
-A table exists in a Lance directory namespace if a table directory of the specific name exists.
-This is true even if the directory is empty or the contents in the directory does not follow the Lance table format spec.
-For such cases, an operation that lists all tables in the directory should show the specific table,
-and an operation that checks if a table exists should return true.
-However, an operation that loads the Lance table metadata should fail with error
-indicating the content in the folder is not compliant with the Lance table format spec.
+A table exists in a Lance directory namespace if a table directory of the specific name exists
+**and** contains a `_versions` subdirectory, which indicates it is a valid Lance dataset.
+
+When checking if a specific table exists:
+- The operation should return true only if the directory exists and contains a `_versions` subdirectory
+- If the directory exists but lacks `_versions`, it should be treated as non-existent
+
+When listing tables in a namespace:
+- Only directories that contain a `_versions` subdirectory should be included in the list
+- Empty directories or directories without `_versions` should not be listed as tables
+- This ensures that only valid Lance datasets are shown to users
+
+## Configuration
+
+The Lance directory namespace accepts the following configuration properties:
+
+| Property    | Required | Description                                                 | Default                   | Example                         |
+|-------------|----------|-------------------------------------------------------------|---------------------------|---------------------------------|
+| `root`      | No       | The root directory of the namespace where tables are stored | Current working directory | `/my/dir`, `s3://bucket/prefix` |
+| `storage.*` | No       | Storage-specific configuration options                      |                           | `storage.region=us-west-2`      |
+
+### Storage Options
+
+Properties with the `storage.` prefix are passed directly to the underlying OpenDAL storage system
+after removing the prefix. For example, `storage.region` becomes `region` when passed to the storage layer.
+Please visit [Apache OpenDAL](https://opendal.apache.org) for more details.

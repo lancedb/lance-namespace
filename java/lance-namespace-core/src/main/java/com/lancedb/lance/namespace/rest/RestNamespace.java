@@ -67,6 +67,7 @@ import com.lancedb.lance.namespace.model.UpdateTableResponse;
 import com.lancedb.lance.namespace.util.JsonUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.arrow.memory.BufferAllocator;
 
 import java.util.Map;
 
@@ -77,19 +78,19 @@ public class RestNamespace implements LanceNamespace {
   private TransactionApi transactionApi;
   private RestNamespaceConfig config;
 
-  public RestNamespace() {
-  }
+  public RestNamespace() {}
 
   @Override
-  public void initialize(Map<String, String> configProperties) {
+  public void initialize(Map<String, String> configProperties, BufferAllocator allocator) {
     this.config = new RestNamespaceConfig(configProperties);
-    
+    // Note: RestNamespace doesn't use BufferAllocator, parameter ignored
+
     // Create ApiClient and set URI if provided
     ApiClient client = new ApiClient();
     if (config.getUri() != null) {
       client.setBasePath(config.getUri());
     }
-    
+
     // Register custom serializers before creating API instances
     ObjectMapper objectMapper = client.getObjectMapper();
     objectMapper.registerModule(new LanceNamespaceJacksonModule());

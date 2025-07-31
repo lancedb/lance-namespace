@@ -19,6 +19,7 @@ import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Sets;
+import org.apache.arrow.memory.BufferAllocator;
 import software.amazon.awssdk.services.glue.GlueClient;
 import software.amazon.awssdk.services.glue.model.GetDatabasesRequest;
 import software.amazon.awssdk.services.glue.model.GetDatabasesResponse;
@@ -34,11 +35,13 @@ public class GlueNamespace implements LanceNamespace, Closeable {
 
   private GlueNamespaceConfig config;
   private GlueClient glueClient;
+  private BufferAllocator allocator;
 
   public GlueNamespace() {}
 
   @Override
-  public void initialize(Map<String, String> configProperties) {
+  public void initialize(Map<String, String> configProperties, BufferAllocator allocator) {
+    this.allocator = allocator;
     GlueNamespaceConfig glueProperties = new GlueNamespaceConfig(configProperties);
     GlueClient glueClient =
         GlueClient.builder().applyMutation(glueProperties::configureClientBuilder).build();

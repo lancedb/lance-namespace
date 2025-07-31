@@ -11,7 +11,7 @@ JSON representation of an Apache Arrow field.
 |**metadata** | **Map&lt;String, String&gt;** |  |  [optional] |
 |**name** | **String** |  |  |
 |**nullable** | **Boolean** |  |  |
-|**type** | [**JsonDataType**](JsonDataType.md) |  |  |
+|**type** | [**JsonArrowDataType**](JsonArrowDataType.md) |  |  |
 
 
 

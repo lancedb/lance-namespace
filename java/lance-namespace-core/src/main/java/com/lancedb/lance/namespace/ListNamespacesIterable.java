@@ -21,9 +21,9 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
- * An iterable that provides paginated access to namespace names from a LanceNamespace.
- * This class handles pagination automatically by making successive requests using page tokens
- * until all namespace names have been retrieved.
+ * An iterable that provides paginated access to namespace names from a LanceNamespace. This class
+ * handles pagination automatically by making successive requests using page tokens until all
+ * namespace names have been retrieved.
  */
 public class ListNamespacesIterable implements Iterable<String> {
 
@@ -34,7 +34,8 @@ public class ListNamespacesIterable implements Iterable<String> {
    * Creates a new ListNamespacesIterable.
    *
    * @param namespace the LanceNamespace to list namespaces from
-   * @param initialRequest the initial ListNamespacesRequest containing the parent namespace ID and optional limit
+   * @param initialRequest the initial ListNamespacesRequest containing the parent namespace ID and
+   *     optional limit
    */
   public ListNamespacesIterable(LanceNamespace namespace, ListNamespacesRequest initialRequest) {
     this.namespace = namespace;
@@ -55,20 +56,20 @@ public class ListNamespacesIterable implements Iterable<String> {
     @Override
     public boolean hasNext() {
       ensureInitialized();
-      
+
       // If current page has more items, return true
       if (currentPageIterator != null && currentPageIterator.hasNext()) {
         return true;
       }
-      
+
       // If no more pages available, return false
       if (!hasMorePages) {
         return false;
       }
-      
+
       // Try to load the next page
       loadNextPage();
-      
+
       // Return true if the newly loaded page has items
       return currentPageIterator != null && currentPageIterator.hasNext();
     }
@@ -78,7 +79,7 @@ public class ListNamespacesIterable implements Iterable<String> {
       if (!hasNext()) {
         throw new NoSuchElementException("No more namespace names available");
       }
-      
+
       return currentPageIterator.next();
     }
 
@@ -92,22 +93,23 @@ public class ListNamespacesIterable implements Iterable<String> {
     private void loadNextPage() {
       try {
         // Create request for the current page
-        ListNamespacesRequest request = new ListNamespacesRequest()
-            .id(initialRequest.getId())
-            .limit(initialRequest.getLimit())
-            .pageToken(nextPageToken);
+        ListNamespacesRequest request =
+            new ListNamespacesRequest()
+                .id(initialRequest.getId())
+                .limit(initialRequest.getLimit())
+                .pageToken(nextPageToken);
 
         // Make the request
         ListNamespacesResponse response = namespace.listNamespaces(request);
-        
+
         // Extract namespace names
         Set<String> namespaces = response.getNamespaces();
         currentPageIterator = namespaces != null ? namespaces.iterator() : null;
-        
+
         // Update pagination state
         nextPageToken = response.getPageToken();
         hasMorePages = nextPageToken != null && !nextPageToken.isEmpty();
-        
+
       } catch (Exception e) {
         hasMorePages = false;
         currentPageIterator = null;

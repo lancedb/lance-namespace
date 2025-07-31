@@ -13,7 +13,6 @@
  */
 package com.lancedb.lance.namespace.lancedb;
 
-import com.lancedb.lance.namespace.client.apache.ApiClient;
 import com.lancedb.lance.namespace.rest.RestNamespace;
 import com.lancedb.lance.namespace.rest.RestNamespaceConfig;
 
@@ -163,7 +162,7 @@ public class LanceDbRestNamespaceBuilder {
     }
     config.put(RestNamespaceConfig.URI, uri);
     RestNamespace ns = new RestNamespace();
-    ns.initialize(config);
+    ns.initialize(config, null);
     return ns;
   }
 }

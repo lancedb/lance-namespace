@@ -26,8 +26,8 @@ import java.util.StringJoiner;
 
 /** CreateTableResponse */
 @JsonPropertyOrder({
-  CreateTableResponse.JSON_PROPERTY_LOCATION,
   CreateTableResponse.JSON_PROPERTY_VERSION,
+  CreateTableResponse.JSON_PROPERTY_LOCATION,
   CreateTableResponse.JSON_PROPERTY_SCHEMA,
   CreateTableResponse.JSON_PROPERTY_PROPERTIES,
   CreateTableResponse.JSON_PROPERTY_STORAGE_OPTIONS
@@ -36,11 +36,11 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class CreateTableResponse {
-  public static final String JSON_PROPERTY_LOCATION = "location";
-  @javax.annotation.Nonnull private String location;
-
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nullable private Long version;
+
+  public static final String JSON_PROPERTY_LOCATION = "location";
+  @javax.annotation.Nullable private String location;
 
   public static final String JSON_PROPERTY_SCHEMA = "schema";
   @javax.annotation.Nullable private JsonArrowSchema schema;
@@ -52,30 +52,6 @@ public class CreateTableResponse {
   @javax.annotation.Nullable private Map<String, String> storageOptions = new HashMap<>();
 
   public CreateTableResponse() {}
-
-  public CreateTableResponse location(@javax.annotation.Nonnull String location) {
-
-    this.location = location;
-    return this;
-  }
-
-  /**
-   * Get location
-   *
-   * @return location
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public String getLocation() {
-    return location;
-  }
-
-  @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setLocation(@javax.annotation.Nonnull String location) {
-    this.location = location;
-  }
 
   public CreateTableResponse version(@javax.annotation.Nullable Long version) {
 
@@ -99,6 +75,30 @@ public class CreateTableResponse {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setVersion(@javax.annotation.Nullable Long version) {
     this.version = version;
+  }
+
+  public CreateTableResponse location(@javax.annotation.Nullable String location) {
+
+    this.location = location;
+    return this;
+  }
+
+  /**
+   * Get location
+   *
+   * @return location
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_LOCATION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getLocation() {
+    return location;
+  }
+
+  @JsonProperty(JSON_PROPERTY_LOCATION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setLocation(@javax.annotation.Nullable String location) {
+    this.location = location;
   }
 
   public CreateTableResponse schema(@javax.annotation.Nullable JsonArrowSchema schema) {
@@ -200,8 +200,8 @@ public class CreateTableResponse {
       return false;
     }
     CreateTableResponse createTableResponse = (CreateTableResponse) o;
-    return Objects.equals(this.location, createTableResponse.location)
-        && Objects.equals(this.version, createTableResponse.version)
+    return Objects.equals(this.version, createTableResponse.version)
+        && Objects.equals(this.location, createTableResponse.location)
         && Objects.equals(this.schema, createTableResponse.schema)
         && Objects.equals(this.properties, createTableResponse.properties)
         && Objects.equals(this.storageOptions, createTableResponse.storageOptions);
@@ -209,15 +209,15 @@ public class CreateTableResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(location, version, schema, properties, storageOptions);
+    return Objects.hash(version, location, schema, properties, storageOptions);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableResponse {\n");
-    sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
@@ -267,6 +267,21 @@ public class CreateTableResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
+    // add `version` to the URL query string
+    if (getVersion() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sversion%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
     // add `location` to the URL query string
     if (getLocation() != null) {
       try {
@@ -277,21 +292,6 @@ public class CreateTableResponse {
                 suffix,
                 URLEncoder.encode(String.valueOf(getLocation()), "UTF-8")
                     .replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
-    // add `version` to the URL query string
-    if (getVersion() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sversion%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **metadata** | **Dict[str, str]** |  | [optional] 
 **name** | **str** |  | 
 **nullable** | **bool** |  | 
-**type** | [**JsonDataType**](JsonDataType.md) |  | 
+**type** | [**JsonArrowDataType**](JsonArrowDataType.md) |  | 
 
 ## Example
 

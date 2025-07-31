@@ -35,8 +35,8 @@ class TestCreateTableResponse(unittest.TestCase):
         model = CreateTableResponse()
         if include_optional:
             return CreateTableResponse(
-                location = '',
                 version = 0,
+                location = '',
                 var_schema = lance_namespace_urllib3_client.models.json_arrow_schema.JsonArrowSchema(
                     fields = [
                         lance_namespace_urllib3_client.models.json_arrow_field.JsonArrowField(
@@ -45,7 +45,7 @@ class TestCreateTableResponse(unittest.TestCase):
                                 }, 
                             name = '', 
                             nullable = True, 
-                            type = lance_namespace_urllib3_client.models.json_data_type.JsonDataType(
+                            type = lance_namespace_urllib3_client.models.json_arrow_data_type.JsonArrowDataType(
                                 length = 0, 
                                 type = '', ), )
                         ], 
@@ -61,7 +61,6 @@ class TestCreateTableResponse(unittest.TestCase):
             )
         else:
             return CreateTableResponse(
-                location = '',
         )
         """
 

@@ -14,10 +14,10 @@
 
 import unittest
 
-from lance_namespace_urllib3_client.models.json_data_type import JsonDataType
+from lance_namespace_urllib3_client.models.json_arrow_data_type import JsonArrowDataType
 
-class TestJsonDataType(unittest.TestCase):
-    """JsonDataType unit test stubs"""
+class TestJsonArrowDataType(unittest.TestCase):
+    """JsonArrowDataType unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,16 +25,16 @@ class TestJsonDataType(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> JsonDataType:
-        """Test JsonDataType
+    def make_instance(self, include_optional) -> JsonArrowDataType:
+        """Test JsonArrowDataType
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `JsonDataType`
+        # uncomment below to create an instance of `JsonArrowDataType`
         """
-        model = JsonDataType()
+        model = JsonArrowDataType()
         if include_optional:
-            return JsonDataType(
+            return JsonArrowDataType(
                 fields = [
                     lance_namespace_urllib3_client.models.json_arrow_field.JsonArrowField(
                         metadata = {
@@ -42,7 +42,7 @@ class TestJsonDataType(unittest.TestCase):
                             }, 
                         name = '', 
                         nullable = True, 
-                        type = lance_namespace_urllib3_client.models.json_data_type.JsonDataType(
+                        type = lance_namespace_urllib3_client.models.json_arrow_data_type.JsonArrowDataType(
                             length = 0, 
                             type = '', ), )
                     ],
@@ -50,13 +50,13 @@ class TestJsonDataType(unittest.TestCase):
                 type = ''
             )
         else:
-            return JsonDataType(
+            return JsonArrowDataType(
                 type = '',
         )
         """
 
-    def testJsonDataType(self):
-        """Test JsonDataType"""
+    def testJsonArrowDataType(self):
+        """Test JsonArrowDataType"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 

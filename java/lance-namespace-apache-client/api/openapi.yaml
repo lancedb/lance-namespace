@@ -1942,9 +1942,6 @@ components:
             Configuration options to be used to access storage. The available
             options depend on the type of storage in use. These will be
             passed directly to Lance to initialize storage access.
-      required:
-      - schema
-      - version
     CountTableRowsRequest:
       example:
         filter: filter
@@ -2575,12 +2572,12 @@ components:
         nullable:
           type: boolean
         type:
-          $ref: '#/components/schemas/JsonDataType'
+          $ref: '#/components/schemas/JsonArrowDataType'
       required:
       - name
       - nullable
       - type
-    JsonDataType:
+    JsonArrowDataType:
       description: JSON representation of an Apache Arrow DataType
       example:
         length: 0
@@ -2617,6 +2614,8 @@ components:
           type: array
         location:
           type: string
+        schema:
+          $ref: '#/components/schemas/JsonArrowSchema'
         properties:
           additionalProperties:
             type: string
@@ -2653,12 +2652,12 @@ components:
         storage_options:
           key: storage_options
       properties:
-        location:
-          type: string
         version:
           format: int64
           minimum: 0
           type: integer
+        location:
+          type: string
         schema:
           $ref: '#/components/schemas/JsonArrowSchema'
         properties:
@@ -2671,8 +2670,6 @@ components:
             Configuration options to be used to access storage. The available
             options depend on the type of storage in use. These will be
             passed directly to Lance to initialize storage access.
-      required:
-      - location
     TableExistsRequest:
       example:
         id:

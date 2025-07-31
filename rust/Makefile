@@ -12,12 +12,12 @@
 
 VERSION = 0.0.4
 
-.PHONY: clean-rust-reqwest-client
-clean-rust-reqwest-client:
+.PHONY: clean-reqwest-client
+clean-reqwest-client:
 	rm -rf lance-namespace-reqwest-client/**
 
-.PHONY: gen-rust-reqwest-client
-gen-rust-reqwest-client: clean-rust-reqwest-client
+.PHONY: gen-reqwest-client
+gen-reqwest-client: clean-reqwest-client
 	uv run openapi-generator-cli generate \
 	  -i ../docs/src/spec/rest.yaml \
 	  -g rust \
@@ -30,15 +30,15 @@ gen-rust-reqwest-client: clean-rust-reqwest-client
 	rm -rf lance-namespace-reqwest-client/.travis.yml
 	rm -rf lance-namespace-reqwest-client/git_push.sh
 
-.PHONY: build-rust-reqwest-client
-build-rust-reqwest-client: gen-rust-reqwest-client
+.PHONY: build-reqwest-client
+build-reqwest-client: gen-reqwest-client
 	cargo test
 
 .PHONY: clean
-clean: clean-rust-reqwest-client
+clean: clean-reqwest-client
 
 .PHONY: gen
-gen: gen-rust-reqwest-client
+gen: gen-reqwest-client
 
 .PHONY: build
-build: build-rust-reqwest-client
+build: build-reqwest-client

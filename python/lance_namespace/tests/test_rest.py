@@ -5,7 +5,7 @@ import pytest
 from unittest.mock import Mock, patch
 from lance_namespace.rest import (
     LanceRestNamespace, 
-    RestConfig,
+    RestNamespaceConfig,
     object_id_str
 )
 from lance_namespace_urllib3_client.models import (
@@ -57,25 +57,25 @@ from lance_namespace_urllib3_client.models import (
 
 def test_config_default_delimiter():
     """Test default delimiter is '.'."""
-    config = RestConfig({})
+    config = RestNamespaceConfig({})
     assert config.delimiter() == "."
 
 
 def test_config_custom_delimiter():
     """Test custom delimiter."""
-    config = RestConfig({"delimiter": "/"})
+    config = RestNamespaceConfig({"delimiter": "/"})
     assert config.delimiter() == "/"
 
 
 def test_config_no_additional_headers():
     """Test no additional headers."""
-    config = RestConfig({"key": "value"})
+    config = RestNamespaceConfig({"key": "value"})
     assert config.additional_headers() == {}
 
 
 def test_config_additional_headers():
     """Test extracting additional headers."""
-    config = RestConfig({
+    config = RestNamespaceConfig({
         "header.Authorization": "Bearer token",
         "header.X-Custom": "custom-value",
         "other.property": "ignored"
@@ -150,7 +150,7 @@ class TestLanceRestNamespace:
         """Test list_namespaces method."""
         # Setup
         namespace.namespace_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -180,7 +180,7 @@ class TestLanceRestNamespace:
         """Test describe_table method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -212,7 +212,7 @@ class TestLanceRestNamespace:
         """Test create_table method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -248,7 +248,7 @@ class TestLanceRestNamespace:
         """Test insert_into_table with mode."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -279,7 +279,7 @@ class TestLanceRestNamespace:
         """Test namespace_exists method."""
         # Setup
         namespace.namespace_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -302,7 +302,7 @@ class TestLanceRestNamespace:
         """Test create_namespace method."""
         # Setup
         namespace.namespace_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -331,7 +331,7 @@ class TestLanceRestNamespace:
         """Test drop_namespace method."""
         # Setup
         namespace.namespace_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -360,7 +360,7 @@ class TestLanceRestNamespace:
         """Test describe_namespace method."""
         # Setup
         namespace.namespace_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -387,7 +387,7 @@ class TestLanceRestNamespace:
         """Test list_tables method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -417,7 +417,7 @@ class TestLanceRestNamespace:
         """Test register_table method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -447,7 +447,7 @@ class TestLanceRestNamespace:
         """Test table_exists method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -471,7 +471,7 @@ class TestLanceRestNamespace:
         """Test drop_table method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -502,7 +502,7 @@ class TestLanceRestNamespace:
         """Test deregister_table method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -534,7 +534,7 @@ class TestLanceRestNamespace:
         """Test count_table_rows method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -563,7 +563,7 @@ class TestLanceRestNamespace:
         """Test merge_insert_into_table method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -609,7 +609,7 @@ class TestLanceRestNamespace:
         """Test update_table method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -640,7 +640,7 @@ class TestLanceRestNamespace:
         """Test delete_from_table method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -667,7 +667,7 @@ class TestLanceRestNamespace:
         """Test query_table method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -695,7 +695,7 @@ class TestLanceRestNamespace:
         """Test create_table_index method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -726,7 +726,7 @@ class TestLanceRestNamespace:
         """Test list_table_indices method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -754,7 +754,7 @@ class TestLanceRestNamespace:
         """Test describe_table_index_stats method."""
         # Setup
         namespace.table_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -789,7 +789,7 @@ class TestLanceRestNamespace:
         """Test describe_transaction method."""
         # Setup
         namespace.transaction_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })
@@ -819,7 +819,7 @@ class TestLanceRestNamespace:
         """Test alter_transaction method."""
         # Setup
         namespace.transaction_api = Mock()
-        namespace.config = RestConfig({
+        namespace.config = RestNamespaceConfig({
             "delimiter": ".",
             "header.Authorization": "Bearer test-token"
         })

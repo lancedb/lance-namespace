@@ -4,9 +4,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**version** | **i64** |  | 
+**version** | Option<**i64**> |  | [optional]
 **location** | Option<**String**> |  | [optional]
-**schema** | [**models::JsonArrowSchema**](JsonArrowSchema.md) |  | 
+**schema** | Option<[**models::JsonArrowSchema**](JsonArrowSchema.md)> |  | [optional]
 **properties** | Option<**std::collections::HashMap<String, String>**> |  | [optional]
 **storage_options** | Option<**std::collections::HashMap<String, String>**> | Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access.  | [optional]
 

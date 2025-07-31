@@ -42,7 +42,7 @@ class TestJsonArrowSchema(unittest.TestCase):
                             }, 
                         name = '', 
                         nullable = True, 
-                        type = lance_namespace_urllib3_client.models.json_data_type.JsonDataType(
+                        type = lance_namespace_urllib3_client.models.json_arrow_data_type.JsonArrowDataType(
                             length = 0, 
                             type = '', ), )
                     ],
@@ -59,7 +59,7 @@ class TestJsonArrowSchema(unittest.TestCase):
                             }, 
                         name = '', 
                         nullable = True, 
-                        type = lance_namespace_urllib3_client.models.json_data_type.JsonDataType(
+                        type = lance_namespace_urllib3_client.models.json_arrow_data_type.JsonArrowDataType(
                             length = 0, 
                             type = '', ), )
                     ],
