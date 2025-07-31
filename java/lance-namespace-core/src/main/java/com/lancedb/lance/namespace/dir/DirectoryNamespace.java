@@ -140,7 +140,11 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
       response.setId(request.getId());
       return response;
     } catch (Exception e) {
-      throw new LanceNamespaceException("Failed to drop table: " + tableName, e);
+      throw LanceNamespaceException.serverError(
+          "Failed to drop table: " + tableName,
+          "TABLE_DROP_ERROR",
+          tableName,
+          "An error occurred while attempting to drop the table: " + e.getMessage());
     }
   }
 
@@ -188,10 +192,18 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
       List<Entry> versionEntries =
           operator.list(versionsPath, ListOptions.builder().limit(1).build());
       if (versionEntries.isEmpty()) {
-        throw new LanceNamespaceException("Table does not exist: " + tableName);
+        throw LanceNamespaceException.notFound(
+            "Table does not exist: " + tableName,
+            "TABLE_NOT_FOUND",
+            tableName,
+            "The requested table was not found in the namespace");
       }
     } catch (Exception e) {
-      throw new LanceNamespaceException("Table does not exist: " + tableName, e);
+      throw LanceNamespaceException.notFound(
+          "Table does not exist: " + tableName,
+          "TABLE_NOT_FOUND",
+          tableName,
+          "The requested table was not found in the namespace: " + e.getMessage());
     }
 
     DescribeTableResponse response = new DescribeTableResponse();

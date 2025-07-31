@@ -24,6 +24,8 @@ public class LanceNamespaces {
 
   public static final Map<String, String> NATIVE_IMPLEMENTATIONS =
       ImmutableMap.<String, String>builder()
+          .put("dir", "com.lancedb.lance.namespace.dir.DirectoryNamespace")
+          .put("rest", "com.lancedb.lance.namespace.rest.RestNamespace")
           .put("hive", "com.lancedb.lance.namespace.hive.HiveNamespace")
           .put("glue", "com.lancedb.lance.namespace.glue.GlueNamespace")
           .build();
