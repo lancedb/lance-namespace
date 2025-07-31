@@ -85,11 +85,6 @@ build-lancedb:
 	./mvnw spotless:apply -pl lance-namespace-lancedb -am
 	./mvnw install -pl lance-namespace-lancedb -am
 
-.PHONY: build-dir
-build-dir:
-	./mvnw spotless:apply -pl lance-namespace-dir -am
-	./mvnw install -pl lance-namespace-dir -am
-
 .PHONY: clean
 clean: clean-apache-client clean-springboot-server
 

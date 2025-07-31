@@ -35,9 +35,9 @@ import com.lancedb.lance.namespace.model.ListTablesRequest;
 import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.util.JsonArrowSchemaConverter;
+import com.lancedb.lance.namespace.util.OpenDalUtil;
 import com.lancedb.lance.namespace.util.ValidationUtil;
 
-import com.google.common.collect.ImmutableMap;
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.vector.types.pojo.Schema;
 import org.apache.opendal.Entry;
@@ -65,7 +65,7 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
   public void initialize(Map<String, String> configProperties, BufferAllocator allocator) {
     this.config = new DirectoryNamespaceConfig(configProperties);
     this.allocator = allocator;
-    this.operator = initializeOperator(this.config.getRoot());
+    this.operator = OpenDalUtil.initializeOperator(this.config.getRoot());
   }
 
   @Override
@@ -136,7 +136,6 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
     try {
       // Use Lance Dataset.drop to remove the dataset
       Dataset.drop(tablePath, config.getStorageOptions());
-
       DropTableResponse response = new DropTableResponse();
       return response;
     } catch (Exception e) {
@@ -197,44 +196,6 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
     DescribeTableResponse response = new DescribeTableResponse();
     response.setLocation(tablePath);
     return response;
-  }
-
-  private Operator initializeOperator(String root) {
-    String[] schemeSplit = root.split("://", -1);
-
-    // local file system path
-    if (schemeSplit.length < 2) {
-      return Operator.of("fs", ImmutableMap.of("root", root));
-    }
-
-    String scheme = normalizeScheme(schemeSplit[0]);
-    String[] authoritySplit = schemeSplit[1].split("/", 2);
-    String authority = authoritySplit[0];
-    String path = authoritySplit.length > 1 ? authoritySplit[1] : "";
-
-    switch (scheme) {
-      case "s3":
-      case "gcs":
-        return Operator.of(scheme, ImmutableMap.of("root", path, "bucket", authority));
-      case "azblob":
-        return Operator.of(scheme, ImmutableMap.of("root", path, "CONTAINER", authority));
-      default:
-        return Operator.of(scheme, ImmutableMap.of("root", schemeSplit[1]));
-    }
-  }
-
-  private String normalizeScheme(String scheme) {
-    switch (scheme.toLowerCase()) {
-      case "s3a":
-      case "s3n":
-        return "s3";
-      case "abfs":
-        return "azblob";
-      case "file":
-        return "fs";
-      default:
-        return scheme.toLowerCase();
-    }
   }
 
   private String tableNameFromId(List<String> id) {
