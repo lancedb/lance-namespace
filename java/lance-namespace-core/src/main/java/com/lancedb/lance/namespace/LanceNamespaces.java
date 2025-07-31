@@ -31,7 +31,7 @@ public class LanceNamespaces {
   private LanceNamespaces() {}
 
   /**
-   * Create a Lance namespace implementation.
+   * Connect to a Lance namespace implementation.
    *
    * @param impl implementation, either a short name for native impl, or a full Java class that
    *     implements {@link LanceNamespace}
@@ -40,7 +40,7 @@ public class LanceNamespaces {
    * @param allocator BufferAllocator for Arrow operations
    * @return a Lance namespace implementation
    */
-  public static LanceNamespace create(
+  public static LanceNamespace connect(
       String impl, Map<String, String> properties, Object conf, BufferAllocator allocator) {
     String resolvedImpl = NATIVE_IMPLEMENTATIONS.getOrDefault(impl, impl);
 

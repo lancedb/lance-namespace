@@ -5,7 +5,11 @@ from typing import Dict, List, Optional
 from urllib.parse import urlparse
 import os
 
-import opendal
+try:
+    import opendal
+except ImportError:
+    opendal = None
+
 import lance
 import pyarrow as pa
 
@@ -44,6 +48,12 @@ class DirectoryNamespace(LanceNamespace):
             root: The root directory of the namespace (optional, defaults to current directory)
             **properties: Additional configuration properties for specific storage backends
         """
+        if opendal is None:
+            raise ImportError(
+                "DirectoryNamespace requires the 'opendal' package. "
+                "Install it with: pip install 'lance-namespace[dir]'"
+            )
+        
         self.config = DirectoryNamespaceConfig(properties)
         root = self.config.root
         

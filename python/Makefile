@@ -38,6 +38,7 @@ build-urllib3-client: gen-urllib3-client
 .PHONY: build-ns
 build-ns: build-urllib3-client
 	cd lance_namespace; \
+		uv pip install ".[test]"
 		uv run pytest
 
 .PHONY: clean

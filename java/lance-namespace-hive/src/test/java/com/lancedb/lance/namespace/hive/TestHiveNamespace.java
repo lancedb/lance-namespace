@@ -97,7 +97,7 @@ public class TestHiveNamespace {
     HiveConf hiveConf = metastore.hiveConf();
     try (BufferAllocator allocator = new RootAllocator(Long.MAX_VALUE)) {
       HiveNamespace namespace =
-          (HiveNamespace) LanceNamespaces.create("hive", Maps.newHashMap(), hiveConf, allocator);
+          (HiveNamespace) LanceNamespaces.connect("hive", Maps.newHashMap(), hiveConf, allocator);
 
       // Case 1: list root.
       ListNamespacesRequest request = new ListNamespacesRequest();
@@ -179,7 +179,7 @@ public class TestHiveNamespace {
     HiveConf hiveConf = metastore.hiveConf();
     try (BufferAllocator allocator = new RootAllocator(Long.MAX_VALUE)) {
       HiveNamespace namespace =
-          (HiveNamespace) LanceNamespaces.create("hive", Maps.newHashMap(), hiveConf, allocator);
+          (HiveNamespace) LanceNamespaces.connect("hive", Maps.newHashMap(), hiveConf, allocator);
 
       ListNamespacesRequest request = new ListNamespacesRequest();
       request.setId(Lists.list("hive"));
