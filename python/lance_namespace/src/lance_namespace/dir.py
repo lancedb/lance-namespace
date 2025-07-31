@@ -88,23 +88,31 @@ class DirectoryNamespace(LanceNamespace):
     
     def list_tables(self, request: ListTablesRequest) -> ListTablesResponse:
         """List all tables in the namespace."""
+        self._validate_root_namespace_id(request.id)
+        
         try:
             tables = []
             entries = self.operator.list("", recursive=False)
             
             for entry in entries:
-                metadata = self.operator.stat(entry.path)
-                if metadata.is_dir:
-                    table_name = entry.path.rstrip('/')
-                    # Check if it's a Lance dataset by looking for objects with _versions/ prefix
-                    try:
-                        versions_path = f"{entry.path}_versions/"
-                        version_entries = list(self.operator.list(versions_path, limit=1))
-                        if version_entries:
-                            tables.append(table_name)
-                    except:
-                        # If _versions doesn't exist, it's not a Lance dataset
-                        pass
+                path = entry.path.rstrip('/')
+                
+                # Only process paths that contain ".lance"
+                if ".lance" not in path:
+                    continue
+                
+                # Strip .lance suffix to get clean table name
+                table_name = path[:-6]  # Remove '.lance' (6 characters)
+                
+                # Check if it's a valid Lance dataset
+                try:
+                    versions_path = f"{table_name}.lance/_versions/"
+                    version_entries = list(self.operator.list(versions_path, limit=1))
+                    if version_entries:
+                        tables.append(table_name)  # Add clean name without .lance
+                except:
+                    # If _versions doesn't exist, it's not a Lance dataset
+                    pass
             
             response = ListTablesResponse(tables=tables)
             return response
@@ -114,13 +122,13 @@ class DirectoryNamespace(LanceNamespace):
     
     def create_table(self, request: CreateTableRequest, request_data: bytes) -> CreateTableResponse:
         """Create a table using Lance dataset."""
-        if not request.id or len(request.id) != 1:
-            raise ValueError("table ID must have exactly 1 level")
+        if not request.id:
+            raise ValueError("table ID cannot be empty")
         
         if not request.var_schema:
             raise ValueError("Schema is required in CreateTableRequest")
         
-        table_name = request.id[0]
+        table_name = self._normalize_table_id(request.id)
         table_path = self._get_table_path(table_name)
         
         if request.location and request.location != table_path:
@@ -146,15 +154,15 @@ class DirectoryNamespace(LanceNamespace):
     
     def drop_table(self, request: DropTableRequest) -> DropTableResponse:
         """Drop a table by removing its Lance dataset."""
-        if not request.id or len(request.id) != 1:
-            raise ValueError("table ID must have exactly 1 level")
+        if not request.id:
+            raise ValueError("table ID cannot be empty")
         
-        table_name = request.id[0]
+        table_name = self._normalize_table_id(request.id)
         table_path = self._get_table_path(table_name)
         
         try:
             # Remove the entire table directory
-            self.operator.remove_all(f"{table_name}/")
+            self.operator.remove_all(f"{table_name}.lance/")
             response = DropTableResponse()
             return response
         except Exception as e:
@@ -162,10 +170,10 @@ class DirectoryNamespace(LanceNamespace):
 
     def describe_table(self, request: DescribeTableRequest) -> DescribeTableResponse:
         """Describe a table by checking its existence and returning location."""
-        if not request.id or len(request.id) != 1:
-            raise ValueError("table ID must have exactly 1 level")
+        if not request.id:
+            raise ValueError("table ID cannot be empty")
         
-        table_name = request.id[0]
+        table_name = self._normalize_table_id(request.id)
         table_path = self._get_table_path(table_name)
         
         try:
@@ -179,6 +187,46 @@ class DirectoryNamespace(LanceNamespace):
         
         response = DescribeTableResponse(location=table_path)
         return response
+    
+    def _normalize_table_id(self, id: List[str]) -> str:
+        """Normalize table ID by handling multi-level IDs with configurable extra level."""
+        if not id:
+            raise ValueError("Directory namespace table ID cannot be empty")
+        
+        # If single level, return as-is (backward compatibility)
+        if len(id) == 1:
+            return id[0]
+        
+        # If multiple levels, check if extra levels match the configured extra level
+        # For table IDs, we expect at most 2 levels: [extra_level, "table_name"]
+        if len(id) == 2 and self.config.extra_level == id[0]:
+            return id[1]
+        
+        # If more than 2 levels, check if all but the last match the configured extra level
+        if len(id) > 2:
+            for i in range(len(id) - 1):
+                if self.config.extra_level != id[i]:
+                    raise ValueError(
+                        f"Directory namespace table ID has unsupported structure: {id}. "
+                        f"Expected single level or multiple levels with '{self.config.extra_level}' prefixes."
+                    )
+            return id[-1]
+        
+        raise ValueError(f"Directory namespace table ID has unsupported structure: {id}")
+    
+    def _validate_root_namespace_id(self, id: Optional[List[str]]) -> None:
+        """Validate that the namespace ID represents a root namespace."""
+        if not id:
+            # Empty ID represents root namespace
+            return
+        
+        # If non-empty, all elements must match the configured extra level
+        for element in id:
+            if self.config.extra_level != element:
+                raise ValueError(
+                    f"Directory namespace only supports root namespace operations, "
+                    f"but got namespace ID: {id}. Expected empty ID or IDs with '{self.config.extra_level}' levels only."
+                )
     
     def _get_table_path(self, table_name: str) -> str:
         """Get the full path for a table."""
@@ -286,6 +334,7 @@ class DirectoryNamespaceConfig:
     """Configuration for DirectoryNamespace."""
     
     ROOT = "root"
+    EXTRA_LEVEL = "extra_level"
     STORAGE_OPTIONS_PREFIX = "storage."
     
     def __init__(self, properties: Optional[Dict[str, str]] = None):
@@ -298,6 +347,7 @@ class DirectoryNamespaceConfig:
             properties = {}
             
         self._root = properties.get(self.ROOT)
+        self._extra_level = properties.get(self.EXTRA_LEVEL, "default")
         self._storage_options = self._extract_storage_options(properties)
     
     def _extract_storage_options(self, properties: Dict[str, str]) -> Dict[str, str]:
@@ -313,6 +363,11 @@ class DirectoryNamespaceConfig:
     def root(self) -> Optional[str]:
         """Get the namespace root directory."""
         return self._root
+    
+    @property
+    def extra_level(self) -> str:
+        """Get the extra level name for multi-level IDs."""
+        return self._extra_level
     
     @property
     def storage_options(self) -> Dict[str, str]:

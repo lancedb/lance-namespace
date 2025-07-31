@@ -5,14 +5,14 @@ People can easily get started with creating and using Lance tables directly on t
 local or remote storage system with a Lance directory namespace.
 
 A directory namespace maps to a directory on storage, we call such directory a **namespace directory**.
-A Lance table corresponds to a subdirectory in the namespace directory.
-We call such a subdirectories **table directory**.
+A Lance table corresponds to a subdirectory in the namespace directory that has the format `<table_name>.lance`.
+We call such a subdirectory **table directory**.
 Consider the following example namespace directory layout:
 
 ```
 .
 └── /my/dir1/
-    ├── table1/
+    ├── table1.lance/
     │   ├── data/
     │   │   ├── 0aa36d91-8293-406b-958c-faf9e7547938.lance
     │   │   └── ed7af55d-b064-4442-bcb5-47b524e98d0e.lance
@@ -21,22 +21,23 @@ Consider the following example namespace directory layout:
     │   └── _indices/
     │       └── 85814508-ed9a-41f2-b939-2050bb7a0ed5-fts/
     │           └── index.idx 
-    ├── table2
-    └── table3
+    ├── table2.lance
+    └── table3.lance
 ```
 
 This describes a Lance directory namespace with the namespace directory at `/my/dir1/`.
 It contains tables `table1`, `table2`, `table3` sitting at table directories
-`/my/dirs/table1`, `/my/dirs/table2`, `/my/dirs/table3` respectively.
+`/my/dirs/table1.lance`, `/my/dirs/table2.lance`, `/my/dirs/table3.lance` respectively.
 
 ## Configuration
 
 The Lance directory namespace accepts the following configuration properties:
 
-| Property    | Required | Description                                                 | Default                   | Example                         |
-|-------------|----------|-------------------------------------------------------------|---------------------------|---------------------------------|
-| `root`      | No       | The root directory of the namespace where tables are stored | Current working directory | `/my/dir`, `s3://bucket/prefix` |
-| `storage.*` | No       | Storage-specific configuration options                      |                           | `storage.region=us-west-2`      |
+| Property      | Required | Description                                                 | Default                   | Example                         |
+|---------------|----------|-------------------------------------------------------------|---------------------------|---------------------------------|
+| `root`        | No       | The root directory of the namespace where tables are stored | Current working directory | `/my/dir`, `s3://bucket/prefix` |
+| `extra_level` | No       | The name used for extra levels in multi-level ID structures | `"default"`               | `ns1`                           |
+| `storage.*`   | No       | Storage-specific configuration options                      |                           | `storage.region=us-west-2`      |
 
 ### Root Path
 
@@ -46,6 +47,15 @@ There are 3 ways to specify a root path:
 2. **Absolute POSIX storage path**: an absolute file path in a POSIX standard storage, e.g. `/my/dir`.
 3. **Relative POSIX storage path**: a relative file path in a POSIX standard storage, e.g. `my/dir2`, `./my/dir3`.
    The absolute path of the root should be derived from the current working directory.
+
+### Extra Level Configuration
+
+The `extra_level` property allows the directory namespace to handle 
+multi-level ID structures when mounted in hierarchical systems:
+
+- Single-level table IDs: `["table_name"]` ✓
+- Multi-level table IDs with default extra level: `["default", "table_name"]` ✓
+- Multi-level namespace IDs: `["default"]` or `[]` (both represent root) ✓
 
 ### Storage Options
 

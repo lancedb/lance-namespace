@@ -147,13 +147,15 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
 
   @Override
   public ListTablesResponse listTables(ListTablesRequest request) {
+    validateRootNamespaceId(request.getId());
+
     Set<String> tables = new HashSet<>();
     List<Entry> entries = operator.list("", ListOptions.builder().recursive(false).build());
 
     for (Entry entry : entries) {
 
       String path = OpenDalUtil.stripTrailingSlash(entry.getPath());
-      if (path.length() <= 6) {
+      if (!path.contains(".lance")) {
         continue;
       }
 
@@ -198,10 +200,41 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
     return response;
   }
 
+  private void validateRootNamespaceId(List<String> id) {
+    if (id == null || id.isEmpty()) {
+      return;
+    }
+
+    // If non-empty, all elements must match the configured extra level
+    for (String element : id) {
+      if (!config.getExtraLevel().equals(element)) {
+        throw new IllegalArgumentException(
+            String.format(
+                "Directory namespace only supports root namespace operations, "
+                    + "but got namespace ID: %s. Expected empty ID or IDs with '%s' levels only.",
+                id, config.getExtraLevel()));
+      }
+    }
+  }
+
   private String tableNameFromId(List<String> id) {
     ValidationUtil.checkArgument(
-        id.size() == 1, "Directory namespace table ID must have only 1 level, but got %s", id);
-    return id.get(0);
+        id != null && !id.isEmpty(), "Directory namespace table ID cannot be empty");
+
+    // If single level, return as-is (backward compatibility)
+    if (id.size() == 1) {
+      return id.get(0);
+    }
+
+    for (int i = 0; i < id.size() - 1; i++) {
+      ValidationUtil.checkArgument(
+          config.getExtraLevel().equals(id.get(i)),
+          "Directory namespace table ID has unsupported structure: %s. "
+              + "Expected single level or multiple levels with '%s' prefixes.",
+          id,
+          config.getExtraLevel());
+    }
+    return id.get(id.size() - 1);
   }
 
   private String getTableFullPath(String tableName) {
