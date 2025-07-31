@@ -28,9 +28,9 @@ import com.lancedb.lance.namespace.server.springboot.model.DropTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ErrorResponse;
 import com.lancedb.lance.namespace.server.springboot.model.IndexListItemResponse;
 import com.lancedb.lance.namespace.server.springboot.model.InsertIntoTableResponse;
+import com.lancedb.lance.namespace.server.springboot.model.JsonArrowDataType;
 import com.lancedb.lance.namespace.server.springboot.model.JsonArrowField;
 import com.lancedb.lance.namespace.server.springboot.model.JsonArrowSchema;
-import com.lancedb.lance.namespace.server.springboot.model.JsonDataType;
 import com.lancedb.lance.namespace.server.springboot.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ListTableIndicesResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ListTablesResponse;
@@ -126,18 +126,18 @@ public class ClientToServerResponse {
     JsonArrowField serverField = new JsonArrowField();
     serverField.setName(clientField.getName());
     serverField.setNullable(clientField.getNullable());
-    serverField.setType(convertJsonDataType(clientField.getType()));
+    serverField.setType(convertJsonArrowDataType(clientField.getType()));
     serverField.setMetadata(clientField.getMetadata());
     return serverField;
   }
 
-  private static JsonDataType convertJsonDataType(
-      com.lancedb.lance.namespace.model.JsonDataType clientType) {
+  private static JsonArrowDataType convertJsonArrowDataType(
+      com.lancedb.lance.namespace.model.JsonArrowDataType clientType) {
     if (clientType == null) {
       return null;
     }
 
-    JsonDataType serverType = new JsonDataType();
+    JsonArrowDataType serverType = new JsonArrowDataType();
     serverType.setType(clientType.getType());
     if (clientType.getFields() != null) {
       serverType.setFields(
