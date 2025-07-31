@@ -315,7 +315,8 @@
                             <nohelp>true</nohelp>
                             <detectJavaApiLink>false</detectJavaApiLink>
                             <links>
-                                <link>https://javadoc.io/doc/com.lancedb/lance-namespace-apache-client/${lance-namespace.version}</link>
+                                <link>https://javadoc.io/doc/com.lancedb/lance-namespace-apache-client</link>
+                                <link>https://javadoc.io/doc/com.lancedb/lance-namespace-core</link>
                             </links>
                         </configuration>
                         <executions>
