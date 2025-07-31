@@ -94,4 +94,4 @@ jobs:
           LANCEDB_API_KEY: ${{ inputs.api_key || secrets.LANCEDB_CLOUD_API_KEY }}
           LANCEDB_REGION: ${{ inputs.region }}
           LANCEDB_HOST_OVERRIDE: ${{ inputs.host_override }}
-        run: make build-java-lancedb
+        run: make build-lancedb
