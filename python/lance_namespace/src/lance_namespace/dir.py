@@ -189,44 +189,24 @@ class DirectoryNamespace(LanceNamespace):
         return response
     
     def _normalize_table_id(self, id: List[str]) -> str:
-        """Normalize table ID by handling multi-level IDs with configurable extra level."""
+        """Normalize table ID - only single-level IDs are supported."""
         if not id:
             raise ValueError("Directory namespace table ID cannot be empty")
         
-        # If single level, return as-is (backward compatibility)
-        if len(id) == 1:
-            return id[0]
+        if len(id) != 1:
+            raise ValueError(
+                f"Directory namespace only supports single-level table IDs, but got: {id}"
+            )
         
-        # If multiple levels, check if extra levels match the configured extra level
-        # For table IDs, we expect at most 2 levels: [extra_level, "table_name"]
-        if len(id) == 2 and self.config.extra_level == id[0]:
-            return id[1]
-        
-        # If more than 2 levels, check if all but the last match the configured extra level
-        if len(id) > 2:
-            for i in range(len(id) - 1):
-                if self.config.extra_level != id[i]:
-                    raise ValueError(
-                        f"Directory namespace table ID has unsupported structure: {id}. "
-                        f"Expected single level or multiple levels with '{self.config.extra_level}' prefixes."
-                    )
-            return id[-1]
-        
-        raise ValueError(f"Directory namespace table ID has unsupported structure: {id}")
+        return id[0]
     
     def _validate_root_namespace_id(self, id: Optional[List[str]]) -> None:
         """Validate that the namespace ID represents a root namespace."""
-        if not id:
-            # Empty ID represents root namespace
-            return
-        
-        # If non-empty, all elements must match the configured extra level
-        for element in id:
-            if self.config.extra_level != element:
-                raise ValueError(
-                    f"Directory namespace only supports root namespace operations, "
-                    f"but got namespace ID: {id}. Expected empty ID or IDs with '{self.config.extra_level}' levels only."
-                )
+        if id:
+            raise ValueError(
+                f"Directory namespace only supports root namespace operations, "
+                f"but got namespace ID: {id}. Expected empty ID."
+            )
     
     def _get_table_path(self, table_name: str) -> str:
         """Get the full path for a table."""
@@ -334,7 +314,6 @@ class DirectoryNamespaceConfig:
     """Configuration for DirectoryNamespace."""
     
     ROOT = "root"
-    EXTRA_LEVEL = "extra_level"
     STORAGE_OPTIONS_PREFIX = "storage."
     
     def __init__(self, properties: Optional[Dict[str, str]] = None):
@@ -347,7 +326,6 @@ class DirectoryNamespaceConfig:
             properties = {}
             
         self._root = properties.get(self.ROOT)
-        self._extra_level = properties.get(self.EXTRA_LEVEL, "default")
         self._storage_options = self._extract_storage_options(properties)
     
     def _extract_storage_options(self, properties: Dict[str, str]) -> Dict[str, str]:
@@ -363,11 +341,6 @@ class DirectoryNamespaceConfig:
     def root(self) -> Optional[str]:
         """Get the namespace root directory."""
         return self._root
-    
-    @property
-    def extra_level(self) -> str:
-        """Get the extra level name for multi-level IDs."""
-        return self._extra_level
     
     @property
     def storage_options(self) -> Dict[str, str]:

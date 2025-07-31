@@ -59,7 +59,6 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
   private DirectoryNamespaceConfig config;
   private Operator operator;
   private BufferAllocator allocator;
-  private String namespacePath;
 
   @Override
   public void initialize(Map<String, String> configProperties, BufferAllocator allocator) {
@@ -110,7 +109,7 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
             .withStorageOptions(config.getStorageOptions())
             .build();
 
-    String tablePath = getTableFullPath(tableName);
+    String tablePath = tableFullPath(tableName);
     ValidationUtil.checkArgument(
         request.getLocation() == null
             || OpenDalUtil.stripTrailingSlash(request.getLocation()).equals(tablePath),
@@ -130,7 +129,7 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
   @Override
   public DropTableResponse dropTable(DropTableRequest request) {
     String tableName = tableNameFromId(request.getId());
-    String tablePath = getTableFullPath(tableName);
+    String tablePath = tableFullPath(tableName);
 
     LOG.debug("Dropping table {} at path {}", tableName, tablePath);
 
@@ -161,7 +160,7 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
 
       String tableName = path.substring(0, path.length() - 6);
       try {
-        String versionsPath = getTableVersionsPath(tableName);
+        String versionsPath = tableVersionsPath(tableName);
         List<Entry> versionEntries =
             operator.list(versionsPath, ListOptions.builder().limit(1).build());
         if (!versionEntries.isEmpty()) {
@@ -180,12 +179,12 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
   @Override
   public DescribeTableResponse describeTable(DescribeTableRequest request) {
     String tableName = tableNameFromId(request.getId());
-    String tablePath = getTableFullPath(tableName);
+    String tablePath = tableFullPath(tableName);
 
     LOG.debug("Describing table {} at path {}", tableName, tablePath);
 
     try {
-      String versionsPath = getTableVersionsPath(tableName);
+      String versionsPath = tableVersionsPath(tableName);
       List<Entry> versionEntries =
           operator.list(versionsPath, ListOptions.builder().limit(1).build());
       if (versionEntries.isEmpty()) {
@@ -201,47 +200,31 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
   }
 
   private void validateRootNamespaceId(List<String> id) {
-    if (id == null || id.isEmpty()) {
-      return;
-    }
-
-    // If non-empty, all elements must match the configured extra level
-    for (String element : id) {
-      if (!config.getExtraLevel().equals(element)) {
-        throw new IllegalArgumentException(
-            String.format(
-                "Directory namespace only supports root namespace operations, "
-                    + "but got namespace ID: %s. Expected empty ID or IDs with '%s' levels only.",
-                id, config.getExtraLevel()));
-      }
-    }
+    ValidationUtil.checkArgument(
+        id == null || id.isEmpty(),
+        String.format(
+            "Directory namespace only supports root namespace operations, "
+                + "but got namespace ID: %s. Expected empty ID.",
+            id));
   }
 
   private String tableNameFromId(List<String> id) {
     ValidationUtil.checkArgument(
         id != null && !id.isEmpty(), "Directory namespace table ID cannot be empty");
 
-    // If single level, return as-is (backward compatibility)
-    if (id.size() == 1) {
-      return id.get(0);
-    }
+    ValidationUtil.checkArgument(
+        id.size() == 1,
+        "Directory namespace only supports single-level table IDs, but got: %s",
+        id);
 
-    for (int i = 0; i < id.size() - 1; i++) {
-      ValidationUtil.checkArgument(
-          config.getExtraLevel().equals(id.get(i)),
-          "Directory namespace table ID has unsupported structure: %s. "
-              + "Expected single level or multiple levels with '%s' prefixes.",
-          id,
-          config.getExtraLevel());
-    }
-    return id.get(id.size() - 1);
+    return id.get(0);
   }
 
-  private String getTableFullPath(String tableName) {
+  private String tableFullPath(String tableName) {
     return String.format("%s/%s.lance", config.getRoot(), tableName);
   }
 
-  private String getTableVersionsPath(String tableName) {
+  private String tableVersionsPath(String tableName) {
     return String.format("%s.lance/_versions/", tableName);
   }
 

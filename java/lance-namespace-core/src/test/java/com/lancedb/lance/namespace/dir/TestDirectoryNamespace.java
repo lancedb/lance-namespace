@@ -350,50 +350,6 @@ public class TestDirectoryNamespace {
   }
 
   @Test
-  public void testCreateTableWithMultiLevelDefaultId() {
-    Map<String, String> properties = new HashMap<>();
-    properties.put("root", tempDir.toString());
-    namespace.initialize(properties, allocator);
-
-    CreateTableRequest request = new CreateTableRequest();
-    List<String> tableId = new ArrayList<>();
-    tableId.add("default");
-    tableId.add("test_table");
-    request.setId(tableId);
-    request.setSchema(createTestSchema());
-
-    CreateTableResponse response = namespace.createTable(request, createTestArrowData());
-    assertNotNull(response);
-    assertNotNull(response.getLocation());
-    assertTrue(response.getLocation().contains("test_table"));
-    assertEquals(Long.valueOf(1), response.getVersion());
-
-    // Verify Lance dataset was created
-    File tableDir = new File(tempDir.toFile(), "test_table.lance");
-    assertTrue(tableDir.exists());
-    assertTrue(tableDir.isDirectory());
-  }
-
-  @Test
-  public void testCreateTableWithMultipleLevelsDefault() {
-    Map<String, String> properties = new HashMap<>();
-    properties.put("root", tempDir.toString());
-    namespace.initialize(properties, allocator);
-
-    CreateTableRequest request = new CreateTableRequest();
-    List<String> tableId = new ArrayList<>();
-    tableId.add("default");
-    tableId.add("default");
-    tableId.add("test_table");
-    request.setId(tableId);
-    request.setSchema(createTestSchema());
-
-    CreateTableResponse response = namespace.createTable(request, createTestArrowData());
-    assertNotNull(response);
-    assertTrue(response.getLocation().contains("test_table"));
-  }
-
-  @Test
   public void testCreateTableWithInvalidMultiLevelId() {
     Map<String, String> properties = new HashMap<>();
     properties.put("root", tempDir.toString());
@@ -406,64 +362,12 @@ public class TestDirectoryNamespace {
     request.setId(tableId);
     request.setSchema(createTestSchema());
 
+    // Should fail because only single-level table IDs are supported
     assertThrows(
         IllegalArgumentException.class,
         () -> {
           namespace.createTable(request, createTestArrowData());
         });
-  }
-
-  @Test
-  public void testDropTableWithMultiLevelDefaultId() throws Exception {
-    Map<String, String> properties = new HashMap<>();
-    properties.put("root", tempDir.toString());
-    namespace.initialize(properties, allocator);
-
-    // First create a table with multi-level ID
-    CreateTableRequest createRequest = new CreateTableRequest();
-    List<String> tableId = new ArrayList<>();
-    tableId.add("default");
-    tableId.add("test_table");
-    createRequest.setId(tableId);
-    createRequest.setSchema(createTestSchema());
-    namespace.createTable(createRequest, createTestArrowData());
-
-    // Verify it exists
-    File tableDir = new File(tempDir.toFile(), "test_table.lance");
-    assertTrue(tableDir.exists());
-
-    // Drop the table using multi-level ID
-    DropTableRequest dropRequest = new DropTableRequest();
-    dropRequest.setId(tableId);
-    DropTableResponse response = namespace.dropTable(dropRequest);
-
-    assertNotNull(response);
-    assertFalse(tableDir.exists());
-  }
-
-  @Test
-  public void testDescribeTableWithMultiLevelDefaultId() {
-    Map<String, String> properties = new HashMap<>();
-    properties.put("root", tempDir.toString());
-    namespace.initialize(properties, allocator);
-
-    // First create a table with multi-level ID
-    CreateTableRequest createRequest = new CreateTableRequest();
-    List<String> tableId = new ArrayList<>();
-    tableId.add("default");
-    tableId.add("test_table");
-    createRequest.setId(tableId);
-    createRequest.setSchema(createTestSchema());
-    namespace.createTable(createRequest, createTestArrowData());
-
-    // Now describe the table using multi-level ID
-    DescribeTableRequest describeRequest = new DescribeTableRequest();
-    describeRequest.setId(tableId);
-    DescribeTableResponse response = namespace.describeTable(describeRequest);
-
-    assertNotNull(response);
-    assertNotNull(response.getLocation());
-    assertTrue(response.getLocation().contains("test_table"));
   }
 
   @Test
@@ -492,7 +396,7 @@ public class TestDirectoryNamespace {
   }
 
   @Test
-  public void testListTablesWithDefaultNamespaceId() {
+  public void testListTablesWithNonEmptyNamespaceId() {
     Map<String, String> properties = new HashMap<>();
     properties.put("root", tempDir.toString());
     namespace.initialize(properties, allocator);
@@ -505,17 +409,17 @@ public class TestDirectoryNamespace {
     request.setSchema(createTestSchema());
     namespace.createTable(request, createTestArrowData());
 
-    // List tables with "default" namespace ID
+    // List tables with non-empty namespace ID should fail
     ListTablesRequest listRequest = new ListTablesRequest();
     List<String> namespaceId = new ArrayList<>();
     namespaceId.add("default");
     listRequest.setId(namespaceId);
-    ListTablesResponse response = namespace.listTables(listRequest);
 
-    assertNotNull(response);
-    assertNotNull(response.getTables());
-    assertEquals(1, response.getTables().size());
-    assertTrue(response.getTables().contains("test_table"));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          namespace.listTables(listRequest);
+        });
   }
 
   @Test
@@ -528,105 +432,6 @@ public class TestDirectoryNamespace {
     ListTablesRequest listRequest = new ListTablesRequest();
     List<String> namespaceId = new ArrayList<>();
     namespaceId.add("namespace1");
-    listRequest.setId(namespaceId);
-
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> {
-          namespace.listTables(listRequest);
-        });
-  }
-
-  @Test
-  public void testListTablesWithMultipleDefaultNamespaceId() {
-    Map<String, String> properties = new HashMap<>();
-    properties.put("root", tempDir.toString());
-    namespace.initialize(properties, allocator);
-
-    // Create a table first
-    CreateTableRequest request = new CreateTableRequest();
-    List<String> tableId = new ArrayList<>();
-    tableId.add("test_table");
-    request.setId(tableId);
-    request.setSchema(createTestSchema());
-    namespace.createTable(request, createTestArrowData());
-
-    // List tables with multiple "default" namespace ID
-    ListTablesRequest listRequest = new ListTablesRequest();
-    List<String> namespaceId = new ArrayList<>();
-    namespaceId.add("default");
-    namespaceId.add("default");
-    listRequest.setId(namespaceId);
-    ListTablesResponse response = namespace.listTables(listRequest);
-
-    assertNotNull(response);
-    assertNotNull(response.getTables());
-    assertEquals(1, response.getTables().size());
-    assertTrue(response.getTables().contains("test_table"));
-  }
-
-  @Test
-  public void testConfigurableExtraLevel() {
-    Map<String, String> properties = new HashMap<>();
-    properties.put("root", tempDir.toString());
-    properties.put("extra_level", "catalog");
-    namespace.initialize(properties, allocator);
-
-    // Create a table with custom extra level
-    CreateTableRequest createRequest = new CreateTableRequest();
-    List<String> tableId = new ArrayList<>();
-    tableId.add("catalog");
-    tableId.add("test_table");
-    createRequest.setId(tableId);
-    createRequest.setSchema(createTestSchema());
-
-    CreateTableResponse response = namespace.createTable(createRequest, createTestArrowData());
-    assertNotNull(response);
-    assertTrue(response.getLocation().contains("test_table"));
-
-    // List tables with custom extra level namespace ID
-    ListTablesRequest listRequest = new ListTablesRequest();
-    List<String> namespaceId = new ArrayList<>();
-    namespaceId.add("catalog");
-    listRequest.setId(namespaceId);
-    ListTablesResponse listResponse = namespace.listTables(listRequest);
-
-    assertNotNull(listResponse);
-    assertEquals(1, listResponse.getTables().size());
-    assertTrue(listResponse.getTables().contains("test_table"));
-
-    // Drop table with custom extra level
-    DropTableRequest dropRequest = new DropTableRequest();
-    dropRequest.setId(tableId);
-    DropTableResponse dropResponse = namespace.dropTable(dropRequest);
-    assertNotNull(dropResponse);
-  }
-
-  @Test
-  public void testConfigurableExtraLevelValidation() {
-    Map<String, String> properties = new HashMap<>();
-    properties.put("root", tempDir.toString());
-    properties.put("extra_level", "catalog");
-    namespace.initialize(properties, allocator);
-
-    // Try to create table with wrong extra level (should fail)
-    CreateTableRequest createRequest = new CreateTableRequest();
-    List<String> tableId = new ArrayList<>();
-    tableId.add("default"); // Wrong extra level
-    tableId.add("test_table");
-    createRequest.setId(tableId);
-    createRequest.setSchema(createTestSchema());
-
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> {
-          namespace.createTable(createRequest, createTestArrowData());
-        });
-
-    // Try to list tables with wrong extra level (should fail)
-    ListTablesRequest listRequest = new ListTablesRequest();
-    List<String> namespaceId = new ArrayList<>();
-    namespaceId.add("default"); // Wrong extra level
     listRequest.setId(namespaceId);
 
     assertThrows(

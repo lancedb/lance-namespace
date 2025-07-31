@@ -23,27 +23,18 @@ public class DirectoryNamespaceConfig implements Serializable {
   public static final String ROOT = "root";
   public static final String ROOT_DEFAULT = System.getProperty("user.dir");
 
-  public static final String EXTRA_LEVEL = "extra_level";
-  public static final String EXTRA_LEVEL_DEFAULT = "default";
-
   public static final String STORAGE_OPTIONS_PREFIX = "storage.";
 
   private final String root;
-  private final String extraLevel;
   private final Map<String, String> storageOptions;
 
   public DirectoryNamespaceConfig(Map<String, String> properties) {
     this.root = PropertyUtil.propertyAsString(properties, ROOT, ROOT_DEFAULT);
-    this.extraLevel = PropertyUtil.propertyAsString(properties, EXTRA_LEVEL, EXTRA_LEVEL_DEFAULT);
     this.storageOptions = PropertyUtil.propertiesWithPrefix(properties, STORAGE_OPTIONS_PREFIX);
   }
 
   public String getRoot() {
     return root;
-  }
-
-  public String getExtraLevel() {
-    return extraLevel;
   }
 
   public Map<String, String> getStorageOptions() {

@@ -36,7 +36,6 @@ The Lance directory namespace accepts the following configuration properties:
 | Property      | Required | Description                                                 | Default                   | Example                         |
 |---------------|----------|-------------------------------------------------------------|---------------------------|---------------------------------|
 | `root`        | No       | The root directory of the namespace where tables are stored | Current working directory | `/my/dir`, `s3://bucket/prefix` |
-| `extra_level` | No       | The name used for extra levels in multi-level ID structures | `"default"`               | `ns1`                           |
 | `storage.*`   | No       | Storage-specific configuration options                      |                           | `storage.region=us-west-2`      |
 
 ### Root Path
@@ -47,15 +46,6 @@ There are 3 ways to specify a root path:
 2. **Absolute POSIX storage path**: an absolute file path in a POSIX standard storage, e.g. `/my/dir`.
 3. **Relative POSIX storage path**: a relative file path in a POSIX standard storage, e.g. `my/dir2`, `./my/dir3`.
    The absolute path of the root should be derived from the current working directory.
-
-### Extra Level Configuration
-
-The `extra_level` property allows the directory namespace to handle 
-multi-level ID structures when mounted in hierarchical systems:
-
-- Single-level table IDs: `["table_name"]` ✓
-- Multi-level table IDs with default extra level: `["default", "table_name"]` ✓
-- Multi-level namespace IDs: `["default"]` or `[]` (both represent root) ✓
 
 ### Storage Options
 

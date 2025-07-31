@@ -26,7 +26,6 @@ Common header configurations include:
 - `headers.X-API-Key`: API key authentication
 - `headers.X-Request-ID`: Request tracking
 
-
 ## REST Routes
 
 The REST route for an operation typically follows the pattern of `POST /<version>/<object>/{id}/<action>`,

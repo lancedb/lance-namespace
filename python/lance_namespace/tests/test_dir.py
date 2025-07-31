@@ -213,33 +213,7 @@ class TestDirectoryNamespace:
         with pytest.raises(ValueError, match="table ID cannot be empty"):
             self.namespace.create_table(request, b"")
     
-    def test_create_table_with_multi_level_default_id(self):
-        """Test creating a table with multi-level default ID."""
-        request = CreateTableRequest(
-            id=["default", "test_table"],
-            schema=self.create_test_schema()
-        )
-        
-        response = self.namespace.create_table(request, b"")
-        assert response.location is not None
-        assert "test_table" in response.location
-        assert response.version == 1
-        
-        # Verify Lance dataset was created
-        table_dir = Path(self.temp_dir) / "test_table.lance"
-        assert table_dir.exists()
-        assert table_dir.is_dir()
     
-    def test_create_table_with_multiple_levels_default(self):
-        """Test creating a table with multiple levels of default."""
-        request = CreateTableRequest(
-            id=["default", "default", "test_table"],
-            schema=self.create_test_schema()
-        )
-        
-        response = self.namespace.create_table(request, b"")
-        assert response.location is not None
-        assert "test_table" in response.location
     
     def test_create_table_with_invalid_multi_level_id(self):
         """Test creating table with invalid multi-level ID."""
@@ -248,46 +222,8 @@ class TestDirectoryNamespace:
             schema=self.create_test_schema()
         )
         
-        with pytest.raises(ValueError, match="unsupported structure"):
+        with pytest.raises(ValueError, match="single-level table IDs"):
             self.namespace.create_table(request, b"")
-    
-    def test_drop_table_with_multi_level_default_id(self):
-        """Test dropping a table with multi-level default ID."""
-        # First create a table with multi-level ID
-        create_request = CreateTableRequest(
-            id=["default", "test_table"],
-            schema=self.create_test_schema()
-        )
-        self.namespace.create_table(create_request, b"")
-        
-        table_dir = Path(self.temp_dir) / "test_table.lance"
-        assert table_dir.exists()
-        
-        # Drop the table using multi-level ID
-        drop_request = DropTableRequest()
-        drop_request.id = ["default", "test_table"]
-        response = self.namespace.drop_table(drop_request)
-        
-        assert response is not None
-        assert not table_dir.exists()
-    
-    def test_describe_table_with_multi_level_default_id(self):
-        """Test describing a table with multi-level default ID."""
-        # First create a table with multi-level ID
-        create_request = CreateTableRequest(
-            id=["default", "test_table"],
-            schema=self.create_test_schema()
-        )
-        self.namespace.create_table(create_request, b"")
-        
-        # Now describe the table using multi-level ID
-        describe_request = DescribeTableRequest()
-        describe_request.id = ["default", "test_table"]
-        response = self.namespace.describe_table(describe_request)
-        
-        assert response is not None
-        assert response.location is not None
-        assert "test_table" in response.location
     
     def test_list_tables_with_root_namespace_id(self):
         """Test listing tables with empty namespace ID (root)."""
@@ -306,8 +242,8 @@ class TestDirectoryNamespace:
         assert len(response.tables) == 1
         assert "test_table" in response.tables
     
-    def test_list_tables_with_default_namespace_id(self):
-        """Test listing tables with 'default' namespace ID."""
+    def test_list_tables_with_non_empty_namespace_id(self):
+        """Test listing tables with non-empty namespace ID should fail."""
         # Create a table first
         request = CreateTableRequest(
             id=["test_table"],
@@ -315,13 +251,12 @@ class TestDirectoryNamespace:
         )
         self.namespace.create_table(request, b"")
         
-        # List tables with "default" namespace ID
+        # List tables with non-empty namespace ID should fail
         list_request = ListTablesRequest()
         list_request.id = ["default"]
-        response = self.namespace.list_tables(list_request)
         
-        assert len(response.tables) == 1
-        assert "test_table" in response.tables
+        with pytest.raises(ValueError, match="root namespace operations"):
+            self.namespace.list_tables(list_request)
     
     def test_list_tables_with_invalid_namespace_id(self):
         """Test listing tables with invalid namespace ID."""
@@ -331,69 +266,4 @@ class TestDirectoryNamespace:
         with pytest.raises(ValueError, match="root namespace operations"):
             self.namespace.list_tables(list_request)
     
-    def test_list_tables_with_multiple_default_namespace_id(self):
-        """Test listing tables with multiple 'default' namespace ID."""
-        # Create a table first
-        request = CreateTableRequest(
-            id=["test_table"],
-            schema=self.create_test_schema()
-        )
-        self.namespace.create_table(request, b"")
-        
-        # List tables with multiple "default" namespace ID
-        list_request = ListTablesRequest()
-        list_request.id = ["default", "default"]
-        response = self.namespace.list_tables(list_request)
-        
-        assert len(response.tables) == 1
-        assert "test_table" in response.tables
     
-    def test_configurable_extra_level(self):
-        """Test configurable extra level functionality."""
-        # Create namespace with custom extra level
-        namespace = DirectoryNamespace(root=self.temp_dir, extra_level="catalog")
-        
-        # Create a table with custom extra level
-        create_request = CreateTableRequest(
-            id=["catalog", "test_table"],
-            schema=self.create_test_schema()
-        )
-        
-        response = namespace.create_table(create_request, b"")
-        assert response.location is not None
-        assert "test_table" in response.location
-        
-        # List tables with custom extra level namespace ID
-        list_request = ListTablesRequest()
-        list_request.id = ["catalog"]
-        list_response = namespace.list_tables(list_request)
-        
-        assert len(list_response.tables) == 1
-        assert "test_table" in list_response.tables
-        
-        # Drop table with custom extra level
-        drop_request = DropTableRequest()
-        drop_request.id = ["catalog", "test_table"]
-        drop_response = namespace.drop_table(drop_request)
-        assert drop_response is not None
-    
-    def test_configurable_extra_level_validation(self):
-        """Test configurable extra level validation."""
-        # Create namespace with custom extra level
-        namespace = DirectoryNamespace(root=self.temp_dir, extra_level="catalog")
-        
-        # Try to create table with wrong extra level (should fail)
-        create_request = CreateTableRequest(
-            id=["default", "test_table"],  # Wrong extra level
-            schema=self.create_test_schema()
-        )
-        
-        with pytest.raises(ValueError, match="unsupported structure"):
-            namespace.create_table(create_request, b"")
-        
-        # Try to list tables with wrong extra level (should fail)
-        list_request = ListTablesRequest()
-        list_request.id = ["default"]  # Wrong extra level
-        
-        with pytest.raises(ValueError, match="root namespace operations"):
-            namespace.list_tables(list_request)
