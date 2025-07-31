@@ -72,4 +72,16 @@ public class OpenDalUtil {
         return scheme.toLowerCase();
     }
   }
+
+  public static String stripTrailingSlash(String path) {
+    if (path == null) {
+      return null;
+    }
+
+    String result = path;
+    while (result.endsWith("/")) {
+      result = result.substring(0, result.length() - 1);
+    }
+    return result;
+  }
 }

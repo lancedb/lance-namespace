@@ -90,17 +90,17 @@ class DirectoryNamespace(LanceNamespace):
         """List all tables in the namespace."""
         try:
             tables = []
-            entries = self.operator.list("")
+            entries = self.operator.list("", recursive=False)
             
             for entry in entries:
                 metadata = self.operator.stat(entry.path)
                 if metadata.is_dir:
                     table_name = entry.path.rstrip('/')
-                    # Check if it's a Lance dataset by looking for _versions directory
+                    # Check if it's a Lance dataset by looking for objects with _versions/ prefix
                     try:
                         versions_path = f"{entry.path}_versions/"
-                        versions_metadata = self.operator.stat(versions_path)
-                        if versions_metadata.is_dir:
+                        version_entries = list(self.operator.list(versions_path, limit=1))
+                        if version_entries:
                             tables.append(table_name)
                     except:
                         # If _versions doesn't exist, it's not a Lance dataset
@@ -169,10 +169,10 @@ class DirectoryNamespace(LanceNamespace):
         table_path = self._get_table_path(table_name)
         
         try:
-            # Check if it's a Lance dataset by looking for _versions directory
-            versions_path = f"{table_name}/_versions/"
-            versions_metadata = self.operator.stat(versions_path)
-            if not versions_metadata.is_dir:
+            # Check if it's a Lance dataset by looking for objects with _versions/ prefix
+            versions_path = f"{table_name}.lance/_versions/"
+            version_entries = list(self.operator.list(versions_path, limit=1))
+            if not version_entries:
                 raise RuntimeError(f"Table does not exist: {table_name}")
         except Exception as e:
             raise RuntimeError(f"Table does not exist: {table_name}: {e}")
@@ -183,7 +183,7 @@ class DirectoryNamespace(LanceNamespace):
     def _get_table_path(self, table_name: str) -> str:
         """Get the full path for a table."""
         root = self.config.root if self.config.root else os.getcwd()
-        return f"{root}/{table_name}"
+        return f"{root}/{table_name}.lance"
     
     def _convert_json_arrow_schema_to_pyarrow(self, json_schema: JsonArrowSchema) -> pa.Schema:
         """Convert JsonArrowSchema to PyArrow Schema."""

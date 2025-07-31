@@ -172,7 +172,7 @@ public class TestDirectoryNamespace {
     assertEquals(Long.valueOf(1), response.getVersion());
 
     // Verify Lance dataset was created (check for _versions directory)
-    File tableDir = new File(tempDir.toFile(), "test_table");
+    File tableDir = new File(tempDir.toFile(), "test_table.lance");
     assertTrue(tableDir.exists());
     assertTrue(tableDir.isDirectory());
 
@@ -247,7 +247,7 @@ public class TestDirectoryNamespace {
     namespace.createTable(createRequest, createTestArrowData());
 
     // Verify it exists
-    File tableDir = new File(tempDir.toFile(), "test_table");
+    File tableDir = new File(tempDir.toFile(), "test_table.lance");
     assertTrue(tableDir.exists());
     File versionsDir = new File(tableDir, "_versions");
     assertTrue(versionsDir.exists());
