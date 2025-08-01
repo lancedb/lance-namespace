@@ -55,13 +55,13 @@ jobs:
         working-directory: python/lance_namespace_urllib3_client
         if: github.event_name == 'pull_request' || github.event.inputs.mode == 'dry_run'
         run: |
-          uv publish --dry-run
+          uv build
 
       - name: Build lance-namespace
         working-directory: python/lance_namespace
         if: github.event_name == 'pull_request' || github.event.inputs.mode == 'dry_run'
         run: |
-          uv publish --dry-run
+          uv build
 
       - name: Dry run validation
         if: github.event_name == 'pull_request' || github.event.inputs.mode == 'dry_run'
