@@ -64,13 +64,11 @@ jobs:
           uv build
 
       - name: Dry run validation
-        working-directory: python
         if: github.event_name == 'pull_request' || github.event.inputs.mode == 'dry_run'
         run: |
           echo "✅ Dry run completed successfully"
           echo "Built packages:"
-          ls -la lance_namespace_urllib3_client/dist/
-          ls -la lance_namespace/dist/
+          ls -la dist/
 
       - name: Publish lance-namespace-urllib3-client to PyPI
         if: |
