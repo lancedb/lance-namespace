@@ -13,9 +13,11 @@
  */
 package com.lancedb.lance.namespace.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -30,6 +32,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({
   RegisterTableRequest.JSON_PROPERTY_ID,
   RegisterTableRequest.JSON_PROPERTY_LOCATION,
+  RegisterTableRequest.JSON_PROPERTY_MODE,
   RegisterTableRequest.JSON_PROPERTY_PROPERTIES
 })
 @javax.annotation.Generated(
@@ -41,6 +44,46 @@ public class RegisterTableRequest {
 
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nonnull private String location;
+
+  /**
+   * There are two modes when trying to register a table, to differentiate the behavior when a table
+   * of the same name already exists: * CREATE (default): the operation fails with 409. * OVERWRITE:
+   * the existing table registration is replaced with the new registration.
+   */
+  public enum ModeEnum {
+    CREATE(String.valueOf("CREATE")),
+
+    OVERWRITE(String.valueOf("OVERWRITE"));
+
+    private String value;
+
+    ModeEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static ModeEnum fromValue(String value) {
+      for (ModeEnum b : ModeEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
+
+  public static final String JSON_PROPERTY_MODE = "mode";
+  @javax.annotation.Nullable private ModeEnum mode;
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
@@ -103,6 +146,32 @@ public class RegisterTableRequest {
     this.location = location;
   }
 
+  public RegisterTableRequest mode(@javax.annotation.Nullable ModeEnum mode) {
+
+    this.mode = mode;
+    return this;
+  }
+
+  /**
+   * There are two modes when trying to register a table, to differentiate the behavior when a table
+   * of the same name already exists: * CREATE (default): the operation fails with 409. * OVERWRITE:
+   * the existing table registration is replaced with the new registration.
+   *
+   * @return mode
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_MODE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public ModeEnum getMode() {
+    return mode;
+  }
+
+  @JsonProperty(JSON_PROPERTY_MODE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setMode(@javax.annotation.Nullable ModeEnum mode) {
+    this.mode = mode;
+  }
+
   public RegisterTableRequest properties(
       @javax.annotation.Nullable Map<String, String> properties) {
 
@@ -147,12 +216,13 @@ public class RegisterTableRequest {
     RegisterTableRequest registerTableRequest = (RegisterTableRequest) o;
     return Objects.equals(this.id, registerTableRequest.id)
         && Objects.equals(this.location, registerTableRequest.location)
+        && Objects.equals(this.mode, registerTableRequest.mode)
         && Objects.equals(this.properties, registerTableRequest.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location, properties);
+    return Objects.hash(id, location, mode, properties);
   }
 
   @Override
@@ -161,6 +231,7 @@ public class RegisterTableRequest {
     sb.append("class RegisterTableRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -239,6 +310,21 @@ public class RegisterTableRequest {
                 suffix,
                 URLEncoder.encode(String.valueOf(getLocation()), "UTF-8")
                     .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `mode` to the URL query string
+    if (getMode() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%smode%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getMode()), "UTF-8").replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

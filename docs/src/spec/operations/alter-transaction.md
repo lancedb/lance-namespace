@@ -9,7 +9,7 @@
 ## Request Schema
 
 ```yaml
---8<-- "src/spec/rest.yaml:2025:2042"
+--8<-- "src/spec/rest.yaml:2035:2052"
 ```
 Supporting action schemas:
 
@@ -28,22 +28,22 @@ Supporting action schemas:
 ## Response Schema
 
 ```yaml
---8<-- "src/spec/rest.yaml:2043:2054"
+--8<-- "src/spec/rest.yaml:2053:2064"
 ```
 
 ## Related Components Schema
 ### Set Status Action
 
 ```yaml
---8<-- "src/spec/rest.yaml:1963:1968"
+--8<-- "src/spec/rest.yaml:1973:1978"
 ```
 ### Set Property Action
 
 ```yaml
---8<-- "src/spec/rest.yaml:1969:1978"
+--8<-- "src/spec/rest.yaml:1979:1988"
 ```
 ### Unset Property Action
 
 ```yaml
---8<-- "src/spec/rest.yaml:1991:1998"
+--8<-- "src/spec/rest.yaml:2001:2008"
 ```

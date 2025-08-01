@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,8 +28,19 @@ class RegisterTableRequest(BaseModel):
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
     location: StrictStr
+    mode: Optional[StrictStr] = Field(default=None, description="There are two modes when trying to register a table, to differentiate the behavior when a table of the same name already exists:   * CREATE (default): the operation fails with 409.   * OVERWRITE: the existing table registration is replaced with the new registration. ")
     properties: Optional[Dict[str, StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["id", "location", "properties"]
+    __properties: ClassVar[List[str]] = ["id", "location", "mode", "properties"]
+
+    @field_validator('mode')
+    def mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['CREATE', 'OVERWRITE']):
+            raise ValueError("must be one of enum values ('CREATE', 'OVERWRITE')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -84,6 +95,7 @@ class RegisterTableRequest(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "location": obj.get("location"),
+            "mode": obj.get("mode"),
             "properties": obj.get("properties")
         })
         return _obj

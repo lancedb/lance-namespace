@@ -13,7 +13,9 @@
  */
 package com.lancedb.lance.namespace.server.springboot.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.annotation.Generated;
@@ -36,6 +38,45 @@ public class RegisterTableRequest {
   @Valid private List<String> id = new ArrayList<>();
 
   private String location;
+
+  /**
+   * There are two modes when trying to register a table, to differentiate the behavior when a table
+   * of the same name already exists: * CREATE (default): the operation fails with 409. * OVERWRITE:
+   * the existing table registration is replaced with the new registration.
+   */
+  public enum ModeEnum {
+    CREATE("CREATE"),
+
+    OVERWRITE("OVERWRITE");
+
+    private String value;
+
+    ModeEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static ModeEnum fromValue(String value) {
+      for (ModeEnum b : ModeEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
+
+  private ModeEnum mode;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
@@ -97,6 +138,32 @@ public class RegisterTableRequest {
     this.location = location;
   }
 
+  public RegisterTableRequest mode(ModeEnum mode) {
+    this.mode = mode;
+    return this;
+  }
+
+  /**
+   * There are two modes when trying to register a table, to differentiate the behavior when a table
+   * of the same name already exists: * CREATE (default): the operation fails with 409. * OVERWRITE:
+   * the existing table registration is replaced with the new registration.
+   *
+   * @return mode
+   */
+  @Schema(
+      name = "mode",
+      description =
+          "There are two modes when trying to register a table, to differentiate the behavior when a table of the same name already exists:   * CREATE (default): the operation fails with 409.   * OVERWRITE: the existing table registration is replaced with the new registration. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("mode")
+  public ModeEnum getMode() {
+    return mode;
+  }
+
+  public void setMode(ModeEnum mode) {
+    this.mode = mode;
+  }
+
   public RegisterTableRequest properties(Map<String, String> properties) {
     this.properties = properties;
     return this;
@@ -136,12 +203,13 @@ public class RegisterTableRequest {
     RegisterTableRequest registerTableRequest = (RegisterTableRequest) o;
     return Objects.equals(this.id, registerTableRequest.id)
         && Objects.equals(this.location, registerTableRequest.location)
+        && Objects.equals(this.mode, registerTableRequest.mode)
         && Objects.equals(this.properties, registerTableRequest.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location, properties);
+    return Objects.hash(id, location, mode, properties);
   }
 
   @Override
@@ -150,6 +218,7 @@ public class RegisterTableRequest {
     sb.append("class RegisterTableRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -113,6 +113,7 @@ public class ServerToClientRequest {
     converted.setId(request.getId());
     converted.setLocation(request.getLocation());
     converted.setProperties(request.getProperties());
+    converted.setMode(RegisterTableRequest.ModeEnum.valueOf(request.getMode().getValue()));
     return converted;
   }
 

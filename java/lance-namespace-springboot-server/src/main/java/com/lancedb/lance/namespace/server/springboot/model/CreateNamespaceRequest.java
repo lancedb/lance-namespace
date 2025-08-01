@@ -39,7 +39,7 @@ public class CreateNamespaceRequest {
 
   /**
    * There are three modes when trying to create a namespace, to differentiate the behavior when a
-   * namespace of the same name already exists: * CREATE: the operation fails with 400. * EXIST_OK:
+   * namespace of the same name already exists: * CREATE: the operation fails with 409. * EXIST_OK:
    * the operation succeeds and the existing namespace is kept. * OVERWRITE: the existing namespace
    * is dropped and a new empty namespace with this name is created.
    */
@@ -116,7 +116,7 @@ public class CreateNamespaceRequest {
 
   /**
    * There are three modes when trying to create a namespace, to differentiate the behavior when a
-   * namespace of the same name already exists: * CREATE: the operation fails with 400. * EXIST_OK:
+   * namespace of the same name already exists: * CREATE: the operation fails with 409. * EXIST_OK:
    * the operation succeeds and the existing namespace is kept. * OVERWRITE: the existing namespace
    * is dropped and a new empty namespace with this name is created.
    *
@@ -125,7 +125,7 @@ public class CreateNamespaceRequest {
   @Schema(
       name = "mode",
       description =
-          "There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 400.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. ",
+          "There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 409.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
   public ModeEnum getMode() {

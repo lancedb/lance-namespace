@@ -1606,7 +1606,7 @@ components:
           description: |
             There are three modes when trying to create a namespace,
             to differentiate the behavior when a namespace of the same name already exists:
-              * CREATE: the operation fails with 400.
+              * CREATE: the operation fails with 409.
               * EXIST_OK: the operation succeeds and the existing namespace is kept.
               * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created.
           enum:
@@ -1789,6 +1789,7 @@ components:
       nullable: true
     RegisterTableRequest:
       example:
+        mode: CREATE
         location: location
         id:
         - id
@@ -1801,6 +1802,16 @@ components:
             type: string
           type: array
         location:
+          type: string
+        mode:
+          description: |
+            There are two modes when trying to register a table,
+            to differentiate the behavior when a table of the same name already exists:
+              * CREATE (default): the operation fails with 409.
+              * OVERWRITE: the existing table registration is replaced with the new registration.
+          enum:
+          - CREATE
+          - OVERWRITE
           type: string
         properties:
           additionalProperties:

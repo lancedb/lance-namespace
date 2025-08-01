@@ -56,47 +56,47 @@ All error responses follow the JSON error response model based on [RFC-7807](htt
 ### 400 - Bad Request Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2423:2440"
+--8<-- "src/spec/rest.yaml:2433:2450"
 ```
 
 ### 401 - Unauthorized Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2441:2454"
+--8<-- "src/spec/rest.yaml:2451:2464"
 ```
 
 ### 403 - Forbidden Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2455:2468"
+--8<-- "src/spec/rest.yaml:2465:2478"
 ```
 
 ### 404 - Not Found Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2469:2483"
+--8<-- "src/spec/rest.yaml:2479:2493"
 ```
 
 ### 406 - Unsupported Operation Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2484:2497"
+--8<-- "src/spec/rest.yaml:2494:2507"
 ```
 
 ### 409 - Conflict Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2498:2511"
+--8<-- "src/spec/rest.yaml:2508:2521"
 ```
 
 ### 503 - Service Unavailable Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2512:2527"
+--8<-- "src/spec/rest.yaml:2522:2537"
 ```
 
 ### 5XX - Server Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2528:2544"
+--8<-- "src/spec/rest.yaml:2538:2554"
 ```

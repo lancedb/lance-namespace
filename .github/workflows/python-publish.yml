@@ -1,0 +1,98 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Python Publish
+
+on:
+  release:
+    types:
+      - released
+  pull_request:
+    paths:
+      - .github/workflows/python-publish.yml
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "dry_run: build & test only, release: build & publish to PyPI"
+        required: true
+        default: "dry_run"
+        type: choice
+        options:
+          - dry_run
+          - release
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for PyPI trusted publishing
+      contents: read
+    defaults:
+      run:
+        working-directory: python
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Build lance-namespace-urllib3-client
+        working-directory: python/lance_namespace_urllib3_client
+        run: |
+          uv build
+
+      - name: Build lance-namespace
+        working-directory: python/lance_namespace
+        run: |
+          uv build
+
+      - name: Test lance-namespace-urllib3-client
+        working-directory: python/lance_namespace_urllib3_client
+        run: |
+          uv sync
+          uv run pytest
+
+      - name: Test lance-namespace
+        working-directory: python/lance_namespace
+        run: |
+          uv sync
+          uv run pytest
+
+      - name: Dry run validation
+        if: github.event_name == 'pull_request' || github.event.inputs.mode == 'dry_run'
+        run: |
+          echo "✅ Dry run completed successfully"
+          echo "Built packages:"
+          ls -la lance_namespace_urllib3_client/dist/
+          ls -la lance_namespace/dist/
+
+      - name: Publish lance-namespace-urllib3-client to PyPI
+        if: |
+          (github.event_name == 'release' && github.event.action == 'released') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
+        working-directory: python/lance_namespace_urllib3_client
+        run: |
+          uv publish --trusted-publishing always
+
+      - name: Publish lance-namespace to PyPI
+        if: |
+          (github.event_name == 'release' && github.event.action == 'released') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
+        working-directory: python/lance_namespace
+        run: |
+          uv publish --trusted-publishing always
