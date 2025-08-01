@@ -64,6 +64,7 @@ jobs:
           uv build
 
       - name: Dry run validation
+        working-directory: python
         if: github.event_name == 'pull_request' || github.event.inputs.mode == 'dry_run'
         run: |
           echo "✅ Dry run completed successfully"
