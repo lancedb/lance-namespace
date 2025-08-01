@@ -63,13 +63,6 @@ jobs:
         run: |
           uv build
 
-      - name: Dry run validation
-        if: github.event_name == 'pull_request' || github.event.inputs.mode == 'dry_run'
-        run: |
-          echo "✅ Dry run completed successfully"
-          echo "Built packages:"
-          ls -la dist/
-
       - name: Publish lance-namespace-urllib3-client to PyPI
         if: |
           (github.event_name == 'release' && github.event.action == 'released') ||
