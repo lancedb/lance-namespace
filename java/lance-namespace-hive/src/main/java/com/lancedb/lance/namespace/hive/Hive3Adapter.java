@@ -13,6 +13,8 @@
  */
 package com.lancedb.lance.namespace.hive;
 
+import com.lancedb.lance.Dataset;
+import com.lancedb.lance.WriteParams;
 import com.lancedb.lance.namespace.LanceNamespaceException;
 import com.lancedb.lance.namespace.ObjectIdentifier;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
@@ -21,26 +23,36 @@ import com.lancedb.lance.namespace.util.HiveUtil;
 import com.lancedb.lance.namespace.util.ValidationUtil;
 
 import com.google.common.collect.Lists;
+import org.apache.arrow.memory.BufferAllocator;
+import org.apache.arrow.vector.types.pojo.Schema;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.metastore.IMetaStoreClient;
 import org.apache.hadoop.hive.metastore.api.Catalog;
 import org.apache.hadoop.hive.metastore.api.Database;
+import org.apache.hadoop.hive.metastore.api.StorageDescriptor;
+import org.apache.hadoop.hive.metastore.api.Table;
 import org.apache.thrift.TException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.lancedb.lance.namespace.hive.ErrorType.CatalogAlreadyExist;
 import static com.lancedb.lance.namespace.hive.ErrorType.DatabaseAlreadyExist;
 import static com.lancedb.lance.namespace.hive.ErrorType.HiveMetaStoreError;
+import static com.lancedb.lance.namespace.hive.ErrorType.TableAlreadyExists;
+import static com.lancedb.lance.namespace.hive.ErrorType.TableNotFound;
 
 public class Hive3Adapter implements HiveAdapter {
-  private HiveClientPool clientPool;
-  private Configuration hadoopConf;
 
-  public Hive3Adapter(HiveClientPool clientPool, Configuration hadoopConf) {
+  private final HiveClientPool clientPool;
+
+  private final BufferAllocator allocator;
+
+  public Hive3Adapter(
+      HiveClientPool clientPool, Configuration hadoopConf, BufferAllocator allocator) {
     this.clientPool = clientPool;
-    this.hadoopConf = hadoopConf;
+    this.allocator = allocator;
   }
 
   @Override
@@ -175,5 +187,122 @@ public class Hive3Adapter implements HiveAdapter {
           client.createDatabase(database);
           return null;
         });
+  }
+
+  @Override
+  public Optional<String> describeTable(ObjectIdentifier id) {
+    ValidationUtil.checkArgument(id.levels() == 4, "Expect catalog.db.table format but get %s", id);
+    String catalog = id.level(0).toLowerCase();
+    String db = id.level(1).toLowerCase();
+    String table = id.level(2).toLowerCase();
+
+    Optional<Table> hmsTable = HiveUtil.getTable(clientPool, catalog, db, table);
+    if (!hmsTable.isPresent()) {
+      return Optional.empty();
+    }
+
+    HiveUtil.validateLanceTable(hmsTable.get());
+    return Optional.of(hmsTable.get().getSd().getLocation());
+  }
+
+  @Override
+  public void createTable(
+      ObjectIdentifier id,
+      Schema schema,
+      String location,
+      Map<String, String> properties,
+      byte[] data) {
+    ValidationUtil.checkArgument(id.levels() == 4, "Expect catalog.db.table format but get %s", id);
+
+    // Check for unsupported managed_by=impl
+    if (properties != null && "impl".equalsIgnoreCase(properties.get("managed_by"))) {
+      throw new UnsupportedOperationException("managed_by=impl is not supported yet");
+    }
+
+    String catalog = id.level(0).toLowerCase();
+    String db = id.level(1).toLowerCase();
+    String tableName = id.level(2).toLowerCase();
+
+    try {
+      // Check if table already exists
+      Optional<Table> existing = HiveUtil.getTable(clientPool, catalog, db, tableName);
+      if (existing.isPresent()) {
+        throw LanceNamespaceException.conflict(
+            String.format("Table %s.%s.%s already exists", catalog, db, tableName),
+            TableAlreadyExists.getType(),
+            String.format("%s.%s.%s", catalog, db, tableName),
+            CommonUtil.formatCurrentStackTrace());
+      }
+
+      // Create HMS table
+      Table table = new Table();
+      table.setCatName(catalog);
+      table.setDbName(db);
+      table.setTableName(tableName);
+      table.setTableType("EXTERNAL_TABLE");
+
+      StorageDescriptor sd = new StorageDescriptor();
+      sd.setLocation(location);
+      table.setSd(sd);
+
+      // Set Lance parameters
+      Map<String, String> params = HiveUtil.createLanceTableParams(properties);
+      table.setParameters(params);
+
+      clientPool.run(
+          client -> {
+            client.createTable(table);
+            return null;
+          });
+
+      // Create Lance dataset if data provided
+      if (data != null && data.length > 0) {
+        WriteParams writeParams =
+            new WriteParams.Builder().withMode(WriteParams.WriteMode.CREATE).build();
+        Dataset.create(allocator, location, schema, writeParams);
+      }
+    } catch (TException | InterruptedException | RuntimeException e) {
+      if (e instanceof InterruptedException) {
+        Thread.currentThread().interrupt();
+      }
+      throw LanceNamespaceException.serviceUnavailable(
+          e.getMessage(), HiveMetaStoreError.getType(), "", CommonUtil.formatCurrentStackTrace());
+    }
+  }
+
+  @Override
+  public String dropTable(ObjectIdentifier id) {
+    ValidationUtil.checkArgument(id.levels() == 4, "Expect catalog.db.table format but get %s", id);
+    String catalog = id.level(0).toLowerCase();
+    String db = id.level(1).toLowerCase();
+    String tableName = id.level(2).toLowerCase();
+
+    try {
+      Optional<Table> hmsTable = HiveUtil.getTable(clientPool, catalog, db, tableName);
+      if (!hmsTable.isPresent()) {
+        throw LanceNamespaceException.notFound(
+            String.format("Table %s.%s.%s does not exist", catalog, db, tableName),
+            TableNotFound.getType(),
+            String.format("%s.%s.%s", catalog, db, tableName),
+            CommonUtil.formatCurrentStackTrace());
+      }
+
+      HiveUtil.validateLanceTable(hmsTable.get());
+      String location = hmsTable.get().getSd().getLocation();
+
+      clientPool.run(
+          client -> {
+            client.dropTable(catalog, db, tableName, false, true);
+            return null;
+          });
+
+      return location;
+    } catch (TException | InterruptedException e) {
+      if (e instanceof InterruptedException) {
+        Thread.currentThread().interrupt();
+      }
+      throw LanceNamespaceException.serviceUnavailable(
+          e.getMessage(), HiveMetaStoreError.getType(), "", CommonUtil.formatCurrentStackTrace());
+    }
   }
 }
