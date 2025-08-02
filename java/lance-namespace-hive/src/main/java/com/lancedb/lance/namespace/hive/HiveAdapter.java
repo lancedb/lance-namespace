@@ -16,18 +16,22 @@ package com.lancedb.lance.namespace.hive;
 import com.lancedb.lance.namespace.ObjectIdentifier;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 
+import org.apache.arrow.memory.BufferAllocator;
+import org.apache.arrow.vector.types.pojo.Schema;
 import org.apache.hadoop.conf.Configuration;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface HiveAdapter {
-  static HiveAdapter create(HiveClientPool clientPool, Configuration hadoopConf) {
+  static HiveAdapter create(
+      HiveClientPool clientPool, Configuration hadoopConf, BufferAllocator allocator) {
     switch (HiveVersion.version()) {
       case V2:
-        return new Hive2Adapter(clientPool, hadoopConf);
+        return new Hive2Adapter(clientPool, hadoopConf, allocator);
       case V3:
-        return new Hive3Adapter(clientPool, hadoopConf);
+        return new Hive3Adapter(clientPool, hadoopConf, allocator);
     }
 
     throw new UnsupportedOperationException(
@@ -38,4 +42,15 @@ public interface HiveAdapter {
 
   void createNamespace(
       ObjectIdentifier id, CreateNamespaceRequest.ModeEnum mode, Map<String, String> properties);
+
+  Optional<String> describeTable(ObjectIdentifier id);
+
+  void createTable(
+      ObjectIdentifier id,
+      Schema schema,
+      String location,
+      Map<String, String> properties,
+      byte[] data);
+
+  String dropTable(ObjectIdentifier id);
 }
