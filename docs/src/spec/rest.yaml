@@ -60,6 +60,9 @@ tags:
   - name: Index
     description: |
       Operations that are related to an index
+  - name: Tag
+    description: |
+      Operations that are related to tags
   - name: Transaction
     description: |
       Operations that are related to a transaction
@@ -497,6 +500,176 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/table/{id}/restore:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Table
+        - Metadata
+      summary: Restore table to a specific version
+      operationId: RestoreTable
+      description: |
+        Restore table `id` to a specific version.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestoreTableRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/RestoreTableResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/table/{id}/version/list:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Table
+        - Metadata
+      summary: List all versions of a table
+      operationId: ListTableVersions
+      description: |
+        List all versions (commits) of table `id` with their metadata.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListTableVersionsRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/ListTableVersionsResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/table/{id}/alter_columns:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Table
+        - Metadata
+      summary: Modify existing columns
+      operationId: AlterTableAlterColumns
+      description: |
+        Modify existing columns in table `id`, such as renaming or changing data types.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlterTableAlterColumnsRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/AlterTableAlterColumnsResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/table/{id}/drop_columns:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Table
+        - Metadata
+      summary: Remove columns from table
+      operationId: AlterTableDropColumns
+      description: |
+        Remove specified columns from table `id`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlterTableDropColumnsRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/AlterTableDropColumnsResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/table/{id}/stats:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Table
+        - Metadata
+      summary: Get table statistics
+      operationId: GetTableStats
+      description: |
+        Get statistics for table `id`, including row counts, data sizes, and column statistics.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetTableStatsRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/GetTableStatsResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
   # Table Data APIs
 
   /v1/table/{id}/insert:
@@ -841,6 +1014,110 @@ paths:
         5XX:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /v1/table/{id}/explain_plan:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Table
+        - Data
+      summary: Get query execution plan explanation
+      operationId: ExplainTableQueryPlan
+      description: |
+        Get the query execution plan for a query against table `id`.
+        Returns a human-readable explanation of how the query will be executed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExplainTableQueryPlanRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/ExplainTableQueryPlanResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/table/{id}/analyze_plan:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Table
+        - Data
+      summary: Analyze query execution plan
+      operationId: AnalyzeTableQueryPlan
+      description: |
+        Analyze the query execution plan for a query against table `id`.
+        Returns detailed statistics and analysis of the query execution plan.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyzeTableQueryPlanRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/AnalyzeTableQueryPlanResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/table/{id}/add_columns:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Table
+        - Data
+      summary: Add new columns to table schema
+      operationId: AlterTableAddColumns
+      description: |
+        Add new columns to table `id` using SQL expressions or default values.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlterTableAddColumnsRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/AlterTableAddColumnsResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
   # Table Index APIs
 
   /v1/table/{id}/create_index:
@@ -949,6 +1226,236 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/DescribeTableIndexStatsResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/table/{id}/index/{index_name}/drop:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      - name: index_name
+        in: path
+        description: Name of the index to drop
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - Table
+        - Index
+        - Metadata
+      summary: Drop a specific index
+      operationId: DropTableIndex
+      description: |
+        Drop the specified index from table `id`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DropTableIndexRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/DropTableIndexResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  # Table Tag APIs
+
+  /v1/table/{id}/tags/list:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      - name: 'page_token'
+        in: query
+        schema:
+          $ref: '#/components/schemas/PageToken'
+      - name: 'limit'
+        in: query
+        schema:
+          $ref: '#/components/schemas/PageLimit'
+    get:
+      tags:
+        - Table
+        - Tag
+        - Metadata
+      summary: List all tags for a table
+      operationId: ListTableTags
+      description: |
+        List all tags that have been created for table `id`.
+        Returns a map of tag names to their corresponding version numbers and metadata.
+        
+        REST NAMESPACE ONLY
+        REST namespace uses GET to perform this operation without a request body.
+        It passes in the `ListTableTagsRequest` information in the following way:
+        - `id`: pass through path parameter of the same name
+        - `page_token`: pass through query parameter of the same name
+        - `limit`: pass through query parameter of the same name
+      responses:
+        200:
+          $ref: '#/components/responses/ListTableTagsResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/table/{id}/tags/version:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Table
+        - Tag
+        - Metadata
+      summary: Get version for a specific tag
+      operationId: GetTableTagVersion
+      description: |
+        Get the version number that a specific tag points to for table `id`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetTableTagVersionRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/GetTableTagVersionResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/table/{id}/tags/create:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Table
+        - Tag
+        - Metadata
+      summary: Create a new tag
+      operationId: CreateTableTag
+      description: |
+        Create a new tag for table `id` that points to a specific version.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTableTagRequest'
+      responses:
+        200:
+          description: Success, no content
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        409:
+          $ref: '#/components/responses/ConflictErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/table/{id}/tags/delete:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Table
+        - Tag
+        - Metadata
+      summary: Delete a tag
+      operationId: DeleteTableTag
+      description: |
+        Delete an existing tag from table `id`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteTableTagRequest'
+      responses:
+        200:
+          description: Success, no content
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/table/{id}/tags/update:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Table
+        - Tag
+        - Metadata
+      summary: Update a tag to point to a different version
+      operationId: UpdateTableTag
+      description: |
+        Update an existing tag for table `id` to point to a different version.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTableTagRequest'
+      responses:
+        200:
+          description: Success, no content
         400:
           $ref: '#/components/responses/BadRequestErrorResponse'
         401:
@@ -1745,6 +2252,10 @@ components:
           minimum: 0
           nullable: true
           description: Optional table version to list indexes from
+        page_token:
+          $ref: '#/components/schemas/PageToken'
+        limit:
+          $ref: '#/components/schemas/PageLimit'
 
     ListTableIndicesResponse:
       type: object
@@ -1754,10 +2265,12 @@ components:
         indexes:
           type: array
           items:
-            $ref: '#/components/schemas/IndexListItemResponse'
+            $ref: '#/components/schemas/IndexContent'
           description: List of indexes on the table
+        page_token:
+          $ref: '#/components/schemas/PageToken'
 
-    IndexListItemResponse:
+    IndexContent:
       type: object
       required:
         - index_name
@@ -2264,6 +2777,371 @@ components:
       - And
       - Or
 
+    GetTableTagVersionRequest:
+      type: object
+      required:
+        - tag
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+        tag:
+          type: string
+          description: Name of the tag to get version for
+
+    GetTableTagVersionResponse:
+      type: object
+      required:
+        - version
+      properties:
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+          description: version number that the tag points to
+
+    CreateTableTagRequest:
+      type: object
+      required:
+        - tag
+        - version
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+        tag:
+          type: string
+          description: Name of the tag to create
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Version number for the tag to point to
+
+    DeleteTableTagRequest:
+      type: object
+      required:
+        - tag
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+        tag:
+          type: string
+          description: Name of the tag to delete
+
+    UpdateTableTagRequest:
+      type: object
+      required:
+        - tag
+        - version
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+        tag:
+          type: string
+          description: Name of the tag to update
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+          description: New version number for the tag to point to
+
+    ListTableTagsResponse:
+      type: object
+      required:
+        - tags
+      properties:
+        tags:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/TagContents'
+          description: Map of tag names to their contents
+
+    TagContents:
+      type: object
+      required:
+        - version
+      properties:
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Version number that the tag points to
+
+    RestoreTableRequest:
+      type: object
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Version to restore to (if not specified, restores to current version)
+
+    RestoreTableResponse:
+      type: object
+      properties:
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Version of the table after restore operation
+
+    ListTableVersionsRequest:
+      type: object
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+        page_token:
+          $ref: '#/components/schemas/PageToken'
+        limit:
+          $ref: '#/components/schemas/PageLimit'
+
+    ListTableVersionsResponse:
+      type: object
+      required:
+        - versions
+      properties:
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TableVersion'
+          description: List of table versions
+        page_token:
+          $ref: '#/components/schemas/PageToken'
+
+    TableVersion:
+      type: object
+      required:
+        - version
+        - timestamp
+      properties:
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Version number
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp when the version was created
+
+    ExplainTableQueryPlanRequest:
+      type: object
+      required:
+        - query
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+        query:
+          $ref: '#/components/schemas/QueryTableRequest'
+        verbose:
+          type: boolean
+          default: false
+          description: Whether to return verbose explanation
+
+    ExplainTableQueryPlanResponse:
+      type: object
+      required:
+        - plan
+      properties:
+        plan:
+          type: string
+          description: Human-readable query execution plan
+
+    AnalyzeTableQueryPlanRequest:
+      type: object
+      required:
+        - query
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+        query:
+          $ref: '#/components/schemas/QueryTableRequest'
+
+    AnalyzeTableQueryPlanResponse:
+      type: object
+      required:
+        - analysis
+      properties:
+        analysis:
+          type: string
+          description: Detailed analysis of the query execution plan
+
+    AlterTableAddColumnsRequest:
+      type: object
+      required:
+        - new_columns
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+        new_columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/NewColumnTransform'
+          description: List of new columns to add
+
+    NewColumnTransform:
+      type: object
+      required:
+        - name
+        - expression
+      properties:
+        name:
+          type: string
+          description: Name of the new column
+        expression:
+          type: string
+          description: SQL expression to compute the column value
+
+    AlterTableAddColumnsResponse:
+      type: object
+      required:
+        - version
+      properties:
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Version of the table after adding columns
+
+    AlterTableAlterColumnsRequest:
+      type: object
+      required:
+        - alterations
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+        alterations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColumnAlteration'
+          description: List of column alterations to perform
+
+    ColumnAlteration:
+      type: object
+      required:
+        - column
+      properties:
+        column:
+          type: string
+          description: Name of the column to alter
+        rename:
+          type: string
+          description: New name for the column (optional)
+        cast_to:
+          type: string
+          description: New data type to cast the column to (optional)
+
+    AlterTableAlterColumnsResponse:
+      type: object
+      required:
+        - version
+      properties:
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Version of the table after altering columns
+
+    AlterTableDropColumnsRequest:
+      type: object
+      required:
+        - columns
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+        columns:
+          type: array
+          items:
+            type: string
+          description: Names of columns to drop
+
+    AlterTableDropColumnsResponse:
+      type: object
+      required:
+        - version
+      properties:
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Version of the table after dropping columns
+
+    GetTableStatsRequest:
+      type: object
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+
+    GetTableStatsResponse:
+      type: object
+      required:
+        - num_rows
+        - size_bytes
+      properties:
+        num_rows:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Total number of rows in the table
+        size_bytes:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Total size of the table in bytes
+        num_fragments:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Number of data fragments
+
+    DropTableIndexRequest:
+      type: object
+      required:
+        - id
+        - index_name
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+        index_name:
+          type: string
+          description: Name of the index to drop
+
+    DropTableIndexResponse:
+      type: object
+      properties:
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Version of the table after dropping the index
+
   responses:
     ListNamespacesResponse:
       description: A list of namespaces
@@ -2427,6 +3305,87 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/DescribeTableIndexStatsResponse'
+
+    # Tag operation responses
+
+    ListTableTagsResponse:
+      description: List of table tags
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListTableTagsResponse'
+
+    GetTableTagVersionResponse:
+      description: Tag version information
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetTableTagVersionResponse'
+
+    # Table operation responses
+
+    ListTableVersionsResponse:
+      description: List of table versions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListTableVersionsResponse'
+
+    ExplainTableQueryPlanResponse:
+      description: Query execution plan explanation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExplainTableQueryPlanResponse'
+
+    AnalyzeTableQueryPlanResponse:
+      description: Query execution plan analysis
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AnalyzeTableQueryPlanResponse'
+
+    AlterTableAddColumnsResponse:
+      description: Add columns operation result
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AlterTableAddColumnsResponse'
+
+    AlterTableAlterColumnsResponse:
+      description: Alter columns operation result
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AlterTableAlterColumnsResponse'
+
+    AlterTableDropColumnsResponse:
+      description: Drop columns operation result
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AlterTableDropColumnsResponse'
+
+    GetTableStatsResponse:
+      description: Table statistics
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetTableStatsResponse'
+
+    RestoreTableResponse:
+      description: Table restore operation result
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RestoreTableResponse'
+
+    DropTableIndexResponse:
+      description: Index drop operation result
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DropTableIndexResponse'
 
     # Error Responses
 

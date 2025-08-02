@@ -15,6 +15,32 @@ use crate::{apis::ResponseContent, models};
 use super::{Error, configuration, ContentType};
 
 
+/// struct for typed errors of method [`alter_table_add_columns`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum AlterTableAddColumnsError {
+    Status400(models::ErrorResponse),
+    Status401(models::ErrorResponse),
+    Status403(models::ErrorResponse),
+    Status404(models::ErrorResponse),
+    Status503(models::ErrorResponse),
+    Status5XX(models::ErrorResponse),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`analyze_table_query_plan`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum AnalyzeTableQueryPlanError {
+    Status400(models::ErrorResponse),
+    Status401(models::ErrorResponse),
+    Status403(models::ErrorResponse),
+    Status404(models::ErrorResponse),
+    Status503(models::ErrorResponse),
+    Status5XX(models::ErrorResponse),
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`count_table_rows`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -45,6 +71,19 @@ pub enum CreateTableError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DeleteFromTableError {
+    Status400(models::ErrorResponse),
+    Status401(models::ErrorResponse),
+    Status403(models::ErrorResponse),
+    Status404(models::ErrorResponse),
+    Status503(models::ErrorResponse),
+    Status5XX(models::ErrorResponse),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`explain_table_query_plan`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum ExplainTableQueryPlanError {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
@@ -106,6 +145,92 @@ pub enum UpdateTableError {
     UnknownValue(serde_json::Value),
 }
 
+
+/// Add new columns to table `id` using SQL expressions or default values. 
+pub async fn alter_table_add_columns(configuration: &configuration::Configuration, id: &str, alter_table_add_columns_request: models::AlterTableAddColumnsRequest, delimiter: Option<&str>) -> Result<models::AlterTableAddColumnsResponse, Error<AlterTableAddColumnsError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
+    let p_alter_table_add_columns_request = alter_table_add_columns_request;
+    let p_delimiter = delimiter;
+
+    let uri_str = format!("{}/v1/table/{id}/add_columns", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    req_builder = req_builder.json(&p_alter_table_add_columns_request);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::AlterTableAddColumnsResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::AlterTableAddColumnsResponse`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<AlterTableAddColumnsError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+/// Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan. 
+pub async fn analyze_table_query_plan(configuration: &configuration::Configuration, id: &str, analyze_table_query_plan_request: models::AnalyzeTableQueryPlanRequest, delimiter: Option<&str>) -> Result<models::AnalyzeTableQueryPlanResponse, Error<AnalyzeTableQueryPlanError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
+    let p_analyze_table_query_plan_request = analyze_table_query_plan_request;
+    let p_delimiter = delimiter;
+
+    let uri_str = format!("{}/v1/table/{id}/analyze_plan", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    req_builder = req_builder.json(&p_analyze_table_query_plan_request);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::AnalyzeTableQueryPlanResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::AnalyzeTableQueryPlanResponse`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<AnalyzeTableQueryPlanError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
 
 /// Count the number of rows in table `id` 
 pub async fn count_table_rows(configuration: &configuration::Configuration, id: &str, count_table_rows_request: models::CountTableRowsRequest, delimiter: Option<&str>) -> Result<i64, Error<CountTableRowsError>> {
@@ -240,6 +365,49 @@ pub async fn delete_from_table(configuration: &configuration::Configuration, id:
     } else {
         let content = resp.text().await?;
         let entity: Option<DeleteFromTableError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+/// Get the query execution plan for a query against table `id`. Returns a human-readable explanation of how the query will be executed. 
+pub async fn explain_table_query_plan(configuration: &configuration::Configuration, id: &str, explain_table_query_plan_request: models::ExplainTableQueryPlanRequest, delimiter: Option<&str>) -> Result<models::ExplainTableQueryPlanResponse, Error<ExplainTableQueryPlanError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
+    let p_explain_table_query_plan_request = explain_table_query_plan_request;
+    let p_delimiter = delimiter;
+
+    let uri_str = format!("{}/v1/table/{id}/explain_plan", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    req_builder = req_builder.json(&p_explain_table_query_plan_request);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::ExplainTableQueryPlanResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::ExplainTableQueryPlanResponse`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<ExplainTableQueryPlanError> = serde_json::from_str(&content).ok();
         Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }

@@ -26,7 +26,7 @@ import com.lancedb.lance.namespace.server.springboot.model.DescribeTransactionRe
 import com.lancedb.lance.namespace.server.springboot.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DropTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.ErrorResponse;
-import com.lancedb.lance.namespace.server.springboot.model.IndexListItemResponse;
+import com.lancedb.lance.namespace.server.springboot.model.IndexContent;
 import com.lancedb.lance.namespace.server.springboot.model.InsertIntoTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.JsonArrowDataType;
 import com.lancedb.lance.namespace.server.springboot.model.JsonArrowField;
@@ -256,9 +256,9 @@ public class ClientToServerResponse {
     return converted;
   }
 
-  private static IndexListItemResponse convertIndexListItem(
-      com.lancedb.lance.namespace.model.IndexListItemResponse item) {
-    IndexListItemResponse converted = new IndexListItemResponse();
+  private static IndexContent convertIndexListItem(
+      com.lancedb.lance.namespace.model.IndexContent item) {
+    IndexContent converted = new IndexContent();
     converted.setIndexName(item.getIndexName());
     converted.setIndexUuid(item.getIndexUuid());
     converted.setColumns(item.getColumns());

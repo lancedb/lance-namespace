@@ -26,6 +26,34 @@ class TestTableApi(unittest.TestCase):
     def tearDown(self) -> None:
         pass
 
+    def test_alter_table_add_columns(self) -> None:
+        """Test case for alter_table_add_columns
+
+        Add new columns to table schema
+        """
+        pass
+
+    def test_alter_table_alter_columns(self) -> None:
+        """Test case for alter_table_alter_columns
+
+        Modify existing columns
+        """
+        pass
+
+    def test_alter_table_drop_columns(self) -> None:
+        """Test case for alter_table_drop_columns
+
+        Remove columns from table
+        """
+        pass
+
+    def test_analyze_table_query_plan(self) -> None:
+        """Test case for analyze_table_query_plan
+
+        Analyze query execution plan
+        """
+        pass
+
     def test_count_table_rows(self) -> None:
         """Test case for count_table_rows
 
@@ -47,10 +75,24 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_create_table_tag(self) -> None:
+        """Test case for create_table_tag
+
+        Create a new tag
+        """
+        pass
+
     def test_delete_from_table(self) -> None:
         """Test case for delete_from_table
 
         Delete rows from a table
+        """
+        pass
+
+    def test_delete_table_tag(self) -> None:
+        """Test case for delete_table_tag
+
+        Delete a tag
         """
         pass
 
@@ -82,6 +124,34 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_drop_table_index(self) -> None:
+        """Test case for drop_table_index
+
+        Drop a specific index
+        """
+        pass
+
+    def test_explain_table_query_plan(self) -> None:
+        """Test case for explain_table_query_plan
+
+        Get query execution plan explanation
+        """
+        pass
+
+    def test_get_table_stats(self) -> None:
+        """Test case for get_table_stats
+
+        Get table statistics
+        """
+        pass
+
+    def test_get_table_tag_version(self) -> None:
+        """Test case for get_table_tag_version
+
+        Get version for a specific tag
+        """
+        pass
+
     def test_insert_into_table(self) -> None:
         """Test case for insert_into_table
 
@@ -93,6 +163,20 @@ class TestTableApi(unittest.TestCase):
         """Test case for list_table_indices
 
         List indexes on a table
+        """
+        pass
+
+    def test_list_table_tags(self) -> None:
+        """Test case for list_table_tags
+
+        List all tags for a table
+        """
+        pass
+
+    def test_list_table_versions(self) -> None:
+        """Test case for list_table_versions
+
+        List all versions of a table
         """
         pass
 
@@ -124,6 +208,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_restore_table(self) -> None:
+        """Test case for restore_table
+
+        Restore table to a specific version
+        """
+        pass
+
     def test_table_exists(self) -> None:
         """Test case for table_exists
 
@@ -135,6 +226,13 @@ class TestTableApi(unittest.TestCase):
         """Test case for update_table
 
         Update rows in a table
+        """
+        pass
+
+    def test_update_table_tag(self) -> None:
+        """Test case for update_table_tag
+
+        Update a tag to point to a different version
         """
         pass
 

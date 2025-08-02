@@ -27,7 +27,9 @@ import java.util.StringJoiner;
 /** ListTableIndicesRequest */
 @JsonPropertyOrder({
   ListTableIndicesRequest.JSON_PROPERTY_ID,
-  ListTableIndicesRequest.JSON_PROPERTY_VERSION
+  ListTableIndicesRequest.JSON_PROPERTY_VERSION,
+  ListTableIndicesRequest.JSON_PROPERTY_PAGE_TOKEN,
+  ListTableIndicesRequest.JSON_PROPERTY_LIMIT
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -38,6 +40,12 @@ public class ListTableIndicesRequest {
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nullable private Long version;
+
+  public static final String JSON_PROPERTY_PAGE_TOKEN = "page_token";
+  @javax.annotation.Nullable private String pageToken;
+
+  public static final String JSON_PROPERTY_LIMIT = "limit";
+  @javax.annotation.Nullable private Integer limit;
 
   public ListTableIndicesRequest() {}
 
@@ -97,6 +105,61 @@ public class ListTableIndicesRequest {
     this.version = version;
   }
 
+  public ListTableIndicesRequest pageToken(@javax.annotation.Nullable String pageToken) {
+
+    this.pageToken = pageToken;
+    return this;
+  }
+
+  /**
+   * An opaque token that allows pagination for list operations (e.g. ListNamespaces). For an
+   * initial request of a list operation, if the implementation cannot return all items in one
+   * response, or if there are more items than the page limit specified in the request, the
+   * implementation must return a page token in the response, indicating there are more results
+   * available. After the initial request, the value of the page token from each response must be
+   * used as the page token value for the next request. Caller must interpret either
+   * &#x60;null&#x60;, missing value or empty string value of the page token from the
+   * implementation&#39;s response as the end of the listing results.
+   *
+   * @return pageToken
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_PAGE_TOKEN)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getPageToken() {
+    return pageToken;
+  }
+
+  @JsonProperty(JSON_PROPERTY_PAGE_TOKEN)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setPageToken(@javax.annotation.Nullable String pageToken) {
+    this.pageToken = pageToken;
+  }
+
+  public ListTableIndicesRequest limit(@javax.annotation.Nullable Integer limit) {
+
+    this.limit = limit;
+    return this;
+  }
+
+  /**
+   * An inclusive upper bound of the number of results that a caller will receive.
+   *
+   * @return limit
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_LIMIT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getLimit() {
+    return limit;
+  }
+
+  @JsonProperty(JSON_PROPERTY_LIMIT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setLimit(@javax.annotation.Nullable Integer limit) {
+    this.limit = limit;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -107,12 +170,14 @@ public class ListTableIndicesRequest {
     }
     ListTableIndicesRequest listTableIndicesRequest = (ListTableIndicesRequest) o;
     return Objects.equals(this.id, listTableIndicesRequest.id)
-        && Objects.equals(this.version, listTableIndicesRequest.version);
+        && Objects.equals(this.version, listTableIndicesRequest.version)
+        && Objects.equals(this.pageToken, listTableIndicesRequest.pageToken)
+        && Objects.equals(this.limit, listTableIndicesRequest.limit);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version);
+    return Objects.hash(id, version, pageToken, limit);
   }
 
   @Override
@@ -121,6 +186,8 @@ public class ListTableIndicesRequest {
     sb.append("class ListTableIndicesRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
+    sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -197,6 +264,37 @@ public class ListTableIndicesRequest {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `page_token` to the URL query string
+    if (getPageToken() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%spage_token%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getPageToken()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `limit` to the URL query string
+    if (getLimit() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%slimit%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getLimit()), "UTF-8").replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

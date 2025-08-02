@@ -22,6 +22,8 @@ import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
 import com.lancedb.lance.namespace.model.CreateTableIndexResponse;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsResponse;
+import com.lancedb.lance.namespace.model.DropTableIndexRequest;
+import com.lancedb.lance.namespace.model.DropTableIndexResponse;
 import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
 import com.lancedb.lance.namespace.model.ListTableIndicesResponse;
 
@@ -257,6 +259,119 @@ public class IndexApi extends BaseApi {
 
     TypeReference<DescribeTableIndexStatsResponse> localVarReturnType =
         new TypeReference<DescribeTableIndexStatsResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Drop a specific index Drop the specified index from table &#x60;id&#x60;.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param indexName Name of the index to drop (required)
+   * @param dropTableIndexRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @return DropTableIndexResponse
+   * @throws ApiException if fails to make API call
+   */
+  public DropTableIndexResponse dropTableIndex(
+      String id, String indexName, DropTableIndexRequest dropTableIndexRequest, String delimiter)
+      throws ApiException {
+    return this.dropTableIndex(
+        id, indexName, dropTableIndexRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Drop a specific index Drop the specified index from table &#x60;id&#x60;.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param indexName Name of the index to drop (required)
+   * @param dropTableIndexRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return DropTableIndexResponse
+   * @throws ApiException if fails to make API call
+   */
+  public DropTableIndexResponse dropTableIndex(
+      String id,
+      String indexName,
+      DropTableIndexRequest dropTableIndexRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = dropTableIndexRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling dropTableIndex");
+    }
+
+    // verify the required parameter 'indexName' is set
+    if (indexName == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'indexName' when calling dropTableIndex");
+    }
+
+    // verify the required parameter 'dropTableIndexRequest' is set
+    if (dropTableIndexRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'dropTableIndexRequest' when calling dropTableIndex");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/index/{index_name}/drop"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)))
+            .replaceAll(
+                "\\{" + "index_name" + "\\}",
+                apiClient.escapeString(apiClient.parameterToString(indexName)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<DropTableIndexResponse> localVarReturnType =
+        new TypeReference<DropTableIndexResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

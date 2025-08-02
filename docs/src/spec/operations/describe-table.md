@@ -3,28 +3,28 @@
 ## Description
 
 ```yaml
---8<-- "src/spec/rest.yaml:371:372"
+--8<-- "src/spec/rest.yaml:374:375"
 ```
 
 ## Request Schema
 
 ```yaml
---8<-- "src/spec/rest.yaml:1330:1344"
+--8<-- "src/spec/rest.yaml:1837:1851"
 ```
 ## Response Schema
 
 ```yaml
---8<-- "src/spec/rest.yaml:1345:1368"
+--8<-- "src/spec/rest.yaml:1852:1875"
 ```
 
 ## Related Components Schema
 ### Json Arrow Schema
 
 ```yaml
---8<-- "src/spec/rest.yaml:1824:1841"
+--8<-- "src/spec/rest.yaml:2337:2354"
 ```
 ### Json Arrow Schema
 
 ```yaml
---8<-- "src/spec/rest.yaml:1842:1862"
+--8<-- "src/spec/rest.yaml:2355:2375"
 ```

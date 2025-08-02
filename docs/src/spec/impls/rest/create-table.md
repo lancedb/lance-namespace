@@ -3,5 +3,5 @@
 ## REST Route Definition
 
 ```yaml
---8<-- "src/spec/rest.yaml:785:842"
+--8<-- "src/spec/rest.yaml:958:1015"
 ```

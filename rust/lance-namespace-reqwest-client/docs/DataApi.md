@@ -4,14 +4,81 @@ All URIs are relative to *http://localhost:2333*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**alter_table_add_columns**](DataApi.md#alter_table_add_columns) | **POST** /v1/table/{id}/add_columns | Add new columns to table schema
+[**analyze_table_query_plan**](DataApi.md#analyze_table_query_plan) | **POST** /v1/table/{id}/analyze_plan | Analyze query execution plan
 [**count_table_rows**](DataApi.md#count_table_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
 [**create_table**](DataApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 [**delete_from_table**](DataApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
+[**explain_table_query_plan**](DataApi.md#explain_table_query_plan) | **POST** /v1/table/{id}/explain_plan | Get query execution plan explanation
 [**insert_into_table**](DataApi.md#insert_into_table) | **POST** /v1/table/{id}/insert | Insert records into a table
 [**merge_insert_into_table**](DataApi.md#merge_insert_into_table) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 [**query_table**](DataApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
 [**update_table**](DataApi.md#update_table) | **POST** /v1/table/{id}/update | Update rows in a table
 
+
+
+## alter_table_add_columns
+
+> models::AlterTableAddColumnsResponse alter_table_add_columns(id, alter_table_add_columns_request, delimiter)
+Add new columns to table schema
+
+Add new columns to table `id` using SQL expressions or default values. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**alter_table_add_columns_request** | [**AlterTableAddColumnsRequest**](AlterTableAddColumnsRequest.md) |  | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
+
+### Return type
+
+[**models::AlterTableAddColumnsResponse**](AlterTableAddColumnsResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## analyze_table_query_plan
+
+> models::AnalyzeTableQueryPlanResponse analyze_table_query_plan(id, analyze_table_query_plan_request, delimiter)
+Analyze query execution plan
+
+Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**analyze_table_query_plan_request** | [**AnalyzeTableQueryPlanRequest**](AnalyzeTableQueryPlanRequest.md) |  | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
+
+### Return type
+
+[**models::AnalyzeTableQueryPlanResponse**](AnalyzeTableQueryPlanResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
 ## count_table_rows
@@ -99,6 +166,38 @@ Name | Type | Description  | Required | Notes
 ### Return type
 
 [**models::DeleteFromTableResponse**](DeleteFromTableResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## explain_table_query_plan
+
+> models::ExplainTableQueryPlanResponse explain_table_query_plan(id, explain_table_query_plan_request, delimiter)
+Get query execution plan explanation
+
+Get the query execution plan for a query against table `id`. Returns a human-readable explanation of how the query will be executed. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  | [required] |
+**explain_table_query_plan_request** | [**ExplainTableQueryPlanRequest**](ExplainTableQueryPlanRequest.md) |  | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  |  |
+
+### Return type
+
+[**models::ExplainTableQueryPlanResponse**](ExplainTableQueryPlanResponse.md)
 
 ### Authorization
 

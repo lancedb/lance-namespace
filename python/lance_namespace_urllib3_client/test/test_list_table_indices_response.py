@@ -36,19 +36,20 @@ class TestListTableIndicesResponse(unittest.TestCase):
         if include_optional:
             return ListTableIndicesResponse(
                 indexes = [
-                    lance_namespace_urllib3_client.models.index_list_item_response.IndexListItemResponse(
+                    lance_namespace_urllib3_client.models.index_content.IndexContent(
                         index_name = '', 
                         index_uuid = '', 
                         columns = [
                             ''
                             ], 
                         status = '', )
-                    ]
+                    ],
+                page_token = ''
             )
         else:
             return ListTableIndicesResponse(
                 indexes = [
-                    lance_namespace_urllib3_client.models.index_list_item_response.IndexListItemResponse(
+                    lance_namespace_urllib3_client.models.index_content.IndexContent(
                         index_name = '', 
                         index_uuid = '', 
                         columns = [

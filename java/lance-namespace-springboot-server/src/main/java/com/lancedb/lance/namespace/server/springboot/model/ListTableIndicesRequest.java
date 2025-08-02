@@ -35,6 +35,10 @@ public class ListTableIndicesRequest {
 
   private Long version;
 
+  private String pageToken;
+
+  private Integer limit;
+
   public ListTableIndicesRequest id(List<String> id) {
     this.id = id;
     return this;
@@ -90,6 +94,61 @@ public class ListTableIndicesRequest {
     this.version = version;
   }
 
+  public ListTableIndicesRequest pageToken(String pageToken) {
+    this.pageToken = pageToken;
+    return this;
+  }
+
+  /**
+   * An opaque token that allows pagination for list operations (e.g. ListNamespaces). For an
+   * initial request of a list operation, if the implementation cannot return all items in one
+   * response, or if there are more items than the page limit specified in the request, the
+   * implementation must return a page token in the response, indicating there are more results
+   * available. After the initial request, the value of the page token from each response must be
+   * used as the page token value for the next request. Caller must interpret either `null`, missing
+   * value or empty string value of the page token from the implementation's response as the end of
+   * the listing results.
+   *
+   * @return pageToken
+   */
+  @Schema(
+      name = "page_token",
+      description =
+          "An opaque token that allows pagination for list operations (e.g. ListNamespaces).  For an initial request of a list operation,  if the implementation cannot return all items in one response, or if there are more items than the page limit specified in the request, the implementation must return a page token in the response, indicating there are more results available.  After the initial request,  the value of the page token from each response must be used as the page token value for the next request.  Caller must interpret either `null`,  missing value or empty string value of the page token from the implementation's response as the end of the listing results. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("page_token")
+  public String getPageToken() {
+    return pageToken;
+  }
+
+  public void setPageToken(String pageToken) {
+    this.pageToken = pageToken;
+  }
+
+  public ListTableIndicesRequest limit(Integer limit) {
+    this.limit = limit;
+    return this;
+  }
+
+  /**
+   * An inclusive upper bound of the number of results that a caller will receive.
+   *
+   * @return limit
+   */
+  @Schema(
+      name = "limit",
+      description =
+          "An inclusive upper bound of the  number of results that a caller will receive. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("limit")
+  public Integer getLimit() {
+    return limit;
+  }
+
+  public void setLimit(Integer limit) {
+    this.limit = limit;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -100,12 +159,14 @@ public class ListTableIndicesRequest {
     }
     ListTableIndicesRequest listTableIndicesRequest = (ListTableIndicesRequest) o;
     return Objects.equals(this.id, listTableIndicesRequest.id)
-        && Objects.equals(this.version, listTableIndicesRequest.version);
+        && Objects.equals(this.version, listTableIndicesRequest.version)
+        && Objects.equals(this.pageToken, listTableIndicesRequest.pageToken)
+        && Objects.equals(this.limit, listTableIndicesRequest.limit);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version);
+    return Objects.hash(id, version, pageToken, limit);
   }
 
   @Override
@@ -114,6 +175,8 @@ public class ListTableIndicesRequest {
     sb.append("class ListTableIndicesRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
+    sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
     sb.append("}");
     return sb.toString();
   }

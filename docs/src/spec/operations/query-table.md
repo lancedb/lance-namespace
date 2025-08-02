@@ -3,13 +3,13 @@
 ## Description
 
 ```yaml
---8<-- "src/spec/rest.yaml:725:727"
+--8<-- "src/spec/rest.yaml:898:900"
 ```
 
 ## Request Schema
 
 ```yaml
---8<-- "src/spec/rest.yaml:1550:1649"
+--8<-- "src/spec/rest.yaml:2057:2156"
 ```
 ## Response
 

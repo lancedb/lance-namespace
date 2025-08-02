@@ -26,6 +26,20 @@ class TestMetadataApi(unittest.TestCase):
     def tearDown(self) -> None:
         pass
 
+    def test_alter_table_alter_columns(self) -> None:
+        """Test case for alter_table_alter_columns
+
+        Modify existing columns
+        """
+        pass
+
+    def test_alter_table_drop_columns(self) -> None:
+        """Test case for alter_table_drop_columns
+
+        Remove columns from table
+        """
+        pass
+
     def test_alter_transaction(self) -> None:
         """Test case for alter_transaction
 
@@ -44,6 +58,20 @@ class TestMetadataApi(unittest.TestCase):
         """Test case for create_table_index
 
         Create an index on a table
+        """
+        pass
+
+    def test_create_table_tag(self) -> None:
+        """Test case for create_table_tag
+
+        Create a new tag
+        """
+        pass
+
+    def test_delete_table_tag(self) -> None:
+        """Test case for delete_table_tag
+
+        Delete a tag
         """
         pass
 
@@ -96,6 +124,27 @@ class TestMetadataApi(unittest.TestCase):
         """
         pass
 
+    def test_drop_table_index(self) -> None:
+        """Test case for drop_table_index
+
+        Drop a specific index
+        """
+        pass
+
+    def test_get_table_stats(self) -> None:
+        """Test case for get_table_stats
+
+        Get table statistics
+        """
+        pass
+
+    def test_get_table_tag_version(self) -> None:
+        """Test case for get_table_tag_version
+
+        Get version for a specific tag
+        """
+        pass
+
     def test_list_namespaces(self) -> None:
         """Test case for list_namespaces
 
@@ -107,6 +156,20 @@ class TestMetadataApi(unittest.TestCase):
         """Test case for list_table_indices
 
         List indexes on a table
+        """
+        pass
+
+    def test_list_table_tags(self) -> None:
+        """Test case for list_table_tags
+
+        List all tags for a table
+        """
+        pass
+
+    def test_list_table_versions(self) -> None:
+        """Test case for list_table_versions
+
+        List all versions of a table
         """
         pass
 
@@ -131,10 +194,24 @@ class TestMetadataApi(unittest.TestCase):
         """
         pass
 
+    def test_restore_table(self) -> None:
+        """Test case for restore_table
+
+        Restore table to a specific version
+        """
+        pass
+
     def test_table_exists(self) -> None:
         """Test case for table_exists
 
         Check if a table exists
+        """
+        pass
+
+    def test_update_table_tag(self) -> None:
+        """Test case for update_table_tag
+
+        Update a tag to point to a different version
         """
         pass
 

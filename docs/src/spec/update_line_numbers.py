@@ -13,7 +13,8 @@ from pathlib import Path
 # Operations that have REST NAMESPACE ONLY sections (will be calculated dynamically)
 REST_OPERATIONS_TO_FIND = [
     'list-namespaces',
-    'list-tables', 
+    'list-tables',
+    'list-table-tags',
     'insert-into-table',
     'merge-insert-into-table',
     'create-table'
@@ -142,6 +143,74 @@ OPERATION_SCHEMAS = {
             'AlterTransactionSetProperty': 'Set Property Action', 
             'AlterTransactionUnsetProperty': 'Unset Property Action'
         }
+    },
+    # Tag operations
+    'list-table-tags': {
+        'request': None,  # GET operation
+        'response': 'ListTableTagsResponse'
+    },
+    'get-table-tag-version': {
+        'request': 'GetTableTagVersionRequest',
+        'response': 'GetTableTagVersionResponse'
+    },
+    'create-table-tag': {
+        'request': 'CreateTableTagRequest',
+        'response': None  # No response schema
+    },
+    'delete-table-tag': {
+        'request': 'DeleteTableTagRequest',
+        'response': None  # No response schema
+    },
+    'update-table-tag': {
+        'request': 'UpdateTableTagRequest',
+        'response': None  # No response schema
+    },
+    # Table operations
+    'restore-table': {
+        'request': 'RestoreTableRequest',
+        'response': 'RestoreTableResponse'
+    },
+    'list-table-versions': {
+        'request': 'ListTableVersionsRequest',
+        'response': 'ListTableVersionsResponse',
+        'additional_schemas': {
+            'TableVersion': 'Table Version'
+        }
+    },
+    'explain-table-query-plan': {
+        'request': 'ExplainTableQueryPlanRequest',
+        'response': 'ExplainTableQueryPlanResponse'
+    },
+    'analyze-table-query-plan': {
+        'request': 'AnalyzeTableQueryPlanRequest',
+        'response': 'AnalyzeTableQueryPlanResponse'
+    },
+    'alter-table-add-columns': {
+        'request': 'AlterTableAddColumnsRequest',
+        'response': 'AlterTableAddColumnsResponse',
+        'additional_schemas': {
+            'NewColumnTransform': 'New Column Transform'
+        }
+    },
+    'alter-table-alter-columns': {
+        'request': 'AlterTableAlterColumnsRequest',
+        'response': 'AlterTableAlterColumnsResponse',
+        'additional_schemas': {
+            'ColumnAlteration': 'Column Alteration'
+        }
+    },
+    'alter-table-drop-columns': {
+        'request': 'AlterTableDropColumnsRequest',
+        'response': 'AlterTableDropColumnsResponse'
+    },
+    'get-table-stats': {
+        'request': 'GetTableStatsRequest',
+        'response': 'GetTableStatsResponse'
+    },
+    # Index operations
+    'drop-table-index': {
+        'request': 'DropTableIndexRequest',
+        'response': 'DropTableIndexResponse'
     }
 }
 

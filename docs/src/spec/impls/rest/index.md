@@ -55,6 +55,7 @@ Here are the non-standard operations:
 
 - [ListNamespaces](./list-namespaces)
 - [ListTables](./list-tables)
+- [ListTableTags](./list-table-tags)
 - [CreateTable](./create-table)
 - [InsertIntoTable](./insert-into-table)
 - [MergeInsertIntoTable](./merge-insert-into-table)

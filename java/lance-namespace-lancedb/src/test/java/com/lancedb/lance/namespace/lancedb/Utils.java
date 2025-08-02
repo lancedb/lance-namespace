@@ -20,7 +20,7 @@ import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
-import com.lancedb.lance.namespace.model.IndexListItemResponse;
+import com.lancedb.lance.namespace.model.IndexContent;
 import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
 import com.lancedb.lance.namespace.model.ListTableIndicesResponse;
 import com.lancedb.lance.namespace.model.QueryTableRequest;
@@ -161,7 +161,7 @@ public class Utils {
     while (elapsedSeconds < maxSeconds) {
       ListTableIndicesResponse listResponse = namespace.listTableIndices(listRequest);
       if (listResponse.getIndexes() != null) {
-        Optional<IndexListItemResponse> indexOpt =
+        Optional<IndexContent> indexOpt =
             listResponse.getIndexes().stream()
                 .filter(idx -> idx.getIndexName().equals(indexName))
                 .findFirst();

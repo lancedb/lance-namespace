@@ -19,6 +19,12 @@ pub struct ListTableIndicesRequest {
     /// Optional table version to list indexes from
     #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
     pub version: Option<i64>,
+    /// An opaque token that allows pagination for list operations (e.g. ListNamespaces).  For an initial request of a list operation,  if the implementation cannot return all items in one response, or if there are more items than the page limit specified in the request, the implementation must return a page token in the response, indicating there are more results available.  After the initial request,  the value of the page token from each response must be used as the page token value for the next request.  Caller must interpret either `null`,  missing value or empty string value of the page token from the implementation's response as the end of the listing results. 
+    #[serde(rename = "page_token", skip_serializing_if = "Option::is_none")]
+    pub page_token: Option<String>,
+    /// An inclusive upper bound of the  number of results that a caller will receive. 
+    #[serde(rename = "limit", skip_serializing_if = "Option::is_none")]
+    pub limit: Option<i32>,
 }
 
 impl ListTableIndicesRequest {
@@ -26,6 +32,8 @@ impl ListTableIndicesRequest {
         ListTableIndicesRequest {
             id: None,
             version: None,
+            page_token: None,
+            limit: None,
         }
     }
 }

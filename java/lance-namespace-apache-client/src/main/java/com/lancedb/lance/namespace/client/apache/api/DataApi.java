@@ -18,10 +18,16 @@ import com.lancedb.lance.namespace.client.apache.ApiException;
 import com.lancedb.lance.namespace.client.apache.BaseApi;
 import com.lancedb.lance.namespace.client.apache.Configuration;
 import com.lancedb.lance.namespace.client.apache.Pair;
+import com.lancedb.lance.namespace.model.AlterTableAddColumnsRequest;
+import com.lancedb.lance.namespace.model.AlterTableAddColumnsResponse;
+import com.lancedb.lance.namespace.model.AnalyzeTableQueryPlanRequest;
+import com.lancedb.lance.namespace.model.AnalyzeTableQueryPlanResponse;
 import com.lancedb.lance.namespace.model.CountTableRowsRequest;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DeleteFromTableRequest;
 import com.lancedb.lance.namespace.model.DeleteFromTableResponse;
+import com.lancedb.lance.namespace.model.ExplainTableQueryPlanRequest;
+import com.lancedb.lance.namespace.model.ExplainTableQueryPlanResponse;
 import com.lancedb.lance.namespace.model.InsertIntoTableResponse;
 import com.lancedb.lance.namespace.model.MergeInsertIntoTableResponse;
 import com.lancedb.lance.namespace.model.QueryTableRequest;
@@ -48,6 +54,212 @@ public class DataApi extends BaseApi {
 
   public DataApi(ApiClient apiClient) {
     super(apiClient);
+  }
+
+  /**
+   * Add new columns to table schema Add new columns to table &#x60;id&#x60; using SQL expressions
+   * or default values.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param alterTableAddColumnsRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @return AlterTableAddColumnsResponse
+   * @throws ApiException if fails to make API call
+   */
+  public AlterTableAddColumnsResponse alterTableAddColumns(
+      String id, AlterTableAddColumnsRequest alterTableAddColumnsRequest, String delimiter)
+      throws ApiException {
+    return this.alterTableAddColumns(
+        id, alterTableAddColumnsRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Add new columns to table schema Add new columns to table &#x60;id&#x60; using SQL expressions
+   * or default values.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param alterTableAddColumnsRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return AlterTableAddColumnsResponse
+   * @throws ApiException if fails to make API call
+   */
+  public AlterTableAddColumnsResponse alterTableAddColumns(
+      String id,
+      AlterTableAddColumnsRequest alterTableAddColumnsRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = alterTableAddColumnsRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling alterTableAddColumns");
+    }
+
+    // verify the required parameter 'alterTableAddColumnsRequest' is set
+    if (alterTableAddColumnsRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'alterTableAddColumnsRequest' when calling alterTableAddColumns");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/add_columns"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<AlterTableAddColumnsResponse> localVarReturnType =
+        new TypeReference<AlterTableAddColumnsResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Analyze query execution plan Analyze the query execution plan for a query against table
+   * &#x60;id&#x60;. Returns detailed statistics and analysis of the query execution plan.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param analyzeTableQueryPlanRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @return AnalyzeTableQueryPlanResponse
+   * @throws ApiException if fails to make API call
+   */
+  public AnalyzeTableQueryPlanResponse analyzeTableQueryPlan(
+      String id, AnalyzeTableQueryPlanRequest analyzeTableQueryPlanRequest, String delimiter)
+      throws ApiException {
+    return this.analyzeTableQueryPlan(
+        id, analyzeTableQueryPlanRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Analyze query execution plan Analyze the query execution plan for a query against table
+   * &#x60;id&#x60;. Returns detailed statistics and analysis of the query execution plan.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param analyzeTableQueryPlanRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return AnalyzeTableQueryPlanResponse
+   * @throws ApiException if fails to make API call
+   */
+  public AnalyzeTableQueryPlanResponse analyzeTableQueryPlan(
+      String id,
+      AnalyzeTableQueryPlanRequest analyzeTableQueryPlanRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = analyzeTableQueryPlanRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling analyzeTableQueryPlan");
+    }
+
+    // verify the required parameter 'analyzeTableQueryPlanRequest' is set
+    if (analyzeTableQueryPlanRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'analyzeTableQueryPlanRequest' when calling analyzeTableQueryPlan");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/analyze_plan"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<AnalyzeTableQueryPlanResponse> localVarReturnType =
+        new TypeReference<AnalyzeTableQueryPlanResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
   }
 
   /**
@@ -361,6 +573,109 @@ public class DataApi extends BaseApi {
 
     TypeReference<DeleteFromTableResponse> localVarReturnType =
         new TypeReference<DeleteFromTableResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Get query execution plan explanation Get the query execution plan for a query against table
+   * &#x60;id&#x60;. Returns a human-readable explanation of how the query will be executed.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param explainTableQueryPlanRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @return ExplainTableQueryPlanResponse
+   * @throws ApiException if fails to make API call
+   */
+  public ExplainTableQueryPlanResponse explainTableQueryPlan(
+      String id, ExplainTableQueryPlanRequest explainTableQueryPlanRequest, String delimiter)
+      throws ApiException {
+    return this.explainTableQueryPlan(
+        id, explainTableQueryPlanRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Get query execution plan explanation Get the query execution plan for a query against table
+   * &#x60;id&#x60;. Returns a human-readable explanation of how the query will be executed.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param explainTableQueryPlanRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return ExplainTableQueryPlanResponse
+   * @throws ApiException if fails to make API call
+   */
+  public ExplainTableQueryPlanResponse explainTableQueryPlan(
+      String id,
+      ExplainTableQueryPlanRequest explainTableQueryPlanRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = explainTableQueryPlanRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling explainTableQueryPlan");
+    }
+
+    // verify the required parameter 'explainTableQueryPlanRequest' is set
+    if (explainTableQueryPlanRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'explainTableQueryPlanRequest' when calling explainTableQueryPlan");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/explain_plan"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<ExplainTableQueryPlanResponse> localVarReturnType =
+        new TypeReference<ExplainTableQueryPlanResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",

@@ -25,6 +25,20 @@ The Lance Namespace Specification defines a list of operations that can be perfo
 | [CreateTableIndex](create-table-index.md)                | 1               |           | ✓     | ✓     | ✓        |      |             |
 | [ListTableIndices](list-table-indices.md)                | 1               |           | ✓     | ✓     | ✓        |      |             |
 | [DescribeTableIndexStats](describe-table-index-stats.md) | 1               |           | ✓     | ✓     | ✓        |      |             |
+| [RestoreTable](restore-table.md)                         | 1               |           | ✓     |       | ✓        |      |             |
+| [ListTableVersions](list-table-versions.md)              | 1               |           | ✓     |       | ✓        |      |             |
+| [ExplainTableQueryPlan](explain-table-query-plan.md)     | 1               |           | ✓     |       |          | ✓    |             |
+| [AnalyzeTableQueryPlan](analyze-table-query-plan.md)     | 1               |           | ✓     |       |          | ✓    |             |
+| [AlterTableAddColumns](alter-table-add-columns.md)       | 1               |           | ✓     |       |          | ✓    |             |
+| [AlterTableAlterColumns](alter-table-alter-columns.md)   | 1               |           | ✓     |       | ✓        |      |             |
+| [AlterTableDropColumns](alter-table-drop-columns.md)     | 1               |           | ✓     |       | ✓        |      |             |
+| [GetTableStats](get-table-stats.md)                      | 1               |           | ✓     |       | ✓        |      |             |
+| [ListTableTags](list-table-tags.md)                      | 1               |           | ✓     |       | ✓        |      |             |
+| [GetTableTagVersion](get-table-tag-version.md)           | 1               |           | ✓     |       | ✓        |      |             |
+| [CreateTableTag](create-table-tag.md)                    | 1               |           | ✓     |       | ✓        |      |             |
+| [DeleteTableTag](delete-table-tag.md)                    | 1               |           | ✓     |       | ✓        |      |             |
+| [UpdateTableTag](update-table-tag.md)                    | 1               |           | ✓     |       | ✓        |      |             |
+| [DropTableIndex](drop-table-index.md)                    | 1               |           | ✓     | ✓     | ✓        |      |             |
 | [DescribeTransaction](describe-transaction.md)           | 1               |           |       |       | ✓        |      | ✓           |
 | [AlterTransaction](alter-transaction.md)                 | 1               |           |       |       | ✓        |      | ✓           |
 
@@ -48,7 +62,7 @@ The request and response schema is defined using JSON schema in the
 All error responses follow the JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807):
 
 ```yaml
---8<-- "src/spec/rest.yaml:1061:1101"
+--8<-- "src/spec/rest.yaml:1568:1608"
 ```
 
 ## HTTP Status Codes and Responses
@@ -56,47 +70,47 @@ All error responses follow the JSON error response model based on [RFC-7807](htt
 ### 400 - Bad Request Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2433:2450"
+--8<-- "src/spec/rest.yaml:3392:3409"
 ```
 
 ### 401 - Unauthorized Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2451:2464"
+--8<-- "src/spec/rest.yaml:3410:3423"
 ```
 
 ### 403 - Forbidden Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2465:2478"
+--8<-- "src/spec/rest.yaml:3424:3437"
 ```
 
 ### 404 - Not Found Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2479:2493"
+--8<-- "src/spec/rest.yaml:3438:3452"
 ```
 
 ### 406 - Unsupported Operation Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2494:2507"
+--8<-- "src/spec/rest.yaml:3453:3466"
 ```
 
 ### 409 - Conflict Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2508:2521"
+--8<-- "src/spec/rest.yaml:3467:3480"
 ```
 
 ### 503 - Service Unavailable Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2522:2537"
+--8<-- "src/spec/rest.yaml:3481:3496"
 ```
 
 ### 5XX - Server Error Response
 
 ```yaml
---8<-- "src/spec/rest.yaml:2538:2554"
+--8<-- "src/spec/rest.yaml:3497:3513"
 ```

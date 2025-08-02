@@ -84,16 +84,30 @@ nav:
           - TableExists: spec/operations/table-exists.md
           - DropTable: spec/operations/drop-table.md
           - DeregisterTable: spec/operations/deregister-table.md
-          - CreateTableIndex: spec/operations/create-table-index.md
-          - ListTableIndices: spec/operations/list-table-indices.md
-          - DescribeTableIndexStats: spec/operations/describe-table-index-stats.md
-          - CreateTable: spec/operations/create-table.md
+          - RestoreTable: spec/operations/restore-table.md
+          - ListTableVersions: spec/operations/list-table-versions.md
+          - AlterTableAlterColumns: spec/operations/alter-table-alter-columns.md
+          - AlterTableDropColumns: spec/operations/alter-table-drop-columns.md
+          - GetTableStats: spec/operations/get-table-stats.md
           - InsertIntoTable: spec/operations/insert-into-table.md
           - MergeInsertIntoTable: spec/operations/merge-insert-into-table.md
           - UpdateTable: spec/operations/update-table.md
           - DeleteFromTable: spec/operations/delete-from-table.md
           - QueryTable: spec/operations/query-table.md
           - CountTableRows: spec/operations/count-table-rows.md
+          - CreateTable: spec/operations/create-table.md
+          - ExplainTableQueryPlan: spec/operations/explain-table-query-plan.md
+          - AnalyzeTableQueryPlan: spec/operations/analyze-table-query-plan.md
+          - AlterTableAddColumns: spec/operations/alter-table-add-columns.md
+          - CreateTableIndex: spec/operations/create-table-index.md
+          - ListTableIndices: spec/operations/list-table-indices.md
+          - DescribeTableIndexStats: spec/operations/describe-table-index-stats.md
+          - DropTableIndex: spec/operations/drop-table-index.md
+          - ListTableTags: spec/operations/list-table-tags.md
+          - GetTableTagVersion: spec/operations/get-table-tag-version.md
+          - CreateTableTag: spec/operations/create-table-tag.md
+          - DeleteTableTag: spec/operations/delete-table-tag.md
+          - UpdateTableTag: spec/operations/update-table-tag.md
           - DescribeTransaction: spec/operations/describe-transaction.md
           - AlterTransaction: spec/operations/alter-transaction.md
       - Implementations:

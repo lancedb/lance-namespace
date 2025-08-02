@@ -18,7 +18,7 @@ import com.lancedb.lance.namespace.model.CreateTableIndexResponse;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsRequest;
 import com.lancedb.lance.namespace.model.DescribeTableIndexStatsResponse;
-import com.lancedb.lance.namespace.model.IndexListItemResponse;
+import com.lancedb.lance.namespace.model.IndexContent;
 import com.lancedb.lance.namespace.model.ListTableIndicesRequest;
 import com.lancedb.lance.namespace.model.ListTableIndicesResponse;
 
@@ -260,7 +260,7 @@ public class TestIndex extends LanceDbRestNamespaceTestBase {
       assertTrue(listResponse.getIndexes().size() >= 3, "Should have at least 3 indices");
 
       log.info("✓ Created {} indices:", listResponse.getIndexes().size());
-      for (IndexListItemResponse index : listResponse.getIndexes()) {
+      for (IndexContent index : listResponse.getIndexes()) {
         log.info("  - {} on columns: {}", index.getIndexName(), index.getColumns());
       }
 

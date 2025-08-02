@@ -38,7 +38,9 @@ class TestListTableIndicesRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
-                version = 0
+                version = 0,
+                page_token = '',
+                limit = 56
             )
         else:
             return ListTableIndicesRequest(

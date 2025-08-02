@@ -17,9 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List
-from lance_namespace_urllib3_client.models.index_list_item_response import IndexListItemResponse
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from lance_namespace_urllib3_client.models.index_content import IndexContent
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,8 +27,9 @@ class ListTableIndicesResponse(BaseModel):
     """
     ListTableIndicesResponse
     """ # noqa: E501
-    indexes: List[IndexListItemResponse] = Field(description="List of indexes on the table")
-    __properties: ClassVar[List[str]] = ["indexes"]
+    indexes: List[IndexContent] = Field(description="List of indexes on the table")
+    page_token: Optional[StrictStr] = Field(default=None, description="An opaque token that allows pagination for list operations (e.g. ListNamespaces).  For an initial request of a list operation,  if the implementation cannot return all items in one response, or if there are more items than the page limit specified in the request, the implementation must return a page token in the response, indicating there are more results available.  After the initial request,  the value of the page token from each response must be used as the page token value for the next request.  Caller must interpret either `null`,  missing value or empty string value of the page token from the implementation's response as the end of the listing results. ")
+    __properties: ClassVar[List[str]] = ["indexes", "page_token"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,7 +89,8 @@ class ListTableIndicesResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "indexes": [IndexListItemResponse.from_dict(_item) for _item in obj["indexes"]] if obj.get("indexes") is not None else None
+            "indexes": [IndexContent.from_dict(_item) for _item in obj["indexes"]] if obj.get("indexes") is not None else None,
+            "page_token": obj.get("page_token")
         })
         return _obj
 

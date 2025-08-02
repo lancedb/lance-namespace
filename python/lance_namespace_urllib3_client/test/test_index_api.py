@@ -40,6 +40,13 @@ class TestIndexApi(unittest.TestCase):
         """
         pass
 
+    def test_drop_table_index(self) -> None:
+        """Test case for drop_table_index
+
+        Drop a specific index
+        """
+        pass
+
     def test_list_table_indices(self) -> None:
         """Test case for list_table_indices
 

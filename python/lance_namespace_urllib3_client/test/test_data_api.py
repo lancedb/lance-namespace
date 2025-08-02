@@ -26,6 +26,20 @@ class TestDataApi(unittest.TestCase):
     def tearDown(self) -> None:
         pass
 
+    def test_alter_table_add_columns(self) -> None:
+        """Test case for alter_table_add_columns
+
+        Add new columns to table schema
+        """
+        pass
+
+    def test_analyze_table_query_plan(self) -> None:
+        """Test case for analyze_table_query_plan
+
+        Analyze query execution plan
+        """
+        pass
+
     def test_count_table_rows(self) -> None:
         """Test case for count_table_rows
 
@@ -44,6 +58,13 @@ class TestDataApi(unittest.TestCase):
         """Test case for delete_from_table
 
         Delete rows from a table
+        """
+        pass
+
+    def test_explain_table_query_plan(self) -> None:
+        """Test case for explain_table_query_plan
+
+        Get query execution plan explanation
         """
         pass
 
