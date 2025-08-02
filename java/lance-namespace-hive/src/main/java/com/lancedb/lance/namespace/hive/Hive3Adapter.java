@@ -254,19 +254,19 @@ public class Hive3Adapter implements HiveAdapter {
             client.createTable(table);
             return null;
           });
-
-      // Create Lance dataset if data provided
-      if (data != null && data.length > 0) {
-        WriteParams writeParams =
-            new WriteParams.Builder().withMode(WriteParams.WriteMode.CREATE).build();
-        Dataset.create(allocator, location, schema, writeParams);
-      }
-    } catch (TException | InterruptedException | RuntimeException e) {
+    } catch (TException | InterruptedException e) {
       if (e instanceof InterruptedException) {
         Thread.currentThread().interrupt();
       }
-      throw LanceNamespaceException.serviceUnavailable(
-          e.getMessage(), HiveMetaStoreError.getType(), "", CommonUtil.formatCurrentStackTrace());
+      throw LanceNamespaceException.serverError(
+          "Fail to create table: " + e.getMessage(), HiveMetaStoreError.getType(), id.idStringStyle(), CommonUtil.formatCurrentStackTrace());
+    }
+
+    // Create Lance dataset if data provided
+    if (data != null && data.length > 0) {
+      WriteParams writeParams =
+              new WriteParams.Builder().withMode(WriteParams.WriteMode.CREATE).build();
+      Dataset.create(allocator, location, schema, writeParams);
     }
   }
 
@@ -280,10 +280,10 @@ public class Hive3Adapter implements HiveAdapter {
     try {
       Optional<Table> hmsTable = HiveUtil.getTable(clientPool, catalog, db, tableName);
       if (!hmsTable.isPresent()) {
-        throw LanceNamespaceException.notFound(
+        throw LanceNamespaceException.serverError(
             String.format("Table %s.%s.%s does not exist", catalog, db, tableName),
             TableNotFound.getType(),
-            String.format("%s.%s.%s", catalog, db, tableName),
+            id.idStringStyle(),
             CommonUtil.formatCurrentStackTrace());
       }
 
@@ -302,7 +302,7 @@ public class Hive3Adapter implements HiveAdapter {
         Thread.currentThread().interrupt();
       }
       throw LanceNamespaceException.serviceUnavailable(
-          e.getMessage(), HiveMetaStoreError.getType(), "", CommonUtil.formatCurrentStackTrace());
+          e.getMessage(), HiveMetaStoreError.getType(), id.idStringStyle(), CommonUtil.formatCurrentStackTrace());
     }
   }
 }
