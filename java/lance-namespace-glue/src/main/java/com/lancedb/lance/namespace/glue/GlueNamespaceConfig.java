@@ -13,7 +13,10 @@
  */
 package com.lancedb.lance.namespace.glue;
 
+import com.lancedb.lance.namespace.util.PropertyUtil;
+
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
@@ -73,12 +76,15 @@ public class GlueNamespaceConfig implements Serializable {
    */
   public static final String SESSION_TOKEN = "aws.session-token";
 
+  public static final String STORAGE_OPTIONS_PREFIX = "storage.";
+
   private final String glueEndpoint;
   private final String glueRegion;
   private final String glueCatalogId;
   private final String glueAccessKeyId;
   private final String glueSecretAccessKey;
   private final String glueSessionToken;
+  private final Map<String, String> storageOptions;
 
   public GlueNamespaceConfig() {
     this.glueCatalogId = null;
@@ -87,6 +93,7 @@ public class GlueNamespaceConfig implements Serializable {
     this.glueAccessKeyId = null;
     this.glueSecretAccessKey = null;
     this.glueSessionToken = null;
+    this.storageOptions = ImmutableMap.of();
   }
 
   public GlueNamespaceConfig(Map<String, String> properties) {
@@ -96,6 +103,7 @@ public class GlueNamespaceConfig implements Serializable {
     this.glueAccessKeyId = properties.get(ACCESS_KEY_ID);
     this.glueSecretAccessKey = properties.get(SECRET_ACCESS_KEY);
     this.glueSessionToken = properties.get(SESSION_TOKEN);
+    this.storageOptions = PropertyUtil.propertiesWithPrefix(properties, STORAGE_OPTIONS_PREFIX);
   }
 
   public String glueCatalogId() {
@@ -121,5 +129,9 @@ public class GlueNamespaceConfig implements Serializable {
       builder.region(Region.of(glueRegion));
     }
     builder.credentialsProvider(credentialsProvider());
+  }
+
+  public Map<String, String> getStorageOptions() {
+    return storageOptions;
   }
 }

@@ -13,9 +13,12 @@
  */
 package com.lancedb.lance.namespace.glue;
 
+import com.lancedb.lance.Dataset;
 import com.lancedb.lance.namespace.LanceNamespaceException;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
+import com.lancedb.lance.namespace.model.CreateTableRequest;
+import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
@@ -23,6 +26,11 @@ import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
+import com.lancedb.lance.namespace.model.DropTableRequest;
+import com.lancedb.lance.namespace.model.DropTableResponse;
+import com.lancedb.lance.namespace.model.JsonArrowDataType;
+import com.lancedb.lance.namespace.model.JsonArrowField;
+import com.lancedb.lance.namespace.model.JsonArrowSchema;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.model.ListTablesRequest;
@@ -35,17 +43,20 @@ import com.lancedb.lance.namespace.model.TableExistsRequest;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
+import org.apache.arrow.memory.BufferAllocator;
+import org.apache.arrow.memory.RootAllocator;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import software.amazon.awssdk.services.glue.GlueClient;
 import software.amazon.awssdk.services.glue.model.AlreadyExistsException;
 import software.amazon.awssdk.services.glue.model.CreateDatabaseRequest;
 import software.amazon.awssdk.services.glue.model.CreateDatabaseResponse;
-import software.amazon.awssdk.services.glue.model.CreateTableRequest;
-import software.amazon.awssdk.services.glue.model.CreateTableResponse;
 import software.amazon.awssdk.services.glue.model.Database;
 import software.amazon.awssdk.services.glue.model.DeleteDatabaseRequest;
 import software.amazon.awssdk.services.glue.model.DeleteDatabaseResponse;
@@ -66,15 +77,22 @@ import software.amazon.awssdk.services.glue.model.StorageDescriptor;
 import software.amazon.awssdk.services.glue.model.Table;
 import software.amazon.awssdk.services.glue.model.TableVersion;
 
+import java.io.File;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static com.lancedb.lance.namespace.glue.GlueNamespace.LANCE_TABLE_TYPE_VALUE;
 import static com.lancedb.lance.namespace.glue.GlueNamespace.TABLE_TYPE_PROP;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -87,12 +105,26 @@ public class TestGlueNamespace {
   @Mock private GlueClient glue;
 
   private GlueNamespace glueNamespace;
+  private static BufferAllocator allocator;
+  @TempDir Path tempDir;
+
+  @BeforeAll
+  public static void setUpAll() {
+    allocator = new RootAllocator(Long.MAX_VALUE);
+  }
+
+  @AfterAll
+  public static void tearDownAll() {
+    if (allocator != null) {
+      allocator.close();
+    }
+  }
 
   @BeforeEach
   public void before() {
     this.glueNamespace = new GlueNamespace();
     GlueNamespaceConfig glueProperties = new GlueNamespaceConfig();
-    glueNamespace.initialize(glueProperties, glue);
+    glueNamespace.initialize(glueProperties, glue, allocator);
   }
 
   @Test
@@ -478,10 +510,72 @@ public class TestGlueNamespace {
   }
 
   @Test
+  public void testDeleteAllTablesDropsLanceAndNonLance() throws Exception {
+    String namespace = "ns1";
+    Path nsDir = tempDir.resolve(namespace);
+    Path lanceTable = nsDir.resolve("tbl1");
+
+    // First create a lance table
+    com.lancedb.lance.namespace.model.CreateTableRequest createReq =
+        new com.lancedb.lance.namespace.model.CreateTableRequest()
+            .id(ImmutableList.of(namespace, "tbl1"))
+            .schema(createTestSchema())
+            .location(lanceTable.toString());
+    when(glue.createTable(any(software.amazon.awssdk.services.glue.model.CreateTableRequest.class)))
+        .thenReturn(
+            software.amazon.awssdk.services.glue.model.CreateTableResponse.builder().build());
+    glueNamespace.createTable(createReq, createTestArrowData());
+
+    // Create a mocked directory of another table with data
+    Path nonLanceTable = nsDir.resolve("tbl2");
+    Files.createDirectories(nonLanceTable);
+    Files.write(nonLanceTable.resolve("foo.metadata"), "bar".getBytes());
+    assertTrue(Files.exists(nonLanceTable.resolve("foo.metadata")));
+    when(glue.getDatabase(any(GetDatabaseRequest.class)))
+        .thenReturn(
+            GetDatabaseResponse.builder()
+                .database(Database.builder().name(namespace).build())
+                .build());
+
+    // Mock delete glue calls
+    Table t1 =
+        Table.builder()
+            .databaseName(namespace)
+            .name("tbl1")
+            .storageDescriptor(StorageDescriptor.builder().location(lanceTable.toString()).build())
+            .parameters(ImmutableMap.of(TABLE_TYPE_PROP, LANCE_TABLE_TYPE_VALUE))
+            .build();
+    Table t2 =
+        Table.builder()
+            .databaseName(namespace)
+            .name("tbl2")
+            .storageDescriptor(
+                StorageDescriptor.builder().location(nonLanceTable.toString()).build())
+            .build();
+
+    when(glue.getTables(any(GetTablesRequest.class)))
+        .thenReturn(GetTablesResponse.builder().tableList(t1, t2).build());
+    when(glue.deleteTable(any(DeleteTableRequest.class)))
+        .thenReturn(DeleteTableResponse.builder().build());
+    when(glue.deleteDatabase(any(DeleteDatabaseRequest.class)))
+        .thenReturn(DeleteDatabaseResponse.builder().build());
+
+    // Drop with cascade
+    DropNamespaceRequest drop =
+        new DropNamespaceRequest()
+            .id(ImmutableList.of(namespace))
+            .mode(DropNamespaceRequest.ModeEnum.FAIL)
+            .behavior(DropNamespaceRequest.BehaviorEnum.CASCADE);
+    glueNamespace.dropNamespace(drop);
+
+    assertFalse(Files.exists(lanceTable), "Lance dataset directory should have been deleted");
+    assertFalse(Files.exists(nonLanceTable), "Non-Lance directory should have been deleted");
+  }
+
+  @Test
   public void testDropNamespaceWithNullName() {
     DropNamespaceRequest request =
         new DropNamespaceRequest().mode(DropNamespaceRequest.ModeEnum.FAIL);
-
     assertThrows(LanceNamespaceException.class, () -> glueNamespace.dropNamespace(request));
   }
 
@@ -697,8 +791,9 @@ public class TestGlueNamespace {
             .location("s3://bucket/tbl")
             .properties(ImmutableMap.of("key", "val"));
 
-    when(glue.createTable(any(CreateTableRequest.class)))
-        .thenReturn(CreateTableResponse.builder().build());
+    when(glue.createTable(any(software.amazon.awssdk.services.glue.model.CreateTableRequest.class)))
+        .thenReturn(
+            software.amazon.awssdk.services.glue.model.CreateTableResponse.builder().build());
 
     RegisterTableResponse resp = glueNamespace.registerTable(req);
     assertEquals("s3://bucket/tbl", resp.getLocation());
@@ -709,17 +804,34 @@ public class TestGlueNamespace {
   public void testRegisterTableAlreadyExists() {
     RegisterTableRequest req =
         new RegisterTableRequest().id(ImmutableList.of("ns1", "tbl")).location("s3://bucket/tbl");
-    when(glue.createTable(any(CreateTableRequest.class)))
+    when(glue.createTable(any(software.amazon.awssdk.services.glue.model.CreateTableRequest.class)))
         .thenThrow(AlreadyExistsException.builder().message("Table Already Exists").build());
 
     assertThrows(LanceNamespaceException.class, () -> glueNamespace.registerTable(req));
   }
 
   @Test
+  public void testRegisterTableWithOverwrite() {
+    // First create a table
+    RegisterTableRequest req =
+        new RegisterTableRequest().id(ImmutableList.of("ns", "tbl")).location("s3://bucket/tbl");
+
+    when(glue.createTable(any(software.amazon.awssdk.services.glue.model.CreateTableRequest.class)))
+        .thenReturn(
+            software.amazon.awssdk.services.glue.model.CreateTableResponse.builder().build());
+
+    glueNamespace.registerTable(req);
+
+    // Now overwrite
+    req.setMode(RegisterTableRequest.ModeEnum.OVERWRITE);
+    glueNamespace.registerTable(req);
+  }
+
+  @Test
   public void testRegisterTableNamespaceNotFound() {
     RegisterTableRequest req =
         new RegisterTableRequest().id(ImmutableList.of("ns1", "tbl")).location("s3://bucket/tbl");
-    when(glue.createTable(any(CreateTableRequest.class)))
+    when(glue.createTable(any(software.amazon.awssdk.services.glue.model.CreateTableRequest.class)))
         .thenThrow(EntityNotFoundException.builder().message("Database Not Found").build());
 
     assertThrows(LanceNamespaceException.class, () -> glueNamespace.registerTable(req));
@@ -836,5 +948,214 @@ public class TestGlueNamespace {
     req.addIdItem(null);
 
     assertThrows(LanceNamespaceException.class, () -> glueNamespace.tableExists(req));
+  }
+
+  @Test
+  public void testBasicCreateTable() {
+    String location = tempDir.resolve("ns1/tbl").toString();
+    CreateTableRequest request =
+        new CreateTableRequest()
+            .id(ImmutableList.of("ns1", "tbl"))
+            .schema(createTestSchema())
+            .location(location);
+
+    when(glue.createTable(any(software.amazon.awssdk.services.glue.model.CreateTableRequest.class)))
+        .thenReturn(
+            software.amazon.awssdk.services.glue.model.CreateTableResponse.builder().build());
+
+    CreateTableResponse response = glueNamespace.createTable(request, createTestArrowData());
+    assertNotNull(response);
+    assertNotNull(response.getLocation());
+    assertTrue(response.getLocation().contains("tbl"));
+    assertEquals(Long.valueOf(1), response.getVersion());
+
+    // Verify Lance dataset was created (check for _versions directory)
+    File tableDir = new File(location);
+    assertTrue(tableDir.exists());
+    assertTrue(tableDir.isDirectory());
+
+    File versionsDir = new File(location, "_versions");
+    assertTrue(versionsDir.exists());
+    assertTrue(versionsDir.isDirectory());
+
+    // Verify dataset can be loaded and has expected schema
+    try (Dataset dataset = Dataset.open(response.getLocation(), allocator)) {
+      assertNotNull(dataset);
+      assertNotNull(dataset.getSchema());
+      assertEquals(2, dataset.getSchema().getFields().size());
+      assertEquals("id", dataset.getSchema().getFields().get(0).getName());
+      assertEquals("name", dataset.getSchema().getFields().get(1).getName());
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to verify created dataset", e);
+    }
+  }
+
+  @Test
+  public void testCreateTableDerivesLocationFromNamespaceUri() throws Exception {
+    com.lancedb.lance.namespace.model.CreateTableRequest req =
+        new com.lancedb.lance.namespace.model.CreateTableRequest()
+            .id(ImmutableList.of("ns1", "tbl"))
+            .schema(createTestSchema());
+
+    Database db =
+        Database.builder()
+            .name("ns1")
+            .locationUri(tempDir.resolve("ns1").toUri().toString())
+            .build();
+
+    when(glue.getDatabase(any(GetDatabaseRequest.class)))
+        .thenReturn(GetDatabaseResponse.builder().database(db).build());
+
+    when(glue.createTable(any(software.amazon.awssdk.services.glue.model.CreateTableRequest.class)))
+        .thenReturn(
+            software.amazon.awssdk.services.glue.model.CreateTableResponse.builder().build());
+
+    com.lancedb.lance.namespace.model.CreateTableResponse resp =
+        glueNamespace.createTable(req, createTestArrowData());
+
+    String expectedPrefix = tempDir.resolve("ns1").resolve("tbl").toString();
+    assertTrue(resp.getLocation().contains(expectedPrefix));
+
+    File dir = new File(new URI(resp.getLocation()));
+    assertTrue(dir.exists(), "Derived table directory must exist");
+    assertTrue(new File(dir, "_versions").isDirectory());
+  }
+
+  @Test
+  public void testCreateTableDeriveFailsWhenNoNamespaceUri() {
+    com.lancedb.lance.namespace.model.CreateTableRequest req =
+        new com.lancedb.lance.namespace.model.CreateTableRequest()
+            .id(ImmutableList.of("ns1", "tbl"))
+            .schema(createTestSchema());
+
+    Database db = Database.builder().name("ns1").build();
+
+    when(glue.getDatabase(any(GetDatabaseRequest.class)))
+        .thenReturn(GetDatabaseResponse.builder().database(db).build());
+
+    LanceNamespaceException e =
+        assertThrows(
+            LanceNamespaceException.class,
+            () -> glueNamespace.createTable(req, createTestArrowData()));
+
+    assertTrue(e.getMessage().contains("Cannot derive location for ns1.tbl"));
+  }
+
+  @Test
+  public void testCreateTableConflictCleansUpDataset() {
+    String namespace = "ns";
+    String tbl = "tbl";
+    Path loc = tempDir.resolve(namespace).resolve(tbl);
+
+    com.lancedb.lance.namespace.model.CreateTableRequest req =
+        new com.lancedb.lance.namespace.model.CreateTableRequest()
+            .id(ImmutableList.of(namespace, tbl))
+            .schema(createTestSchema())
+            .location(loc.toString());
+
+    when(glue.createTable(any(software.amazon.awssdk.services.glue.model.CreateTableRequest.class)))
+        .thenThrow(AlreadyExistsException.builder().message("Table already exists").build());
+
+    assertThrows(
+        LanceNamespaceException.class, () -> glueNamespace.createTable(req, createTestArrowData()));
+    assertFalse(Files.exists(loc), "Dataset should be removed on exception");
+  }
+
+  @Test
+  public void testCreateTableMissingSchema() {
+    com.lancedb.lance.namespace.model.CreateTableRequest req =
+        new com.lancedb.lance.namespace.model.CreateTableRequest()
+            .id(ImmutableList.of("ns", "tbl"))
+            .location(tempDir.toString());
+
+    LanceNamespaceException ex =
+        assertThrows(
+            LanceNamespaceException.class, () -> glueNamespace.createTable(req, new byte[0]));
+    assertTrue(ex.getMessage().contains("Schema is required"));
+  }
+
+  @Test
+  public void testDropTableExplicitLocationOnDisk() {
+    // First create table
+    Path location = tempDir.resolve("ns1/tbl");
+    List<String> tableId = ImmutableList.of("ns1", "tbl");
+    com.lancedb.lance.namespace.model.CreateTableRequest request =
+        new com.lancedb.lance.namespace.model.CreateTableRequest()
+            .id(tableId)
+            .schema(createTestSchema())
+            .location(location.toString());
+
+    when(glue.createTable(any(software.amazon.awssdk.services.glue.model.CreateTableRequest.class)))
+        .thenReturn(
+            software.amazon.awssdk.services.glue.model.CreateTableResponse.builder().build());
+
+    glueNamespace.createTable(request, createTestArrowData());
+
+    // Verify it exists
+    File tableDir = new File(location.toString());
+    assertTrue(tableDir.exists());
+    File versionsDir = new File(tableDir, "_versions");
+    assertTrue(versionsDir.exists());
+
+    // Drop the table
+    Table tbl =
+        Table.builder()
+            .databaseName(tableId.get(0))
+            .name(tableId.get(1))
+            .storageDescriptor(StorageDescriptor.builder().location(location.toString()).build())
+            .parameters(ImmutableMap.of(TABLE_TYPE_PROP, LANCE_TABLE_TYPE_VALUE))
+            .build();
+    when(glue.getTable(any(GetTableRequest.class)))
+        .thenReturn(GetTableResponse.builder().table(tbl).build());
+
+    DropTableRequest dropRequest = new DropTableRequest();
+    dropRequest.setId(tableId);
+    DropTableResponse response = glueNamespace.dropTable(dropRequest);
+
+    assertNotNull(response);
+    assertFalse(tableDir.exists());
+  }
+
+  @Test
+  public void testDropTableTableNotFound() {
+    when(glue.getTable(any(GetTableRequest.class)))
+        .thenThrow(EntityNotFoundException.builder().message("Entity Not found").build());
+    DropTableRequest req = new DropTableRequest().id(ImmutableList.of("ns1", "tbl"));
+    LanceNamespaceException e =
+        assertThrows(LanceNamespaceException.class, () -> glueNamespace.dropTable(req));
+
+    assertTrue(e.getMessage().contains("Glue table not found: ns1.tbl"));
+  }
+
+  private JsonArrowSchema createTestSchema() {
+    // Create a simple schema with id (int32) and name (string) fields
+    JsonArrowDataType intType = new JsonArrowDataType();
+    intType.setType("int32");
+
+    JsonArrowDataType stringType = new JsonArrowDataType();
+    stringType.setType("utf8");
+
+    JsonArrowField idField = new JsonArrowField();
+    idField.setName("id");
+    idField.setType(intType);
+    idField.setNullable(false);
+
+    JsonArrowField nameField = new JsonArrowField();
+    nameField.setName("name");
+    nameField.setType(stringType);
+    nameField.setNullable(true);
+
+    List<JsonArrowField> fields = new ArrayList<>();
+    fields.add(idField);
+    fields.add(nameField);
+
+    JsonArrowSchema schema = new JsonArrowSchema();
+    schema.setFields(fields);
+    return schema;
+  }
+
+  private byte[] createTestArrowData() {
+    // For testing, return empty byte array since we only need schema
+    return new byte[0];
   }
 }

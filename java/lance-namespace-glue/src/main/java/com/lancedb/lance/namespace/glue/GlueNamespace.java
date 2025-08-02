@@ -13,10 +13,14 @@
  */
 package com.lancedb.lance.namespace.glue;
 
+import com.lancedb.lance.Dataset;
+import com.lancedb.lance.WriteParams;
 import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.LanceNamespaceException;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
+import com.lancedb.lance.namespace.model.CreateTableRequest;
+import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DeregisterTableRequest;
 import com.lancedb.lance.namespace.model.DeregisterTableResponse;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
@@ -25,6 +29,9 @@ import com.lancedb.lance.namespace.model.DescribeTableRequest;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
 import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
+import com.lancedb.lance.namespace.model.DropTableRequest;
+import com.lancedb.lance.namespace.model.DropTableResponse;
+import com.lancedb.lance.namespace.model.JsonArrowSchema;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.model.ListTablesRequest;
@@ -33,16 +40,19 @@ import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
+import com.lancedb.lance.namespace.util.JsonArrowSchemaConverter;
+import com.lancedb.lance.namespace.util.OpenDalUtil;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.arrow.memory.BufferAllocator;
+import org.apache.arrow.vector.types.pojo.Schema;
+import org.apache.opendal.Operator;
 import software.amazon.awssdk.services.glue.GlueClient;
 import software.amazon.awssdk.services.glue.model.AlreadyExistsException;
 import software.amazon.awssdk.services.glue.model.CreateDatabaseRequest;
-import software.amazon.awssdk.services.glue.model.CreateTableRequest;
 import software.amazon.awssdk.services.glue.model.Database;
 import software.amazon.awssdk.services.glue.model.DatabaseInput;
 import software.amazon.awssdk.services.glue.model.DeleteDatabaseRequest;
@@ -73,6 +83,7 @@ public class GlueNamespace implements LanceNamespace, Closeable {
   public static final String LANCE_TABLE_TYPE_VALUE = "lance";
   public static final String MANAGED_BY_PROP = "managed_by";
   public static final String STORAGE_VALUE = "storage";
+  public static final String VERSION_PROP = "version";
   private static final int MAX_LISTING_SIZE = 100;
 
   private GlueNamespaceConfig config;
@@ -83,17 +94,18 @@ public class GlueNamespace implements LanceNamespace, Closeable {
 
   @Override
   public void initialize(Map<String, String> configProperties, BufferAllocator allocator) {
-    this.allocator = allocator;
     GlueNamespaceConfig glueProperties = new GlueNamespaceConfig(configProperties);
     GlueClient glueClient =
         GlueClient.builder().applyMutation(glueProperties::configureClientBuilder).build();
-    initialize(glueProperties, glueClient);
+    initialize(glueProperties, glueClient, allocator);
   }
 
   @VisibleForTesting
-  void initialize(GlueNamespaceConfig properties, GlueClient glueClient) {
+  void initialize(
+      GlueNamespaceConfig properties, GlueClient glueClient, BufferAllocator allocator) {
     this.config = properties;
     this.glueClient = glueClient;
+    this.allocator = allocator;
   }
 
   @Override
@@ -248,31 +260,14 @@ public class GlueNamespace implements LanceNamespace, Closeable {
     String namespaceName = request.getId().get(0);
     String tableName = request.getId().get(1);
 
-    try {
-      Table table =
-          glueClient
-              .getTable(
-                  GetTableRequest.builder()
-                      .catalogId(config.glueCatalogId())
-                      .databaseName(namespaceName)
-                      .name(tableName)
-                      .build())
-              .table();
+    Table table = getGlueTableAtVersion(namespaceName, tableName, request.getVersion());
+    ensureLanceTable(table);
 
-      ensureLanceTable(table);
-
-      DescribeTableResponse response = new DescribeTableResponse();
-      if (table.storageDescriptor() != null && table.storageDescriptor().location() != null) {
-        response.setLocation(table.storageDescriptor().location());
-      }
-      return response;
-    } catch (EntityNotFoundException e) {
-      throw GlueToLanceErrorConverter.notFound(
-          e, "Glue table not found: %s.%s", namespaceName, tableName);
-    } catch (GlueException e) {
-      throw GlueToLanceErrorConverter.serverError(
-          e, "Failed to get Glue table: %s.%s", namespaceName, tableName);
+    DescribeTableResponse response = new DescribeTableResponse();
+    if (table.storageDescriptor() != null && table.storageDescriptor().location() != null) {
+      response.setLocation(table.storageDescriptor().location());
     }
+    return response;
   }
 
   @Override
@@ -283,6 +278,14 @@ public class GlueNamespace implements LanceNamespace, Closeable {
 
     if (request.getLocation().isEmpty()) {
       throw LanceNamespaceException.badRequest("Table location is required", "BAD_REQUEST", "", "");
+    }
+    String location = OpenDalUtil.stripTrailingSlash(request.getLocation());
+    RegisterTableRequest.ModeEnum mode =
+        request.getMode() != null ? request.getMode() : RegisterTableRequest.ModeEnum.CREATE;
+
+    if (mode == RegisterTableRequest.ModeEnum.OVERWRITE) {
+      // If table exists, delete its Glue Table (ignore if missing)
+      deleteGlueTable(namespaceName, tableName, false);
     }
 
     try {
@@ -298,21 +301,18 @@ public class GlueNamespace implements LanceNamespace, Closeable {
           TableInput.builder()
               .name(tableName)
               .storageDescriptor(
-                  StorageDescriptor.builder()
-                      .location(request.getLocation())
-                      .parameters(params)
-                      .build())
+                  StorageDescriptor.builder().location(location).parameters(params).build())
               .build();
 
       glueClient.createTable(
-          CreateTableRequest.builder()
+          software.amazon.awssdk.services.glue.model.CreateTableRequest.builder()
               .catalogId(config.glueCatalogId())
               .databaseName(namespaceName)
               .tableInput(tableInput)
               .build());
 
       RegisterTableResponse response = new RegisterTableResponse();
-      response.setLocation(request.getLocation());
+      response.setLocation(location);
       response.setProperties(request.getProperties());
       return response;
     } catch (AlreadyExistsException e) {
@@ -333,24 +333,10 @@ public class GlueNamespace implements LanceNamespace, Closeable {
     String tableName = request.getId().get(1);
 
     try {
-      Table table =
-          glueClient
-              .getTable(
-                  GetTableRequest.builder()
-                      .catalogId(config.glueCatalogId())
-                      .databaseName(namespaceName)
-                      .name(tableName)
-                      .build())
-              .table();
-
+      Table table = getGlueTable(namespaceName, tableName);
       ensureLanceTable(table);
+      deleteGlueTable(namespaceName, tableName, false);
 
-      glueClient.deleteTable(
-          DeleteTableRequest.builder()
-              .catalogId(config.glueCatalogId())
-              .databaseName(namespaceName)
-              .name(tableName)
-              .build());
       DeregisterTableResponse response = new DeregisterTableResponse();
       response.setId(request.getId());
       if (table.storageDescriptor() != null && table.storageDescriptor().location() != null) {
@@ -363,11 +349,115 @@ public class GlueNamespace implements LanceNamespace, Closeable {
 
     } catch (EntityNotFoundException e) {
       throw GlueToLanceErrorConverter.notFound(
-          e, "Table not found: %s.%s", namespaceName, tableName);
+          e, "Glue table not found: %s.%s", namespaceName, tableName);
     } catch (GlueException e) {
       throw GlueToLanceErrorConverter.serverError(
           e, "Failed to deregister table: %s.%s", namespaceName, tableName);
     }
+  }
+
+  @Override
+  public CreateTableResponse createTable(CreateTableRequest request, byte[] requestData) {
+    validateTableId(request.getId());
+    String namespaceName = request.getId().get(0);
+    String tableName = request.getId().get(1);
+
+    String location = request.getLocation();
+    if (location == null || location.isEmpty()) {
+      location = getDefaultTableLocation(namespaceName, tableName);
+    }
+
+    try {
+      Map<String, String> params = Maps.newHashMap();
+      if (request.getProperties() != null) {
+        params.putAll(request.getProperties());
+      }
+      params.put(TABLE_TYPE_PROP, LANCE_TABLE_TYPE_VALUE);
+      params.put(MANAGED_BY_PROP, params.getOrDefault(MANAGED_BY_PROP, STORAGE_VALUE));
+      params.put(VERSION_PROP, "1");
+
+      validateSchemaNotNull(request.getSchema(), namespaceName, tableName);
+      Schema schema = JsonArrowSchemaConverter.convertToArrowSchema(request.getSchema());
+
+      WriteParams writeParams =
+          new WriteParams.Builder().withMode(WriteParams.WriteMode.CREATE).build();
+
+      try {
+        Dataset.create(allocator, location, schema, writeParams);
+      } catch (Exception e) {
+        throw LanceNamespaceException.serverError(
+            "Failed to create Lance dataset at location: " + request.getLocation(),
+            "DATASET_CREATE_ERROR",
+            location,
+            "An error occurred while creating the Lance dataset: " + e.getMessage());
+      }
+
+      TableInput tableInput =
+          TableInput.builder()
+              .name(tableName)
+              .storageDescriptor(
+                  StorageDescriptor.builder().location(location).parameters(params).build())
+              .parameters(params)
+              .build();
+
+      glueClient.createTable(
+          software.amazon.awssdk.services.glue.model.CreateTableRequest.builder()
+              .catalogId(config.glueCatalogId())
+              .databaseName(namespaceName)
+              .tableInput(tableInput)
+              .build());
+
+      CreateTableResponse response = new CreateTableResponse();
+      response.setLocation(location);
+      response.setVersion(1L);
+      response.setProperties(request.getProperties());
+      return response;
+    } catch (GlueException e) {
+      safeDropDataset(location);
+      if (e instanceof AlreadyExistsException) {
+        throw GlueToLanceErrorConverter.conflict(
+            e, "Table already exists: %s.%s", namespaceName, tableName);
+      } else if (e instanceof EntityNotFoundException) {
+        throw GlueToLanceErrorConverter.notFound(e, "Namespace not found: %s", namespaceName);
+      } else {
+        throw GlueToLanceErrorConverter.serverError(
+            e, "Failed to create table: %s.%s", namespaceName, tableName);
+      }
+    }
+  }
+
+  @Override
+  public DropTableResponse dropTable(DropTableRequest request) {
+    validateTableId(request.getId());
+    String namespaceName = request.getId().get(0);
+    String tableName = request.getId().get(1);
+
+    Table table = getGlueTable(namespaceName, tableName);
+    ensureLanceTable(table);
+    String tableLocation = null;
+    if (table.storageDescriptor() != null && table.storageDescriptor().location() != null) {
+      tableLocation = OpenDalUtil.stripTrailingSlash(table.storageDescriptor().location());
+    }
+
+    try {
+      Dataset.drop(tableLocation, config.getStorageOptions());
+    } catch (Exception e) {
+      // Log warning but continue with Glue metadata deletion
+      throw LanceNamespaceException.serverError(
+          "Failed to drop Lance dataset at location: " + tableLocation,
+          "DATASET_DROP_ERROR",
+          tableLocation,
+          e.getMessage());
+    }
+
+    deleteGlueTable(namespaceName, tableName, false);
+    DropTableResponse response = new DropTableResponse();
+    response.setId(request.getId());
+    response.setLocation(tableLocation);
+    if (table.parameters() != null && !table.parameters().isEmpty()) {
+      response.setProperties(table.parameters());
+    }
+    return response;
   }
 
   @Override
@@ -376,41 +466,8 @@ public class GlueNamespace implements LanceNamespace, Closeable {
     String namespaceName = request.getId().get(0);
     String tableName = request.getId().get(1);
 
-    try {
-      Table table;
-      if (request.getVersion() != null) {
-        // Check specific table version
-        String tableVersion = String.valueOf(request.getVersion());
-        table =
-            glueClient
-                .getTableVersion(
-                    GetTableVersionRequest.builder()
-                        .catalogId(config.glueCatalogId())
-                        .databaseName(namespaceName)
-                        .tableName(tableName)
-                        .versionId(tableVersion)
-                        .build())
-                .tableVersion()
-                .table();
-      } else {
-        table =
-            glueClient
-                .getTable(
-                    GetTableRequest.builder()
-                        .catalogId(config.glueCatalogId())
-                        .databaseName(namespaceName)
-                        .name(tableName)
-                        .build())
-                .table();
-        ensureLanceTable(table);
-      }
-    } catch (EntityNotFoundException e) {
-      throw GlueToLanceErrorConverter.notFound(
-          e, "Table not found: %s.%s", namespaceName, tableName);
-    } catch (GlueException e) {
-      throw GlueToLanceErrorConverter.serverError(
-          e, "Failed to check table existence: %s.%s", namespaceName, tableName);
-    }
+    Table table = getGlueTableAtVersion(namespaceName, tableName, request.getVersion());
+    ensureLanceTable(table);
   }
 
   private void validateParent(List<String> id) {
@@ -458,7 +515,8 @@ public class GlueNamespace implements LanceNamespace, Closeable {
   }
 
   private static Map<String, String> extractDatabaseProperties(Database database) {
-    Map<String, String> glueProperties = Maps.newHashMap(database.parameters());
+    Map<String, String> glueProperties =
+        database.parameters() != null ? Maps.newHashMap(database.parameters()) : Maps.newHashMap();
     if (database.locationUri() != null) {
       glueProperties.put(PARAM_LOCATION, database.locationUri());
     }
@@ -518,7 +576,8 @@ public class GlueNamespace implements LanceNamespace, Closeable {
     DatabaseInput.Builder builder = DatabaseInput.builder().name(namespaceName);
 
     if (params.containsKey(PARAM_LOCATION)) {
-      builder.locationUri(params.get(PARAM_LOCATION));
+      String location = OpenDalUtil.stripTrailingSlash(params.get(PARAM_LOCATION));
+      builder.locationUri(location);
     }
     if (params.containsKey(PARAM_DESCRIPTION)) {
       builder.description(params.get(PARAM_DESCRIPTION));
@@ -541,7 +600,6 @@ public class GlueNamespace implements LanceNamespace, Closeable {
   }
 
   private void deleteAllTables(String namespaceName) {
-    // TODO: This should also delete the actual table data, not just the Glue table instance.
     try {
       String nextToken = null;
       do {
@@ -553,16 +611,34 @@ public class GlueNamespace implements LanceNamespace, Closeable {
                     .nextToken(nextToken)
                     .build());
         for (Table table : tablesResponse.tableList()) {
-          try {
-            glueClient.deleteTable(
-                DeleteTableRequest.builder()
-                    .catalogId(config.glueCatalogId())
-                    .databaseName(namespaceName)
-                    .name(table.name())
-                    .build());
-          } catch (EntityNotFoundException e) {
-            // Table already deleted, continue
+          if (table.storageDescriptor() != null && table.storageDescriptor().location() != null) {
+            String tableLocation =
+                OpenDalUtil.stripTrailingSlash(table.storageDescriptor().location());
+            if (isLanceTable(table)) {
+              try {
+                Dataset.drop(tableLocation, config.getStorageOptions());
+              } catch (Exception e) {
+                throw LanceNamespaceException.serverError(
+                    String.format("Failed to drop table: %s.%s", namespaceName, table.name()),
+                    "TABLE_DROP_ERROR",
+                    namespaceName + "." + table.name(),
+                    e.getMessage());
+              }
+            } else {
+              // For non-Lance tables, use OpenDAL to delete the directory
+              try (Operator op = OpenDalUtil.initializeOperator(tableLocation)) {
+                // table location is the root
+                op.removeAll("");
+              } catch (Exception e) {
+                throw LanceNamespaceException.serverError(
+                    String.format("Failed to drop table: %s.%s", namespaceName, table.name()),
+                    "TABLE_DROP_ERROR",
+                    namespaceName + "." + table.name(),
+                    e.getMessage());
+              }
+            }
           }
+          deleteGlueTable(namespaceName, table.name(), true);
         }
         nextToken = tablesResponse.nextToken();
       } while (nextToken != null);
@@ -604,6 +680,112 @@ public class GlueNamespace implements LanceNamespace, Closeable {
           "NOT_LANCE_TABLE",
           table.databaseName() + "." + table.name(),
           "");
+    }
+  }
+
+  private String getDefaultTableLocation(String namespaceName, String tableName) {
+    Database db = getDatabase(namespaceName);
+    String dbUri = db.locationUri();
+    if (dbUri == null || dbUri.isEmpty()) {
+      throw LanceNamespaceException.badRequest(
+          String.format(
+              "Cannot derive location for %s.%s: no namespace location"
+                  + " and no table location provided",
+              namespaceName, tableName),
+          "BAD_REQUEST",
+          namespaceName + "." + tableName,
+          "");
+    }
+    String base = OpenDalUtil.stripTrailingSlash(dbUri);
+    return String.format("%s/%s", base, tableName);
+  }
+
+  private Table getGlueTable(String namespace, String tableName) {
+    try {
+      return glueClient
+          .getTable(
+              GetTableRequest.builder()
+                  .catalogId(config.glueCatalogId())
+                  .databaseName(namespace)
+                  .name(tableName)
+                  .build())
+          .table();
+    } catch (EntityNotFoundException e) {
+      throw GlueToLanceErrorConverter.notFound(
+          e, "Glue table not found: %s.%s", namespace, tableName);
+    } catch (GlueException e) {
+      throw GlueToLanceErrorConverter.serverError(
+          e, "Failed to get Glue table: %s.%s", namespace, tableName);
+    }
+  }
+
+  private void deleteGlueTable(String namespaceName, String tableName, boolean failIfNotFound) {
+    try {
+      glueClient.deleteTable(
+          DeleteTableRequest.builder()
+              .catalogId(config.glueCatalogId())
+              .databaseName(namespaceName)
+              .name(tableName)
+              .build());
+    } catch (EntityNotFoundException e) {
+      if (failIfNotFound) {
+        throw GlueToLanceErrorConverter.notFound(
+            e, "Glue table not found: %s.%s", namespaceName, tableName);
+      }
+    } catch (GlueException e) {
+      throw GlueToLanceErrorConverter.serverError(
+          e, "Failed to delete Glue table: %s.%s", namespaceName, tableName);
+    }
+  }
+
+  private Table getGlueTableAtVersion(String namespaceName, String tableName, Long version) {
+    try {
+      Table table;
+      if (version != null) {
+        // Get specific table version
+        String tableVersion = String.valueOf(version);
+        table =
+            glueClient
+                .getTableVersion(
+                    GetTableVersionRequest.builder()
+                        .catalogId(config.glueCatalogId())
+                        .databaseName(namespaceName)
+                        .tableName(tableName)
+                        .versionId(tableVersion)
+                        .build())
+                .tableVersion()
+                .table();
+      } else {
+        // Get current table version
+        table = getGlueTable(namespaceName, tableName);
+      }
+      return table;
+    } catch (EntityNotFoundException e) {
+      throw GlueToLanceErrorConverter.notFound(
+          e, "Glue table not found: %s.%s", namespaceName, tableName);
+    } catch (GlueException e) {
+      throw GlueToLanceErrorConverter.serverError(
+          e, "Failed to get Glue table: %s.%s", namespaceName, tableName);
+    }
+  }
+
+  private void validateSchemaNotNull(
+      JsonArrowSchema schema, String namespaceName, String tableName) {
+    if (schema == null) {
+      throw LanceNamespaceException.badRequest(
+          String.format(
+              "Schema is required in CreateTableRequest: %s.%s", namespaceName, tableName),
+          "BAD_REQUEST",
+          namespaceName + "." + tableName,
+          "");
+    }
+  }
+
+  private void safeDropDataset(String location) {
+    try {
+      Dataset.drop(location, config.getStorageOptions());
+    } catch (Exception cleanupErr) {
+      // failed to clean up dataset
     }
   }
 

@@ -15,16 +15,13 @@ package com.lancedb.lance.namespace.glue;
 
 import com.lancedb.lance.namespace.LanceNamespaceException;
 
-import software.amazon.awssdk.services.glue.model.AlreadyExistsException;
-import software.amazon.awssdk.services.glue.model.EntityNotFoundException;
 import software.amazon.awssdk.services.glue.model.GlueException;
 
 public class GlueToLanceErrorConverter {
 
   private GlueToLanceErrorConverter() {}
 
-  public static LanceNamespaceException notFound(
-      EntityNotFoundException e, String message, Object... args) {
+  public static LanceNamespaceException notFound(GlueException e, String message, Object... args) {
     return LanceNamespaceException.notFound(
         String.format(message, args),
         e.getMessage().getClass().getSimpleName(),
@@ -32,8 +29,7 @@ public class GlueToLanceErrorConverter {
         e.getMessage());
   }
 
-  public static LanceNamespaceException conflict(
-      AlreadyExistsException e, String message, Object... args) {
+  public static LanceNamespaceException conflict(GlueException e, String message, Object... args) {
     return LanceNamespaceException.notFound(
         String.format(message, args),
         e.getMessage().getClass().getSimpleName(),
