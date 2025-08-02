@@ -18,9 +18,12 @@ public enum ErrorType {
   HiveMetaStoreError("HiveMetaStoreError"),
   UnknownCatalog("UnknownCatalog"),
   CatalogAlreadyExist("CatalogAlreadyExist"),
-  DatabaseAlreadyExist("DatabaseAlreadyExist");
+  DatabaseAlreadyExist("DatabaseAlreadyExist"),
+  TableAlreadyExists("TableAlreadyExists"),
+  TableNotFound("TableNotFound"),
+  InvalidLanceTable("InvalidLanceTable");
 
-  private String type;
+  private final String type;
 
   ErrorType(String type) {
     this.type = type;

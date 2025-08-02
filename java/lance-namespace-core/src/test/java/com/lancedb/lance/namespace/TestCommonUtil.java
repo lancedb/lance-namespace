@@ -26,7 +26,6 @@ public class TestCommonUtil {
     // Case 1: Un-absolute path
     assertThrows(IllegalArgumentException.class, () -> CommonUtil.makeQualified("./cat"));
     assertThrows(IllegalArgumentException.class, () -> CommonUtil.makeQualified("cat"));
-    assertThrows(IllegalArgumentException.class, () -> CommonUtil.makeQualified("/cat"));
 
     // Case 2: null and empty
     assertThrows(NullPointerException.class, () -> CommonUtil.makeQualified(null));
@@ -37,5 +36,9 @@ public class TestCommonUtil {
     assertEquals("s3:///cat", CommonUtil.makeQualified("s3:///cat"));
     assertEquals("s3://bucket/cat", CommonUtil.makeQualified("s3://bucket/cat?param=foo"));
     assertEquals("s3://bucket/cat", CommonUtil.makeQualified("s3://bucket/cat#frag=0"));
+
+    // Case 4: absolute local file path
+    assertEquals("file:///cat", CommonUtil.makeQualified("/cat"));
+    assertEquals("file:///var/folders/test", CommonUtil.makeQualified("/var/folders/test"));
   }
 }

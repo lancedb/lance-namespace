@@ -22,14 +22,18 @@ import org.apache.hadoop.hive.metastore.api.Catalog;
 import org.apache.hadoop.hive.metastore.api.Database;
 import org.apache.hadoop.hive.metastore.api.NoSuchObjectException;
 import org.apache.hadoop.hive.metastore.api.PrincipalType;
+import org.apache.hadoop.hive.metastore.api.Table;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.thrift.TException;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.lancedb.lance.namespace.hive.ErrorType.HiveMetaStoreError;
+import static com.lancedb.lance.namespace.hive.ErrorType.InvalidLanceTable;
 import static com.lancedb.lance.namespace.hive.ErrorType.UnknownCatalog;
 
 public class HiveUtil {
@@ -137,5 +141,56 @@ public class HiveUtil {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static Optional<Table> getTable(HiveClientPool clientPool, String db, String table) {
+    try {
+      return Optional.of(clientPool.run(client -> client.getTable(db, table)));
+    } catch (NoSuchObjectException e) {
+      return Optional.empty();
+    } catch (TException | InterruptedException e) {
+      if (e instanceof InterruptedException) {
+        Thread.currentThread().interrupt();
+      }
+      throw LanceNamespaceException.serviceUnavailable(
+          e.getMessage(), HiveMetaStoreError.getType(), "", CommonUtil.formatCurrentStackTrace());
+    }
+  }
+
+  public static Optional<Table> getTable(
+      HiveClientPool clientPool, String catalog, String db, String table) {
+    try {
+      return Optional.of(clientPool.run(client -> client.getTable(catalog, db, table)));
+    } catch (NoSuchObjectException e) {
+      return Optional.empty();
+    } catch (TException | InterruptedException e) {
+      if (e instanceof InterruptedException) {
+        Thread.currentThread().interrupt();
+      }
+      throw LanceNamespaceException.serviceUnavailable(
+          e.getMessage(), HiveMetaStoreError.getType(), "", CommonUtil.formatCurrentStackTrace());
+    }
+  }
+
+  public static void validateLanceTable(Table table) {
+    Map<String, String> params = table.getParameters();
+    if (params == null || !"lance".equalsIgnoreCase(params.get("table_type"))) {
+      throw LanceNamespaceException.badRequest(
+          String.format(
+              "Table %s.%s is not a Lance table", table.getDbName(), table.getTableName()),
+          InvalidLanceTable.getType(),
+          String.format("%s.%s", table.getDbName(), table.getTableName()),
+          CommonUtil.formatCurrentStackTrace());
+    }
+  }
+
+  public static Map<String, String> createLanceTableParams(Map<String, String> properties) {
+    Map<String, String> params = new HashMap<>();
+    if (properties != null) {
+      params.putAll(properties);
+    }
+    params.put("table_type", "lance");
+    params.putIfAbsent("managed_by", "storage");
+    return params;
   }
 }

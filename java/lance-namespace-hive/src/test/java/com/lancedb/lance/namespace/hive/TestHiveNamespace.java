@@ -18,6 +18,15 @@ import com.lancedb.lance.namespace.LanceNamespaceException;
 import com.lancedb.lance.namespace.LanceNamespaces;
 import com.lancedb.lance.namespace.ObjectIdentifier;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
+import com.lancedb.lance.namespace.model.CreateTableRequest;
+import com.lancedb.lance.namespace.model.CreateTableResponse;
+import com.lancedb.lance.namespace.model.DescribeTableRequest;
+import com.lancedb.lance.namespace.model.DescribeTableResponse;
+import com.lancedb.lance.namespace.model.DropTableRequest;
+import com.lancedb.lance.namespace.model.DropTableResponse;
+import com.lancedb.lance.namespace.model.JsonArrowDataType;
+import com.lancedb.lance.namespace.model.JsonArrowField;
+import com.lancedb.lance.namespace.model.JsonArrowSchema;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 
@@ -25,6 +34,14 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
+import org.apache.arrow.vector.IntVector;
+import org.apache.arrow.vector.VarCharVector;
+import org.apache.arrow.vector.VectorSchemaRoot;
+import org.apache.arrow.vector.ipc.ArrowStreamWriter;
+import org.apache.arrow.vector.types.pojo.ArrowType;
+import org.apache.arrow.vector.types.pojo.Field;
+import org.apache.arrow.vector.types.pojo.FieldType;
+import org.apache.arrow.vector.types.pojo.Schema;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.api.Catalog;
 import org.apache.hadoop.hive.metastore.api.Database;
@@ -40,8 +57,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.channels.Channels;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,11 +78,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class TestHiveNamespace {
+
+  private static BufferAllocator allocator;
   private static LocalHiveMetastore metastore;
   private static String tmpDirBase;
 
   @BeforeAll
   public static void setup() throws IOException {
+    allocator = new RootAllocator(Long.MAX_VALUE);
     metastore = new LocalHiveMetastore();
     metastore.start();
 
@@ -72,7 +96,13 @@ public class TestHiveNamespace {
 
   @AfterAll
   public static void teardown() throws Exception {
-    metastore.stop();
+
+    if (allocator != null) {
+      allocator.close();
+    }
+    if (metastore != null) {
+      metastore.stop();
+    }
 
     File file = new File(tmpDirBase);
     file.delete();
@@ -232,7 +262,7 @@ public class TestHiveNamespace {
 
     HiveConf hiveConf = metastore.hiveConf();
     HiveNamespace namespace =
-        (HiveNamespace) LanceNamespaces.create("hive", Maps.newHashMap(), hiveConf);
+        (HiveNamespace) LanceNamespaces.connect("hive", Maps.newHashMap(), hiveConf, allocator);
 
     testCreateCatalog(namespace);
 
@@ -361,6 +391,274 @@ public class TestHiveNamespace {
                   });
         }
       }
+    }
+  }
+
+  @Test
+  public void testTableOperationsV3() throws Exception {
+    assumeTrue(HiveVersion.version() == HiveVersion.V3);
+
+    HiveConf hiveConf = metastore.hiveConf();
+    HiveNamespace namespace =
+        (HiveNamespace) LanceNamespaces.connect("hive", Maps.newHashMap(), hiveConf, allocator);
+
+    // Setup: Create catalog and database
+    CreateNamespaceRequest nsRequest = new CreateNamespaceRequest();
+    Map<String, String> properties = Maps.newHashMap();
+    properties.put(
+        HiveNamespaceConfig.CATALOG_LOCATION_URI, "file://" + tmpDirBase + "/test_catalog");
+    nsRequest.setProperties(properties);
+    nsRequest.setId(Lists.list("test_catalog"));
+    nsRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+    namespace.createNamespace(nsRequest);
+
+    nsRequest.setId(Lists.list("test_catalog", "test_db"));
+    namespace.createNamespace(nsRequest);
+
+    testCreateTable(namespace);
+    testDescribeTable(namespace);
+    testDropTable(namespace);
+  }
+
+  private void testCreateTable(HiveNamespace namespace) throws IOException {
+    // Case 1: Create table with valid parameters
+    CreateTableRequest request = new CreateTableRequest();
+    request.setId(Lists.list("test_catalog", "test_db", "test_table"));
+    request.setLocation(tmpDirBase + "/test_catalog/test_db/test_table.lance");
+
+    // Create a simple schema
+    JsonArrowSchema schema = createTestSchema();
+    request.setSchema(schema);
+
+    Map<String, String> properties = Maps.newHashMap();
+    properties.put("custom_prop", "custom_value");
+    request.setProperties(properties);
+
+    // Create with data
+    byte[] testData = createTestData();
+    CreateTableResponse response = namespace.createTable(request, testData);
+
+    assertEquals(request.getLocation(), response.getLocation());
+    assertEquals(1L, response.getVersion());
+
+    // Case 2: Create table that already exists
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.createTable(request, testData));
+    assertTrue(error.getMessage().contains("Table test_catalog.test_db.test_table already exists"));
+
+    // Case 3: Create table with managed_by=impl (not supported)
+    CreateTableRequest implRequest = new CreateTableRequest();
+    implRequest.setId(Lists.list("test_catalog", "test_db", "impl_table"));
+    implRequest.setLocation(tmpDirBase + "/test_catalog/test_db/impl_table.lance");
+    implRequest.setSchema(schema);
+    Map<String, String> implProps = Maps.newHashMap();
+    implProps.put("managed_by", "impl");
+    implRequest.setProperties(implProps);
+
+    error =
+        assertThrows(
+            UnsupportedOperationException.class,
+            () -> namespace.createTable(implRequest, testData));
+    assertTrue(error.getMessage().contains("managed_by=impl is not supported yet"));
+
+    // Case 4: Create table without data
+    CreateTableRequest noDataRequest = new CreateTableRequest();
+    noDataRequest.setId(Lists.list("test_catalog", "test_db", "no_data_table"));
+    noDataRequest.setLocation(tmpDirBase + "/test_catalog/test_db/no_data_table.lance");
+    noDataRequest.setSchema(schema);
+
+    byte[] emptyData = createEmptyArrowData();
+    response = namespace.createTable(noDataRequest, emptyData);
+    assertEquals(noDataRequest.getLocation(), response.getLocation());
+  }
+
+  private void testDescribeTable(HiveNamespace namespace) {
+    // Case 1: Describe existing Lance table
+    DescribeTableRequest request = new DescribeTableRequest();
+    request.setId(Lists.list("test_catalog", "test_db", "test_table"));
+
+    DescribeTableResponse response = namespace.describeTable(request);
+    assertEquals(tmpDirBase + "/test_catalog/test_db/test_table.lance", response.getLocation());
+
+    // Case 2: Describe non-existent table
+    request.setId(Lists.list("test_catalog", "test_db", "non_existent"));
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.describeTable(request));
+    assertTrue(error.getMessage().contains("Table does not exist"));
+
+    // Case 3: Describe non-Lance table
+    // First create a non-Lance table in HMS
+    try {
+      metastore
+          .clientPool()
+          .run(
+              client -> {
+                Table t = new Table();
+                t.setCatName("test_catalog");
+                t.setDbName("test_db");
+                t.setTableName("non_lance_table");
+                t.setTableType("EXTERNAL_TABLE");
+                StorageDescriptor sd = new StorageDescriptor();
+                sd.setLocation(tmpDirBase + "/non_lance_table");
+                sd.setCols(Lists.list(new FieldSchema("c1", serdeConstants.INT_TYPE_NAME, "")));
+                sd.setSerdeInfo(new SerDeInfo());
+                t.setSd(sd);
+                t.setPartitionKeys(Lists.list());
+                // Don't set Lance parameters
+                t.setParameters(Maps.newHashMap());
+                client.createTable(t);
+                return null;
+              });
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+
+    request.setId(Lists.list("test_catalog", "test_db", "non_lance_table"));
+    error = assertThrows(LanceNamespaceException.class, () -> namespace.describeTable(request));
+    assertTrue(error.getMessage().contains("is not a Lance table"));
+  }
+
+  private void testDropTable(HiveNamespace namespace) {
+    // Case 1: Drop existing table
+    DropTableRequest request = new DropTableRequest();
+    request.setId(Lists.list("test_catalog", "test_db", "test_table"));
+
+    DropTableResponse response = namespace.dropTable(request);
+    assertEquals(tmpDirBase + "/test_catalog/test_db/test_table.lance", response.getLocation());
+    assertEquals(request.getId(), response.getId());
+
+    // Verify table is dropped by trying to describe it
+    DescribeTableRequest descRequest = new DescribeTableRequest();
+    descRequest.setId(request.getId());
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.describeTable(descRequest));
+    assertTrue(error.getMessage().contains("Table does not exist"));
+
+    // Case 2: Drop non-existent table
+    request.setId(Lists.list("test_catalog", "test_db", "already_dropped"));
+    error = assertThrows(LanceNamespaceException.class, () -> namespace.dropTable(request));
+    assertTrue(
+        error.getMessage().contains("Table test_catalog.test_db.already_dropped does not exist"));
+
+    // Case 3: Drop non-Lance table
+    request.setId(Lists.list("test_catalog", "test_db", "non_lance_table"));
+    error = assertThrows(LanceNamespaceException.class, () -> namespace.dropTable(request));
+    assertTrue(error.getMessage().contains("is not a Lance table"));
+  }
+
+  @Test
+  public void testTableOperationsV2() throws Exception {
+    assumeTrue(HiveVersion.version() == HiveVersion.V2);
+
+    HiveConf hiveConf = metastore.hiveConf();
+    HiveNamespace namespace =
+        (HiveNamespace) LanceNamespaces.connect("hive", Maps.newHashMap(), hiveConf, allocator);
+
+    // Setup: Create database
+    CreateNamespaceRequest nsRequest = new CreateNamespaceRequest();
+    nsRequest.setId(Lists.list("test_db_v2"));
+    nsRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+    namespace.createNamespace(nsRequest);
+
+    // Test create table
+    CreateTableRequest createRequest = new CreateTableRequest();
+    createRequest.setId(Lists.list("test_db_v2", "test_table_v2"));
+    createRequest.setLocation(tmpDirBase + "/test_db_v2/test_table_v2.lance");
+    createRequest.setSchema(createTestSchema());
+
+    byte[] testData = createTestData();
+    CreateTableResponse createResponse = namespace.createTable(createRequest, testData);
+    assertEquals(createRequest.getLocation(), createResponse.getLocation());
+
+    // Test describe table
+    DescribeTableRequest descRequest = new DescribeTableRequest();
+    descRequest.setId(Lists.list("test_db_v2", "test_table_v2"));
+    DescribeTableResponse descResponse = namespace.describeTable(descRequest);
+    assertEquals(createRequest.getLocation(), descResponse.getLocation());
+
+    // Test drop table
+    DropTableRequest dropRequest = new DropTableRequest();
+    dropRequest.setId(Lists.list("test_db_v2", "test_table_v2"));
+    DropTableResponse dropResponse = namespace.dropTable(dropRequest);
+    assertEquals(createRequest.getLocation(), dropResponse.getLocation());
+  }
+
+  private JsonArrowSchema createTestSchema() {
+    JsonArrowSchema schema = new JsonArrowSchema();
+
+    JsonArrowDataType intType = new JsonArrowDataType();
+    intType.setType("int32");
+
+    JsonArrowDataType stringType = new JsonArrowDataType();
+    stringType.setType("utf8");
+
+    JsonArrowField idField = new JsonArrowField();
+    idField.setName("id");
+    idField.setType(intType);
+    idField.setNullable(false);
+
+    JsonArrowField nameField = new JsonArrowField();
+    nameField.setName("name");
+    nameField.setType(stringType);
+    nameField.setNullable(true);
+
+    schema.setFields(Arrays.asList(idField, nameField));
+    return schema;
+  }
+
+  private byte[] createTestData() throws IOException {
+    Schema arrowSchema =
+        new Schema(
+            Arrays.asList(
+                new Field("id", FieldType.nullable(new ArrowType.Int(32, true)), null),
+                new Field("name", FieldType.nullable(new ArrowType.Utf8()), null)));
+
+    try (VectorSchemaRoot root = VectorSchemaRoot.create(arrowSchema, allocator)) {
+      IntVector idVector = (IntVector) root.getVector("id");
+      VarCharVector nameVector = (VarCharVector) root.getVector("name");
+
+      // Add some test data
+      root.setRowCount(3);
+      idVector.setSafe(0, 1);
+      idVector.setSafe(1, 2);
+      idVector.setSafe(2, 3);
+
+      nameVector.setSafe(0, "Alice".getBytes(StandardCharsets.UTF_8));
+      nameVector.setSafe(1, "Bob".getBytes(StandardCharsets.UTF_8));
+      nameVector.setSafe(2, "Charlie".getBytes(StandardCharsets.UTF_8));
+
+      // Serialize to Arrow IPC format
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      try (ArrowStreamWriter writer = new ArrowStreamWriter(root, null, Channels.newChannel(out))) {
+        writer.start();
+        writer.writeBatch();
+        writer.end();
+      }
+
+      return out.toByteArray();
+    }
+  }
+
+  private byte[] createEmptyArrowData() throws IOException {
+    Schema arrowSchema =
+        new Schema(
+            Arrays.asList(
+                new Field("id", FieldType.nullable(new ArrowType.Int(32, true)), null),
+                new Field("name", FieldType.nullable(new ArrowType.Utf8()), null)));
+
+    try (VectorSchemaRoot root = VectorSchemaRoot.create(arrowSchema, allocator)) {
+      // Set row count to 0 for empty data
+      root.setRowCount(0);
+
+      // Serialize to Arrow IPC format
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      try (ArrowStreamWriter writer = new ArrowStreamWriter(root, null, Channels.newChannel(out))) {
+        writer.start();
+        writer.writeBatch();
+        writer.end();
+      }
+
+      return out.toByteArray();
     }
   }
 }

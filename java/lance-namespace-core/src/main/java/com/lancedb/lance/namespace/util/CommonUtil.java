@@ -37,7 +37,10 @@ public class CommonUtil {
    */
   public static String makeQualified(String absolutePath) {
     try {
-      URI uri = new URI(absolutePath);
+      // Handle absolute local file paths that start with /
+      String uriString = absolutePath.startsWith("/") ? "file://" + absolutePath : absolutePath;
+
+      URI uri = new URI(uriString);
       ValidationUtil.checkArgument(
           uri.isAbsolute(), "Couldn't parse %s because it is not absolute.", absolutePath);
 
