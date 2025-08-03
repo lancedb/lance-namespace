@@ -78,8 +78,10 @@ public class TestHive2Namespace {
       metastore.stop();
     }
 
-    File file = new File(tmpDirBase);
-    file.delete();
+    if (tmpDirBase != null) {
+      File file = new File(tmpDirBase);
+      file.delete();
+    }
   }
 
   @AfterEach
