@@ -91,7 +91,9 @@
         <module>lance-namespace-springboot-server</module>
         <module>lance-namespace-core</module>
         <module>lance-namespace-adapter</module>
-        <module>lance-namespace-hive</module>
+        <module>lance-namespace-hive-base</module>
+        <module>lance-namespace-hive2</module>
+        <module>lance-namespace-hive3</module>
         <module>lance-namespace-glue</module>
         <module>lance-namespace-lancedb</module>
     </modules>
@@ -152,6 +154,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
         </plugins>
 
         <pluginManagement>
@@ -192,6 +202,31 @@
                             <phase>validate</phase>
                             <goals>
                                 <goal>apply</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.3.0</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>test-jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.3.0</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal>
                             </goals>
                         </execution>
                     </executions>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+      <groupId>com.lancedb</groupId>
+      <artifactId>lance-namespace-root</artifactId>
+      <version>0.0.5</version>
+      <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>lance-namespace-hive3</artifactId>
+    <name>${project.artifactId}</name>
+    <description>Lance Namespace Apache Hive 3.x MetaStore Implementation</description>
+    <packaging>jar</packaging>
+
+    <dependencies>
+      <dependency>
+        <groupId>com.lancedb</groupId>
+        <artifactId>lance-namespace-hive-base</artifactId>
+        <version>${lance-namespace.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hive</groupId>
+        <artifactId>hive-standalone-metastore</artifactId>
+        <version>3.1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hive</groupId>
+        <artifactId>hive-exec</artifactId>
+        <version>3.1.3</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.tdunning</groupId>
+            <artifactId>json</artifactId>
+          </exclusion>
+        </exclusions>
+        <classifier>core</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>com.lancedb</groupId>
+        <artifactId>lance-namespace-hive-base</artifactId>
+        <version>${lance-namespace.version}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.11.3</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>3.26.3</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+</project>

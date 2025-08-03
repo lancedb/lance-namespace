@@ -70,10 +70,16 @@ build-adapter:
 	./mvnw spotless:apply -pl lance-namespace-adapter -am
 	./mvnw install -pl lance-namespace-adapter -am
 
-.PHONY: build-hive
-build-hive:
-	./mvnw spotless:apply -pl lance-namespace-hive -am
-	./mvnw install -pl lance-namespace-hive -am
+.PHONY: build-hive2
+build-hive2:
+	./mvnw spotless:apply -pl lance-namespace-hive2 -am
+	./mvnw install -pl lance-namespace-hive2 -am
+
+.PHONY: build-hive3
+build-hive3:
+	./mvnw spotless:apply -pl lance-namespace-hive3 -am
+	./mvnw install -pl lance-namespace-hive3 -am
+
 
 .PHONY: build-glue
 build-glue:
@@ -92,4 +98,4 @@ clean: clean-apache-client clean-springboot-server
 gen: gen-apache-client gen-springboot-server lint-apache-client lint-springboot-server
 
 .PHONY: build
-build: build-apache-client build-springboot-server build-core build-adapter build-hive build-glue build-lancedb
+build: build-apache-client build-springboot-server build-core build-adapter build-hive2 build-hive3 build-glue build-lancedb
