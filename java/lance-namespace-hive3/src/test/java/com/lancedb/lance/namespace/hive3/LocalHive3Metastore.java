@@ -13,9 +13,6 @@
  */
 package com.lancedb.lance.namespace.hive3;
 
-import com.lancedb.lance.namespace.util.DynConstructors;
-import com.lancedb.lance.namespace.util.DynMethods;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -25,6 +22,7 @@ import org.apache.hadoop.hive.metastore.HiveMetaStore;
 import org.apache.hadoop.hive.metastore.IHMSHandler;
 import org.apache.hadoop.hive.metastore.RetryingHMSHandler;
 import org.apache.hadoop.hive.metastore.TSetIpAddressProcessor;
+import org.apache.hadoop.hive.metastore.ThreadPool;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;
@@ -48,38 +46,6 @@ public class LocalHive3Metastore {
 
   private static final String DEFAULT_DATABASE_NAME = "default";
   private static final int DEFAULT_POOL_SIZE = 5;
-
-  // create the metastore handlers based on whether we're working with Hive2 or Hive3 dependencies
-  // we need to do this because there is a breaking API change between Hive2 and Hive3
-  private static final DynConstructors.Ctor<HiveMetaStore.HMSHandler> HMS_HANDLER_CTOR =
-      DynConstructors.builder()
-          .impl(HiveMetaStore.HMSHandler.class, String.class, Configuration.class)
-          .impl(HiveMetaStore.HMSHandler.class, String.class, HiveConf.class)
-          .build();
-
-  private static final DynMethods.StaticMethod GET_BASE_HMS_HANDLER =
-      DynMethods.builder("getProxy")
-          .impl(RetryingHMSHandler.class, Configuration.class, IHMSHandler.class, boolean.class)
-          .impl(RetryingHMSHandler.class, HiveConf.class, IHMSHandler.class, boolean.class)
-          .buildStatic();
-
-  // Hive3 introduces background metastore tasks (MetastoreTaskThread) for performing various
-  // cleanup duties. These
-  // threads are scheduled and executed in a static thread pool
-  // (org.apache.hadoop.hive.metastore.ThreadPool).
-  // This thread pool is shut down normally as part of the JVM shutdown hook, but since we're
-  // creating and tearing down
-  // multiple metastore instances within the same JVM, we have to call this cleanup method manually,
-  // otherwise
-  // threads from our previous test suite will be stuck in the pool with stale config, and keep on
-  // being scheduled.
-  // This can lead to issues, e.g. accidental Persistence Manager closure by
-  // ScheduledQueryExecutionsMaintTask.
-  private static final DynMethods.StaticMethod METASTORE_THREADS_SHUTDOWN =
-      DynMethods.builder("shutdown")
-          .impl("org.apache.hadoop.hive.metastore.ThreadPool")
-          .orNoop()
-          .buildStatic();
 
   // It's tricky to clear all static fields in an HMS instance in order to switch derby root dir.
   // Therefore, we reuse the same derby root between tests and remove it after JVM exits.
@@ -196,7 +162,8 @@ public class LocalHive3Metastore {
     if (baseHandler != null) {
       baseHandler.shutdown();
     }
-    METASTORE_THREADS_SHUTDOWN.invoke();
+
+    ThreadPool.shutdown();
   }
 
   public HiveConf hiveConf() {
@@ -306,14 +273,5 @@ public class LocalHive3Metastore {
     // Always set DataNucleus settings for schema initialization
     conf.set("datanucleus.schema.autoCreateAll", "true");
     conf.set("datanucleus.autoCreateSchema", "true");
-
-    // Disable background metastore tasks that can cause ClassNotFoundException in test environment
-    //    conf.set("metastore.task.threads.always", "");
-    //    conf.set("metastore.task.threads.remote", "");
-    //    conf.set("hive.metastore.task.threads.always", "");
-    //    conf.set("hive.metastore.task.threads.remote", "");
-    //    // Disable specific problematic tasks
-    //    conf.set("hive.metastore.repl.dumpdir.clean.task", "false");
-    //    conf.set("hive.metastore.scheduled.queries.execution.maintenance", "false");
   }
 }

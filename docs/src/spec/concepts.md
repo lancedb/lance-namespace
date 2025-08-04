@@ -42,38 +42,45 @@ The identifier of any object must be unique among all other objects that share t
 
 Based on the uniqueness property of an object name within its parent namespace,
 an object identifier is the list of object names starting from (not including) the root namespace to (including) the object itself.
-This is also called an **list identifier**.
+This is also called an **list style identifier**.
 For examples:
 
-- the list identifier of `cat5` is `[cat2, cat5]`
-- the list identifier of `t1` is `[cat2, cat5, t1]`
+- the list style identifier of `cat5` is `[cat2, cat5]`
+- the list style identifier of `t1` is `[cat2, cat5, t1]`
 
-The dot (`.`) symbol is typically used as the delimiter to join all the names to form an **string identifier**,
+The dot (`.`) symbol is typically used as the delimiter to join all the names to form an **string style identifier**,
 but other symbols could also be used if dot is used in the object name.
 For examples:
 
-- the string identifier of `cat5` is `cat2.cat5`
-- the string identifier of `t1` is `cat2.cat5.t1`
-- the string identifier of `t3` is `cat4$t3` when using delimiter `$`
+- the string style identifier of `cat5` is `cat2.cat5`
+- the string style identifier of `t1` is `cat2.cat5.t1`
+- the string style identifier of `t3` is `cat4$t3` when using delimiter `$`
 
 ## Name and Identifier for Root Namespace
 
 The root namespace itself has no name or identifier.
-When represented in code, its name and string identifier is represented by an empty or null string,
-and its list identifier is represented by an empty or null list.
+When represented in code, its name and string style identifier is represented by an empty or null string,
+and its list style identifier is represented by an empty or null list.
 
 The actual name and identifier of the root namespace is typically
 assigned by users through some configuration when used in a tool.
 For example, a root namespace can be called `cat1` in Ray, but called `cat2` in Apache Spark,
 and they are both configured to connect to the same root namespace.
 
-## Namespace Level
+## Object Level
 
-If every table has the same number of namespaces all the way to the root namespace,
-the namespace is called **leveled**. The [example above](#namespace-definition) is not leveled
-because `t1` has 2 namespaces `ns1` and `ns4` before root, whereas `t2` has 1 namespace `ns2` before root.
+The root namespace is always at level 0.
+This means if an object has list style identifier with list size `N`, 
+the object is at the `N`th level in the entire namespace hierarchy.
+We also say the object identifier has `N` levels.
+For examples, a namespace `[ns1, ns2]` is at level 2, the identifier `ns1.ns2` has 2 levels.
+A table `[catalog1, database2, table3]` is at level 3, the identifier `catalog1.database2.table3` has 3 levels.
 
-For a leveled namespace, the number of namespaces up to and including the root for any table 
-is referred to as the **number of levels**.
+### Leveled Namespace
+
+If every table in the root namespace are at the same level `N`, the namespace is called **leveled**,
+and we say this namespace is a `N`-level namespace.
 For example, a [directory namespace](../impls/dir) is a 1-level namespace,
 and a [Hive 2.x namespace](../impls/hive) is a 2-level namespace.
+The [example above](#namespace-definition) is not leveled
+because `t1` has 2 namespaces `ns1` and `ns4` before root, whereas `t2` has 1 namespace `ns2` before root.

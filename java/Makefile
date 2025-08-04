@@ -51,6 +51,8 @@ gen-springboot-server: clean-springboot-server
       --additional-properties=groupId=com.lancedb,artifactId=lance-namespace-springboot-server,artifactVersion=$(VERSION),parentGroupId=com.lancedb,parentArtifactId=lance-namespace-root,parentVersion=$(VERSION),parentRelativePath=pom.xml,library=spring-boot,interfaceOnly=true,useOptional=true,openApiNullable=false,java8=true,apiPackage=com.lancedb.lance.namespace.server.springboot.api,modelPackage=com.lancedb.lance.namespace.server.springboot.model,useTags=true,skipDefaultInterface=false,hideGenerationTimestamp=true,licenseName=Apache-2.0,licenseUrl=https://www.apache.org/licenses/LICENSE-2.0.txt
 	rm -rf lance-namespace-springboot-server/.openapi-generator-ignore
 	rm -rf lance-namespace-springboot-server/.openapi-generator
+	rm -rf lance-namespace-springboot-server/pom.xml
+	cp springboot-server-pom.xml lance-namespace-springboot-server/pom.xml
 
 .PHONY: lint-springboot-server
 lint-springboot-server: gen-apache-client gen-springboot-server
@@ -79,7 +81,6 @@ build-hive2:
 build-hive3:
 	./mvnw spotless:apply -pl lance-namespace-hive3 -am
 	./mvnw install -pl lance-namespace-hive3 -am
-
 
 .PHONY: build-glue
 build-glue:

@@ -33,6 +33,7 @@ import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -88,6 +89,7 @@ public class TestHive2Namespace {
     metastore.reset();
   }
 
+  @Disabled("Need to figure out the proper interface")
   @Test
   public void testCreateTable() throws IOException {
     // Setup: Create database

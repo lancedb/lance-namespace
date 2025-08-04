@@ -164,6 +164,7 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
         tableId.levels() == 3, "Expect 3-level table identifier but get %s", tableId);
 
     String location = doDropTable(tableId);
+    // TODO: remove data
 
     DropTableResponse response = new DropTableResponse();
     response.setLocation(location);
