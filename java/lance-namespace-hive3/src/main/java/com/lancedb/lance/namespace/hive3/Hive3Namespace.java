@@ -227,7 +227,6 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
       String catalogName, CreateNamespaceRequest.ModeEnum mode, Map<String, String> properties)
       throws TException, InterruptedException {
 
-    // Check if catalog already exists
     Catalog existingCatalog = Hive3Util.getCatalogOrNull(clientPool, catalogName);
     if (existingCatalog != null) {
       switch (mode) {
@@ -248,22 +247,16 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
       }
     }
 
-    // Create new catalog
     Catalog catalog = new Catalog();
     catalog.setName(catalogName);
 
-    // Set catalog location from properties or use default
     String locationUri = properties != null ? properties.get("catalog.location.uri") : null;
     if (locationUri == null) {
       locationUri =
-          "file://"
-              + hadoopConf.get(HiveConf.ConfVars.METASTOREWAREHOUSE.varname)
-              + "/"
-              + catalogName;
+          hadoopConf.get(HiveConf.ConfVars.METASTOREWAREHOUSE.varname) + "/" + catalogName;
     }
     catalog.setLocationUri(locationUri);
 
-    // Set description from properties
     String description = properties != null ? properties.get("description") : null;
     if (description != null) {
       catalog.setDescription(description);
