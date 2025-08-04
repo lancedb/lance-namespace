@@ -299,8 +299,7 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
       table.setDbName(db);
       table.setTableName(tableName);
       table.setTableType("EXTERNAL_TABLE");
-      table.setPartitionKeys(
-          Lists.newArrayList());
+      table.setPartitionKeys(Lists.newArrayList());
 
       StorageDescriptor sd = new StorageDescriptor();
       sd.setLocation(location);

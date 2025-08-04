@@ -16,9 +16,7 @@ package com.lancedb.lance.namespace.hive3;
 import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.LanceNamespaceException;
 import com.lancedb.lance.namespace.LanceNamespaces;
-import com.lancedb.lance.namespace.hive.base.BaseHiveTestHelper;
-import com.lancedb.lance.namespace.hive.base.HiveNamespaceConfig;
-import com.lancedb.lance.namespace.hive.base.LocalHiveMetastore;
+import com.lancedb.lance.namespace.TestHelper;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
@@ -51,14 +49,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TestHive3Namespace {
 
   private static BufferAllocator allocator;
-  private static LocalHiveMetastore metastore;
+  private static LocalHive3Metastore metastore;
   private static String tmpDirBase;
   private static LanceNamespace namespace;
 
   @BeforeAll
   public static void setup() throws IOException {
     allocator = new RootAllocator(Long.MAX_VALUE);
-    metastore = new LocalHiveMetastore();
+    metastore = new LocalHive3Metastore();
     metastore.start();
 
     File file =
@@ -67,13 +65,12 @@ public class TestHive3Namespace {
     tmpDirBase = file.getAbsolutePath();
 
     HiveConf hiveConf = metastore.hiveConf();
-    namespace = LanceNamespaces.connect("hive", Maps.newHashMap(), hiveConf, allocator);
+    namespace = LanceNamespaces.connect("hive3", Maps.newHashMap(), hiveConf, allocator);
 
     // Setup: Create catalog and database for tests
     CreateNamespaceRequest nsRequest = new CreateNamespaceRequest();
     Map<String, String> properties = Maps.newHashMap();
-    properties.put(
-        HiveNamespaceConfig.CATALOG_LOCATION_URI, "file://" + tmpDirBase + "/test_catalog");
+    properties.put("catalog.location.uri", "file://" + tmpDirBase + "/test_catalog");
     nsRequest.setProperties(properties);
     nsRequest.setId(Lists.list("test_catalog"));
     nsRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
@@ -92,8 +89,10 @@ public class TestHive3Namespace {
       metastore.stop();
     }
 
-    File file = new File(tmpDirBase);
-    file.delete();
+    if (tmpDirBase != null) {
+      File file = new File(tmpDirBase);
+      file.delete();
+    }
   }
 
   @AfterEach
@@ -103,8 +102,7 @@ public class TestHive3Namespace {
     // Re-setup catalog and database after cleanup
     CreateNamespaceRequest nsRequest = new CreateNamespaceRequest();
     Map<String, String> properties = Maps.newHashMap();
-    properties.put(
-        HiveNamespaceConfig.CATALOG_LOCATION_URI, "file://" + tmpDirBase + "/test_catalog");
+    properties.put("catalog.location.uri", "file://" + tmpDirBase + "/test_catalog");
     nsRequest.setProperties(properties);
     nsRequest.setId(Lists.list("test_catalog"));
     nsRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
@@ -120,13 +118,13 @@ public class TestHive3Namespace {
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Lists.list("test_catalog", "test_db", "test_table"));
     request.setLocation(tmpDirBase + "/test_catalog/test_db/test_table.lance");
-    request.setSchema(BaseHiveTestHelper.createTestSchema());
+    request.setSchema(TestHelper.createTestSchema());
 
     Map<String, String> properties = Maps.newHashMap();
     properties.put("custom_prop", "custom_value");
     request.setProperties(properties);
 
-    byte[] testData = BaseHiveTestHelper.createTestArrowData(allocator);
+    byte[] testData = TestHelper.createTestArrowData(allocator);
     CreateTableResponse response = namespace.createTable(request, testData);
 
     assertEquals(request.getLocation(), response.getLocation());
@@ -139,9 +137,9 @@ public class TestHive3Namespace {
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Lists.list("test_catalog", "test_db", "test_table"));
     request.setLocation(tmpDirBase + "/test_catalog/test_db/test_table.lance");
-    request.setSchema(BaseHiveTestHelper.createTestSchema());
+    request.setSchema(TestHelper.createTestSchema());
 
-    byte[] testData = BaseHiveTestHelper.createTestArrowData(allocator);
+    byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(request, testData);
 
     // Test: Create table that already exists
@@ -156,13 +154,13 @@ public class TestHive3Namespace {
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Lists.list("test_catalog", "test_db", "impl_table"));
     request.setLocation(tmpDirBase + "/test_catalog/test_db/impl_table.lance");
-    request.setSchema(BaseHiveTestHelper.createTestSchema());
+    request.setSchema(TestHelper.createTestSchema());
 
     Map<String, String> properties = Maps.newHashMap();
     properties.put("managed_by", "impl");
     request.setProperties(properties);
 
-    byte[] testData = BaseHiveTestHelper.createTestArrowData(allocator);
+    byte[] testData = TestHelper.createTestArrowData(allocator);
     Exception error =
         assertThrows(
             UnsupportedOperationException.class, () -> namespace.createTable(request, testData));
@@ -175,9 +173,9 @@ public class TestHive3Namespace {
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Lists.list("test_catalog", "test_db", "no_data_table"));
     request.setLocation(tmpDirBase + "/test_catalog/test_db/no_data_table.lance");
-    request.setSchema(BaseHiveTestHelper.createTestSchema());
+    request.setSchema(TestHelper.createTestSchema());
 
-    byte[] emptyData = BaseHiveTestHelper.createEmptyArrowData(allocator);
+    byte[] emptyData = TestHelper.createEmptyArrowData(allocator);
     CreateTableResponse response = namespace.createTable(request, emptyData);
     assertEquals(request.getLocation(), response.getLocation());
   }
@@ -188,9 +186,9 @@ public class TestHive3Namespace {
     CreateTableRequest createRequest = new CreateTableRequest();
     createRequest.setId(Lists.list("test_catalog", "test_db", "test_table"));
     createRequest.setLocation(tmpDirBase + "/test_catalog/test_db/test_table.lance");
-    createRequest.setSchema(BaseHiveTestHelper.createTestSchema());
+    createRequest.setSchema(TestHelper.createTestSchema());
 
-    byte[] testData = BaseHiveTestHelper.createTestArrowData(allocator);
+    byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(createRequest, testData);
 
     // Test: Describe existing Lance table
@@ -198,7 +196,8 @@ public class TestHive3Namespace {
     request.setId(Lists.list("test_catalog", "test_db", "test_table"));
 
     DescribeTableResponse response = namespace.describeTable(request);
-    assertEquals(tmpDirBase + "/test_catalog/test_db/test_table.lance", response.getLocation());
+    assertEquals(
+        "file:" + tmpDirBase + "/test_catalog/test_db/test_table.lance", response.getLocation());
   }
 
   @Test
@@ -217,9 +216,9 @@ public class TestHive3Namespace {
     CreateTableRequest createRequest = new CreateTableRequest();
     createRequest.setId(Lists.list("test_catalog", "test_db", "test_table"));
     createRequest.setLocation(tmpDirBase + "/test_catalog/test_db/test_table.lance");
-    createRequest.setSchema(BaseHiveTestHelper.createTestSchema());
+    createRequest.setSchema(TestHelper.createTestSchema());
 
-    byte[] testData = BaseHiveTestHelper.createTestArrowData(allocator);
+    byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(createRequest, testData);
 
     // Test: Drop existing table
@@ -227,7 +226,8 @@ public class TestHive3Namespace {
     request.setId(Lists.list("test_catalog", "test_db", "test_table"));
 
     DropTableResponse response = namespace.dropTable(request);
-    assertEquals(tmpDirBase + "/test_catalog/test_db/test_table.lance", response.getLocation());
+    assertEquals(
+        "file:" + tmpDirBase + "/test_catalog/test_db/test_table.lance", response.getLocation());
     assertEquals(request.getId(), response.getId());
 
     // Verify table is dropped by trying to describe it

@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.hive2;
+package com.lancedb.lance.namespace;
 
 import com.lancedb.lance.namespace.model.JsonArrowDataType;
 import com.lancedb.lance.namespace.model.JsonArrowField;
@@ -33,7 +33,7 @@ import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-public class BaseHiveTestHelper {
+public class TestHelper {
 
   public static JsonArrowSchema createTestSchema() {
     JsonArrowSchema schema = new JsonArrowSchema();

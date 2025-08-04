@@ -16,6 +16,7 @@ package com.lancedb.lance.namespace.hive2;
 import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.LanceNamespaceException;
 import com.lancedb.lance.namespace.LanceNamespaces;
+import com.lancedb.lance.namespace.TestHelper;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
@@ -99,13 +100,13 @@ public class TestHive2Namespace {
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Lists.list("test_db", "test_table"));
     request.setLocation(tmpDirBase + "/test_db/test_table.lance");
-    request.setSchema(BaseHiveTestHelper.createTestSchema());
+    request.setSchema(TestHelper.createTestSchema());
 
     Map<String, String> properties = Maps.newHashMap();
     properties.put("custom_prop", "custom_value");
     request.setProperties(properties);
 
-    byte[] testData = BaseHiveTestHelper.createTestArrowData(allocator);
+    byte[] testData = TestHelper.createTestArrowData(allocator);
     CreateTableResponse response = namespace.createTable(request, testData);
 
     assertEquals(request.getLocation(), response.getLocation());
@@ -123,9 +124,9 @@ public class TestHive2Namespace {
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Lists.list("test_db", "test_table"));
     request.setLocation(tmpDirBase + "/test_db/test_table.lance");
-    request.setSchema(BaseHiveTestHelper.createTestSchema());
+    request.setSchema(TestHelper.createTestSchema());
 
-    byte[] testData = BaseHiveTestHelper.createTestArrowData(allocator);
+    byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(request, testData);
 
     // Test: Create table that already exists
@@ -146,13 +147,13 @@ public class TestHive2Namespace {
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Lists.list("test_db", "impl_table"));
     request.setLocation(tmpDirBase + "/test_db/impl_table.lance");
-    request.setSchema(BaseHiveTestHelper.createTestSchema());
+    request.setSchema(TestHelper.createTestSchema());
 
     Map<String, String> properties = Maps.newHashMap();
     properties.put("managed_by", "impl");
     request.setProperties(properties);
 
-    byte[] testData = BaseHiveTestHelper.createTestArrowData(allocator);
+    byte[] testData = TestHelper.createTestArrowData(allocator);
     Exception error =
         assertThrows(
             UnsupportedOperationException.class, () -> namespace.createTable(request, testData));
@@ -171,9 +172,9 @@ public class TestHive2Namespace {
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Lists.list("test_db", "no_data_table"));
     request.setLocation(tmpDirBase + "/test_db/no_data_table.lance");
-    request.setSchema(BaseHiveTestHelper.createTestSchema());
+    request.setSchema(TestHelper.createTestSchema());
 
-    byte[] emptyData = BaseHiveTestHelper.createEmptyArrowData(allocator);
+    byte[] emptyData = TestHelper.createEmptyArrowData(allocator);
     CreateTableResponse response = namespace.createTable(request, emptyData);
     assertEquals(request.getLocation(), response.getLocation());
   }
@@ -189,9 +190,9 @@ public class TestHive2Namespace {
     CreateTableRequest createRequest = new CreateTableRequest();
     createRequest.setId(Lists.list("test_db", "test_table"));
     createRequest.setLocation(tmpDirBase + "/test_db/test_table.lance");
-    createRequest.setSchema(BaseHiveTestHelper.createTestSchema());
+    createRequest.setSchema(TestHelper.createTestSchema());
 
-    byte[] testData = BaseHiveTestHelper.createTestArrowData(allocator);
+    byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(createRequest, testData);
 
     // Test: Describe existing Lance table
@@ -229,9 +230,9 @@ public class TestHive2Namespace {
     CreateTableRequest createRequest = new CreateTableRequest();
     createRequest.setId(Lists.list("test_db", "test_table"));
     createRequest.setLocation(tmpDirBase + "/test_db/test_table.lance");
-    createRequest.setSchema(BaseHiveTestHelper.createTestSchema());
+    createRequest.setSchema(TestHelper.createTestSchema());
 
-    byte[] testData = BaseHiveTestHelper.createTestArrowData(allocator);
+    byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(createRequest, testData);
 
     // Test: Drop existing table
