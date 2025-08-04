@@ -118,7 +118,7 @@ public class TableController implements TableApi {
       byte[] data = readAllBytes(body.getInputStream());
       com.lancedb.lance.namespace.server.springboot.model.CreateTableRequest request =
           new com.lancedb.lance.namespace.server.springboot.model.CreateTableRequest();
-      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).idListStyle());
+      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listStyleId());
       xLanceTableLocation.ifPresent(request::setLocation);
       if (xLanceTableProperties.isPresent()) {
         // Parse JSON properties
@@ -177,7 +177,7 @@ public class TableController implements TableApi {
       byte[] data = readAllBytes(body.getInputStream());
       com.lancedb.lance.namespace.server.springboot.model.InsertIntoTableRequest request =
           new com.lancedb.lance.namespace.server.springboot.model.InsertIntoTableRequest();
-      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).idListStyle());
+      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listStyleId());
       request.setMode(
           com.lancedb.lance.namespace.server.springboot.model.InsertIntoTableRequest.ModeEnum
               .fromValue(mode.orElse("append")));
@@ -213,7 +213,7 @@ public class TableController implements TableApi {
       byte[] data = readAllBytes(body.getInputStream());
       com.lancedb.lance.namespace.server.springboot.model.MergeInsertIntoTableRequest request =
           new com.lancedb.lance.namespace.server.springboot.model.MergeInsertIntoTableRequest();
-      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).idListStyle());
+      request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listStyleId());
       request.setOn(on);
       request.setWhenMatchedUpdateAll(whenMatchedUpdateAll.orElse(false));
       whenMatchedUpdateAllFilt.ifPresent(request::setWhenMatchedUpdateAllFilt);

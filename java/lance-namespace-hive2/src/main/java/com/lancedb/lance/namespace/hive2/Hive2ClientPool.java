@@ -11,9 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.hive.base;
+package com.lancedb.lance.namespace.hive2;
 
-import com.lancedb.lance.namespace.util.DynMethods;
+import com.lancedb.lance.namespace.util.ClientPoolImpl;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.conf.HiveConf;
@@ -25,60 +25,37 @@ import org.apache.hadoop.hive.metastore.api.MetaException;
 import org.apache.thrift.TException;
 import org.apache.thrift.transport.TTransportException;
 
-// Copied from apache iceberg.
-// https://github.com/apache/iceberg/blob/main/hive-metastore/src/main/java/org/apache/iceberg/hive/HiveClientPool.java
-public class HiveClientPool extends ClientPoolImpl<IMetaStoreClient, TException> {
-
-  private static final DynMethods.StaticMethod GET_CLIENT =
-      DynMethods.builder("getProxy")
-          .impl(
-              RetryingMetaStoreClient.class,
-              HiveConf.class,
-              HiveMetaHookLoader.class,
-              String.class) // Hive 1 and 2
-          .impl(
-              RetryingMetaStoreClient.class,
-              Configuration.class,
-              HiveMetaHookLoader.class,
-              String.class) // Hive 3
-          .buildStatic();
+// Adapted from apache iceberg for Hive 2.x
+public class Hive2ClientPool extends ClientPoolImpl<IMetaStoreClient, TException> {
 
   private final HiveConf hiveConf;
 
-  public HiveClientPool(int poolSize, Configuration conf) {
+  public Hive2ClientPool(int poolSize, Configuration conf) {
     // Do not allow retry by default as we rely on RetryingHiveClient
     super(poolSize, TTransportException.class, false);
-    this.hiveConf = new HiveConf(conf, HiveClientPool.class);
+    this.hiveConf = new HiveConf(conf, Hive2ClientPool.class);
     this.hiveConf.addResource(conf);
   }
 
   @Override
   protected IMetaStoreClient newClient() {
     try {
-      try {
-        return GET_CLIENT.invoke(
-            hiveConf, (HiveMetaHookLoader) tbl -> null, HiveMetaStoreClient.class.getName());
-      } catch (RuntimeException e) {
-        // any MetaException would be wrapped into RuntimeException during reflection, so let's
-        // double-check type here
-        if (e.getCause() instanceof MetaException) {
-          throw (MetaException) e.getCause();
-        }
-        throw e;
-      }
+      // Hive 2.x specific client creation - no dynamic reflection needed
+      return RetryingMetaStoreClient.getProxy(
+          hiveConf, (HiveMetaHookLoader) tbl -> null, HiveMetaStoreClient.class.getName());
     } catch (MetaException e) {
-      throw new HiveMetaException(e, "Failed to connect to Hive Metastore");
+      throw new Hive2MetaException(e, "Failed to connect to Hive 2.x Metastore");
     } catch (Throwable t) {
       if (t.getMessage() != null
           && t.getMessage().contains("Another instance of Derby may have already booted")) {
-        throw new HiveMetaException(
+        throw new Hive2MetaException(
             t,
             "Failed to start an embedded metastore because embedded "
                 + "Derby supports only one client at a time. To fix this, use a metastore that"
                 + " supports multiple clients.");
       }
 
-      throw new HiveMetaException(t, "Failed to connect to Hive Metastore");
+      throw new Hive2MetaException(t, "Failed to connect to Hive 2.x Metastore");
     }
   }
 
@@ -88,7 +65,7 @@ public class HiveClientPool extends ClientPoolImpl<IMetaStoreClient, TException>
       client.close();
       client.reconnect();
     } catch (MetaException e) {
-      throw new HiveMetaException(e, "Failed to reconnect to Hive Metastore");
+      throw new Hive2MetaException(e, "Failed to reconnect to Hive 2.x Metastore");
     }
     return client;
   }

@@ -77,7 +77,7 @@ public class ServerToClientRequest {
   public static ListNamespacesRequest listNamespaces(
       String id, Optional<String> delimiter, Optional<String> pageToken, Optional<Integer> limit) {
     ListNamespacesRequest converted = new ListNamespacesRequest();
-    converted.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).idListStyle());
+    converted.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listStyleId());
     converted.setPageToken(pageToken.orElse(null));
     converted.setLimit(limit.orElse(null));
     return converted;
@@ -86,7 +86,7 @@ public class ServerToClientRequest {
   public static ListTablesRequest listTables(
       String id, Optional<String> delimiter, Optional<String> pageToken, Optional<Integer> limit) {
     ListTablesRequest converted = new ListTablesRequest();
-    converted.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).idListStyle());
+    converted.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listStyleId());
     converted.setPageToken(pageToken.orElse(null));
     converted.setLimit(limit.orElse(null));
     return converted;

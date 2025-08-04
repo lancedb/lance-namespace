@@ -26,7 +26,8 @@ public class LanceNamespaces {
       ImmutableMap.<String, String>builder()
           .put("dir", "com.lancedb.lance.namespace.dir.DirectoryNamespace")
           .put("rest", "com.lancedb.lance.namespace.rest.RestNamespace")
-          .put("hive", "com.lancedb.lance.namespace.hive.HiveNamespace")
+          .put("hive2", "com.lancedb.lance.namespace.hive2.Hive2Namespace")
+          .put("hive3", "com.lancedb.lance.namespace.hive3.Hive3Namespace")
           .put("glue", "com.lancedb.lance.namespace.glue.GlueNamespace")
           .build();
 

@@ -11,11 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.util;
+package com.lancedb.lance.namespace.hive3;
 
 import com.lancedb.lance.namespace.LanceNamespaceException;
-import com.lancedb.lance.namespace.hive.base.HiveClientPool;
-import com.lancedb.lance.namespace.hive.base.HiveNamespaceConfig;
+import com.lancedb.lance.namespace.util.CommonUtil;
 
 import com.google.common.collect.Maps;
 import org.apache.hadoop.hive.metastore.api.Catalog;
@@ -32,12 +31,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.lancedb.lance.namespace.hive.base.ErrorType.HiveMetaStoreError;
-import static com.lancedb.lance.namespace.hive.base.ErrorType.InvalidLanceTable;
-import static com.lancedb.lance.namespace.hive.base.ErrorType.UnknownCatalog;
+import static com.lancedb.lance.namespace.hive3.Hive3ErrorType.HiveMetaStoreError;
+import static com.lancedb.lance.namespace.hive3.Hive3ErrorType.InvalidLanceTable;
+import static com.lancedb.lance.namespace.hive3.Hive3ErrorType.UnknownCatalog;
 
-public class HiveUtil {
-  public static Catalog getCatalogOrNull(HiveClientPool clientPool, String catalog) {
+public class Hive3Util {
+  public static Catalog getCatalogOrNull(Hive3ClientPool clientPool, String catalog) {
     try {
       return clientPool.run(client -> client.getCatalog(catalog));
     } catch (NoSuchObjectException e) {
@@ -52,7 +51,7 @@ public class HiveUtil {
   }
 
   public static Catalog getCatalogOrThrowNotFoundException(
-      HiveClientPool clientPool, String catalog) {
+      Hive3ClientPool clientPool, String catalog) {
     Catalog catalogObj = getCatalogOrNull(clientPool, catalog);
     if (catalogObj == null) {
       throw LanceNamespaceException.notFound(
@@ -64,7 +63,7 @@ public class HiveUtil {
     return catalogObj;
   }
 
-  public static Database getDatabaseOrNull(HiveClientPool clientPool, String catalog, String db) {
+  public static Database getDatabaseOrNull(Hive3ClientPool clientPool, String catalog, String db) {
     try {
       return clientPool.run(client -> client.getDatabase(catalog, db));
     } catch (NoSuchObjectException e) {
@@ -78,7 +77,7 @@ public class HiveUtil {
     }
   }
 
-  public static Database getDatabaseOrNull(HiveClientPool clientPool, String db) {
+  public static Database getDatabaseOrNull(Hive3ClientPool clientPool, String db) {
     try {
       return clientPool.run(client -> client.getDatabase(db));
     } catch (NoSuchObjectException e) {
@@ -100,13 +99,13 @@ public class HiveUtil {
     Map<String, String> parameters = Maps.newHashMap();
     properties.forEach(
         (k, v) -> {
-          if (k.equals(HiveNamespaceConfig.DATABASE_DESCRIPTION)) {
+          if (k.equals(Hive3NamespaceConfig.DATABASE_DESCRIPTION)) {
             database.setDescription(v);
-          } else if (k.equals(HiveNamespaceConfig.DATABASE_LOCATION_URI)) {
+          } else if (k.equals(Hive3NamespaceConfig.DATABASE_LOCATION_URI)) {
             database.setLocationUri(v);
-          } else if (k.equals(HiveNamespaceConfig.DATABASE_OWNER)) {
+          } else if (k.equals(Hive3NamespaceConfig.DATABASE_OWNER)) {
             database.setOwnerName(v);
-          } else if (k.equals(HiveNamespaceConfig.DATABASE_OWNER_TYPE) && v != null) {
+          } else if (k.equals(Hive3NamespaceConfig.DATABASE_OWNER_TYPE) && v != null) {
             database.setOwnerType(PrincipalType.valueOf(v));
           } else if (v != null) {
             parameters.put(k, v);
@@ -116,16 +115,16 @@ public class HiveUtil {
     if (!database.isSetLocationUri()) {
       String location = databaseLocation(warehouseLocation.get(), dbName);
       database.setLocationUri(location);
-      properties.put(HiveNamespaceConfig.DATABASE_LOCATION_URI, location);
+      properties.put(Hive3NamespaceConfig.DATABASE_LOCATION_URI, location);
     }
     if (!database.isSetOwnerName()) {
       String user = hadoopUser();
       database.setOwnerName(user);
-      properties.put(HiveNamespaceConfig.DATABASE_OWNER, user);
+      properties.put(Hive3NamespaceConfig.DATABASE_OWNER, user);
     }
     if (!database.isSetOwnerType()) {
       database.setOwnerType(PrincipalType.USER);
-      properties.put(HiveNamespaceConfig.DATABASE_OWNER_TYPE, PrincipalType.USER.name());
+      properties.put(Hive3NamespaceConfig.DATABASE_OWNER_TYPE, PrincipalType.USER.name());
     }
 
     database.setParameters(parameters);
@@ -143,7 +142,7 @@ public class HiveUtil {
     }
   }
 
-  public static Optional<Table> getTable(HiveClientPool clientPool, String db, String table) {
+  public static Optional<Table> getTable(Hive3ClientPool clientPool, String db, String table) {
     try {
       return Optional.of(clientPool.run(client -> client.getTable(db, table)));
     } catch (NoSuchObjectException e) {
@@ -158,7 +157,7 @@ public class HiveUtil {
   }
 
   public static Optional<Table> getTable(
-      HiveClientPool clientPool, String catalog, String db, String table) {
+      Hive3ClientPool clientPool, String catalog, String db, String table) {
     try {
       return Optional.of(clientPool.run(client -> client.getTable(catalog, db, table)));
     } catch (NoSuchObjectException e) {

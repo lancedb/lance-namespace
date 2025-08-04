@@ -91,7 +91,6 @@
         <module>lance-namespace-springboot-server</module>
         <module>lance-namespace-core</module>
         <module>lance-namespace-adapter</module>
-        <module>lance-namespace-hive-base</module>
         <module>lance-namespace-hive2</module>
         <module>lance-namespace-hive3</module>
         <module>lance-namespace-glue</module>

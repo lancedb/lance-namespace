@@ -11,25 +11,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.hive.base;
+package com.lancedb.lance.namespace.hive3;
 
 import com.google.errorprone.annotations.FormatMethod;
 import org.apache.hadoop.hive.metastore.api.MetaException;
 
-// Copied from apache iceberg.
-// https://github.com/apache/iceberg/blob/main/hive-metastore/src/main/java/org/apache/iceberg/hive/RuntimeMetaException.java
-public class HiveMetaException extends RuntimeException {
-  public HiveMetaException(MetaException cause) {
+// Adapted from apache iceberg for Hive 3.x
+public class Hive3MetaException extends RuntimeException {
+  public Hive3MetaException(MetaException cause) {
     super(cause);
   }
 
   @FormatMethod
-  public HiveMetaException(MetaException cause, String message, Object... args) {
+  public Hive3MetaException(MetaException cause, String message, Object... args) {
     super(String.format(message, args), cause);
   }
 
   @FormatMethod
-  public HiveMetaException(Throwable throwable, String message, Object... args) {
+  public Hive3MetaException(Throwable throwable, String message, Object... args) {
     super(String.format(message, args), throwable);
   }
 }

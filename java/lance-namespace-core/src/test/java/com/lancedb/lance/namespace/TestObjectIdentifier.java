@@ -38,22 +38,22 @@ public class TestObjectIdentifier {
 
     // Case 2: empty namespace
     ObjectIdentifier oid = ObjectIdentifier.of(Lists.newArrayList());
-    assertEquals(1, oid.levels());
+    assertEquals(0, oid.levels());
 
     oid = ObjectIdentifier.of(Lists.newArrayList("a", "b"));
-    assertEquals(3, oid.levels());
-    assertEquals("a", oid.level(0));
-    assertEquals("b", oid.level(1));
+    assertEquals(2, oid.levels());
+    assertEquals("a", oid.levelAtListPos(0));
+    assertEquals("b", oid.levelAtListPos(1));
 
     // Case 3: parse name
     oid = ObjectIdentifier.of(Lists.newArrayList());
-    assertEquals(".", oid.idStringStyle());
+    assertEquals(".", oid.stringStyleId());
 
     oid = ObjectIdentifier.of(Lists.newArrayList("a"));
-    assertEquals("a", oid.idStringStyle());
+    assertEquals("a", oid.stringStyleId());
 
     oid = ObjectIdentifier.of(Lists.newArrayList("a", "b"));
-    assertEquals("a.b", oid.idStringStyle());
+    assertEquals("a.b", oid.stringStyleId());
 
     // Case 4: parse parent
     oid = ObjectIdentifier.of(Lists.newArrayList());

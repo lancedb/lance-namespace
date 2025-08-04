@@ -11,25 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.hive.base;
+package com.lancedb.lance.namespace.util;
 
-/** Error types for hive lance namespace */
-public enum ErrorType {
-  HiveMetaStoreError("HiveMetaStoreError"),
-  UnknownCatalog("UnknownCatalog"),
-  CatalogAlreadyExist("CatalogAlreadyExist"),
-  DatabaseAlreadyExist("DatabaseAlreadyExist"),
-  TableAlreadyExists("TableAlreadyExists"),
-  TableNotFound("TableNotFound"),
-  InvalidLanceTable("InvalidLanceTable");
-
-  private final String type;
-
-  ErrorType(String type) {
-    this.type = type;
+// Copied from apache iceberg.
+// https://github.com/apache/iceberg/blob/main/core/src/main/java/org/apache/iceberg/ClientPool.java
+public interface ClientPool<C, E extends Exception> {
+  interface Action<R, C, E extends Exception> {
+    R run(C client) throws E;
   }
 
-  public String getType() {
-    return type;
-  }
+  <R> R run(Action<R, C, E> action) throws E, InterruptedException;
+
+  <R> R run(Action<R, C, E> action, boolean retry) throws E, InterruptedException;
 }

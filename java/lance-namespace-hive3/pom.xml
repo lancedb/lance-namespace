@@ -20,7 +20,7 @@
     <dependencies>
       <dependency>
         <groupId>com.lancedb</groupId>
-        <artifactId>lance-namespace-hive-base</artifactId>
+        <artifactId>lance-namespace-core</artifactId>
         <version>${lance-namespace.version}</version>
       </dependency>
       <dependency>
@@ -45,12 +45,17 @@
         <classifier>core</classifier>
       </dependency>
 
+      <!-- Add Hadoop dependencies needed for Hive 3.x -->
       <dependency>
-        <groupId>com.lancedb</groupId>
-        <artifactId>lance-namespace-hive-base</artifactId>
-        <version>${lance-namespace.version}</version>
-        <type>test-jar</type>
-        <scope>test</scope>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-common</artifactId>
+        <version>3.2.4</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.junit.jupiter</groupId>

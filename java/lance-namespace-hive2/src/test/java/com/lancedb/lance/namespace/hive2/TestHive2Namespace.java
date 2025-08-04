@@ -16,8 +16,6 @@ package com.lancedb.lance.namespace.hive2;
 import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.LanceNamespaceException;
 import com.lancedb.lance.namespace.LanceNamespaces;
-import com.lancedb.lance.namespace.hive.base.BaseHiveTestHelper;
-import com.lancedb.lance.namespace.hive.base.LocalHiveMetastore;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
@@ -50,14 +48,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TestHive2Namespace {
 
   private static BufferAllocator allocator;
-  private static LocalHiveMetastore metastore;
+  private static LocalHive2Metastore metastore;
   private static String tmpDirBase;
   private static LanceNamespace namespace;
 
   @BeforeAll
   public static void setup() throws IOException {
     allocator = new RootAllocator(Long.MAX_VALUE);
-    metastore = new LocalHiveMetastore();
+    metastore = new LocalHive2Metastore();
     metastore.start();
 
     File file =
@@ -66,7 +64,7 @@ public class TestHive2Namespace {
     tmpDirBase = file.getAbsolutePath();
 
     HiveConf hiveConf = metastore.hiveConf();
-    namespace = LanceNamespaces.connect("hive", Maps.newHashMap(), hiveConf, allocator);
+    namespace = LanceNamespaces.connect("hive2", Maps.newHashMap(), hiveConf, allocator);
   }
 
   @AfterAll

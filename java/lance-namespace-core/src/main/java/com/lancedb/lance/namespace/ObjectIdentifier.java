@@ -37,7 +37,7 @@ public class ObjectIdentifier {
         .forEach(
             level ->
                 ValidationUtil.checkNotNullOrEmptyString(
-                    level, "Invalid namespace containing empty string %s", levels));
+                    level, "Invalid namespace containing empty string levels %s", levels));
     return new ObjectIdentifier(levels.toArray(new String[0]));
   }
 
@@ -54,22 +54,22 @@ public class ObjectIdentifier {
     return new ObjectIdentifier(id.split(delimiter));
   }
 
-  public String level(int pos) {
+  public String levelAtListPos(int pos) {
     return levels[pos];
   }
 
-  public String idStringStyle() {
-    return idStringStyle(DELIMITER_DEFAULT);
+  public String stringStyleId() {
+    return stringStyleId(DELIMITER_DEFAULT);
   }
 
-  public String idStringStyle(String delimiter) {
+  public String stringStyleId(String delimiter) {
     if (levels.length == 0) {
       return delimiter;
     }
     return String.join(delimiter, levels);
   }
 
-  public List<String> idListStyle() {
+  public List<String> listStyleId() {
     return ImmutableList.copyOf(levels);
   }
 
@@ -82,7 +82,7 @@ public class ObjectIdentifier {
   }
 
   public int levels() {
-    return levels.length + 1;
+    return levels.length;
   }
 
   public boolean isRoot() {

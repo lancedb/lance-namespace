@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lancedb.lance.namespace.hive.base;
+package com.lancedb.lance.namespace.hive2;
 
 import com.lancedb.lance.namespace.model.JsonArrowDataType;
 import com.lancedb.lance.namespace.model.JsonArrowField;
