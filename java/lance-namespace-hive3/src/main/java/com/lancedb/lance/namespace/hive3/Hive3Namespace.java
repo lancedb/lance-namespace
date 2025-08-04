@@ -198,8 +198,9 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
       if (e instanceof InterruptedException) {
         Thread.currentThread().interrupt();
       }
+      String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
       throw LanceNamespaceException.serviceUnavailable(
-          e.getMessage(), HiveMetaStoreError.getType(), "", CommonUtil.formatCurrentStackTrace());
+          "Failed operation: " + errorMessage, HiveMetaStoreError.getType(), "", CommonUtil.formatCurrentStackTrace());
     }
   }
 
@@ -219,8 +220,9 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
       if (e instanceof InterruptedException) {
         Thread.currentThread().interrupt();
       }
+      String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
       throw LanceNamespaceException.serviceUnavailable(
-          e.getMessage(), HiveMetaStoreError.getType(), "", CommonUtil.formatCurrentStackTrace());
+          "Failed operation: " + errorMessage, HiveMetaStoreError.getType(), "", CommonUtil.formatCurrentStackTrace());
     }
   }
 
@@ -320,9 +322,15 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
       table.setDbName(db);
       table.setTableName(tableName);
       table.setTableType("EXTERNAL_TABLE");
+      table.setPartitionKeys(Lists.newArrayList()); // Partition keys belong to Table, not StorageDescriptor
 
       StorageDescriptor sd = new StorageDescriptor();
       sd.setLocation(location);
+      // Initialize required fields to avoid NPE
+      sd.setCols(Lists.newArrayList());
+      sd.setInputFormat("com.lancedb.lance.mapred.LanceInputFormat");
+      sd.setOutputFormat("com.lancedb.lance.mapred.LanceOutputFormat");
+      sd.setSerdeInfo(new org.apache.hadoop.hive.metastore.api.SerDeInfo());
       table.setSd(sd);
 
       // Set Lance parameters
@@ -382,8 +390,9 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
       if (e instanceof InterruptedException) {
         Thread.currentThread().interrupt();
       }
+      String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
       throw LanceNamespaceException.serviceUnavailable(
-          e.getMessage(),
+          "Failed to drop table: " + errorMessage,
           HiveMetaStoreError.getType(),
           id.stringStyleId(),
           CommonUtil.formatCurrentStackTrace());

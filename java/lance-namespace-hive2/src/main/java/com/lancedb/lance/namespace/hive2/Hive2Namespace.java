@@ -187,8 +187,12 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
       if (e instanceof InterruptedException) {
         Thread.currentThread().interrupt();
       }
+      String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
       throw LanceNamespaceException.serviceUnavailable(
-          e.getMessage(), HiveMetaStoreError.getType(), "", CommonUtil.formatCurrentStackTrace());
+          "Failed to list namespaces: " + errorMessage,
+          HiveMetaStoreError.getType(),
+          "",
+          CommonUtil.formatCurrentStackTrace());
     }
   }
 
@@ -202,8 +206,12 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
       if (e instanceof InterruptedException) {
         Thread.currentThread().interrupt();
       }
+      String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
       throw LanceNamespaceException.serviceUnavailable(
-          e.getMessage(), HiveMetaStoreError.getType(), "", CommonUtil.formatCurrentStackTrace());
+          "Failed to create namespace: " + errorMessage,
+          HiveMetaStoreError.getType(),
+          "",
+          CommonUtil.formatCurrentStackTrace());
     }
   }
 
@@ -270,7 +278,6 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
       Map<String, String> properties,
       byte[] data) {
 
-    // Check for unsupported managed_by=impl
     if (properties != null && "impl".equalsIgnoreCase(properties.get("managed_by"))) {
       throw new UnsupportedOperationException("managed_by=impl is not supported yet");
     }
@@ -279,7 +286,6 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
     String tableName = id.levelAtListPos(1).toLowerCase();
 
     try {
-      // Check if table already exists
       Optional<Table> existing = Hive2Util.getTable(clientPool, db, tableName);
       if (existing.isPresent()) {
         throw LanceNamespaceException.conflict(
@@ -289,17 +295,21 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
             CommonUtil.formatCurrentStackTrace());
       }
 
-      // Create HMS table
       Table table = new Table();
       table.setDbName(db);
       table.setTableName(tableName);
       table.setTableType("EXTERNAL_TABLE");
+      table.setPartitionKeys(
+          Lists.newArrayList());
 
       StorageDescriptor sd = new StorageDescriptor();
       sd.setLocation(location);
+      sd.setCols(Lists.newArrayList());
+      sd.setInputFormat("com.lancedb.lance.mapred.LanceInputFormat");
+      sd.setOutputFormat("com.lancedb.lance.mapred.LanceOutputFormat");
+      sd.setSerdeInfo(new org.apache.hadoop.hive.metastore.api.SerDeInfo());
       table.setSd(sd);
 
-      // Set Lance parameters
       Map<String, String> params = Hive2Util.createLanceTableParams(properties);
       table.setParameters(params);
 
@@ -309,7 +319,6 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
             return null;
           });
 
-      // Create Lance dataset if data provided
       if (data != null && data.length > 0) {
         WriteParams writeParams =
             new WriteParams.Builder().withMode(WriteParams.WriteMode.CREATE).build();
@@ -319,8 +328,12 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
       if (e instanceof InterruptedException) {
         Thread.currentThread().interrupt();
       }
+      String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
       throw LanceNamespaceException.serviceUnavailable(
-          e.getMessage(), HiveMetaStoreError.getType(), "", CommonUtil.formatCurrentStackTrace());
+          "Failed to create table: " + errorMessage,
+          HiveMetaStoreError.getType(),
+          "",
+          CommonUtil.formatCurrentStackTrace());
     }
   }
 
@@ -352,8 +365,12 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
       if (e instanceof InterruptedException) {
         Thread.currentThread().interrupt();
       }
+      String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
       throw LanceNamespaceException.serviceUnavailable(
-          e.getMessage(), HiveMetaStoreError.getType(), "", CommonUtil.formatCurrentStackTrace());
+          "Failed to drop table: " + errorMessage,
+          HiveMetaStoreError.getType(),
+          "",
+          CommonUtil.formatCurrentStackTrace());
     }
   }
 }

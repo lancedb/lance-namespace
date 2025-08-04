@@ -199,7 +199,7 @@ public class TestHive2Namespace {
     request.setId(Lists.list("test_db", "test_table"));
 
     DescribeTableResponse response = namespace.describeTable(request);
-    assertEquals(tmpDirBase + "/test_db/test_table.lance", response.getLocation());
+    assertEquals("file:" + tmpDirBase + "/test_db/test_table.lance", response.getLocation());
   }
 
   @Test
@@ -239,7 +239,7 @@ public class TestHive2Namespace {
     request.setId(Lists.list("test_db", "test_table"));
 
     DropTableResponse response = namespace.dropTable(request);
-    assertEquals(tmpDirBase + "/test_db/test_table.lance", response.getLocation());
+    assertEquals("file:" + tmpDirBase + "/test_db/test_table.lance", response.getLocation());
     assertEquals(request.getId(), response.getId());
 
     // Verify table is dropped by trying to describe it
