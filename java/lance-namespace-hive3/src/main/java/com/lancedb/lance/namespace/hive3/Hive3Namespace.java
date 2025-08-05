@@ -62,9 +62,10 @@ import static com.lancedb.lance.namespace.hive3.Hive3ErrorType.TableNotFound;
 public class Hive3Namespace implements LanceNamespace, Configurable<Configuration> {
   private static final Logger LOG = LoggerFactory.getLogger(Hive3Namespace.class);
 
-  protected Hive3ClientPool clientPool;
-  protected Configuration hadoopConf;
-  protected BufferAllocator allocator;
+  private Hive3ClientPool clientPool;
+  private Configuration hadoopConf;
+  private BufferAllocator allocator;
+  private Hive3NamespaceConfig config;
 
   public Hive3Namespace() {}
 
@@ -76,11 +77,8 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
       hadoopConf = new Configuration();
     }
 
-    int poolSize =
-        configProperties.containsKey(Hive3NamespaceConfig.CLIENT_POOL_SIZE)
-            ? Integer.parseInt(configProperties.get(Hive3NamespaceConfig.CLIENT_POOL_SIZE))
-            : Hive3NamespaceConfig.CLIENT_POOL_SIZE_DEFAULT;
-    this.clientPool = new Hive3ClientPool(poolSize, hadoopConf);
+    this.config = new Hive3NamespaceConfig(configProperties);
+    this.clientPool = new Hive3ClientPool(config.getClientPoolSize(), hadoopConf);
   }
 
   @Override
@@ -387,7 +385,10 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
 
     if (data != null && data.length > 0) {
       WriteParams writeParams =
-          new WriteParams.Builder().withMode(WriteParams.WriteMode.CREATE).build();
+          new WriteParams.Builder()
+              .withMode(WriteParams.WriteMode.CREATE)
+              .withStorageOptions(config.getStorageOptions())
+              .build();
       Dataset.create(allocator, location, schema, writeParams);
     }
   }

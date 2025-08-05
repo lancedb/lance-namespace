@@ -52,7 +52,7 @@ public class TestGlueNamespaceConfig {
     props.put(GlueNamespaceConfig.REGION, "us-west-2");
     props.put(GlueNamespaceConfig.ENDPOINT, "https://glue.us-west-2.api.aws");
     GlueNamespaceConfig properties = new GlueNamespaceConfig(props);
-    assertEquals("1234567890", properties.glueCatalogId());
+    assertEquals("1234567890", properties.catalogId());
   }
 
   @Test

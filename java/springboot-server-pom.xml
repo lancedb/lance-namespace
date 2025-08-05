@@ -4,7 +4,7 @@
     <artifactId>lance-namespace-springboot-server</artifactId>
     <packaging>jar</packaging>
     <name>lance-namespace-springboot-server</name>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
     <properties>
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -16,7 +16,7 @@
     <parent>
         <groupId>com.lancedb</groupId>
         <artifactId>lance-namespace-root</artifactId>
-        <version>0.0.5</version>
+        <version>0.0.6</version>
     </parent>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>

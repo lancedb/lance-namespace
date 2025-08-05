@@ -62,9 +62,10 @@ import static com.lancedb.lance.namespace.hive2.Hive2ErrorType.TableNotFound;
 public class Hive2Namespace implements LanceNamespace, Configurable<Configuration> {
   private static final Logger LOG = LoggerFactory.getLogger(Hive2Namespace.class);
 
-  protected Hive2ClientPool clientPool;
-  protected Configuration hadoopConf;
-  protected BufferAllocator allocator;
+  private Hive2ClientPool clientPool;
+  private Configuration hadoopConf;
+  private BufferAllocator allocator;
+  private Hive2NamespaceConfig config;
 
   public Hive2Namespace() {}
 
@@ -75,12 +76,8 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
       LOG.warn("Hadoop configuration not set, using the default configuration.");
       hadoopConf = new Configuration();
     }
-
-    int poolSize =
-        configProperties.containsKey(Hive2NamespaceConfig.CLIENT_POOL_SIZE)
-            ? Integer.parseInt(configProperties.get(Hive2NamespaceConfig.CLIENT_POOL_SIZE))
-            : Hive2NamespaceConfig.CLIENT_POOL_SIZE_DEFAULT;
-    this.clientPool = new Hive2ClientPool(poolSize, hadoopConf);
+    this.config = new Hive2NamespaceConfig(configProperties);
+    this.clientPool = new Hive2ClientPool(config.getClientPoolSize(), hadoopConf);
   }
 
   @Override
@@ -137,6 +134,7 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
 
     DescribeTableResponse response = new DescribeTableResponse();
     response.setLocation(location.get());
+    response.setStorageOptions(config.getStorageOptions());
     return response;
   }
 
@@ -153,6 +151,7 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
     CreateTableResponse response = new CreateTableResponse();
     response.setLocation(request.getLocation());
     response.setVersion(1L);
+    response.setStorageOptions(config.getStorageOptions());
     return response;
   }
 
@@ -321,7 +320,10 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
 
       if (data != null && data.length > 0) {
         WriteParams writeParams =
-            new WriteParams.Builder().withMode(WriteParams.WriteMode.CREATE).build();
+            new WriteParams.Builder()
+                .withMode(WriteParams.WriteMode.CREATE)
+                .withStorageOptions(config.getStorageOptions())
+                .build();
         Dataset.create(allocator, location, schema, writeParams);
       }
     } catch (TException | InterruptedException | RuntimeException e) {

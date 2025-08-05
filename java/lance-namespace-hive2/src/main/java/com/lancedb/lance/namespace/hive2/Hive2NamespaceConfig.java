@@ -28,14 +28,22 @@ public class Hive2NamespaceConfig {
   public static final String CLIENT_POOL_SIZE = "client.pool-size";
   public static final int CLIENT_POOL_SIZE_DEFAULT = 3;
 
+  public static final String STORAGE_OPTIONS_PREFIX = "storage.";
+
   private final int clientPoolSize;
+  private final Map<String, String> storageOptions;
 
   public Hive2NamespaceConfig(Map<String, String> properties) {
     this.clientPoolSize =
         PropertyUtil.propertyAsInt(properties, CLIENT_POOL_SIZE, CLIENT_POOL_SIZE_DEFAULT);
+    this.storageOptions = PropertyUtil.propertiesWithPrefix(properties, STORAGE_OPTIONS_PREFIX);
   }
 
   public int getClientPoolSize() {
     return clientPoolSize;
+  }
+
+  public Map<String, String> getStorageOptions() {
+    return storageOptions;
   }
 }

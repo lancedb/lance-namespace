@@ -123,6 +123,7 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
     CreateTableResponse response = new CreateTableResponse();
     response.setLocation(tablePath);
     response.setVersion(1L);
+    response.setStorageOptions(config.getStorageOptions());
     return response;
   }
 
@@ -208,6 +209,7 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
 
     DescribeTableResponse response = new DescribeTableResponse();
     response.setLocation(tablePath);
+    response.setStorageOptions(config.getStorageOptions());
     return response;
   }
 

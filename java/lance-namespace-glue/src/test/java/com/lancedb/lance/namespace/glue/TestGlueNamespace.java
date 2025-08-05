@@ -1022,7 +1022,12 @@ public class TestGlueNamespace {
   }
 
   @Test
-  public void testCreateTableDeriveFailsWhenNoNamespaceUri() {
+  public void testCreateTableDerivesLocationFromDefaultRootWhenNoNamespaceUri() {
+    // Initialize with a custom root directory using tempDir
+    GlueNamespaceConfig config =
+        new GlueNamespaceConfig(ImmutableMap.of("root", tempDir.toString()));
+    glueNamespace.initialize(config, glue, allocator);
+
     com.lancedb.lance.namespace.model.CreateTableRequest req =
         new com.lancedb.lance.namespace.model.CreateTableRequest()
             .id(ImmutableList.of("ns1", "tbl"))
@@ -1033,12 +1038,23 @@ public class TestGlueNamespace {
     when(glue.getDatabase(any(GetDatabaseRequest.class)))
         .thenReturn(GetDatabaseResponse.builder().database(db).build());
 
-    LanceNamespaceException e =
-        assertThrows(
-            LanceNamespaceException.class,
-            () -> glueNamespace.createTable(req, createTestArrowData()));
+    when(glue.createTable(any(software.amazon.awssdk.services.glue.model.CreateTableRequest.class)))
+        .thenReturn(
+            software.amazon.awssdk.services.glue.model.CreateTableResponse.builder().build());
 
-    assertTrue(e.getMessage().contains("Cannot derive location for ns1.tbl"));
+    // Now the implementation uses the configured root when namespace URI is missing
+    com.lancedb.lance.namespace.model.CreateTableResponse resp =
+        glueNamespace.createTable(req, createTestArrowData());
+
+    // The location should be derived from the configured root
+    assertNotNull(resp.getLocation());
+    String expectedLocationPattern = String.format("%s/ns1/tbl.lance", tempDir.toString());
+    assertEquals(expectedLocationPattern, resp.getLocation());
+
+    // Verify the dataset was created
+    Path tableDir = tempDir.resolve("ns1").resolve("tbl.lance");
+    assertTrue(Files.exists(tableDir));
+    assertTrue(Files.exists(tableDir.resolve("_versions")));
   }
 
   @Test

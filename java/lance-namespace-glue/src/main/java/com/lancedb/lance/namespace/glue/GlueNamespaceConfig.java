@@ -13,6 +13,7 @@
  */
 package com.lancedb.lance.namespace.glue;
 
+import com.lancedb.lance.namespace.util.OpenDalUtil;
 import com.lancedb.lance.namespace.util.PropertyUtil;
 
 import com.google.common.base.Strings;
@@ -38,7 +39,7 @@ public class GlueNamespaceConfig implements Serializable {
    * <p>For more details, see
    * https://docs.aws.amazon.com/glue/latest/dg/aws-glue-api-catalog-databases.html
    */
-  public static final String CATALOG_ID = "catalog-id";
+  public static final String CATALOG_ID = "catalog_id";
 
   /**
    * Configures a specific Glue service endpoint for the GlueCatalog.
@@ -46,10 +47,10 @@ public class GlueNamespaceConfig implements Serializable {
    * <p>This allows GlueCatalog to connect to any Glue API compatible metastore with a custom
    * endpoint.
    */
-  public static final String ENDPOINT = "aws.endpoint";
+  public static final String ENDPOINT = "endpoint";
 
   /** Configure the AWS region for all Glue operations */
-  public static final String REGION = "aws.region";
+  public static final String REGION = "region";
 
   /**
    * AWS access key ID for static credentials.
@@ -58,7 +59,7 @@ public class GlueNamespaceConfig implements Serializable {
    * the default AWS credential provider chain. If {@link #SESSION_TOKEN} is also provided, session
    * credentials will be used.
    */
-  public static final String ACCESS_KEY_ID = "aws.access-key-id";
+  public static final String ACCESS_KEY_ID = "access_key_id";
 
   /**
    * AWS secret access key for static credentials.
@@ -66,7 +67,7 @@ public class GlueNamespaceConfig implements Serializable {
    * <p>Used together with {@link #ACCESS_KEY_ID}. If {@link #SESSION_TOKEN} is provided, session
    * credentials are used; otherwise, basic credentials are used.
    */
-  public static final String SECRET_ACCESS_KEY = "aws.secret-access-key";
+  public static final String SECRET_ACCESS_KEY = "secret_access_key";
 
   /**
    * AWS session token for temporary credentials.
@@ -74,64 +75,78 @@ public class GlueNamespaceConfig implements Serializable {
    * <p>When set, the glue client uses session credentials rather than the default credential
    * provider chain.
    */
-  public static final String SESSION_TOKEN = "aws.session-token";
+  public static final String SESSION_TOKEN = "session_token";
 
+  /** Additional storage configurations to access table */
   public static final String STORAGE_OPTIONS_PREFIX = "storage.";
 
-  private final String glueEndpoint;
-  private final String glueRegion;
-  private final String glueCatalogId;
-  private final String glueAccessKeyId;
-  private final String glueSecretAccessKey;
-  private final String glueSessionToken;
+  /** Storage root location of the lakehouse on Glue catalog */
+  public static final String ROOT = "root";
+
+  public static final String ROOT_DEFAULT = System.getProperty("user.dir");
+
+  private final String endpoint;
+  private final String region;
+  private final String catalogId;
+  private final String accessKeyId;
+  private final String secretAccessKey;
+  private final String sessionToken;
   private final Map<String, String> storageOptions;
+  private final String root;
 
   public GlueNamespaceConfig() {
-    this.glueCatalogId = null;
-    this.glueEndpoint = null;
-    this.glueRegion = null;
-    this.glueAccessKeyId = null;
-    this.glueSecretAccessKey = null;
-    this.glueSessionToken = null;
+    this.catalogId = null;
+    this.endpoint = null;
+    this.region = null;
+    this.accessKeyId = null;
+    this.secretAccessKey = null;
+    this.sessionToken = null;
     this.storageOptions = ImmutableMap.of();
+    this.root = ROOT_DEFAULT;
   }
 
   public GlueNamespaceConfig(Map<String, String> properties) {
-    this.glueEndpoint = properties.get(ENDPOINT);
-    this.glueRegion = properties.get(REGION);
-    this.glueCatalogId = properties.get(CATALOG_ID);
-    this.glueAccessKeyId = properties.get(ACCESS_KEY_ID);
-    this.glueSecretAccessKey = properties.get(SECRET_ACCESS_KEY);
-    this.glueSessionToken = properties.get(SESSION_TOKEN);
+    this.endpoint = properties.get(ENDPOINT);
+    this.region = properties.get(REGION);
+    this.catalogId = properties.get(CATALOG_ID);
+    this.accessKeyId = properties.get(ACCESS_KEY_ID);
+    this.secretAccessKey = properties.get(SECRET_ACCESS_KEY);
+    this.sessionToken = properties.get(SESSION_TOKEN);
     this.storageOptions = PropertyUtil.propertiesWithPrefix(properties, STORAGE_OPTIONS_PREFIX);
+    this.root =
+        OpenDalUtil.stripTrailingSlash(
+            PropertyUtil.propertyAsString(properties, ROOT, ROOT_DEFAULT));
   }
 
-  public String glueCatalogId() {
-    return glueCatalogId;
+  public String catalogId() {
+    return catalogId;
   }
 
   private AwsCredentialsProvider credentialsProvider() {
-    if (!Strings.isNullOrEmpty(glueAccessKeyId) && !Strings.isNullOrEmpty(glueSecretAccessKey)) {
+    if (!Strings.isNullOrEmpty(accessKeyId) && !Strings.isNullOrEmpty(secretAccessKey)) {
       return StaticCredentialsProvider.create(
-          Strings.isNullOrEmpty(glueSessionToken)
-              ? AwsBasicCredentials.create(glueAccessKeyId, glueSecretAccessKey)
-              : AwsSessionCredentials.create(
-                  glueAccessKeyId, glueSecretAccessKey, glueSessionToken));
+          Strings.isNullOrEmpty(sessionToken)
+              ? AwsBasicCredentials.create(accessKeyId, secretAccessKey)
+              : AwsSessionCredentials.create(accessKeyId, secretAccessKey, sessionToken));
     }
     return DefaultCredentialsProvider.builder().build();
   }
 
   public void configureClientBuilder(GlueClientBuilder builder) {
-    if (glueEndpoint != null) {
-      builder.endpointOverride(URI.create(glueEndpoint));
+    if (endpoint != null) {
+      builder.endpointOverride(URI.create(endpoint));
     }
-    if (!Strings.isNullOrEmpty(glueRegion)) {
-      builder.region(Region.of(glueRegion));
+    if (!Strings.isNullOrEmpty(region)) {
+      builder.region(Region.of(region));
     }
     builder.credentialsProvider(credentialsProvider());
   }
 
   public Map<String, String> getStorageOptions() {
     return storageOptions;
+  }
+
+  public String getRoot() {
+    return root;
   }
 }

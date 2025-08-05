@@ -13,6 +13,7 @@
  */
 package com.lancedb.lance.namespace.dir;
 
+import com.lancedb.lance.namespace.util.OpenDalUtil;
 import com.lancedb.lance.namespace.util.PropertyUtil;
 
 import java.io.Serializable;
@@ -29,7 +30,9 @@ public class DirectoryNamespaceConfig implements Serializable {
   private final Map<String, String> storageOptions;
 
   public DirectoryNamespaceConfig(Map<String, String> properties) {
-    this.root = PropertyUtil.propertyAsString(properties, ROOT, ROOT_DEFAULT);
+    this.root =
+        OpenDalUtil.stripTrailingSlash(
+            PropertyUtil.propertyAsString(properties, ROOT, ROOT_DEFAULT));
     this.storageOptions = PropertyUtil.propertiesWithPrefix(properties, STORAGE_OPTIONS_PREFIX);
   }
 
