@@ -133,7 +133,7 @@ public class GlueNamespaceConfig implements Serializable {
   }
 
   public void configureClientBuilder(GlueClientBuilder builder) {
-    if (endpoint != null) {
+    if (!Strings.isNullOrEmpty(endpoint)) {
       builder.endpointOverride(URI.create(endpoint));
     }
     if (!Strings.isNullOrEmpty(region)) {

@@ -54,7 +54,7 @@ public class LanceNamespaceException extends RuntimeException {
   }
 
   public LanceNamespaceException(ErrorResponse errorResponse) {
-    super(errorResponse.getError());
+    super(errorResponse.toString());
     this.code = errorResponse.getCode() == null ? UNKNOWN_ERROR_CODE : errorResponse.getCode();
     this.errorResponse = Optional.of(errorResponse);
   }
