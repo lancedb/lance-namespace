@@ -31,6 +31,8 @@ import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
+import com.lancedb.lance.namespace.model.ListTablesRequest;
+import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
 import com.lancedb.lance.namespace.util.CommonUtil;
@@ -179,6 +181,11 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
 
     response.setProperties(properties);
     return response;
+  }
+
+  @Override
+  public ListTablesResponse listTables(ListTablesRequest request) {
+    return LanceNamespace.super.listTables(request);
   }
 
   @Override
