@@ -294,5 +294,25 @@ public class LocalHive3Metastore {
     // Disable cleanup tasks and scheduled operations
     conf.set("hive.metastore.runworker.in", "false");
     conf.set("hive.metastore.task.threads.always", "");
+
+    // Disable ACID/transactional features that may trigger replication
+    conf.set("hive.support.concurrency", "false");
+    conf.set("hive.txn.manager", "org.apache.hadoop.hive.ql.lockmgr.DummyTxnManager");
+    conf.set("hive.compactor.initiator.on", "false");
+    conf.set("hive.compactor.worker.threads", "0");
+
+    // Disable notification and event processing
+    conf.set("hive.metastore.notifications.add.thrift.objects", "false");
+    conf.set("hive.metastore.notification.parameters.exclude.patterns", ".*");
+
+    // Disable replication scheduler and related services
+    conf.set("hive.repl.scheduler.enabled", "false");
+    conf.set("hive.exec.post.hooks", "");
+    conf.set("hive.exec.pre.hooks", "");
+    conf.set("hive.exec.failure.hooks", "");
+
+    // Disable stats and related background tasks
+    conf.set("hive.stats.autogather", "false");
+    conf.set("hive.stats.column.autogather", "false");
   }
 }

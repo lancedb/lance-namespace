@@ -23,12 +23,16 @@ import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
+import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
+import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
+import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
+import com.lancedb.lance.namespace.model.TableExistsRequest;
 import com.lancedb.lance.namespace.util.CommonUtil;
 import com.lancedb.lance.namespace.util.JsonArrowSchemaConverter;
 import com.lancedb.lance.namespace.util.PageUtil;
@@ -114,6 +118,90 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
     CreateNamespaceResponse response = new CreateNamespaceResponse();
     response.setProperties(properties);
     return response;
+  }
+
+  @Override
+  public void namespaceExists(NamespaceExistsRequest request) {
+    ObjectIdentifier id = ObjectIdentifier.of(request.getId());
+
+    ValidationUtil.checkArgument(
+        !id.isRoot() && id.levels() <= 1, "Expect a 1-level namespace but get %s", id);
+
+    String db = id.levelAtListPos(0).toLowerCase();
+    Database database = Hive2Util.getDatabaseOrNull(clientPool, db);
+
+    if (database == null) {
+      throw LanceNamespaceException.notFound(
+          String.format("Namespace does not exist: %s", id.stringStyleId()),
+          HiveMetaStoreError.getType(),
+          id.stringStyleId(),
+          CommonUtil.formatCurrentStackTrace());
+    }
+  }
+
+  @Override
+  public DescribeNamespaceResponse describeNamespace(DescribeNamespaceRequest request) {
+    ObjectIdentifier id = ObjectIdentifier.of(request.getId());
+
+    ValidationUtil.checkArgument(
+        !id.isRoot() && id.levels() <= 1, "Expect a 1-level namespace but get %s", id);
+
+    String db = id.levelAtListPos(0).toLowerCase();
+    Database database = Hive2Util.getDatabaseOrNull(clientPool, db);
+
+    if (database == null) {
+      throw LanceNamespaceException.notFound(
+          String.format("Namespace does not exist: %s", id.stringStyleId()),
+          HiveMetaStoreError.getType(),
+          id.stringStyleId(),
+          CommonUtil.formatCurrentStackTrace());
+    }
+
+    DescribeNamespaceResponse response = new DescribeNamespaceResponse();
+    Map<String, String> properties = new HashMap<>();
+
+    if (database.getDescription() != null) {
+      properties.put(Hive2NamespaceConfig.DATABASE_DESCRIPTION, database.getDescription());
+    }
+    if (database.getLocationUri() != null) {
+      properties.put(Hive2NamespaceConfig.DATABASE_LOCATION_URI, database.getLocationUri());
+    }
+    if (database.getOwnerName() != null) {
+      properties.put("owner", database.getOwnerName());
+    }
+    if (database.getOwnerType() != null) {
+      properties.put("owner_type", database.getOwnerType().name());
+    }
+
+    if (database.getParameters() != null) {
+      properties.putAll(database.getParameters());
+    }
+
+    response.setProperties(properties);
+    return response;
+  }
+
+  @Override
+  public void tableExists(TableExistsRequest request) {
+    ObjectIdentifier tableId = ObjectIdentifier.of(request.getId());
+
+    ValidationUtil.checkArgument(
+        tableId.levels() == 2, "Expect 2-level table identifier but get %s", tableId);
+
+    String db = tableId.levelAtListPos(0).toLowerCase();
+    String table = tableId.levelAtListPos(1).toLowerCase();
+
+    Optional<Table> hmsTable = Hive2Util.getTable(clientPool, db, table);
+
+    if (!hmsTable.isPresent()) {
+      throw LanceNamespaceException.notFound(
+          String.format("Table does not exist: %s", tableId.stringStyleId()),
+          TableNotFound.getType(),
+          tableId.stringStyleId(),
+          CommonUtil.formatCurrentStackTrace());
+    }
+
+    Hive2Util.validateLanceTable(hmsTable.get());
   }
 
   @Override

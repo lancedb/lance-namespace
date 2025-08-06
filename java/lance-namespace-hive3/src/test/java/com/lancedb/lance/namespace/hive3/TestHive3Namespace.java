@@ -20,10 +20,14 @@ import com.lancedb.lance.namespace.TestHelper;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
+import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
+import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
+import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
+import com.lancedb.lance.namespace.model.TableExistsRequest;
 
 import com.google.common.collect.Maps;
 import org.apache.arrow.memory.BufferAllocator;
@@ -336,5 +340,152 @@ public class TestHive3Namespace {
         "Expected either custom database location or root fallback but got: "
             + response.getLocation());
     assertEquals(1L, response.getVersion());
+  }
+
+  @Test
+  public void testDescribeNamespaceCatalog() {
+    // Test: Describe catalog-level namespace
+    DescribeNamespaceRequest request = new DescribeNamespaceRequest();
+    request.setId(Lists.list("test_catalog"));
+
+    DescribeNamespaceResponse response = namespace.describeNamespace(request);
+
+    assertEquals("Lance catalog: test_catalog", response.getProperties().get("description"));
+    assertTrue(response.getProperties().containsKey("catalog.location.uri"));
+  }
+
+  @Test
+  public void testDescribeNamespaceDatabase() {
+    // Test: Describe database-level namespace
+    DescribeNamespaceRequest request = new DescribeNamespaceRequest();
+    request.setId(Lists.list("test_catalog", "test_db"));
+
+    DescribeNamespaceResponse response = namespace.describeNamespace(request);
+
+    assertTrue(response.getProperties().containsKey("database.location-uri"));
+    assertTrue(response.getProperties().containsKey("database.owner"));
+    assertTrue(response.getProperties().containsKey("database.owner-type"));
+  }
+
+  @Test
+  public void testDescribeNamespaceDatabaseWithCustomProperties() {
+    // Setup: Create database with custom properties
+    CreateNamespaceRequest nsRequest = new CreateNamespaceRequest();
+    nsRequest.setId(Lists.list("test_catalog", "custom_db"));
+    nsRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+
+    Map<String, String> properties = Maps.newHashMap();
+    properties.put("database.description", "Custom database description");
+    properties.put("custom_param", "custom_value");
+    nsRequest.setProperties(properties);
+
+    namespace.createNamespace(nsRequest);
+
+    // Test: Describe namespace with custom properties
+    DescribeNamespaceRequest request = new DescribeNamespaceRequest();
+    request.setId(Lists.list("test_catalog", "custom_db"));
+
+    DescribeNamespaceResponse response = namespace.describeNamespace(request);
+
+    assertEquals(
+        "Custom database description", response.getProperties().get("database.description"));
+    assertEquals("custom_value", response.getProperties().get("custom_param"));
+    assertTrue(response.getProperties().containsKey("database.location-uri"));
+    assertTrue(response.getProperties().containsKey("database.owner"));
+    assertTrue(response.getProperties().containsKey("database.owner-type"));
+  }
+
+  @Test
+  public void testDescribeNonExistentCatalog() {
+    // Test: Describe non-existent catalog
+    DescribeNamespaceRequest request = new DescribeNamespaceRequest();
+    request.setId(Lists.list("non_existent_catalog"));
+
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.describeNamespace(request));
+    assertTrue(error.getMessage().contains("Namespace does not exist"));
+  }
+
+  @Test
+  public void testDescribeNonExistentDatabase() {
+    // Test: Describe non-existent database
+    DescribeNamespaceRequest request = new DescribeNamespaceRequest();
+    request.setId(Lists.list("test_catalog", "non_existent_db"));
+
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.describeNamespace(request));
+    assertTrue(error.getMessage().contains("Namespace does not exist"));
+  }
+
+  @Test
+  public void testNamespaceExistsCatalog() {
+    // Test: Check existing catalog
+    NamespaceExistsRequest request = new NamespaceExistsRequest();
+    request.setId(Lists.list("test_catalog"));
+
+    // Should not throw exception for existing catalog
+    namespace.namespaceExists(request);
+  }
+
+  @Test
+  public void testNamespaceExistsDatabase() {
+    // Test: Check existing database
+    NamespaceExistsRequest request = new NamespaceExistsRequest();
+    request.setId(Lists.list("test_catalog", "test_db"));
+
+    // Should not throw exception for existing database
+    namespace.namespaceExists(request);
+  }
+
+  @Test
+  public void testNamespaceExistsNonExistentCatalog() {
+    // Test: Check non-existent catalog
+    NamespaceExistsRequest request = new NamespaceExistsRequest();
+    request.setId(Lists.list("non_existent_catalog"));
+
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.namespaceExists(request));
+    assertTrue(error.getMessage().contains("Namespace does not exist"));
+  }
+
+  @Test
+  public void testNamespaceExistsNonExistentDatabase() {
+    // Test: Check non-existent database
+    NamespaceExistsRequest request = new NamespaceExistsRequest();
+    request.setId(Lists.list("test_catalog", "non_existent_db"));
+
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.namespaceExists(request));
+    assertTrue(error.getMessage().contains("Namespace does not exist"));
+  }
+
+  @Test
+  public void testTableExists() throws IOException {
+    // Setup: Create table
+    CreateTableRequest createRequest = new CreateTableRequest();
+    createRequest.setId(Lists.list("test_catalog", "test_db", "test_table"));
+    createRequest.setLocation(tmpDirBase + "/test_catalog/test_db/test_table.lance");
+    createRequest.setSchema(TestHelper.createTestSchema());
+
+    byte[] testData = TestHelper.createTestArrowData(allocator);
+    namespace.createTable(createRequest, testData);
+
+    // Test: Check existing table
+    TableExistsRequest request = new TableExistsRequest();
+    request.setId(Lists.list("test_catalog", "test_db", "test_table"));
+
+    // Should not throw exception for existing Lance table
+    namespace.tableExists(request);
+  }
+
+  @Test
+  public void testTableExistsNonExistent() {
+    // Test: Check non-existent table
+    TableExistsRequest request = new TableExistsRequest();
+    request.setId(Lists.list("test_catalog", "test_db", "non_existent_table"));
+
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.tableExists(request));
+    assertTrue(error.getMessage().contains("Table does not exist"));
   }
 }
