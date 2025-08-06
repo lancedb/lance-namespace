@@ -27,6 +27,8 @@ import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
 import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
+import com.lancedb.lance.namespace.model.DropNamespaceRequest;
+import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
@@ -184,8 +186,47 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
   }
 
   @Override
+  public DropNamespaceResponse dropNamespace(DropNamespaceRequest request) {
+    ObjectIdentifier id = ObjectIdentifier.of(request.getId());
+    DropNamespaceRequest.ModeEnum mode = request.getMode();
+    DropNamespaceRequest.BehaviorEnum behavior = request.getBehavior();
+
+    ValidationUtil.checkArgument(
+        !id.isRoot() && id.levels() <= 1, "Expect a 1-level namespace but get %s", id);
+
+    if (mode == null) {
+      mode = DropNamespaceRequest.ModeEnum.FAIL;
+    }
+    if (behavior == null) {
+      behavior = DropNamespaceRequest.BehaviorEnum.RESTRICT;
+    }
+
+    Map<String, String> properties = doDropNamespace(id, mode, behavior);
+
+    DropNamespaceResponse response = new DropNamespaceResponse();
+    response.setProperties(properties);
+    return response;
+  }
+
+  @Override
   public ListTablesResponse listTables(ListTablesRequest request) {
-    return LanceNamespace.super.listTables(request);
+    ObjectIdentifier nsId = ObjectIdentifier.of(request.getId());
+
+    ValidationUtil.checkArgument(
+        !nsId.isRoot() && nsId.levels() == 1, "Expect a 1-level namespace but get %s", nsId);
+
+    String db = nsId.levelAtListPos(0).toLowerCase();
+    List<String> tables = doListTables(db);
+
+    Collections.sort(tables);
+    PageUtil.Page page =
+        PageUtil.splitPage(
+            tables, request.getPageToken(), PageUtil.normalizePageSize(request.getLimit()));
+
+    ListTablesResponse response = new ListTablesResponse();
+    response.setTables(Sets.newHashSet(page.items()));
+    response.setPageToken(page.nextPageToken());
+    return response;
   }
 
   @Override
@@ -448,6 +489,50 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
     }
   }
 
+  protected List<String> doListTables(String db) {
+    try {
+      // First validate that database exists
+      Database database = Hive2Util.getDatabaseOrNull(clientPool, db);
+      if (database == null) {
+        throw LanceNamespaceException.notFound(
+            String.format("Database %s doesn't exist", db),
+            HiveMetaStoreError.getType(),
+            db,
+            CommonUtil.formatCurrentStackTrace());
+      }
+
+      List<String> allTables = clientPool.run(client -> client.getAllTables(db));
+      List<String> lanceTables = Lists.newArrayList();
+
+      for (String tableName : allTables) {
+        try {
+          Optional<Table> table = Hive2Util.getTable(clientPool, db, tableName);
+          if (table.isPresent()) {
+            Map<String, String> params = table.get().getParameters();
+            if (params != null && "lance".equalsIgnoreCase(params.get("table_type"))) {
+              lanceTables.add(tableName);
+            }
+          }
+        } catch (Exception e) {
+          // Skip tables that can't be accessed or validated
+          LOG.warn("Failed to validate table {}.{}: {}", db, tableName, e.getMessage());
+        }
+      }
+
+      return lanceTables;
+    } catch (TException | InterruptedException e) {
+      if (e instanceof InterruptedException) {
+        Thread.currentThread().interrupt();
+      }
+      String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
+      throw LanceNamespaceException.serviceUnavailable(
+          "Failed to list tables: " + errorMessage,
+          HiveMetaStoreError.getType(),
+          "",
+          CommonUtil.formatCurrentStackTrace());
+    }
+  }
+
   protected String doDropTable(ObjectIdentifier id) {
     String db = id.levelAtListPos(0).toLowerCase();
     String tableName = id.levelAtListPos(1).toLowerCase();
@@ -481,6 +566,98 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
           "Failed to drop table: " + errorMessage,
           HiveMetaStoreError.getType(),
           "",
+          CommonUtil.formatCurrentStackTrace());
+    }
+  }
+
+  protected Map<String, String> doDropNamespace(
+      ObjectIdentifier id,
+      DropNamespaceRequest.ModeEnum mode,
+      DropNamespaceRequest.BehaviorEnum behavior) {
+    String db = id.levelAtListPos(0).toLowerCase();
+
+    try {
+      Database database = Hive2Util.getDatabaseOrNull(clientPool, db);
+      if (database == null) {
+        if (mode == DropNamespaceRequest.ModeEnum.SKIP) {
+          // Return empty properties for SKIP mode when namespace doesn't exist
+          return new HashMap<>();
+        } else {
+          throw LanceNamespaceException.notFound(
+              String.format("Database %s doesn't exist", db),
+              HiveMetaStoreError.getType(),
+              db,
+              CommonUtil.formatCurrentStackTrace());
+        }
+      }
+
+      // Check if database contains tables
+      List<String> tables = doListTables(db);
+      if (!tables.isEmpty()) {
+        if (behavior == DropNamespaceRequest.BehaviorEnum.RESTRICT) {
+          throw LanceNamespaceException.badRequest(
+              String.format(
+                  "Database %s is not empty. Contains %d tables: %s", db, tables.size(), tables),
+              HiveMetaStoreError.getType(),
+              db,
+              CommonUtil.formatCurrentStackTrace());
+        } else if (behavior == DropNamespaceRequest.BehaviorEnum.CASCADE) {
+          // Drop all tables first
+          for (String tableName : tables) {
+            try {
+              ObjectIdentifier tableId = ObjectIdentifier.of(Lists.newArrayList(db, tableName));
+              doDropTable(tableId);
+              LOG.info("Dropped table {}.{} during CASCADE operation", db, tableName);
+            } catch (Exception e) {
+              LOG.warn("Failed to drop table {}.{}: {}", db, tableName, e.getMessage());
+              throw LanceNamespaceException.serviceUnavailable(
+                  String.format(
+                      "Failed to drop table %s.%s during CASCADE operation: %s",
+                      db, tableName, e.getMessage()),
+                  HiveMetaStoreError.getType(),
+                  String.format("%s.%s", db, tableName),
+                  CommonUtil.formatCurrentStackTrace());
+            }
+          }
+        }
+      }
+
+      // Collect database properties before dropping
+      Map<String, String> properties = new HashMap<>();
+      if (database.getDescription() != null) {
+        properties.put(Hive2NamespaceConfig.DATABASE_DESCRIPTION, database.getDescription());
+      }
+      if (database.getLocationUri() != null) {
+        properties.put(Hive2NamespaceConfig.DATABASE_LOCATION_URI, database.getLocationUri());
+      }
+      if (database.getOwnerName() != null) {
+        properties.put("owner", database.getOwnerName());
+      }
+      if (database.getOwnerType() != null) {
+        properties.put("owner_type", database.getOwnerType().name());
+      }
+      if (database.getParameters() != null) {
+        properties.putAll(database.getParameters());
+      }
+
+      // Drop the database
+      clientPool.run(
+          client -> {
+            client.dropDatabase(db, false, true, false);
+            return null;
+          });
+
+      LOG.info("Successfully dropped database: {}", db);
+      return properties;
+    } catch (TException | InterruptedException e) {
+      if (e instanceof InterruptedException) {
+        Thread.currentThread().interrupt();
+      }
+      String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
+      throw LanceNamespaceException.serviceUnavailable(
+          "Failed to drop namespace: " + errorMessage,
+          HiveMetaStoreError.getType(),
+          db,
           CommonUtil.formatCurrentStackTrace());
     }
   }

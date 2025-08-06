@@ -390,7 +390,7 @@ public class GlueNamespace implements LanceNamespace, Closeable {
         Dataset.create(allocator, location, schema, writeParams);
       } catch (Exception e) {
         throw LanceNamespaceException.serverError(
-            "Failed to create Lance dataset at location: " + request.getLocation(),
+            "Failed to create Lance dataset at location: " + location,
             "DATASET_CREATE_ERROR",
             location,
             "An error occurred while creating the Lance dataset: " + e.getMessage());
@@ -628,7 +628,8 @@ public class GlueNamespace implements LanceNamespace, Closeable {
               }
             } else {
               // For non-Lance tables, use OpenDAL to delete the directory
-              try (Operator op = OpenDalUtil.initializeOperator(tableLocation)) {
+              try (Operator op =
+                  OpenDalUtil.initializeOperator(tableLocation, config.getStorageOptions())) {
                 // table location is the root
                 op.removeAll("");
               } catch (Exception e) {
@@ -688,8 +689,14 @@ public class GlueNamespace implements LanceNamespace, Closeable {
   private String getDefaultTableLocation(String namespaceName, String tableName) {
     Database db = getDatabase(namespaceName);
     String dbUri = db.locationUri();
+
     if (dbUri == null || dbUri.isEmpty()) {
-      return String.format("%s/%s/%s.lance", config.getRoot(), namespaceName, tableName);
+      String rootConfig = config.getRoot();
+      if (rootConfig == null) {
+        throw new IllegalStateException(
+            "Root configuration is null - cannot derive table location");
+      }
+      return String.format("%s/%s/%s.lance", rootConfig, namespaceName, tableName);
     }
     String base = OpenDalUtil.stripTrailingSlash(dbUri);
     return String.format("%s/%s.lance", base, tableName);

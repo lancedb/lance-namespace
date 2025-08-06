@@ -13,8 +13,10 @@
  */
 package com.lancedb.lance.namespace.util;
 
-import com.google.common.collect.ImmutableMap;
 import org.apache.opendal.Operator;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /** Utility class for OpenDAL operations and configurations. */
 public class OpenDalUtil {
@@ -24,17 +26,23 @@ public class OpenDalUtil {
   }
 
   /**
-   * Initialize an OpenDAL operator based on the root path.
+   * Initialize an OpenDAL operator based on the root path and storage options.
    *
    * @param root the root path/URI
+   * @param storageOptions additional storage configuration options (credentials, endpoints, etc.)
    * @return configured OpenDAL operator
    */
-  public static Operator initializeOperator(String root) {
+  public static Operator initializeOperator(String root, Map<String, String> storageOptions) {
     String[] schemeSplit = root.split("://", -1);
 
     // local file system path
     if (schemeSplit.length < 2) {
-      return Operator.of("fs", ImmutableMap.of("root", root));
+      Map<String, String> config = new HashMap<>();
+      config.put("root", root);
+      if (storageOptions != null) {
+        config.putAll(storageOptions);
+      }
+      return Operator.of("fs", config);
     }
 
     String scheme = normalizeScheme(schemeSplit[0]);
@@ -42,15 +50,29 @@ public class OpenDalUtil {
     String authority = authoritySplit[0];
     String path = authoritySplit.length > 1 ? authoritySplit[1] : "";
 
+    Map<String, String> config = new HashMap<>();
+
     switch (scheme) {
       case "s3":
       case "gcs":
-        return Operator.of(scheme, ImmutableMap.of("root", path, "bucket", authority));
+        config.put("root", path);
+        config.put("bucket", authority);
+        break;
       case "azblob":
-        return Operator.of(scheme, ImmutableMap.of("root", path, "CONTAINER", authority));
+        config.put("root", path);
+        config.put("CONTAINER", authority);
+        break;
       default:
-        return Operator.of(scheme, ImmutableMap.of("root", schemeSplit[1]));
+        config.put("root", schemeSplit[1]);
+        break;
     }
+
+    // Add storage options
+    if (storageOptions != null) {
+      config.putAll(storageOptions);
+    }
+
+    return Operator.of(scheme, config);
   }
 
   /**

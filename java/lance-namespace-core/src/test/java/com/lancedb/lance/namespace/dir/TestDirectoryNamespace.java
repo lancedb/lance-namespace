@@ -14,6 +14,7 @@
 package com.lancedb.lance.namespace.dir;
 
 import com.lancedb.lance.Dataset;
+import com.lancedb.lance.namespace.LanceNamespaceException;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
@@ -30,6 +31,7 @@ import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListTablesRequest;
 import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
+import com.lancedb.lance.namespace.model.TableExistsRequest;
 
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
@@ -439,5 +441,46 @@ public class TestDirectoryNamespace {
         () -> {
           namespace.listTables(listRequest);
         });
+  }
+
+  @Test
+  public void testTableExists() {
+    Map<String, String> properties = new HashMap<>();
+    properties.put("root", tempDir.toString());
+    namespace.initialize(properties, allocator);
+
+    // First create a table
+    CreateTableRequest createRequest = new CreateTableRequest();
+    List<String> tableId = new ArrayList<>();
+    tableId.add("test_table");
+    createRequest.setId(tableId);
+    createRequest.setSchema(createTestSchema());
+    namespace.createTable(createRequest, createTestArrowData());
+
+    // Test that the table exists - should not throw exception
+    TableExistsRequest existsRequest = new TableExistsRequest();
+    existsRequest.setId(tableId);
+
+    // This should complete without throwing an exception
+    namespace.tableExists(existsRequest);
+  }
+
+  @Test
+  public void testTableExistsNonExistent() {
+    Map<String, String> properties = new HashMap<>();
+    properties.put("root", tempDir.toString());
+    namespace.initialize(properties, allocator);
+
+    // Test that a non-existent table throws exception
+    TableExistsRequest existsRequest = new TableExistsRequest();
+    List<String> tableId = new ArrayList<>();
+    tableId.add("non_existent_table");
+    existsRequest.setId(tableId);
+
+    LanceNamespaceException exception =
+        assertThrows(LanceNamespaceException.class, () -> namespace.tableExists(existsRequest));
+
+    assertTrue(exception.getMessage().contains("Table does not exist"));
+    assertTrue(exception.getMessage().contains("non_existent_table"));
   }
 }

@@ -24,8 +24,12 @@ import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
 import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
 import com.lancedb.lance.namespace.model.DescribeTableResponse;
+import com.lancedb.lance.namespace.model.DropNamespaceRequest;
+import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
+import com.lancedb.lance.namespace.model.ListTablesRequest;
+import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
 
@@ -487,5 +491,372 @@ public class TestHive3Namespace {
     Exception error =
         assertThrows(LanceNamespaceException.class, () -> namespace.tableExists(request));
     assertTrue(error.getMessage().contains("Table does not exist"));
+  }
+
+  @Test
+  public void testListTables() throws IOException {
+    // Create first table
+    CreateTableRequest createRequest1 = new CreateTableRequest();
+    createRequest1.setId(Lists.list("test_catalog", "test_db", "table1"));
+    createRequest1.setLocation(tmpDirBase + "/test_catalog/test_db/table1.lance");
+    createRequest1.setSchema(TestHelper.createTestSchema());
+
+    byte[] testData = TestHelper.createTestArrowData(allocator);
+    namespace.createTable(createRequest1, testData);
+
+    // Create second table
+    CreateTableRequest createRequest2 = new CreateTableRequest();
+    createRequest2.setId(Lists.list("test_catalog", "test_db", "table2"));
+    createRequest2.setLocation(tmpDirBase + "/test_catalog/test_db/table2.lance");
+    createRequest2.setSchema(TestHelper.createTestSchema());
+
+    namespace.createTable(createRequest2, testData);
+
+    // Test: List tables
+    ListTablesRequest request = new ListTablesRequest();
+    request.setId(Lists.list("test_catalog", "test_db"));
+
+    ListTablesResponse response = namespace.listTables(request);
+
+    assertEquals(2, response.getTables().size());
+    assertTrue(response.getTables().contains("table1"));
+    assertTrue(response.getTables().contains("table2"));
+  }
+
+  @Test
+  public void testListTablesEmpty() {
+    // Test: List tables in empty database
+    ListTablesRequest request = new ListTablesRequest();
+    request.setId(Lists.list("test_catalog", "test_db"));
+
+    ListTablesResponse response = namespace.listTables(request);
+
+    assertEquals(0, response.getTables().size());
+  }
+
+  @Test
+  public void testListTablesWithPagination() throws IOException {
+    // Create multiple tables
+    for (int i = 1; i <= 5; i++) {
+      CreateTableRequest createRequest = new CreateTableRequest();
+      createRequest.setId(Lists.list("test_catalog", "test_db", "table" + i));
+      createRequest.setLocation(tmpDirBase + "/test_catalog/test_db/table" + i + ".lance");
+      createRequest.setSchema(TestHelper.createTestSchema());
+
+      byte[] testData = TestHelper.createTestArrowData(allocator);
+      namespace.createTable(createRequest, testData);
+    }
+
+    // Test: List tables with pagination (limit 3)
+    ListTablesRequest request = new ListTablesRequest();
+    request.setId(Lists.list("test_catalog", "test_db"));
+    request.setLimit(3);
+
+    ListTablesResponse response = namespace.listTables(request);
+
+    assertEquals(3, response.getTables().size());
+    // Should have a page token for remaining results
+    assertTrue(response.getPageToken() != null && !response.getPageToken().isEmpty());
+
+    // Get remaining tables
+    ListTablesRequest nextRequest = new ListTablesRequest();
+    nextRequest.setId(Lists.list("test_catalog", "test_db"));
+    nextRequest.setPageToken(response.getPageToken());
+
+    ListTablesResponse nextResponse = namespace.listTables(nextRequest);
+
+    assertEquals(2, nextResponse.getTables().size());
+    // No more pages
+    assertTrue(nextResponse.getPageToken() == null || nextResponse.getPageToken().isEmpty());
+  }
+
+  @Test
+  public void testListTablesWithCustomDatabase() throws IOException {
+    // Setup: Create database with custom name
+    CreateNamespaceRequest nsRequest = new CreateNamespaceRequest();
+    nsRequest.setId(Lists.list("test_catalog", "custom_db"));
+    nsRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+    namespace.createNamespace(nsRequest);
+
+    // Create table in custom database
+    CreateTableRequest createRequest = new CreateTableRequest();
+    createRequest.setId(Lists.list("test_catalog", "custom_db", "custom_table"));
+    createRequest.setLocation(tmpDirBase + "/test_catalog/custom_db/custom_table.lance");
+    createRequest.setSchema(TestHelper.createTestSchema());
+
+    byte[] testData = TestHelper.createTestArrowData(allocator);
+    namespace.createTable(createRequest, testData);
+
+    // Test: List tables in custom database
+    ListTablesRequest request = new ListTablesRequest();
+    request.setId(Lists.list("test_catalog", "custom_db"));
+
+    ListTablesResponse response = namespace.listTables(request);
+
+    assertEquals(1, response.getTables().size());
+    assertTrue(response.getTables().contains("custom_table"));
+  }
+
+  @Test
+  public void testListTablesNonExistentDatabase() {
+    // Test: List tables in non-existent database
+    ListTablesRequest request = new ListTablesRequest();
+    request.setId(Lists.list("test_catalog", "non_existent_db"));
+
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.listTables(request));
+    assertTrue(error.getMessage().contains("Database test_catalog.non_existent_db doesn't exist"));
+  }
+
+  @Test
+  public void testListTablesNonExistentCatalog() {
+    // Test: List tables in non-existent catalog
+    ListTablesRequest request = new ListTablesRequest();
+    request.setId(Lists.list("non_existent_catalog", "test_db"));
+
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.listTables(request));
+    assertTrue(error.getMessage().contains("Catalog non_existent_catalog doesn't exist"));
+  }
+
+  @Test
+  public void testDropNamespaceBasicDatabase() throws IOException {
+    // Setup: Create catalog and database
+    CreateNamespaceRequest catalogRequest = new CreateNamespaceRequest();
+    catalogRequest.setId(Lists.list("test_catalog_basic_db"));
+    catalogRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+    namespace.createNamespace(catalogRequest);
+
+    CreateNamespaceRequest dbRequest = new CreateNamespaceRequest();
+    dbRequest.setId(Lists.list("test_catalog_basic_db", "test_db"));
+    dbRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+
+    Map<String, String> properties = Maps.newHashMap();
+    properties.put("database.description", "Test database for dropping");
+    properties.put("custom_param", "custom_value");
+    dbRequest.setProperties(properties);
+
+    namespace.createNamespace(dbRequest);
+
+    // Test: Drop the database with default behavior (RESTRICT) and mode (FAIL)
+    DropNamespaceRequest dropRequest = new DropNamespaceRequest();
+    dropRequest.setId(Lists.list("test_catalog_basic_db", "test_db"));
+
+    DropNamespaceResponse response = namespace.dropNamespace(dropRequest);
+
+    // Verify properties were returned
+    assertEquals(
+        "Test database for dropping", response.getProperties().get("database.description"));
+    assertEquals("custom_value", response.getProperties().get("custom_param"));
+
+    // Verify database was dropped
+    NamespaceExistsRequest existsRequest = new NamespaceExistsRequest();
+    existsRequest.setId(Lists.list("test_catalog_basic_db", "test_db"));
+
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.namespaceExists(existsRequest));
+    assertTrue(error.getMessage().contains("Namespace does not exist"));
+  }
+
+  @Test
+  public void testDropNamespaceBasicCatalog() {
+    // Setup: Create catalog
+    CreateNamespaceRequest catalogRequest = new CreateNamespaceRequest();
+    catalogRequest.setId(Lists.list("test_catalog_basic"));
+    catalogRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+
+    Map<String, String> properties = Maps.newHashMap();
+    properties.put("description", "Test catalog for dropping");
+    catalogRequest.setProperties(properties);
+
+    namespace.createNamespace(catalogRequest);
+
+    // Test: Drop the catalog with CASCADE (since Hive creates default database automatically)
+    DropNamespaceRequest dropRequest = new DropNamespaceRequest();
+    dropRequest.setId(Lists.list("test_catalog_basic"));
+    dropRequest.setBehavior(DropNamespaceRequest.BehaviorEnum.CASCADE);
+
+    DropNamespaceResponse response = namespace.dropNamespace(dropRequest);
+
+    // Verify properties were returned
+    assertEquals("Test catalog for dropping", response.getProperties().get("description"));
+
+    // Verify catalog was dropped
+    NamespaceExistsRequest existsRequest = new NamespaceExistsRequest();
+    existsRequest.setId(Lists.list("test_catalog_basic"));
+
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.namespaceExists(existsRequest));
+    assertTrue(error.getMessage().contains("Namespace does not exist"));
+  }
+
+  @Test
+  public void testDropNamespaceSkipMode() {
+    // Test: Drop non-existent database with SKIP mode
+    DropNamespaceRequest dropRequest = new DropNamespaceRequest();
+    dropRequest.setId(Lists.list("non_existent_catalog", "non_existent_db"));
+    dropRequest.setMode(DropNamespaceRequest.ModeEnum.SKIP);
+
+    DropNamespaceResponse response = namespace.dropNamespace(dropRequest);
+
+    // Should return empty properties for SKIP mode
+    assertEquals(0, response.getProperties().size());
+  }
+
+  @Test
+  public void testDropNamespaceFailMode() {
+    // Test: Drop non-existent database with FAIL mode (default)
+    DropNamespaceRequest dropRequest = new DropNamespaceRequest();
+    dropRequest.setId(Lists.list("non_existent_catalog", "non_existent_db"));
+    dropRequest.setMode(DropNamespaceRequest.ModeEnum.FAIL);
+
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.dropNamespace(dropRequest));
+    assertTrue(error.getMessage().contains("doesn't exist"));
+  }
+
+  @Test
+  public void testDropDatabaseRestrictWithTables() throws IOException {
+    // Setup: Create catalog, database and table
+    CreateNamespaceRequest catalogRequest = new CreateNamespaceRequest();
+    catalogRequest.setId(Lists.list("test_catalog_restrict"));
+    catalogRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+    namespace.createNamespace(catalogRequest);
+
+    CreateNamespaceRequest dbRequest = new CreateNamespaceRequest();
+    dbRequest.setId(Lists.list("test_catalog_restrict", "test_db"));
+    dbRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+    namespace.createNamespace(dbRequest);
+
+    CreateTableRequest createRequest = new CreateTableRequest();
+    createRequest.setId(Lists.list("test_catalog_restrict", "test_db", "test_table"));
+    createRequest.setLocation(tmpDirBase + "/test_catalog_restrict/test_db/test_table.lance");
+    createRequest.setSchema(TestHelper.createTestSchema());
+
+    byte[] testData = TestHelper.createTestArrowData(allocator);
+    namespace.createTable(createRequest, testData);
+
+    // Test: Try to drop database with RESTRICT behavior (should fail)
+    DropNamespaceRequest dropRequest = new DropNamespaceRequest();
+    dropRequest.setId(Lists.list("test_catalog_restrict", "test_db"));
+    dropRequest.setBehavior(DropNamespaceRequest.BehaviorEnum.RESTRICT);
+
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.dropNamespace(dropRequest));
+    assertTrue(error.getMessage().contains("Database test_catalog_restrict.test_db is not empty"));
+    assertTrue(error.getMessage().contains("Contains 1 tables"));
+  }
+
+  @Test
+  public void testDropCatalogRestrictWithDatabases() {
+    // Setup: Create catalog and database
+    CreateNamespaceRequest catalogRequest = new CreateNamespaceRequest();
+    catalogRequest.setId(Lists.list("test_catalog_restrict_db"));
+    catalogRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+    namespace.createNamespace(catalogRequest);
+
+    CreateNamespaceRequest dbRequest = new CreateNamespaceRequest();
+    dbRequest.setId(Lists.list("test_catalog_restrict_db", "test_db"));
+    dbRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+    namespace.createNamespace(dbRequest);
+
+    // Test: Try to drop catalog with RESTRICT behavior (should fail)
+    DropNamespaceRequest dropRequest = new DropNamespaceRequest();
+    dropRequest.setId(Lists.list("test_catalog_restrict_db"));
+    dropRequest.setBehavior(DropNamespaceRequest.BehaviorEnum.RESTRICT);
+
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.dropNamespace(dropRequest));
+    assertTrue(error.getMessage().contains("is not empty"));
+    assertTrue(error.getMessage().contains("databases"));
+  }
+
+  @Test
+  public void testDropDatabaseCascadeWithTables() throws IOException {
+    // Setup: Create catalog, database and multiple tables
+    CreateNamespaceRequest catalogRequest = new CreateNamespaceRequest();
+    catalogRequest.setId(Lists.list("test_catalog_cascade_db"));
+    catalogRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+    namespace.createNamespace(catalogRequest);
+
+    CreateNamespaceRequest dbRequest = new CreateNamespaceRequest();
+    dbRequest.setId(Lists.list("test_catalog_cascade_db", "test_db"));
+    dbRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+    namespace.createNamespace(dbRequest);
+
+    // Create first table
+    CreateTableRequest createRequest1 = new CreateTableRequest();
+    createRequest1.setId(Lists.list("test_catalog_cascade_db", "test_db", "table1"));
+    createRequest1.setLocation(tmpDirBase + "/test_catalog_cascade_db/test_db/table1.lance");
+    createRequest1.setSchema(TestHelper.createTestSchema());
+
+    byte[] testData = TestHelper.createTestArrowData(allocator);
+    namespace.createTable(createRequest1, testData);
+
+    // Create second table
+    CreateTableRequest createRequest2 = new CreateTableRequest();
+    createRequest2.setId(Lists.list("test_catalog_cascade_db", "test_db", "table2"));
+    createRequest2.setLocation(tmpDirBase + "/test_catalog_cascade_db/test_db/table2.lance");
+    createRequest2.setSchema(TestHelper.createTestSchema());
+
+    namespace.createTable(createRequest2, testData);
+
+    // Test: Drop database with CASCADE behavior
+    DropNamespaceRequest dropRequest = new DropNamespaceRequest();
+    dropRequest.setId(Lists.list("test_catalog_cascade_db", "test_db"));
+    dropRequest.setBehavior(DropNamespaceRequest.BehaviorEnum.CASCADE);
+
+    DropNamespaceResponse response = namespace.dropNamespace(dropRequest);
+
+    // Verify database properties were returned
+    assertTrue(response.getProperties().containsKey("database.location-uri"));
+
+    // Verify database was dropped
+    NamespaceExistsRequest existsRequest = new NamespaceExistsRequest();
+    existsRequest.setId(Lists.list("test_catalog_cascade_db", "test_db"));
+
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.namespaceExists(existsRequest));
+    assertTrue(error.getMessage().contains("Namespace does not exist"));
+  }
+
+  @Test
+  public void testDropCatalogCascadeWithDatabasesAndTables() throws IOException {
+    // Setup: Create catalog, database and table
+    CreateNamespaceRequest catalogRequest = new CreateNamespaceRequest();
+    catalogRequest.setId(Lists.list("test_catalog_cascade"));
+    catalogRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+    namespace.createNamespace(catalogRequest);
+
+    CreateNamespaceRequest dbRequest = new CreateNamespaceRequest();
+    dbRequest.setId(Lists.list("test_catalog_cascade", "test_db"));
+    dbRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+    namespace.createNamespace(dbRequest);
+
+    CreateTableRequest createRequest = new CreateTableRequest();
+    createRequest.setId(Lists.list("test_catalog_cascade", "test_db", "test_table"));
+    createRequest.setLocation(tmpDirBase + "/test_catalog_cascade/test_db/test_table.lance");
+    createRequest.setSchema(TestHelper.createTestSchema());
+
+    byte[] testData = TestHelper.createTestArrowData(allocator);
+    namespace.createTable(createRequest, testData);
+
+    // Test: Drop catalog with CASCADE behavior
+    DropNamespaceRequest dropRequest = new DropNamespaceRequest();
+    dropRequest.setId(Lists.list("test_catalog_cascade"));
+    dropRequest.setBehavior(DropNamespaceRequest.BehaviorEnum.CASCADE);
+
+    DropNamespaceResponse response = namespace.dropNamespace(dropRequest);
+
+    // Verify catalog properties were returned
+    assertTrue(response.getProperties().containsKey("catalog.location.uri"));
+
+    // Verify catalog was dropped
+    NamespaceExistsRequest existsRequest = new NamespaceExistsRequest();
+    existsRequest.setId(Lists.list("test_catalog_cascade"));
+
+    Exception error =
+        assertThrows(LanceNamespaceException.class, () -> namespace.namespaceExists(existsRequest));
+    assertTrue(error.getMessage().contains("Namespace does not exist"));
   }
 }

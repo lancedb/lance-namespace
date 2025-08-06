@@ -47,7 +47,14 @@ public class PageUtil {
       }
     }
 
-    int right = Math.min(left + pageSize, items.size());
+    // Avoid integer overflow when pageSize is Integer.MAX_VALUE
+    int right;
+    if (pageSize == Integer.MAX_VALUE) {
+      right = items.size();
+    } else {
+      right = Math.min(left + pageSize, items.size());
+    }
+
     List<String> pageItems = items.subList(left, right);
     String nextPageToken = right == items.size() ? null : items.get(right);
     return new Page(pageItems, nextPageToken);
