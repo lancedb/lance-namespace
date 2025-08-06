@@ -121,7 +121,6 @@ nav:
               - CreateTable: spec/impls/rest/create-table.md
           - Directory: spec/impls/dir.md
           - Apache Hive MetaStore: spec/impls/hive.md
-          - Apache Iceberg REST Catalog: spec/impls/iceberg.md
       - Tool Integration: spec/tools.md
       - OpenAPI: https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/lancedb/lance-namespace/refs/heads/main/docs/src/spec/rest.yaml
   - User Guide:

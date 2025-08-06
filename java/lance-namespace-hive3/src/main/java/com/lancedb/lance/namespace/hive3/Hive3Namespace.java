@@ -50,6 +50,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -146,10 +147,15 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
     ValidationUtil.checkArgument(
         tableId.levels() == 3, "Expect 3-level table identifier but get %s", tableId);
 
-    doCreateTable(tableId, schema, request.getLocation(), request.getProperties(), requestData);
+    String location = request.getLocation();
+    if (location == null || location.isEmpty()) {
+      location = getDefaultTableLocation(tableId.levelAtListPos(1), tableId.levelAtListPos(2));
+    }
+
+    doCreateTable(tableId, schema, location, request.getProperties(), requestData);
 
     CreateTableResponse response = new CreateTableResponse();
-    response.setLocation(request.getLocation());
+    response.setLocation(location);
     response.setVersion(1L);
     return response;
   }
@@ -298,10 +304,18 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
       }
     }
 
+    // If no location is specified in properties, use root config
+    Map<String, String> dbProperties =
+        new HashMap<>(properties != null ? properties : new HashMap<>());
+    if (!dbProperties.containsKey(Hive3NamespaceConfig.DATABASE_LOCATION_URI)) {
+      String dbLocation = String.format("%s/%s", config.getRoot(), dbName);
+      dbProperties.put(Hive3NamespaceConfig.DATABASE_LOCATION_URI, dbLocation);
+    }
+
     Database database = new Database();
     database.setCatalogName(catalogName);
     database.setName(dbName);
-    Hive3Util.setDatabaseProperties(database, () -> catalog.getLocationUri(), dbName, properties);
+    Hive3Util.setDatabaseProperties(database, () -> catalog.getLocationUri(), dbName, dbProperties);
 
     clientPool.run(
         client -> {
@@ -429,5 +443,26 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
           id.stringStyleId(),
           CommonUtil.formatCurrentStackTrace());
     }
+  }
+
+  private String getDefaultTableLocation(String namespaceName, String tableName) {
+    try {
+      // Try to get the database location first
+      Database db = Hive3Util.getDatabaseOrNull(clientPool, namespaceName.toLowerCase());
+      if (db != null && db.getLocationUri() != null && !db.getLocationUri().isEmpty()) {
+        String dbLocation = db.getLocationUri();
+        if (!dbLocation.endsWith("/")) {
+          dbLocation += "/";
+        }
+        return dbLocation + tableName.toLowerCase() + ".lance";
+      }
+    } catch (Exception e) {
+      // Fall back to using root config if database location fails
+      LOG.warn("Failed to get database location for {}, using root config", namespaceName, e);
+    }
+
+    // Use the configured root as fallback
+    return String.format(
+        "%s/%s/%s.lance", config.getRoot(), namespaceName.toLowerCase(), tableName.toLowerCase());
   }
 }

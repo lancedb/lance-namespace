@@ -268,4 +268,78 @@ public class TestHive2Namespace {
         assertThrows(LanceNamespaceException.class, () -> namespace.dropTable(request));
     assertTrue(error.getMessage().contains("Table test_db.non_existent does not exist"));
   }
+
+  @Test
+  public void testCreateTableWithDefaultLocationFromRoot() throws IOException {
+    // With our enhancement, databases created without explicit location
+    // will use the root config location instead of Hive warehouse
+
+    // Setup: Create namespace with custom root configuration
+    Map<String, String> properties = Maps.newHashMap();
+    properties.put("root", tmpDirBase);
+
+    HiveConf hiveConf = metastore.hiveConf();
+    LanceNamespace customNamespace =
+        LanceNamespaces.connect("hive2", properties, hiveConf, allocator);
+
+    // Setup: Create database (will use root location)
+    CreateNamespaceRequest nsRequest = new CreateNamespaceRequest();
+    nsRequest.setId(Lists.list("test_db"));
+    nsRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+    customNamespace.createNamespace(nsRequest);
+
+    // Test: Create table without specifying location
+    CreateTableRequest request = new CreateTableRequest();
+    request.setId(Lists.list("test_db", "test_table"));
+    // Don't set location - it will be derived from database location
+    request.setSchema(TestHelper.createTestSchema());
+
+    // Test without data
+    CreateTableResponse response = customNamespace.createTable(request, null);
+
+    // Verify: Location should be derived from root-based database location
+    // Hive adds file: prefix to locations
+    String expectedLocation = "file:" + tmpDirBase + "/test_db/test_table.lance";
+    assertEquals(expectedLocation, response.getLocation());
+    assertEquals(1L, response.getVersion());
+  }
+
+  @Test
+  public void testCreateTableWithDefaultLocationFromDatabaseLocation() throws IOException {
+    // Setup: Create namespace with custom root configuration
+    Map<String, String> properties = Maps.newHashMap();
+    properties.put("root", tmpDirBase);
+
+    HiveConf hiveConf = metastore.hiveConf();
+    LanceNamespace customNamespace =
+        LanceNamespaces.connect("hive2", properties, hiveConf, allocator);
+
+    // Setup: Create database with specific location
+    CreateNamespaceRequest nsRequest = new CreateNamespaceRequest();
+    nsRequest.setId(Lists.list("test_db_with_location"));
+    nsRequest.setMode(CreateNamespaceRequest.ModeEnum.CREATE);
+
+    // Set database location - this should take precedence over root config
+    String databaseLocation = tmpDirBase + "/custom_db_location";
+    Map<String, String> dbProperties = Maps.newHashMap();
+    dbProperties.put("database.location-uri", databaseLocation);
+    nsRequest.setProperties(dbProperties);
+
+    customNamespace.createNamespace(nsRequest);
+
+    // Test: Create table without specifying location (should derive from database location)
+    CreateTableRequest request = new CreateTableRequest();
+    request.setId(Lists.list("test_db_with_location", "test_table"));
+    // Don't set location - it should be derived from database location
+    request.setSchema(TestHelper.createTestSchema());
+
+    // Test without data
+    CreateTableResponse response = customNamespace.createTable(request, null);
+
+    // Verify: Location should be derived as {database_location}/{table}.lance
+    // Database locations in Hive typically have file: prefix
+    String expectedLocation = "file:" + databaseLocation + "/test_table.lance";
+    assertEquals(expectedLocation, response.getLocation());
+    assertEquals(1L, response.getVersion());
+  }
 }

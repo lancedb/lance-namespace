@@ -13,6 +13,7 @@
  */
 package com.lancedb.lance.namespace.hive2;
 
+import com.lancedb.lance.namespace.util.OpenDalUtil;
 import com.lancedb.lance.namespace.util.PropertyUtil;
 
 import java.util.Map;
@@ -30,13 +31,22 @@ public class Hive2NamespaceConfig {
 
   public static final String STORAGE_OPTIONS_PREFIX = "storage.";
 
+  /** Storage root location of the lakehouse on Hive catalog */
+  public static final String ROOT = "root";
+
+  public static final String ROOT_DEFAULT = System.getProperty("user.dir");
+
   private final int clientPoolSize;
   private final Map<String, String> storageOptions;
+  private final String root;
 
   public Hive2NamespaceConfig(Map<String, String> properties) {
     this.clientPoolSize =
         PropertyUtil.propertyAsInt(properties, CLIENT_POOL_SIZE, CLIENT_POOL_SIZE_DEFAULT);
     this.storageOptions = PropertyUtil.propertiesWithPrefix(properties, STORAGE_OPTIONS_PREFIX);
+    this.root =
+        OpenDalUtil.stripTrailingSlash(
+            PropertyUtil.propertyAsString(properties, ROOT, ROOT_DEFAULT));
   }
 
   public int getClientPoolSize() {
@@ -45,5 +55,9 @@ public class Hive2NamespaceConfig {
 
   public Map<String, String> getStorageOptions() {
     return storageOptions;
+  }
+
+  public String getRoot() {
+    return root;
   }
 }

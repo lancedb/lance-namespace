@@ -504,7 +504,7 @@ public class GlueNamespace implements LanceNamespace, Closeable {
   private void validateTableId(List<String> id) {
     if (id == null || id.size() != 2) {
       throw LanceNamespaceException.badRequest(
-          "Table identifier must contain exactly 2 elements: [namespace, table]",
+          "Table identifier must contain exactly 2 elements, but got " + id,
           "BAD_REQUEST",
           id != null ? String.join("/", id) : "",
           "Expected format: [namespace, table]");

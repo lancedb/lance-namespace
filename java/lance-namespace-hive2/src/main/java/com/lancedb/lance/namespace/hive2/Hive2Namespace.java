@@ -49,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -146,10 +147,15 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
     ValidationUtil.checkArgument(
         tableId.levels() == 2, "Expect 2-level table identifier but get %s", tableId);
 
-    doCreateTable(tableId, schema, request.getLocation(), request.getProperties(), requestData);
+    String location = request.getLocation();
+    if (location == null || location.isEmpty()) {
+      location = getDefaultTableLocation(tableId.levelAtListPos(0), tableId.levelAtListPos(1));
+    }
+
+    doCreateTable(tableId, schema, location, request.getProperties(), requestData);
 
     CreateTableResponse response = new CreateTableResponse();
-    response.setLocation(request.getLocation());
+    response.setLocation(location);
     response.setVersion(1L);
     response.setStorageOptions(config.getStorageOptions());
     return response;
@@ -247,9 +253,17 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
                     "Warehouse location is not set: %s=null",
                     HiveConf.ConfVars.METASTOREWAREHOUSE.varname));
 
+    // If no location is specified in properties, use root config
+    Map<String, String> dbProperties =
+        new HashMap<>(properties != null ? properties : new HashMap<>());
+    if (!dbProperties.containsKey(Hive2NamespaceConfig.DATABASE_LOCATION_URI)) {
+      String dbLocation = String.format("%s/%s", config.getRoot(), dbName);
+      dbProperties.put(Hive2NamespaceConfig.DATABASE_LOCATION_URI, dbLocation);
+    }
+
     Database database = new Database();
     database.setName(dbName);
-    Hive2Util.setDatabaseProperties(database, warehouseLocation, dbName, properties);
+    Hive2Util.setDatabaseProperties(database, warehouseLocation, dbName, dbProperties);
 
     clientPool.run(
         client -> {
@@ -374,5 +388,26 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
           "",
           CommonUtil.formatCurrentStackTrace());
     }
+  }
+
+  private String getDefaultTableLocation(String namespaceName, String tableName) {
+    try {
+      // Try to get the database location first
+      Database db = Hive2Util.getDatabaseOrNull(clientPool, namespaceName.toLowerCase());
+      if (db != null && db.getLocationUri() != null && !db.getLocationUri().isEmpty()) {
+        String dbLocation = db.getLocationUri();
+        if (!dbLocation.endsWith("/")) {
+          dbLocation += "/";
+        }
+        return dbLocation + tableName.toLowerCase() + ".lance";
+      }
+    } catch (Exception e) {
+      // Fall back to using root config if database location fails
+      LOG.warn("Failed to get database location for {}, using root config", namespaceName, e);
+    }
+
+    // Use the configured root as fallback
+    return String.format(
+        "%s/%s/%s.lance", config.getRoot(), namespaceName.toLowerCase(), tableName.toLowerCase());
   }
 }

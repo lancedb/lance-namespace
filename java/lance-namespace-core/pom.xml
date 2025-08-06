@@ -37,7 +37,19 @@
             <groupId>org.apache.opendal</groupId>
             <artifactId>opendal</artifactId>
             <version>0.48.0</version>
-            <classifier>${os.detected.classifier}</classifier>
+            <classifier>linux-aarch_64</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.opendal</groupId>
+            <artifactId>opendal</artifactId>
+            <version>0.48.0</version>
+            <classifier>linux-x86_64</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.opendal</groupId>
+            <artifactId>opendal</artifactId>
+            <version>0.48.0</version>
+            <classifier>osx-aarch_64</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.arrow</groupId>
@@ -103,13 +115,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <extensions>
-            <extension>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>os-maven-plugin</artifactId>
-                <version>1.7.0</version>
-            </extension>
-        </extensions>
     </build>
     <profiles>
     </profiles>
