@@ -2,7 +2,23 @@
 
 **Lance Hive Namespace** is an implementation using Apache Hive MetaStore (HMS).
 For more details about HMS, please read [HMS AdminManual 2.x](https://hive.apache.org/docs/latest/adminmanual-metastore-administration_27362076/) 
-and [HMS AdminManual 3.x](https://hive.apache.org/docs/latest/adminmanual-metastore-3-0-administration_75978150/). 
+and [HMS AdminManual 3.x](https://hive.apache.org/docs/latest/adminmanual-metastore-3-0-administration_75978150/).
+
+## Configuration
+
+The Lance Hive namespace accepts the following configuration properties:
+
+| Property           | Required | Description                                            | Default                   | Example                         |
+|--------------------|----------|--------------------------------------------------------|---------------------------|---------------------------------|
+| `client.pool-size` | No       | Size of the HMS client connection pool                 | 3                         | `5`                             |
+| `root`             | No       | Storage root location of the lakehouse on Hive catalog | Current working directory | `/my/dir`, `s3://bucket/prefix` |
+| `storage.*`        | No       | Additional storage configurations to access table      |                           | `storage.region=us-west-2`      |
+
+### Version-specific Configuration
+
+**Hive 2.x**: Uses the configuration properties listed above.
+
+**Hive 3.x**: Uses the same configuration properties as Hive 2.x, with an additional catalog name constant (`hive`) for catalog-level operations. 
 
 ## Namespace Mapping
 
