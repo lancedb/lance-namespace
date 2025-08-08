@@ -1,4 +1,6 @@
 nav:
   - index.md
-  - spec
+  - Concepts: concepts.md
+  - operations
+  - impls
   - Contributing: contributing.md

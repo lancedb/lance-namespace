@@ -10,13 +10,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-.PHONY: lint
-lint:
-	uv run mkdocs-linkcheck src
-
 .PHONY: gen
-gen: lint
-	cd src/spec; uv run update_line_numbers.py
+gen:
+	cd src; uv run update_line_numbers.py
 
 .PHONY: build
 build: gen
@@ -25,7 +21,3 @@ build: gen
 .PHONY: serve
 serve: gen
 	uv run mkdocs serve
-
-.PHONY: deploy
-deploy:
-	uv run mkdocs gh-deploy --force

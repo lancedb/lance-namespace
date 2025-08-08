@@ -51,3 +51,31 @@ You can also run `make <command>-<language>-<module>` inside a language folder t
 
 - `make gen-rust-reqwest-client`: codegen and lint the Rust reqwest client module
 - `make build-java-springboot-server`: build the Java Spring Boot server module
+
+## Documentation
+
+### Setup
+
+The documentation website is built using [mkdocs-material](https://pypi.org/project/mkdocs-material).
+Start the server with:
+
+```shell
+make serve-docs
+```
+
+### Generated Doc from OpenAPI Spec
+
+The OpenAPI spec at `docs/src/rest.yaml` is digested and generated as Markdown documents for better readability.
+Generate the latest documents with:
+
+```shell
+make gen-docs
+```
+
+### Understanding the Build Process
+
+The contents in the `lance-namespace` repo are for the ease of contributors to edit and preview.
+After code merge, the contents are added to the 
+[main Lance documentation](https://github.com/lancedb/lance/tree/main/docs) 
+during the Lance doc CI build time, and is presented in the Lance website under 
+[Apache Spark integration](https://lancedb.github.io/lance/format/namespace).

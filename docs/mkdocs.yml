@@ -8,8 +8,6 @@ repo_url: https://github.com/lancedb/lance-namespace
 
 theme:
   name: material
-  logo: logo/white.png
-  favicon: logo/logo.png
   palette:
     - scheme: default
       primary: indigo

@@ -58,6 +58,10 @@ gen-docs:
 build-docs:
 	cd docs; make build
 
+.PHONY: serve-docs
+build-docs:
+	cd docs; make serve
+
 .PHONY: clean
 clean: clean-rust clean-python clean-java
 
