@@ -1,0 +1,6 @@
+title: Spec
+nav:
+  - Concepts: concepts.md
+  - operations
+  - impls
+  - OpenAPI Swagger UI: https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/lancedb/lance-namespace/refs/heads/main/docs/src/spec/rest.yaml
