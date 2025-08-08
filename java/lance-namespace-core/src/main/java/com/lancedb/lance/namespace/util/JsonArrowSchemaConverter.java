@@ -68,7 +68,8 @@ public class JsonArrowSchemaConverter {
 
     // Convert child fields if they exist (needed for list, struct, map, etc.)
     List<Field> children = null;
-    if (jsonField.getType() != null && jsonField.getType().getFields() != null) {
+    boolean hasChildFields = jsonField.getType() != null && jsonField.getType().getFields() != null;
+    if (hasChildFields) {
       children = new ArrayList<>();
       for (JsonArrowField childField : jsonField.getType().getFields()) {
         children.add(convertToArrowField(childField));
