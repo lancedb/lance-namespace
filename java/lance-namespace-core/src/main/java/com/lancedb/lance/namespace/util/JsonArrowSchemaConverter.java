@@ -65,7 +65,18 @@ public class JsonArrowSchemaConverter {
         jsonField.getMetadata() != null ? jsonField.getMetadata() : new HashMap<>();
 
     FieldType fieldType = new FieldType(nullable, arrowType, null, metadata);
-    return new Field(name, fieldType, null);
+
+    // Convert child fields if they exist (needed for list, struct, map, etc.)
+    List<Field> children = null;
+    boolean hasChildFields = jsonField.getType() != null && jsonField.getType().getFields() != null;
+    if (hasChildFields) {
+      children = new ArrayList<>();
+      for (JsonArrowField childField : jsonField.getType().getFields()) {
+        children.add(convertToArrowField(childField));
+      }
+    }
+
+    return new Field(name, fieldType, children);
   }
 
   private static ArrowType convertToArrowType(JsonArrowDataType jsonType) {
