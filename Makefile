@@ -12,7 +12,7 @@
 
 .PHONY: lint
 lint:
-	uv run openapi-spec-validator --errors all docs/src/spec/rest.yaml
+	uv run openapi-spec-validator --errors all docs/src/rest.yaml
 
 .PHONY: clean-rust
 clean-rust:
@@ -57,6 +57,10 @@ gen-docs:
 .PHONY: build-docs
 build-docs:
 	cd docs; make build
+
+.PHONY: serve-docs
+serve-docs:
+	cd docs; make serve
 
 .PHONY: clean
 clean: clean-rust clean-python clean-java

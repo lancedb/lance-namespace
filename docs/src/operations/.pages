@@ -1,0 +1,40 @@
+title: Operations
+nav:
+  - Overview: index.md
+  - create-namespace.md
+  - list-namespaces.md
+  - describe-namespace.md
+  - drop-namespace.md
+  - namespace-exists.md
+  - list-tables.md
+  - register-table.md
+  - describe-table.md
+  - table-exists.md
+  - drop-table.md
+  - deregister-table.md
+  - restore-table.md
+  - list-table-versions.md
+  - alter-table-alter-columns.md
+  - alter-table-drop-columns.md
+  - get-table-stats.md
+  - insert-into-table.md
+  - merge-insert-into-table.md
+  - update-table.md
+  - delete-from-table.md
+  - query-table.md
+  - count-table-rows.md
+  - create-table.md
+  - explain-table-query-plan.md
+  - analyze-table-query-plan.md
+  - alter-table-add-columns.md
+  - create-table-index.md
+  - list-table-indices.md
+  - describe-table-index-stats.md
+  - drop-table-index.md
+  - list-table-tags.md
+  - get-table-tag-version.md
+  - create-table-tag.md
+  - delete-table-tag.md
+  - update-table-tag.md
+  - describe-transaction.md
+  - alter-transaction.md

@@ -21,7 +21,7 @@ clean-urllib3-client:
 .PHONY: gen-urllib3-client
 gen-urllib3-client: clean-urllib3-client
 	uv run openapi-generator-cli generate \
-	  -i ../docs/src/spec/rest.yaml \
+	  -i ../docs/src/rest.yaml \
 	  -g python \
 	  -o lance_namespace_urllib3_client \
 	  --additional-properties=packageName=lance_namespace_urllib3_client,packageVersion=$(VERSION),library=urllib3

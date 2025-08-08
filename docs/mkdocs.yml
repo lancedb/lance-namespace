@@ -8,8 +8,6 @@ repo_url: https://github.com/lancedb/lance-namespace
 
 theme:
   name: material
-  logo: logo/white.png
-  favicon: logo/logo.png
   palette:
     - scheme: default
       primary: indigo
@@ -57,6 +55,7 @@ markdown_extensions:
 
 plugins:
   - search
+  - awesome-pages
 
 extra:
   social:
@@ -67,63 +66,3 @@ extra:
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/lancedb
 
-nav:
-  - Introduction: index.md
-  - Spec:
-      - Concepts: spec/concepts.md
-      - Operations:
-          - Overview: spec/operations/index.md
-          - CreateNamespace: spec/operations/create-namespace.md
-          - ListNamespaces: spec/operations/list-namespaces.md
-          - DescribeNamespace: spec/operations/describe-namespace.md
-          - DropNamespace: spec/operations/drop-namespace.md
-          - NamespaceExists: spec/operations/namespace-exists.md
-          - ListTables: spec/operations/list-tables.md
-          - RegisterTable: spec/operations/register-table.md
-          - DescribeTable: spec/operations/describe-table.md
-          - TableExists: spec/operations/table-exists.md
-          - DropTable: spec/operations/drop-table.md
-          - DeregisterTable: spec/operations/deregister-table.md
-          - RestoreTable: spec/operations/restore-table.md
-          - ListTableVersions: spec/operations/list-table-versions.md
-          - AlterTableAlterColumns: spec/operations/alter-table-alter-columns.md
-          - AlterTableDropColumns: spec/operations/alter-table-drop-columns.md
-          - GetTableStats: spec/operations/get-table-stats.md
-          - InsertIntoTable: spec/operations/insert-into-table.md
-          - MergeInsertIntoTable: spec/operations/merge-insert-into-table.md
-          - UpdateTable: spec/operations/update-table.md
-          - DeleteFromTable: spec/operations/delete-from-table.md
-          - QueryTable: spec/operations/query-table.md
-          - CountTableRows: spec/operations/count-table-rows.md
-          - CreateTable: spec/operations/create-table.md
-          - ExplainTableQueryPlan: spec/operations/explain-table-query-plan.md
-          - AnalyzeTableQueryPlan: spec/operations/analyze-table-query-plan.md
-          - AlterTableAddColumns: spec/operations/alter-table-add-columns.md
-          - CreateTableIndex: spec/operations/create-table-index.md
-          - ListTableIndices: spec/operations/list-table-indices.md
-          - DescribeTableIndexStats: spec/operations/describe-table-index-stats.md
-          - DropTableIndex: spec/operations/drop-table-index.md
-          - ListTableTags: spec/operations/list-table-tags.md
-          - GetTableTagVersion: spec/operations/get-table-tag-version.md
-          - CreateTableTag: spec/operations/create-table-tag.md
-          - DeleteTableTag: spec/operations/delete-table-tag.md
-          - UpdateTableTag: spec/operations/update-table-tag.md
-          - DescribeTransaction: spec/operations/describe-transaction.md
-          - AlterTransaction: spec/operations/alter-transaction.md
-      - Implementations:
-          - Overview: spec/impls/index.md
-          - REST: 
-              - Overview: spec/impls/rest/index.md
-              - ListNamespaces: spec/impls/rest/list-namespaces.md
-              - ListTables: spec/impls/rest/list-tables.md
-              - InsertIntoTable: spec/impls/rest/insert-into-table.md
-              - MergeInsertIntoTable: spec/impls/rest/merge-insert-into-table.md
-              - CreateTable: spec/impls/rest/create-table.md
-          - Directory: spec/impls/dir.md
-          - Apache Hive MetaStore: spec/impls/hive.md
-      - Tool Integration: spec/tools.md
-      - OpenAPI: https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/lancedb/lance-namespace/refs/heads/main/docs/src/spec/rest.yaml
-  - User Guide:
-      - Java SDK: user-guide/java-sdk.md
-  - Contributing: contributing.md
-  - Lance: https://lancedb.github.io/lance

@@ -19,7 +19,7 @@ clean-reqwest-client:
 .PHONY: gen-reqwest-client
 gen-reqwest-client: clean-reqwest-client
 	uv run openapi-generator-cli generate \
-	  -i ../docs/src/spec/rest.yaml \
+	  -i ../docs/src/rest.yaml \
 	  -g rust \
 	  -o lance-namespace-reqwest-client \
 	  --type-mappings='Binary=Vec<u8>,binary=Vec<u8>,file=Vec<u8>' \

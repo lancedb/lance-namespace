@@ -11,7 +11,8 @@ dev = [
     "openapi-generator-cli==7.12.0",
     "mkdocs-material",
     "mkdocs-linkcheck",
-    "mkdocs-macros-plugin"
+    "mkdocs-macros-plugin",
+    "mkdocs-awesome-pages-plugin"
 ]
 
 [tool.uv.workspace]
