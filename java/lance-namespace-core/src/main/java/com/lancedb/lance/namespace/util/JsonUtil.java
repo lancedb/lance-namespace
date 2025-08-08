@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -484,5 +485,25 @@ public class JsonUtil {
       gen.writeStringField(pair.getKey(), pair.getValue());
     }
     gen.writeEndObject();
+  }
+
+  public static String toJsonString(Object object) {
+    try {
+      return MAPPER.writeValueAsString(object);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
+  public static JsonNode parseJson(String json) {
+    try {
+      return MAPPER.readValue(json, JsonNode.class);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
+  public static ObjectNode createObjectNode() {
+    return MAPPER.createObjectNode();
   }
 }
