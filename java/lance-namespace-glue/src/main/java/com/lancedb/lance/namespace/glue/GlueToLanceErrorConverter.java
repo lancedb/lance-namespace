@@ -22,27 +22,30 @@ public class GlueToLanceErrorConverter {
   private GlueToLanceErrorConverter() {}
 
   public static LanceNamespaceException notFound(GlueException e, String message, Object... args) {
+    String exceptionMessage = e.getMessage();
     return LanceNamespaceException.notFound(
         String.format(message, args),
-        e.getMessage().getClass().getSimpleName(),
+        exceptionMessage != null ? exceptionMessage.getClass().getSimpleName() : "GlueException",
         e.requestId(),
-        e.getMessage());
+        exceptionMessage != null ? exceptionMessage : "No error message");
   }
 
   public static LanceNamespaceException conflict(GlueException e, String message, Object... args) {
+    String exceptionMessage = e.getMessage();
     return LanceNamespaceException.notFound(
         String.format(message, args),
-        e.getMessage().getClass().getSimpleName(),
+        exceptionMessage != null ? exceptionMessage.getClass().getSimpleName() : "GlueException",
         e.requestId(),
-        e.getMessage());
+        exceptionMessage != null ? exceptionMessage : "No error message");
   }
 
   public static LanceNamespaceException serverError(
       GlueException e, String message, Object... args) {
+    String exceptionMessage = e.getMessage();
     return LanceNamespaceException.serverError(
         String.format(message, args),
-        e.getMessage().getClass().getSimpleName(),
+        exceptionMessage != null ? exceptionMessage.getClass().getSimpleName() : "GlueException",
         e.requestId(),
-        e.getMessage());
+        exceptionMessage != null ? exceptionMessage : "No error message");
   }
 }

@@ -68,6 +68,15 @@
         <version>5.18.0</version>
         <scope>test</scope>
       </dependency>
+      
+      <!-- Add test dependencies for TCK -->
+      <dependency>
+        <groupId>com.lancedb</groupId>
+        <artifactId>lance-namespace-core</artifactId>
+        <version>${lance-namespace.version}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
     
     <build>
