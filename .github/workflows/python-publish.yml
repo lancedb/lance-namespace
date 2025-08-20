@@ -36,9 +36,6 @@ jobs:
     permissions:
       id-token: write  # Required for PyPI trusted publishing
       contents: read
-    defaults:
-      run:
-        working-directory: python
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
