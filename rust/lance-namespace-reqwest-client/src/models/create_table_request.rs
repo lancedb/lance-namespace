@@ -18,6 +18,9 @@ pub struct CreateTableRequest {
     pub id: Option<Vec<String>>,
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
+    /// There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing table is kept.   * overwrite: the existing table is dropped and a new table with this name is created. 
+    #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
+    pub mode: Option<Mode>,
     #[serde(rename = "schema", skip_serializing_if = "Option::is_none")]
     pub schema: Option<Box<models::JsonArrowSchema>>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
@@ -30,9 +33,26 @@ impl CreateTableRequest {
         CreateTableRequest {
             id: None,
             location: None,
+            mode: None,
             schema: None,
             properties: None,
         }
+    }
+}
+/// There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing table is kept.   * overwrite: the existing table is dropped and a new table with this name is created. 
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum Mode {
+    #[serde(rename = "create")]
+    Create,
+    #[serde(rename = "exist_ok")]
+    ExistOk,
+    #[serde(rename = "overwrite")]
+    Overwrite,
+}
+
+impl Default for Mode {
+    fn default() -> Mode {
+        Self::Create
     }
 }
 

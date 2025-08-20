@@ -275,12 +275,13 @@ pub async fn count_table_rows(configuration: &configuration::Configuration, id: 
     }
 }
 
-/// Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
-pub async fn create_table(configuration: &configuration::Configuration, id: &str, body: Vec<u8>, delimiter: Option<&str>, x_lance_table_location: Option<&str>, x_lance_table_properties: Option<&str>) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
+/// Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
+pub async fn create_table(configuration: &configuration::Configuration, id: &str, body: Vec<u8>, delimiter: Option<&str>, mode: Option<&str>, x_lance_table_location: Option<&str>, x_lance_table_properties: Option<&str>) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_body = body;
     let p_delimiter = delimiter;
+    let p_mode = mode;
     let p_x_lance_table_location = x_lance_table_location;
     let p_x_lance_table_properties = x_lance_table_properties;
 
@@ -289,6 +290,9 @@ pub async fn create_table(configuration: &configuration::Configuration, id: &str
 
     if let Some(ref param_value) = p_delimiter {
         req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_mode {
+        req_builder = req_builder.query(&[("mode", &param_value.to_string())]);
     }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());

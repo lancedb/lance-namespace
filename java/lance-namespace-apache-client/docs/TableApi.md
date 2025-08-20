@@ -419,11 +419,11 @@ No authorization required
 
 ## createTable
 
-> CreateTableResponse createTable(id, body, delimiter, xLanceTableLocation, xLanceTableProperties)
+> CreateTableResponse createTable(id, body, delimiter, mode, xLanceTableLocation, xLanceTableProperties)
 
 Create a table with the given name
 
-Create table &#x60;id&#x60; in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the &#x60;CreateTableRequest&#x60; information in the following way: - &#x60;id&#x60;: pass through path parameter of the same name - &#x60;location&#x60;: pass through header &#x60;x-lance-table-location&#x60; - &#x60;properties&#x60;: pass through header &#x60;x-lance-table-properties&#x60; 
+Create table &#x60;id&#x60; in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the &#x60;CreateTableRequest&#x60; information in the following way: - &#x60;id&#x60;: pass through path parameter of the same name - &#x60;mode&#x60;: pass through query parameter of the same name - &#x60;location&#x60;: pass through header &#x60;x-lance-table-location&#x60; - &#x60;properties&#x60;: pass through header &#x60;x-lance-table-properties&#x60; 
 
 ### Example
 
@@ -444,10 +444,11 @@ public class Example {
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
         byte[] body = null; // byte[] | Arrow IPC data
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
+        String mode = "mode_example"; // String | 
         String xLanceTableLocation = "xLanceTableLocation_example"; // String | URI pointing to root location to create the table at
         String xLanceTableProperties = "xLanceTableProperties_example"; // String | JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
         try {
-            CreateTableResponse result = apiInstance.createTable(id, body, delimiter, xLanceTableLocation, xLanceTableProperties);
+            CreateTableResponse result = apiInstance.createTable(id, body, delimiter, mode, xLanceTableLocation, xLanceTableProperties);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TableApi#createTable");
@@ -468,6 +469,7 @@ public class Example {
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **body** | **byte[]**| Arrow IPC data | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] |
+| **mode** | **String**|  | [optional] |
 | **xLanceTableLocation** | **String**| URI pointing to root location to create the table at | [optional] |
 | **xLanceTableProperties** | **String**| JSON-encoded string map (e.g. { \&quot;owner\&quot;: \&quot;jack\&quot; })  | [optional] |
 

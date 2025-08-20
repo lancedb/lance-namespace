@@ -1028,6 +1028,7 @@ class DataApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        mode: Optional[StrictStr] = None,
         x_lance_table_location: Annotated[Optional[StrictStr], Field(description="URI pointing to root location to create the table at")] = None,
         x_lance_table_properties: Annotated[Optional[StrictStr], Field(description="JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ")] = None,
         _request_timeout: Union[
@@ -1045,7 +1046,7 @@ class DataApi:
     ) -> CreateTableResponse:
         """Create a table with the given name
 
-        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
+        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1053,6 +1054,8 @@ class DataApi:
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param mode:
+        :type mode: str
         :param x_lance_table_location: URI pointing to root location to create the table at
         :type x_lance_table_location: str
         :param x_lance_table_properties: JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
@@ -1083,6 +1086,7 @@ class DataApi:
             id=id,
             body=body,
             delimiter=delimiter,
+            mode=mode,
             x_lance_table_location=x_lance_table_location,
             x_lance_table_properties=x_lance_table_properties,
             _request_auth=_request_auth,
@@ -1117,6 +1121,7 @@ class DataApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        mode: Optional[StrictStr] = None,
         x_lance_table_location: Annotated[Optional[StrictStr], Field(description="URI pointing to root location to create the table at")] = None,
         x_lance_table_properties: Annotated[Optional[StrictStr], Field(description="JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ")] = None,
         _request_timeout: Union[
@@ -1134,7 +1139,7 @@ class DataApi:
     ) -> ApiResponse[CreateTableResponse]:
         """Create a table with the given name
 
-        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
+        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1142,6 +1147,8 @@ class DataApi:
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param mode:
+        :type mode: str
         :param x_lance_table_location: URI pointing to root location to create the table at
         :type x_lance_table_location: str
         :param x_lance_table_properties: JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
@@ -1172,6 +1179,7 @@ class DataApi:
             id=id,
             body=body,
             delimiter=delimiter,
+            mode=mode,
             x_lance_table_location=x_lance_table_location,
             x_lance_table_properties=x_lance_table_properties,
             _request_auth=_request_auth,
@@ -1206,6 +1214,7 @@ class DataApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ")] = None,
+        mode: Optional[StrictStr] = None,
         x_lance_table_location: Annotated[Optional[StrictStr], Field(description="URI pointing to root location to create the table at")] = None,
         x_lance_table_properties: Annotated[Optional[StrictStr], Field(description="JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ")] = None,
         _request_timeout: Union[
@@ -1223,7 +1232,7 @@ class DataApi:
     ) -> RESTResponseType:
         """Create a table with the given name
 
-        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
+        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1231,6 +1240,8 @@ class DataApi:
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. 
         :type delimiter: str
+        :param mode:
+        :type mode: str
         :param x_lance_table_location: URI pointing to root location to create the table at
         :type x_lance_table_location: str
         :param x_lance_table_properties: JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
@@ -1261,6 +1272,7 @@ class DataApi:
             id=id,
             body=body,
             delimiter=delimiter,
+            mode=mode,
             x_lance_table_location=x_lance_table_location,
             x_lance_table_properties=x_lance_table_properties,
             _request_auth=_request_auth,
@@ -1290,6 +1302,7 @@ class DataApi:
         id,
         body,
         delimiter,
+        mode,
         x_lance_table_location,
         x_lance_table_properties,
         _request_auth,
@@ -1319,6 +1332,10 @@ class DataApi:
         if delimiter is not None:
             
             _query_params.append(('delimiter', delimiter))
+            
+        if mode is not None:
+            
+            _query_params.append(('mode', mode))
             
         # process the header parameters
         if x_lance_table_location is not None:

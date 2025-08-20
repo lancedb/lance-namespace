@@ -204,6 +204,7 @@ public class RestNamespace implements LanceNamespace {
           ObjectIdentifier.of(request.getId()).stringStyleId(config.getDelimiter()),
           requestData,
           config.getDelimiter(),
+          request.getMode() == null ? null : request.getMode().getValue(),
           request.getLocation(),
           serializedTableProperties,
           config.getAdditionalHeaders());

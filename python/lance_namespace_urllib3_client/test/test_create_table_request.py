@@ -39,6 +39,7 @@ class TestCreateTableRequest(unittest.TestCase):
                     ''
                     ],
                 location = '',
+                mode = 'create',
                 var_schema = lance_namespace_urllib3_client.models.json_arrow_schema.JsonArrowSchema(
                     fields = [
                         lance_namespace_urllib3_client.models.json_arrow_field.JsonArrowField(

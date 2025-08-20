@@ -309,7 +309,7 @@ class TestLanceRestNamespace:
 
         request = CreateNamespaceRequest()
         request.id = ["new_ns"]
-        request.mode = "CREATE"
+        request.mode = "create"
         request.properties = {"owner": "test"}
 
         expected_response = CreateNamespaceResponse(properties={"owner": "test"})

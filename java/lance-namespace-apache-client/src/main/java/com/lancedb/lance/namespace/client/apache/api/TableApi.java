@@ -605,8 +605,9 @@ public class TableApi extends BaseApi {
    * the stream is empty, the API creates a new empty table. REST NAMESPACE ONLY REST namespace uses
    * Arrow IPC stream as the request body. It passes in the &#x60;CreateTableRequest&#x60;
    * information in the following way: - &#x60;id&#x60;: pass through path parameter of the same
-   * name - &#x60;location&#x60;: pass through header &#x60;x-lance-table-location&#x60; -
-   * &#x60;properties&#x60;: pass through header &#x60;x-lance-table-properties&#x60;
+   * name - &#x60;mode&#x60;: pass through query parameter of the same name - &#x60;location&#x60;:
+   * pass through header &#x60;x-lance-table-location&#x60; - &#x60;properties&#x60;: pass through
+   * header &#x60;x-lance-table-properties&#x60;
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -616,6 +617,7 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
+   * @param mode (optional)
    * @param xLanceTableLocation URI pointing to root location to create the table at (optional)
    * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
    *     \&quot;jack\&quot; }) (optional)
@@ -626,11 +628,18 @@ public class TableApi extends BaseApi {
       String id,
       byte[] body,
       String delimiter,
+      String mode,
       String xLanceTableLocation,
       String xLanceTableProperties)
       throws ApiException {
     return this.createTable(
-        id, body, delimiter, xLanceTableLocation, xLanceTableProperties, Collections.emptyMap());
+        id,
+        body,
+        delimiter,
+        mode,
+        xLanceTableLocation,
+        xLanceTableProperties,
+        Collections.emptyMap());
   }
 
   /**
@@ -639,8 +648,9 @@ public class TableApi extends BaseApi {
    * the stream is empty, the API creates a new empty table. REST NAMESPACE ONLY REST namespace uses
    * Arrow IPC stream as the request body. It passes in the &#x60;CreateTableRequest&#x60;
    * information in the following way: - &#x60;id&#x60;: pass through path parameter of the same
-   * name - &#x60;location&#x60;: pass through header &#x60;x-lance-table-location&#x60; -
-   * &#x60;properties&#x60;: pass through header &#x60;x-lance-table-properties&#x60;
+   * name - &#x60;mode&#x60;: pass through query parameter of the same name - &#x60;location&#x60;:
+   * pass through header &#x60;x-lance-table-location&#x60; - &#x60;properties&#x60;: pass through
+   * header &#x60;x-lance-table-properties&#x60;
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -650,6 +660,7 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
+   * @param mode (optional)
    * @param xLanceTableLocation URI pointing to root location to create the table at (optional)
    * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
    *     \&quot;jack\&quot; }) (optional)
@@ -661,6 +672,7 @@ public class TableApi extends BaseApi {
       String id,
       byte[] body,
       String delimiter,
+      String mode,
       String xLanceTableLocation,
       String xLanceTableProperties,
       Map<String, String> additionalHeaders)
@@ -692,6 +704,7 @@ public class TableApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("mode", mode));
     if (xLanceTableLocation != null)
       localVarHeaderParams.put(
           "x-lance-table-location", apiClient.parameterToString(xLanceTableLocation));

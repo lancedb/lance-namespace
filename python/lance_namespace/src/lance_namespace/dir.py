@@ -5,7 +5,10 @@ from typing import Dict, List, Optional
 from urllib.parse import urlparse
 import os
 
-import opendal
+try:
+    import opendal
+except ImportError:
+    opendal = None
 
 import lance
 import pyarrow as pa

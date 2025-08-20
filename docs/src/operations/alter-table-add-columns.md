@@ -3,23 +3,23 @@
 ## Description
 
 ```yaml
---8<-- "src/rest.yaml:1097:1098"
+--8<-- "src/rest.yaml:1103:1104"
 ```
 
 ## Request Schema
 
 ```yaml
---8<-- "src/rest.yaml:2986:3000"
+--8<-- "src/rest.yaml:3004:3018"
 ```
 ## Response Schema
 
 ```yaml
---8<-- "src/rest.yaml:3014:3024"
+--8<-- "src/rest.yaml:3032:3042"
 ```
 
 ## Related Components Schema
 ### New Column Transform
 
 ```yaml
---8<-- "src/rest.yaml:3001:3013"
+--8<-- "src/rest.yaml:3019:3031"
 ```

@@ -13,7 +13,9 @@
  */
 package com.lancedb.lance.namespace.server.springboot.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.annotation.Generated;
@@ -39,6 +41,48 @@ public class CreateTableRequest {
   @Valid private List<String> id = new ArrayList<>();
 
   private String location;
+
+  /**
+   * There are three modes when trying to create a table, to differentiate the behavior when a table
+   * of the same name already exists: * create: the operation fails with 409. * exist_ok: the
+   * operation succeeds and the existing table is kept. * overwrite: the existing table is dropped
+   * and a new table with this name is created.
+   */
+  public enum ModeEnum {
+    CREATE("create"),
+
+    EXIST_OK("exist_ok"),
+
+    OVERWRITE("overwrite");
+
+    private String value;
+
+    ModeEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static ModeEnum fromValue(String value) {
+      for (ModeEnum b : ModeEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
+
+  private ModeEnum mode;
 
   private JsonArrowSchema schema;
 
@@ -90,6 +134,33 @@ public class CreateTableRequest {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public CreateTableRequest mode(ModeEnum mode) {
+    this.mode = mode;
+    return this;
+  }
+
+  /**
+   * There are three modes when trying to create a table, to differentiate the behavior when a table
+   * of the same name already exists: * create: the operation fails with 409. * exist_ok: the
+   * operation succeeds and the existing table is kept. * overwrite: the existing table is dropped
+   * and a new table with this name is created.
+   *
+   * @return mode
+   */
+  @Schema(
+      name = "mode",
+      description =
+          "There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing table is kept.   * overwrite: the existing table is dropped and a new table with this name is created. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("mode")
+  public ModeEnum getMode() {
+    return mode;
+  }
+
+  public void setMode(ModeEnum mode) {
+    this.mode = mode;
   }
 
   public CreateTableRequest schema(JsonArrowSchema schema) {
@@ -152,13 +223,14 @@ public class CreateTableRequest {
     CreateTableRequest createTableRequest = (CreateTableRequest) o;
     return Objects.equals(this.id, createTableRequest.id)
         && Objects.equals(this.location, createTableRequest.location)
+        && Objects.equals(this.mode, createTableRequest.mode)
         && Objects.equals(this.schema, createTableRequest.schema)
         && Objects.equals(this.properties, createTableRequest.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location, schema, properties);
+    return Objects.hash(id, location, mode, schema, properties);
   }
 
   @Override
@@ -167,6 +239,7 @@ public class CreateTableRequest {
     sb.append("class CreateTableRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");

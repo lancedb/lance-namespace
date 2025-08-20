@@ -9,22 +9,22 @@
 ## Request Schema
 
 ```yaml
---8<-- "src/rest.yaml:1837:1851"
+--8<-- "src/rest.yaml:1843:1857"
 ```
 ## Response Schema
 
 ```yaml
---8<-- "src/rest.yaml:1852:1875"
+--8<-- "src/rest.yaml:1858:1881"
 ```
 
 ## Related Components Schema
 ### Json Arrow Schema
 
 ```yaml
---8<-- "src/rest.yaml:2337:2354"
+--8<-- "src/rest.yaml:2343:2360"
 ```
 ### Json Arrow Schema
 
 ```yaml
---8<-- "src/rest.yaml:2355:2375"
+--8<-- "src/rest.yaml:2361:2381"
 ```

@@ -15,7 +15,7 @@ use serde::{Deserialize, Serialize};
 pub struct CreateNamespaceRequest {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
-    /// There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 409.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
+    /// There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing namespace is kept.   * overwrite: the existing namespace is dropped and a new empty namespace with this name is created. 
     #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
     pub mode: Option<Mode>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
@@ -31,14 +31,14 @@ impl CreateNamespaceRequest {
         }
     }
 }
-/// There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 409.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. 
+/// There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing namespace is kept.   * overwrite: the existing namespace is dropped and a new empty namespace with this name is created. 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum Mode {
-    #[serde(rename = "CREATE")]
+    #[serde(rename = "create")]
     Create,
-    #[serde(rename = "EXIST_OK")]
+    #[serde(rename = "exist_ok")]
     ExistOk,
-    #[serde(rename = "OVERWRITE")]
+    #[serde(rename = "overwrite")]
     Overwrite,
 }
 

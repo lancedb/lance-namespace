@@ -8,7 +8,13 @@ from pathlib import Path
 
 import pytest
 
-from lance_namespace.dir import DirectoryNamespace
+try:
+    import opendal
+    from lance_namespace.dir import DirectoryNamespace
+except ImportError:
+    DirectoryNamespace = None
+    opendal = None
+
 from lance_namespace_urllib3_client.models import (
     CreateNamespaceRequest,
     ListNamespacesRequest,
@@ -28,6 +34,7 @@ from lance_namespace_urllib3_client.models import (
 )
 
 
+@pytest.mark.skipif(opendal is None, reason="opendal not available")
 class TestDirectoryNamespace:
     
     def setup_method(self):
@@ -265,5 +272,3 @@ class TestDirectoryNamespace:
         
         with pytest.raises(ValueError, match="root namespace operations"):
             self.namespace.list_tables(list_request)
-    
-    

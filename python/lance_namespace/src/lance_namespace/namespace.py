@@ -164,7 +164,6 @@ def connect(impl: str, properties: Dict[str, str]) -> LanceNamespace:
     Args:
         impl: Implementation alias or full class path
         properties: Configuration properties
-        conf: Optional configuration object
         
     Returns:
         LanceNamespace instance

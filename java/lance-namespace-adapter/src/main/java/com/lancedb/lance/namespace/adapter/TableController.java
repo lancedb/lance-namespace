@@ -19,6 +19,7 @@ import com.lancedb.lance.namespace.server.springboot.api.TableApi;
 import com.lancedb.lance.namespace.server.springboot.model.CountTableRowsRequest;
 import com.lancedb.lance.namespace.server.springboot.model.CreateTableIndexRequest;
 import com.lancedb.lance.namespace.server.springboot.model.CreateTableIndexResponse;
+import com.lancedb.lance.namespace.server.springboot.model.CreateTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.CreateTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.DeleteFromTableRequest;
 import com.lancedb.lance.namespace.server.springboot.model.DeleteFromTableResponse;
@@ -112,6 +113,7 @@ public class TableController implements TableApi {
       String id,
       Resource body,
       Optional<String> delimiter,
+      Optional<String> mode,
       Optional<String> xLanceTableLocation,
       Optional<String> xLanceTableProperties) {
     try {
@@ -119,6 +121,7 @@ public class TableController implements TableApi {
       com.lancedb.lance.namespace.server.springboot.model.CreateTableRequest request =
           new com.lancedb.lance.namespace.server.springboot.model.CreateTableRequest();
       request.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listStyleId());
+      request.setMode(mode.map(CreateTableRequest.ModeEnum::fromValue).orElse(null));
       xLanceTableLocation.ifPresent(request::setLocation);
       if (xLanceTableProperties.isPresent()) {
         // Parse JSON properties

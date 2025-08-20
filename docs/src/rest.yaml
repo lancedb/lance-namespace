@@ -959,6 +959,11 @@ paths:
     parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
+      - name: "mode"
+        in: query
+        required: false
+        schema:
+          type: string
       - name: "x-lance-table-location"
         in: header
         required: false
@@ -988,6 +993,7 @@ paths:
         REST namespace uses Arrow IPC stream as the request body.
         It passes in the `CreateTableRequest` information in the following way:
         - `id`: pass through path parameter of the same name
+        - `mode`: pass through query parameter of the same name
         - `location`: pass through header `x-lance-table-location`
         - `properties`: pass through header `x-lance-table-properties`
       requestBody:
@@ -1618,13 +1624,13 @@ components:
           description: |
             There are three modes when trying to create a namespace,
             to differentiate the behavior when a namespace of the same name already exists:
-              * CREATE: the operation fails with 409.
-              * EXIST_OK: the operation succeeds and the existing namespace is kept.
-              * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created.
+              * create: the operation fails with 409.
+              * exist_ok: the operation succeeds and the existing namespace is kept.
+              * overwrite: the existing namespace is dropped and a new empty namespace with this name is created.
           enum:
-            - CREATE
-            - EXIST_OK
-            - OVERWRITE
+            - create
+            - exist_ok
+            - overwrite
         properties:
           type: object
           additionalProperties:
@@ -2408,6 +2414,18 @@ components:
             type: string
         location:
           type: string
+        mode:
+          type: string
+          description: |
+            There are three modes when trying to create a table,
+            to differentiate the behavior when a table of the same name already exists:
+              * create: the operation fails with 409.
+              * exist_ok: the operation succeeds and the existing table is kept.
+              * overwrite: the existing table is dropped and a new table with this name is created.
+          enum:
+            - create
+            - exist_ok
+            - overwrite
         schema:
           $ref: '#/components/schemas/JsonArrowSchema'
         properties:

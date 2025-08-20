@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **List[str]** |  | [optional] 
 **location** | **str** |  | [optional] 
+**mode** | **str** | There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing table is kept.   * overwrite: the existing table is dropped and a new table with this name is created.  | [optional] 
 **var_schema** | [**JsonArrowSchema**](JsonArrowSchema.md) |  | [optional] 
 **properties** | **Dict[str, str]** |  | [optional] 
 
