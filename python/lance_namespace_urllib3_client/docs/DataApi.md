@@ -257,7 +257,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **create_table**
-> CreateTableResponse create_table(id, body, delimiter=delimiter, x_lance_table_location=x_lance_table_location, x_lance_table_properties=x_lance_table_properties)
+> CreateTableResponse create_table(id, body, delimiter=delimiter, mode=mode, x_lance_table_location=x_lance_table_location, x_lance_table_properties=x_lance_table_properties)
 
 Create a table with the given name
 
@@ -270,6 +270,7 @@ REST NAMESPACE ONLY
 REST namespace uses Arrow IPC stream as the request body.
 It passes in the `CreateTableRequest` information in the following way:
 - `id`: pass through path parameter of the same name
+- `mode`: pass through query parameter of the same name
 - `location`: pass through header `x-lance-table-location`
 - `properties`: pass through header `x-lance-table-properties`
 
@@ -297,12 +298,13 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
     body = None # bytearray | Arrow IPC data
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
+    mode = 'mode_example' # str |  (optional)
     x_lance_table_location = 'x_lance_table_location_example' # str | URI pointing to root location to create the table at (optional)
     x_lance_table_properties = 'x_lance_table_properties_example' # str | JSON-encoded string map (e.g. { \"owner\": \"jack\" })  (optional)
 
     try:
         # Create a table with the given name
-        api_response = api_instance.create_table(id, body, delimiter=delimiter, x_lance_table_location=x_lance_table_location, x_lance_table_properties=x_lance_table_properties)
+        api_response = api_instance.create_table(id, body, delimiter=delimiter, mode=mode, x_lance_table_location=x_lance_table_location, x_lance_table_properties=x_lance_table_properties)
         print("The response of DataApi->create_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -319,6 +321,7 @@ Name | Type | Description  | Notes
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **body** | **bytearray**| Arrow IPC data | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.  | [optional] 
+ **mode** | **str**|  | [optional] 
  **x_lance_table_location** | **str**| URI pointing to root location to create the table at | [optional] 
  **x_lance_table_properties** | **str**| JSON-encoded string map (e.g. { \&quot;owner\&quot;: \&quot;jack\&quot; })  | [optional] 
 

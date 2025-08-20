@@ -1,11 +1,9 @@
 [project]
 name = "lance-namespace-urllib3-client"
-version = "0.0.5"
+version = "0.0.6"
 description = "Lance Namespace Specification"
 readme = "README.md"
-authors = [
-    { name = "OpenAPI Generator Community", email = "team@openapitools.org" }
-]
+authors = [{ name = "LanceDB Devs", email = "dev@lancedb.com" }]
 license = { text = "Apache-2.0" }
 keywords = ["OpenAPI", "OpenAPI-Generator", "Lance Namespace Specification"]
 requires-python = ">=3.8"

@@ -1164,6 +1164,13 @@ paths:
     parameters:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
+    - explode: true
+      in: query
+      name: mode
+      required: false
+      schema:
+        type: string
+      style: form
     - description: URI pointing to root location to create the table at
       explode: false
       in: header
@@ -1187,12 +1194,20 @@ paths:
         \    \nIf the stream is empty, the API creates a new empty table.\n\nREST\
         \ NAMESPACE ONLY\nREST namespace uses Arrow IPC stream as the request body.\n\
         It passes in the `CreateTableRequest` information in the following way:\n\
-        - `id`: pass through path parameter of the same name\n- `location`: pass through\
-        \ header `x-lance-table-location`\n- `properties`: pass through header `x-lance-table-properties`\n"
+        - `id`: pass through path parameter of the same name\n- `mode`: pass through\
+        \ query parameter of the same name\n- `location`: pass through header `x-lance-table-location`\n\
+        - `properties`: pass through header `x-lance-table-properties`\n"
       operationId: CreateTable
       parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
+      - explode: true
+        in: query
+        name: mode
+        required: false
+        schema:
+          type: string
+        style: form
       - description: URI pointing to root location to create the table at
         explode: false
         in: header
@@ -2261,7 +2276,7 @@ components:
           type: string
     CreateNamespaceRequest:
       example:
-        mode: CREATE
+        mode: create
         id:
         - id
         - id
@@ -2276,13 +2291,13 @@ components:
           description: |
             There are three modes when trying to create a namespace,
             to differentiate the behavior when a namespace of the same name already exists:
-              * CREATE: the operation fails with 409.
-              * EXIST_OK: the operation succeeds and the existing namespace is kept.
-              * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created.
+              * create: the operation fails with 409.
+              * exist_ok: the operation succeeds and the existing namespace is kept.
+              * overwrite: the existing namespace is dropped and a new empty namespace with this name is created.
           enum:
-          - CREATE
-          - EXIST_OK
-          - OVERWRITE
+          - create
+          - exist_ok
+          - overwrite
           type: string
         properties:
           additionalProperties:
@@ -3340,6 +3355,18 @@ components:
             type: string
           type: array
         location:
+          type: string
+        mode:
+          description: |
+            There are three modes when trying to create a table,
+            to differentiate the behavior when a table of the same name already exists:
+              * create: the operation fails with 409.
+              * exist_ok: the operation succeeds and the existing table is kept.
+              * overwrite: the existing table is dropped and a new table with this name is created.
+          enum:
+          - create
+          - exist_ok
+          - overwrite
           type: string
         schema:
           $ref: '#/components/schemas/JsonArrowSchema'

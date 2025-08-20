@@ -938,9 +938,9 @@ public interface TableApi {
    * used as the table schema. If the stream is empty, the API creates a new empty table. REST
    * NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the
    * &#x60;CreateTableRequest&#x60; information in the following way: - &#x60;id&#x60;: pass through
-   * path parameter of the same name - &#x60;location&#x60;: pass through header
-   * &#x60;x-lance-table-location&#x60; - &#x60;properties&#x60;: pass through header
-   * &#x60;x-lance-table-properties&#x60;
+   * path parameter of the same name - &#x60;mode&#x60;: pass through query parameter of the same
+   * name - &#x60;location&#x60;: pass through header &#x60;x-lance-table-location&#x60; -
+   * &#x60;properties&#x60;: pass through header &#x60;x-lance-table-properties&#x60;
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -950,6 +950,7 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
    *     (optional)
+   * @param mode (optional)
    * @param xLanceTableLocation URI pointing to root location to create the table at (optional)
    * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
    *     \&quot;jack\&quot; }) (optional)
@@ -970,7 +971,7 @@ public interface TableApi {
       operationId = "createTable",
       summary = "Create a table with the given name",
       description =
-          "Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` ",
+          "Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` ",
       tags = {"Table", "Data"},
       responses = {
         @ApiResponse(
@@ -1058,6 +1059,10 @@ public interface TableApi {
           @Valid
           @RequestParam(value = "delimiter", required = false)
           Optional<String> delimiter,
+      @Parameter(name = "mode", description = "", in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "mode", required = false)
+          Optional<String> mode,
       @Parameter(
               name = "x-lance-table-location",
               description = "URI pointing to root location to create the table at",

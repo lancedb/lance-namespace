@@ -27,7 +27,7 @@ class CreateNamespaceRequest(BaseModel):
     CreateNamespaceRequest
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
-    mode: Optional[StrictStr] = Field(default=None, description="There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 409.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. ")
+    mode: Optional[StrictStr] = Field(default=None, description="There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing namespace is kept.   * overwrite: the existing namespace is dropped and a new empty namespace with this name is created. ")
     properties: Optional[Dict[str, StrictStr]] = None
     __properties: ClassVar[List[str]] = ["id", "mode", "properties"]
 
@@ -37,8 +37,8 @@ class CreateNamespaceRequest(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['CREATE', 'EXIST_OK', 'OVERWRITE']):
-            raise ValueError("must be one of enum values ('CREATE', 'EXIST_OK', 'OVERWRITE')")
+        if value not in set(['create', 'exist_ok', 'overwrite']):
+            raise ValueError("must be one of enum values ('create', 'exist_ok', 'overwrite')")
         return value
 
     model_config = ConfigDict(

@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from lance_namespace_urllib3_client.models.json_arrow_schema import JsonArrowSchema
 from typing import Optional, Set
@@ -29,9 +29,20 @@ class CreateTableRequest(BaseModel):
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
     location: Optional[StrictStr] = None
+    mode: Optional[StrictStr] = Field(default=None, description="There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing table is kept.   * overwrite: the existing table is dropped and a new table with this name is created. ")
     var_schema: Optional[JsonArrowSchema] = Field(default=None, alias="schema")
     properties: Optional[Dict[str, StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["id", "location", "schema", "properties"]
+    __properties: ClassVar[List[str]] = ["id", "location", "mode", "schema", "properties"]
+
+    @field_validator('mode')
+    def mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['create', 'exist_ok', 'overwrite']):
+            raise ValueError("must be one of enum values ('create', 'exist_ok', 'overwrite')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,6 +100,7 @@ class CreateTableRequest(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "location": obj.get("location"),
+            "mode": obj.get("mode"),
             "schema": JsonArrowSchema.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
             "properties": obj.get("properties")
         })

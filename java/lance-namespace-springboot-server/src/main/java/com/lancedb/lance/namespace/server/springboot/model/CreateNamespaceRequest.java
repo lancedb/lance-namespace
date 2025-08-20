@@ -39,16 +39,16 @@ public class CreateNamespaceRequest {
 
   /**
    * There are three modes when trying to create a namespace, to differentiate the behavior when a
-   * namespace of the same name already exists: * CREATE: the operation fails with 409. * EXIST_OK:
-   * the operation succeeds and the existing namespace is kept. * OVERWRITE: the existing namespace
+   * namespace of the same name already exists: * create: the operation fails with 409. * exist_ok:
+   * the operation succeeds and the existing namespace is kept. * overwrite: the existing namespace
    * is dropped and a new empty namespace with this name is created.
    */
   public enum ModeEnum {
-    CREATE("CREATE"),
+    CREATE("create"),
 
-    EXIST_OK("EXIST_OK"),
+    EXIST_OK("exist_ok"),
 
-    OVERWRITE("OVERWRITE");
+    OVERWRITE("overwrite");
 
     private String value;
 
@@ -116,8 +116,8 @@ public class CreateNamespaceRequest {
 
   /**
    * There are three modes when trying to create a namespace, to differentiate the behavior when a
-   * namespace of the same name already exists: * CREATE: the operation fails with 409. * EXIST_OK:
-   * the operation succeeds and the existing namespace is kept. * OVERWRITE: the existing namespace
+   * namespace of the same name already exists: * create: the operation fails with 409. * exist_ok:
+   * the operation succeeds and the existing namespace is kept. * overwrite: the existing namespace
    * is dropped and a new empty namespace with this name is created.
    *
    * @return mode
@@ -125,7 +125,7 @@ public class CreateNamespaceRequest {
   @Schema(
       name = "mode",
       description =
-          "There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * CREATE: the operation fails with 409.   * EXIST_OK: the operation succeeds and the existing namespace is kept.   * OVERWRITE: the existing namespace is dropped and a new empty namespace with this name is created. ",
+          "There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing namespace is kept.   * overwrite: the existing namespace is dropped and a new empty namespace with this name is created. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
   public ModeEnum getMode() {
