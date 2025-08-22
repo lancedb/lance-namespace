@@ -30,96 +30,82 @@ impl DirNamespace {
     fn initialize_operator(config: &DirNamespaceConfig) -> Result<Operator> {
         let root = config.root().unwrap_or_else(|| std::env::current_dir().unwrap().to_string_lossy().to_string());
         
-        // Try to parse as URL to determine scheme
-        // If no scheme is provided, will fall back to fs:// (filesystem) below
-        if let Ok(url) = Url::parse(&root) {
-            let scheme = Self::normalize_scheme(url.scheme());
-            let mut operator_config = HashMap::new();
-            
-            match scheme.as_str() {
-                "s3" => {
-                    let bucket = url.host_str().ok_or_else(|| {
-                        LanceNamespaceError::InvalidConfiguration("S3 URL must have a bucket".to_string())
-                    })?;
-                    
-                    operator_config.insert("bucket".to_string(), bucket.to_string());
-                    operator_config.insert("root".to_string(), url.path().trim_start_matches('/').to_string());
-                    
-                    // Add storage options from config
-                    for (key, value) in config.storage_options() {
-                        operator_config.insert(key.clone(), value.clone());
-                    }
-                    
-                    let op = Operator::via_iter(opendal::Scheme::S3, operator_config)?;
-                    Ok(op)
+        // If URL parsing fails, assume it's a local path and add fs:// prefix
+        let url = Url::parse(&root).or_else(|_| Url::parse(&format!("fs://{}", root)))?;
+        
+        let scheme = Self::normalize_scheme(url.scheme());
+        let mut operator_config = HashMap::new();
+        
+        match scheme.as_str() {
+            "s3" => {
+                let bucket = url.host_str().ok_or_else(|| {
+                    LanceNamespaceError::InvalidConfiguration("S3 URL must have a bucket".to_string())
+                })?;
+                
+                operator_config.insert("bucket".to_string(), bucket.to_string());
+                operator_config.insert("root".to_string(), url.path().trim_start_matches('/').to_string());
+                
+                // Add storage options from config
+                for (key, value) in config.storage_options() {
+                    operator_config.insert(key.clone(), value.clone());
                 }
-                "gcs" => {
-                    let bucket = url.host_str().ok_or_else(|| {
-                        LanceNamespaceError::InvalidConfiguration("GCS URL must have a bucket".to_string())
-                    })?;
-                    
-                    operator_config.insert("bucket".to_string(), bucket.to_string());
-                    operator_config.insert("root".to_string(), url.path().trim_start_matches('/').to_string());
-                    
-                    // Add storage options from config
-                    for (key, value) in config.storage_options() {
-                        operator_config.insert(key.clone(), value.clone());
-                    }
-                    
-                    let op = Operator::via_iter(opendal::Scheme::Gcs, operator_config)?;
-                    Ok(op)
+                
+                let op = Operator::via_iter(opendal::Scheme::S3, operator_config)?;
+                Ok(op)
+            }
+            "gcs" => {
+                let bucket = url.host_str().ok_or_else(|| {
+                    LanceNamespaceError::InvalidConfiguration("GCS URL must have a bucket".to_string())
+                })?;
+                
+                operator_config.insert("bucket".to_string(), bucket.to_string());
+                operator_config.insert("root".to_string(), url.path().trim_start_matches('/').to_string());
+                
+                // Add storage options from config
+                for (key, value) in config.storage_options() {
+                    operator_config.insert(key.clone(), value.clone());
                 }
-                "azblob" => {
-                    let container = url.host_str().ok_or_else(|| {
-                        LanceNamespaceError::InvalidConfiguration("Azure Blob URL must have a container".to_string())
-                    })?;
-                    
-                    operator_config.insert("container".to_string(), container.to_string());
-                    operator_config.insert("root".to_string(), url.path().trim_start_matches('/').to_string());
-                    
-                    // Add storage options from config  
-                    for (key, value) in config.storage_options() {
-                        operator_config.insert(key.clone(), value.clone());
-                    }
+                
+                let op = Operator::via_iter(opendal::Scheme::Gcs, operator_config)?;
+                Ok(op)
+            }
+            "azblob" => {
+                let container = url.host_str().ok_or_else(|| {
+                    LanceNamespaceError::InvalidConfiguration("Azure Blob URL must have a container".to_string())
+                })?;
+                
+                operator_config.insert("container".to_string(), container.to_string());
+                operator_config.insert("root".to_string(), url.path().trim_start_matches('/').to_string());
+                
+                // Add storage options from config  
+                for (key, value) in config.storage_options() {
+                    operator_config.insert(key.clone(), value.clone());
+                }
 
-                    let op = Operator::via_iter(opendal::Scheme::Azblob, operator_config)?;
-                    Ok(op)
-                }
-                "fs" => {
-                    operator_config.insert("root".to_string(), url.path().to_string());
-                    
-                    // Add storage options from config
-                    for (key, value) in config.storage_options() {
-                        operator_config.insert(key.clone(), value.clone());
-                    }
-                    
-                    let op = Operator::via_iter(opendal::Scheme::Fs, operator_config)?;
-                    Ok(op)
-                }
-                _ => {
-                    // Default fallback - treat as root with storage options
-                    operator_config.insert("root".to_string(), root);
-                    for (key, value) in config.storage_options() {
-                        operator_config.insert(key.clone(), value.clone());
-                    }
-                    
-                    let op = Operator::via_iter(opendal::Scheme::Fs, operator_config)?;
-                    Ok(op)
-                }
+                let op = Operator::via_iter(opendal::Scheme::Azblob, operator_config)?;
+                Ok(op)
             }
-        } else {
-            // Local file system path (no scheme provided)
-            // Default to fs:// filesystem scheme as requested
-            let mut operator_config = HashMap::new();
-            operator_config.insert("root".to_string(), root);
-            
-            // Add storage options from config
-            for (key, value) in config.storage_options() {
-                operator_config.insert(key.clone(), value.clone());
+            "fs" => {
+                operator_config.insert("root".to_string(), url.path().to_string());
+                
+                // Add storage options from config
+                for (key, value) in config.storage_options() {
+                    operator_config.insert(key.clone(), value.clone());
+                }
+                
+                let op = Operator::via_iter(opendal::Scheme::Fs, operator_config)?;
+                Ok(op)
             }
-            
-            let op = Operator::via_iter(opendal::Scheme::Fs, operator_config)?;
-            Ok(op)
+            _ => {
+                // Default fallback to filesystem
+                operator_config.insert("root".to_string(), url.path().to_string());
+                for (key, value) in config.storage_options() {
+                    operator_config.insert(key.clone(), value.clone());
+                }
+                
+                let op = Operator::via_iter(opendal::Scheme::Fs, operator_config)?;
+                Ok(op)
+            }
         }
     }
     
