@@ -97,13 +97,21 @@ impl DirNamespace {
                 Ok(op)
             }
             _ => {
-                // Default fallback to filesystem
+                // Pass through unknown schemes as-is to OpenDAL
+                // Extract the scheme name and try to parse it as an OpenDAL scheme
+                let opendal_scheme = scheme.parse().map_err(|_| {
+                    LanceNamespaceError::InvalidConfiguration(
+                        format!("Unsupported or invalid scheme: {}", scheme)
+                    )
+                })?;
+                
+                // For unknown schemes, use the URL as-is
                 operator_config.insert("root".to_string(), url.path().to_string());
                 for (key, value) in config.storage_options() {
                     operator_config.insert(key.clone(), value.clone());
                 }
                 
-                let op = Operator::via_iter(opendal::Scheme::Fs, operator_config)?;
+                let op = Operator::via_iter(opendal_scheme, operator_config)?;
                 Ok(op)
             }
         }
@@ -679,6 +687,23 @@ mod tests {
         assert!(result.is_err());
         if let Err(e) = result {
             assert!(e.to_string().contains("S3 URL must have a bucket"));
+        }
+    }
+
+    #[test]
+    fn test_unknown_scheme_passthrough() {
+        let mut properties = HashMap::new();
+        properties.insert("root".to_string(), "unknown://some/path".to_string());
+        
+        // Unknown schemes should be passed through to OpenDAL
+        let result = DirNamespace::new(properties);
+        
+        // Should fail because "unknown" is not a supported OpenDAL scheme
+        assert!(result.is_err());
+        if let Err(e) = result {
+            let error_msg = e.to_string();
+            // OpenDAL returns "Unsupported" error with scheme name in context
+            assert!(error_msg.contains("unknown") || error_msg.contains("Unsupported"));
         }
     }
 }
