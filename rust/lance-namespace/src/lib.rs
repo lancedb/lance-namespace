@@ -156,6 +156,26 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_dir_namespace_create_root_namespace_empty_list() {
+        let temp_dir = TempDir::new().unwrap();
+        let mut properties = HashMap::new();
+        properties.insert("root".to_string(), temp_dir.path().to_string_lossy().to_string());
+        
+        let namespace = connect("dir", properties).unwrap();
+        
+        let request = lance_namespace_reqwest_client::models::CreateNamespaceRequest {
+            id: Some(vec![]), // Root namespace as empty list
+            mode: None,
+            properties: Some(HashMap::new()),
+        };
+        
+        // Root namespace already exists, should fail with AlreadyExists error
+        let result = namespace.create_namespace(request).await;
+        assert!(result.is_err());
+        assert!(matches!(result.unwrap_err(), LanceNamespaceError::AlreadyExists(_)));
+    }
+
+    #[tokio::test]
     async fn test_dir_namespace_list_namespaces() {
         let temp_dir = TempDir::new().unwrap();
         let mut properties = HashMap::new();

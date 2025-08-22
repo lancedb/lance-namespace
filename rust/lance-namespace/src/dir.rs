@@ -197,8 +197,8 @@ impl DirNamespace {
 #[async_trait]
 impl LanceNamespace for DirNamespace {
     async fn create_namespace(&self, request: CreateNamespaceRequest) -> Result<CreateNamespaceResponse> {
-        // Check if this is for the root namespace
-        if request.id.is_none() || request.id.as_ref().map_or(false, |id| id.is_empty()) {
+        // Check if this is for the root namespace (None or empty list)
+        if request.id.as_ref().map_or(true, |id| id.is_empty()) {
             // Root namespace already exists
             return Err(LanceNamespaceError::AlreadyExists(
                 "Root namespace already exists".to_string()
