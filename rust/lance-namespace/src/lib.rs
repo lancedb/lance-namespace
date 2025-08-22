@@ -129,8 +129,10 @@ mod tests {
             properties: Some(HashMap::new()),
         };
         
+        // Root namespace already exists, should fail
         let result = namespace.create_namespace(request).await;
-        assert!(result.is_ok());
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("already exists"));
     }
 
     #[tokio::test]
@@ -156,8 +158,11 @@ mod tests {
     #[tokio::test]
     async fn test_dir_namespace_describe_namespace() {
         let temp_dir = TempDir::new().unwrap();
+        let root_path = temp_dir.path().to_string_lossy().to_string();
+        
         let mut properties = HashMap::new();
-        properties.insert("root".to_string(), temp_dir.path().to_string_lossy().to_string());
+        properties.insert("root".to_string(), root_path.clone());
+        properties.insert("storage.test_option".to_string(), "test_value".to_string());
         
         let namespace = connect("dir", properties).unwrap();
         
@@ -167,6 +172,13 @@ mod tests {
         
         let result = namespace.describe_namespace(request).await;
         assert!(result.is_ok());
+        
+        let response = result.unwrap();
+        let props = response.properties.unwrap();
+        
+        // Should contain root path and storage options
+        assert_eq!(props.get("root"), Some(&root_path));
+        assert_eq!(props.get("test_option"), Some(&"test_value".to_string())); // storage. prefix is stripped
     }
 
     #[tokio::test]

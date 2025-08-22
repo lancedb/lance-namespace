@@ -31,6 +31,7 @@ impl DirNamespace {
         let root = config.root().unwrap_or_else(|| std::env::current_dir().unwrap().to_string_lossy().to_string());
         
         // Try to parse as URL to determine scheme
+        // If no scheme is provided, will fall back to fs:// (filesystem) below
         if let Ok(url) = Url::parse(&root) {
             let scheme = Self::normalize_scheme(url.scheme());
             let mut operator_config = HashMap::new();
@@ -69,8 +70,6 @@ impl DirNamespace {
                     Ok(op)
                 }
                 "azblob" => {
-                    // For Azure Blob Storage, we might need to use "abs" or similar
-                    // Let's try to create it and catch the error if the scheme is not supported
                     let container = url.host_str().ok_or_else(|| {
                         LanceNamespaceError::InvalidConfiguration("Azure Blob URL must have a container".to_string())
                     })?;
@@ -109,7 +108,8 @@ impl DirNamespace {
                 }
             }
         } else {
-            // Local file system path (no scheme)
+            // Local file system path (no scheme provided)
+            // Default to fs:// filesystem scheme as requested
             let mut operator_config = HashMap::new();
             operator_config.insert("root".to_string(), root);
             
@@ -205,10 +205,10 @@ impl LanceNamespace for DirNamespace {
     async fn create_namespace(&self, request: CreateNamespaceRequest) -> Result<CreateNamespaceResponse> {
         self.validate_root_namespace_id(&request.id)?;
         
-        // For root namespace, this is a no-op that succeeds
-        Ok(CreateNamespaceResponse {
-            properties: request.properties,
-        })
+        // Root namespace already exists, cannot create it
+        Err(LanceNamespaceError::InvalidConfiguration(
+            "Root namespace already exists and cannot be created".to_string()
+        ))
     }
     
     async fn list_namespaces(&self, request: ListNamespacesRequest) -> Result<ListNamespacesResponse> {
@@ -224,9 +224,21 @@ impl LanceNamespace for DirNamespace {
     async fn describe_namespace(&self, request: DescribeNamespaceRequest) -> Result<DescribeNamespaceResponse> {
         self.validate_root_namespace_id(&request.id)?;
         
-        // Return description of the root namespace
+        // Return user-configured storage options and root path
+        let mut properties = std::collections::HashMap::new();
+        
+        // Add root path
+        if let Some(root) = self.config.root() {
+            properties.insert("root".to_string(), root);
+        }
+        
+        // Add storage options from config
+        for (key, value) in self.config.storage_options() {
+            properties.insert(key.clone(), value.clone());
+        }
+        
         Ok(DescribeNamespaceResponse {
-            properties: Some(std::collections::HashMap::new()), // No special properties for directory namespace
+            properties: Some(properties),
         })
     }
     
