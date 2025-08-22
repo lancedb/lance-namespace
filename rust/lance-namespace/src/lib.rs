@@ -129,10 +129,30 @@ mod tests {
             properties: Some(HashMap::new()),
         };
         
-        // Root namespace already exists, should fail
+        // Root namespace already exists, should fail with AlreadyExists error
         let result = namespace.create_namespace(request).await;
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("already exists"));
+        assert!(matches!(result.unwrap_err(), LanceNamespaceError::AlreadyExists(_)));
+    }
+
+    #[tokio::test]
+    async fn test_dir_namespace_create_non_root_namespace() {
+        let temp_dir = TempDir::new().unwrap();
+        let mut properties = HashMap::new();
+        properties.insert("root".to_string(), temp_dir.path().to_string_lossy().to_string());
+        
+        let namespace = connect("dir", properties).unwrap();
+        
+        let request = lance_namespace_reqwest_client::models::CreateNamespaceRequest {
+            id: Some(vec!["test".to_string()]), // Non-root namespace
+            mode: None,
+            properties: Some(HashMap::new()),
+        };
+        
+        // Non-root namespace creation not supported
+        let result = namespace.create_namespace(request).await;
+        assert!(result.is_err());
+        assert!(matches!(result.unwrap_err(), LanceNamespaceError::NotSupported(_)));
     }
 
     #[tokio::test]

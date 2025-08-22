@@ -19,6 +19,9 @@ pub enum LanceNamespaceError {
     #[error("Namespace not found: {0}")]
     NamespaceNotFound(String),
     
+    #[error("Already exists: {0}")]
+    AlreadyExists(String),
+    
     #[error("IO error: {0}")]
     Io(#[from] std::io::Error),
     

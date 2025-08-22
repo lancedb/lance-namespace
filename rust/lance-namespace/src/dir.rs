@@ -203,11 +203,17 @@ impl DirNamespace {
 #[async_trait]
 impl LanceNamespace for DirNamespace {
     async fn create_namespace(&self, request: CreateNamespaceRequest) -> Result<CreateNamespaceResponse> {
-        self.validate_root_namespace_id(&request.id)?;
+        // Check if this is for the root namespace
+        if request.id.is_none() || request.id.as_ref().map_or(false, |id| id.is_empty()) {
+            // Root namespace already exists
+            return Err(LanceNamespaceError::AlreadyExists(
+                "Root namespace already exists".to_string()
+            ));
+        }
         
-        // Root namespace already exists, cannot create it
-        Err(LanceNamespaceError::InvalidConfiguration(
-            "Root namespace already exists and cannot be created".to_string()
+        // For non-root namespaces, directory namespace doesn't support creation
+        Err(LanceNamespaceError::NotSupported(
+            "Directory namespace only supports root namespace operations".to_string()
         ))
     }
     
