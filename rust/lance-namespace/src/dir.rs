@@ -261,34 +261,50 @@ impl LanceNamespace for DirNamespace {
     async fn list_tables(&self, request: ListTablesRequest) -> Result<ListTablesResponse> {
         self.validate_root_namespace_id(&request.id)?;
         
-        let mut tables = Vec::new();
+        let mut tables = std::collections::HashSet::new();
         
+        // List all entries at root level (non-recursive for object stores compatibility)  
         let entries = self.operator.list("").await?;
         
         for entry in entries {
             let path = entry.path().trim_end_matches('/');
             
+            // Look for entries containing ".lance" (following Java implementation)
             if !path.contains(".lance") {
                 continue;
             }
             
-            let table_name = path.strip_suffix(".lance").unwrap_or(path);
+            // Extract table name by removing the ".lance" suffix
+            let table_name = if let Some(name) = path.strip_suffix(".lance") {
+                name.to_string()
+            } else {
+                // If it contains .lance but doesn't end with it, extract the prefix
+                if let Some(pos) = path.find(".lance") {
+                    path[..pos].to_string()
+                } else {
+                    continue;
+                }
+            };
             
-            let versions_path = format!("{}/_versions/", path);
+            // Validate this is a real Lance table by checking for version entries
+            // Following the Java implementation approach
+            let versions_path = format!("{}.lance/_versions/", table_name);
             match self.operator.list(&versions_path).await {
                 Ok(version_entries) => {
                     if !version_entries.is_empty() {
-                        tables.push(table_name.to_string());
+                        tables.insert(table_name);
                     }
                 }
                 Err(_) => {
-                    // _versions doesn't exist, not a Lance dataset
+                    // _versions doesn't exist or can't be accessed, skip this entry
+                    // (similar to Java implementation that logs and continues)
+                    continue;
                 }
             }
         }
         
         Ok(ListTablesResponse {
-            tables,
+            tables: tables.into_iter().collect(),
             page_token: None,
         })
     }
