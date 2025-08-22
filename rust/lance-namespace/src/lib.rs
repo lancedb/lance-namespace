@@ -112,4 +112,124 @@ mod tests {
         assert!(result.is_err());
         assert!(matches!(result, Err(LanceNamespaceError::UnknownImplementation(_))));
     }
+
+    // Comprehensive tests for DirNamespace operations
+    
+    #[tokio::test]
+    async fn test_dir_namespace_create_namespace() {
+        let temp_dir = TempDir::new().unwrap();
+        let mut properties = HashMap::new();
+        properties.insert("root".to_string(), temp_dir.path().to_string_lossy().to_string());
+        
+        let namespace = connect("dir", properties).unwrap();
+        
+        let request = lance_namespace_reqwest_client::models::CreateNamespaceRequest {
+            id: None, // Root namespace
+            mode: None,
+            properties: Some(HashMap::new()),
+        };
+        
+        let result = namespace.create_namespace(request).await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_dir_namespace_list_namespaces() {
+        let temp_dir = TempDir::new().unwrap();
+        let mut properties = HashMap::new();
+        properties.insert("root".to_string(), temp_dir.path().to_string_lossy().to_string());
+        
+        let namespace = connect("dir", properties).unwrap();
+        
+        let request = lance_namespace_reqwest_client::models::ListNamespacesRequest {
+            id: None, // Root namespace
+            page_token: None,
+            limit: None,
+        };
+        
+        let result = namespace.list_namespaces(request).await;
+        assert!(result.is_ok());
+        let response = result.unwrap();
+        assert!(response.namespaces.is_empty()); // Directory namespace is flat
+    }
+
+    #[tokio::test]
+    async fn test_dir_namespace_describe_namespace() {
+        let temp_dir = TempDir::new().unwrap();
+        let mut properties = HashMap::new();
+        properties.insert("root".to_string(), temp_dir.path().to_string_lossy().to_string());
+        
+        let namespace = connect("dir", properties).unwrap();
+        
+        let request = lance_namespace_reqwest_client::models::DescribeNamespaceRequest {
+            id: Some(vec![]), // Root namespace
+        };
+        
+        let result = namespace.describe_namespace(request).await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_dir_namespace_namespace_exists() {
+        let temp_dir = TempDir::new().unwrap();
+        let mut properties = HashMap::new();
+        properties.insert("root".to_string(), temp_dir.path().to_string_lossy().to_string());
+        
+        let namespace = connect("dir", properties).unwrap();
+        
+        let request = lance_namespace_reqwest_client::models::NamespaceExistsRequest {
+            id: Some(vec![]), // Root namespace
+        };
+        
+        let result = namespace.namespace_exists(request).await;
+        assert!(result.is_ok()); // Root namespace always exists
+    }
+
+    #[tokio::test]
+    async fn test_dir_namespace_drop_namespace() {
+        let temp_dir = TempDir::new().unwrap();
+        let mut properties = HashMap::new();
+        properties.insert("root".to_string(), temp_dir.path().to_string_lossy().to_string());
+        
+        let namespace = connect("dir", properties).unwrap();
+        
+        let request = lance_namespace_reqwest_client::models::DropNamespaceRequest {
+            id: Some(vec![]), // Root namespace
+            mode: None,
+            behavior: None,
+        };
+        
+        let result = namespace.drop_namespace(request).await;
+        assert!(result.is_err()); // Cannot drop root namespace
+    }
+
+    // Rest Namespace tests (basic connectivity tests)
+    
+    #[tokio::test]
+    async fn test_rest_namespace_operations() {
+        // Test basic REST namespace operations (without actual server)
+        let mut properties = HashMap::new();
+        properties.insert("uri".to_string(), "http://localhost:8080".to_string());
+        
+        let namespace = connect("rest", properties).unwrap();
+        
+        // These will fail because there's no server, but they test the request construction
+        let list_namespaces_request = lance_namespace_reqwest_client::models::ListNamespacesRequest {
+            id: None,
+            page_token: None,
+            limit: None,
+        };
+        
+        let result = namespace.list_namespaces(list_namespaces_request).await;
+        assert!(result.is_err()); // Expected to fail without server
+        
+        let list_tables_request = ListTablesRequest {
+            id: None,
+            page_token: None,
+            limit: None,
+        };
+        
+        let result = namespace.list_tables(list_tables_request).await;
+        assert!(result.is_err()); // Expected to fail without server
+    }
 }

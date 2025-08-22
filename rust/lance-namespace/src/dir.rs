@@ -456,7 +456,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_namespace_operations_not_supported() {
+    async fn test_non_root_namespace_operations_not_supported() {
         let temp_dir = TempDir::new().unwrap();
         let root_path = temp_dir.path().to_string_lossy().to_string();
         
@@ -465,36 +465,28 @@ mod tests {
         
         let namespace = DirNamespace::new(properties).unwrap();
         
-        // Test that namespace operations are not supported
+        // Test that non-root namespace operations are not supported
         let create_namespace_request = CreateNamespaceRequest {
-            id: Some(vec!["test".to_string()]),
+            id: Some(vec!["test".to_string()]), // Non-root namespace
             properties: None,
             mode: None,
         };
         
         let result = namespace.create_namespace(create_namespace_request).await;
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("does not support"));
+        assert!(result.unwrap_err().to_string().contains("only supports root namespace"));
         
-        // Test list_namespaces
-        let list_request = ListNamespacesRequest {
-            id: None,
-            page_token: None,
-            limit: None,
-        };
-        let result = namespace.list_namespaces(list_request).await;
-        assert!(result.is_err());
-        
-        // Test describe_namespace
+        // Test describe_namespace with non-root
         let describe_request = DescribeNamespaceRequest {
-            id: Some(vec!["test".to_string()]),
+            id: Some(vec!["test".to_string()]), // Non-root namespace
         };
         let result = namespace.describe_namespace(describe_request).await;
         assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("only supports root namespace"));
         
-        // Test drop_namespace
+        // Test drop_namespace with non-root
         let drop_request = DropNamespaceRequest {
-            id: Some(vec!["test".to_string()]),
+            id: Some(vec!["test".to_string()]), // Non-root namespace
             mode: None,
             behavior: None,
         };
