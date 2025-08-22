@@ -49,7 +49,7 @@ impl DirNamespace {
                         operator_config.insert(key.clone(), value.clone());
                     }
                     
-                    let op = Operator::via_map(opendal::Scheme::S3, operator_config)?;
+                    let op = Operator::via_iter(opendal::Scheme::S3, operator_config)?;
                     Ok(op)
                 }
                 "gcs" => {
@@ -65,7 +65,7 @@ impl DirNamespace {
                         operator_config.insert(key.clone(), value.clone());
                     }
                     
-                    let op = Operator::via_map(opendal::Scheme::Gcs, operator_config)?;
+                    let op = Operator::via_iter(opendal::Scheme::Gcs, operator_config)?;
                     Ok(op)
                 }
                 "azblob" => {
@@ -83,7 +83,7 @@ impl DirNamespace {
                         operator_config.insert(key.clone(), value.clone());
                     }
 
-                    let op = Operator::via_map(opendal::Scheme::Azblob, operator_config)?;
+                    let op = Operator::via_iter(opendal::Scheme::Azblob, operator_config)?;
                     Ok(op)
                 }
                 "fs" => {
@@ -94,7 +94,7 @@ impl DirNamespace {
                         operator_config.insert(key.clone(), value.clone());
                     }
                     
-                    let op = Operator::via_map(opendal::Scheme::Fs, operator_config)?;
+                    let op = Operator::via_iter(opendal::Scheme::Fs, operator_config)?;
                     Ok(op)
                 }
                 _ => {
@@ -104,7 +104,7 @@ impl DirNamespace {
                         operator_config.insert(key.clone(), value.clone());
                     }
                     
-                    let op = Operator::via_map(opendal::Scheme::Fs, operator_config)?;
+                    let op = Operator::via_iter(opendal::Scheme::Fs, operator_config)?;
                     Ok(op)
                 }
             }
@@ -118,7 +118,7 @@ impl DirNamespace {
                 operator_config.insert(key.clone(), value.clone());
             }
             
-            let op = Operator::via_map(opendal::Scheme::Fs, operator_config)?;
+            let op = Operator::via_iter(opendal::Scheme::Fs, operator_config)?;
             Ok(op)
         }
     }
