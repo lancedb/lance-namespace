@@ -1,14 +1,14 @@
 use thiserror::Error;
 
-pub type Result<T> = std::result::Result<T, NamespaceError>;
+pub type Result<T> = std::result::Result<T, LanceNamespaceError>;
 
 #[derive(Error, Debug)]
-pub enum NamespaceError {
+pub enum LanceNamespaceError {
     #[error("Operation not supported: {0}")]
     NotSupported(String),
     
-    #[error("Unsupported implementation: {0}")]
-    UnsupportedImplementation(String),
+    #[error("Unknown implementation: {0}")]
+    UnknownImplementation(String),
     
     #[error("Invalid configuration: {0}")]
     InvalidConfiguration(String),

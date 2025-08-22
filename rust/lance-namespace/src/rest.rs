@@ -5,7 +5,7 @@ use serde_json;
 use lance_namespace_reqwest_client::models::*;
 
 use crate::namespace::LanceNamespace;
-use crate::error::{NamespaceError, Result};
+use crate::error::{LanceNamespaceError, Result};
 
 pub struct RestNamespace {
     client: Client,
@@ -17,7 +17,7 @@ impl RestNamespace {
     pub fn new(properties: HashMap<String, String>) -> Result<Self> {
         let config = RestNamespaceConfig::new(properties)?;
         let base_url = config.uri().ok_or_else(|| {
-            NamespaceError::InvalidConfiguration("uri property is required for REST namespace".to_string())
+            LanceNamespaceError::InvalidConfiguration("uri property is required for REST namespace".to_string())
         })?;
         
         let mut client_builder = Client::builder();
@@ -26,9 +26,9 @@ impl RestNamespace {
         let mut default_headers = reqwest::header::HeaderMap::new();
         for (key, value) in config.additional_headers() {
             let header_name = reqwest::header::HeaderName::try_from(key)
-                .map_err(|e| NamespaceError::InvalidConfiguration(format!("Invalid header name '{}': {}", key, e)))?;
+                .map_err(|e| LanceNamespaceError::InvalidConfiguration(format!("Invalid header name '{}': {}", key, e)))?;
             let header_value = reqwest::header::HeaderValue::try_from(value)
-                .map_err(|e| NamespaceError::InvalidConfiguration(format!("Invalid header value for '{}': {}", key, e)))?;
+                .map_err(|e| LanceNamespaceError::InvalidConfiguration(format!("Invalid header value for '{}': {}", key, e)))?;
             default_headers.insert(header_name, header_value);
         }
         client_builder = client_builder.default_headers(default_headers);
@@ -50,6 +50,26 @@ impl RestNamespace {
         }
     }
     
+    fn build_query_params(&self, page_token: Option<&String>, limit: Option<i32>) -> Vec<String> {
+        let mut query_params = Vec::new();
+        
+        query_params.push(format!("delimiter={}", urlencoding::encode(&self.config.delimiter())));
+        
+        if let Some(page_token) = page_token {
+            query_params.push(format!("page_token={}", urlencoding::encode(page_token)));
+        }
+        
+        if let Some(limit) = limit {
+            query_params.push(format!("limit={}", limit));
+        }
+        
+        query_params
+    }
+    
+    fn build_path_with_delimiter(&self, base_path: &str) -> String {
+        format!("{}?delimiter={}", base_path, urlencoding::encode(&self.config.delimiter()))
+    }
+
     async fn make_request<T>(&self, method: reqwest::Method, path: &str, body: Option<Vec<u8>>) -> Result<T>
     where
         T: serde::de::DeserializeOwned,
@@ -65,7 +85,7 @@ impl RestNamespace {
         let response = request.send().await?;
         
         if !response.status().is_success() {
-            return Err(NamespaceError::Runtime(format!(
+            return Err(LanceNamespaceError::Runtime(format!(
                 "HTTP request failed with status {}: {}",
                 response.status(),
                 response.text().await.unwrap_or_default()
@@ -89,17 +109,7 @@ impl LanceNamespace for RestNamespace {
         let id_str = self.object_id_str(request.id.as_deref().unwrap_or_default());
         
         let mut path = format!("namespaces/{}", id_str);
-        let mut query_params = Vec::new();
-        
-        query_params.push(format!("delimiter={}", urlencoding::encode(&self.config.delimiter())));
-        
-        if let Some(page_token) = &request.page_token {
-            query_params.push(format!("page_token={}", urlencoding::encode(page_token)));
-        }
-        
-        if let Some(limit) = request.limit {
-            query_params.push(format!("limit={}", limit));
-        }
+        let query_params = self.build_query_params(request.page_token.as_ref(), request.limit);
         
         if !query_params.is_empty() {
             path.push('?');
@@ -150,17 +160,7 @@ impl LanceNamespace for RestNamespace {
         let id_str = self.object_id_str(request.id.as_deref().unwrap_or_default());
         
         let mut path = format!("namespaces/{}/tables", id_str);
-        let mut query_params = Vec::new();
-        
-        query_params.push(format!("delimiter={}", urlencoding::encode(&self.config.delimiter())));
-        
-        if let Some(page_token) = &request.page_token {
-            query_params.push(format!("page_token={}", urlencoding::encode(page_token)));
-        }
-        
-        if let Some(limit) = request.limit {
-            query_params.push(format!("limit={}", limit));
-        }
+        let query_params = self.build_query_params(request.page_token.as_ref(), request.limit);
         
         if !query_params.is_empty() {
             path.push('?');
@@ -173,7 +173,7 @@ impl LanceNamespace for RestNamespace {
     async fn describe_table(&self, request: DescribeTableRequest) -> Result<DescribeTableResponse> {
         let id_str = self.object_id_str(request.id.as_deref().unwrap_or_default());
         
-        let path = format!("tables/{}?delimiter={}", id_str, urlencoding::encode(&self.config.delimiter()));
+        let path = self.build_path_with_delimiter(&format!("tables/{}", id_str));
         let body = serde_json::to_vec(&request)?;
         
         self.make_request(reqwest::Method::POST, &path, Some(body)).await
@@ -321,7 +321,7 @@ impl LanceNamespace for RestNamespace {
             .await?;
         
         if !response.status().is_success() {
-            return Err(NamespaceError::Runtime(format!(
+            return Err(LanceNamespaceError::Runtime(format!(
                 "HTTP request failed with status {}: {}",
                 response.status(),
                 response.text().await.unwrap_or_default()

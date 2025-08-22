@@ -2,7 +2,7 @@
 name = "lance-namespace"
 version = "0.1.0"
 edition = "2021"
-authors = ["Lance Team"]
+authors = ["Lance Devs <dev@lancedb.com>"]
 description = "Lance Namespace trait and implementations for Rust"
 license = "Apache-2.0"
 repository = "https://github.com/lancedb/lance-namespace"

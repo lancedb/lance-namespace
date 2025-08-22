@@ -6,7 +6,7 @@ pub mod error;
 pub use namespace::LanceNamespace;
 pub use dir::DirNamespace;
 pub use rest::RestNamespace;
-pub use error::{NamespaceError, Result};
+pub use error::{LanceNamespaceError, Result};
 
 use std::collections::HashMap;
 
@@ -20,7 +20,7 @@ pub fn connect(impl_name: &str, properties: HashMap<String, String>) -> Result<B
             let rest_namespace = RestNamespace::new(properties)?;
             Ok(Box::new(rest_namespace))
         }
-        _ => Err(NamespaceError::UnsupportedImplementation(impl_name.to_string())),
+        _ => Err(LanceNamespaceError::UnknownImplementation(impl_name.to_string())),
     }
 }
 
@@ -70,10 +70,10 @@ mod tests {
         let result = connect("unsupported", properties);
         assert!(result.is_err());
         
-        if let Err(NamespaceError::UnsupportedImplementation(impl_name)) = result {
+        if let Err(LanceNamespaceError::UnknownImplementation(impl_name)) = result {
             assert_eq!(impl_name, "unsupported");
         } else {
-            panic!("Expected UnsupportedImplementation error");
+            panic!("Expected UnknownImplementation error");
         }
     }
 
@@ -105,11 +105,11 @@ mod tests {
         let properties1 = HashMap::new();
         let result = connect("DIR", properties1);
         assert!(result.is_err());
-        assert!(matches!(result, Err(NamespaceError::UnsupportedImplementation(_))));
+        assert!(matches!(result, Err(LanceNamespaceError::UnknownImplementation(_))));
         
         let properties2 = HashMap::new();
         let result = connect("REST", properties2);
         assert!(result.is_err());
-        assert!(matches!(result, Err(NamespaceError::UnsupportedImplementation(_))));
+        assert!(matches!(result, Err(LanceNamespaceError::UnknownImplementation(_))));
     }
 }

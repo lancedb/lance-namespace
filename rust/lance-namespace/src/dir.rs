@@ -9,7 +9,7 @@ use arrow::record_batch::RecordBatch;
 use lance_namespace_reqwest_client::models::*;
 
 use crate::namespace::LanceNamespace;
-use crate::error::{NamespaceError, Result};
+use crate::error::{LanceNamespaceError, Result};
 
 pub struct DirNamespace {
     config: DirNamespaceConfig,
@@ -38,7 +38,7 @@ impl DirNamespace {
             match scheme.as_str() {
                 "s3" => {
                     let bucket = url.host_str().ok_or_else(|| {
-                        NamespaceError::InvalidConfiguration("S3 URL must have a bucket".to_string())
+                        LanceNamespaceError::InvalidConfiguration("S3 URL must have a bucket".to_string())
                     })?;
                     
                     operator_config.insert("bucket".to_string(), bucket.to_string());
@@ -54,7 +54,7 @@ impl DirNamespace {
                 }
                 "gcs" => {
                     let bucket = url.host_str().ok_or_else(|| {
-                        NamespaceError::InvalidConfiguration("GCS URL must have a bucket".to_string())
+                        LanceNamespaceError::InvalidConfiguration("GCS URL must have a bucket".to_string())
                     })?;
                     
                     operator_config.insert("bucket".to_string(), bucket.to_string());
@@ -72,7 +72,7 @@ impl DirNamespace {
                     // For Azure Blob Storage, we might need to use "abs" or similar
                     // Let's try to create it and catch the error if the scheme is not supported
                     let container = url.host_str().ok_or_else(|| {
-                        NamespaceError::InvalidConfiguration("Azure Blob URL must have a container".to_string())
+                        LanceNamespaceError::InvalidConfiguration("Azure Blob URL must have a container".to_string())
                     })?;
                     
                     operator_config.insert("container".to_string(), container.to_string());
@@ -135,11 +135,11 @@ impl DirNamespace {
     
     fn normalize_table_id(&self, id: &[String]) -> Result<String> {
         if id.is_empty() {
-            return Err(NamespaceError::InvalidConfiguration("Directory namespace table ID cannot be empty".to_string()));
+            return Err(LanceNamespaceError::InvalidConfiguration("Directory namespace table ID cannot be empty".to_string()));
         }
         
         if id.len() != 1 {
-            return Err(NamespaceError::InvalidConfiguration(
+            return Err(LanceNamespaceError::InvalidConfiguration(
                 format!("Directory namespace only supports single-level table IDs, but got: {:?}", id)
             ));
         }
@@ -150,7 +150,7 @@ impl DirNamespace {
     fn validate_root_namespace_id(&self, id: &Option<Vec<String>>) -> Result<()> {
         if let Some(id) = id {
             if !id.is_empty() {
-                return Err(NamespaceError::InvalidConfiguration(
+                return Err(LanceNamespaceError::InvalidConfiguration(
                     format!("Directory namespace only supports root namespace operations, but got namespace ID: {:?}. Expected empty ID.", id)
                 ));
             }
@@ -195,41 +195,55 @@ impl DirNamespace {
             "float64" => Ok(DataType::Float64),
             "utf8" => Ok(DataType::Utf8),
             "binary" => Ok(DataType::Binary),
-            _ => Err(NamespaceError::InvalidConfiguration(format!("Unsupported Arrow type: {}", json_type.r#type))),
+            _ => Err(LanceNamespaceError::InvalidConfiguration(format!("Unsupported Arrow type: {}", json_type.r#type))),
         }
     }
 }
 
 #[async_trait]
 impl LanceNamespace for DirNamespace {
-    async fn create_namespace(&self, _request: CreateNamespaceRequest) -> Result<CreateNamespaceResponse> {
-        Err(NamespaceError::NotSupported(
-            "Directory namespace only contains a flat list of tables and does not support creating namespaces".to_string()
+    async fn create_namespace(&self, request: CreateNamespaceRequest) -> Result<CreateNamespaceResponse> {
+        self.validate_root_namespace_id(&request.id)?;
+        
+        // For root namespace, this is a no-op that succeeds
+        Ok(CreateNamespaceResponse {
+            properties: request.properties,
+        })
+    }
+    
+    async fn list_namespaces(&self, request: ListNamespacesRequest) -> Result<ListNamespacesResponse> {
+        self.validate_root_namespace_id(&request.id)?;
+        
+        // Directory namespace is flat, so return empty list of namespaces
+        Ok(ListNamespacesResponse {
+            namespaces: vec![],
+            page_token: None,
+        })
+    }
+    
+    async fn describe_namespace(&self, request: DescribeNamespaceRequest) -> Result<DescribeNamespaceResponse> {
+        self.validate_root_namespace_id(&request.id)?;
+        
+        // Return description of the root namespace
+        Ok(DescribeNamespaceResponse {
+            properties: Some(std::collections::HashMap::new()), // No special properties for directory namespace
+        })
+    }
+    
+    async fn drop_namespace(&self, request: DropNamespaceRequest) -> Result<DropNamespaceResponse> {
+        self.validate_root_namespace_id(&request.id)?;
+        
+        // Cannot drop the root namespace
+        Err(LanceNamespaceError::NotSupported(
+            "Cannot drop root namespace in directory namespace implementation".to_string()
         ))
     }
     
-    async fn list_namespaces(&self, _request: ListNamespacesRequest) -> Result<ListNamespacesResponse> {
-        Err(NamespaceError::NotSupported(
-            "Directory namespace only contains a flat list of tables and does not support listing namespaces".to_string()
-        ))
-    }
-    
-    async fn describe_namespace(&self, _request: DescribeNamespaceRequest) -> Result<DescribeNamespaceResponse> {
-        Err(NamespaceError::NotSupported(
-            "Directory namespace only contains a flat list of tables and does not support describing namespaces".to_string()
-        ))
-    }
-    
-    async fn drop_namespace(&self, _request: DropNamespaceRequest) -> Result<DropNamespaceResponse> {
-        Err(NamespaceError::NotSupported(
-            "Directory namespace only contains a flat list of tables and does not support dropping namespaces".to_string()
-        ))
-    }
-    
-    async fn namespace_exists(&self, _request: NamespaceExistsRequest) -> Result<()> {
-        Err(NamespaceError::NotSupported(
-            "Directory namespace only contains a flat list of tables and does not support namespace existence checks".to_string()
-        ))
+    async fn namespace_exists(&self, request: NamespaceExistsRequest) -> Result<()> {
+        self.validate_root_namespace_id(&request.id)?;
+        
+        // Root namespace always exists in directory implementation
+        Ok(())
     }
     
     async fn list_tables(&self, request: ListTablesRequest) -> Result<ListTablesResponse> {
@@ -269,11 +283,11 @@ impl LanceNamespace for DirNamespace {
     
     async fn create_table(&self, request: CreateTableRequest, _request_data: Vec<u8>) -> Result<CreateTableResponse> {
         let id = request.id.as_ref().ok_or_else(|| {
-            NamespaceError::InvalidConfiguration("table ID cannot be empty".to_string())
+            LanceNamespaceError::InvalidConfiguration("table ID cannot be empty".to_string())
         })?;
         
         let schema = request.schema.as_ref().ok_or_else(|| {
-            NamespaceError::InvalidConfiguration("Schema is required in CreateTableRequest".to_string())
+            LanceNamespaceError::InvalidConfiguration("Schema is required in CreateTableRequest".to_string())
         })?;
         
         let table_name = self.normalize_table_id(id)?;
@@ -281,7 +295,7 @@ impl LanceNamespace for DirNamespace {
         
         if let Some(location) = &request.location {
             if location != &table_path {
-                return Err(NamespaceError::InvalidConfiguration(
+                return Err(LanceNamespaceError::InvalidConfiguration(
                     format!("Cannot create table {} at location {}, must be at location {}", table_name, location, table_path)
                 ));
             }
@@ -305,7 +319,7 @@ impl LanceNamespace for DirNamespace {
                 DataType::Float64 => Arc::new(Float64Array::from(Vec::<f64>::new())),
                 DataType::Utf8 => Arc::new(StringArray::from(Vec::<String>::new())),
                 DataType::Binary => Arc::new(BinaryArray::from(Vec::<&[u8]>::new())),
-                _ => return Err(NamespaceError::InvalidConfiguration(format!("Unsupported data type: {:?}", field.data_type()))),
+                _ => return Err(LanceNamespaceError::InvalidConfiguration(format!("Unsupported data type: {:?}", field.data_type()))),
             };
             arrays.push(empty_array);
         }
@@ -330,7 +344,7 @@ impl LanceNamespace for DirNamespace {
     
     async fn drop_table(&self, request: DropTableRequest) -> Result<DropTableResponse> {
         let id = request.id.as_ref().ok_or_else(|| {
-            NamespaceError::InvalidConfiguration("table ID cannot be empty".to_string())
+            LanceNamespaceError::InvalidConfiguration("table ID cannot be empty".to_string())
         })?;
         
         let table_name = self.normalize_table_id(id)?;
@@ -348,7 +362,7 @@ impl LanceNamespace for DirNamespace {
     
     async fn describe_table(&self, request: DescribeTableRequest) -> Result<DescribeTableResponse> {
         let id = request.id.as_ref().ok_or_else(|| {
-            NamespaceError::InvalidConfiguration("table ID cannot be empty".to_string())
+            LanceNamespaceError::InvalidConfiguration("table ID cannot be empty".to_string())
         })?;
         
         let table_name = self.normalize_table_id(id)?;
@@ -358,11 +372,11 @@ impl LanceNamespace for DirNamespace {
         match self.operator.list(&versions_path).await {
             Ok(version_entries) => {
                 if version_entries.is_empty() {
-                    return Err(NamespaceError::TableNotFound(table_name));
+                    return Err(LanceNamespaceError::TableNotFound(table_name));
                 }
             }
             Err(_) => {
-                return Err(NamespaceError::TableNotFound(table_name));
+                return Err(LanceNamespaceError::TableNotFound(table_name));
             }
         }
         
