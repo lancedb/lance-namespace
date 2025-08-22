@@ -1,0 +1,25 @@
+[package]
+name = "lance-namespace"
+version = "0.1.0"
+edition = "2021"
+authors = ["Lance Team"]
+description = "Lance Namespace trait and implementations for Rust"
+license = "Apache-2.0"
+repository = "https://github.com/lancedb/lance-namespace"
+
+[dependencies]
+lance-namespace-reqwest-client = { path = "../lance-namespace-reqwest-client" }
+async-trait = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+url = "2.0"
+opendal = { version = "0.47", features = ["services-fs", "services-s3", "services-gcs", "services-azblob"] }
+arrow = "53.0"
+lance = "0.19"
+reqwest = { version = "0.12", features = ["json"] }
+tokio = { version = "1.0", features = ["full"] }
+urlencoding = "2.1"
+
+[dev-dependencies]
+tempfile = "3.0"
