@@ -43,8 +43,8 @@ def mock_lance():
 def glue_namespace(mock_boto3, mock_lance):
     """Create a GlueNamespace instance with mocked dependencies."""
     properties = {
-        'glue.region': 'us-east-1',
-        'glue.catalog-id': '123456789012'
+        'region': 'us-east-1',
+        'catalog_id': '123456789012'
     }
     namespace = GlueNamespace(**properties)
     return namespace
@@ -56,15 +56,16 @@ class TestGlueNamespaceConfig:
     def test_config_initialization(self):
         """Test configuration initialization."""
         properties = {
-            'glue.catalog-id': '123456789012',
-            'glue.endpoint': 'https://glue.example.com',
-            'glue.region': 'us-west-2',
-            'glue.access-key-id': 'AKIAEXAMPLE',
-            'glue.secret-access-key': 'secret',
-            'glue.session-token': 'token',
-            'glue.profile-name': 'default',
-            'glue.max-retries': '5',
-            'glue.retry-mode': 'adaptive',
+            'catalog_id': '123456789012',
+            'endpoint': 'https://glue.example.com',
+            'region': 'us-west-2',
+            'access_key_id': 'AKIAEXAMPLE',
+            'secret_access_key': 'secret',
+            'session_token': 'token',
+            'profile_name': 'default',
+            'max_retries': '5',
+            'retry_mode': 'adaptive',
+            'root': 's3://bucket/path',
             'storage.key1': 'value1',
             'storage.key2': 'value2',
         }
@@ -80,6 +81,7 @@ class TestGlueNamespaceConfig:
         assert config.profile_name == 'default'
         assert config.max_retries == 5
         assert config.retry_mode == 'adaptive'
+        assert config.root == 's3://bucket/path'
         assert config.storage_options == {'key1': 'value1', 'key2': 'value2'}
     
     def test_config_with_empty_properties(self):
@@ -90,6 +92,7 @@ class TestGlueNamespaceConfig:
         assert config.endpoint is None
         assert config.region is None
         assert config.max_retries is None
+        assert config.root is None
         assert config.storage_options == {}
 
 
@@ -143,6 +146,22 @@ class TestGlueNamespace:
         assert response.namespaces == []
         glue_namespace.glue.get_databases.assert_not_called()
     
+    def test_list_namespaces_root(self, glue_namespace):
+        """Test listing namespaces at root level."""
+        glue_namespace.glue.get_databases.return_value = {
+            'DatabaseList': [
+                {'Name': 'db1'},
+                {'Name': 'db2'},
+            ]
+        }
+        
+        # Empty id means root namespace
+        request = ListNamespacesRequest(id=[])
+        response = glue_namespace.list_namespaces(request)
+        
+        assert response.namespaces == ['db1', 'db2']
+        glue_namespace.glue.get_databases.assert_called_once()
+    
     def test_create_namespace(self, glue_namespace):
         """Test creating a namespace."""
         request = CreateNamespaceRequest(
@@ -158,6 +177,15 @@ class TestGlueNamespace:
         assert call_args[1]['DatabaseInput']['Description'] == 'Test database'
         assert call_args[1]['DatabaseInput']['LocationUri'] == 's3://bucket/path'
     
+    def test_create_namespace_root(self, glue_namespace):
+        """Test creating root namespace fails."""
+        request = CreateNamespaceRequest(id=[])
+        
+        with pytest.raises(RuntimeError, match="Root namespace already exists"):
+            glue_namespace.create_namespace(request)
+        
+        glue_namespace.glue.create_database.assert_not_called()
+    
     def test_create_namespace_already_exists(self, glue_namespace):
         """Test creating a namespace that already exists."""
         # Create a custom exception with the right name
@@ -171,6 +199,14 @@ class TestGlueNamespace:
         
         with pytest.raises(RuntimeError, match="Namespace already exists"):
             glue_namespace.create_namespace(request)
+    
+    def test_describe_namespace_root(self, glue_namespace):
+        """Test describing root namespace."""
+        request = DescribeNamespaceRequest(id=[])
+        response = glue_namespace.describe_namespace(request)
+        
+        assert response.properties['description'] == 'Root Glue catalog namespace'
+        glue_namespace.glue.get_database.assert_not_called()
     
     def test_describe_namespace(self, glue_namespace):
         """Test describing a namespace."""
@@ -189,6 +225,16 @@ class TestGlueNamespace:
         assert response.properties['description'] == 'Test database'
         assert response.properties['location'] == 's3://bucket/path'
         assert response.properties['key'] == 'value'
+    
+    def test_drop_namespace_root(self, glue_namespace):
+        """Test dropping root namespace fails."""
+        request = DropNamespaceRequest(id=[])
+        
+        with pytest.raises(RuntimeError, match="Cannot drop root namespace"):
+            glue_namespace.drop_namespace(request)
+        
+        glue_namespace.glue.get_tables.assert_not_called()
+        glue_namespace.glue.delete_database.assert_not_called()
     
     def test_drop_namespace(self, glue_namespace):
         """Test dropping an empty namespace."""
@@ -210,6 +256,13 @@ class TestGlueNamespace:
         
         with pytest.raises(RuntimeError, match="Cannot drop non-empty namespace"):
             glue_namespace.drop_namespace(request)
+    
+    def test_namespace_exists_root(self, glue_namespace):
+        """Test checking if root namespace exists."""
+        request = NamespaceExistsRequest(id=[])
+        glue_namespace.namespace_exists(request)  # Should not raise
+        
+        glue_namespace.glue.get_database.assert_not_called()
     
     def test_namespace_exists(self, glue_namespace):
         """Test checking if a namespace exists."""
@@ -233,6 +286,14 @@ class TestGlueNamespace:
         
         with pytest.raises(RuntimeError, match="Namespace does not exist"):
             glue_namespace.namespace_exists(request)
+    
+    def test_list_tables_root(self, glue_namespace):
+        """Test listing tables at root namespace returns empty."""
+        request = ListTablesRequest(id=[])
+        response = glue_namespace.list_tables(request)
+        
+        assert response.tables == []
+        glue_namespace.glue.get_tables.assert_not_called()
     
     def test_list_tables(self, glue_namespace):
         """Test listing tables in a namespace."""

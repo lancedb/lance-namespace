@@ -55,21 +55,71 @@ EXTERNAL_TABLE = "EXTERNAL_TABLE"
 
 
 class GlueNamespace(LanceNamespace):
-    """Lance Glue Namespace implementation using AWS Glue Data Catalog."""
+    """Lance Glue Namespace implementation using AWS Glue Data Catalog.
+    
+    This namespace implementation integrates Lance with AWS Glue Data Catalog,
+    allowing you to manage Lance table metadata in a centralized AWS service.
+    
+    Usage Examples:
+    
+        >>> from lance_namespace import connect
+        
+        >>> # Connect using default AWS credentials
+        >>> namespace = connect("glue", {
+        ...     "region": "us-east-1"
+        ... })
+        
+        >>> # Connect with specific credentials
+        >>> namespace = connect("glue", {
+        ...     "region": "us-east-1",
+        ...     "access_key_id": "YOUR_ACCESS_KEY",
+        ...     "secret_access_key": "YOUR_SECRET_KEY"
+        ... })
+        
+        >>> # Connect with custom catalog ID and endpoint
+        >>> namespace = connect("glue", {
+        ...     "region": "us-east-1",
+        ...     "catalog_id": "123456789012",
+        ...     "endpoint": "https://glue.example.com"
+        ... })
+        
+        >>> # Create a database (namespace)
+        >>> from lance_namespace_urllib3_client.models import CreateNamespaceRequest
+        >>> namespace.create_namespace(CreateNamespaceRequest(
+        ...     id=["my_database"],
+        ...     properties={"description": "My Lance tables"}
+        ... ))
+        
+        >>> # List databases
+        >>> from lance_namespace_urllib3_client.models import ListNamespacesRequest
+        >>> response = namespace.list_namespaces(ListNamespacesRequest())
+        >>> print(response.namespaces)
+        
+        >>> # Create a table
+        >>> from lance_namespace_urllib3_client.models import CreateTableRequest
+        >>> namespace.create_table(CreateTableRequest(
+        ...     id=["my_database", "my_table"],
+        ...     var_schema=arrow_schema  # PyArrow schema
+        ... ), data_bytes)
+    
+    Note:
+        Requires boto3 to be installed: pip install lance-namespace[glue]
+    """
     
     def __init__(self, **properties):
         """Initialize the Glue namespace.
         
         Args:
-            glue.catalog-id: Glue catalog ID (AWS account ID)
-            glue.endpoint: Optional custom Glue endpoint
-            glue.region: AWS region for Glue
-            glue.access-key-id: AWS access key ID
-            glue.secret-access-key: AWS secret access key
-            glue.session-token: AWS session token
-            glue.profile-name: AWS profile name
-            glue.max-retries: Maximum number of retries
-            glue.retry-mode: Retry mode (standard, adaptive, legacy)
+            catalog_id: Glue catalog ID (AWS account ID)
+            endpoint: Optional custom Glue endpoint
+            region: AWS region for Glue
+            access_key_id: AWS access key ID
+            secret_access_key: AWS secret access key
+            session_token: AWS session token
+            profile_name: AWS profile name
+            max_retries: Maximum number of retries
+            retry_mode: Retry mode (standard, adaptive, legacy)
+            root: Storage root location of the lakehouse on Glue catalog
             storage.*: Storage configuration properties for Lance datasets
             **properties: Additional configuration properties
         """
@@ -123,12 +173,12 @@ class GlueNamespace(LanceNamespace):
     
     def list_namespaces(self, request: ListNamespacesRequest) -> ListNamespacesResponse:
         """List namespaces (databases) in Glue."""
-        # Hierarchical namespaces are not supported in Glue
-        if request.id:
+        # Only list databases if we're at root namespace (no id or empty id)
+        if request.id and len(request.id) > 0:
+            # Hierarchical namespaces are not supported in Glue
             return ListNamespacesResponse(namespaces=[])
         
         try:
-            # ListNamespacesResponse expects a list of strings, not list of lists
             databases = []
             next_token = None
             
@@ -151,7 +201,16 @@ class GlueNamespace(LanceNamespace):
     
     def describe_namespace(self, request: DescribeNamespaceRequest) -> DescribeNamespaceResponse:
         """Describe a namespace (database) in Glue."""
-        if not request.id or len(request.id) != 1:
+        # Handle root namespace
+        if not request.id or len(request.id) == 0:
+            # Root namespace always exists
+            properties = {}
+            if self.config.root:
+                properties['location'] = self.config.root
+            properties['description'] = 'Root Glue catalog namespace'
+            return DescribeNamespaceResponse(properties=properties)
+        
+        if len(request.id) != 1:
             raise ValueError("Glue namespace requires exactly one level identifier")
         
         database_name = request.id[0]
@@ -175,7 +234,11 @@ class GlueNamespace(LanceNamespace):
     
     def create_namespace(self, request: CreateNamespaceRequest) -> CreateNamespaceResponse:
         """Create a namespace (database) in Glue."""
-        if not request.id or len(request.id) != 1:
+        # Handle root namespace
+        if not request.id or len(request.id) == 0:
+            raise RuntimeError("Root namespace already exists")
+        
+        if len(request.id) != 1:
             raise ValueError("Glue namespace requires exactly one level identifier")
         
         database_name = request.id[0]
@@ -204,7 +267,11 @@ class GlueNamespace(LanceNamespace):
     
     def drop_namespace(self, request: DropNamespaceRequest) -> DropNamespaceResponse:
         """Drop a namespace (database) in Glue."""
-        if not request.id or len(request.id) != 1:
+        # Handle root namespace
+        if not request.id or len(request.id) == 0:
+            raise RuntimeError("Cannot drop root namespace")
+        
+        if len(request.id) != 1:
             raise ValueError("Glue namespace requires exactly one level identifier")
         
         database_name = request.id[0]
@@ -227,7 +294,11 @@ class GlueNamespace(LanceNamespace):
     
     def namespace_exists(self, request: NamespaceExistsRequest) -> None:
         """Check if a namespace exists."""
-        if not request.id or len(request.id) != 1:
+        # Handle root namespace - it always exists
+        if not request.id or len(request.id) == 0:
+            return  # Root namespace always exists
+        
+        if len(request.id) != 1:
             raise ValueError("Glue namespace requires exactly one level identifier")
         
         database_name = request.id[0]
@@ -242,7 +313,11 @@ class GlueNamespace(LanceNamespace):
     
     def list_tables(self, request: ListTablesRequest) -> ListTablesResponse:
         """List tables in a namespace."""
-        if not request.id or len(request.id) != 1:
+        # Handle root namespace - no tables at root level
+        if not request.id or len(request.id) == 0:
+            return ListTablesResponse(tables=[])
+        
+        if len(request.id) != 1:
             raise ValueError("Glue namespace requires exactly one level identifier")
         
         database_name = request.id[0]
@@ -586,16 +661,17 @@ class GlueNamespace(LanceNamespace):
 class GlueNamespaceConfig:
     """Configuration for GlueNamespace."""
     
-    # Glue configuration keys
-    CATALOG_ID = "glue.catalog-id"
-    ENDPOINT = "glue.endpoint"
-    REGION = "glue.region"
-    ACCESS_KEY_ID = "glue.access-key-id"
-    SECRET_ACCESS_KEY = "glue.secret-access-key"
-    SESSION_TOKEN = "glue.session-token"
-    PROFILE_NAME = "glue.profile-name"
-    MAX_RETRIES = "glue.max-retries"
-    RETRY_MODE = "glue.retry-mode"
+    # Glue configuration keys (without prefix as per documentation)
+    CATALOG_ID = "catalog_id"
+    ENDPOINT = "endpoint"
+    REGION = "region"
+    ACCESS_KEY_ID = "access_key_id"
+    SECRET_ACCESS_KEY = "secret_access_key"
+    SESSION_TOKEN = "session_token"
+    PROFILE_NAME = "profile_name"
+    MAX_RETRIES = "max_retries"
+    RETRY_MODE = "retry_mode"
+    ROOT = "root"
     
     # Storage configuration prefix
     STORAGE_OPTIONS_PREFIX = "storage."
@@ -616,6 +692,7 @@ class GlueNamespaceConfig:
         self._secret_access_key = properties.get(self.SECRET_ACCESS_KEY)
         self._session_token = properties.get(self.SESSION_TOKEN)
         self._profile_name = properties.get(self.PROFILE_NAME)
+        self._root = properties.get(self.ROOT)
         
         # Parse max retries
         max_retries_str = properties.get(self.MAX_RETRIES)
@@ -670,6 +747,10 @@ class GlueNamespaceConfig:
     @property
     def retry_mode(self) -> Optional[str]:
         return self._retry_mode
+    
+    @property
+    def root(self) -> Optional[str]:
+        return self._root
     
     @property
     def storage_options(self) -> Dict[str, str]:
