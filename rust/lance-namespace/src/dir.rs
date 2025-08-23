@@ -1,10 +1,29 @@
 //! Directory-based Lance Namespace implementation.
+//!
+//! This module provides a directory-based implementation of the Lance namespace
+//! that stores tables as Lance datasets in a filesystem directory structure.
+//!
+//! ## Lance Integration
+//!
+//! The implementation supports full Lance dataset creation when the `lance-integration`
+//! feature is enabled. Currently, this feature is disabled by default due to a
+//! compilation issue in Lance v0.32-0.33 with the tempfile crate.
+//!
+//! To enable Lance integration when the issue is fixed:
+//! ```toml
+//! lance-namespace = { version = "0.1", features = ["lance-integration"] }
+//! ```
+//!
+//! Without the feature, a placeholder implementation creates Lance-compatible
+//! directory structures for testing purposes.
 
 use std::collections::HashMap;
 use std::sync::Arc;
 
 use async_trait::async_trait;
 use bytes::Bytes;
+#[cfg(feature = "lance-integration")]
+use lance::dataset::{Dataset, WriteParams};
 use opendal::Operator;
 
 use lance_namespace_reqwest_client::models::{
@@ -337,35 +356,60 @@ impl LanceNamespace for DirectoryNamespace {
 
         // Convert schema
         let arrow_schema = convert_json_arrow_schema(json_schema)?;
-        let _arrow_schema = Arc::new(arrow_schema);
+        let arrow_schema = Arc::new(arrow_schema);
 
-        // For now, we'll create a placeholder directory structure compatible with Lance
-        // TODO: Use actual Lance dataset creation when Lance crate compilation issues are resolved
-        let table_dir = format!("{}.lance/", table_name);
-        self.operator
-            .create_dir(&table_dir)
+        // Create the Lance dataset
+        #[cfg(feature = "lance-integration")]
+        {
+            // Create an empty RecordBatch with the schema
+            let batch = arrow::record_batch::RecordBatch::new_empty(arrow_schema.clone());
+
+            // Set up write parameters for creating a new dataset
+            let write_params = WriteParams {
+                mode: lance::dataset::WriteMode::Create,
+                ..Default::default()
+            };
+
+            // Create the Lance dataset using the actual Lance API
+            Dataset::write(
+                vec![batch],
+                &table_path,
+                Some(write_params),
+            )
             .await
-            .map_err(|e| NamespaceError::Other(format!("Failed to create table directory: {}", e)))?;
-        
-        // Create _versions directory to simulate Lance structure
-        let versions_dir = format!("{}_versions/", table_dir);
-        self.operator
-            .create_dir(&versions_dir)
-            .await
-            .map_err(|e| NamespaceError::Other(format!("Failed to create versions directory: {}", e)))?;
-        
-        // Create a placeholder manifest file (Lance datasets have manifest files)
-        let manifest_file = format!("{}_latest.manifest", table_dir);
-        let manifest_content = serde_json::json!({
-            "version": 1,
-            "schema": _arrow_schema.metadata(),
-            "created_at": std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()
-        }).to_string();
-        
-        self.operator
-            .write(&manifest_file, manifest_content.as_bytes().to_vec())
-            .await
-            .map_err(|e| NamespaceError::Other(format!("Failed to create manifest file: {}", e)))?;
+            .map_err(|e| NamespaceError::Other(format!("Failed to create Lance dataset: {}", e)))?;
+        }
+
+        #[cfg(not(feature = "lance-integration"))]
+        {
+            // Fallback implementation when Lance is not available
+            // Create a placeholder directory structure compatible with Lance
+            let table_dir = format!("{}.lance/", table_name);
+            self.operator
+                .create_dir(&table_dir)
+                .await
+                .map_err(|e| NamespaceError::Other(format!("Failed to create table directory: {}", e)))?;
+            
+            // Create _versions directory to simulate Lance structure
+            let versions_dir = format!("{}_versions/", table_dir);
+            self.operator
+                .create_dir(&versions_dir)
+                .await
+                .map_err(|e| NamespaceError::Other(format!("Failed to create versions directory: {}", e)))?;
+            
+            // Create a placeholder manifest file (Lance datasets have manifest files)
+            let manifest_file = format!("{}_latest.manifest", table_dir);
+            let manifest_content = serde_json::json!({
+                "version": 1,
+                "schema": arrow_schema.metadata(),
+                "created_at": std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()
+            }).to_string();
+            
+            self.operator
+                .write(&manifest_file, manifest_content.as_bytes().to_vec())
+                .await
+                .map_err(|e| NamespaceError::Other(format!("Failed to create manifest file: {}", e)))?;
+        }
 
         Ok(CreateTableResponse {
             version: Some(1),
