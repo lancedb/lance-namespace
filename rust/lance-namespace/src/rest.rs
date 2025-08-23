@@ -136,6 +136,17 @@ impl RestNamespace {
             configuration,
         }
     }
+
+    /// Create a new REST namespace with custom configuration (for testing)
+    #[cfg(test)]
+    pub fn with_configuration(properties: HashMap<String, String>, configuration: Configuration) -> Self {
+        let config = RestNamespaceConfig::new(properties);
+        
+        Self {
+            config,
+            configuration,
+        }
+    }
 }
 
 #[async_trait]
@@ -545,6 +556,8 @@ mod tests {
     use lance_namespace_reqwest_client::models::{
         create_table_request, insert_into_table_request,
     };
+    use wiremock::{Mock, MockServer, ResponseTemplate};
+    use wiremock::matchers::{method, path};
 
     /// Create a test REST namespace instance
     fn create_test_namespace() -> RestNamespace {
@@ -587,8 +600,91 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_list_namespaces_success() {
+        // Start a mock server
+        let mock_server = MockServer::start().await;
+        
+        // Create mock response
+        Mock::given(method("GET"))
+            .and(path("/v1/namespace/test/list"))
+            .respond_with(ResponseTemplate::new(200)
+                .set_body_json(serde_json::json!({
+                    "namespaces": [
+                        "namespace1",
+                        "namespace2"
+                    ]
+                })))
+            .mount(&mock_server)
+            .await;
+        
+        // Create namespace with mock server URL
+        let mut properties = HashMap::new();
+        properties.insert("uri".to_string(), mock_server.uri());
+        properties.insert("delimiter".to_string(), ".".to_string());
+        
+        let mut configuration = Configuration::new();
+        configuration.base_path = mock_server.uri();
+        
+        let namespace = RestNamespace::with_configuration(properties, configuration);
+        
+        let request = ListNamespacesRequest {
+            id: Some(vec!["test".to_string()]),
+            page_token: None,
+            limit: Some(10),
+        };
+        
+        let result = namespace.list_namespaces(request).await;
+        
+        // Should succeed with mock server
+        assert!(result.is_ok());
+        let response = result.unwrap();
+        assert_eq!(response.namespaces.len(), 2);
+        assert_eq!(response.namespaces[0], "namespace1");
+        assert_eq!(response.namespaces[1], "namespace2");
+    }
+
+    #[tokio::test]
+    async fn test_list_namespaces_error() {
+        // Start a mock server
+        let mock_server = MockServer::start().await;
+        
+        // Create mock error response
+        Mock::given(method("GET"))
+            .and(path("/v1/namespace/test/list"))
+            .respond_with(ResponseTemplate::new(404)
+                .set_body_json(serde_json::json!({
+                    "error": {
+                        "message": "Namespace not found",
+                        "type": "NamespaceNotFoundException"
+                    }
+                })))
+            .mount(&mock_server)
+            .await;
+        
+        // Create namespace with mock server URL
+        let mut properties = HashMap::new();
+        properties.insert("uri".to_string(), mock_server.uri());
+        
+        let mut configuration = Configuration::new();
+        configuration.base_path = mock_server.uri();
+        
+        let namespace = RestNamespace::with_configuration(properties, configuration);
+        
+        let request = ListNamespacesRequest {
+            id: Some(vec!["test".to_string()]),
+            page_token: None,
+            limit: Some(10),
+        };
+        
+        let result = namespace.list_namespaces(request).await;
+        
+        // Should return an error
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
     #[ignore] // Requires a running server
-    async fn test_list_namespaces() {
+    async fn test_list_namespaces_integration() {
         let namespace = create_test_namespace();
         let request = ListNamespacesRequest {
             id: Some(vec!["test".to_string()]),
@@ -604,8 +700,128 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_create_namespace_success() {
+        // Start a mock server
+        let mock_server = MockServer::start().await;
+        
+        // Create mock response
+        Mock::given(method("POST"))
+            .and(path("/v1/namespace/test.newnamespace/create"))
+            .respond_with(ResponseTemplate::new(201)
+                .set_body_json(serde_json::json!({
+                    "namespace": {
+                        "identifier": ["test", "newnamespace"],
+                        "properties": {}
+                    }
+                })))
+            .mount(&mock_server)
+            .await;
+        
+        // Create namespace with mock server URL
+        let mut properties = HashMap::new();
+        properties.insert("uri".to_string(), mock_server.uri());
+        
+        let mut configuration = Configuration::new();
+        configuration.base_path = mock_server.uri();
+        
+        let namespace = RestNamespace::with_configuration(properties, configuration);
+        
+        let request = CreateNamespaceRequest {
+            id: Some(vec!["test".to_string(), "newnamespace".to_string()]),
+            properties: None,
+            mode: None,
+        };
+        
+        let result = namespace.create_namespace(request).await;
+        
+        // Should succeed with mock server
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_create_table_success() {
+        // Start a mock server
+        let mock_server = MockServer::start().await;
+        
+        // Create mock response
+        Mock::given(method("POST"))
+            .and(path("/v1/table/test.namespace.table/create"))
+            .respond_with(ResponseTemplate::new(201)
+                .set_body_json(serde_json::json!({
+                    "table": {
+                        "identifier": ["test", "namespace", "table"],
+                        "location": "/path/to/table",
+                        "version": 1
+                    }
+                })))
+            .mount(&mock_server)
+            .await;
+        
+        // Create namespace with mock server URL
+        let mut properties = HashMap::new();
+        properties.insert("uri".to_string(), mock_server.uri());
+        
+        let mut configuration = Configuration::new();
+        configuration.base_path = mock_server.uri();
+        
+        let namespace = RestNamespace::with_configuration(properties, configuration);
+        
+        let request = CreateTableRequest {
+            id: Some(vec!["test".to_string(), "namespace".to_string(), "table".to_string()]),
+            location: None,
+            mode: Some(create_table_request::Mode::Create),
+            schema: None,
+            properties: None,
+        };
+        
+        let data = Bytes::from("arrow data here");
+        let result = namespace.create_table(request, data).await;
+        
+        // Should succeed with mock server
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_insert_into_table_success() {
+        // Start a mock server
+        let mock_server = MockServer::start().await;
+        
+        // Create mock response
+        Mock::given(method("POST"))
+            .and(path("/v1/table/test.namespace.table/insert"))
+            .respond_with(ResponseTemplate::new(200)
+                .set_body_json(serde_json::json!({
+                    "version": 2
+                })))
+            .mount(&mock_server)
+            .await;
+        
+        // Create namespace with mock server URL
+        let mut properties = HashMap::new();
+        properties.insert("uri".to_string(), mock_server.uri());
+        
+        let mut configuration = Configuration::new();
+        configuration.base_path = mock_server.uri();
+        
+        let namespace = RestNamespace::with_configuration(properties, configuration);
+        
+        let request = InsertIntoTableRequest {
+            id: Some(vec!["test".to_string(), "namespace".to_string(), "table".to_string()]),
+            mode: Some(insert_into_table_request::Mode::Append),
+        };
+        
+        let data = Bytes::from("arrow data here");
+        let result = namespace.insert_into_table(request, data).await;
+        
+        // Should succeed with mock server
+        assert!(result.is_ok());
+        let response = result.unwrap();
+        assert_eq!(response.version, Some(2));
+    }
+
+    #[tokio::test]
     #[ignore] // Requires a running server
-    async fn test_create_namespace() {
+    async fn test_create_namespace_integration() {
         let namespace = create_test_namespace();
         let request = CreateNamespaceRequest {
             id: Some(vec!["test".to_string(), "namespace".to_string()]),
