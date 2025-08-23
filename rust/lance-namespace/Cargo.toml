@@ -1,0 +1,22 @@
+[package]
+name = "lance-namespace"
+version = "0.1.0"
+edition = "2021"
+authors = ["Lance Namespace Contributors"]
+description = "Lance Namespace Rust Client - A unified interface for managing namespaces and tables"
+license = "Apache-2.0"
+repository = "https://github.com/lancedb/lance-namespace"
+documentation = "https://docs.rs/lance-namespace"
+keywords = ["lance", "namespace", "table", "database"]
+categories = ["database"]
+
+[dependencies]
+async-trait = "0.1"
+thiserror = "1.0"
+bytes = "1.5"
+
+# Use models from the reqwest client
+lance-namespace-reqwest-client = { path = "../lance-namespace-reqwest-client" }
+
+[dev-dependencies]
+tokio = { version = "1.35", features = ["full"] }

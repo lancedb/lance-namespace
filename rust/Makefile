@@ -34,6 +34,19 @@ gen-reqwest-client: clean-reqwest-client
 build-reqwest-client: gen-reqwest-client
 	cargo test
 
+.PHONY: lint
+lint:
+	cd lance-namespace && cargo fmt -- --check
+	cd lance-namespace && cargo clippy --all-targets --all-features
+
+.PHONY: format
+format:
+	cargo fmt --all
+
+.PHONY: test
+test:
+	cd lance-namespace && cargo test
+
 .PHONY: clean
 clean: clean-reqwest-client
 
@@ -41,4 +54,4 @@ clean: clean-reqwest-client
 gen: gen-reqwest-client
 
 .PHONY: build
-build: build-reqwest-client
+build: build-reqwest-client lint test
