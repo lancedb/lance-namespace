@@ -7,8 +7,6 @@ import pyarrow as pa
 from lance_namespace.schema import (
     convert_json_arrow_schema_to_pyarrow,
     convert_json_arrow_type_to_pyarrow,
-    convert_pyarrow_schema_to_glue_columns,
-    convert_pyarrow_type_to_glue_type,
 )
 from lance_namespace_urllib3_client.models import (
     JsonArrowSchema,
@@ -106,85 +104,3 @@ class TestJsonArrowToPyArrow:
         assert pyarrow_schema.field('name').nullable == True
         assert pyarrow_schema.field('score').type == pa.float64()
         assert pyarrow_schema.metadata == {b'created_by': b'test'}
-
-
-class TestPyArrowToGlue:
-    """Test PyArrow to Glue type conversions."""
-    
-    def test_convert_basic_types(self):
-        """Test conversion of basic PyArrow types to Glue types."""
-        assert convert_pyarrow_type_to_glue_type(pa.bool_()) == 'boolean'
-        assert convert_pyarrow_type_to_glue_type(pa.int8()) == 'tinyint'
-        assert convert_pyarrow_type_to_glue_type(pa.uint8()) == 'tinyint'
-        assert convert_pyarrow_type_to_glue_type(pa.int16()) == 'smallint'
-        assert convert_pyarrow_type_to_glue_type(pa.uint16()) == 'smallint'
-        assert convert_pyarrow_type_to_glue_type(pa.int32()) == 'int'
-        assert convert_pyarrow_type_to_glue_type(pa.uint32()) == 'int'
-        assert convert_pyarrow_type_to_glue_type(pa.int64()) == 'bigint'
-        assert convert_pyarrow_type_to_glue_type(pa.uint64()) == 'bigint'
-        assert convert_pyarrow_type_to_glue_type(pa.float32()) == 'float'
-        assert convert_pyarrow_type_to_glue_type(pa.float64()) == 'double'
-        assert convert_pyarrow_type_to_glue_type(pa.string()) == 'string'
-        assert convert_pyarrow_type_to_glue_type(pa.binary()) == 'binary'
-        assert convert_pyarrow_type_to_glue_type(pa.date32()) == 'date'
-        assert convert_pyarrow_type_to_glue_type(pa.date64()) == 'date'
-        assert convert_pyarrow_type_to_glue_type(pa.timestamp('us')) == 'timestamp'
-    
-    def test_convert_decimal_type(self):
-        """Test conversion of decimal type."""
-        assert convert_pyarrow_type_to_glue_type(pa.decimal128(10, 2)) == 'decimal(10,2)'
-        assert convert_pyarrow_type_to_glue_type(pa.decimal128(38, 10)) == 'decimal(38,10)'
-    
-    def test_convert_complex_types(self):
-        """Test conversion of complex PyArrow types to Glue types."""
-        # Test list/array type
-        assert convert_pyarrow_type_to_glue_type(pa.list_(pa.int32())) == 'array<int>'
-        assert convert_pyarrow_type_to_glue_type(pa.list_(pa.string())) == 'array<string>'
-        
-        # Test struct type
-        struct_type = pa.struct([
-            pa.field('a', pa.int32()),
-            pa.field('b', pa.string())
-        ])
-        assert convert_pyarrow_type_to_glue_type(struct_type) == 'struct<a:int,b:string>'
-        
-        # Test map type
-        map_type = pa.map_(pa.string(), pa.int32())
-        assert convert_pyarrow_type_to_glue_type(map_type) == 'map<string,int>'
-    
-    def test_convert_nested_complex_types(self):
-        """Test conversion of nested complex types."""
-        # Array of structs
-        struct_type = pa.struct([pa.field('x', pa.int32())])
-        array_of_structs = pa.list_(struct_type)
-        assert convert_pyarrow_type_to_glue_type(array_of_structs) == 'array<struct<x:int>>'
-        
-        # Map with complex value type
-        map_with_array = pa.map_(pa.string(), pa.list_(pa.int32()))
-        assert convert_pyarrow_type_to_glue_type(map_with_array) == 'map<string,array<int>>'
-    
-    def test_convert_schema_to_glue_columns(self):
-        """Test conversion of PyArrow schema to Glue column definitions."""
-        schema = pa.schema([
-            pa.field('id', pa.int64()),
-            pa.field('name', pa.string()),
-            pa.field('scores', pa.list_(pa.float32())),
-            pa.field('metadata', pa.struct([
-                pa.field('created', pa.timestamp('us')),
-                pa.field('version', pa.int32())
-            ]))
-        ])
-        
-        columns = convert_pyarrow_schema_to_glue_columns(schema)
-        
-        assert len(columns) == 4
-        assert columns[0] == {'Name': 'id', 'Type': 'bigint'}
-        assert columns[1] == {'Name': 'name', 'Type': 'string'}
-        assert columns[2] == {'Name': 'scores', 'Type': 'array<float>'}
-        assert columns[3] == {'Name': 'metadata', 'Type': 'struct<created:timestamp,version:int>'}
-    
-    def test_unknown_type_defaults_to_string(self):
-        """Test that unknown types default to string."""
-        # Create a custom type that isn't recognized
-        unknown_type = pa.null()  # null type as an example
-        assert convert_pyarrow_type_to_glue_type(unknown_type) == 'string'

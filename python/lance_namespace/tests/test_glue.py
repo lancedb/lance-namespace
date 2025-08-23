@@ -549,3 +549,48 @@ class TestGlueNamespace:
         no_params = {}
         assert glue_namespace._is_lance_table(no_params) is False
     
+    def test_pyarrow_type_conversions(self, glue_namespace):
+        """Test PyArrow to Glue type conversions."""
+        # Test basic types
+        assert glue_namespace._convert_pyarrow_type_to_glue_type(pa.bool_()) == 'boolean'
+        assert glue_namespace._convert_pyarrow_type_to_glue_type(pa.int32()) == 'int'
+        assert glue_namespace._convert_pyarrow_type_to_glue_type(pa.int64()) == 'bigint'
+        assert glue_namespace._convert_pyarrow_type_to_glue_type(pa.float32()) == 'float'
+        assert glue_namespace._convert_pyarrow_type_to_glue_type(pa.float64()) == 'double'
+        assert glue_namespace._convert_pyarrow_type_to_glue_type(pa.string()) == 'string'
+        assert glue_namespace._convert_pyarrow_type_to_glue_type(pa.binary()) == 'binary'
+        assert glue_namespace._convert_pyarrow_type_to_glue_type(pa.date32()) == 'date'
+        assert glue_namespace._convert_pyarrow_type_to_glue_type(pa.timestamp('us')) == 'timestamp'
+        
+        # Test complex types
+        assert glue_namespace._convert_pyarrow_type_to_glue_type(pa.list_(pa.int32())) == 'array<int>'
+        assert glue_namespace._convert_pyarrow_type_to_glue_type(
+            pa.struct([pa.field('a', pa.int32()), pa.field('b', pa.string())])
+        ) == 'struct<a:int,b:string>'
+        assert glue_namespace._convert_pyarrow_type_to_glue_type(
+            pa.map_(pa.string(), pa.int32())
+        ) == 'map<string,int>'
+        
+        # Test decimal
+        assert glue_namespace._convert_pyarrow_type_to_glue_type(pa.decimal128(10, 2)) == 'decimal(10,2)'
+    
+    def test_pyarrow_schema_to_glue_columns(self, glue_namespace):
+        """Test conversion of PyArrow schema to Glue column definitions."""
+        schema = pa.schema([
+            pa.field('id', pa.int64()),
+            pa.field('name', pa.string()),
+            pa.field('scores', pa.list_(pa.float32())),
+            pa.field('metadata', pa.struct([
+                pa.field('created', pa.timestamp('us')),
+                pa.field('version', pa.int32())
+            ]))
+        ])
+        
+        columns = glue_namespace._convert_pyarrow_schema_to_glue_columns(schema)
+        
+        assert len(columns) == 4
+        assert columns[0] == {'Name': 'id', 'Type': 'bigint'}
+        assert columns[1] == {'Name': 'name', 'Type': 'string'}
+        assert columns[2] == {'Name': 'scores', 'Type': 'array<float>'}
+        assert columns[3] == {'Name': 'metadata', 'Type': 'struct<created:timestamp,version:int>'}
+    

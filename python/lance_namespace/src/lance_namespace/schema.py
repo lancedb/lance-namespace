@@ -1,7 +1,10 @@
 """
 Schema conversion utilities for Lance Namespace implementations.
+
+This module contains functions for converting between JSON Arrow schema
+representations and PyArrow schemas. These are generic conversions that
+can be used by any namespace implementation.
 """
-from typing import List, Dict
 
 try:
     import pyarrow as pa
@@ -113,85 +116,3 @@ def convert_json_arrow_type_to_pyarrow(json_type: JsonArrowDataType) -> "pa.Data
             return pa.decimal128(38, 10)  # Default precision/scale
     else:
         raise ValueError(f"Unsupported Arrow type: {type_name_lower}")
-
-
-def convert_pyarrow_schema_to_glue_columns(schema: "pa.Schema") -> List[Dict[str, str]]:
-    """Convert PyArrow schema to Glue column definitions.
-    
-    Args:
-        schema: PyArrow Schema object
-        
-    Returns:
-        List of Glue column dictionaries
-        
-    Raises:
-        ImportError: If PyArrow is not available
-    """
-    if not HAS_PYARROW:
-        raise ImportError("PyArrow is required for schema conversion")
-    
-    columns = []
-    for field in schema:
-        column = {
-            'Name': field.name,
-            'Type': convert_pyarrow_type_to_glue_type(field.type)
-        }
-        columns.append(column)
-    return columns
-
-
-def convert_pyarrow_type_to_glue_type(arrow_type: "pa.DataType") -> str:
-    """Convert PyArrow type to Glue/Hive type string.
-    
-    Args:
-        arrow_type: PyArrow DataType object
-        
-    Returns:
-        String representation of Glue/Hive type
-        
-    Raises:
-        ImportError: If PyArrow is not available
-    """
-    if not HAS_PYARROW:
-        raise ImportError("PyArrow is required for type conversion")
-    
-    if pa.types.is_boolean(arrow_type):
-        return 'boolean'
-    elif pa.types.is_int8(arrow_type) or pa.types.is_uint8(arrow_type):
-        return 'tinyint'
-    elif pa.types.is_int16(arrow_type) or pa.types.is_uint16(arrow_type):
-        return 'smallint'
-    elif pa.types.is_int32(arrow_type) or pa.types.is_uint32(arrow_type):
-        return 'int'
-    elif pa.types.is_int64(arrow_type) or pa.types.is_uint64(arrow_type):
-        return 'bigint'
-    elif pa.types.is_float32(arrow_type):
-        return 'float'
-    elif pa.types.is_float64(arrow_type):
-        return 'double'
-    elif pa.types.is_string(arrow_type):
-        return 'string'
-    elif pa.types.is_binary(arrow_type):
-        return 'binary'
-    elif pa.types.is_date32(arrow_type) or pa.types.is_date64(arrow_type):
-        return 'date'
-    elif pa.types.is_timestamp(arrow_type):
-        return 'timestamp'
-    elif pa.types.is_decimal(arrow_type):
-        return f'decimal({arrow_type.precision},{arrow_type.scale})'
-    elif pa.types.is_list(arrow_type):
-        element_type = convert_pyarrow_type_to_glue_type(arrow_type.value_type)
-        return f'array<{element_type}>'
-    elif pa.types.is_struct(arrow_type):
-        field_strs = []
-        for field in arrow_type:
-            field_type = convert_pyarrow_type_to_glue_type(field.type)
-            field_strs.append(f'{field.name}:{field_type}')
-        return f'struct<{",".join(field_strs)}>'
-    elif pa.types.is_map(arrow_type):
-        key_type = convert_pyarrow_type_to_glue_type(arrow_type.key_type)
-        value_type = convert_pyarrow_type_to_glue_type(arrow_type.item_type)
-        return f'map<{key_type},{value_type}>'
-    else:
-        # Default to string for unknown types
-        return 'string'

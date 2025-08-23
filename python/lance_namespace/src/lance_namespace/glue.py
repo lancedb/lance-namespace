@@ -21,8 +21,6 @@ from lance_namespace.namespace import LanceNamespace
 from lance_namespace.schema import (
     convert_json_arrow_schema_to_pyarrow,
     convert_json_arrow_type_to_pyarrow,
-    convert_pyarrow_schema_to_glue_columns,
-    convert_pyarrow_type_to_glue_type,
 )
 from lance_namespace_urllib3_client.models import (
     ListNamespacesRequest,
@@ -442,7 +440,7 @@ class GlueNamespace(LanceNamespace):
             },
             'StorageDescriptor': {
                 'Location': table_location,
-                'Columns': convert_pyarrow_schema_to_glue_columns(schema)
+                'Columns': self._convert_pyarrow_schema_to_glue_columns(schema)
             }
         }
         
@@ -520,7 +518,7 @@ class GlueNamespace(LanceNamespace):
             },
             'StorageDescriptor': {
                 'Location': request.location,
-                'Columns': convert_pyarrow_schema_to_glue_columns(schema)
+                'Columns': self._convert_pyarrow_schema_to_glue_columns(schema)
             }
         }
         
@@ -581,6 +579,60 @@ class GlueNamespace(LanceNamespace):
     def _is_lance_table(self, glue_table: Dict[str, Any]) -> bool:
         """Check if a Glue table is a Lance table."""
         return glue_table.get('Parameters', {}).get(TABLE_TYPE, '').upper() == LANCE_TABLE_TYPE
+    
+    def _convert_pyarrow_schema_to_glue_columns(self, schema: pa.Schema) -> List[Dict[str, str]]:
+        """Convert PyArrow schema to Glue column definitions."""
+        columns = []
+        for field in schema:
+            column = {
+                'Name': field.name,
+                'Type': self._convert_pyarrow_type_to_glue_type(field.type)
+            }
+            columns.append(column)
+        return columns
+    
+    def _convert_pyarrow_type_to_glue_type(self, arrow_type: pa.DataType) -> str:
+        """Convert PyArrow type to Glue/Hive type string."""
+        if pa.types.is_boolean(arrow_type):
+            return 'boolean'
+        elif pa.types.is_int8(arrow_type) or pa.types.is_uint8(arrow_type):
+            return 'tinyint'
+        elif pa.types.is_int16(arrow_type) or pa.types.is_uint16(arrow_type):
+            return 'smallint'
+        elif pa.types.is_int32(arrow_type) or pa.types.is_uint32(arrow_type):
+            return 'int'
+        elif pa.types.is_int64(arrow_type) or pa.types.is_uint64(arrow_type):
+            return 'bigint'
+        elif pa.types.is_float32(arrow_type):
+            return 'float'
+        elif pa.types.is_float64(arrow_type):
+            return 'double'
+        elif pa.types.is_string(arrow_type):
+            return 'string'
+        elif pa.types.is_binary(arrow_type):
+            return 'binary'
+        elif pa.types.is_date32(arrow_type) or pa.types.is_date64(arrow_type):
+            return 'date'
+        elif pa.types.is_timestamp(arrow_type):
+            return 'timestamp'
+        elif pa.types.is_decimal(arrow_type):
+            return f'decimal({arrow_type.precision},{arrow_type.scale})'
+        elif pa.types.is_list(arrow_type):
+            element_type = self._convert_pyarrow_type_to_glue_type(arrow_type.value_type)
+            return f'array<{element_type}>'
+        elif pa.types.is_struct(arrow_type):
+            field_strs = []
+            for field in arrow_type:
+                field_type = self._convert_pyarrow_type_to_glue_type(field.type)
+                field_strs.append(f'{field.name}:{field_type}')
+            return f'struct<{",".join(field_strs)}>'
+        elif pa.types.is_map(arrow_type):
+            key_type = self._convert_pyarrow_type_to_glue_type(arrow_type.key_type)
+            value_type = self._convert_pyarrow_type_to_glue_type(arrow_type.item_type)
+            return f'map<{key_type},{value_type}>'
+        else:
+            # Default to string for unknown types
+            return 'string'
     
 
 
