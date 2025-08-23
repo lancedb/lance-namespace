@@ -10,4 +10,3 @@ pub mod rest;
 // Re-export the trait and connect function at the crate root
 pub use connect::{connect, ConnectError};
 pub use namespace::{LanceNamespace, NamespaceError, Result};
-pub use rest::{RestNamespace, RestNamespaceConfig};
