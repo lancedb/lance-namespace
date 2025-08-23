@@ -79,20 +79,52 @@ public class TestUnityNamespace {
 
   @BeforeClass
   public static void checkUnityServer() {
-    // Check if Unity server is running
+    // Check if Unity server is running by verifying the root endpoint
     try {
-      java.net.HttpURLConnection connection =
+      // First check if server responds at root with "Hello, Unity Catalog!"
+      java.net.HttpURLConnection rootConnection =
+          (java.net.HttpURLConnection) new java.net.URL(UNITY_ENDPOINT).openConnection();
+      rootConnection.setRequestMethod("GET");
+      rootConnection.setConnectTimeout(1000);
+      rootConnection.setReadTimeout(1000);
+
+      if (rootConnection.getResponseCode() == 200) {
+        java.io.BufferedReader reader =
+            new java.io.BufferedReader(
+                new java.io.InputStreamReader(rootConnection.getInputStream()));
+        String response = reader.readLine();
+        reader.close();
+        rootConnection.disconnect();
+
+        if (!"Hello, Unity Catalog!".equals(response)) {
+          System.err.println(
+              "Server at " + UNITY_ENDPOINT + " is not Unity Catalog (response: " + response + ")");
+          System.err.println("Skipping Unity namespace tests.");
+          org.junit.Assume.assumeTrue("Unity Catalog server is not available", false);
+        }
+      } else {
+        rootConnection.disconnect();
+        System.err.println("Unity Catalog server not responding at " + UNITY_ENDPOINT);
+        System.err.println("Skipping Unity namespace tests.");
+        org.junit.Assume.assumeTrue("Unity Catalog server is not available", false);
+      }
+
+      // Also verify the API endpoint is accessible
+      java.net.HttpURLConnection apiConnection =
           (java.net.HttpURLConnection)
               new java.net.URL(UNITY_ENDPOINT + "/api/2.1/unity-catalog/catalogs").openConnection();
-      connection.setRequestMethod("GET");
-      connection.setConnectTimeout(1000);
-      int responseCode = connection.getResponseCode();
-      connection.disconnect();
+      apiConnection.setRequestMethod("GET");
+      apiConnection.setConnectTimeout(1000);
+      int responseCode = apiConnection.getResponseCode();
+      apiConnection.disconnect();
 
       if (responseCode != 200) {
-        System.err.println("Unity Catalog server not available. Please start with docker-compose.");
+        System.err.println(
+            "Unity Catalog API not available at "
+                + UNITY_ENDPOINT
+                + "/api/2.1/unity-catalog/catalogs");
         System.err.println("Skipping Unity namespace tests.");
-        org.junit.Assume.assumeTrue("Unity Catalog server is not running", false);
+        org.junit.Assume.assumeTrue("Unity Catalog API is not accessible", false);
       }
     } catch (Exception e) {
       System.err.println("Unity Catalog server not available: " + e.getMessage());

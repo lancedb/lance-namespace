@@ -76,5 +76,4 @@ jobs:
         run: mvn checkstyle:check spotless:check
       - name: Running tests with Java ${{ matrix.java-version }}
         working-directory: java
-        # Exclude Unity tests as they require Unity Catalog server
-        run: mvn install -pl '!lance-namespace-unity'
+        run: mvn install
