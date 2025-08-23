@@ -389,7 +389,7 @@ impl LanceNamespace for DirectoryNamespace {
     async fn create_table(
         &self,
         request: CreateTableRequest,
-        _request_data: Bytes,
+        request_data: Bytes,
     ) -> Result<CreateTableResponse> {
         let table_name = Self::table_name_from_id(&request.id)?;
         let table_path = self.table_full_path(&table_name);
@@ -415,12 +415,41 @@ impl LanceNamespace for DirectoryNamespace {
         let arrow_schema = convert_json_arrow_schema(json_schema)?;
         let arrow_schema = Arc::new(arrow_schema);
 
-        // Create an empty RecordBatch with the schema
-        let batch = arrow::record_batch::RecordBatch::new_empty(arrow_schema.clone());
-
-        // Create a RecordBatchReader from the batch
-        let batches = vec![Ok(batch)];
-        let reader = arrow::record_batch::RecordBatchIterator::new(batches, arrow_schema.clone());
+        // Create RecordBatchReader from request_data (Arrow IPC stream)
+        let reader = if request_data.is_empty() {
+            // If no data provided, create an empty batch with the schema
+            let batch = arrow::record_batch::RecordBatch::new_empty(arrow_schema.clone());
+            let batches = vec![Ok(batch)];
+            arrow::record_batch::RecordBatchIterator::new(batches, arrow_schema.clone())
+        } else {
+            // Parse the Arrow IPC stream from request_data
+            use arrow::ipc::reader::StreamReader;
+            use std::io::Cursor;
+            
+            let cursor = Cursor::new(request_data.to_vec());
+            let stream_reader = StreamReader::try_new(cursor, None)
+                .map_err(|e| NamespaceError::Other(format!("Failed to parse Arrow IPC stream: {}", e)))?;
+            
+            // Collect all batches from the stream
+            let mut batches = Vec::new();
+            let actual_schema = stream_reader.schema();
+            
+            // Verify schema matches
+            if actual_schema != arrow_schema {
+                return Err(NamespaceError::Other(
+                    "Schema in IPC stream does not match the provided schema".to_string()
+                ));
+            }
+            
+            for batch_result in stream_reader {
+                batches.push(batch_result.map_err(|e| 
+                    NamespaceError::Other(format!("Failed to read batch from IPC stream: {}", e)))?);
+            }
+            
+            // Convert to RecordBatchIterator
+            let batch_results: Vec<_> = batches.into_iter().map(Ok).collect();
+            arrow::record_batch::RecordBatchIterator::new(batch_results, actual_schema)
+        };
 
         // Set up write parameters for creating a new dataset
         let write_params = WriteParams {
@@ -1022,5 +1051,80 @@ mod tests {
         let request = ListTablesRequest::new();
         let response = namespace.list_tables(request).await.unwrap();
         assert_eq!(response.tables.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_create_table_with_ipc_data() {
+        use arrow::array::{Int32Array, StringArray};
+        use arrow::ipc::writer::StreamWriter;
+
+        let (namespace, _temp_dir) = create_test_namespace().await;
+
+        // Create a schema with some fields
+        let schema = create_test_schema();
+
+        // Create some test data that matches the schema
+        let arrow_schema = convert_json_arrow_schema(&schema).unwrap();
+        let arrow_schema = Arc::new(arrow_schema);
+
+        // Create a RecordBatch with actual data
+        let id_array = Int32Array::from(vec![1, 2, 3]);
+        let name_array = StringArray::from(vec!["Alice", "Bob", "Charlie"]);
+        let batch = arrow::record_batch::RecordBatch::try_new(
+            arrow_schema.clone(),
+            vec![Arc::new(id_array), Arc::new(name_array)],
+        ).unwrap();
+
+        // Write the batch to an IPC stream
+        let mut buffer = Vec::new();
+        {
+            let mut writer = StreamWriter::try_new(&mut buffer, &arrow_schema).unwrap();
+            writer.write(&batch).unwrap();
+            writer.finish().unwrap();
+        }
+
+        // Create table with the IPC data
+        let mut request = CreateTableRequest::new();
+        request.id = Some(vec!["test_table_with_data".to_string()]);
+        request.schema = Some(Box::new(schema));
+
+        let response = namespace
+            .create_table(request, Bytes::from(buffer))
+            .await
+            .unwrap();
+
+        assert_eq!(response.version, Some(1));
+        assert!(response.location.unwrap().contains("test_table_with_data.lance"));
+
+        // Verify table exists
+        let mut exists_request = TableExistsRequest::new();
+        exists_request.id = Some(vec!["test_table_with_data".to_string()]);
+        namespace.table_exists(exists_request).await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_create_table_with_empty_data() {
+        let (namespace, _temp_dir) = create_test_namespace().await;
+
+        // Create a schema
+        let schema = create_test_schema();
+
+        // Create table with empty data (should create empty dataset with schema)
+        let mut request = CreateTableRequest::new();
+        request.id = Some(vec!["empty_table".to_string()]);
+        request.schema = Some(Box::new(schema));
+
+        let response = namespace
+            .create_table(request, Bytes::new())
+            .await
+            .unwrap();
+
+        assert_eq!(response.version, Some(1));
+        assert!(response.location.unwrap().contains("empty_table.lance"));
+
+        // Verify table exists
+        let mut exists_request = TableExistsRequest::new();
+        exists_request.id = Some(vec!["empty_table".to_string()]);
+        namespace.table_exists(exists_request).await.unwrap();
     }
 }
