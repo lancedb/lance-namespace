@@ -14,7 +14,6 @@
 package com.lancedb.lance.namespace.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.hc.client5.http.classic.methods.HttpDelete;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPatch;
@@ -36,7 +35,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -251,7 +249,8 @@ public class RestClient implements Closeable {
     executeRequest(request, null);
   }
 
-  private <T> T executeRequest(HttpUriRequestBase request, Class<T> responseType) throws IOException {
+  private <T> T executeRequest(HttpUriRequestBase request, Class<T> responseType)
+      throws IOException {
     // Add default headers
     defaultHeaders.forEach(request::addHeader);
 
@@ -270,7 +269,14 @@ public class RestClient implements Closeable {
       try (CloseableHttpResponse response = httpClient.execute(request)) {
         int statusCode = response.getCode();
         HttpEntity entity = response.getEntity();
-        String responseBody = entity != null ? EntityUtils.toString(entity) : null;
+        String responseBody = null;
+        if (entity != null) {
+          try {
+            responseBody = EntityUtils.toString(entity);
+          } catch (org.apache.hc.core5.http.ParseException e) {
+            throw new IOException("Failed to parse response body", e);
+          }
+        }
 
         if (statusCode >= 200 && statusCode < 300) {
           if (responseType == null || responseType == Void.class) {
@@ -288,10 +294,14 @@ public class RestClient implements Closeable {
               String.format("Request failed with status %d: %s", statusCode, responseBody));
         } else {
           // Server error, might retry
+          LOG.warn("HTTP request failed with status {}: {}", statusCode, responseBody);
           lastException =
               new IOException(
                   String.format("Request failed with status %d: %s", statusCode, responseBody));
         }
+      } catch (RestClientException e) {
+        // Client errors should not be retried, rethrow immediately
+        throw e;
       } catch (IOException e) {
         lastException = e;
         LOG.warn("Request attempt {} failed: {}", attempt + 1, e.getMessage());
