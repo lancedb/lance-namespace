@@ -9,5 +9,5 @@ pub mod namespace;
 
 // Re-export the trait and connect function at the crate root
 pub use connect::{connect, ConnectError};
-pub use dir::{DirectoryNamespace, DirectoryNamespaceConfig};
+pub use dir::DirectoryNamespace;
 pub use namespace::{LanceNamespace, NamespaceError, Result};

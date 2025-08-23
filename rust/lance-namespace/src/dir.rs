@@ -269,6 +269,8 @@ impl LanceNamespace for DirectoryNamespace {
         Self::validate_root_namespace_id(&request.id)?;
 
         let mut tables = Vec::new();
+        
+        // Use non-recursive listing to avoid issues with object stores that don't have directory concept
         let entries = self.operator.list("").await.map_err(|e| {
             NamespaceError::Io(std::io::Error::new(
                 std::io::ErrorKind::Other,
@@ -279,7 +281,7 @@ impl LanceNamespace for DirectoryNamespace {
         for entry in entries {
             let path = entry.path().trim_end_matches('/');
             
-            // Only process paths that end with .lance
+            // Only process directory-like paths that end with .lance
             if !path.ends_with(".lance") {
                 continue;
             }
@@ -287,17 +289,22 @@ impl LanceNamespace for DirectoryNamespace {
             // Extract table name (remove .lance suffix)
             let table_name = &path[..path.len() - 6];
 
-            // Check if it's a valid Lance dataset by looking for _versions directory
-            let versions_path = self.table_versions_path(table_name);
-            match self.operator.list(&versions_path).await {
-                Ok(version_entries) => {
-                    // Check if there's at least one version
-                    if !version_entries.is_empty() {
-                        tables.push(table_name.to_string());
-                    }
+            // For object stores, we need to check if there's a manifest file to verify it's a Lance dataset
+            // Try to check for a manifest file or version file
+            let manifest_path = format!("{}.lance/_latest.manifest", table_name);
+            match self.operator.read(&manifest_path).await {
+                Ok(_) => {
+                    // Found a manifest, this is likely a Lance dataset
+                    tables.push(table_name.to_string());
                 }
                 Err(_) => {
-                    // Not a valid Lance dataset, skip
+                    // No manifest found, check for version files pattern
+                    let versions_path = format!("{}.lance/_versions/", table_name);
+                    if let Ok(version_entries) = self.operator.list(&versions_path).await {
+                        if !version_entries.is_empty() {
+                            tables.push(table_name.to_string());
+                        }
+                    }
                 }
             }
         }
@@ -383,8 +390,8 @@ impl LanceNamespace for DirectoryNamespace {
         let arrow_schema = Self::convert_json_arrow_schema(json_schema)?;
         let _arrow_schema = Arc::new(arrow_schema);
 
-        // For now, we'll just create a placeholder directory structure
-        // In a real implementation, this would use Lance dataset creation
+        // For now, we'll create a placeholder directory structure compatible with Lance
+        // TODO: Use actual Lance dataset creation when Lance crate compilation issues are resolved
         let table_dir = format!("{}.lance/", table_name);
         self.operator
             .create_dir(&table_dir)
@@ -398,12 +405,18 @@ impl LanceNamespace for DirectoryNamespace {
             .await
             .map_err(|e| NamespaceError::Other(format!("Failed to create versions directory: {}", e)))?;
         
-        // Create a placeholder version file
-        let version_file = format!("{}1.manifest", versions_dir);
+        // Create a placeholder manifest file (Lance datasets have manifest files)
+        let manifest_file = format!("{}_latest.manifest", table_dir);
+        let manifest_content = serde_json::json!({
+            "version": 1,
+            "schema": _arrow_schema.metadata(),
+            "created_at": std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()
+        }).to_string();
+        
         self.operator
-            .write(&version_file, vec![0u8])
+            .write(&manifest_file, manifest_content.as_bytes().to_vec())
             .await
-            .map_err(|e| NamespaceError::Other(format!("Failed to create version file: {}", e)))?;
+            .map_err(|e| NamespaceError::Other(format!("Failed to create manifest file: {}", e)))?;
 
         Ok(CreateTableResponse {
             version: Some(1),
