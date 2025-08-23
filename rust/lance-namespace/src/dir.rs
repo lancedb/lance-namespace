@@ -3,7 +3,6 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use arrow::datatypes::{DataType, Field, Schema as ArrowSchema};
 use async_trait::async_trait;
 use bytes::Bytes;
 use opendal::Operator;
@@ -18,6 +17,7 @@ use lance_namespace_reqwest_client::models::{
 };
 
 use crate::namespace::{LanceNamespace, NamespaceError, Result};
+use crate::schema::convert_json_arrow_schema;
 
 /// Configuration for DirectoryNamespace.
 #[derive(Debug, Clone)]
@@ -139,57 +139,6 @@ impl DirectoryNamespace {
     /// Get the versions path for a table
     fn table_versions_path(&self, table_name: &str) -> String {
         format!("{}.lance/_versions/", table_name)
-    }
-
-    /// Convert JsonArrowSchema to Arrow Schema
-    fn convert_json_arrow_schema(json_schema: &JsonArrowSchema) -> Result<ArrowSchema> {
-        let fields: Result<Vec<Field>> = json_schema
-            .fields
-            .iter()
-            .map(|f| Self::convert_json_arrow_field(f))
-            .collect();
-
-        let metadata = json_schema
-            .metadata
-            .as_ref()
-            .map(|m| m.clone())
-            .unwrap_or_default();
-
-        Ok(ArrowSchema::new_with_metadata(fields?, metadata))
-    }
-
-    /// Convert JsonArrowField to Arrow Field
-    fn convert_json_arrow_field(json_field: &JsonArrowField) -> Result<Field> {
-        let data_type = Self::convert_json_arrow_type(&json_field.r#type)?;
-        let nullable = json_field.nullable;
-
-        Ok(Field::new(&json_field.name, data_type, nullable))
-    }
-
-    /// Convert JsonArrowDataType to Arrow DataType
-    fn convert_json_arrow_type(json_type: &JsonArrowDataType) -> Result<DataType> {
-        let type_name = json_type.r#type.to_lowercase();
-
-        match type_name.as_str() {
-            "null" => Ok(DataType::Null),
-            "bool" | "boolean" => Ok(DataType::Boolean),
-            "int8" => Ok(DataType::Int8),
-            "uint8" => Ok(DataType::UInt8),
-            "int16" => Ok(DataType::Int16),
-            "uint16" => Ok(DataType::UInt16),
-            "int32" => Ok(DataType::Int32),
-            "uint32" => Ok(DataType::UInt32),
-            "int64" => Ok(DataType::Int64),
-            "uint64" => Ok(DataType::UInt64),
-            "float32" => Ok(DataType::Float32),
-            "float64" => Ok(DataType::Float64),
-            "utf8" => Ok(DataType::Utf8),
-            "binary" => Ok(DataType::Binary),
-            _ => Err(NamespaceError::Other(format!(
-                "Unsupported Arrow type: {}",
-                type_name
-            ))),
-        }
     }
 }
 
@@ -387,7 +336,7 @@ impl LanceNamespace for DirectoryNamespace {
         }
 
         // Convert schema
-        let arrow_schema = Self::convert_json_arrow_schema(json_schema)?;
+        let arrow_schema = convert_json_arrow_schema(json_schema)?;
         let _arrow_schema = Arc::new(arrow_schema);
 
         // For now, we'll create a placeholder directory structure compatible with Lance

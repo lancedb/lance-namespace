@@ -6,6 +6,7 @@
 pub mod connect;
 pub mod dir;
 pub mod namespace;
+pub mod schema;
 
 // Re-export the trait and connect function at the crate root
 pub use connect::{connect, ConnectError};
