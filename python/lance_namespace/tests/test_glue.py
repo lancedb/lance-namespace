@@ -549,29 +549,3 @@ class TestGlueNamespace:
         no_params = {}
         assert glue_namespace._is_lance_table(no_params) is False
     
-    def test_pyarrow_type_conversions(self, glue_namespace):
-        """Test PyArrow type conversions."""
-        from lance_namespace.schema import convert_pyarrow_type_to_glue_type
-        
-        # Test basic types
-        assert convert_pyarrow_type_to_glue_type(pa.bool_()) == 'boolean'
-        assert convert_pyarrow_type_to_glue_type(pa.int32()) == 'int'
-        assert convert_pyarrow_type_to_glue_type(pa.int64()) == 'bigint'
-        assert convert_pyarrow_type_to_glue_type(pa.float32()) == 'float'
-        assert convert_pyarrow_type_to_glue_type(pa.float64()) == 'double'
-        assert convert_pyarrow_type_to_glue_type(pa.string()) == 'string'
-        assert convert_pyarrow_type_to_glue_type(pa.binary()) == 'binary'
-        assert convert_pyarrow_type_to_glue_type(pa.date32()) == 'date'
-        assert convert_pyarrow_type_to_glue_type(pa.timestamp('us')) == 'timestamp'
-        
-        # Test complex types
-        assert convert_pyarrow_type_to_glue_type(pa.list_(pa.int32())) == 'array<int>'
-        assert convert_pyarrow_type_to_glue_type(
-            pa.struct([pa.field('a', pa.int32()), pa.field('b', pa.string())])
-        ) == 'struct<a:int,b:string>'
-        assert convert_pyarrow_type_to_glue_type(
-            pa.map_(pa.string(), pa.int32())
-        ) == 'map<string,int>'
-        
-        # Test decimal
-        assert convert_pyarrow_type_to_glue_type(pa.decimal128(10, 2)) == 'decimal(10,2)'

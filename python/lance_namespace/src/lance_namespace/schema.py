@@ -58,48 +58,50 @@ def convert_json_arrow_type_to_pyarrow(json_type: JsonArrowDataType) -> "pa.Data
     if not HAS_PYARROW:
         raise ImportError("PyArrow is required for type conversion")
     
-    type_name = json_type.type.lower()
+    # Convert type name to lowercase but preserve timezone case
+    type_name = json_type.type
+    type_name_lower = type_name.lower()
     
-    if type_name == "null":
+    if type_name_lower == "null":
         return pa.null()
-    elif type_name in ["bool", "boolean"]:
+    elif type_name_lower in ["bool", "boolean"]:
         return pa.bool_()
-    elif type_name == "int8":
+    elif type_name_lower == "int8":
         return pa.int8()
-    elif type_name == "uint8":
+    elif type_name_lower == "uint8":
         return pa.uint8()
-    elif type_name == "int16":
+    elif type_name_lower == "int16":
         return pa.int16()
-    elif type_name == "uint16":
+    elif type_name_lower == "uint16":
         return pa.uint16()
-    elif type_name == "int32":
+    elif type_name_lower == "int32":
         return pa.int32()
-    elif type_name == "uint32":
+    elif type_name_lower == "uint32":
         return pa.uint32()
-    elif type_name == "int64":
+    elif type_name_lower == "int64":
         return pa.int64()
-    elif type_name == "uint64":
+    elif type_name_lower == "uint64":
         return pa.uint64()
-    elif type_name == "float32":
+    elif type_name_lower == "float32":
         return pa.float32()
-    elif type_name == "float64":
+    elif type_name_lower == "float64":
         return pa.float64()
-    elif type_name == "utf8":
+    elif type_name_lower == "utf8":
         return pa.utf8()
-    elif type_name == "binary":
+    elif type_name_lower == "binary":
         return pa.binary()
-    elif type_name == "date32":
+    elif type_name_lower == "date32":
         return pa.date32()
-    elif type_name == "date64":
+    elif type_name_lower == "date64":
         return pa.date64()
-    elif type_name.startswith("timestamp"):
+    elif type_name_lower.startswith("timestamp"):
         # Handle timestamp with timezone
         if "tz=" in type_name:
             tz = type_name.split("tz=")[1].rstrip("]")
             return pa.timestamp('us', tz=tz)
         else:
             return pa.timestamp('us')
-    elif type_name.startswith("decimal"):
+    elif type_name_lower.startswith("decimal"):
         # Parse decimal(precision, scale)
         import re
         match = re.match(r'decimal\((\d+),\s*(\d+)\)', type_name)
@@ -110,7 +112,7 @@ def convert_json_arrow_type_to_pyarrow(json_type: JsonArrowDataType) -> "pa.Data
         else:
             return pa.decimal128(38, 10)  # Default precision/scale
     else:
-        raise ValueError(f"Unsupported Arrow type: {type_name}")
+        raise ValueError(f"Unsupported Arrow type: {type_name_lower}")
 
 
 def convert_pyarrow_schema_to_glue_columns(schema: "pa.Schema") -> List[Dict[str, str]]:
