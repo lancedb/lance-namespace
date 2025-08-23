@@ -49,7 +49,6 @@ from lance_namespace_urllib3_client.models import (
 
 LANCE_TABLE_TYPE = "LANCE"
 TABLE_TYPE = "table_type"
-METADATA_LOCATION = "metadata_location"
 LOCATION = "location"
 EXTERNAL_TABLE = "EXTERNAL_TABLE"
 
@@ -418,7 +417,6 @@ class GlueNamespace(LanceNamespace):
             'TableType': EXTERNAL_TABLE,
             'Parameters': {
                 TABLE_TYPE: LANCE_TABLE_TYPE,
-                METADATA_LOCATION: table_location,
             },
             'StorageDescriptor': {
                 'Location': table_location,
@@ -479,7 +477,6 @@ class GlueNamespace(LanceNamespace):
             'TableType': EXTERNAL_TABLE,
             'Parameters': {
                 TABLE_TYPE: LANCE_TABLE_TYPE,
-                METADATA_LOCATION: request.location,
             },
             'StorageDescriptor': {
                 'Location': request.location,

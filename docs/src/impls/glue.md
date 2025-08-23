@@ -40,10 +40,9 @@ object in AWS Glue with the following requirements:
 1. the [`TableType`](https://docs.aws.amazon.com/glue/latest/webapi/API_Table.html#Glue-Type-Table-TableType) must be set to `EXTERNAL_TABLE` to indicate this is not a Glue managed table
 2. the [`StorageDescriptor.Location`](https://docs.aws.amazon.com/glue/latest/webapi/API_StorageDescriptor.html#Glue-Type-StorageDescriptor-Location) must point to the root location of the Lance table
 3. the [`Parameters`](https://docs.aws.amazon.com/glue/latest/webapi/API_Table.html#Glue-Type-Table-Parameters) must follow:
-    1. there is a key `table_type` set to `LANCE` (case insensitive)
-    2. there is a key `metadata_location` set to the Lance table storage location
-    3. there is a key `managed_by` set to either `storage` or `impl` (case insensitive). If not set, default to `storage`
-    4. there is a key `version` set to the latest numeric version number of the table. This field will only be respected if `managed_by=impl`
+    1. there is a key `table_type` set to `lance` (case insensitive)
+    2. there is a key `managed_by` set to either `storage` or `impl` (case insensitive). If not set, default to `storage`
+    3. there is a key `version` set to the latest numeric version number of the table. This field will only be respected if `managed_by=impl`
 
 ## Requirement for Implementation Managed Table
 
