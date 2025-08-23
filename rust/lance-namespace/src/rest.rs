@@ -121,15 +121,30 @@ impl RestNamespace {
     pub fn new(properties: HashMap<String, String>) -> Self {
         let config = RestNamespaceConfig::new(properties);
         
+        // Build reqwest client with custom headers if provided
+        let mut client_builder = reqwest::Client::builder();
+        
+        // Add custom headers to the client
+        if !config.additional_headers().is_empty() {
+            let mut headers = reqwest::header::HeaderMap::new();
+            for (key, value) in config.additional_headers() {
+                if let (Ok(header_name), Ok(header_value)) = (
+                    reqwest::header::HeaderName::from_bytes(key.as_bytes()),
+                    reqwest::header::HeaderValue::from_str(value),
+                ) {
+                    headers.insert(header_name, header_value);
+                }
+            }
+            client_builder = client_builder.default_headers(headers);
+        }
+        
+        let client = client_builder.build().unwrap_or_else(|_| reqwest::Client::new());
+        
         let mut reqwest_config = Configuration::new();
+        reqwest_config.client = client;
         if let Some(uri) = config.uri() {
             reqwest_config.base_path = uri.to_string();
         }
-        
-        // TODO: Add support for additional headers in the configuration
-        // The generated client doesn't currently support custom headers per request
-        // This would need to be added to the generated client or we'd need to
-        // modify the client to support it
 
         Self {
             config,
@@ -579,6 +594,43 @@ mod tests {
         
         // Successfully created the namespace
         assert!(true);
+    }
+
+    #[tokio::test]
+    async fn test_custom_headers_are_sent() {
+        // Start a mock server
+        let mock_server = MockServer::start().await;
+        
+        // Create mock that expects custom headers
+        Mock::given(method("GET"))
+            .and(path("/v1/namespace/test/list"))
+            .and(wiremock::matchers::header("Authorization", "Bearer test-token"))
+            .and(wiremock::matchers::header("X-Custom-Header", "custom-value"))
+            .respond_with(ResponseTemplate::new(200)
+                .set_body_json(serde_json::json!({
+                    "namespaces": []
+                })))
+            .mount(&mock_server)
+            .await;
+        
+        // Create namespace with custom headers
+        let mut properties = HashMap::new();
+        properties.insert("uri".to_string(), mock_server.uri());
+        properties.insert("header.Authorization".to_string(), "Bearer test-token".to_string());
+        properties.insert("header.X-Custom-Header".to_string(), "custom-value".to_string());
+        
+        let namespace = RestNamespace::new(properties);
+        
+        let request = ListNamespacesRequest {
+            id: Some(vec!["test".to_string()]),
+            page_token: None,
+            limit: None,
+        };
+        
+        let result = namespace.list_namespaces(request).await;
+        
+        // Should succeed, meaning headers were sent correctly
+        assert!(result.is_ok());
     }
 
     #[test]
