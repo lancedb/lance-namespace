@@ -615,6 +615,18 @@ wheels = [
 ]
 
 [[package]]
+name = "hive-metastore-client"
+version = "1.0.9"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "thrift" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/07/ed/f15d3f3e4f3676368993beedde77f499456a64debc7fd244e9278f5b9631/hive_metastore_client-1.0.9.tar.gz", hash = "sha256:b7e00a7cbdd8b2907cb68a219b086f1dbcbeb2010d8c0b530c99c961c4512fe9", size = 122852, upload-time = "2021-08-23T17:55:28.623Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/46/40/1dc3ced1f1487cb298a465a0c30685569058b912d554e696394837430017/hive_metastore_client-1.0.9-py3-none-any.whl", hash = "sha256:62a6657804a772398574bba64d46cd7bff10babb7bdc601abe1118ca916810a5", size = 137883, upload-time = "2021-08-23T17:55:27.117Z" },
+]
+
+[[package]]
 name = "hjson"
 version = "3.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -732,9 +744,15 @@ dir = [
     { name = "opendal", version = "0.45.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "opendal", version = "0.46.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
 ]
+<<<<<<< HEAD
 glue = [
     { name = "boto3" },
     { name = "botocore" },
+=======
+hive2 = [
+    { name = "hive-metastore-client" },
+    { name = "thrift" },
+>>>>>>> 9628e38 (feat: add Hive2Namespace implementation for Python)
 ]
 test = [
     { name = "pytest" },
@@ -743,17 +761,26 @@ test = [
 
 [package.metadata]
 requires-dist = [
+<<<<<<< HEAD
     { name = "boto3", marker = "extra == 'glue'", specifier = ">=1.24.0" },
     { name = "botocore", marker = "extra == 'glue'", specifier = ">=1.27.0" },
+=======
+    { name = "hive-metastore-client", marker = "extra == 'hive2'", specifier = ">=1.0.9" },
+>>>>>>> 9628e38 (feat: add Hive2Namespace implementation for Python)
     { name = "lance-namespace-urllib3-client", editable = "python/lance_namespace_urllib3_client" },
     { name = "opendal", marker = "extra == 'dir'" },
     { name = "pyarrow", specifier = ">=14.0.0" },
     { name = "pylance", specifier = ">=0.18.0" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=7.0.0" },
     { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=4.0.0" },
+    { name = "thrift", marker = "extra == 'hive2'", specifier = ">=0.13.0" },
     { name = "typing-extensions", specifier = ">=4.0.0" },
 ]
+<<<<<<< HEAD
 provides-extras = ["test", "dir", "glue"]
+=======
+provides-extras = ["test", "dir", "hive2"]
+>>>>>>> 9628e38 (feat: add Hive2Namespace implementation for Python)
 
 [[package]]
 name = "lance-namespace-urllib3-client"
@@ -2302,6 +2329,15 @@ sdist = { url = "https://files.pythonhosted.org/packages/ca/6c/3d75c196ac07ac874
 wheels = [
     { url = "https://files.pythonhosted.org/packages/4f/bd/de8d508070629b6d84a30d01d57e4a65c69aa7f5abe7560b8fad3b50ea59/termcolor-3.1.0-py3-none-any.whl", hash = "sha256:591dd26b5c2ce03b9e43f391264626557873ce1d379019786f99b0c2bee140aa", size = 7684, upload-time = "2025-04-30T11:37:52.382Z" },
 ]
+
+[[package]]
+name = "thrift"
+version = "0.13.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "six" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/97/1e/3284d19d7be99305eda145b8aa46b0c33244e4a496ec66440dac19f8274d/thrift-0.13.0.tar.gz", hash = "sha256:9af1c86bf73433afc6010ed376a6c6aca2b54099cc0d61895f640870a9ae7d89", size = 59911, upload-time = "2019-11-18T04:50:57.646Z" }
 
 [[package]]
 name = "tomli"
