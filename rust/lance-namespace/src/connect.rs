@@ -5,6 +5,7 @@ use std::sync::Arc;
 use thiserror::Error;
 
 use crate::namespace::LanceNamespace;
+use crate::rest::RestNamespace;
 
 /// Error type for connection-related operations
 #[derive(Debug, Error)]
@@ -58,14 +59,14 @@ pub enum ConnectError {
 /// ```
 pub async fn connect(
     impl_name: &str,
-    _properties: HashMap<String, String>,
+    properties: HashMap<String, String>,
 ) -> Result<Arc<dyn LanceNamespace>, ConnectError> {
     // Native implementations will be added here as they are created
     match impl_name {
-        // "rest" => {
-        //     // Create REST implementation
-        //     Ok(Arc::new(RestNamespace::new(properties)?))
-        // }
+        "rest" => {
+            // Create REST implementation
+            Ok(Arc::new(RestNamespace::new(properties)))
+        }
         // "dir" => {
         //     // Create directory implementation
         //     Ok(Arc::new(DirectoryNamespace::new(properties)?))
