@@ -397,19 +397,35 @@ class GlueNamespace(LanceNamespace):
                 # Use S3 default location
                 table_location = f"s3://lance-namespace/{database_name}/{table_name}.lance"
         
-        # Convert schema and create empty Lance dataset
+        # Convert schema for validation
         schema = self._convert_json_arrow_schema_to_pyarrow(request.var_schema)
         
-        # Create empty table with schema
-        arrays = []
-        for field in schema:
-            empty_array = pa.array([], type=field.type)
-            arrays.append(empty_array)
-        
-        empty_table = pa.Table.from_arrays(arrays, schema=schema)
+        # Convert Arrow IPC stream bytes to RecordBatch
+        if request_data:
+            # Read Arrow IPC stream
+            reader = pa.ipc.open_stream(pa.py_buffer(request_data))
+            batches = [batch for batch in reader]
+            
+            # Convert to table for Lance
+            if batches:
+                table = pa.Table.from_batches(batches, schema=schema)
+            else:
+                # No data, create empty table with schema
+                arrays = []
+                for field in schema:
+                    empty_array = pa.array([], type=field.type)
+                    arrays.append(empty_array)
+                table = pa.Table.from_arrays(arrays, schema=schema)
+        else:
+            # No data provided, create empty table with schema
+            arrays = []
+            for field in schema:
+                empty_array = pa.array([], type=field.type)
+                arrays.append(empty_array)
+            table = pa.Table.from_arrays(arrays, schema=schema)
         
         # Write Lance dataset
-        lance.write_dataset(empty_table, table_location, storage_options=self.config.storage_options)
+        lance.write_dataset(table, table_location, storage_options=self.config.storage_options)
         
         # Create Glue table entry
         table_input = {

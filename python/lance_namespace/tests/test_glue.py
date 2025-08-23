@@ -329,7 +329,20 @@ class TestGlueNamespace:
             var_schema=schema
         )
         
-        response = glue_namespace.create_table(request, b'')
+        # Create mock Arrow IPC stream data
+        arrow_schema = pa.schema([
+            pa.field('id', pa.int64(), nullable=False),
+            pa.field('name', pa.string(), nullable=True),
+        ])
+        table = pa.table({'id': [1, 2], 'name': ['Alice', 'Bob']}, schema=arrow_schema)
+        
+        # Convert to IPC stream bytes
+        with pa.BufferOutputStream() as sink:
+            with pa.ipc.new_stream(sink, arrow_schema) as writer:
+                writer.write_table(table)
+            request_data = sink.getvalue().to_pybytes()
+        
+        response = glue_namespace.create_table(request, request_data)
         
         assert response.location == 's3://bucket/db/test_table.lance'
         assert response.version == 1
@@ -343,6 +356,36 @@ class TestGlueNamespace:
         assert call_args[1]['DatabaseName'] == 'test_db'
         assert call_args[1]['TableInput']['Name'] == 'test_table'
         assert call_args[1]['TableInput']['Parameters']['table_type'] == 'LANCE'
+    
+    def test_create_table_empty_data(self, glue_namespace, mock_lance):
+        """Test creating a table with empty data."""
+        glue_namespace.glue.get_database.return_value = {
+            'Database': {'LocationUri': 's3://bucket/db'}
+        }
+        
+        schema = JsonArrowSchema(
+            fields=[
+                JsonArrowField(name='id', type=JsonArrowDataType(type='int64'), nullable=False),
+                JsonArrowField(name='name', type=JsonArrowDataType(type='utf8'), nullable=True),
+            ]
+        )
+        
+        request = CreateTableRequest(
+            id=['test_db', 'test_table'],
+            var_schema=schema
+        )
+        
+        # Test with empty bytes
+        response = glue_namespace.create_table(request, b'')
+        
+        assert response.location == 's3://bucket/db/test_table.lance'
+        assert response.version == 1
+        
+        # Verify Lance dataset was written with empty table
+        mock_lance.write_dataset.assert_called_once()
+        written_table = mock_lance.write_dataset.call_args[0][0]
+        assert written_table.num_rows == 0
+        assert len(written_table.schema) == 2  # id and name columns
     
     def test_drop_table(self, glue_namespace):
         """Test dropping a table."""
