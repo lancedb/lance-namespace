@@ -6,6 +6,7 @@ use thiserror::Error;
 
 use crate::dir::DirectoryNamespace;
 use crate::namespace::LanceNamespace;
+use crate::rest::RestNamespace;
 
 /// Error type for connection-related operations
 #[derive(Debug, Error)]
@@ -63,10 +64,10 @@ pub async fn connect(
 ) -> Result<Arc<dyn LanceNamespace>, ConnectError> {
     // Native implementations will be added here as they are created
     match impl_name {
-        // "rest" => {
-        //     // Create REST implementation
-        //     Ok(Arc::new(RestNamespace::new(properties)?))
-        // }
+        "rest" => {
+            // Create REST implementation
+            Ok(Arc::new(RestNamespace::new(properties)))
+        }
         "dir" => {
             // Create directory implementation
             DirectoryNamespace::new(properties)

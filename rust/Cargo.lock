@@ -18,6 +18,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "512761e0bb2578dd7380c6baaa0f4ce03e84f95e960231d1dec8bf4d7d6e2627"
 
 [[package]]
+<<<<<<< HEAD
 name = "aes"
 version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -43,6 +44,8 @@ dependencies = [
 ]
 
 [[package]]
+=======
+>>>>>>> upstream/main
 name = "aho-corasick"
 version = "1.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -52,6 +55,7 @@ dependencies = [
 ]
 
 [[package]]
+<<<<<<< HEAD
 name = "alloc-no-stdlib"
 version = "2.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -292,11 +296,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "af7686986a3bf2254c9fb130c623cdcb2f8e1f15763e7c71c310f0834da3d292"
 dependencies = [
  "bitflags",
+=======
+name = "assert-json-diff"
+version = "2.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "47e4f2b81832e72834d7518d8487a0396a28cc408186a2e8854c0f98011faf12"
+dependencies = [
+>>>>>>> upstream/main
  "serde",
  "serde_json",
 ]
 
 [[package]]
+<<<<<<< HEAD
 name = "arrow-select"
 version = "55.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -371,6 +383,8 @@ dependencies = [
 ]
 
 [[package]]
+=======
+>>>>>>> upstream/main
 name = "async-trait"
 version = "0.1.89"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1169,6 +1183,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 
 [[package]]
+<<<<<<< HEAD
 name = "cpufeatures"
 version = "0.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1395,10 +1410,21 @@ dependencies = [
  "log",
  "object_store",
  "parking_lot",
+=======
+name = "deadpool"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fb84100978c1c7b37f09ed3ce3e5f843af02c2a2c431bae5b19230dad2c1b490"
+dependencies = [
+ "async-trait",
+ "deadpool-runtime",
+ "num_cpus",
+>>>>>>> upstream/main
  "tokio",
 ]
 
 [[package]]
+<<<<<<< HEAD
 name = "datafusion-catalog-listing"
 version = "48.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1944,6 +1970,12 @@ dependencies = [
  "redox_users",
  "windows-sys 0.59.0",
 ]
+=======
+name = "deadpool-runtime"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "092966b41edc516079bdf31ec78a2e0588d1d0c08f78b91d8307215928642b2b"
+>>>>>>> upstream/main
 
 [[package]]
 name = "displaydoc"
@@ -2105,6 +2137,7 @@ dependencies = [
 ]
 
 [[package]]
+<<<<<<< HEAD
 name = "fs4"
 version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2145,6 +2178,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e6d5a32815ae3f33302d95fdcb2ce17862f8c65363dcfd29360480ba1001fc9c"
 
 [[package]]
+=======
+>>>>>>> upstream/main
 name = "futures"
 version = "0.3.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2200,7 +2235,11 @@ checksum = "162ee34ebcb7c64a8abebc059ce0fee27c2262618d7b60ed8faf72fef13c3650"
 dependencies = [
  "proc-macro2",
  "quote",
+<<<<<<< HEAD
  "syn 2.0.100",
+=======
+ "syn",
+>>>>>>> upstream/main
 ]
 
 [[package]]
@@ -2231,6 +2270,7 @@ dependencies = [
  "pin-project-lite",
  "pin-utils",
  "slab",
+<<<<<<< HEAD
 ]
 
 [[package]]
@@ -2255,6 +2295,8 @@ checksum = "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a"
 dependencies = [
  "typenum",
  "version_check",
+=======
+>>>>>>> upstream/main
 ]
 
 [[package]]
@@ -2413,6 +2455,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "hermit-abi"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fc0fef456e4baa96da950455cd02c081ca953b141298e41db3fc7e36b1da849c"
+
+[[package]]
 name = "http"
 version = "1.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2464,10 +2512,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6dbf3de79e51f3d586ab4cb9d5c3e2c14aa28ed23d180cf89b4df0454a69cc87"
 
 [[package]]
+<<<<<<< HEAD
 name = "humantime"
 version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9b112acc8b3adf4b107a8ec20977da0273a8c386765a3ec0229bd500a1443f9f"
+=======
+name = "httpdate"
+version = "1.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "df3b46402a9d5adb4c86a0cf463f42e19994e3ee891101b1841f30a545cb49a9"
+>>>>>>> upstream/main
 
 [[package]]
 name = "hyper"
@@ -2482,6 +2537,7 @@ dependencies = [
  "http 1.3.1",
  "http-body 1.0.1",
  "httparse",
+ "httpdate",
  "itoa",
  "pin-project-lite",
  "smallvec",
@@ -3198,12 +3254,20 @@ dependencies = [
  "bytes",
  "lance",
  "lance-namespace-reqwest-client",
+<<<<<<< HEAD
  "opendal",
  "serde",
  "serde_json",
  "tempfile",
  "thiserror 1.0.69",
+=======
+ "reqwest",
+ "serde",
+ "serde_json",
+ "thiserror",
+>>>>>>> upstream/main
  "tokio",
+ "wiremock",
 ]
 
 [[package]]
@@ -3608,6 +3672,7 @@ dependencies = [
 ]
 
 [[package]]
+<<<<<<< HEAD
 name = "nom"
 version = "7.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3725,6 +3790,8 @@ dependencies = [
 ]
 
 [[package]]
+=======
+>>>>>>> upstream/main
 name = "num_cpus"
 version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4452,6 +4519,7 @@ dependencies = [
 ]
 
 [[package]]
+<<<<<<< HEAD
 name = "redox_users"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4463,6 +4531,8 @@ dependencies = [
 ]
 
 [[package]]
+=======
+>>>>>>> upstream/main
 name = "regex"
 version = "1.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4470,6 +4540,7 @@ checksum = "b544ef1b4eac5dc2db33ea63606ae9ffcfac26c1416a2806ae0bf5f56b201191"
 dependencies = [
  "aho-corasick",
  "memchr",
+<<<<<<< HEAD
  "regex-automata 0.4.9",
  "regex-syntax 0.8.5",
 ]
@@ -4481,6 +4552,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6c230d73fb8d8c1b9c0b3135c5142a8acee3a0558fb8db5cf1cb65f8d7862132"
 dependencies = [
  "regex-syntax 0.6.29",
+=======
+ "regex-automata",
+ "regex-syntax",
+>>>>>>> upstream/main
 ]
 
 [[package]]
@@ -4491,6 +4566,7 @@ checksum = "809e8dc61f6de73b46c85f4c96486310fe304c434cfa43669d7b40f711150908"
 dependencies = [
  "aho-corasick",
  "memchr",
+<<<<<<< HEAD
  "regex-syntax 0.8.5",
 ]
 
@@ -4507,12 +4583,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f162c6dd7b008981e4d40210aca20b4bd0f9b60ca9271061b07f78537722f2e1"
 
 [[package]]
+=======
+ "regex-syntax",
+]
+
+[[package]]
+>>>>>>> upstream/main
 name = "regex-syntax"
 version = "0.8.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
 
 [[package]]
+<<<<<<< HEAD
 name = "reqsign"
 version = "0.16.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4544,6 +4627,8 @@ dependencies = [
 ]
 
 [[package]]
+=======
+>>>>>>> upstream/main
 name = "reqwest"
 version = "0.12.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6289,6 +6374,30 @@ name = "windows_x86_64_msvc"
 version = "0.53.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "271414315aff87387382ec3d271b52d7ae78726f5d44ac98b4f4030c91880486"
+
+[[package]]
+name = "wiremock"
+version = "0.6.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a2b8b99d4cdbf36b239a9532e31fe4fb8acc38d1897c1761e161550a7dc78e6a"
+dependencies = [
+ "assert-json-diff",
+ "async-trait",
+ "base64",
+ "deadpool",
+ "futures",
+ "http",
+ "http-body-util",
+ "hyper",
+ "hyper-util",
+ "log",
+ "once_cell",
+ "regex",
+ "serde",
+ "serde_json",
+ "tokio",
+ "url",
+]
 
 [[package]]
 name = "wit-bindgen-rt"
