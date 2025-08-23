@@ -14,7 +14,7 @@ Usage:
     # Connect to Hive Metastore
     namespace = connect("hive2", {
         "uri": "thrift://localhost:9083",
-        "warehouse": "/user/hive/warehouse",
+        "root": "/my/dir",  # Or "s3://bucket/prefix"
         "ugi": "user:group1,group2"  # Optional user/group info
     })
     
@@ -48,8 +48,10 @@ Usage:
 
 Configuration Properties:
     uri (str): Hive Metastore Thrift URI (e.g., "thrift://localhost:9083")
-    warehouse (str): Warehouse directory path (default: "/user/hive/warehouse")
+    root (str): Storage root location of the lakehouse on Hive catalog (default: current working directory)
     ugi (str): Optional User Group Information for authentication (format: "user:group1,group2")
+    client.pool-size (int): Size of the HMS client connection pool (default: 3)
+    storage.* (str): Additional storage configurations to access table
 """
 from typing import Dict, List, Optional, Any
 from urllib.parse import urlparse, unquote
@@ -120,9 +122,11 @@ from lance_namespace_urllib3_client.models import (
 
 logger = logging.getLogger(__name__)
 
-# Table properties used by Lance
-LANCE_TABLE_TYPE = "lance.table_type"
-LANCE_TABLE_FORMAT = "LANCE"
+# Table properties used by Lance (per hive.md specification)
+TABLE_TYPE_KEY = "table_type"  # Case insensitive
+LANCE_TABLE_FORMAT = "lance"  # Case insensitive
+MANAGED_BY_KEY = "managed_by"  # Case insensitive, values: "storage" or "impl"
+VERSION_KEY = "version"  # Numeric version number
 EXTERNAL_TABLE = "EXTERNAL_TABLE"
 
 
@@ -181,8 +185,10 @@ class Hive2Namespace(LanceNamespace):
         
         Args:
             uri: The Hive Metastore URI (e.g., "thrift://localhost:9083")
+            root: Storage root location of the lakehouse on Hive catalog (optional)
             ugi: User Group Information for authentication (optional, format: "user:group1,group2")
-            warehouse: The warehouse directory path (optional, defaults to Hive's warehouse)
+            client.pool-size: Size of the HMS client connection pool (optional, default: 3)
+            storage.*: Additional storage configurations to access table
             **properties: Additional configuration properties
         """
         if not HIVE_AVAILABLE:
@@ -193,7 +199,10 @@ class Hive2Namespace(LanceNamespace):
         
         self.uri = properties.get("uri", "thrift://localhost:9083")
         self.ugi = properties.get("ugi")
-        self.warehouse = properties.get("warehouse", "/user/hive/warehouse")
+        self.root = properties.get("root", os.getcwd())
+        self.pool_size = int(properties.get("client.pool-size", "3"))
+        # Extract storage properties
+        self.storage_properties = {k[8:]: v for k, v in properties.items() if k.startswith("storage.")}
         
         # Create client
         self._client = HiveMetastoreClient(self.uri, self.ugi)
@@ -207,22 +216,26 @@ class Hive2Namespace(LanceNamespace):
         else:
             raise ValueError(f"Invalid identifier: {identifier}")
     
+    def _is_root_namespace(self, identifier: Optional[List[str]]) -> bool:
+        """Check if the identifier refers to the root namespace."""
+        return not identifier or len(identifier) == 0
+    
     def _get_table_location(self, database: str, table: str) -> str:
         """Get the location for a table."""
-        return os.path.join(self.warehouse, f"{database}.db", table)
+        return os.path.join(self.root, f"{database}.db", table)
     
     def list_namespaces(self, request: ListNamespacesRequest) -> ListNamespacesResponse:
         """List all databases in the Hive Metastore."""
         try:
+            # Only list namespaces if we're at the root level
+            if not self._is_root_namespace(request.id):
+                # Non-root namespaces don't have children in Hive2
+                return ListNamespacesResponse(namespaces=[])
+            
             with self._client as client:
                 databases = client.get_all_databases()
-                # Return just database names as strings
+                # Return just database names as strings (excluding default)
                 namespaces = [db for db in databases if db != "default"]
-                
-                # Apply parent filter if specified
-                if request.id:
-                    # In Hive, databases are flat, so parent filtering doesn't apply
-                    namespaces = []
                 
                 return ListNamespacesResponse(namespaces=namespaces)
         except Exception as e:
@@ -232,6 +245,16 @@ class Hive2Namespace(LanceNamespace):
     def describe_namespace(self, request: DescribeNamespaceRequest) -> DescribeNamespaceResponse:
         """Describe a database in the Hive Metastore."""
         try:
+            # Handle root namespace
+            if self._is_root_namespace(request.id):
+                properties = {
+                    "location": self.root,
+                    "description": "Root namespace (Hive Metastore)"
+                }
+                if self.ugi:
+                    properties["ugi"] = self.ugi
+                return DescribeNamespaceResponse(properties=properties)
+            
             if len(request.id) != 1:
                 raise ValueError(f"Invalid namespace identifier: {request.id}")
             
@@ -262,6 +285,10 @@ class Hive2Namespace(LanceNamespace):
     def create_namespace(self, request: CreateNamespaceRequest) -> CreateNamespaceResponse:
         """Create a new database in the Hive Metastore."""
         try:
+            # Cannot create root namespace
+            if self._is_root_namespace(request.id):
+                raise ValueError("Root namespace already exists")
+            
             if len(request.id) != 1:
                 raise ValueError(f"Invalid namespace identifier: {request.id}")
             
@@ -276,7 +303,7 @@ class Hive2Namespace(LanceNamespace):
             database.ownerName = request.properties.get("owner", os.getenv("USER", ""))
             database.locationUri = request.properties.get(
                 "location", 
-                os.path.join(self.warehouse, f"{database_name}.db")
+                os.path.join(self.root, f"{database_name}.db")
             )
             database.parameters = {
                 k: v for k, v in request.properties.items() 
@@ -296,6 +323,10 @@ class Hive2Namespace(LanceNamespace):
     def drop_namespace(self, request: DropNamespaceRequest) -> DropNamespaceResponse:
         """Drop a database from the Hive Metastore."""
         try:
+            # Cannot drop root namespace
+            if self._is_root_namespace(request.id):
+                raise ValueError("Cannot drop root namespace")
+            
             if len(request.id) != 1:
                 raise ValueError(f"Invalid namespace identifier: {request.id}")
             
@@ -321,6 +352,10 @@ class Hive2Namespace(LanceNamespace):
     def namespace_exists(self, request: NamespaceExistsRequest) -> None:
         """Check if a database exists in the Hive Metastore."""
         try:
+            # Root namespace always exists
+            if self._is_root_namespace(request.id):
+                return
+            
             if len(request.id) != 1:
                 raise ValueError(f"Invalid namespace identifier: {request.id}")
             
@@ -337,6 +372,10 @@ class Hive2Namespace(LanceNamespace):
     def list_tables(self, request: ListTablesRequest) -> ListTablesResponse:
         """List tables in a database."""
         try:
+            # Root namespace has no tables
+            if self._is_root_namespace(request.id):
+                return ListTablesResponse(tables=[])
+            
             if len(request.id) != 1:
                 raise ValueError(f"Invalid namespace identifier: {request.id}")
             
@@ -350,11 +389,12 @@ class Hive2Namespace(LanceNamespace):
                 for table_name in table_names:
                     try:
                         table = client.get_table(database_name, table_name)
-                        # Check if it's a Lance table
-                        if (table.parameters and 
-                            table.parameters.get(LANCE_TABLE_TYPE) == LANCE_TABLE_FORMAT):
-                            # Return just table name, not full identifier
-                            tables.append(table_name)
+                        # Check if it's a Lance table (case insensitive)
+                        if table.parameters:
+                            table_type = table.parameters.get(TABLE_TYPE_KEY, "").lower()
+                            if table_type == LANCE_TABLE_FORMAT:
+                                # Return just table name, not full identifier
+                                tables.append(table_name)
                     except Exception:
                         # Skip tables we can't read
                         continue
@@ -374,9 +414,11 @@ class Hive2Namespace(LanceNamespace):
             with self._client as client:
                 table = client.get_table(database, table_name)
                 
-                # Check if it's a Lance table
-                if not (table.parameters and 
-                        table.parameters.get(LANCE_TABLE_TYPE) == LANCE_TABLE_FORMAT):
+                # Check if it's a Lance table (case insensitive)
+                if not table.parameters:
+                    raise ValueError(f"Table {request.id} is not a Lance table")
+                table_type = table.parameters.get(TABLE_TYPE_KEY, "").lower()
+                if table_type != LANCE_TABLE_FORMAT:
                     raise ValueError(f"Table {request.id} is not a Lance table")
                 
                 # Get table location
@@ -458,14 +500,18 @@ class Hive2Namespace(LanceNamespace):
             
             hive_table.sd = sd
             
-            # Set table parameters
+            # Set table parameters per hive.md specification
             hive_table.parameters = {
-                LANCE_TABLE_TYPE: LANCE_TABLE_FORMAT,
-                "lance.version": str(dataset.version),
+                TABLE_TYPE_KEY: LANCE_TABLE_FORMAT,
+                MANAGED_BY_KEY: request.properties.get(MANAGED_BY_KEY, "storage"),
+                VERSION_KEY: str(dataset.version),
                 "EXTERNAL": "TRUE",
             }
             if request.properties:
-                hive_table.parameters.update(request.properties)
+                # Add other properties but don't override the required ones
+                for k, v in request.properties.items():
+                    if k not in [TABLE_TYPE_KEY, MANAGED_BY_KEY, VERSION_KEY]:
+                        hive_table.parameters[k] = v
             
             with self._client as client:
                 client.create_table(hive_table)
@@ -488,9 +534,11 @@ class Hive2Namespace(LanceNamespace):
             with self._client as client:
                 table = client.get_table(database, table_name)
                 
-                # Check if it's a Lance table
-                if not (table.parameters and 
-                        table.parameters.get(LANCE_TABLE_TYPE) == LANCE_TABLE_FORMAT):
+                # Check if it's a Lance table (case insensitive)
+                if not table.parameters:
+                    raise ValueError(f"Table {request.id} is not a Lance table")
+                table_type = table.parameters.get(TABLE_TYPE_KEY, "").lower()
+                if table_type != LANCE_TABLE_FORMAT:
                     raise ValueError(f"Table {request.id} is not a Lance table")
         except Exception as e:
             if NoSuchObjectException and isinstance(e, NoSuchObjectException):
@@ -507,8 +555,11 @@ class Hive2Namespace(LanceNamespace):
                 # Get table to check if it's a Lance table
                 table = client.get_table(database, table_name)
                 
-                if not (table.parameters and 
-                        table.parameters.get(LANCE_TABLE_TYPE) == LANCE_TABLE_FORMAT):
+                # Check if it's a Lance table (case insensitive)
+                if not table.parameters:
+                    raise ValueError(f"Table {request.id} is not a Lance table")
+                table_type = table.parameters.get(TABLE_TYPE_KEY, "").lower()
+                if table_type != LANCE_TABLE_FORMAT:
                     raise ValueError(f"Table {request.id} is not a Lance table")
                 
                 # Drop the table (always delete data for Lance tables)
@@ -530,8 +581,11 @@ class Hive2Namespace(LanceNamespace):
                 # Get table to check if it's a Lance table
                 table = client.get_table(database, table_name)
                 
-                if not (table.parameters and 
-                        table.parameters.get(LANCE_TABLE_TYPE) == LANCE_TABLE_FORMAT):
+                # Check if it's a Lance table (case insensitive)
+                if not table.parameters:
+                    raise ValueError(f"Table {request.id} is not a Lance table")
+                table_type = table.parameters.get(TABLE_TYPE_KEY, "").lower()
+                if table_type != LANCE_TABLE_FORMAT:
                     raise ValueError(f"Table {request.id} is not a Lance table")
                 
                 location = table.sd.location if table.sd else None

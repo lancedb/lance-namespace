@@ -40,7 +40,7 @@ def hive_namespace(mock_hive_client):
     with patch("lance_namespace.hive.HIVE_AVAILABLE", True):
         namespace = connect("hive2", {
             "uri": "thrift://localhost:9083",
-            "warehouse": "/tmp/warehouse"
+            "root": "/tmp/warehouse"
         })
         namespace._client = mock_hive_client
         return namespace
@@ -55,12 +55,12 @@ class TestHive2Namespace:
             with patch("lance_namespace.hive.HiveMetastoreClient") as mock_client:
                 namespace = connect("hive2", {
                     "uri": "thrift://localhost:9083",
-                    "warehouse": "/tmp/warehouse",
+                    "root": "/tmp/warehouse",
                     "ugi": "user:group1,group2"
                 })
                 
                 assert namespace.uri == "thrift://localhost:9083"
-                assert namespace.warehouse == "/tmp/warehouse"
+                assert namespace.root == "/tmp/warehouse"
                 assert namespace.ugi == "user:group1,group2"
                 mock_client.assert_called_once_with("thrift://localhost:9083", "user:group1,group2")
     
@@ -173,13 +173,13 @@ class TestHive2Namespace:
     def test_list_tables(self, hive_namespace, mock_hive_client):
         """Test listing tables in a namespace."""
         mock_table1 = MagicMock()
-        mock_table1.parameters = {"lance.table_type": "LANCE"}
+        mock_table1.parameters = {"table_type": "lance"}
         
         mock_table2 = MagicMock()
         mock_table2.parameters = {"other_type": "OTHER"}
         
         mock_table3 = MagicMock()
-        mock_table3.parameters = {"lance.table_type": "LANCE"}
+        mock_table3.parameters = {"table_type": "lance"}
         
         mock_client_instance = MagicMock()
         mock_client_instance.get_all_tables.return_value = ["table1", "table2", "table3"]
@@ -245,13 +245,13 @@ class TestHive2Namespace:
                     assert mock_hive_table.tableName == "test_table"
                     assert mock_hive_table.tableType == "EXTERNAL_TABLE"
                     assert mock_sd.location == table_path
-                    assert mock_hive_table.parameters["lance.table_type"] == "LANCE"
+                    assert mock_hive_table.parameters["table_type"] == "lance"
                     assert mock_hive_table.parameters["owner"] == "test_user"
     
     def test_table_exists(self, hive_namespace, mock_hive_client):
         """Test checking if a table exists."""
         mock_table = MagicMock()
-        mock_table.parameters = {"lance.table_type": "LANCE"}
+        mock_table.parameters = {"table_type": "lance"}
         
         mock_client_instance = MagicMock()
         mock_client_instance.get_table.return_value = mock_table
@@ -265,7 +265,7 @@ class TestHive2Namespace:
     def test_drop_table(self, hive_namespace, mock_hive_client):
         """Test dropping a table."""
         mock_table = MagicMock()
-        mock_table.parameters = {"lance.table_type": "LANCE"}
+        mock_table.parameters = {"table_type": "lance"}
         
         mock_client_instance = MagicMock()
         mock_client_instance.get_table.return_value = mock_table
@@ -282,7 +282,7 @@ class TestHive2Namespace:
     def test_deregister_table(self, hive_namespace, mock_hive_client):
         """Test deregistering a table without deleting data."""
         mock_table = MagicMock()
-        mock_table.parameters = {"lance.table_type": "LANCE"}
+        mock_table.parameters = {"table_type": "lance"}
         mock_table.sd.location = "/tmp/test_table"
         
         mock_client_instance = MagicMock()
@@ -313,3 +313,30 @@ class TestHive2Namespace:
         """Test getting table location."""
         location = hive_namespace._get_table_location("test_db", "test_table")
         assert location == "/tmp/warehouse/test_db.db/test_table"
+    
+    def test_root_namespace_operations(self, hive_namespace):
+        """Test root namespace operations."""
+        # Test namespace_exists for root
+        request = NamespaceExistsRequest(id=[])
+        hive_namespace.namespace_exists(request)  # Should not raise
+        
+        # Test describe_namespace for root
+        request = DescribeNamespaceRequest(id=[])
+        response = hive_namespace.describe_namespace(request)
+        assert response.properties["location"] == "/tmp/warehouse"
+        assert "Root namespace" in response.properties["description"]
+        
+        # Test list_tables for root (should be empty)
+        request = ListTablesRequest(id=[])
+        response = hive_namespace.list_tables(request)
+        assert response.tables == []
+        
+        # Test create_namespace for root (should fail)
+        request = CreateNamespaceRequest(id=[])
+        with pytest.raises(ValueError, match="Root namespace already exists"):
+            hive_namespace.create_namespace(request)
+        
+        # Test drop_namespace for root (should fail)
+        request = DropNamespaceRequest(id=[])
+        with pytest.raises(ValueError, match="Cannot drop root namespace"):
+            hive_namespace.drop_namespace(request)
