@@ -24,12 +24,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- Apache HttpComponents for REST client -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.14</version>
-        </dependency>
 
         <!-- Jackson for JSON processing -->
         <dependency>

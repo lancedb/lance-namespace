@@ -53,12 +53,3 @@ object in Unity Catalog with the following requirements:
 Updates to implementation-managed Lance tables must use Unity Catalog's table versioning mechanism
 for conditional updates through the UpdateTable API. The `version` property must be updated atomically
 to prevent concurrent modification conflicts.
-
-## HTTP Client
-
-The Unity namespace implementation uses a shared RestClient from lance-namespace-core for all HTTP operations.
-This client provides:
-- Connection pooling
-- Automatic retries with exponential backoff
-- Request/response logging
-- Error handling and mapping to appropriate Lance exceptions

@@ -14,26 +14,29 @@
 package com.lancedb.lance.namespace.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.util.EntityUtils;
+
+import org.apache.hc.client5.http.classic.methods.HttpDelete;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPatch;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpPut;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.util.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -123,8 +126,8 @@ public class RestClient implements Closeable {
 
       RequestConfig requestConfig =
           RequestConfig.custom()
-              .setConnectTimeout(connectTimeoutSeconds * 1000)
-              .setSocketTimeout(readTimeoutSeconds * 1000)
+              .setConnectTimeout(Timeout.ofSeconds(connectTimeoutSeconds))
+              .setResponseTimeout(Timeout.ofSeconds(readTimeoutSeconds))
               .build();
 
       CloseableHttpClient httpClient =
@@ -248,7 +251,7 @@ public class RestClient implements Closeable {
     executeRequest(request, null);
   }
 
-  private <T> T executeRequest(HttpRequestBase request, Class<T> responseType) throws IOException {
+  private <T> T executeRequest(HttpUriRequestBase request, Class<T> responseType) throws IOException {
     // Add default headers
     defaultHeaders.forEach(request::addHeader);
 
@@ -265,7 +268,7 @@ public class RestClient implements Closeable {
       }
 
       try (CloseableHttpResponse response = httpClient.execute(request)) {
-        int statusCode = response.getStatusLine().getStatusCode();
+        int statusCode = response.getCode();
         HttpEntity entity = response.getEntity();
         String responseBody = entity != null ? EntityUtils.toString(entity) : null;
 
