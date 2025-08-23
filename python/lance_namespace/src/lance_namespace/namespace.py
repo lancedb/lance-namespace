@@ -155,6 +155,7 @@ class LanceNamespace(ABC):
 NATIVE_IMPLS = {
     "rest": "lance_namespace.rest.LanceRestNamespace",
     "dir": "lance_namespace.dir.DirectoryNamespace",
+    "glue": "lance_namespace.glue.GlueNamespace",
 }
 
 def connect(impl: str, properties: Dict[str, str]) -> LanceNamespace:
