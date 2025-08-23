@@ -18,6 +18,12 @@ import lance
 import pyarrow as pa
 
 from lance_namespace.namespace import LanceNamespace
+from lance_namespace.schema import (
+    convert_json_arrow_schema_to_pyarrow,
+    convert_json_arrow_type_to_pyarrow,
+    convert_pyarrow_schema_to_glue_columns,
+    convert_pyarrow_type_to_glue_type,
+)
 from lance_namespace_urllib3_client.models import (
     ListNamespacesRequest,
     ListNamespacesResponse,
@@ -398,7 +404,7 @@ class GlueNamespace(LanceNamespace):
                 table_location = f"s3://lance-namespace/{database_name}/{table_name}.lance"
         
         # Convert schema for validation
-        schema = self._convert_json_arrow_schema_to_pyarrow(request.var_schema)
+        schema = convert_json_arrow_schema_to_pyarrow(request.var_schema)
         
         # Convert Arrow IPC stream bytes to RecordBatch
         if request_data:
@@ -436,7 +442,7 @@ class GlueNamespace(LanceNamespace):
             },
             'StorageDescriptor': {
                 'Location': table_location,
-                'Columns': self._convert_schema_to_glue_columns(schema),
+                'Columns': convert_pyarrow_schema_to_glue_columns(schema),
                 'InputFormat': 'org.apache.hadoop.mapred.TextInputFormat',
                 'OutputFormat': 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat',
                 'SerdeInfo': {
@@ -458,10 +464,31 @@ class GlueNamespace(LanceNamespace):
             raise RuntimeError(f"Failed to create table: {e}")
     
     def drop_table(self, request: DropTableRequest) -> DropTableResponse:
-        """Drop a table."""
+        """Drop a table - deletes both the Lance dataset and Glue catalog entry."""
         database_name, table_name = self._parse_table_identifier(request.id)
         
         try:
+            # First get the table to find its location
+            response = self.glue.get_table(
+                DatabaseName=database_name,
+                Name=table_name
+            )
+            table = response['Table']
+            
+            # Verify it's a Lance table
+            if not self._is_lance_table(table):
+                raise RuntimeError(f"Table is not a Lance table: {database_name}.{table_name}")
+            
+            # Get the table location
+            location = table.get('StorageDescriptor', {}).get('Location')
+            if not location:
+                raise RuntimeError(f"Table has no location: {database_name}.{table_name}")
+            
+            # Drop the Lance dataset first
+            lance_dataset = lance.dataset(location, storage_options=self.config.storage_options)
+            lance_dataset.delete()
+            
+            # Then remove from Glue catalog
             self.glue.delete_table(
                 DatabaseName=database_name,
                 Name=table_name
@@ -471,6 +498,8 @@ class GlueNamespace(LanceNamespace):
             error_name = e.__class__.__name__ if hasattr(e, '__class__') else ''
             if error_name == 'EntityNotFoundException':
                 raise RuntimeError(f"Table does not exist: {database_name}.{table_name}")
+            if isinstance(e, RuntimeError):
+                raise
             raise RuntimeError(f"Failed to drop table: {e}")
     
     def register_table(self, request: RegisterTableRequest) -> RegisterTableResponse:
@@ -496,7 +525,7 @@ class GlueNamespace(LanceNamespace):
             },
             'StorageDescriptor': {
                 'Location': request.location,
-                'Columns': self._convert_schema_to_glue_columns(schema),
+                'Columns': convert_pyarrow_schema_to_glue_columns(schema),
                 'InputFormat': 'org.apache.hadoop.mapred.TextInputFormat',
                 'OutputFormat': 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat',
                 'SerdeInfo': {
@@ -518,8 +547,21 @@ class GlueNamespace(LanceNamespace):
             raise RuntimeError(f"Failed to register table: {e}")
     
     def deregister_table(self, request: DeregisterTableRequest) -> DeregisterTableResponse:
-        """Deregister a table (same as drop for Glue)."""
-        return self.drop_table(DropTableRequest(id=request.id))
+        """Deregister a table - removes only the Glue catalog entry, keeps the Lance dataset."""
+        database_name, table_name = self._parse_table_identifier(request.id)
+        
+        try:
+            # Only remove from Glue catalog, don't delete the Lance dataset
+            self.glue.delete_table(
+                DatabaseName=database_name,
+                Name=table_name
+            )
+            return DeregisterTableResponse()
+        except Exception as e:
+            error_name = e.__class__.__name__ if hasattr(e, '__class__') else ''
+            if error_name == 'EntityNotFoundException':
+                raise RuntimeError(f"Table does not exist: {database_name}.{table_name}")
+            raise RuntimeError(f"Failed to deregister table: {e}")
     
     def table_exists(self, request: TableExistsRequest) -> None:
         """Check if a table exists."""
@@ -550,125 +592,6 @@ class GlueNamespace(LanceNamespace):
         """Check if a Glue table is a Lance table."""
         return glue_table.get('Parameters', {}).get(TABLE_TYPE, '').upper() == LANCE_TABLE_TYPE
     
-    def _convert_json_arrow_schema_to_pyarrow(self, json_schema: JsonArrowSchema) -> pa.Schema:
-        """Convert JsonArrowSchema to PyArrow Schema."""
-        fields = []
-        for json_field in json_schema.fields:
-            arrow_type = self._convert_json_arrow_type_to_pyarrow(json_field.type)
-            field = pa.field(json_field.name, arrow_type, nullable=json_field.nullable)
-            fields.append(field)
-        
-        return pa.schema(fields, metadata=json_schema.metadata)
-    
-    def _convert_json_arrow_type_to_pyarrow(self, json_type: JsonArrowDataType) -> pa.DataType:
-        """Convert JsonArrowDataType to PyArrow DataType."""
-        type_name = json_type.type.lower()
-        
-        if type_name == "null":
-            return pa.null()
-        elif type_name in ["bool", "boolean"]:
-            return pa.bool_()
-        elif type_name == "int8":
-            return pa.int8()
-        elif type_name == "uint8":
-            return pa.uint8()
-        elif type_name == "int16":
-            return pa.int16()
-        elif type_name == "uint16":
-            return pa.uint16()
-        elif type_name == "int32":
-            return pa.int32()
-        elif type_name == "uint32":
-            return pa.uint32()
-        elif type_name == "int64":
-            return pa.int64()
-        elif type_name == "uint64":
-            return pa.uint64()
-        elif type_name == "float32":
-            return pa.float32()
-        elif type_name == "float64":
-            return pa.float64()
-        elif type_name == "utf8":
-            return pa.utf8()
-        elif type_name == "binary":
-            return pa.binary()
-        elif type_name == "date32":
-            return pa.date32()
-        elif type_name == "date64":
-            return pa.date64()
-        elif type_name.startswith("timestamp"):
-            # Handle timestamp with timezone
-            if "tz=" in type_name:
-                tz = type_name.split("tz=")[1].rstrip("]")
-                return pa.timestamp('us', tz=tz)
-            else:
-                return pa.timestamp('us')
-        elif type_name.startswith("decimal"):
-            # Parse decimal(precision, scale)
-            import re
-            match = re.match(r'decimal\((\d+),\s*(\d+)\)', type_name)
-            if match:
-                precision = int(match.group(1))
-                scale = int(match.group(2))
-                return pa.decimal128(precision, scale)
-            else:
-                return pa.decimal128(38, 10)  # Default precision/scale
-        else:
-            raise ValueError(f"Unsupported Arrow type: {type_name}")
-    
-    def _convert_schema_to_glue_columns(self, schema: pa.Schema) -> List[Dict[str, str]]:
-        """Convert PyArrow schema to Glue column definitions."""
-        columns = []
-        for field in schema:
-            column = {
-                'Name': field.name,
-                'Type': self._pyarrow_type_to_glue_type(field.type)
-            }
-            columns.append(column)
-        return columns
-    
-    def _pyarrow_type_to_glue_type(self, arrow_type: pa.DataType) -> str:
-        """Convert PyArrow type to Glue/Hive type string."""
-        if pa.types.is_boolean(arrow_type):
-            return 'boolean'
-        elif pa.types.is_int8(arrow_type) or pa.types.is_uint8(arrow_type):
-            return 'tinyint'
-        elif pa.types.is_int16(arrow_type) or pa.types.is_uint16(arrow_type):
-            return 'smallint'
-        elif pa.types.is_int32(arrow_type) or pa.types.is_uint32(arrow_type):
-            return 'int'
-        elif pa.types.is_int64(arrow_type) or pa.types.is_uint64(arrow_type):
-            return 'bigint'
-        elif pa.types.is_float32(arrow_type):
-            return 'float'
-        elif pa.types.is_float64(arrow_type):
-            return 'double'
-        elif pa.types.is_string(arrow_type):
-            return 'string'
-        elif pa.types.is_binary(arrow_type):
-            return 'binary'
-        elif pa.types.is_date32(arrow_type) or pa.types.is_date64(arrow_type):
-            return 'date'
-        elif pa.types.is_timestamp(arrow_type):
-            return 'timestamp'
-        elif pa.types.is_decimal(arrow_type):
-            return f'decimal({arrow_type.precision},{arrow_type.scale})'
-        elif pa.types.is_list(arrow_type):
-            element_type = self._pyarrow_type_to_glue_type(arrow_type.value_type)
-            return f'array<{element_type}>'
-        elif pa.types.is_struct(arrow_type):
-            field_strs = []
-            for field in arrow_type:
-                field_type = self._pyarrow_type_to_glue_type(field.type)
-                field_strs.append(f'{field.name}:{field_type}')
-            return f'struct<{",".join(field_strs)}>'
-        elif pa.types.is_map(arrow_type):
-            key_type = self._pyarrow_type_to_glue_type(arrow_type.key_type)
-            value_type = self._pyarrow_type_to_glue_type(arrow_type.item_type)
-            return f'map<{key_type},{value_type}>'
-        else:
-            # Default to string for unknown types
-            return 'string'
 
 
 class GlueNamespaceConfig:

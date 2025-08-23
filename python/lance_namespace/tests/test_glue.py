@@ -17,6 +17,7 @@ from lance_namespace_urllib3_client.models import (
     DropTableRequest,
     DescribeTableRequest,
     RegisterTableRequest,
+    DeregisterTableRequest,
     TableExistsRequest,
     JsonArrowSchema,
     JsonArrowField,
@@ -387,11 +388,43 @@ class TestGlueNamespace:
         assert written_table.num_rows == 0
         assert len(written_table.schema) == 2  # id and name columns
     
-    def test_drop_table(self, glue_namespace):
+    def test_drop_table(self, glue_namespace, mock_lance):
         """Test dropping a table."""
+        # Mock the Glue get_table response
+        glue_namespace.glue.get_table.return_value = {
+            'Table': {
+                'Name': 'test_table',
+                'Parameters': {'table_type': 'LANCE'},
+                'StorageDescriptor': {'Location': 's3://bucket/table.lance'}
+            }
+        }
+        
+        # Mock the Lance dataset
+        mock_dataset = mock_lance.dataset.return_value
+        
         request = DropTableRequest(id=['test_db', 'test_table'])
         response = glue_namespace.drop_table(request)
         
+        # Verify Lance dataset was deleted first
+        mock_lance.dataset.assert_called_once_with(
+            's3://bucket/table.lance',
+            storage_options={}
+        )
+        mock_dataset.delete.assert_called_once()
+        
+        # Then verify Glue table was deleted
+        glue_namespace.glue.delete_table.assert_called_once_with(
+            DatabaseName='test_db',
+            Name='test_table'
+        )
+    
+    def test_deregister_table(self, glue_namespace, mock_lance):
+        """Test deregistering a table (only removes from Glue, keeps Lance dataset)."""
+        request = DeregisterTableRequest(id=['test_db', 'test_table'])
+        response = glue_namespace.deregister_table(request)
+        
+        # Verify only Glue table was deleted (no Lance operations)
+        mock_lance.dataset.assert_not_called()
         glue_namespace.glue.delete_table.assert_called_once_with(
             DatabaseName='test_db',
             Name='test_table'
@@ -518,25 +551,27 @@ class TestGlueNamespace:
     
     def test_pyarrow_type_conversions(self, glue_namespace):
         """Test PyArrow type conversions."""
+        from lance_namespace.schema import convert_pyarrow_type_to_glue_type
+        
         # Test basic types
-        assert glue_namespace._pyarrow_type_to_glue_type(pa.bool_()) == 'boolean'
-        assert glue_namespace._pyarrow_type_to_glue_type(pa.int32()) == 'int'
-        assert glue_namespace._pyarrow_type_to_glue_type(pa.int64()) == 'bigint'
-        assert glue_namespace._pyarrow_type_to_glue_type(pa.float32()) == 'float'
-        assert glue_namespace._pyarrow_type_to_glue_type(pa.float64()) == 'double'
-        assert glue_namespace._pyarrow_type_to_glue_type(pa.string()) == 'string'
-        assert glue_namespace._pyarrow_type_to_glue_type(pa.binary()) == 'binary'
-        assert glue_namespace._pyarrow_type_to_glue_type(pa.date32()) == 'date'
-        assert glue_namespace._pyarrow_type_to_glue_type(pa.timestamp('us')) == 'timestamp'
+        assert convert_pyarrow_type_to_glue_type(pa.bool_()) == 'boolean'
+        assert convert_pyarrow_type_to_glue_type(pa.int32()) == 'int'
+        assert convert_pyarrow_type_to_glue_type(pa.int64()) == 'bigint'
+        assert convert_pyarrow_type_to_glue_type(pa.float32()) == 'float'
+        assert convert_pyarrow_type_to_glue_type(pa.float64()) == 'double'
+        assert convert_pyarrow_type_to_glue_type(pa.string()) == 'string'
+        assert convert_pyarrow_type_to_glue_type(pa.binary()) == 'binary'
+        assert convert_pyarrow_type_to_glue_type(pa.date32()) == 'date'
+        assert convert_pyarrow_type_to_glue_type(pa.timestamp('us')) == 'timestamp'
         
         # Test complex types
-        assert glue_namespace._pyarrow_type_to_glue_type(pa.list_(pa.int32())) == 'array<int>'
-        assert glue_namespace._pyarrow_type_to_glue_type(
+        assert convert_pyarrow_type_to_glue_type(pa.list_(pa.int32())) == 'array<int>'
+        assert convert_pyarrow_type_to_glue_type(
             pa.struct([pa.field('a', pa.int32()), pa.field('b', pa.string())])
         ) == 'struct<a:int,b:string>'
-        assert glue_namespace._pyarrow_type_to_glue_type(
+        assert convert_pyarrow_type_to_glue_type(
             pa.map_(pa.string(), pa.int32())
         ) == 'map<string,int>'
         
         # Test decimal
-        assert glue_namespace._pyarrow_type_to_glue_type(pa.decimal128(10, 2)) == 'decimal(10,2)'
+        assert convert_pyarrow_type_to_glue_type(pa.decimal128(10, 2)) == 'decimal(10,2)'
