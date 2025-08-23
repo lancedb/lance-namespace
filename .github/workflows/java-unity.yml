@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Java
+name: Java Unity Catalog Tests
 
 on:
   push:
@@ -23,9 +23,9 @@ on:
       - ready_for_review
       - reopened
     paths:
-      - docs/src/spec/**
-      - java/**
-      - .github/workflows/java.yml
+      - java/lance-namespace-unity/**
+      - java/lance-namespace-core/**
+      - .github/workflows/java-unity.yml
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -45,9 +45,9 @@ env:
   CARGO_BUILD_JOBS: "1"
 
 jobs:
-  linux-build:
+  unity-catalog-tests:
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 30
     strategy:
       matrix:
         java-version: [ 11, 17 ]
@@ -71,10 +71,46 @@ jobs:
           distribution: temurin
           java-version: ${{ matrix.java-version }}
           cache: "maven"
-      - name: Check code style
+      
+      # Start Unity Catalog server using Docker Compose
+      - name: Start Unity Catalog server
+        run: |
+          git clone https://github.com/unitycatalog/unitycatalog.git /tmp/unitycatalog
+          cd /tmp/unitycatalog
+          docker compose up -d
+          # Wait for Unity Catalog to be ready
+          echo "Waiting for Unity Catalog server to start..."
+          for i in {1..30}; do
+            if curl -s http://localhost:8080/api/2.1/unity-catalog/catalogs > /dev/null; then
+              echo "Unity Catalog server is ready"
+              break
+            fi
+            echo "Waiting for Unity Catalog server... ($i/30)"
+            sleep 2
+          done
+          # Verify server is responding
+          curl -s http://localhost:8080/api/2.1/unity-catalog/catalogs || exit 1
+      
+      # Build dependencies first
+      - name: Build dependencies
         working-directory: java
-        run: mvn checkstyle:check spotless:check
-      - name: Running tests with Java ${{ matrix.java-version }}
+        run: mvn install -pl lance-namespace-core -am -DskipTests
+      
+      # Run Unity namespace tests
+      - name: Run Unity Catalog tests with Java ${{ matrix.java-version }}
         working-directory: java
-        # Exclude Unity tests as they require Unity Catalog server
-        run: mvn install -pl '!lance-namespace-unity'
+        run: mvn test -pl lance-namespace-unity
+      
+      # Clean up Docker containers
+      - name: Stop Unity Catalog server
+        if: always()
+        run: |
+          cd /tmp/unitycatalog
+          docker compose down
+      
+      # Show Docker logs if tests failed
+      - name: Show Unity Catalog logs on failure
+        if: failure()
+        run: |
+          cd /tmp/unitycatalog
+          docker compose logs
