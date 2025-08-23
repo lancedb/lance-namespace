@@ -4,6 +4,7 @@
 //! that stores tables as Lance datasets in a filesystem directory structure.
 
 use std::collections::HashMap;
+use std::str::FromStr;
 use std::sync::Arc;
 
 use async_trait::async_trait;
@@ -92,16 +93,88 @@ impl DirectoryNamespace {
     /// Initialize the OpenDAL operator based on the configuration
     fn initialize_operator(config: &DirectoryNamespaceConfig) -> Result<Operator> {
         let root = config.root();
+        let storage_options = &config.storage_options;
 
-        // For now, we'll only support local filesystem
-        // More complex storage backends can be added later
-        let mut map = HashMap::new();
-        map.insert("root".to_string(), root.to_string());
+        // Parse the root path to determine scheme and configuration
+        let (scheme, mut opendal_config) = Self::parse_storage_path(root)?;
         
-        let operator = Operator::via_iter(opendal::Scheme::Fs, map)
+        // Add any additional storage options from config
+        opendal_config.extend(storage_options.clone());
+
+        // Create the operator with the determined scheme and configuration
+        let operator = Operator::via_iter(scheme, opendal_config)
             .map_err(|e| NamespaceError::Other(format!("Failed to create operator: {}", e)))?;
 
         Ok(operator)
+    }
+
+    /// Parse storage path and return scheme and configuration
+    fn parse_storage_path(root: &str) -> Result<(opendal::Scheme, HashMap<String, String>)> {
+        let mut config = HashMap::new();
+        
+        // Check if it's a URL by splitting on "://"
+        let parts: Vec<&str> = root.splitn(2, "://").collect();
+        
+        if parts.len() < 2 {
+            // Not a URL, treat as local filesystem
+            config.insert("root".to_string(), root.to_string());
+            return Ok((opendal::Scheme::Fs, config));
+        }
+
+        // Normalize the scheme
+        let normalized_scheme = Self::normalize_scheme(parts[0]);
+        let path_part = parts[1];
+
+        // Split authority and path
+        let authority_parts: Vec<&str> = path_part.splitn(2, '/').collect();
+        let authority = authority_parts[0];
+        let path = if authority_parts.len() > 1 {
+            authority_parts[1]
+        } else {
+            ""
+        };
+
+        // Configure based on scheme
+        let scheme = match normalized_scheme.as_str() {
+            "fs" => {
+                config.insert("root".to_string(), path_part.to_string());
+                opendal::Scheme::Fs
+            }
+            "s3" => {
+                config.insert("root".to_string(), path.to_string());
+                config.insert("bucket".to_string(), authority.to_string());
+                opendal::Scheme::S3
+            }
+            "gcs" => {
+                config.insert("root".to_string(), path.to_string());
+                config.insert("bucket".to_string(), authority.to_string());
+                opendal::Scheme::Gcs
+            }
+            "azblob" => {
+                config.insert("root".to_string(), path.to_string());
+                config.insert("container".to_string(), authority.to_string());
+                opendal::Scheme::Azblob
+            }
+            _ => {
+                // For unknown schemes, pass as-is and let OpenDAL handle it
+                config.insert("root".to_string(), path_part.to_string());
+                // Try to parse the scheme string to OpenDAL scheme
+                opendal::Scheme::from_str(&normalized_scheme)
+                    .map_err(|_| NamespaceError::Other(format!("Unsupported storage scheme: {}", normalized_scheme)))?
+            }
+        };
+
+        Ok((scheme, config))
+    }
+
+    /// Normalize scheme names with common aliases
+    fn normalize_scheme(scheme: &str) -> String {
+        match scheme.to_lowercase().as_str() {
+            "s3a" | "s3n" => "s3".to_string(),
+            "abfs" => "azblob".to_string(),
+            "file" => "fs".to_string(),
+            s => s.to_string(),
+        }
     }
 
 
@@ -844,6 +917,108 @@ mod tests {
             .unwrap();
 
         // Test basic operation through the trait object
+        let request = ListTablesRequest::new();
+        let response = namespace.list_tables(request).await.unwrap();
+        assert_eq!(response.tables.len(), 0);
+    }
+
+    #[test]
+    fn test_parse_storage_path_local() {
+        // Test local filesystem paths
+        let (scheme, config) = DirectoryNamespace::parse_storage_path("/path/to/data").unwrap();
+        assert!(matches!(scheme, opendal::Scheme::Fs));
+        assert_eq!(config.get("root").unwrap(), "/path/to/data");
+
+        // Test relative path
+        let (scheme, config) = DirectoryNamespace::parse_storage_path("./data").unwrap();
+        assert!(matches!(scheme, opendal::Scheme::Fs));
+        assert_eq!(config.get("root").unwrap(), "./data");
+    }
+
+    #[test]
+    fn test_parse_storage_path_s3() {
+        // Test S3 URL
+        let (scheme, config) = DirectoryNamespace::parse_storage_path("s3://my-bucket/path/to/data").unwrap();
+        assert!(matches!(scheme, opendal::Scheme::S3));
+        assert_eq!(config.get("bucket").unwrap(), "my-bucket");
+        assert_eq!(config.get("root").unwrap(), "path/to/data");
+
+        // Test S3 with just bucket
+        let (scheme, config) = DirectoryNamespace::parse_storage_path("s3://my-bucket").unwrap();
+        assert!(matches!(scheme, opendal::Scheme::S3));
+        assert_eq!(config.get("bucket").unwrap(), "my-bucket");
+        assert_eq!(config.get("root").unwrap(), "");
+    }
+
+    #[test]
+    fn test_parse_storage_path_gcs() {
+        // Test GCS URL
+        let (scheme, config) = DirectoryNamespace::parse_storage_path("gcs://my-bucket/path/to/data").unwrap();
+        assert!(matches!(scheme, opendal::Scheme::Gcs));
+        assert_eq!(config.get("bucket").unwrap(), "my-bucket");
+        assert_eq!(config.get("root").unwrap(), "path/to/data");
+    }
+
+    #[test]
+    fn test_parse_storage_path_azblob() {
+        // Test Azure Blob URL
+        let (scheme, config) = DirectoryNamespace::parse_storage_path("azblob://my-container/path/to/data").unwrap();
+        assert!(matches!(scheme, opendal::Scheme::Azblob));
+        assert_eq!(config.get("container").unwrap(), "my-container");
+        assert_eq!(config.get("root").unwrap(), "path/to/data");
+
+        // Test with abfs alias
+        let (scheme, config) = DirectoryNamespace::parse_storage_path("abfs://my-container/path").unwrap();
+        assert!(matches!(scheme, opendal::Scheme::Azblob));
+        assert_eq!(config.get("container").unwrap(), "my-container");
+        assert_eq!(config.get("root").unwrap(), "path");
+    }
+
+    #[test]
+    fn test_normalize_scheme() {
+        // Test scheme normalization
+        assert_eq!(DirectoryNamespace::normalize_scheme("s3a"), "s3");
+        assert_eq!(DirectoryNamespace::normalize_scheme("s3n"), "s3");
+        assert_eq!(DirectoryNamespace::normalize_scheme("S3A"), "s3");
+        assert_eq!(DirectoryNamespace::normalize_scheme("abfs"), "azblob");
+        assert_eq!(DirectoryNamespace::normalize_scheme("ABFS"), "azblob");
+        assert_eq!(DirectoryNamespace::normalize_scheme("file"), "fs");
+        assert_eq!(DirectoryNamespace::normalize_scheme("FILE"), "fs");
+        assert_eq!(DirectoryNamespace::normalize_scheme("gcs"), "gcs");
+        assert_eq!(DirectoryNamespace::normalize_scheme("random"), "random");
+    }
+
+    #[test]
+    fn test_fs_scheme_url() {
+        // Test file:// URLs
+        let (scheme, config) = DirectoryNamespace::parse_storage_path("file:///absolute/path").unwrap();
+        assert!(matches!(scheme, opendal::Scheme::Fs));
+        assert_eq!(config.get("root").unwrap(), "/absolute/path");
+
+        // Test fs:// URLs
+        let (scheme, config) = DirectoryNamespace::parse_storage_path("fs:///absolute/path").unwrap();
+        assert!(matches!(scheme, opendal::Scheme::Fs));
+        assert_eq!(config.get("root").unwrap(), "/absolute/path");
+    }
+
+    #[tokio::test]
+    async fn test_storage_options_passed_through() {
+        // Test that storage options are properly passed to the operator
+        let temp_dir = TempDir::new().unwrap();
+        let mut properties = HashMap::new();
+        properties.insert(
+            "root".to_string(),
+            temp_dir.path().to_string_lossy().to_string(),
+        );
+        
+        // Add some storage options
+        properties.insert("aws_access_key_id".to_string(), "test_key".to_string());
+        properties.insert("aws_secret_access_key".to_string(), "test_secret".to_string());
+
+        let namespace = DirectoryNamespace::new(properties).unwrap();
+        
+        // Verify the namespace was created (storage options are internal to operator)
+        // The main test is that it doesn't fail with the extra options
         let request = ListTablesRequest::new();
         let response = namespace.list_tables(request).await.unwrap();
         assert_eq!(response.tables.len(), 0);

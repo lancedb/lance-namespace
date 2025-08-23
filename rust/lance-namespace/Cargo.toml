@@ -17,7 +17,7 @@ bytes = "1.5"
 # Lance 0.31-0.33 have compilation issues with tempfile (TempDir::keep() method)
 # Using patched version in lance-index-patched/ - see PATCH_NOTES.md
 lance = "0.31"
-opendal = { version = "0.54", features = ["services-fs"] }
+opendal = { version = "0.54", features = ["services-fs", "services-s3", "services-gcs", "services-azblob"] }
 arrow = "55.2"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
