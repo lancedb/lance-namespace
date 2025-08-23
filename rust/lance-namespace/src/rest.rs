@@ -113,7 +113,7 @@ fn convert_api_error<T: std::fmt::Debug>(err: lance_namespace_reqwest_client::ap
 /// REST implementation of Lance Namespace
 pub struct RestNamespace {
     config: RestNamespaceConfig,
-    configuration: Configuration,
+    reqwest_config: Configuration,
 }
 
 impl RestNamespace {
@@ -121,9 +121,9 @@ impl RestNamespace {
     pub fn new(properties: HashMap<String, String>) -> Self {
         let config = RestNamespaceConfig::new(properties);
         
-        let mut configuration = Configuration::new();
+        let mut reqwest_config = Configuration::new();
         if let Some(uri) = config.uri() {
-            configuration.base_path = uri.to_string();
+            reqwest_config.base_path = uri.to_string();
         }
         
         // TODO: Add support for additional headers in the configuration
@@ -133,18 +133,18 @@ impl RestNamespace {
 
         Self {
             config,
-            configuration,
+            reqwest_config,
         }
     }
 
     /// Create a new REST namespace with custom configuration (for testing)
     #[cfg(test)]
-    pub fn with_configuration(properties: HashMap<String, String>, configuration: Configuration) -> Self {
+    pub fn with_configuration(properties: HashMap<String, String>, reqwest_config: Configuration) -> Self {
         let config = RestNamespaceConfig::new(properties);
         
         Self {
             config,
-            configuration,
+            reqwest_config,
         }
     }
 }
@@ -158,7 +158,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         namespace_api::list_namespaces(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             Some(self.config.delimiter()),
             request.page_token.as_deref(),
@@ -175,7 +175,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         namespace_api::describe_namespace(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -191,7 +191,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         namespace_api::create_namespace(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -207,7 +207,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         namespace_api::drop_namespace(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -220,7 +220,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         namespace_api::namespace_exists(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -233,7 +233,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         table_api::list_tables(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             Some(self.config.delimiter()),
             request.page_token.as_deref(),
@@ -250,7 +250,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         table_api::describe_table(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -266,7 +266,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         table_api::register_table(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -279,7 +279,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         table_api::table_exists(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -292,7 +292,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         table_api::drop_table(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -308,7 +308,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         table_api::deregister_table(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -321,7 +321,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         table_api::count_table_rows(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -349,7 +349,7 @@ impl LanceNamespace for RestNamespace {
         });
         
         table_api::create_table(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request_data.to_vec(),
             Some(self.config.delimiter()),
@@ -375,7 +375,7 @@ impl LanceNamespace for RestNamespace {
         });
         
         table_api::insert_into_table(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request_data.to_vec(),
             Some(self.config.delimiter()),
@@ -397,7 +397,7 @@ impl LanceNamespace for RestNamespace {
         })?;
         
         table_api::merge_insert_into_table(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             on,
             request_data.to_vec(),
@@ -416,7 +416,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         table_api::update_table(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -432,7 +432,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         table_api::delete_from_table(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -445,7 +445,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         let response = table_api::query_table(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -470,7 +470,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         table_api::create_table_index(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -486,7 +486,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         table_api::list_table_indices(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -506,7 +506,7 @@ impl LanceNamespace for RestNamespace {
         let index_name = ""; // This should come from somewhere in the request
         
         table_api::describe_table_index_stats(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             index_name,
             request,
@@ -523,7 +523,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         transaction_api::describe_transaction(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -539,7 +539,7 @@ impl LanceNamespace for RestNamespace {
         let id = object_id_str(&request.id, self.config.delimiter())?;
         
         transaction_api::alter_transaction(
-            &self.configuration,
+            &self.reqwest_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -622,10 +622,10 @@ mod tests {
         properties.insert("uri".to_string(), mock_server.uri());
         properties.insert("delimiter".to_string(), ".".to_string());
         
-        let mut configuration = Configuration::new();
-        configuration.base_path = mock_server.uri();
+        let mut reqwest_config = Configuration::new();
+        reqwest_config.base_path = mock_server.uri();
         
-        let namespace = RestNamespace::with_configuration(properties, configuration);
+        let namespace = RestNamespace::with_configuration(properties, reqwest_config);
         
         let request = ListNamespacesRequest {
             id: Some(vec!["test".to_string()]),
@@ -665,10 +665,10 @@ mod tests {
         let mut properties = HashMap::new();
         properties.insert("uri".to_string(), mock_server.uri());
         
-        let mut configuration = Configuration::new();
-        configuration.base_path = mock_server.uri();
+        let mut reqwest_config = Configuration::new();
+        reqwest_config.base_path = mock_server.uri();
         
-        let namespace = RestNamespace::with_configuration(properties, configuration);
+        let namespace = RestNamespace::with_configuration(properties, reqwest_config);
         
         let request = ListNamespacesRequest {
             id: Some(vec!["test".to_string()]),
@@ -721,10 +721,10 @@ mod tests {
         let mut properties = HashMap::new();
         properties.insert("uri".to_string(), mock_server.uri());
         
-        let mut configuration = Configuration::new();
-        configuration.base_path = mock_server.uri();
+        let mut reqwest_config = Configuration::new();
+        reqwest_config.base_path = mock_server.uri();
         
-        let namespace = RestNamespace::with_configuration(properties, configuration);
+        let namespace = RestNamespace::with_configuration(properties, reqwest_config);
         
         let request = CreateNamespaceRequest {
             id: Some(vec!["test".to_string(), "newnamespace".to_string()]),
@@ -761,10 +761,10 @@ mod tests {
         let mut properties = HashMap::new();
         properties.insert("uri".to_string(), mock_server.uri());
         
-        let mut configuration = Configuration::new();
-        configuration.base_path = mock_server.uri();
+        let mut reqwest_config = Configuration::new();
+        reqwest_config.base_path = mock_server.uri();
         
-        let namespace = RestNamespace::with_configuration(properties, configuration);
+        let namespace = RestNamespace::with_configuration(properties, reqwest_config);
         
         let request = CreateTableRequest {
             id: Some(vec!["test".to_string(), "namespace".to_string(), "table".to_string()]),
@@ -800,10 +800,10 @@ mod tests {
         let mut properties = HashMap::new();
         properties.insert("uri".to_string(), mock_server.uri());
         
-        let mut configuration = Configuration::new();
-        configuration.base_path = mock_server.uri();
+        let mut reqwest_config = Configuration::new();
+        reqwest_config.base_path = mock_server.uri();
         
-        let namespace = RestNamespace::with_configuration(properties, configuration);
+        let namespace = RestNamespace::with_configuration(properties, reqwest_config);
         
         let request = InsertIntoTableRequest {
             id: Some(vec!["test".to_string(), "namespace".to_string(), "table".to_string()]),
