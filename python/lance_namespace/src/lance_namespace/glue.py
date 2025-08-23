@@ -442,12 +442,7 @@ class GlueNamespace(LanceNamespace):
             },
             'StorageDescriptor': {
                 'Location': table_location,
-                'Columns': convert_pyarrow_schema_to_glue_columns(schema),
-                'InputFormat': 'org.apache.hadoop.mapred.TextInputFormat',
-                'OutputFormat': 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat',
-                'SerdeInfo': {
-                    'SerializationLibrary': 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'
-                }
+                'Columns': convert_pyarrow_schema_to_glue_columns(schema)
             }
         }
         
@@ -525,12 +520,7 @@ class GlueNamespace(LanceNamespace):
             },
             'StorageDescriptor': {
                 'Location': request.location,
-                'Columns': convert_pyarrow_schema_to_glue_columns(schema),
-                'InputFormat': 'org.apache.hadoop.mapred.TextInputFormat',
-                'OutputFormat': 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat',
-                'SerdeInfo': {
-                    'SerializationLibrary': 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'
-                }
+                'Columns': convert_pyarrow_schema_to_glue_columns(schema)
             }
         }
         
