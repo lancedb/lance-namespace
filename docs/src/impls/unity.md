@@ -40,9 +40,9 @@ A Lance table appears as a [Table](https://github.com/unitycatalog/unitycatalog/
 object in Unity Catalog with the following requirements:
 
 1. the `table_type` must be set to `EXTERNAL` to indicate this is not a Unity managed table
-2. the `data_source_format` should be `null` as Lance has its own format
+2. the `data_source_format` should be `TEXT` (Unity Catalog doesn't recognize `LANCE` format, so we use `TEXT` as a generic format for external tables)
 3. the `storage_location` must point to the root location of the Lance table
-4. the `columns` should be `null` as Lance manages its own schema
+4. the `columns` must be provided with the table schema converted from Lance's Arrow schema to Unity's column format
 5. the `properties` must follow:
     1. there is a key `table_type` set to `lance` (case insensitive)
     2. there is a key `managed_by` set to either `storage` or `impl` (case insensitive). If not set, default to `storage`
