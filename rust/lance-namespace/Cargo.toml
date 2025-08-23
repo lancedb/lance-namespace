@@ -10,19 +10,15 @@ documentation = "https://docs.rs/lance-namespace"
 keywords = ["lance", "namespace", "table", "database"]
 categories = ["database"]
 
-[features]
-default = []
-# Enable when Lance compilation issues are fixed
-lance-integration = ["lance"]
-
 [dependencies]
 async-trait = "0.1"
 thiserror = "1.0"
 bytes = "1.5"
-# Lance has compilation issues with tempfile in version 0.32-0.33
-lance = { version = "0.33", optional = true }
+# Lance 0.31-0.33 have compilation issues with tempfile (TempDir::keep() method)
+# Using patched version in lance-index-patched/ - see PATCH_NOTES.md
+lance = "0.31"
 opendal = { version = "0.54", features = ["services-fs"] }
-arrow = "56.0"
+arrow = "55.2"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 
