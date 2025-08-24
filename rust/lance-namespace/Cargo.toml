@@ -15,8 +15,6 @@ async-trait = "0.1"
 thiserror = "1.0"
 bytes = "1.5"
 reqwest = { version = "0.12", features = ["json"] }
-# Lance 0.31-0.33 have compilation issues with tempfile (TempDir::keep() method)
-# Using patched version in lance-index-patched/ - see PATCH_NOTES.md
 lance = "0.31"
 opendal = { version = "0.54", features = ["services-fs", "services-s3", "services-gcs", "services-azblob"] }
 arrow = "55.2"

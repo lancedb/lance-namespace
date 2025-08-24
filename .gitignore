@@ -118,7 +118,3 @@ venv.bak/
 
 # Docs
 docs/site
-
-# Temporary lance-index patch directory
-lance-index-patched/
-/lance-index-patched/
