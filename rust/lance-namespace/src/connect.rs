@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use thiserror::Error;
 
+use crate::dir::DirectoryNamespace;
 use crate::namespace::LanceNamespace;
 use crate::rest::RestNamespace;
 
@@ -67,10 +68,12 @@ pub async fn connect(
             // Create REST implementation
             Ok(Arc::new(RestNamespace::new(properties)))
         }
-        // "dir" => {
-        //     // Create directory implementation
-        //     Ok(Arc::new(DirectoryNamespace::new(properties)?))
-        // }
+        "dir" => {
+            // Create directory implementation
+            DirectoryNamespace::new(properties)
+                .map(|ns| Arc::new(ns) as Arc<dyn LanceNamespace>)
+                .map_err(|e| ConnectError::ConstructionError(e.to_string()))
+        }
         _ => Err(ConnectError::UnknownImpl(format!(
             "Implementation '{}' is not yet available",
             impl_name

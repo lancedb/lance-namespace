@@ -65,6 +65,15 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: rust
+      - name: Check formatting for lance-namespace
+        working-directory: rust/lance-namespace
+        run: cargo fmt -- --check
+      - name: Run clippy for lance-namespace
+        working-directory: rust/lance-namespace
+        run: cargo clippy --all-targets --all-features
+      - name: Build lance-namespace
+        working-directory: rust/lance-namespace
+        run: cargo build --all-features
       - name: Running lance-namespace tests
-        working-directory: rust
-        run: cargo test
+        working-directory: rust/lance-namespace
+        run: cargo test --all-features

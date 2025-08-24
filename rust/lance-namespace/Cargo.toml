@@ -15,8 +15,12 @@ async-trait = "0.1"
 thiserror = "1.0"
 bytes = "1.5"
 reqwest = { version = "0.12", features = ["json"] }
+lance = "0.31"
+opendal = { version = "0.54", features = ["services-fs", "services-s3", "services-gcs", "services-azblob"] }
+arrow = "55.2"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+url = "2.5"
 
 # Use models from the reqwest client
 lance-namespace-reqwest-client = { path = "../lance-namespace-reqwest-client" }
@@ -24,3 +28,4 @@ lance-namespace-reqwest-client = { path = "../lance-namespace-reqwest-client" }
 [dev-dependencies]
 tokio = { version = "1.35", features = ["full"] }
 wiremock = "0.6"
+tempfile = "3.20"
