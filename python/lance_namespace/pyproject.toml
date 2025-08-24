@@ -26,6 +26,10 @@ glue = [
     "boto3>=1.24.0",
     "botocore>=1.27.0",
 ]
+hive2 = [
+    "thrift>=0.13.0",
+    "hive-metastore-client>=1.0.9",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
