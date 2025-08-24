@@ -65,14 +65,12 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: rust
-      - name: Check formatting
-        working-directory: rust
-        run: cargo fmt --all -- --check
+      - name: Check formatting for lance-namespace
+        working-directory: rust/lance-namespace
+        run: cargo fmt -- --check
       - name: Run clippy for lance-namespace
         working-directory: rust/lance-namespace
-        run: |
-          # Run clippy but allow it to fail due to auto-generated code issues
-          cargo clippy --all-targets --all-features 2>&1 | grep -v "lance-namespace-reqwest-client" || true
+        run: cargo clippy --all-targets --all-features
       - name: Build lance-namespace
         working-directory: rust/lance-namespace
         run: cargo build --all-features

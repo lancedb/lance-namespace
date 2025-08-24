@@ -37,20 +37,19 @@ build-reqwest-client: gen-reqwest-client
 # Lance namespace specific targets
 .PHONY: format-check
 format-check:
-	cargo fmt --all -- --check
+	cd lance-namespace && cargo fmt -- --check
 
 .PHONY: format
 format:
+	cd lance-namespace && cargo fmt
+
+.PHONY: format-all
+format-all:
 	cargo fmt --all
 
 .PHONY: lint-lance-namespace
 lint-lance-namespace:
-	cd lance-namespace && cargo clippy --all-targets --all-features 2>&1 | grep -v "lance-namespace-reqwest-client" || true
-
-.PHONY: lint-lance-namespace-strict
-lint-lance-namespace-strict:
-	cd lance-namespace && cargo clippy --all-targets --all-features -- -D warnings
-
+	cd lance-namespace && cargo clippy --all-targets --all-features
 .PHONY: lint-all
 lint-all:
 	cargo clippy --all --all-targets --all-features
