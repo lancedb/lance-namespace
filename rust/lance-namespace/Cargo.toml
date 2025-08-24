@@ -29,4 +29,4 @@ lance-namespace-reqwest-client = { path = "../lance-namespace-reqwest-client" }
 [dev-dependencies]
 tokio = { version = "1.35", features = ["full"] }
 wiremock = "0.6"
-tempfile = "3.8"
+tempfile = "=3.20.0"  # Pin to same version as Lance to avoid API incompatibilities
