@@ -39,10 +39,6 @@ lint-ns:
 	cd lance-namespace && cargo fmt -- --check
 	cd lance-namespace && cargo clippy --all-targets --all-features
 
-.PHONY: test
-test:
-	cd lance-namespace && cargo test
-
 .PHONY: build-ns
 build-ns:
 	cd lance-namespace && cargo test
@@ -54,4 +50,4 @@ clean: clean-reqwest-client
 gen: gen-reqwest-client
 
 .PHONY: build
-build: build-reqwest-client build-ns lint-ns test
+build: build-reqwest-client lint-ns build-ns
