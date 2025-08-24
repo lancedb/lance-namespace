@@ -43,7 +43,12 @@ impl DirectoryNamespaceConfig {
         let root = properties
             .get(Self::ROOT)
             .cloned()
-            .unwrap_or_else(|| std::env::current_dir().unwrap().to_string_lossy().to_string())
+            .unwrap_or_else(|| {
+                std::env::current_dir()
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string()
+            })
             .trim_end_matches('/')
             .to_string();
 
@@ -96,10 +101,7 @@ impl DirectoryNamespace {
         let storage_options = &config.storage_options;
 
         // Parse the root path to determine scheme and configuration
-        let (scheme, mut opendal_config) = Self::parse_storage_path(root)?;
-        
-        // Add any additional storage options from config
-        opendal_config.extend(storage_options.clone());
+        let (scheme, opendal_config) = Self::parse_storage_path(root, storage_options)?;
 
         // Create the operator with the determined scheme and configuration
         let operator = Operator::via_iter(scheme, opendal_config)
@@ -109,62 +111,74 @@ impl DirectoryNamespace {
     }
 
     /// Parse storage path and return scheme and configuration
-    fn parse_storage_path(root: &str) -> Result<(opendal::Scheme, HashMap<String, String>)> {
+    fn parse_storage_path(
+        root: &str,
+        storage_options: &HashMap<String, String>,
+    ) -> Result<(opendal::Scheme, HashMap<String, String>)> {
+        use url::Url;
+
         let mut config = HashMap::new();
-        
-        // Check if it's a URL by splitting on "://"
-        let parts: Vec<&str> = root.splitn(2, "://").collect();
-        
-        if parts.len() < 2 {
-            // Not a URL, treat as local filesystem
-            config.insert("root".to_string(), root.to_string());
-            return Ok((opendal::Scheme::Fs, config));
-        }
 
-        // Normalize the scheme
-        let normalized_scheme = Self::normalize_scheme(parts[0]);
-        let path_part = parts[1];
-
-        // Split authority and path
-        let authority_parts: Vec<&str> = path_part.splitn(2, '/').collect();
-        let authority = authority_parts[0];
-        let path = if authority_parts.len() > 1 {
-            authority_parts[1]
+        // Try to parse as URL, if it fails, treat as local filesystem path
+        let (scheme, authority, path) = if let Ok(url) = Url::parse(root) {
+            let scheme = Self::normalize_scheme(url.scheme());
+            let authority = url.host_str().unwrap_or("");
+            // For file:// and fs:// URLs, preserve the full path including leading slash
+            // For cloud storage URLs, remove the leading slash
+            let path = if scheme == "fs" || scheme == "file" {
+                url.path().to_string()
+            } else {
+                url.path().trim_start_matches('/').to_string()
+            };
+            (scheme, authority.to_string(), path)
         } else {
-            ""
+            // Not a URL, treat as local filesystem - prepend fs://
+            ("fs".to_string(), String::new(), root.to_string())
         };
 
         // Configure based on scheme
-        let scheme = match normalized_scheme.as_str() {
-            "fs" => {
-                config.insert("root".to_string(), path_part.to_string());
+        let opendal_scheme = match scheme.as_str() {
+            "fs" | "file" => {
+                // For filesystem, use the full path (authority is empty for local paths)
+                if authority.is_empty() {
+                    config.insert("root".to_string(), path);
+                } else {
+                    // Handle file:///absolute/path or fs://hostname/path
+                    config.insert("root".to_string(), format!("{}/{}", authority, path));
+                }
                 opendal::Scheme::Fs
             }
             "s3" => {
-                config.insert("root".to_string(), path.to_string());
-                config.insert("bucket".to_string(), authority.to_string());
+                config.insert("root".to_string(), path);
+                config.insert("bucket".to_string(), authority);
                 opendal::Scheme::S3
             }
             "gcs" => {
-                config.insert("root".to_string(), path.to_string());
-                config.insert("bucket".to_string(), authority.to_string());
+                config.insert("root".to_string(), path);
+                config.insert("bucket".to_string(), authority);
                 opendal::Scheme::Gcs
             }
             "azblob" => {
-                config.insert("root".to_string(), path.to_string());
-                config.insert("container".to_string(), authority.to_string());
+                config.insert("root".to_string(), path);
+                config.insert("container".to_string(), authority);
                 opendal::Scheme::Azblob
             }
             _ => {
-                // For unknown schemes, pass as-is and let OpenDAL handle it
-                config.insert("root".to_string(), path_part.to_string());
-                // Try to parse the scheme string to OpenDAL scheme
-                opendal::Scheme::from_str(&normalized_scheme)
-                    .map_err(|_| NamespaceError::Other(format!("Unsupported storage scheme: {}", normalized_scheme)))?
+                // For unknown schemes, try to parse as OpenDAL scheme
+                config.insert("root".to_string(), path);
+                if !authority.is_empty() {
+                    config.insert("bucket".to_string(), authority);
+                }
+                opendal::Scheme::from_str(&scheme).map_err(|_| {
+                    NamespaceError::Other(format!("Unsupported storage scheme: {}", scheme))
+                })?
             }
         };
 
-        Ok((scheme, config))
+        // Add storage options for all schemes
+        config.extend(storage_options.clone());
+
+        Ok((opendal_scheme, config))
     }
 
     /// Normalize scheme names with common aliases
@@ -176,7 +190,6 @@ impl DirectoryNamespace {
             s => s.to_string(),
         }
     }
-
 
     /// Validate that the namespace ID represents the root namespace
     fn validate_root_namespace_id(id: &Option<Vec<String>>) -> Result<()> {
@@ -226,7 +239,7 @@ impl LanceNamespace for DirectoryNamespace {
     ) -> Result<ListNamespacesResponse> {
         // Validate this is a request for the root namespace
         Self::validate_root_namespace_id(&request.id)?;
-        
+
         // Directory namespace only contains the root namespace (empty list)
         Ok(ListNamespacesResponse::new(vec![]))
     }
@@ -237,7 +250,7 @@ impl LanceNamespace for DirectoryNamespace {
     ) -> Result<DescribeNamespaceResponse> {
         // Validate this is a request for the root namespace
         Self::validate_root_namespace_id(&request.id)?;
-        
+
         // Return description of the root namespace
         Ok(DescribeNamespaceResponse {
             properties: Some(HashMap::new()),
@@ -254,24 +267,21 @@ impl LanceNamespace for DirectoryNamespace {
                 "Root namespace already exists and cannot be created".to_string(),
             ));
         }
-        
+
         // Non-root namespaces are not supported
         Err(NamespaceError::NotSupported(
             "Directory namespace only supports the root namespace".to_string(),
         ))
     }
 
-    async fn drop_namespace(
-        &self,
-        request: DropNamespaceRequest,
-    ) -> Result<DropNamespaceResponse> {
+    async fn drop_namespace(&self, request: DropNamespaceRequest) -> Result<DropNamespaceResponse> {
         // Root namespace always exists and cannot be dropped
         if request.id.is_none() || request.id.as_ref().unwrap().is_empty() {
             return Err(NamespaceError::Other(
                 "Root namespace cannot be dropped".to_string(),
             ));
         }
-        
+
         // Non-root namespaces are not supported
         Err(NamespaceError::NotSupported(
             "Directory namespace only supports the root namespace".to_string(),
@@ -283,7 +293,7 @@ impl LanceNamespace for DirectoryNamespace {
         if request.id.is_none() || request.id.as_ref().unwrap().is_empty() {
             return Ok(());
         }
-        
+
         // Non-root namespaces don't exist
         Err(NamespaceError::Other(
             "Only root namespace exists in directory namespace".to_string(),
@@ -294,7 +304,7 @@ impl LanceNamespace for DirectoryNamespace {
         Self::validate_root_namespace_id(&request.id)?;
 
         let mut tables = Vec::new();
-        
+
         // Use non-recursive listing to avoid issues with object stores that don't have directory concept
         let entries = self.operator.list("").await.map_err(|e| {
             NamespaceError::Io(std::io::Error::new(
@@ -305,7 +315,7 @@ impl LanceNamespace for DirectoryNamespace {
 
         for entry in entries {
             let path = entry.path().trim_end_matches('/');
-            
+
             // Only process directory-like paths that end with .lance
             if !path.ends_with(".lance") {
                 continue;
@@ -314,22 +324,12 @@ impl LanceNamespace for DirectoryNamespace {
             // Extract table name (remove .lance suffix)
             let table_name = &path[..path.len() - 6];
 
-            // For object stores, we need to check if there's a manifest file to verify it's a Lance dataset
-            // Try to check for a manifest file or version file
-            let manifest_path = format!("{}.lance/_latest.manifest", table_name);
-            match self.operator.read(&manifest_path).await {
-                Ok(_) => {
-                    // Found a manifest, this is likely a Lance dataset
+            // Check if there are any versions to verify it's a valid Lance dataset
+            let versions_path = format!("{}.lance/_versions/", table_name);
+            if let Ok(version_entries) = self.operator.list(&versions_path).await {
+                // If there's at least one version file, it's a valid Lance dataset
+                if !version_entries.is_empty() {
                     tables.push(table_name.to_string());
-                }
-                Err(_) => {
-                    // No manifest found, check for version files pattern
-                    let versions_path = format!("{}.lance/_versions/", table_name);
-                    if let Ok(version_entries) = self.operator.list(&versions_path).await {
-                        if !version_entries.is_empty() {
-                            tables.push(table_name.to_string());
-                        }
-                    }
                 }
             }
         }
@@ -338,18 +338,16 @@ impl LanceNamespace for DirectoryNamespace {
         Ok(response)
     }
 
-    async fn describe_table(
-        &self,
-        request: DescribeTableRequest,
-    ) -> Result<DescribeTableResponse> {
+    async fn describe_table(&self, request: DescribeTableRequest) -> Result<DescribeTableResponse> {
         let table_name = Self::table_name_from_id(&request.id)?;
         let table_path = self.table_full_path(&table_name);
 
         // Check if the table exists by looking for _versions directory
         let versions_path = self.table_versions_path(&table_name);
-        let entries = self.operator.list(&versions_path).await.map_err(|_| {
-            NamespaceError::Other(format!("Table does not exist: {}", table_name))
-        })?;
+        let entries =
+            self.operator.list(&versions_path).await.map_err(|_| {
+                NamespaceError::Other(format!("Table does not exist: {}", table_name))
+            })?;
 
         if entries.is_empty() {
             return Err(NamespaceError::Other(format!(
@@ -372,9 +370,10 @@ impl LanceNamespace for DirectoryNamespace {
 
         // Check if the table exists by looking for _versions directory
         let versions_path = self.table_versions_path(&table_name);
-        let entries = self.operator.list(&versions_path).await.map_err(|_| {
-            NamespaceError::Other(format!("Table does not exist: {}", table_name))
-        })?;
+        let entries =
+            self.operator.list(&versions_path).await.map_err(|_| {
+                NamespaceError::Other(format!("Table does not exist: {}", table_name))
+            })?;
 
         if entries.is_empty() {
             return Err(NamespaceError::Other(format!(
@@ -395,10 +394,9 @@ impl LanceNamespace for DirectoryNamespace {
         let table_path = self.table_full_path(&table_name);
 
         // Validate schema is provided
-        let json_schema = request
-            .schema
-            .as_ref()
-            .ok_or_else(|| NamespaceError::Other("Schema is required in CreateTableRequest".to_string()))?;
+        let json_schema = request.schema.as_ref().ok_or_else(|| {
+            NamespaceError::Other("Schema is required in CreateTableRequest".to_string())
+        })?;
 
         // Validate location if provided
         if let Some(location) = &request.location {
@@ -425,27 +423,29 @@ impl LanceNamespace for DirectoryNamespace {
             // Parse the Arrow IPC stream from request_data
             use arrow::ipc::reader::StreamReader;
             use std::io::Cursor;
-            
+
             let cursor = Cursor::new(request_data.to_vec());
-            let stream_reader = StreamReader::try_new(cursor, None)
-                .map_err(|e| NamespaceError::Other(format!("Failed to parse Arrow IPC stream: {}", e)))?;
-            
+            let stream_reader = StreamReader::try_new(cursor, None).map_err(|e| {
+                NamespaceError::Other(format!("Failed to parse Arrow IPC stream: {}", e))
+            })?;
+
             // Collect all batches from the stream
             let mut batches = Vec::new();
             let actual_schema = stream_reader.schema();
-            
+
             // Verify schema matches
             if actual_schema != arrow_schema {
                 return Err(NamespaceError::Other(
-                    "Schema in IPC stream does not match the provided schema".to_string()
+                    "Schema in IPC stream does not match the provided schema".to_string(),
                 ));
             }
-            
+
             for batch_result in stream_reader {
-                batches.push(batch_result.map_err(|e| 
-                    NamespaceError::Other(format!("Failed to read batch from IPC stream: {}", e)))?);
+                batches.push(batch_result.map_err(|e| {
+                    NamespaceError::Other(format!("Failed to read batch from IPC stream: {}", e))
+                })?);
             }
-            
+
             // Convert to RecordBatchIterator
             let batch_results: Vec<_> = batches.into_iter().map(Ok).collect();
             arrow::record_batch::RecordBatchIterator::new(batch_results, actual_schema)
@@ -458,13 +458,9 @@ impl LanceNamespace for DirectoryNamespace {
         };
 
         // Create the Lance dataset using the actual Lance API
-        Dataset::write(
-            reader,
-            &table_path,
-            Some(write_params),
-        )
-        .await
-        .map_err(|e| NamespaceError::Other(format!("Failed to create Lance dataset: {}", e)))?;
+        Dataset::write(reader, &table_path, Some(write_params))
+            .await
+            .map_err(|e| NamespaceError::Other(format!("Failed to create Lance dataset: {}", e)))?;
 
         Ok(CreateTableResponse {
             version: Some(1),
@@ -481,10 +477,9 @@ impl LanceNamespace for DirectoryNamespace {
 
         // Remove the entire table directory
         let table_dir = format!("{}.lance/", table_name);
-        self.operator
-            .remove_all(&table_dir)
-            .await
-            .map_err(|e| NamespaceError::Other(format!("Failed to drop table {}: {}", table_name, e)))?;
+        self.operator.remove_all(&table_dir).await.map_err(|e| {
+            NamespaceError::Other(format!("Failed to drop table {}: {}", table_name, e))
+        })?;
 
         Ok(DropTableResponse {
             id: request.id,
@@ -611,7 +606,10 @@ mod tests {
 
         let result = namespace.create_table(request, bytes::Bytes::new()).await;
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("must be at location"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("must be at location"));
     }
 
     #[tokio::test]
@@ -682,7 +680,7 @@ mod tests {
         let mut request = DescribeTableRequest::new();
         request.id = Some(vec!["test_table".to_string()]);
         let response = namespace.describe_table(request).await.unwrap();
-        
+
         assert!(response.location.is_some());
         assert!(response.location.unwrap().ends_with("test_table.lance"));
     }
@@ -693,7 +691,7 @@ mod tests {
 
         let mut request = DescribeTableRequest::new();
         request.id = Some(vec!["nonexistent".to_string()]);
-        
+
         let result = namespace.describe_table(request).await;
         assert!(result.is_err());
         assert!(result
@@ -766,7 +764,7 @@ mod tests {
 
         let mut request = DropTableRequest::new();
         request.id = Some(vec!["nonexistent".to_string()]);
-        
+
         // Should not fail when dropping non-existent table (idempotent)
         let result = namespace.drop_table(request).await;
         // The operation might succeed or fail depending on implementation
@@ -804,7 +802,10 @@ mod tests {
         let request = DropNamespaceRequest::new();
         let result = namespace.drop_namespace(request).await;
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("cannot be dropped"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("cannot be dropped"));
     }
 
     #[tokio::test]
@@ -822,7 +823,10 @@ mod tests {
         request.id = Some(vec!["child".to_string()]);
         let result = namespace.namespace_exists(request).await;
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("Only root namespace exists"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("Only root namespace exists"));
 
         // Test drop_namespace for non-root - not supported
         let mut request = DropNamespaceRequest::new();
@@ -838,7 +842,10 @@ mod tests {
         std::fs::create_dir(&custom_path).unwrap();
 
         let mut properties = HashMap::new();
-        properties.insert("root".to_string(), custom_path.to_string_lossy().to_string());
+        properties.insert(
+            "root".to_string(),
+            custom_path.to_string_lossy().to_string(),
+        );
 
         let namespace = DirectoryNamespace::new(properties).unwrap();
 
@@ -941,9 +948,7 @@ mod tests {
             temp_dir.path().to_string_lossy().to_string(),
         );
 
-        let namespace = crate::connect("dir", properties)
-            .await
-            .unwrap();
+        let namespace = crate::connect("dir", properties).await.unwrap();
 
         // Test basic operation through the trait object
         let request = ListTablesRequest::new();
@@ -953,27 +958,36 @@ mod tests {
 
     #[test]
     fn test_parse_storage_path_local() {
+        let storage_options = HashMap::new();
+
         // Test local filesystem paths
-        let (scheme, config) = DirectoryNamespace::parse_storage_path("/path/to/data").unwrap();
+        let (scheme, config) =
+            DirectoryNamespace::parse_storage_path("/path/to/data", &storage_options).unwrap();
         assert!(matches!(scheme, opendal::Scheme::Fs));
         assert_eq!(config.get("root").unwrap(), "/path/to/data");
 
         // Test relative path
-        let (scheme, config) = DirectoryNamespace::parse_storage_path("./data").unwrap();
+        let (scheme, config) =
+            DirectoryNamespace::parse_storage_path("./data", &storage_options).unwrap();
         assert!(matches!(scheme, opendal::Scheme::Fs));
         assert_eq!(config.get("root").unwrap(), "./data");
     }
 
     #[test]
     fn test_parse_storage_path_s3() {
+        let storage_options = HashMap::new();
+
         // Test S3 URL
-        let (scheme, config) = DirectoryNamespace::parse_storage_path("s3://my-bucket/path/to/data").unwrap();
+        let (scheme, config) =
+            DirectoryNamespace::parse_storage_path("s3://my-bucket/path/to/data", &storage_options)
+                .unwrap();
         assert!(matches!(scheme, opendal::Scheme::S3));
         assert_eq!(config.get("bucket").unwrap(), "my-bucket");
         assert_eq!(config.get("root").unwrap(), "path/to/data");
 
         // Test S3 with just bucket
-        let (scheme, config) = DirectoryNamespace::parse_storage_path("s3://my-bucket").unwrap();
+        let (scheme, config) =
+            DirectoryNamespace::parse_storage_path("s3://my-bucket", &storage_options).unwrap();
         assert!(matches!(scheme, opendal::Scheme::S3));
         assert_eq!(config.get("bucket").unwrap(), "my-bucket");
         assert_eq!(config.get("root").unwrap(), "");
@@ -981,8 +995,14 @@ mod tests {
 
     #[test]
     fn test_parse_storage_path_gcs() {
+        let storage_options = HashMap::new();
+
         // Test GCS URL
-        let (scheme, config) = DirectoryNamespace::parse_storage_path("gcs://my-bucket/path/to/data").unwrap();
+        let (scheme, config) = DirectoryNamespace::parse_storage_path(
+            "gcs://my-bucket/path/to/data",
+            &storage_options,
+        )
+        .unwrap();
         assert!(matches!(scheme, opendal::Scheme::Gcs));
         assert_eq!(config.get("bucket").unwrap(), "my-bucket");
         assert_eq!(config.get("root").unwrap(), "path/to/data");
@@ -990,14 +1010,22 @@ mod tests {
 
     #[test]
     fn test_parse_storage_path_azblob() {
+        let storage_options = HashMap::new();
+
         // Test Azure Blob URL
-        let (scheme, config) = DirectoryNamespace::parse_storage_path("azblob://my-container/path/to/data").unwrap();
+        let (scheme, config) = DirectoryNamespace::parse_storage_path(
+            "azblob://my-container/path/to/data",
+            &storage_options,
+        )
+        .unwrap();
         assert!(matches!(scheme, opendal::Scheme::Azblob));
         assert_eq!(config.get("container").unwrap(), "my-container");
         assert_eq!(config.get("root").unwrap(), "path/to/data");
 
         // Test with abfs alias
-        let (scheme, config) = DirectoryNamespace::parse_storage_path("abfs://my-container/path").unwrap();
+        let (scheme, config) =
+            DirectoryNamespace::parse_storage_path("abfs://my-container/path", &storage_options)
+                .unwrap();
         assert!(matches!(scheme, opendal::Scheme::Azblob));
         assert_eq!(config.get("container").unwrap(), "my-container");
         assert_eq!(config.get("root").unwrap(), "path");
@@ -1019,38 +1047,52 @@ mod tests {
 
     #[test]
     fn test_fs_scheme_url() {
+        let storage_options = HashMap::new();
+
         // Test file:// URLs
-        let (scheme, config) = DirectoryNamespace::parse_storage_path("file:///absolute/path").unwrap();
+        let (scheme, config) =
+            DirectoryNamespace::parse_storage_path("file:///absolute/path", &storage_options)
+                .unwrap();
         assert!(matches!(scheme, opendal::Scheme::Fs));
         assert_eq!(config.get("root").unwrap(), "/absolute/path");
 
         // Test fs:// URLs
-        let (scheme, config) = DirectoryNamespace::parse_storage_path("fs:///absolute/path").unwrap();
+        let (scheme, config) =
+            DirectoryNamespace::parse_storage_path("fs:///absolute/path", &storage_options)
+                .unwrap();
         assert!(matches!(scheme, opendal::Scheme::Fs));
         assert_eq!(config.get("root").unwrap(), "/absolute/path");
     }
 
-    #[tokio::test]
-    async fn test_storage_options_passed_through() {
-        // Test that storage options are properly passed to the operator
-        let temp_dir = TempDir::new().unwrap();
-        let mut properties = HashMap::new();
-        properties.insert(
-            "root".to_string(),
-            temp_dir.path().to_string_lossy().to_string(),
+    #[test]
+    fn test_storage_options_passed_through() {
+        // Test that storage options are properly passed through parse_storage_path
+        let mut storage_options = HashMap::new();
+        storage_options.insert("aws_access_key_id".to_string(), "test_key".to_string());
+        storage_options.insert(
+            "aws_secret_access_key".to_string(),
+            "test_secret".to_string(),
         );
-        
-        // Add some storage options
-        properties.insert("aws_access_key_id".to_string(), "test_key".to_string());
-        properties.insert("aws_secret_access_key".to_string(), "test_secret".to_string());
+        storage_options.insert("region".to_string(), "us-west-2".to_string());
 
-        let namespace = DirectoryNamespace::new(properties).unwrap();
-        
-        // Verify the namespace was created (storage options are internal to operator)
-        // The main test is that it doesn't fail with the extra options
-        let request = ListTablesRequest::new();
-        let response = namespace.list_tables(request).await.unwrap();
-        assert_eq!(response.tables.len(), 0);
+        // Test with S3 - storage options should be included
+        let (scheme, config) =
+            DirectoryNamespace::parse_storage_path("s3://my-bucket/path", &storage_options)
+                .unwrap();
+        assert!(matches!(scheme, opendal::Scheme::S3));
+        assert_eq!(config.get("bucket").unwrap(), "my-bucket");
+        assert_eq!(config.get("root").unwrap(), "path");
+        assert_eq!(config.get("aws_access_key_id").unwrap(), "test_key");
+        assert_eq!(config.get("aws_secret_access_key").unwrap(), "test_secret");
+        assert_eq!(config.get("region").unwrap(), "us-west-2");
+
+        // Test with local filesystem - storage options should still be included
+        let (scheme, config) =
+            DirectoryNamespace::parse_storage_path("/local/path", &storage_options).unwrap();
+        assert!(matches!(scheme, opendal::Scheme::Fs));
+        assert_eq!(config.get("root").unwrap(), "/local/path");
+        // Even for local fs, storage options should be passed through
+        assert_eq!(config.get("aws_access_key_id").unwrap(), "test_key");
     }
 
     #[tokio::test]
@@ -1073,7 +1115,8 @@ mod tests {
         let batch = arrow::record_batch::RecordBatch::try_new(
             arrow_schema.clone(),
             vec![Arc::new(id_array), Arc::new(name_array)],
-        ).unwrap();
+        )
+        .unwrap();
 
         // Write the batch to an IPC stream
         let mut buffer = Vec::new();
@@ -1094,7 +1137,10 @@ mod tests {
             .unwrap();
 
         assert_eq!(response.version, Some(1));
-        assert!(response.location.unwrap().contains("test_table_with_data.lance"));
+        assert!(response
+            .location
+            .unwrap()
+            .contains("test_table_with_data.lance"));
 
         // Verify table exists
         let mut exists_request = TableExistsRequest::new();
@@ -1114,10 +1160,7 @@ mod tests {
         request.id = Some(vec!["empty_table".to_string()]);
         request.schema = Some(Box::new(schema));
 
-        let response = namespace
-            .create_table(request, Bytes::new())
-            .await
-            .unwrap();
+        let response = namespace.create_table(request, Bytes::new()).await.unwrap();
 
         assert_eq!(response.version, Some(1));
         assert!(response.location.unwrap().contains("empty_table.lance"));
