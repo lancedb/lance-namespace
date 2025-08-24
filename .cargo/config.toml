@@ -1,0 +1,2 @@
+[patch.crates-io]
+lance-index = { path = "lance-index-patched" }

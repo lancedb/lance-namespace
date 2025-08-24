@@ -9,6 +9,7 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 use bytes::Bytes;
+use lance::dataset::{Dataset, WriteParams};
 use opendal::Operator;
 
 use lance_namespace_reqwest_client::models::{
@@ -450,47 +451,20 @@ impl LanceNamespace for DirectoryNamespace {
             arrow::record_batch::RecordBatchIterator::new(batch_results, actual_schema)
         };
 
-        // TODO: Use actual Lance dataset creation when compilation issue is fixed
-        // For now, create a placeholder directory structure compatible with Lance
-        
-        // Consume the reader to validate data
-        let mut batch_count = 0;
-        for batch_result in reader {
-            batch_result.map_err(|e| 
-                NamespaceError::Other(format!("Invalid batch data: {}", e)))?;
-            batch_count += 1;
-        }
-        
-        // Create the table directory structure
-        let table_dir = format!("{}.lance/", table_name);
-        self.operator
-            .create_dir(&table_dir)
-            .await
-            .map_err(|e| NamespaceError::Other(format!("Failed to create table directory: {}", e)))?;
-        
-        // Create _versions directory to simulate Lance structure
-        let versions_dir = format!("{}_versions/", table_dir);
-        self.operator
-            .create_dir(&versions_dir)
-            .await
-            .map_err(|e| NamespaceError::Other(format!("Failed to create versions directory: {}", e)))?;
-        
-        // Create a placeholder manifest file
-        let manifest_file = format!("{}1.manifest", versions_dir);
-        let manifest_content = serde_json::json!({
-            "version": 1,
-            "batch_count": batch_count,
-            "schema": serde_json::to_value(&json_schema).unwrap_or_default(),
-            "created_at": std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_secs()
-        }).to_string();
-        
-        self.operator
-            .write(&manifest_file, manifest_content.as_bytes().to_vec())
-            .await
-            .map_err(|e| NamespaceError::Other(format!("Failed to create manifest file: {}", e)))?;
+        // Set up write parameters for creating a new dataset
+        let write_params = WriteParams {
+            mode: lance::dataset::WriteMode::Create,
+            ..Default::default()
+        };
+
+        // Create the Lance dataset using the actual Lance API
+        Dataset::write(
+            reader,
+            &table_path,
+            Some(write_params),
+        )
+        .await
+        .map_err(|e| NamespaceError::Other(format!("Failed to create Lance dataset: {}", e)))?;
 
         Ok(CreateTableResponse {
             version: Some(1),
