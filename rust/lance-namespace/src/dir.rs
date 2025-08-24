@@ -325,7 +325,7 @@ impl LanceNamespace for DirectoryNamespace {
             let table_name = &path[..path.len() - 6];
 
             // Check if there are any versions to verify it's a valid Lance dataset
-            let versions_path = format!("{}.lance/_versions/", table_name);
+            let versions_path = self.table_versions_path(table_name);
             if let Ok(version_entries) = self.operator.list(&versions_path).await {
                 // If there's at least one version file, it's a valid Lance dataset
                 if !version_entries.is_empty() {

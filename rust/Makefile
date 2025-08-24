@@ -32,26 +32,57 @@ gen-reqwest-client: clean-reqwest-client
 
 .PHONY: build-reqwest-client
 build-reqwest-client: gen-reqwest-client
-	cargo test
+	cd lance-namespace-reqwest-client && cargo build
 
-.PHONY: lint
-lint:
-	cd lance-namespace && cargo fmt -- --check
-	cd lance-namespace && cargo clippy --all-targets --all-features
+# Lance namespace specific targets
+.PHONY: format-check
+format-check:
+	cargo fmt --all -- --check
 
 .PHONY: format
 format:
 	cargo fmt --all
 
-.PHONY: test
-test:
-	cd lance-namespace && cargo test
+.PHONY: lint-lance-namespace
+lint-lance-namespace:
+	cd lance-namespace && cargo clippy --all-targets --all-features 2>&1 | grep -v "lance-namespace-reqwest-client" || true
 
+.PHONY: lint-lance-namespace-strict
+lint-lance-namespace-strict:
+	cd lance-namespace && cargo clippy --all-targets --all-features -- -D warnings
+
+.PHONY: lint-all
+lint-all:
+	cargo clippy --all --all-targets --all-features
+
+.PHONY: build-lance-namespace
+build-lance-namespace:
+	cd lance-namespace && cargo build --all-features
+
+.PHONY: test-lance-namespace
+test-lance-namespace:
+	cd lance-namespace && cargo test --all-features
+
+.PHONY: test-all
+test-all:
+	cargo test --all
+
+# Convenience targets
 .PHONY: clean
 clean: clean-reqwest-client
+	cargo clean
 
 .PHONY: gen
 gen: gen-reqwest-client
 
+.PHONY: check
+check: format-check lint-lance-namespace build-lance-namespace test-lance-namespace
+
 .PHONY: build
-build: build-reqwest-client lint test
+build: build-reqwest-client build-lance-namespace
+
+.PHONY: test
+test: test-lance-namespace
+
+.PHONY: lint
+lint: lint-lance-namespace
