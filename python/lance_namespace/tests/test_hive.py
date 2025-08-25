@@ -276,6 +276,12 @@ class TestHive2Namespace:
                     assert mock_hive_table.tableName == "test_table"
                     assert mock_hive_table.tableType == "EXTERNAL_TABLE"
                     assert mock_sd.location == table_path
+                    # Verify Lance-specific input/output formats
+                    assert mock_sd.inputFormat == "com.lancedb.lance.mapred.LanceInputFormat"
+                    assert mock_sd.outputFormat == "com.lancedb.lance.mapred.LanceOutputFormat"
+                    # Verify SerDe configuration
+                    assert mock_sd.serdeInfo == mock_serde
+                    assert mock_serde.serializationLib == "com.lancedb.lance.mapred.LanceSerDe"
                     assert mock_hive_table.parameters["table_type"] == "lance"
                     assert mock_hive_table.parameters["owner"] == "test_user"
     

@@ -500,8 +500,8 @@ class Hive2Namespace(LanceNamespace):
                 raise ImportError("Hive dependencies not available")
             sd = StorageDescriptor()
             sd.location = request.location
-            sd.inputFormat = "org.apache.hadoop.mapred.SequenceFileInputFormat"
-            sd.outputFormat = "org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat"
+            sd.inputFormat = "com.lancedb.lance.mapred.LanceInputFormat"
+            sd.outputFormat = "com.lancedb.lance.mapred.LanceOutputFormat"
             sd.compressed = False
             sd.cols = self._pyarrow_schema_to_hive_fields(schema)
             
@@ -509,9 +509,7 @@ class Hive2Namespace(LanceNamespace):
             if not SerDeInfo:
                 raise ImportError("Hive dependencies not available")
             serde = SerDeInfo()
-            serde.name = table_name
-            serde.serializationLib = "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe"
-            serde.parameters = {}
+            serde.serializationLib = "com.lancedb.lance.mapred.LanceSerDe"
             sd.serdeInfo = serde
             
             hive_table.sd = sd
