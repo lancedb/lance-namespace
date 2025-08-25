@@ -193,6 +193,37 @@ class TestHive2Namespace:
         assert response.tables == ["table1", "table3"]
         mock_client_instance.get_all_tables.assert_called_once_with("test_db")
     
+    def test_describe_table(self, hive_namespace, mock_hive_client):
+        """Test describing a table returns Hive metadata without opening Lance dataset."""
+        mock_table = MagicMock()
+        mock_table.sd.location = "/tmp/warehouse/test_db.db/test_table"
+        mock_table.owner = "table_owner"  # Set owner on table object
+        mock_table.parameters = {
+            "table_type": "lance",
+            "version": "42",  # Use 'version' not 'lance.version' per hive.md spec
+            "created_time": "2024-01-01"
+        }
+        
+        mock_client_instance = MagicMock()
+        mock_client_instance.get_table.return_value = mock_table
+        mock_hive_client.__enter__.return_value = mock_client_instance
+        
+        request = DescribeTableRequest(id=["test_db", "test_table"])
+        response = hive_namespace.describe_table(request)
+        
+        # Verify response contains Hive metadata
+        assert response.location == "/tmp/warehouse/test_db.db/test_table"
+        assert response.version == 42  # Parsed from lance.version
+        assert response.var_schema is None  # No schema since we don't open Lance dataset
+        assert response.properties["owner"] == "table_owner"  # From table.owner
+        assert response.properties["created_time"] == "2024-01-01"
+        # Properties should include all parameters from Hive
+        assert response.properties["table_type"] == "lance"
+        assert response.properties["version"] == "42"
+        
+        # Verify we called get_table but didn't try to open Lance dataset
+        mock_client_instance.get_table.assert_called_once_with("test_db", "test_table")
+    
     def test_register_table(self, hive_namespace, mock_hive_client):
         """Test registering a Lance table."""
         with tempfile.TemporaryDirectory() as tmpdir:

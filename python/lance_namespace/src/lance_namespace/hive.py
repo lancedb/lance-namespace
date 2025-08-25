@@ -91,7 +91,6 @@ import lance
 import pyarrow as pa
 
 from lance_namespace.namespace import LanceNamespace
-from lance_namespace.schema import convert_pyarrow_schema_to_json_arrow
 from lance_namespace_urllib3_client.models import (
     ListNamespacesRequest,
     ListNamespacesResponse,
@@ -426,24 +425,27 @@ class Hive2Namespace(LanceNamespace):
                 if not location:
                     raise ValueError(f"Table {request.id} has no location")
                 
-                # Open Lance dataset to get schema
-                dataset = lance.dataset(location)
-                schema = dataset.schema
-                
-                # Convert PyArrow schema to JSON Arrow schema
-                json_schema = convert_pyarrow_schema_to_json_arrow(schema)
-                
+                # Build properties from Hive metadata
                 properties = {}
                 if table.parameters:
                     properties.update(table.parameters)
                 if table.owner:
                     properties["owner"] = table.owner
                 
+                # Get version from table parameters if available
+                version = None
+                if table.parameters and VERSION_KEY in table.parameters:
+                    try:
+                        version = int(table.parameters[VERSION_KEY])
+                    except (ValueError, TypeError):
+                        pass
+                
+                # Note: We don't load the Lance dataset here, just return Hive metadata
+                # Schema will be None as we're not opening the dataset
                 return DescribeTableResponse(
-                    id=request.id,
-                    schema=json_schema,
+                    var_schema=None,
                     location=location,
-                    version=dataset.version,
+                    version=version,
                     properties=properties
                 )
         except Exception as e:
@@ -453,13 +455,27 @@ class Hive2Namespace(LanceNamespace):
             raise
     
     def register_table(self, request: RegisterTableRequest) -> RegisterTableResponse:
-        """Register an existing Lance table in the Hive Metastore."""
+        """Register an existing Lance table in the Hive Metastore.
+        
+        Note: This will open the Lance dataset to get schema and version information.
+        If you want to avoid opening the dataset, you can provide 'version' in properties.
+        """
         try:
             database, table_name = self._normalize_identifier(request.id)
             
-            # Open Lance dataset to get schema
-            dataset = lance.dataset(request.location)
-            schema = dataset.schema
+            # Get version from properties or open dataset to get it
+            version = request.properties.get(VERSION_KEY) if request.properties else None
+            
+            # We need to open the dataset to get schema for Hive columns
+            # and version if not provided
+            if version is None:
+                dataset = lance.dataset(request.location)
+                schema = dataset.schema
+                version = str(dataset.version)
+            else:
+                # If version is provided, still need to open for schema
+                dataset = lance.dataset(request.location)
+                schema = dataset.schema
             
             # Create Hive table object
             if not HiveTable:
@@ -467,7 +483,7 @@ class Hive2Namespace(LanceNamespace):
             hive_table = HiveTable()
             hive_table.dbName = database
             hive_table.tableName = table_name
-            hive_table.owner = request.properties.get("owner", os.getenv("USER", ""))
+            hive_table.owner = request.properties.get("owner", os.getenv("USER", "")) if request.properties else os.getenv("USER", "")
             # Use current time if file doesn't exist yet
             import time
             current_time = int(time.time())
@@ -503,8 +519,8 @@ class Hive2Namespace(LanceNamespace):
             # Set table parameters per hive.md specification
             hive_table.parameters = {
                 TABLE_TYPE_KEY: LANCE_TABLE_FORMAT,
-                MANAGED_BY_KEY: request.properties.get(MANAGED_BY_KEY, "storage"),
-                VERSION_KEY: str(dataset.version),
+                MANAGED_BY_KEY: request.properties.get(MANAGED_BY_KEY, "storage") if request.properties else "storage",
+                VERSION_KEY: version,
                 "EXTERNAL": "TRUE",
             }
             if request.properties:
