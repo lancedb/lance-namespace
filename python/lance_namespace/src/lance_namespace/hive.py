@@ -463,19 +463,20 @@ class Hive2Namespace(LanceNamespace):
         try:
             database, table_name = self._normalize_identifier(request.id)
             
-            # Get version from properties or open dataset to get it
-            version = request.properties.get(VERSION_KEY) if request.properties else None
+            # Determine managed_by value
+            managed_by = request.properties.get(MANAGED_BY_KEY, "storage") if request.properties else "storage"
             
-            # We need to open the dataset to get schema for Hive columns
-            # and version if not provided
-            if version is None:
-                dataset = lance.dataset(request.location)
-                schema = dataset.schema
-                version = str(dataset.version)
-            else:
-                # If version is provided, still need to open for schema
-                dataset = lance.dataset(request.location)
-                schema = dataset.schema
+            # We always need to open the dataset to get schema for Hive columns
+            dataset = lance.dataset(request.location)
+            schema = dataset.schema
+            
+            # Only track version if managed_by is "impl"
+            version = None
+            if managed_by == "impl":
+                # Get version from properties or dataset
+                version = request.properties.get(VERSION_KEY) if request.properties else None
+                if version is None:
+                    version = str(dataset.version)
             
             # Create Hive table object
             if not HiveTable:
@@ -517,10 +518,13 @@ class Hive2Namespace(LanceNamespace):
             # Set table parameters per hive.md specification
             hive_table.parameters = {
                 TABLE_TYPE_KEY: LANCE_TABLE_FORMAT,
-                MANAGED_BY_KEY: request.properties.get(MANAGED_BY_KEY, "storage") if request.properties else "storage",
-                VERSION_KEY: version,
-                "EXTERNAL": "TRUE",
+                MANAGED_BY_KEY: managed_by,
             }
+            
+            # Only set version if managed_by is "impl"
+            if managed_by == "impl" and version is not None:
+                hive_table.parameters[VERSION_KEY] = version
+            
             if request.properties:
                 # Add other properties but don't override the required ones
                 for k, v in request.properties.items():

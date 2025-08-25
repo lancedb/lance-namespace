@@ -283,6 +283,58 @@ class TestHive2Namespace:
                     assert mock_sd.serdeInfo == mock_serde
                     assert mock_serde.serializationLib == "com.lancedb.lance.mapred.LanceSerDe"
                     assert mock_hive_table.parameters["table_type"] == "lance"
+                    assert mock_hive_table.parameters["managed_by"] == "storage"  # Default
+                    assert "version" not in mock_hive_table.parameters  # Not set for storage-managed
+                    assert "EXTERNAL" not in mock_hive_table.parameters  # Should not be present
+                    assert mock_hive_table.parameters["owner"] == "test_user"
+    
+    def test_register_table_impl_managed(self, hive_namespace, mock_hive_client):
+        """Test registering a Lance table with managed_by=impl."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Create a mock Lance dataset
+            table_path = os.path.join(tmpdir, "test_table")
+            
+            # Create sample data
+            data = pa.table({
+                "id": [1, 2, 3],
+                "name": ["Alice", "Bob", "Charlie"]
+            })
+            
+            with patch("lance_namespace.hive.lance.dataset") as mock_dataset_func:
+                mock_dataset = MagicMock()
+                mock_dataset.schema = data.schema
+                mock_dataset.version = 42
+                mock_dataset_func.return_value = mock_dataset
+                
+                mock_client_instance = MagicMock()
+                mock_hive_client.__enter__.return_value = mock_client_instance
+                
+                # Mock all Hive classes
+                with patch("lance_namespace.hive.HiveTable") as mock_hive_table_class, \
+                     patch("lance_namespace.hive.StorageDescriptor") as mock_sd_class, \
+                     patch("lance_namespace.hive.SerDeInfo") as mock_serde_class, \
+                     patch("lance_namespace.hive.FieldSchema") as mock_field_class:
+                    
+                    mock_hive_table = MagicMock()
+                    mock_hive_table_class.return_value = mock_hive_table
+                    mock_sd = MagicMock()
+                    mock_sd_class.return_value = mock_sd
+                    mock_serde = MagicMock()
+                    mock_serde_class.return_value = mock_serde
+                    mock_field_class.return_value = MagicMock()
+                    
+                    request = RegisterTableRequest(
+                        id=["test_db", "test_table"],
+                        location=table_path,
+                        properties={"owner": "test_user", "managed_by": "impl"}
+                    )
+                    response = hive_namespace.register_table(request)
+                    
+                    # Verify version is set when managed_by is "impl"
+                    assert mock_hive_table.parameters["table_type"] == "lance"
+                    assert mock_hive_table.parameters["managed_by"] == "impl"
+                    assert mock_hive_table.parameters["version"] == "42"  # Version should be set
+                    assert "EXTERNAL" not in mock_hive_table.parameters  # Should not be present
                     assert mock_hive_table.parameters["owner"] == "test_user"
     
     def test_table_exists(self, hive_namespace, mock_hive_client):
