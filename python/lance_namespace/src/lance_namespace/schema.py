@@ -45,6 +45,101 @@ def convert_json_arrow_schema_to_pyarrow(json_schema: JsonArrowSchema) -> "pa.Sc
     return pa.schema(fields, metadata=json_schema.metadata)
 
 
+def convert_pyarrow_schema_to_json_arrow(schema: "pa.Schema") -> JsonArrowSchema:
+    """Convert PyArrow schema to JSON Arrow schema.
+    
+    Args:
+        schema: PyArrow schema to convert
+        
+    Returns:
+        JsonArrowSchema object
+        
+    Raises:
+        ImportError: If PyArrow is not available
+    """
+    if not HAS_PYARROW:
+        raise ImportError("PyArrow is required for schema conversion")
+    
+    fields = []
+    for field in schema:
+        json_field = JsonArrowField(
+            name=field.name,
+            nullable=field.nullable,
+            type=convert_pyarrow_type_to_json_arrow(field.type),
+            metadata=field.metadata
+        )
+        fields.append(json_field)
+    
+    return JsonArrowSchema(fields=fields)
+
+
+def convert_pyarrow_type_to_json_arrow(dtype: "pa.DataType") -> JsonArrowDataType:
+    """Convert PyArrow data type to JSON Arrow data type.
+    
+    Args:
+        dtype: PyArrow data type to convert
+        
+    Returns:
+        JsonArrowDataType object
+        
+    Raises:
+        ImportError: If PyArrow is not available
+    """
+    if not HAS_PYARROW:
+        raise ImportError("PyArrow is required for schema conversion")
+    
+    if pa.types.is_boolean(dtype):
+        return JsonArrowDataType(name="bool")
+    elif pa.types.is_int8(dtype):
+        return JsonArrowDataType(name="int", bitWidth=8, isSigned=True)
+    elif pa.types.is_int16(dtype):
+        return JsonArrowDataType(name="int", bitWidth=16, isSigned=True)
+    elif pa.types.is_int32(dtype):
+        return JsonArrowDataType(name="int", bitWidth=32, isSigned=True)
+    elif pa.types.is_int64(dtype):
+        return JsonArrowDataType(name="int", bitWidth=64, isSigned=True)
+    elif pa.types.is_uint8(dtype):
+        return JsonArrowDataType(name="int", bitWidth=8, isSigned=False)
+    elif pa.types.is_uint16(dtype):
+        return JsonArrowDataType(name="int", bitWidth=16, isSigned=False)
+    elif pa.types.is_uint32(dtype):
+        return JsonArrowDataType(name="int", bitWidth=32, isSigned=False)
+    elif pa.types.is_uint64(dtype):
+        return JsonArrowDataType(name="int", bitWidth=64, isSigned=False)
+    elif pa.types.is_float32(dtype):
+        return JsonArrowDataType(name="floatingpoint", precision="SINGLE")
+    elif pa.types.is_float64(dtype):
+        return JsonArrowDataType(name="floatingpoint", precision="DOUBLE")
+    elif pa.types.is_string(dtype):
+        return JsonArrowDataType(name="utf8")
+    elif pa.types.is_binary(dtype):
+        return JsonArrowDataType(name="binary")
+    elif pa.types.is_timestamp(dtype):
+        return JsonArrowDataType(
+            name="timestamp",
+            unit=dtype.unit,
+            timezone=dtype.tz
+        )
+    elif pa.types.is_date32(dtype):
+        return JsonArrowDataType(name="date", unit="DAY")
+    elif pa.types.is_date64(dtype):
+        return JsonArrowDataType(name="date", unit="MILLISECOND")
+    elif pa.types.is_decimal(dtype):
+        return JsonArrowDataType(
+            name="decimal",
+            precision=dtype.precision,
+            scale=dtype.scale
+        )
+    elif pa.types.is_list(dtype):
+        return JsonArrowDataType(name="list")
+    elif pa.types.is_struct(dtype):
+        return JsonArrowDataType(name="struct")
+    elif pa.types.is_map(dtype):
+        return JsonArrowDataType(name="map")
+    else:
+        return JsonArrowDataType(name="unknown")
+
+
 def convert_json_arrow_type_to_pyarrow(json_type: JsonArrowDataType) -> "pa.DataType":
     """Convert JsonArrowDataType to PyArrow DataType.
     
