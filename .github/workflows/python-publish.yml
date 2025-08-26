@@ -48,15 +48,10 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
 
-      - name: Build lance-namespace-urllib3-client
-        working-directory: python/lance_namespace_urllib3_client
+      - name: Build module dists
+        working-directory: python
         run: |
-          uv build
-
-      - name: Build lance-namespace
-        working-directory: python/lance_namespace
-        run: |
-          uv build
+          make publish
 
       - name: Publish to PyPI
         if: |
