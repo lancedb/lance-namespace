@@ -118,3 +118,6 @@ venv.bak/
 
 # Docs
 docs/site
+
+# Release lance_namespace
+python/lance_namespace/README.md
