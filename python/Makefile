@@ -38,13 +38,13 @@ build-urllib3-client: gen-urllib3-client
 .PHONY: build-ns
 build-ns: build-urllib3-client
 	cd lance_namespace; \
-		uv pip install ".[glue,hive2,test]"
+		cp ../../README.md README.md; \
+		uv pip install ".[glue,hive2,test]"; \
 		uv run pytest
 
 .PHONY: publish-ns
 publish-ns:
 	cd lance_namespace; \
-		cp ../../README.md README.md; \
 		uv build
 
 .PHONY: publish-urllib3-client
