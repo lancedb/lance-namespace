@@ -203,8 +203,18 @@ class Hive2Namespace(LanceNamespace):
         # Extract storage properties
         self.storage_properties = {k[8:]: v for k, v in properties.items() if k.startswith("storage.")}
         
-        # Create client
-        self._client = HiveMetastoreClient(self.uri, self.ugi)
+        # Store properties for pickling support
+        self._properties = properties.copy()
+        
+        # Lazy initialization to support pickling
+        self._client = None
+    
+    @property
+    def client(self):
+        """Get the Hive client, initializing it if necessary."""
+        if self._client is None:
+            self._client = HiveMetastoreClient(self.uri, self.ugi)
+        return self._client
     
     def _normalize_identifier(self, identifier: List[str]) -> tuple:
         """Normalize identifier to (database, table) tuple."""
@@ -231,7 +241,7 @@ class Hive2Namespace(LanceNamespace):
                 # Non-root namespaces don't have children in Hive2
                 return ListNamespacesResponse(namespaces=[])
             
-            with self._client as client:
+            with self.client as client:
                 databases = client.get_all_databases()
                 # Return just database names as strings (excluding default)
                 namespaces = [db for db in databases if db != "default"]
@@ -259,7 +269,7 @@ class Hive2Namespace(LanceNamespace):
             
             database_name = request.id[0]
             
-            with self._client as client:
+            with self.client as client:
                 database = client.get_database(database_name)
                 
                 properties = {}
@@ -309,7 +319,7 @@ class Hive2Namespace(LanceNamespace):
                 if k not in ["comment", "owner", "location"]
             }
             
-            with self._client as client:
+            with self.client as client:
                 client.create_database(database)
             
             return CreateNamespaceResponse()
@@ -331,7 +341,7 @@ class Hive2Namespace(LanceNamespace):
             
             database_name = request.id[0]
             
-            with self._client as client:
+            with self.client as client:
                 # Check if database is empty
                 tables = client.get_all_tables(database_name)
                 cascade = request.behavior == "CASCADE" if request.behavior else False
@@ -360,7 +370,7 @@ class Hive2Namespace(LanceNamespace):
             
             database_name = request.id[0]
             
-            with self._client as client:
+            with self.client as client:
                 client.get_database(database_name)
         except Exception as e:
             if NoSuchObjectException and isinstance(e, NoSuchObjectException):
@@ -380,7 +390,7 @@ class Hive2Namespace(LanceNamespace):
             
             database_name = request.id[0]
             
-            with self._client as client:
+            with self.client as client:
                 table_names = client.get_all_tables(database_name)
                 
                 # Filter for Lance tables if needed
@@ -410,7 +420,7 @@ class Hive2Namespace(LanceNamespace):
         try:
             database, table_name = self._normalize_identifier(request.id)
             
-            with self._client as client:
+            with self.client as client:
                 table = client.get_table(database, table_name)
                 
                 # Check if it's a Lance table (case insensitive)
@@ -531,7 +541,7 @@ class Hive2Namespace(LanceNamespace):
                     if k not in [TABLE_TYPE_KEY, MANAGED_BY_KEY, VERSION_KEY]:
                         hive_table.parameters[k] = v
             
-            with self._client as client:
+            with self.client as client:
                 client.create_table(hive_table)
             
             return RegisterTableResponse(
@@ -549,7 +559,7 @@ class Hive2Namespace(LanceNamespace):
         try:
             database, table_name = self._normalize_identifier(request.id)
             
-            with self._client as client:
+            with self.client as client:
                 table = client.get_table(database, table_name)
                 
                 # Check if it's a Lance table (case insensitive)
@@ -569,7 +579,7 @@ class Hive2Namespace(LanceNamespace):
         try:
             database, table_name = self._normalize_identifier(request.id)
             
-            with self._client as client:
+            with self.client as client:
                 # Get table to check if it's a Lance table
                 table = client.get_table(database, table_name)
                 
@@ -595,7 +605,7 @@ class Hive2Namespace(LanceNamespace):
         try:
             database, table_name = self._normalize_identifier(request.id)
             
-            with self._client as client:
+            with self.client as client:
                 # Get table to check if it's a Lance table
                 table = client.get_table(database, table_name)
                 
@@ -711,3 +721,15 @@ class Hive2Namespace(LanceNamespace):
             return f"struct<{','.join(field_strs)}>"
         else:
             return "string"  # Default to string for unknown types
+    
+    def __getstate__(self):
+        """Prepare instance for pickling by excluding unpickleable objects."""
+        state = self.__dict__.copy()
+        # Remove the unpickleable Hive client
+        state['_client'] = None
+        return state
+    
+    def __setstate__(self, state):
+        """Restore instance from pickled state."""
+        self.__dict__.update(state)
+        # The Hive client will be re-initialized lazily via the property

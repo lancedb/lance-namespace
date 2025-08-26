@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VERSION = 0.0.6
+VERSION = 0.0.7
 
 .PHONY: clean-urllib3-client
 clean-urllib3-client:
@@ -38,7 +38,7 @@ build-urllib3-client: gen-urllib3-client
 .PHONY: build-ns
 build-ns: build-urllib3-client
 	cd lance_namespace; \
-		uv pip install ".[test]"
+		uv pip install ".[glue,hive2,test]"
 		uv run pytest
 
 .PHONY: clean

@@ -1,11 +1,10 @@
 [project]
 name = "lance-namespace"
-version = "0.0.6"
+version = "0.0.7"
 description = "Python client for Lance Namespace API"
-readme = "README.md"
-authors = [
-    { name = "Jack Ye", email = "yezhaoqin@gmail.com" }
-]
+readme = "../../README.md"
+license = {file = "../../LICENSE"}
+authors = [{ name = "LanceDB Devs", email = "dev@lancedb.com" }]
 requires-python = ">=3.9"
 dependencies = [
     "lance-namespace-urllib3-client",

@@ -133,7 +133,14 @@ class GlueNamespace(LanceNamespace):
             )
         
         self.config = GlueNamespaceConfig(properties)
-        self.glue = self._initialize_glue_client()
+        self._glue = None  # Lazy initialization to support pickling
+    
+    @property
+    def glue(self):
+        """Get the Glue client, initializing it if necessary."""
+        if self._glue is None:
+            self._glue = self._initialize_glue_client()
+        return self._glue
     
     def _initialize_glue_client(self):
         """Initialize the AWS Glue client."""
@@ -634,6 +641,18 @@ class GlueNamespace(LanceNamespace):
             # Default to string for unknown types
             return 'string'
     
+    def __getstate__(self):
+        """Prepare instance for pickling by excluding unpickleable objects."""
+        state = self.__dict__.copy()
+        # Remove the unpickleable Glue client
+        state['_glue'] = None
+        return state
+    
+    def __setstate__(self, state):
+        """Restore instance from pickled state."""
+        self.__dict__.update(state)
+        # The Glue client will be re-initialized lazily via the property
+    
 
 
 class GlueNamespaceConfig:
@@ -662,6 +681,9 @@ class GlueNamespaceConfig:
         """
         if properties is None:
             properties = {}
+        
+        # Store raw properties for pickling support
+        self._properties = properties.copy()
         
         self._catalog_id = properties.get(self.CATALOG_ID)
         self._endpoint = properties.get(self.ENDPOINT)
@@ -734,3 +756,8 @@ class GlueNamespaceConfig:
     def storage_options(self) -> Dict[str, str]:
         """Get the storage configuration properties."""
         return self._storage_options.copy()
+    
+    @property
+    def properties(self) -> Dict[str, str]:
+        """Get the raw properties dictionary."""
+        return self._properties.copy()
