@@ -594,3 +594,41 @@ class TestGlueNamespace:
         assert columns[2] == {'Name': 'scores', 'Type': 'array<float>'}
         assert columns[3] == {'Name': 'metadata', 'Type': 'struct<created:timestamp,version:int>'}
     
+    def test_pickle_support(self, mock_boto3):
+        """Test that GlueNamespace can be pickled and unpickled for Ray compatibility."""
+        import pickle
+        
+        # Create a GlueNamespace instance
+        properties = {
+            'region': 'us-east-1',
+            'catalog_id': '123456789012',
+            'endpoint': 'https://glue.example.com',
+            'storage.access_key_id': 'test-key',
+            'storage.secret_access_key': 'test-secret'
+        }
+        namespace = GlueNamespace(**properties)
+        
+        # Test pickling
+        pickled = pickle.dumps(namespace)
+        assert pickled is not None
+        
+        # Test unpickling
+        restored = pickle.loads(pickled)
+        assert isinstance(restored, GlueNamespace)
+        
+        # Verify configuration is preserved
+        assert restored.config.region == 'us-east-1'
+        assert restored.config.catalog_id == '123456789012'
+        assert restored.config.endpoint == 'https://glue.example.com'
+        assert restored.config.storage_options['access_key_id'] == 'test-key'
+        assert restored.config.storage_options['secret_access_key'] == 'test-secret'
+        
+        # Verify glue client is None after unpickling (will be lazily initialized)
+        assert restored._glue is None
+        
+        # Test that glue client can be re-initialized after unpickling
+        # This will create a new mock client when accessed
+        client = restored.glue
+        assert client is not None
+        assert restored._glue is not None
+    

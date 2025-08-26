@@ -62,6 +62,12 @@ class TestHive2Namespace:
                 assert namespace.uri == "thrift://localhost:9083"
                 assert namespace.root == "/tmp/warehouse"
                 assert namespace.ugi == "user:group1,group2"
+                
+                # Client should not be initialized yet (lazy loading)
+                mock_client.assert_not_called()
+                
+                # Access the client property to trigger initialization
+                _ = namespace.client
                 mock_client.assert_called_once_with("thrift://localhost:9083", "user:group1,group2")
     
     def test_initialization_without_hive_deps(self):
@@ -429,3 +435,46 @@ class TestHive2Namespace:
         request = DropNamespaceRequest(id=[])
         with pytest.raises(ValueError, match="Cannot drop root namespace"):
             hive_namespace.drop_namespace(request)
+    
+    def test_pickle_support(self):
+        """Test that Hive2Namespace can be pickled and unpickled for Ray compatibility."""
+        import pickle
+        
+        with patch("lance_namespace.hive.HIVE_AVAILABLE", True):
+            with patch("lance_namespace.hive.HiveMetastoreClient"):
+                # Create a Hive2Namespace instance
+                namespace = connect("hive2", {
+                    "uri": "thrift://localhost:9083",
+                    "root": "/tmp/warehouse",
+                    "ugi": "user:group1,group2",
+                    "client.pool-size": "5",
+                    "storage.access_key_id": "test-key",
+                    "storage.secret_access_key": "test-secret"
+                })
+                
+                # Test pickling
+                pickled = pickle.dumps(namespace)
+                assert pickled is not None
+                
+                # Test unpickling
+                restored = pickle.loads(pickled)
+                assert isinstance(restored, namespace.__class__)
+                
+                # Verify configuration is preserved
+                assert restored.uri == "thrift://localhost:9083"
+                assert restored.root == "/tmp/warehouse"
+                assert restored.ugi == "user:group1,group2"
+                assert restored.pool_size == 5
+                assert restored.storage_properties["access_key_id"] == "test-key"
+                assert restored.storage_properties["secret_access_key"] == "test-secret"
+                
+                # Verify client is None after unpickling (will be lazily initialized)
+                assert restored._client is None
+                
+                # Test that client can be re-initialized after unpickling
+                with patch("lance_namespace.hive.HiveMetastoreClient") as mock_client:
+                    # This will create a new mock client when accessed
+                    client = restored.client
+                    assert client is not None
+                    assert restored._client is not None
+                    mock_client.assert_called_once_with("thrift://localhost:9083", "user:group1,group2")

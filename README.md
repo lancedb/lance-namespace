@@ -1,7 +1,5 @@
 # Lance Namespace
 
-![logo](./docs/src/logo/wide.png)
-
 **Lance Namespace** is an open specification on top of the storage-based Lance data format
 to standardize access to a collection of Lance tables (a.k.a. Lance datasets).
 It describes how a metadata service like Apache Hive MetaStore (HMS),
