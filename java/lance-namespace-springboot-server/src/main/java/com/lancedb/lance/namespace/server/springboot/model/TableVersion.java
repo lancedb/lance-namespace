@@ -15,11 +15,10 @@ package com.lancedb.lance.namespace.server.springboot.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.annotation.Generated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 import java.time.OffsetDateTime;
 import java.util.*;

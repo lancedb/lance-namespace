@@ -17,6 +17,10 @@
     <description>Lance Namespace server adapter</description>
     <packaging>jar</packaging>
 
+    <properties>
+        <maven.compiler.release>17</maven.compiler.release>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.lancedb</groupId>
