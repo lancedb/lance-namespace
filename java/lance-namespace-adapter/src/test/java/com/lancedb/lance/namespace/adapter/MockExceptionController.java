@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MockExceptionController {
   @GetMapping("/testNotFound")
-  public String testNotFound(@RequestParam(required = false) String param) {
+  public String testNotFound(@RequestParam(name = "param", required = false) String param) {
     String error = "Mock resource not found";
     String type = "Not found Error";
     String instance = "/v1/namespaces";
@@ -32,7 +32,8 @@ public class MockExceptionController {
 
   @GetMapping("/testInternalError")
   public String transformIntoErrorResponse(
-      @RequestParam(required = false) String param, @RequestParam(required = false) int errorCode) {
+      @RequestParam(name = "param", required = false) String param,
+      @RequestParam(name = "errorCode", required = false) int errorCode) {
     String detail = String.format("%s not found", param);
     throw new LanceNamespaceException(errorCode, detail);
   }

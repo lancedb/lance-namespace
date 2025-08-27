@@ -15,9 +15,8 @@ package com.lancedb.lance.namespace.server.springboot.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-
-import javax.annotation.Generated;
-import javax.validation.constraints.*;
+import jakarta.annotation.Generated;
+import jakarta.validation.constraints.*;
 
 import java.util.*;
 
