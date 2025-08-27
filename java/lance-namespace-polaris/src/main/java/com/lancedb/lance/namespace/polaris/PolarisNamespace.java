@@ -45,7 +45,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -60,8 +59,6 @@ public class PolarisNamespace implements LanceNamespace {
   private static final String MANAGED_BY_KEY = "managed_by";
   private static final String TABLE_TYPE_KEY = "table_type";
   private static final String VERSION_KEY = "version";
-  private static final String CREATED_AT_KEY = "created_at";
-  private static final String UPDATED_AT_KEY = "updated_at";
 
   private PolarisNamespaceConfig config;
   private RestClient restClient;
@@ -301,9 +298,14 @@ public class PolarisNamespace implements LanceNamespace {
 
       // Add Lance-specific properties
       properties.put(TABLE_TYPE_KEY, TABLE_FORMAT_LANCE);
-      properties.put(MANAGED_BY_KEY, "lance-namespace");
-      properties.put(VERSION_KEY, "1");
-      properties.put(CREATED_AT_KEY, Instant.now().toString());
+      // Default to storage-managed unless specified
+      if (!properties.containsKey(MANAGED_BY_KEY)) {
+        properties.put(MANAGED_BY_KEY, "storage");
+      }
+      // Only set version if managed by impl
+      if ("impl".equalsIgnoreCase(properties.get(MANAGED_BY_KEY))) {
+        properties.put(VERSION_KEY, "1");
+      }
 
       // Create generic table request
       PolarisModels.CreateGenericTableRequest tableRequest =
