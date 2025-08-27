@@ -183,7 +183,17 @@ ListTablesResponse tables = namespace.listTables(listRequest);
 
 ## Testing
 
-Unit tests use mocked `RestClient` to verify API interactions without requiring a running Polaris instance. Integration tests against a real Polaris deployment should be configured with appropriate credentials.
+### Unit Tests
+
+Unit tests use mocked `RestClient` to verify API interactions without requiring a running Polaris instance.
+
+### Integration Tests
+
+Integration tests automatically detect if a Polaris instance is available at `http://localhost:8182`. If available, tests will run against the real instance. If not available, tests will be automatically skipped.
+
+To run integration tests:
+1. Start Polaris at `http://localhost:8182` with credentials `CLIENT_ID=root`, `CLIENT_SECRET=s3cr3t`
+2. Run `mvn test` - integration tests will automatically be included
 
 ## References
 
