@@ -20,7 +20,6 @@ import java.util.Map;
 /** Configuration for Polaris namespace implementation. */
 public class PolarisNamespaceConfig {
   public static final String POLARIS_ENDPOINT = "endpoint";
-  public static final String POLARIS_CATALOG = "catalog";
   public static final String POLARIS_AUTH_TOKEN = "auth.token";
   public static final String POLARIS_CONNECT_TIMEOUT = "connect.timeout";
   public static final String POLARIS_READ_TIMEOUT = "read.timeout";
@@ -31,7 +30,6 @@ public class PolarisNamespaceConfig {
   private static final int DEFAULT_MAX_RETRIES = 3;
 
   private final String endpoint;
-  private final String catalog;
   private final String authToken;
   private final int connectTimeout;
   private final int readTimeout;
@@ -39,7 +37,6 @@ public class PolarisNamespaceConfig {
 
   public PolarisNamespaceConfig(Map<String, String> properties) {
     this.endpoint = getRequiredProperty(properties, POLARIS_ENDPOINT);
-    this.catalog = getRequiredProperty(properties, POLARIS_CATALOG);
     this.authToken = properties.get(POLARIS_AUTH_TOKEN);
     this.connectTimeout =
         Integer.parseInt(
@@ -105,10 +102,6 @@ public class PolarisNamespaceConfig {
     return endpoint;
   }
 
-  public String getCatalog() {
-    return catalog;
-  }
-
   public String getAuthToken() {
     return authToken;
   }
@@ -125,13 +118,10 @@ public class PolarisNamespaceConfig {
     return maxRetries;
   }
 
-  /**
-   * Get the full API URL for Polaris generic table operations. Format:
-   * {endpoint}/polaris/v1/{catalog}
-   */
+  /** Get the full API URL for Polaris catalog operations. Format: {endpoint}/api/catalog/v1 */
   public String getFullApiUrl() {
     String baseUrl =
         endpoint.endsWith("/") ? endpoint.substring(0, endpoint.length() - 1) : endpoint;
-    return String.format("%s/polaris/v1/%s", baseUrl, catalog);
+    return baseUrl + "/api/catalog/v1";
   }
 }

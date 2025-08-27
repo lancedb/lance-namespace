@@ -14,7 +14,6 @@ The Lance Polaris namespace accepts the following configuration properties:
 | Property          | Required | Description                                    | Default | Example                    |
 |-------------------|----------|------------------------------------------------|---------|----------------------------|
 | `endpoint`        | Yes      | Polaris server endpoint URL                   |         | `http://localhost:8182`    |
-| `catalog`         | Yes      | Catalog name in Polaris                       |         | `my_catalog`               |
 | `auth.token`      | No       | Bearer token for authentication               |         | `your-auth-token`          |
 | `connect.timeout` | No       | Connection timeout in milliseconds            | 10000   | `30000`                    |
 | `read.timeout`    | No       | Read timeout in milliseconds                  | 30000   | `60000`                    |
@@ -29,8 +28,11 @@ The Polaris namespace supports bearer token authentication:
 
 ## Namespace Mapping
 
-Polaris Catalog supports arbitrary nested namespace hierarchy. A catalog in Polaris serves as the root,
-with namespaces that can be nested to any depth to form a flexible Lance namespace structure.
+Polaris provides a flexible namespace hierarchy:
+
+- A catalog in Polaris maps to the first level Lance namespace
+- Nested namespaces in Polaris map to subsequent Lance namespace levels
+- Polaris supports arbitrary nesting depth, allowing flexible namespace organization
 
 ## Table Definition
 
