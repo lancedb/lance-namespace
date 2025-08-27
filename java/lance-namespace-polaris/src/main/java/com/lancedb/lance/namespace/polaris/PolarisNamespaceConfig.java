@@ -19,12 +19,12 @@ import java.util.Map;
 
 /** Configuration for Polaris namespace implementation. */
 public class PolarisNamespaceConfig {
-  public static final String POLARIS_ENDPOINT = "polaris.endpoint";
-  public static final String POLARIS_CATALOG = "polaris.catalog";
-  public static final String POLARIS_AUTH_TOKEN = "polaris.auth.token";
-  public static final String POLARIS_CONNECT_TIMEOUT = "polaris.connect.timeout";
-  public static final String POLARIS_READ_TIMEOUT = "polaris.read.timeout";
-  public static final String POLARIS_MAX_RETRIES = "polaris.max.retries";
+  public static final String POLARIS_ENDPOINT = "endpoint";
+  public static final String POLARIS_CATALOG = "catalog";
+  public static final String POLARIS_AUTH_TOKEN = "auth.token";
+  public static final String POLARIS_CONNECT_TIMEOUT = "connect.timeout";
+  public static final String POLARIS_READ_TIMEOUT = "read.timeout";
+  public static final String POLARIS_MAX_RETRIES = "max.retries";
 
   private static final int DEFAULT_CONNECT_TIMEOUT = 10000; // 10 seconds
   private static final int DEFAULT_READ_TIMEOUT = 30000; // 30 seconds

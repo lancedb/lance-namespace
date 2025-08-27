@@ -126,19 +126,19 @@ public class TestPolarisNamespaceIntegration {
     testNamespace = "test_ns_" + uniqueId;
 
     Map<String, String> config = new HashMap<>();
-    config.put("polaris.endpoint", POLARIS_ENDPOINT);
-    config.put("polaris.catalog", testCatalog);
+    config.put("endpoint", POLARIS_ENDPOINT);
+    config.put("catalog", testCatalog);
 
     // Try to get OAuth token first
     String token = getOAuthToken();
     if (token != null) {
-      config.put("polaris.auth.token", token);
+      config.put("auth.token", token);
     } else {
       // Fall back to basic auth
       String basicAuth =
           java.util.Base64.getEncoder()
               .encodeToString((CLIENT_ID + ":" + CLIENT_SECRET).getBytes());
-      config.put("polaris.auth.token", basicAuth);
+      config.put("auth.token", basicAuth);
     }
 
     namespace.initialize(config, allocator);

@@ -71,9 +71,9 @@ public class TestPolarisNamespace {
     namespace = new PolarisNamespace();
 
     config = new HashMap<>();
-    config.put("polaris.endpoint", "http://localhost:8182");
-    config.put("polaris.catalog", "test_catalog");
-    config.put("polaris.auth.token", "test-token");
+    config.put("endpoint", "http://localhost:8182");
+    config.put("catalog", "test_catalog");
+    config.put("auth.token", "test-token");
 
     // Initialize namespace with config
     namespace.initialize(config, allocator);
@@ -107,18 +107,18 @@ public class TestPolarisNamespace {
     PolarisNamespace ns = new PolarisNamespace();
     assertThatThrownBy(() -> ns.initialize(badConfig, allocator))
         .isInstanceOf(LanceNamespaceException.class)
-        .hasMessageContaining("Required configuration property 'polaris.endpoint' is not set");
+        .hasMessageContaining("Required configuration property 'endpoint' is not set");
   }
 
   @Test
   public void testInitializeMissingCatalog() {
     Map<String, String> badConfig = new HashMap<>();
-    badConfig.put("polaris.endpoint", "http://localhost:8182");
+    badConfig.put("endpoint", "http://localhost:8182");
 
     PolarisNamespace ns = new PolarisNamespace();
     assertThatThrownBy(() -> ns.initialize(badConfig, allocator))
         .isInstanceOf(LanceNamespaceException.class)
-        .hasMessageContaining("Required configuration property 'polaris.catalog' is not set");
+        .hasMessageContaining("Required configuration property 'catalog' is not set");
   }
 
   @Test
