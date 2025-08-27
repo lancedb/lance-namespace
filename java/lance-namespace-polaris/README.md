@@ -83,15 +83,15 @@ mvn test
 
 ### Integration Tests
 
-Integration tests require a running Polaris instance and are provided in `TestPolarisNamespaceIntegration.java`:
+Integration tests are provided in `TestPolarisNamespaceIntegration.java` and will run automatically if a Polaris instance is available:
 
 1. Start Polaris with the following configuration:
    - Endpoint: `http://localhost:8182`
    - Root credentials: `CLIENT_ID=root`, `CLIENT_SECRET=s3cr3t`
 
-2. Run integration tests:
+2. Run tests (integration tests will be automatically included if Polaris is reachable):
 ```bash
-mvn test -Dtest.polaris.integration=true
+mvn test
 ```
 
-If the system property is not set or Polaris is not available, integration tests will be skipped automatically.
+If Polaris is not available at `http://localhost:8182`, integration tests will be automatically skipped.

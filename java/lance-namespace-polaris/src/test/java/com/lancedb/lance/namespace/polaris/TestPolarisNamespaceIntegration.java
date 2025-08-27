@@ -34,10 +34,10 @@ import com.lancedb.lance.namespace.model.TableExistsRequest;
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -56,14 +56,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * <p>To run these tests, start Polaris with: - Endpoint: http://localhost:8182 - Credentials:
  * CLIENT_ID=root, CLIENT_SECRET=s3cr3t
  *
- * <p>Tests are skipped if Polaris is not available.
+ * <p>Tests are automatically skipped if Polaris is not available.
  */
-@EnabledIfSystemProperty(named = "test.polaris.integration", matches = "true")
 public class TestPolarisNamespaceIntegration {
 
   private static final String POLARIS_ENDPOINT = "http://localhost:8182";
   private static final String CLIENT_ID = "root";
   private static final String CLIENT_SECRET = "s3cr3t";
+  private static boolean polarisAvailable = false;
 
   private PolarisNamespace namespace;
   private BufferAllocator allocator;
@@ -72,31 +72,51 @@ public class TestPolarisNamespaceIntegration {
 
   @BeforeAll
   public static void checkPolarisAvailable() {
-    if (!"true".equals(System.getProperty("test.polaris.integration"))) {
-      return; // Skip check if integration tests are disabled
-    }
-
     try {
-      URL url = new URL(POLARIS_ENDPOINT + "/");
+      // Try to check if Polaris API is available by checking a known endpoint
+      // We'll try the namespaces endpoint which should exist
+      URL url = new URL(POLARIS_ENDPOINT + "/api/catalog/v1/namespaces");
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
       conn.setConnectTimeout(1000);
       conn.setReadTimeout(1000);
+
+      // Add basic auth header to check if we can authenticate
+      String auth =
+          java.util.Base64.getEncoder()
+              .encodeToString((CLIENT_ID + ":" + CLIENT_SECRET).getBytes());
+      conn.setRequestProperty("Authorization", "Basic " + auth);
+
       int responseCode = conn.getResponseCode();
       conn.disconnect();
 
-      // Even 404 means the server is responding
-      if (responseCode < 0) {
-        throw new RuntimeException("Polaris is not available at " + POLARIS_ENDPOINT);
+      // Consider Polaris available if we get any HTTP response (even 401/403)
+      // but not 404 which means the endpoint doesn't exist
+      polarisAvailable = responseCode != 404 && responseCode > 0;
+
+      if (!polarisAvailable) {
+        System.out.println(
+            "Polaris is not available at " + POLARIS_ENDPOINT + " - skipping integration tests");
+      } else {
+        System.out.println(
+            "Polaris detected at " + POLARIS_ENDPOINT + " (response code: " + responseCode + ")");
       }
     } catch (Exception e) {
-      throw new RuntimeException(
-          "Polaris is not available at " + POLARIS_ENDPOINT + ": " + e.getMessage(), e);
+      polarisAvailable = false;
+      System.out.println(
+          "Polaris is not available at "
+              + POLARIS_ENDPOINT
+              + " ("
+              + e.getMessage()
+              + ") - skipping integration tests");
     }
   }
 
   @BeforeEach
   public void setUp() throws Exception {
+    // Skip all tests if Polaris is not available
+    Assumptions.assumeTrue(polarisAvailable, "Polaris is not available at " + POLARIS_ENDPOINT);
+
     allocator = new RootAllocator();
     namespace = new PolarisNamespace();
 
