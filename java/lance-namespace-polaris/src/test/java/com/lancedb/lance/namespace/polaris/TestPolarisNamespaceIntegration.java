@@ -127,7 +127,6 @@ public class TestPolarisNamespaceIntegration {
 
     Map<String, String> config = new HashMap<>();
     config.put("endpoint", POLARIS_ENDPOINT);
-    config.put("catalog", testCatalog);
 
     // Try to get OAuth token first
     String token = getOAuthToken();
