@@ -10,8 +10,6 @@ The Lance Gravitino namespace accepts the following configuration properties:
 | Property            | Required | Description                                                    | Default                   | Example                           |
 |---------------------|----------|----------------------------------------------------------------|---------------------------|-----------------------------------|
 | `endpoint`          | No       | Gravitino server endpoint URL                                 | `http://localhost:8090`   | `http://gravitino.example.com`   |
-| `metalake`          | Yes      | Gravitino metalake name                                       |                           | `my_metalake`                     |
-| `catalog`           | Yes      | Gravitino catalog name within the metalake                    |                           | `lance_catalog`                   |
 | `auth_token`        | No       | Bearer token for authentication                               |                           | `eyJhbGciOiJIUzI1...`            |
 | `connect_timeout`   | No       | HTTP connection timeout in seconds                            | 10                        | `30`                              |
 | `read_timeout`      | No       | HTTP read timeout in seconds                                  | 60                        | `120`                             |
@@ -26,12 +24,12 @@ The Gravitino namespace supports the following authentication methods:
 
 ## Namespace Mapping
 
-Apache Gravitino provides a 4-level namespace hierarchy. The Lance namespace operates within a pre-configured metalake and catalog:
+Apache Gravitino provides a 4-level namespace hierarchy:
 
-- A metalake in Gravitino is configured at initialization (read-only)
-- A catalog within the metalake is configured at initialization (read-only)  
-- A schema (database) in Gravitino maps to the first level Lance namespace
-- Together they form the Lance namespace structure
+- A metalake in Gravitino maps to the first level Lance namespace
+- A catalog within the metalake maps to the second level Lance namespace  
+- A schema (database) in Gravitino maps to the third level Lance namespace
+- Together they form a 4-level Lance namespace structure matching Gravitino's hierarchy
 
 ## Table Definition
 

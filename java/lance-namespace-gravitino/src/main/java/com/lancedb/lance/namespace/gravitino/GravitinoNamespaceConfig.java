@@ -21,8 +21,6 @@ public class GravitinoNamespaceConfig {
   
   // Configuration keys
   public static final String GRAVITINO_ENDPOINT = "endpoint";
-  public static final String GRAVITINO_METALAKE = "metalake";
-  public static final String GRAVITINO_CATALOG = "catalog";
   public static final String GRAVITINO_AUTH_TOKEN = "auth_token";
   public static final String GRAVITINO_CONNECT_TIMEOUT = "connect_timeout";
   public static final String GRAVITINO_READ_TIMEOUT = "read_timeout";
@@ -36,8 +34,6 @@ public class GravitinoNamespaceConfig {
   private static final int DEFAULT_MAX_RETRIES = 3;
   
   private final String endpoint;
-  private final String metalake;
-  private final String catalog;
   private final String authToken;
   private final int connectTimeout;
   private final int readTimeout;
@@ -46,20 +42,6 @@ public class GravitinoNamespaceConfig {
   public GravitinoNamespaceConfig(Map<String, String> properties) {
     this.endpoint = PropertyUtil.propertyAsString(
         properties, GRAVITINO_ENDPOINT, DEFAULT_ENDPOINT);
-    
-    this.metalake = PropertyUtil.propertyAsString(
-        properties, GRAVITINO_METALAKE, null);
-    if (metalake == null || metalake.isEmpty()) {
-      throw new IllegalArgumentException(
-          "Gravitino metalake must be specified with property: " + GRAVITINO_METALAKE);
-    }
-    
-    this.catalog = PropertyUtil.propertyAsString(
-        properties, GRAVITINO_CATALOG, null);
-    if (catalog == null || catalog.isEmpty()) {
-      throw new IllegalArgumentException(
-          "Gravitino catalog must be specified with property: " + GRAVITINO_CATALOG);
-    }
     
     this.authToken = PropertyUtil.propertyAsString(
         properties, GRAVITINO_AUTH_TOKEN, null);
@@ -76,14 +58,6 @@ public class GravitinoNamespaceConfig {
   
   public String getEndpoint() {
     return endpoint;
-  }
-  
-  public String getMetalake() {
-    return metalake;
-  }
-  
-  public String getCatalog() {
-    return catalog;
   }
   
   public String getAuthToken() {
@@ -113,45 +87,55 @@ public class GravitinoNamespaceConfig {
   
   /**
    * Constructs the base path for catalog operations.
+   * @param metalake The metalake name
+   * @param catalog The catalog name
    * @return The catalog base path
    */
-  public String getCatalogBasePath() {
+  public String getCatalogBasePath(String metalake, String catalog) {
     return String.format("/metalakes/%s/catalogs/%s", metalake, catalog);
   }
   
   /**
    * Constructs the path for schema operations.
+   * @param metalake The metalake name
+   * @param catalog The catalog name
    * @return The schema operations path
    */
-  public String getSchemasPath() {
-    return getCatalogBasePath() + "/schemas";
+  public String getSchemasPath(String metalake, String catalog) {
+    return getCatalogBasePath(metalake, catalog) + "/schemas";
   }
   
   /**
    * Constructs the path for a specific schema.
+   * @param metalake The metalake name
+   * @param catalog The catalog name
    * @param schema The schema name
    * @return The schema path
    */
-  public String getSchemaPath(String schema) {
-    return getSchemasPath() + "/" + schema;
+  public String getSchemaPath(String metalake, String catalog, String schema) {
+    return getSchemasPath(metalake, catalog) + "/" + schema;
   }
   
   /**
    * Constructs the path for table operations within a schema.
+   * @param metalake The metalake name
+   * @param catalog The catalog name
    * @param schema The schema name
    * @return The tables path
    */
-  public String getTablesPath(String schema) {
-    return getSchemaPath(schema) + "/tables";
+  public String getTablesPath(String metalake, String catalog, String schema) {
+    return getSchemaPath(metalake, catalog, schema) + "/tables";
   }
   
   /**
    * Constructs the path for a specific table.
+   * @param metalake The metalake name
+   * @param catalog The catalog name
    * @param schema The schema name
    * @param table The table name
    * @return The table path
    */
-  public String getTablePath(String schema, String table) {
-    return getTablesPath(schema) + "/" + table;
+  public String getTablePath(String metalake, String catalog, String schema, String table) {
+    return getTablesPath(metalake, catalog, schema) + "/" + table;
   }
 }

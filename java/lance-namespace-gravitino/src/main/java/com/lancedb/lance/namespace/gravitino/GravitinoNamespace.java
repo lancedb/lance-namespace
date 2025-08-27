@@ -74,8 +74,29 @@ public class GravitinoNamespace implements LanceNamespace {
     }
     
     this.restClient = clientBuilder.build();
-    LOG.info("Initialized Gravitino namespace with endpoint: {} for metalake: {}, catalog: {}", 
-        config.getEndpoint(), config.getMetalake(), config.getCatalog());
+    LOG.info("Initialized Gravitino namespace with endpoint: {}", config.getEndpoint());
+  }
+  
+  // Helper methods to parse namespace hierarchy
+  private String[] parseNamespaceLevels(ObjectIdentifier namespace) {
+    String fullName = namespace.getName();
+    String[] parts = fullName.split("\\.");
+    if (parts.length != 3) {
+      throw new LanceNamespaceException(
+          "Gravitino namespace must have 3 levels: metalake.catalog.schema, got: " + fullName);
+    }
+    return parts; // [metalake, catalog, schema]
+  }
+  
+  private String[] parseTableLevels(ObjectIdentifier table) {
+    String namespace = table.getNamespace();
+    String tableName = table.getName();
+    String[] parts = namespace.split("\\.");
+    if (parts.length != 3) {
+      throw new LanceNamespaceException(
+          "Gravitino table namespace must have 3 levels: metalake.catalog.schema, got: " + namespace);
+    }
+    return new String[] {parts[0], parts[1], parts[2], tableName}; // [metalake, catalog, schema, table]
   }
   
   @Override
@@ -97,9 +118,15 @@ public class GravitinoNamespace implements LanceNamespace {
     ValidationUtil.validateCreateNamespaceRequest(request);
     
     try {
+      // Parse namespace levels
+      String[] levels = parseNamespaceLevels(request.getNamespace());
+      String metalake = levels[0];
+      String catalog = levels[1];
+      String schema = levels[2];
+      
       // Prepare Gravitino create schema request
       GravitinoModels.CreateSchemaRequest createRequest = new GravitinoModels.CreateSchemaRequest();
-      createRequest.setName(request.getNamespace().getName());
+      createRequest.setName(schema);
       createRequest.setComment(request.getProperties().get("comment"));
       
       // Copy properties excluding comment (as it's a separate field in Gravitino)
@@ -110,7 +137,7 @@ public class GravitinoNamespace implements LanceNamespace {
       }
       
       // Make REST API call
-      String response = restClient.post(config.getSchemasPath(), createRequest);
+      String response = restClient.post(config.getSchemasPath(metalake, catalog), createRequest);
       
       // Parse response
       GravitinoModels.ResponseWrapper<GravitinoModels.Schema> wrapper =
@@ -148,7 +175,13 @@ public class GravitinoNamespace implements LanceNamespace {
     ValidationUtil.validateDescribeNamespaceRequest(request);
     
     try {
-      String schemaPath = config.getSchemaPath(request.getNamespace().getName());
+      // Parse namespace levels
+      String[] levels = parseNamespaceLevels(request.getNamespace());
+      String metalake = levels[0];
+      String catalog = levels[1];
+      String schema = levels[2];
+      
+      String schemaPath = config.getSchemaPath(metalake, catalog, schema);
       String response = restClient.get(schemaPath);
       
       // Parse response
@@ -191,7 +224,13 @@ public class GravitinoNamespace implements LanceNamespace {
     ValidationUtil.validateNamespaceExistsRequest(request);
     
     try {
-      String schemaPath = config.getSchemaPath(request.getNamespace().getName());
+      // Parse namespace levels
+      String[] levels = parseNamespaceLevels(request.getNamespace());
+      String metalake = levels[0];
+      String catalog = levels[1];
+      String schema = levels[2];
+      
+      String schemaPath = config.getSchemaPath(metalake, catalog, schema);
       restClient.get(schemaPath);
       return true;
     } catch (IOException e) {
@@ -207,7 +246,13 @@ public class GravitinoNamespace implements LanceNamespace {
     ValidationUtil.validateDropNamespaceRequest(request);
     
     try {
-      String schemaPath = config.getSchemaPath(request.getNamespace().getName());
+      // Parse namespace levels
+      String[] levels = parseNamespaceLevels(request.getNamespace());
+      String metalake = levels[0];
+      String catalog = levels[1];
+      String schema = levels[2];
+      
+      String schemaPath = config.getSchemaPath(metalake, catalog, schema);
       String response = restClient.delete(schemaPath);
       
       // Parse response
@@ -227,35 +272,10 @@ public class GravitinoNamespace implements LanceNamespace {
   
   @Override
   public ListNamespacesResponse listNamespaces(ListNamespacesRequest request) {
-    try {
-      String response = restClient.get(config.getSchemasPath());
-      
-      // Parse response
-      GravitinoModels.ResponseWrapper<GravitinoModels.EntityListResponse> wrapper =
-          objectMapper.readValue(response,
-              new TypeReference<GravitinoModels.ResponseWrapper<GravitinoModels.EntityListResponse>>() {});
-      
-      if (wrapper.getCode() != 0) {
-        throw new LanceNamespaceException("Failed to list schemas: " + response);
-      }
-      
-      // Convert to namespace list
-      List<ObjectIdentifier> namespaces = new ArrayList<>();
-      if (wrapper.getData() != null && wrapper.getData().getIdentifiers() != null) {
-        for (GravitinoModels.NameIdentifier identifier : wrapper.getData().getIdentifiers()) {
-          namespaces.add(ObjectIdentifier.of(
-              ObjectIdentifier.Type.NAMESPACE, identifier.getName()));
-        }
-      }
-      
-      ListNamespacesResponse result = new ListNamespacesResponse();
-      result.setNamespaces(namespaces);
-      
-      return result;
-      
-    } catch (IOException e) {
-      throw new LanceNamespaceException("Failed to list namespaces: " + e.getMessage(), e);
-    }
+    // For Gravitino's 3-level namespace, listing requires metalake and catalog context
+    // which is not provided in the request. This operation needs redesign.
+    throw new UnsupportedOperationException(
+        "List namespaces requires metalake and catalog context which is not provided in the request");
   }
   
   // ============= Table Operations =============
@@ -265,8 +285,12 @@ public class GravitinoNamespace implements LanceNamespace {
     ValidationUtil.validateCreateTableRequest(request);
     
     try {
-      String schemaName = request.getTableIdentifier().getNamespace();
-      String tableName = request.getTableIdentifier().getName();
+      // Parse table levels
+      String[] levels = parseTableLevels(request.getTableIdentifier());
+      String metalake = levels[0];
+      String catalog = levels[1];
+      String schemaName = levels[2];
+      String tableName = levels[3];
       
       // Prepare Gravitino create table request
       GravitinoModels.CreateTableRequest createRequest = new GravitinoModels.CreateTableRequest();
@@ -293,7 +317,7 @@ public class GravitinoNamespace implements LanceNamespace {
       createRequest.setProperties(props);
       
       // Make REST API call
-      String tablesPath = config.getTablesPath(schemaName);
+      String tablesPath = config.getTablesPath(metalake, catalog, schemaName);
       String response = restClient.post(tablesPath, createRequest);
       
       // Parse response
@@ -342,9 +366,13 @@ public class GravitinoNamespace implements LanceNamespace {
     ValidationUtil.validateDescribeTableRequest(request);
     
     try {
-      String schemaName = request.getTableIdentifier().getNamespace();
-      String tableName = request.getTableIdentifier().getName();
-      String tablePath = config.getTablePath(schemaName, tableName);
+      // Parse table levels
+      String[] levels = parseTableLevels(request.getTableIdentifier());
+      String metalake = levels[0];
+      String catalog = levels[1];
+      String schemaName = levels[2];
+      String tableName = levels[3];
+      String tablePath = config.getTablePath(metalake, catalog, schemaName, tableName);
       
       String response = restClient.get(tablePath);
       
@@ -394,9 +422,13 @@ public class GravitinoNamespace implements LanceNamespace {
     ValidationUtil.validateTableExistsRequest(request);
     
     try {
-      String schemaName = request.getTableIdentifier().getNamespace();
-      String tableName = request.getTableIdentifier().getName();
-      String tablePath = config.getTablePath(schemaName, tableName);
+      // Parse table levels
+      String[] levels = parseTableLevels(request.getTableIdentifier());
+      String metalake = levels[0];
+      String catalog = levels[1];
+      String schemaName = levels[2];
+      String tableName = levels[3];
+      String tablePath = config.getTablePath(metalake, catalog, schemaName, tableName);
       
       restClient.get(tablePath);
       return true;
@@ -413,9 +445,13 @@ public class GravitinoNamespace implements LanceNamespace {
     ValidationUtil.validateDropTableRequest(request);
     
     try {
-      String schemaName = request.getTableIdentifier().getNamespace();
-      String tableName = request.getTableIdentifier().getName();
-      String tablePath = config.getTablePath(schemaName, tableName);
+      // Parse table levels
+      String[] levels = parseTableLevels(request.getTableIdentifier());
+      String metalake = levels[0];
+      String catalog = levels[1];
+      String schemaName = levels[2];
+      String tableName = levels[3];
+      String tablePath = config.getTablePath(metalake, catalog, schemaName, tableName);
       
       // Add purge parameter if requested
       String fullPath = tablePath;
@@ -445,8 +481,12 @@ public class GravitinoNamespace implements LanceNamespace {
     ValidationUtil.validateListTablesRequest(request);
     
     try {
-      String schemaName = request.getNamespace().getName();
-      String tablesPath = config.getTablesPath(schemaName);
+      // Parse namespace levels for listing tables
+      String[] levels = parseNamespaceLevels(request.getNamespace());
+      String metalake = levels[0];
+      String catalog = levels[1];
+      String schemaName = levels[2];
+      String tablesPath = config.getTablesPath(metalake, catalog, schemaName);
       
       String response = restClient.get(tablesPath);
       
@@ -465,8 +505,10 @@ public class GravitinoNamespace implements LanceNamespace {
         for (GravitinoModels.NameIdentifier identifier : wrapper.getData().getIdentifiers()) {
           // We might want to filter by checking table properties,
           // but for now include all tables
+          // Construct full namespace path: metalake.catalog.schema
+          String fullNamespace = metalake + "." + catalog + "." + schemaName;
           tables.add(ObjectIdentifier.of(
-              ObjectIdentifier.Type.TABLE, schemaName, identifier.getName()));
+              ObjectIdentifier.Type.TABLE, fullNamespace, identifier.getName()));
         }
       }
       

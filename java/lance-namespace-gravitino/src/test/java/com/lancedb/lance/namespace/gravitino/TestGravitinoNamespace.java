@@ -62,8 +62,6 @@ public class TestGravitinoNamespace {
     
     Map<String, String> config = new HashMap<>();
     config.put("endpoint", "http://localhost:8090");
-    config.put("metalake", "test_metalake");
-    config.put("catalog", "test_catalog");
     config.put("auth_token", "test-token");
     
     namespace.initialize(config, allocator);
@@ -107,7 +105,7 @@ public class TestGravitinoNamespace {
     
     // Execute test
     CreateNamespaceRequest request = new CreateNamespaceRequest();
-    request.setNamespace(ObjectIdentifier.of(ObjectIdentifier.Type.NAMESPACE, "test_schema"));
+    request.setNamespace(ObjectIdentifier.of(ObjectIdentifier.Type.NAMESPACE, "test_metalake.test_catalog.test_schema"));
     Map<String, String> properties = new HashMap<>();
     properties.put("comment", "Test schema");
     properties.put("key1", "value1");
@@ -116,7 +114,7 @@ public class TestGravitinoNamespace {
     CreateNamespaceResponse result = namespace.createNamespace(request);
     
     assertNotNull(result);
-    assertEquals("test_schema", result.getNamespace().getName());
+    assertEquals("test_metalake.test_catalog.test_schema", result.getNamespace().getName());
     assertEquals("Test schema", result.getProperties().get("comment"));
     assertEquals("value1", result.getProperties().get("key1"));
   }
@@ -146,12 +144,12 @@ public class TestGravitinoNamespace {
     
     // Execute test
     DescribeNamespaceRequest request = new DescribeNamespaceRequest();
-    request.setNamespace(ObjectIdentifier.of(ObjectIdentifier.Type.NAMESPACE, "test_schema"));
+    request.setNamespace(ObjectIdentifier.of(ObjectIdentifier.Type.NAMESPACE, "test_metalake.test_catalog.test_schema"));
     
     DescribeNamespaceResponse result = namespace.describeNamespace(request);
     
     assertNotNull(result);
-    assertEquals("test_schema", result.getNamespace().getName());
+    assertEquals("test_metalake.test_catalog.test_schema", result.getNamespace().getName());
     assertEquals("Test schema description", result.getProperties().get("comment"));
     assertEquals("value1", result.getProperties().get("property1"));
   }
@@ -174,7 +172,7 @@ public class TestGravitinoNamespace {
             .withBody(jsonResponse)));
     
     NamespaceExistsRequest request = new NamespaceExistsRequest();
-    request.setNamespace(ObjectIdentifier.of(ObjectIdentifier.Type.NAMESPACE, "existing_schema"));
+    request.setNamespace(ObjectIdentifier.of(ObjectIdentifier.Type.NAMESPACE, "test_metalake.test_catalog.existing_schema"));
     
     assertTrue(namespace.namespaceExists(request));
     
@@ -183,7 +181,7 @@ public class TestGravitinoNamespace {
         .willReturn(aResponse()
             .withStatus(404)));
     
-    request.setNamespace(ObjectIdentifier.of(ObjectIdentifier.Type.NAMESPACE, "non_existing"));
+    request.setNamespace(ObjectIdentifier.of(ObjectIdentifier.Type.NAMESPACE, "test_metalake.test_catalog.non_existing"));
     assertFalse(namespace.namespaceExists(request));
   }
   
@@ -230,7 +228,7 @@ public class TestGravitinoNamespace {
     
     // Execute test
     CreateTableRequest request = new CreateTableRequest();
-    request.setTableIdentifier(ObjectIdentifier.of(ObjectIdentifier.Type.TABLE, "test_schema", "test_table"));
+    request.setTableIdentifier(ObjectIdentifier.of(ObjectIdentifier.Type.TABLE, "test_metalake.test_catalog.test_schema", "test_table"));
     
     // Create Arrow schema
     List<Field> fields = Arrays.asList(
@@ -284,7 +282,7 @@ public class TestGravitinoNamespace {
     
     // Execute test
     ListTablesRequest request = new ListTablesRequest();
-    request.setNamespace(ObjectIdentifier.of(ObjectIdentifier.Type.NAMESPACE, "test_schema"));
+    request.setNamespace(ObjectIdentifier.of(ObjectIdentifier.Type.NAMESPACE, "test_metalake.test_catalog.test_schema"));
     
     ListTablesResponse result = namespace.listTables(request);
     
@@ -315,7 +313,7 @@ public class TestGravitinoNamespace {
     
     // Execute test
     DropTableRequest request = new DropTableRequest();
-    request.setTableIdentifier(ObjectIdentifier.of(ObjectIdentifier.Type.TABLE, "test_schema", "test_table"));
+    request.setTableIdentifier(ObjectIdentifier.of(ObjectIdentifier.Type.TABLE, "test_metalake.test_catalog.test_schema", "test_table"));
     request.setPurge(true);
     
     DropTableResponse result = namespace.dropTable(request);
@@ -342,7 +340,7 @@ public class TestGravitinoNamespace {
     
     // Execute test - should throw exception
     CreateTableRequest request = new CreateTableRequest();
-    request.setTableIdentifier(ObjectIdentifier.of(ObjectIdentifier.Type.TABLE, "test_schema", "existing_table"));
+    request.setTableIdentifier(ObjectIdentifier.of(ObjectIdentifier.Type.TABLE, "test_metalake.test_catalog.test_schema", "existing_table"));
     
     List<Field> fields = Arrays.asList(Field.nullable("id", new ArrowType.Int(64, true)));
     Schema arrowSchema = new Schema(fields);
