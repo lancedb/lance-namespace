@@ -292,8 +292,11 @@ public class PolarisNamespace implements LanceNamespace {
 
       // Prepare table properties
       Map<String, String> properties = new HashMap<>();
+      String comment = null;
       if (request.getProperties() != null) {
         properties.putAll(request.getProperties());
+        // Extract comment to use as doc field
+        comment = properties.remove("comment");
       }
 
       // Add Lance-specific properties
@@ -308,7 +311,7 @@ public class PolarisNamespace implements LanceNamespace {
               tableName,
               TABLE_FORMAT_LANCE,
               request.getLocation(), // location from request
-              null, // doc field for comment
+              comment, // doc field from comment property
               properties);
 
       // Create table using Generic Table API

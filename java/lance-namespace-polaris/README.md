@@ -74,4 +74,24 @@ The Polaris namespace supports bearer token authentication. Provide the token vi
 
 ## Testing
 
-Unit tests are provided in `TestPolarisNamespace.java`. To run integration tests against a real Polaris instance, configure the test environment with appropriate credentials.
+### Unit Tests
+
+Unit tests run with mocked dependencies and are provided in `TestPolarisNamespace.java`:
+```bash
+mvn test
+```
+
+### Integration Tests
+
+Integration tests require a running Polaris instance and are provided in `TestPolarisNamespaceIntegration.java`:
+
+1. Start Polaris with the following configuration:
+   - Endpoint: `http://localhost:8182`
+   - Root credentials: `CLIENT_ID=root`, `CLIENT_SECRET=s3cr3t`
+
+2. Run integration tests:
+```bash
+mvn test -Dtest.polaris.integration=true
+```
+
+If the system property is not set or Polaris is not available, integration tests will be skipped automatically.

@@ -139,7 +139,7 @@ public class TestPolarisNamespace {
 
     CreateNamespaceResponse response = namespace.createNamespace(request);
 
-    assertThat(response.getId()).isEqualTo(Arrays.asList("test_catalog", "schema1"));
+    // Response doesn't have getId() method, just verify properties
     assertThat(response.getProperties()).containsEntry("key", "value");
   }
 
@@ -158,7 +158,7 @@ public class TestPolarisNamespace {
 
     DescribeNamespaceResponse response = namespace.describeNamespace(request);
 
-    assertThat(response.getId()).isEqualTo(Arrays.asList("test_catalog", "schema1"));
+    // Response doesn't have getId() method, just verify properties
     assertThat(response.getProperties()).containsEntry("description", "test schema");
   }
 
@@ -181,8 +181,7 @@ public class TestPolarisNamespace {
     ListNamespacesResponse response = namespace.listNamespaces(request);
 
     assertThat(response.getNamespaces()).hasSize(2);
-    assertThat(response.getNamespaces().get(0)).isEqualTo(Arrays.asList("test_catalog", "schema1"));
-    assertThat(response.getNamespaces().get(1)).isEqualTo(Arrays.asList("test_catalog", "schema2"));
+    assertThat(response.getNamespaces()).contains("test_catalog.schema1", "test_catalog.schema2");
   }
 
   @Test
@@ -193,7 +192,7 @@ public class TestPolarisNamespace {
     DropNamespaceResponse response = namespace.dropNamespace(request);
 
     verify(restClient).delete("/namespaces/test_catalog.schema1");
-    assertThat(response.getId()).isEqualTo(Arrays.asList("test_catalog", "schema1"));
+    // Response doesn't have getId() method, just verify the delete was called
   }
 
   @Test
@@ -205,9 +204,8 @@ public class TestPolarisNamespace {
     NamespaceExistsRequest request = new NamespaceExistsRequest();
     request.setId(Arrays.asList("test_catalog", "schema1"));
 
-    boolean exists = namespace.namespaceExists(request);
-
-    assertThat(exists).isTrue();
+    // namespaceExists returns void - it throws exception if not exists
+    namespace.namespaceExists(request); // Should not throw
   }
 
   @Test
@@ -219,9 +217,9 @@ public class TestPolarisNamespace {
     NamespaceExistsRequest request = new NamespaceExistsRequest();
     request.setId(Arrays.asList("test_catalog", "schema1"));
 
-    boolean exists = namespace.namespaceExists(request);
-
-    assertThat(exists).isFalse();
+    // namespaceExists should throw when namespace doesn't exist
+    assertThatThrownBy(() -> namespace.namespaceExists(request))
+        .isInstanceOf(LanceNamespaceException.class);
   }
 
   @Test
@@ -230,6 +228,7 @@ public class TestPolarisNamespace {
     mockTable.setName("test_table");
     mockTable.setFormat("lance");
     mockTable.setBaseLocation("s3://bucket/path/to/table");
+    mockTable.setDoc("Test table"); // Should be returned in doc field
     Map<String, String> props = new HashMap<>();
     props.put("table_type", "lance");
     mockTable.setProperties(props);
@@ -246,14 +245,14 @@ public class TestPolarisNamespace {
 
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Arrays.asList("test_catalog", "schema1", "test_table"));
-    request.setUri("s3://bucket/path/to/table");
-    request.setComment("Test table");
+    request.setLocation("s3://bucket/path/to/table");
+    request.setProperties(Collections.singletonMap("comment", "Test table"));
 
-    CreateTableResponse response = namespace.createTable(request);
+    CreateTableResponse response = namespace.createTable(request, new byte[0]);
 
-    assertThat(response.getId()).isEqualTo(Arrays.asList("test_catalog", "schema1", "test_table"));
-    assertThat(response.getUri()).isEqualTo("s3://bucket/path/to/table");
+    assertThat(response.getLocation()).isEqualTo("s3://bucket/path/to/table");
     assertThat(response.getProperties()).containsEntry("table_type", "lance");
+    assertThat(response.getProperties()).containsEntry("comment", "Test table");
   }
 
   @Test
@@ -281,9 +280,8 @@ public class TestPolarisNamespace {
 
     DescribeTableResponse response = namespace.describeTable(request);
 
-    assertThat(response.getId()).isEqualTo(Arrays.asList("test_catalog", "schema1", "test_table"));
-    assertThat(response.getUri()).isEqualTo("s3://bucket/path/to/table");
-    assertThat(response.getComment()).isEqualTo("Test table");
+    assertThat(response.getLocation()).isEqualTo("s3://bucket/path/to/table");
+    assertThat(response.getProperties()).containsEntry("comment", "Test table");
     assertThat(response.getProperties()).containsEntry("table_type", "lance");
   }
 
@@ -347,6 +345,6 @@ public class TestPolarisNamespace {
     DropTableResponse response = namespace.dropTable(request);
 
     verify(restClient).delete("/namespaces/test_catalog.schema1/generic-tables/test_table");
-    assertThat(response.getId()).isEqualTo(Arrays.asList("test_catalog", "schema1", "test_table"));
+    // Response doesn't have getId() method, just verify the delete was called
   }
 }
