@@ -1,11 +1,14 @@
 # Contributing to Lance Namespace
 
+The Lance Namespace codebase is at [lancedb/lance-namespace](https://github.com/lancedb/lance-namespace).
+
 ## Repository structure
 
 | Component                    | Language | Path                                   | Description                                                               |
 |------------------------------|----------|----------------------------------------|---------------------------------------------------------------------------|
 | spec                         |          | docs/src/spec                          | Lance Namespace Specification                                             |
 | Rust Reqwest Client          | Rust     | rust/lance-namespace-reqwest-client    | Generated Rust reqwest client for Lance REST Namespace                    |
+| Rust Lance Namespace Core    | Rust     | rust/lance-namespace                   | Lance Namespace Rust Core SDK                                             |
 | Python UrlLib3 Client        | Python   | python/lance_namespace_urllib3_client  | Generated Python urllib3 client for Lance REST Namespace                  |
 | Python Lance Namespace Core  | Python   | python/lance_namespace                 | Lance Namespace Python Core SDK                                           |
 | Java Apache Client           | Java     | java/lance-namespace-apache-client     | Generated Java Apache HTTP client for Lance REST Namespace                |
@@ -74,8 +77,10 @@ make gen-docs
 
 ### Understanding the Build Process
 
-The contents in the `lance-namespace` repo are for the ease of contributors to edit and preview.
+The contents in `lance-namespace/docs` are for the ease of contributors to edit and preview.
 After code merge, the contents are added to the 
 [main Lance documentation](https://github.com/lancedb/lance/tree/main/docs) 
 during the Lance doc CI build time, and is presented in the Lance website under 
-[Apache Spark integration](https://lancedb.github.io/lance/format/namespace).
+[Lance Namespace Spec](https://lancedb.github.io/lance/format/namespace).
+
+The CONTRIBUTING.md document is auto-built to the [Lance Contributing Guide](https://lancedb.github.io/lance/community/contributing/) 
