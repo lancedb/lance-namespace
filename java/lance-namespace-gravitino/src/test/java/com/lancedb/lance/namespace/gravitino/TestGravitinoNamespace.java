@@ -61,10 +61,10 @@ public class TestGravitinoNamespace {
     objectMapper = new ObjectMapper();
     
     Map<String, String> config = new HashMap<>();
-    config.put(GravitinoNamespaceConfig.GRAVITINO_ENDPOINT, "http://localhost:8090");
-    config.put(GravitinoNamespaceConfig.GRAVITINO_METALAKE, "test_metalake");
-    config.put(GravitinoNamespaceConfig.GRAVITINO_CATALOG, "test_catalog");
-    config.put(GravitinoNamespaceConfig.GRAVITINO_AUTH_TOKEN, "test-token");
+    config.put("endpoint", "http://localhost:8090");
+    config.put("metalake", "test_metalake");
+    config.put("catalog", "test_catalog");
+    config.put("auth_token", "test-token");
     
     namespace.initialize(config, allocator);
     

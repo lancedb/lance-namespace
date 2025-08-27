@@ -20,13 +20,13 @@ import java.util.Map;
 public class GravitinoNamespaceConfig {
   
   // Configuration keys
-  public static final String GRAVITINO_ENDPOINT = "gravitino.endpoint";
-  public static final String GRAVITINO_METALAKE = "gravitino.metalake";
-  public static final String GRAVITINO_CATALOG = "gravitino.catalog";
-  public static final String GRAVITINO_AUTH_TOKEN = "gravitino.auth.token";
-  public static final String GRAVITINO_CONNECT_TIMEOUT = "gravitino.connect.timeout";
-  public static final String GRAVITINO_READ_TIMEOUT = "gravitino.read.timeout";
-  public static final String GRAVITINO_MAX_RETRIES = "gravitino.max.retries";
+  public static final String GRAVITINO_ENDPOINT = "endpoint";
+  public static final String GRAVITINO_METALAKE = "metalake";
+  public static final String GRAVITINO_CATALOG = "catalog";
+  public static final String GRAVITINO_AUTH_TOKEN = "auth_token";
+  public static final String GRAVITINO_CONNECT_TIMEOUT = "connect_timeout";
+  public static final String GRAVITINO_READ_TIMEOUT = "read_timeout";
+  public static final String GRAVITINO_MAX_RETRIES = "max_retries";
   
   // Default values
   private static final String DEFAULT_ENDPOINT = "http://localhost:8090";
