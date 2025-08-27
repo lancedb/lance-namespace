@@ -99,11 +99,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param alterTableAddColumnsRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Add columns operation result (status code 200) or Indicates a bad request error. It
    *     could be caused by an unexpected request body format or other forms of request validation
@@ -194,7 +194,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -206,7 +206,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -267,11 +267,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param alterTableAlterColumnsRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Alter columns operation result (status code 200) or Indicates a bad request error. It
    *     could be caused by an unexpected request body format or other forms of request validation
@@ -363,7 +363,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -375,7 +375,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -436,11 +436,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param alterTableDropColumnsRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Drop columns operation result (status code 200) or Indicates a bad request error. It
    *     could be caused by an unexpected request body format or other forms of request validation
@@ -531,7 +531,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -543,7 +543,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -605,11 +605,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param analyzeTableQueryPlanRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Query execution plan analysis (status code 200) or Indicates a bad request error. It
    *     could be caused by an unexpected request body format or other forms of request validation
@@ -701,7 +701,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -713,7 +713,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -774,11 +774,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param countTableRowsRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Result of counting rows in a table (status code 200) or Indicates a bad request error.
    *     It could be caused by an unexpected request body format or other forms of request
@@ -869,7 +869,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -881,7 +881,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -943,11 +943,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param body Arrow IPC data (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param mode (optional)
    * @param xLanceTableLocation URI pointing to root location to create the table at (optional)
@@ -1043,7 +1043,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -1053,7 +1053,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -1134,11 +1134,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param createTableIndexRequest Index creation request (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Index created successfully (status code 200) or Indicates a bad request error. It could
    *     be caused by an unexpected request body format or other forms of request validation
@@ -1230,7 +1230,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -1245,7 +1245,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -1307,11 +1307,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param createTableTagRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Success, no content (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
@@ -1404,7 +1404,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -1416,7 +1416,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -1477,11 +1477,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param deleteFromTableRequest Delete request (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Delete successful (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
@@ -1572,7 +1572,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -1584,7 +1584,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -1645,11 +1645,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param deleteTableTagRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Success, no content (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
@@ -1733,7 +1733,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -1745,7 +1745,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -1801,11 +1801,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param deregisterTableRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Response of DeregisterTable (status code 200) or Indicates a bad request error. It
    *     could be caused by an unexpected request body format or other forms of request validation
@@ -1896,7 +1896,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -1908,7 +1908,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -1970,11 +1970,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param describeTableRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Table properties result when loading a table (status code 200) or Indicates a bad
    *     request error. It could be caused by an unexpected request body format or other forms of
@@ -2065,7 +2065,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -2077,7 +2077,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -2140,12 +2140,12 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param indexName Name of the index to get stats for (required)
    * @param describeTableIndexStatsRequest Index stats request (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Index statistics (status code 200) or Indicates a bad request error. It could be caused
    *     by an unexpected request body format or other forms of request validation failure, such as
@@ -2237,7 +2237,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -2259,7 +2259,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -2320,11 +2320,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param dropTableRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Response of DropTable (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
@@ -2415,7 +2415,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -2425,7 +2425,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -2487,12 +2487,12 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param indexName Name of the index to drop (required)
    * @param dropTableIndexRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Index drop operation result (status code 200) or Indicates a bad request error. It
    *     could be caused by an unexpected request body format or other forms of request validation
@@ -2583,7 +2583,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -2602,7 +2602,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -2664,11 +2664,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param explainTableQueryPlanRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Query execution plan explanation (status code 200) or Indicates a bad request error. It
    *     could be caused by an unexpected request body format or other forms of request validation
@@ -2760,7 +2760,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -2772,7 +2772,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -2833,11 +2833,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param getTableStatsRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Table statistics (status code 200) or Indicates a bad request error. It could be caused
    *     by an unexpected request body format or other forms of request validation failure, such as
@@ -2929,7 +2929,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -2941,7 +2941,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -3003,11 +3003,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param getTableTagVersionRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Tag version information (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
@@ -3098,7 +3098,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -3110,7 +3110,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -3174,11 +3174,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param body Arrow IPC stream containing the records to insert (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param mode How the insert should behave: - append (default): insert data to the existing table
    *     - overwrite: remove all data in the table and then insert data to it (optional, default to
@@ -3273,7 +3273,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -3288,7 +3288,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -3357,11 +3357,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param listTableIndicesRequest Index list request (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return List of indices on the table (status code 200) or Indicates a bad request error. It
    *     could be caused by an unexpected request body format or other forms of request validation
@@ -3453,7 +3453,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -3468,7 +3468,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -3535,10 +3535,10 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param pageToken (optional)
    * @param limit (optional)
@@ -3631,7 +3631,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -3639,7 +3639,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -3708,11 +3708,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param listTableVersionsRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return List of table versions (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
@@ -3803,7 +3803,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -3815,7 +3815,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -3887,12 +3887,12 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param on Column name to use for matching rows (required) (required)
    * @param body Arrow IPC stream containing the records to merge (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
    * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
@@ -3993,7 +3993,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -4017,7 +4017,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -4123,11 +4123,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param queryTableRequest Query request (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Query results in Arrow IPC file or stream format (status code 200) or Indicates a bad
    *     request error. It could be caused by an unexpected request body format or other forms of
@@ -4265,7 +4265,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -4277,7 +4277,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -4333,11 +4333,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param registerTableRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Table properties result when registering a table (status code 200) or Indicates a bad
    *     request error. It could be caused by an unexpected request body format or other forms of
@@ -4447,7 +4447,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -4459,7 +4459,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -4533,11 +4533,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param restoreTableRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Table restore operation result (status code 200) or Indicates a bad request error. It
    *     could be caused by an unexpected request body format or other forms of request validation
@@ -4628,7 +4628,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -4640,7 +4640,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -4701,11 +4701,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param tableExistsRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Success, no content (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
@@ -4790,7 +4790,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -4800,7 +4800,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -4856,11 +4856,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param updateTableRequest Update request (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Update successful (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
@@ -4951,7 +4951,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -4963,7 +4963,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)
@@ -5024,11 +5024,11 @@ public interface TableApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param updateTableTagRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Success, no content (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
@@ -5112,7 +5112,7 @@ public interface TableApi {
       @Parameter(
               name = "id",
               description =
-                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. ",
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
               required = true,
               in = ParameterIn.PATH)
           @PathVariable("id")
@@ -5124,7 +5124,7 @@ public interface TableApi {
       @Parameter(
               name = "delimiter",
               description =
-                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used. ",
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "delimiter", required = false)

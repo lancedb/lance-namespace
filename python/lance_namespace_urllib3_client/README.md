@@ -76,9 +76,9 @@ configuration = lance_namespace_urllib3_client.Configuration(
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.DataApi(api_client)
-    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace. 
+    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
     alter_table_add_columns_request = lance_namespace_urllib3_client.AlterTableAddColumnsRequest() # AlterTableAddColumnsRequest | 
-    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `.` delimiter must be used.  (optional)
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
 
     try:
         # Add new columns to table schema

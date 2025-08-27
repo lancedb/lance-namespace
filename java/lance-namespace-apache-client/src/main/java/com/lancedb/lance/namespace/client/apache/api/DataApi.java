@@ -62,11 +62,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param alterTableAddColumnsRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return AlterTableAddColumnsResponse
    * @throws ApiException if fails to make API call
@@ -84,11 +84,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param alterTableAddColumnsRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return AlterTableAddColumnsResponse
@@ -165,11 +165,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param analyzeTableQueryPlanRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return AnalyzeTableQueryPlanResponse
    * @throws ApiException if fails to make API call
@@ -187,11 +187,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param analyzeTableQueryPlanRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return AnalyzeTableQueryPlanResponse
@@ -267,11 +267,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param countTableRowsRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Long
    * @throws ApiException if fails to make API call
@@ -287,11 +287,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param countTableRowsRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return Long
@@ -373,11 +373,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param body Arrow IPC data (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param mode (optional)
    * @param xLanceTableLocation URI pointing to root location to create the table at (optional)
@@ -416,11 +416,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param body Arrow IPC data (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param mode (optional)
    * @param xLanceTableLocation URI pointing to root location to create the table at (optional)
@@ -507,11 +507,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param deleteFromTableRequest Delete request (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return DeleteFromTableResponse
    * @throws ApiException if fails to make API call
@@ -527,11 +527,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param deleteFromTableRequest Delete request (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return DeleteFromTableResponse
@@ -608,11 +608,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param explainTableQueryPlanRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return ExplainTableQueryPlanResponse
    * @throws ApiException if fails to make API call
@@ -630,11 +630,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param explainTableQueryPlanRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return ExplainTableQueryPlanResponse
@@ -714,11 +714,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param body Arrow IPC stream containing the records to insert (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param mode How the insert should behave: - append (default): insert data to the existing table
    *     - overwrite: remove all data in the table and then insert data to it (optional, default to
@@ -740,11 +740,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param body Arrow IPC stream containing the records to insert (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param mode How the insert should behave: - append (default): insert data to the existing table
    *     - overwrite: remove all data in the table and then insert data to it (optional, default to
@@ -831,12 +831,12 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param on Column name to use for matching rows (required) (required)
    * @param body Arrow IPC stream containing the records to merge (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
    * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
@@ -890,12 +890,12 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param on Column name to use for matching rows (required) (required)
    * @param body Arrow IPC stream containing the records to merge (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
    * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
@@ -1005,11 +1005,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param queryTableRequest Query request (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return byte[]
    * @throws ApiException if fails to make API call
@@ -1025,11 +1025,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param queryTableRequest Query request (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return byte[]
@@ -1104,11 +1104,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param updateTableRequest Update request (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return UpdateTableResponse
    * @throws ApiException if fails to make API call
@@ -1123,11 +1123,11 @@ public class DataApi extends BaseApi {
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
-   *     For example, &#x60;v1/namespace/./list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param updateTableRequest Update request (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
-   *     Lance Namespace spec. When not specified, the &#x60;.&#x60; delimiter must be used.
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return UpdateTableResponse
