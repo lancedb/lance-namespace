@@ -14,16 +14,16 @@ The Lance Polaris namespace accepts the following configuration properties:
 | Property          | Required | Description                                    | Default | Example                    |
 |-------------------|----------|------------------------------------------------|---------|----------------------------|
 | `endpoint`        | Yes      | Polaris server endpoint URL                   |         | `http://localhost:8182`    |
-| `auth.token`      | No       | Bearer token for authentication               |         | `your-auth-token`          |
-| `connect.timeout` | No       | Connection timeout in milliseconds            | 10000   | `30000`                    |
-| `read.timeout`    | No       | Read timeout in milliseconds                  | 30000   | `60000`                    |
-| `max.retries`     | No       | Maximum number of retries for failed requests | 3       | `5`                        |
+| `auth_token`      | No       | Bearer token for authentication               |         | `your-auth-token`          |
+| `connect_timeout` | No       | Connection timeout in milliseconds            | 10000   | `30000`                    |
+| `read_timeout`    | No       | Read timeout in milliseconds                  | 30000   | `60000`                    |
+| `max_retries`     | No       | Maximum number of retries for failed requests | 3       | `5`                        |
 
 ### Authentication
 
 The Polaris namespace supports bearer token authentication:
 
-1. **Bearer Token**: Set `auth.token` with a valid Polaris access token
+1. **Bearer Token**: Set `auth_token` with a valid Polaris access token
 2. **No Authentication**: For local or unsecured Polaris deployments
 
 ## Namespace Mapping

@@ -72,7 +72,7 @@ public class TestPolarisNamespace {
 
     config = new HashMap<>();
     config.put("endpoint", "http://localhost:8182");
-    config.put("auth.token", "test-token");
+    config.put("auth_token", "test-token");
 
     // Initialize namespace with config
     namespace.initialize(config, allocator);

@@ -131,13 +131,13 @@ public class TestPolarisNamespaceIntegration {
     // Try to get OAuth token first
     String token = getOAuthToken();
     if (token != null) {
-      config.put("auth.token", token);
+      config.put("auth_token", token);
     } else {
       // Fall back to basic auth
       String basicAuth =
           java.util.Base64.getEncoder()
               .encodeToString((CLIENT_ID + ":" + CLIENT_SECRET).getBytes());
-      config.put("auth.token", basicAuth);
+      config.put("auth_token", basicAuth);
     }
 
     namespace.initialize(config, allocator);
