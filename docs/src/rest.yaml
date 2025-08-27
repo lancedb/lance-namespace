@@ -1555,7 +1555,7 @@ components:
       description: |
         `string identifier` of an object in a namespace, following the Lance Namespace spec.
         When the value is equal to the delimiter, it represents the root namespace.
-        For example, `v1/namespace/./list` performs a `ListNamespace` on the root namespace.
+        For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.
       in: path
       required: true
       schema:
@@ -1564,7 +1564,7 @@ components:
       name: delimiter
       description: |
         An optional delimiter of the `string identifier`, following the Lance Namespace spec.
-        When not specified, the `.` delimiter must be used.
+        When not specified, the `$` delimiter must be used.
       in: query
       required: false
       schema:
