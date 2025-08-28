@@ -50,7 +50,7 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        java-version: [ 11, 17 ]
+        java-version: [ 17 ]
     steps:
       - name: Install dependencies
         run: |
