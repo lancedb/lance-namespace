@@ -1683,6 +1683,52 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/table/{id}/create-empty:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
+    post:
+      description: |
+        Create an empty table with the given name without touching storage.
+        This is a metadata-only operation that records the table existence and sets up aspects like access control.
+      operationId: CreateEmptyTable
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEmptyTableRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateEmptyTableResponse'
+          description: Table properties result when creating an empty table
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "409":
+          $ref: '#/components/responses/ConflictErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Create an empty table
+      tags:
+      - Table
+      - Metadata
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/table/{id}/tags/create:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -3414,6 +3460,51 @@ components:
           type: string
         schema:
           $ref: '#/components/schemas/JsonArrowSchema'
+        properties:
+          additionalProperties:
+            type: string
+        storage_options:
+          additionalProperties:
+            type: string
+          description: |
+            Configuration options to be used to access storage. The available
+            options depend on the type of storage in use. These will be
+            passed directly to Lance to initialize storage access.
+    CreateEmptyTableRequest:
+      description: |
+        Request for creating an empty table.
+      example:
+        location: location
+        id:
+        - id
+        - id
+        properties:
+          key: properties
+      properties:
+        id:
+          items:
+            type: string
+          type: array
+        location:
+          description: |
+            Optional storage location for the table.
+            If not provided, the namespace implementation should determine the table location.
+          type: string
+        properties:
+          additionalProperties:
+            type: string
+    CreateEmptyTableResponse:
+      description: |
+        Response for creating an empty table.
+      example:
+        location: location
+        properties:
+          key: properties
+        storage_options:
+          key: storage_options
+      properties:
+        location:
+          type: string
         properties:
           additionalProperties:
             type: string

@@ -17,14 +17,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
+import java.util.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-@Schema(
-    name = "CreateEmptyTableRequest",
-    description = "Request for creating an empty table (metadata only)")
+/** Request for creating an empty table. */
+@Schema(name = "CreateEmptyTableRequest", description = "Request for creating an empty table. ")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
@@ -33,6 +36,8 @@ public class CreateEmptyTableRequest {
   @Valid private List<String> id = new ArrayList<>();
 
   private String location;
+
+  @Valid private Map<String, String> properties = new HashMap<>();
 
   public CreateEmptyTableRequest id(List<String> id) {
     this.id = id;
@@ -68,11 +73,16 @@ public class CreateEmptyTableRequest {
   }
 
   /**
-   * Get location
+   * Optional storage location for the table. If not provided, the namespace implementation should
+   * determine the table location.
    *
    * @return location
    */
-  @Schema(name = "location", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "location",
+      description =
+          "Optional storage location for the table. If not provided, the namespace implementation should determine the table location. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("location")
   public String getLocation() {
     return location;
@@ -80,6 +90,34 @@ public class CreateEmptyTableRequest {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public CreateEmptyTableRequest properties(Map<String, String> properties) {
+    this.properties = properties;
+    return this;
+  }
+
+  public CreateEmptyTableRequest putPropertiesItem(String key, String propertiesItem) {
+    if (this.properties == null) {
+      this.properties = new HashMap<>();
+    }
+    this.properties.put(key, propertiesItem);
+    return this;
+  }
+
+  /**
+   * Get properties
+   *
+   * @return properties
+   */
+  @Schema(name = "properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("properties")
+  public Map<String, String> getProperties() {
+    return properties;
+  }
+
+  public void setProperties(Map<String, String> properties) {
+    this.properties = properties;
   }
 
   @Override
@@ -92,12 +130,13 @@ public class CreateEmptyTableRequest {
     }
     CreateEmptyTableRequest createEmptyTableRequest = (CreateEmptyTableRequest) o;
     return Objects.equals(this.id, createEmptyTableRequest.id)
-        && Objects.equals(this.location, createEmptyTableRequest.location);
+        && Objects.equals(this.location, createEmptyTableRequest.location)
+        && Objects.equals(this.properties, createEmptyTableRequest.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location);
+    return Objects.hash(id, location, properties);
   }
 
   @Override
@@ -106,6 +145,7 @@ public class CreateEmptyTableRequest {
     sb.append("class CreateEmptyTableRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -120,4 +160,3 @@ public class CreateEmptyTableRequest {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

@@ -9,5 +9,5 @@
 ## Response Schema
 
 ```yaml
---8<-- "src/rest.yaml:2873:2883"
+--8<-- "src/rest.yaml:2953:2963"
 ```

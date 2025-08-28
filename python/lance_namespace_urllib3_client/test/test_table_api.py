@@ -61,6 +61,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_create_empty_table(self) -> None:
+        """Test case for create_empty_table
+
+        Create an empty table
+        """
+        pass
+
     def test_create_table(self) -> None:
         """Test case for create_table
 

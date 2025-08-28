@@ -9,17 +9,17 @@
 ## Request Schema
 
 ```yaml
---8<-- "src/rest.yaml:3043:3057"
+--8<-- "src/rest.yaml:3123:3137"
 ```
 ## Response Schema
 
 ```yaml
---8<-- "src/rest.yaml:3073:3083"
+--8<-- "src/rest.yaml:3153:3163"
 ```
 
 ## Related Components Schema
 ### Column Alteration
 
 ```yaml
---8<-- "src/rest.yaml:3058:3072"
+--8<-- "src/rest.yaml:3138:3152"
 ```

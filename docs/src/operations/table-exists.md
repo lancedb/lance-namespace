@@ -9,7 +9,7 @@
 ## Request Schema
 
 ```yaml
---8<-- "src/rest.yaml:2460:2474"
+--8<-- "src/rest.yaml:2540:2554"
 ```
 ## Response
 

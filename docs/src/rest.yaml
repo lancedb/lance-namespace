@@ -2501,7 +2501,7 @@ components:
     CreateEmptyTableRequest:
       type: object
       description: |
-        Request for creating an empty table (metadata only).
+        Request for creating an empty table.
       properties:
         id:
           type: array

@@ -20,41 +20,22 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-@Schema(name = "CreateEmptyTableResponse", description = "Response for creating an empty table")
+/** Response for creating an empty table. */
+@Schema(name = "CreateEmptyTableResponse", description = "Response for creating an empty table. ")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class CreateEmptyTableResponse {
-
-  private Long version;
 
   private String location;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
   @Valid private Map<String, String> storageOptions = new HashMap<>();
-
-  public CreateEmptyTableResponse version(Long version) {
-    this.version = version;
-    return this;
-  }
-
-  /**
-   * Get version minimum: 0
-   *
-   * @return version
-   */
-  @Min(0L)
-  @Schema(name = "version", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("version")
-  public Long getVersion() {
-    return version;
-  }
-
-  public void setVersion(Long version) {
-    this.version = version;
-  }
 
   public CreateEmptyTableResponse location(String location) {
     this.location = location;
@@ -146,22 +127,20 @@ public class CreateEmptyTableResponse {
       return false;
     }
     CreateEmptyTableResponse createEmptyTableResponse = (CreateEmptyTableResponse) o;
-    return Objects.equals(this.version, createEmptyTableResponse.version)
-        && Objects.equals(this.location, createEmptyTableResponse.location)
+    return Objects.equals(this.location, createEmptyTableResponse.location)
         && Objects.equals(this.properties, createEmptyTableResponse.properties)
         && Objects.equals(this.storageOptions, createEmptyTableResponse.storageOptions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version, location, properties, storageOptions);
+    return Objects.hash(location, properties, storageOptions);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateEmptyTableResponse {\n");
-    sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
@@ -179,4 +158,3 @@ public class CreateEmptyTableResponse {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

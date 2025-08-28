@@ -36,4 +36,3 @@ public class CreateEmptyTableRequest {
     this.location = location;
   }
 }
-

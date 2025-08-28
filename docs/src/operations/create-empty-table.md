@@ -5,17 +5,17 @@ Create an empty table (metadata only) without touching storage.
 ## Description
 
 ```yaml
---8<-- "src/rest.yaml:1380:1384"
+--8<-- "src/rest.yaml:1381:1383"
 ```
 
 ## Request Schema
 
 ```yaml
---8<-- "src/rest.yaml:2460:2471"
+--8<-- "src/rest.yaml:2501:2519"
 ```
 
 ## Response Schema
 
 ```yaml
---8<-- "src/rest.yaml:2473:2495"
+--8<-- "src/rest.yaml:2520:2539"
 ```

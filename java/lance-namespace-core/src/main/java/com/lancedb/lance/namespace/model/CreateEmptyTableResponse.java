@@ -55,4 +55,3 @@ public class CreateEmptyTableResponse {
     this.storageOptions = storageOptions;
   }
 }
-
