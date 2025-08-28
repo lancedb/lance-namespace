@@ -17,6 +17,8 @@ import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.ObjectIdentifier;
 import com.lancedb.lance.namespace.server.springboot.api.TableApi;
 import com.lancedb.lance.namespace.server.springboot.model.CountTableRowsRequest;
+import com.lancedb.lance.namespace.server.springboot.model.CreateEmptyTableRequest;
+import com.lancedb.lance.namespace.server.springboot.model.CreateEmptyTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.CreateTableIndexRequest;
 import com.lancedb.lance.namespace.server.springboot.model.CreateTableIndexResponse;
 import com.lancedb.lance.namespace.server.springboot.model.CreateTableRequest;
@@ -140,6 +142,16 @@ public class TableController implements TableApi {
     } catch (IOException e) {
       throw new RuntimeException("Failed to read request body", e);
     }
+  }
+
+  @Override
+  public ResponseEntity<CreateEmptyTableResponse> createEmptyTable(
+      String id, CreateEmptyTableRequest createEmptyTableRequest, Optional<String> delimiter) {
+    createEmptyTableRequest.setId(ObjectIdentifier.of(id, delimiter.orElse(null)).listStyleId());
+    return ResponseEntity.ok(
+        ClientToServerResponse.createEmptyTable(
+            delegate.createEmptyTable(
+                ServerToClientRequest.createEmptyTable(createEmptyTableRequest))));
   }
 
   @Override

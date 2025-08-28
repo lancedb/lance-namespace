@@ -20,6 +20,7 @@ import com.lancedb.lance.namespace.model.AlterTransactionSetProperty;
 import com.lancedb.lance.namespace.model.AlterTransactionSetStatus;
 import com.lancedb.lance.namespace.model.AlterTransactionUnsetProperty;
 import com.lancedb.lance.namespace.model.CountTableRowsRequest;
+import com.lancedb.lance.namespace.model.CreateEmptyTableRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
 import com.lancedb.lance.namespace.model.CreateTableRequest;
@@ -205,6 +206,14 @@ public class ServerToClientRequest {
     converted.setId(request.getId());
     converted.setLocation(request.getLocation());
     converted.setProperties(request.getProperties());
+    return converted;
+  }
+
+  public static CreateEmptyTableRequest createEmptyTable(
+      com.lancedb.lance.namespace.server.springboot.model.CreateEmptyTableRequest request) {
+    CreateEmptyTableRequest converted = new CreateEmptyTableRequest();
+    converted.setId(ObjectIdentifier.of(request.getId()));
+    converted.setLocation(request.getLocation());
     return converted;
   }
 

@@ -14,6 +14,7 @@
 package com.lancedb.lance.namespace.adapter;
 
 import com.lancedb.lance.namespace.server.springboot.model.AlterTransactionResponse;
+import com.lancedb.lance.namespace.server.springboot.model.CreateEmptyTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.server.springboot.model.CreateTableIndexResponse;
 import com.lancedb.lance.namespace.server.springboot.model.CreateTableResponse;
@@ -200,6 +201,16 @@ public class ClientToServerResponse {
     converted.setLocation(response.getLocation());
     converted.setVersion(response.getVersion());
     converted.setSchema(convertJsonSchema(response.getSchema()));
+    converted.setProperties(response.getProperties());
+    converted.setStorageOptions(response.getStorageOptions());
+    return converted;
+  }
+
+  public static CreateEmptyTableResponse createEmptyTable(
+      com.lancedb.lance.namespace.model.CreateEmptyTableResponse response) {
+    CreateEmptyTableResponse converted = new CreateEmptyTableResponse();
+    converted.setLocation(response.getLocation());
+    converted.setVersion(response.getVersion());
     converted.setProperties(response.getProperties());
     converted.setStorageOptions(response.getStorageOptions());
     return converted;

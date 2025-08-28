@@ -22,6 +22,8 @@ import com.lancedb.lance.namespace.server.springboot.model.AlterTableDropColumns
 import com.lancedb.lance.namespace.server.springboot.model.AnalyzeTableQueryPlanRequest;
 import com.lancedb.lance.namespace.server.springboot.model.AnalyzeTableQueryPlanResponse;
 import com.lancedb.lance.namespace.server.springboot.model.CountTableRowsRequest;
+import com.lancedb.lance.namespace.server.springboot.model.CreateEmptyTableRequest;
+import com.lancedb.lance.namespace.server.springboot.model.CreateEmptyTableResponse;
 import com.lancedb.lance.namespace.server.springboot.model.CreateTableIndexRequest;
 import com.lancedb.lance.namespace.server.springboot.model.CreateTableIndexResponse;
 import com.lancedb.lance.namespace.server.springboot.model.CreateTableResponse;
@@ -1117,6 +1119,140 @@ public interface TableApi {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
                       "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+              }
+            });
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
+
+  /**
+   * POST /v1/table/{id}/create-empty : Create an empty table (metadata only) Create an empty table
+   * with the given name without touching storage. This is a metadata-only operation that records
+   * the table existence and sets up access control.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   * @param createEmptyTableRequest Request body containing optional location (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return Table properties result when creating an empty table (status code 200) or other error
+   *     responses
+   */
+  @Operation(
+      operationId = "createEmptyTable",
+      summary = "Create an empty table (metadata only)",
+      description =
+          "Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up access control.",
+      tags = {"Table", "Metadata"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Table properties result when creating an empty table",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = CreateEmptyTableResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "400",
+            description =
+                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "401",
+            description =
+                "Unauthorized. The request lacks valid authentication credentials for the operation.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "403",
+            description = "Forbidden. Authenticated user does not have the necessary permissions.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "404",
+            description = "A server-side problem that means can not find the specified resource.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "409",
+            description = "A table with the same name already exists.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "503",
+            description =
+                "The service is not ready to handle the request. The client should wait and retry.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "5XX",
+            description =
+                "A server-side problem that might not be addressable from the client side.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            })
+      })
+  @RequestMapping(
+      method = RequestMethod.POST,
+      value = "/v1/table/{id}/create-empty",
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  default ResponseEntity<CreateEmptyTableResponse> createEmptyTable(
+      @Parameter(
+              name = "id",
+              description =
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace.",
+              required = true,
+              in = ParameterIn.PATH)
+          @PathVariable("id")
+          String id,
+      @Parameter(
+              name = "CreateEmptyTableRequest",
+              description = "Request body containing optional location",
+              required = true)
+          @Valid
+          @RequestBody
+          CreateEmptyTableRequest createEmptyTableRequest,
+      @Parameter(
+              name = "delimiter",
+              description =
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter) {
+    getRequest()
+        .ifPresent(
+            request -> {
+              for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"location\" : \"location\", \"version\" : 0, \"properties\" : { \"key\" : \"properties\" }, \"storage_options\" : { \"key\" : \"storage_options\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
