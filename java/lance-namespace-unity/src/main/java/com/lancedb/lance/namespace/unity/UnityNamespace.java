@@ -18,6 +18,8 @@ import com.lancedb.lance.WriteParams;
 import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.LanceNamespaceException;
 import com.lancedb.lance.namespace.ObjectIdentifier;
+import com.lancedb.lance.namespace.model.CreateEmptyTableRequest;
+import com.lancedb.lance.namespace.model.CreateEmptyTableResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.CreateTableRequest;
@@ -333,6 +335,12 @@ public class UnityNamespace implements LanceNamespace {
 
   @Override
   public CreateTableResponse createTable(CreateTableRequest request, byte[] requestData) {
+    // Validate that requestData is a valid Arrow IPC stream
+    ValidationUtil.checkNotNull(
+        requestData, "Request data (Arrow IPC stream) is required for createTable");
+    ValidationUtil.checkArgument(
+        requestData.length > 0, "Request data (Arrow IPC stream) cannot be empty");
+
     ObjectIdentifier tableId = ObjectIdentifier.of(request.getId());
     ValidationUtil.checkArgument(
         tableId.levels() == 3, "Expect a 3-level table identifier but get %s", tableId);
@@ -402,6 +410,83 @@ public class UnityNamespace implements LanceNamespace {
       throw new LanceNamespaceException(500, "Failed to create table: " + e.getMessage());
     } catch (Exception e) {
       throw new LanceNamespaceException(500, "Failed to create table: " + e.getMessage());
+    }
+  }
+
+  @Override
+  public CreateEmptyTableResponse createEmptyTable(CreateEmptyTableRequest request) {
+    ObjectIdentifier tableId = ObjectIdentifier.of(request.getId());
+    ValidationUtil.checkArgument(
+        tableId.levels() == 3, "Expect a 3-level table identifier but get %s", tableId);
+
+    String catalog = tableId.levelAtListPos(0);
+    String schema = tableId.levelAtListPos(1);
+    String table = tableId.levelAtListPos(2);
+
+    if (!catalog.equals(config.getCatalog())) {
+      throw LanceNamespaceException.badRequest(
+          "Cannot create empty table in catalog",
+          "INVALID_CATALOG",
+          catalog,
+          "Expected: " + config.getCatalog());
+    }
+
+    try {
+      // Determine table location
+      String tablePath = request.getLocation();
+      if (tablePath == null || tablePath.isEmpty()) {
+        tablePath = config.getRoot() + "/" + catalog + "/" + schema + "/" + table;
+      }
+
+      // Create Unity table metadata without creating Lance dataset
+      UnityModels.CreateTable createTable = new UnityModels.CreateTable();
+      createTable.setName(table);
+      createTable.setCatalogName(catalog);
+      createTable.setSchemaName(schema);
+      createTable.setTableType(TABLE_TYPE_EXTERNAL);
+      // Unity doesn't recognize LANCE format, use TEXT as a generic format for external tables
+      createTable.setDataSourceFormat("TEXT");
+      // For empty table, create minimal schema with just an ID column
+      List<UnityModels.ColumnInfo> columns = new ArrayList<>();
+      UnityModels.ColumnInfo idColumn = new UnityModels.ColumnInfo();
+      idColumn.setName("__placeholder_id");
+      idColumn.setTypeText("BIGINT");
+      idColumn.setTypeName("BIGINT");
+      idColumn.setTypeJson("{\"type\":\"long\"}");
+      idColumn.setPosition(0);
+      idColumn.setNullable(true);
+      columns.add(idColumn);
+      createTable.setColumns(columns);
+      createTable.setStorageLocation(tablePath);
+
+      Map<String, String> properties = new HashMap<>();
+      properties.put(TABLE_TYPE_KEY, TABLE_TYPE_LANCE);
+      properties.put(MANAGED_BY_KEY, "catalog");
+      // Don't set version for empty table
+      if (request.getProperties() != null) {
+        properties.putAll(request.getProperties());
+      }
+      createTable.setProperties(properties);
+
+      UnityModels.TableInfo tableInfo =
+          restClient.post("/tables", createTable, UnityModels.TableInfo.class);
+
+      CreateEmptyTableResponse response = new CreateEmptyTableResponse();
+      response.setLocation(tablePath);
+      response.setProperties(tableInfo.getProperties());
+      return response;
+
+    } catch (RestClient.RestClientException e) {
+      if (e.getStatusCode() == 409) {
+        throw LanceNamespaceException.conflict(
+            "Table already exists",
+            "TABLE_EXISTS",
+            request.getId().toString(),
+            e.getResponseBody());
+      }
+      throw new LanceNamespaceException(500, "Failed to create empty table: " + e.getMessage());
+    } catch (Exception e) {
+      throw new LanceNamespaceException(500, "Failed to create empty table: " + e.getMessage());
     }
   }
 

@@ -461,9 +461,6 @@ public class GlueNamespace implements LanceNamespace, Closeable {
       params.put(TABLE_TYPE_PROP, LANCE_TABLE_TYPE_VALUE);
       params.put(MANAGED_BY_PROP, params.getOrDefault(MANAGED_BY_PROP, STORAGE_VALUE));
 
-      // For empty table, we don't have a version yet
-      params.put("empty_table", "true");
-
       TableInput tableInput =
           TableInput.builder()
               .name(tableName)

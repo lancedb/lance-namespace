@@ -25,6 +25,8 @@ import com.lancedb.lance.namespace.lancedb.jackson.LanceNamespaceJacksonModule;
 import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.AlterTransactionResponse;
 import com.lancedb.lance.namespace.model.CountTableRowsRequest;
+import com.lancedb.lance.namespace.model.CreateEmptyTableRequest;
+import com.lancedb.lance.namespace.model.CreateEmptyTableResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
@@ -207,6 +209,19 @@ public class RestNamespace implements LanceNamespace {
           request.getMode() == null ? null : request.getMode().getValue(),
           request.getLocation(),
           serializedTableProperties,
+          config.getAdditionalHeaders());
+    } catch (ApiException e) {
+      throw new LanceNamespaceException(e);
+    }
+  }
+
+  @Override
+  public CreateEmptyTableResponse createEmptyTable(CreateEmptyTableRequest request) {
+    try {
+      return tableApi.createEmptyTable(
+          ObjectIdentifier.of(request.getId()).stringStyleId(config.getDelimiter()),
+          request,
+          config.getDelimiter(),
           config.getAdditionalHeaders());
     } catch (ApiException e) {
       throw new LanceNamespaceException(e);
