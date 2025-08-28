@@ -19,6 +19,8 @@ import com.lancedb.lance.namespace.Configurable;
 import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.LanceNamespaceException;
 import com.lancedb.lance.namespace.ObjectIdentifier;
+import com.lancedb.lance.namespace.model.CreateEmptyTableRequest;
+import com.lancedb.lance.namespace.model.CreateEmptyTableResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.CreateTableRequest;
@@ -314,6 +316,10 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
 
   @Override
   public CreateTableResponse createTable(CreateTableRequest request, byte[] requestData) {
+    // Validate that requestData is a valid Arrow IPC stream
+    ValidationUtil.checkNotNull(requestData, "Request data (Arrow IPC stream) is required for createTable");
+    ValidationUtil.checkArgument(requestData.length > 0, "Request data (Arrow IPC stream) cannot be empty");
+    
     ObjectIdentifier tableId = ObjectIdentifier.of(request.getId());
     Schema schema = JsonArrowSchemaConverter.convertToArrowSchema(request.getSchema());
 
@@ -330,6 +336,26 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
     CreateTableResponse response = new CreateTableResponse();
     response.setLocation(location);
     response.setVersion(1L);
+    return response;
+  }
+
+  @Override
+  public CreateEmptyTableResponse createEmptyTable(CreateEmptyTableRequest request) {
+    ObjectIdentifier tableId = ObjectIdentifier.of(request.getId());
+    
+    ValidationUtil.checkArgument(
+        tableId.levels() == 3, "Expect 3-level table identifier but get %s", tableId);
+
+    String location = request.getLocation();
+    if (location == null || location.isEmpty()) {
+      location = getDefaultTableLocation(tableId.levelAtListPos(1), tableId.levelAtListPos(2));
+    }
+
+    // Create table in metastore without data (pass null for requestData)
+    doCreateTable(tableId, null, location, request.getProperties(), null);
+
+    CreateEmptyTableResponse response = new CreateEmptyTableResponse();
+    response.setLocation(location);
     return response;
   }
 

@@ -17,6 +17,8 @@ import com.lancedb.lance.Dataset;
 import com.lancedb.lance.WriteParams;
 import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.LanceNamespaceException;
+import com.lancedb.lance.namespace.model.CreateEmptyTableRequest;
+import com.lancedb.lance.namespace.model.CreateEmptyTableResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.CreateTableRequest;
@@ -102,6 +104,13 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
   @Override
   public CreateTableResponse createTable(CreateTableRequest request, byte[] requestData) {
     String tableName = tableNameFromId(request.getId());
+    
+    // Validate that requestData is a valid Arrow IPC stream
+    ValidationUtil.checkNotNull(requestData, "Request data (Arrow IPC stream) is required for createTable");
+    ValidationUtil.checkArgument(requestData.length > 0, "Request data (Arrow IPC stream) cannot be empty");
+    
+    // For now, we're using the schema from the request, but in a full implementation
+    // this would parse the Arrow IPC stream to get the schema and data
     ValidationUtil.checkNotNull(request.getSchema(), "Schema is required in CreateTableRequest");
     Schema schema = JsonArrowSchemaConverter.convertToArrowSchema(request.getSchema());
 
@@ -120,11 +129,54 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
         request.getLocation(),
         tablePath);
 
-    // Create the Lance dataset
+    // Create the Lance dataset with data
     Dataset.create(allocator, tablePath, schema, writeParams);
     CreateTableResponse response = new CreateTableResponse();
     response.setLocation(tablePath);
     response.setVersion(1L);
+    response.setStorageOptions(config.getStorageOptions());
+    return response;
+  }
+
+  @Override
+  public CreateEmptyTableResponse createEmptyTable(CreateEmptyTableRequest request) {
+    String tableName = tableNameFromId(request.getId());
+    String tablePath = tableFullPath(tableName);
+    
+    ValidationUtil.checkArgument(
+        request.getLocation() == null
+            || OpenDalUtil.stripTrailingSlash(request.getLocation()).equals(tablePath),
+        "Cannot create table %s at location %s, must be at location %s",
+        tableName,
+        request.getLocation(),
+        tablePath);
+
+    // Check if table already exists
+    String versionsPath = tableVersionsPath(tableName);
+    List<Entry> versionEntries =
+        operator.list(versionsPath, ListOptions.builder().limit(1).build());
+    if (!versionEntries.isEmpty()) {
+      throw LanceNamespaceException.alreadyExists(
+          "Table already exists: " + tableName,
+          "TABLE_ALREADY_EXISTS",
+          tableName,
+          "The table already exists in the namespace");
+    }
+
+    // Create .lance-reserved file to mark table existence
+    String reservedFilePath = tablePath + "/.lance-reserved";
+    try {
+      operator.write(reservedFilePath, new byte[0]);
+    } catch (Exception e) {
+      throw LanceNamespaceException.internal(
+          "Failed to create empty table: " + tableName,
+          "CREATE_EMPTY_TABLE_FAILED",
+          tableName,
+          "Failed to create .lance-reserved file", e);
+    }
+
+    CreateEmptyTableResponse response = new CreateEmptyTableResponse();
+    response.setLocation(tablePath);
     response.setStorageOptions(config.getStorageOptions());
     return response;
   }
@@ -189,16 +241,28 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
 
     LOG.debug("Checking if table {} exists", tableName);
 
+    // Check if table has versions (actual Lance table)
     String versionsPath = tableVersionsPath(tableName);
     List<Entry> versionEntries =
         operator.list(versionsPath, ListOptions.builder().limit(1).build());
-    if (versionEntries.isEmpty()) {
-      throw LanceNamespaceException.notFound(
-          "Table does not exist: " + tableName,
-          "TABLE_NOT_FOUND",
-          tableName,
-          "The requested table was not found in the namespace");
+    if (!versionEntries.isEmpty()) {
+      return; // Table exists with data
     }
+
+    // Check if .lance-reserved file exists (empty table created with createEmptyTable)
+    String reservedFilePath = tableFullPath(tableName) + "/.lance-reserved";
+    try {
+      operator.stat(reservedFilePath);
+      return; // Table exists as empty table
+    } catch (Exception e) {
+      // File doesn't exist, continue to throw not found
+    }
+
+    throw LanceNamespaceException.notFound(
+        "Table does not exist: " + tableName,
+        "TABLE_NOT_FOUND",
+        tableName,
+        "The requested table was not found in the namespace");
   }
 
   @Override
