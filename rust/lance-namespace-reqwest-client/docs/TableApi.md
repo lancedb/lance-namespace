@@ -203,7 +203,7 @@ No authorization required
 > models::CreateEmptyTableResponse create_empty_table(id, create_empty_table_request, delimiter)
 Create an empty table
 
-Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control. 
+Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control.  For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory to mark the table's existence without creating actual Lance data files. 
 
 ### Parameters
 
@@ -953,7 +953,7 @@ No authorization required
 > table_exists(id, table_exists_request, delimiter)
 Check if a table exists
 
-Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body. 
+Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (empty table created with CreateEmptyTable) 
 
 ### Parameters
 

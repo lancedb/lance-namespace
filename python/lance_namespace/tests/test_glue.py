@@ -360,24 +360,37 @@ class TestGlueNamespace:
     
     def test_create_table_empty_data(self, glue_namespace, mock_lance):
         """Test creating a table with empty data."""
+        import pyarrow as pa
+        import io
+        
         glue_namespace.glue.get_database.return_value = {
             'Database': {'LocationUri': 's3://bucket/db'}
         }
         
-        schema = JsonArrowSchema(
-            fields=[
-                JsonArrowField(name='id', type=JsonArrowDataType(type='int64'), nullable=False),
-                JsonArrowField(name='name', type=JsonArrowDataType(type='utf8'), nullable=True),
-            ]
-        )
+        # Create an empty Arrow table with schema
+        arrow_schema = pa.schema([
+            pa.field('id', pa.int64(), nullable=False),
+            pa.field('name', pa.utf8(), nullable=True),
+        ])
+        # Create empty arrays for each field
+        empty_arrays = [
+            pa.array([], type=pa.int64()),
+            pa.array([], type=pa.utf8())
+        ]
+        empty_table = pa.table(empty_arrays, schema=arrow_schema)
+        
+        # Convert to Arrow IPC stream
+        buffer = io.BytesIO()
+        with pa.ipc.RecordBatchStreamWriter(buffer, arrow_schema) as writer:
+            writer.write_table(empty_table)
+        ipc_data = buffer.getvalue()
         
         request = CreateTableRequest(
-            id=['test_db', 'test_table'],
-            var_schema=schema
+            id=['test_db', 'test_table']
         )
         
-        # Test with empty bytes
-        response = glue_namespace.create_table(request, b'')
+        # Test with empty IPC stream
+        response = glue_namespace.create_table(request, ipc_data)
         
         assert response.location == 's3://bucket/db/test_table.lance'
         assert response.version == 1

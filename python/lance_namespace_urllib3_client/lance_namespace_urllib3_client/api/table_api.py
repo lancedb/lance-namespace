@@ -1725,7 +1725,7 @@ class TableApi:
     ) -> CreateEmptyTableResponse:
         """Create an empty table
 
-        Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control. 
+        Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control.  For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory to mark the table's existence without creating actual Lance data files. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1807,7 +1807,7 @@ class TableApi:
     ) -> ApiResponse[CreateEmptyTableResponse]:
         """Create an empty table
 
-        Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control. 
+        Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control.  For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory to mark the table's existence without creating actual Lance data files. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1889,7 +1889,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Create an empty table
 
-        Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control. 
+        Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control.  For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory to mark the table's existence without creating actual Lance data files. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -9403,7 +9403,7 @@ class TableApi:
     ) -> None:
         """Check if a table exists
 
-        Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body. 
+        Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (empty table created with CreateEmptyTable) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -9484,7 +9484,7 @@ class TableApi:
     ) -> ApiResponse[None]:
         """Check if a table exists
 
-        Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body. 
+        Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (empty table created with CreateEmptyTable) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -9565,7 +9565,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Check if a table exists
 
-        Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body. 
+        Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (empty table created with CreateEmptyTable) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str

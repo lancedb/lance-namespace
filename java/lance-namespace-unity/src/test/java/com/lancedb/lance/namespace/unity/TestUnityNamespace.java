@@ -244,7 +244,7 @@ public class TestUnityNamespace {
   }
 
   @Test
-  public void testTableLifecycle() {
+  public void testTableLifecycle() throws IOException {
     // Create schema first
     CreateNamespaceRequest createNsRequest = new CreateNamespaceRequest();
     createNsRequest.setId(Arrays.asList(UNITY_CATALOG, TEST_SCHEMA));
@@ -276,15 +276,16 @@ public class TestUnityNamespace {
     field2.setNullable(true);
 
     arrowSchema.setFields(Arrays.asList(field1, field2));
-    createTableRequest.setSchema(arrowSchema);
 
     Map<String, String> tableProps = new HashMap<>();
     tableProps.put("custom_prop", "custom_value");
     createTableRequest.setProperties(tableProps);
     // Unity tables are always managed by storage
 
-    CreateTableResponse createTableResponse =
-        namespace.createTable(createTableRequest, new byte[0]);
+    // Create proper Arrow IPC stream from the schema
+    byte[] arrowData =
+        com.lancedb.lance.namespace.util.ArrowIpcUtil.createEmptyArrowIpcStream(arrowSchema);
+    CreateTableResponse createTableResponse = namespace.createTable(createTableRequest, arrowData);
     assertNotNull(createTableResponse);
     // Table created successfully - just verify non-null response
     assertNotNull(createTableResponse.getLocation());

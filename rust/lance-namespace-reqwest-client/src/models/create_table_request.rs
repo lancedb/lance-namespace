@@ -21,8 +21,6 @@ pub struct CreateTableRequest {
     /// There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing table is kept.   * overwrite: the existing table is dropped and a new table with this name is created. 
     #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
     pub mode: Option<Mode>,
-    #[serde(rename = "schema", skip_serializing_if = "Option::is_none")]
-    pub schema: Option<Box<models::JsonArrowSchema>>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
 }
@@ -34,7 +32,6 @@ impl CreateTableRequest {
             id: None,
             location: None,
             mode: None,
-            schema: None,
             properties: None,
         }
     }

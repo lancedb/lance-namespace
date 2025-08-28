@@ -33,12 +33,14 @@ import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
+import com.lancedb.lance.namespace.model.JsonArrowSchema;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.model.ListTablesRequest;
 import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
+import com.lancedb.lance.namespace.util.ArrowIpcUtil;
 import com.lancedb.lance.namespace.util.CommonUtil;
 import com.lancedb.lance.namespace.util.JsonArrowSchemaConverter;
 import com.lancedb.lance.namespace.util.PageUtil;
@@ -59,6 +61,7 @@ import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -323,7 +326,19 @@ public class Hive3Namespace implements LanceNamespace, Configurable<Configuratio
         requestData.length > 0, "Request data (Arrow IPC stream) cannot be empty");
 
     ObjectIdentifier tableId = ObjectIdentifier.of(request.getId());
-    Schema schema = JsonArrowSchemaConverter.convertToArrowSchema(request.getSchema());
+
+    // Extract schema from Arrow IPC stream
+    JsonArrowSchema jsonSchema;
+    try {
+      jsonSchema = ArrowIpcUtil.extractSchemaFromIpc(requestData);
+    } catch (IOException e) {
+      throw LanceNamespaceException.badRequest(
+          "Invalid Arrow IPC stream: " + e.getMessage(),
+          "INVALID_ARROW_IPC",
+          tableId.stringStyleId(),
+          "Failed to extract schema from Arrow IPC stream");
+    }
+    Schema schema = JsonArrowSchemaConverter.convertToArrowSchema(jsonSchema);
 
     ValidationUtil.checkArgument(
         tableId.levels() == 3, "Expect 3-level table identifier but get %s", tableId);

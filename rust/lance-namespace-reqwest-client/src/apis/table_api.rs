@@ -639,7 +639,7 @@ pub async fn count_table_rows(configuration: &configuration::Configuration, id: 
     }
 }
 
-/// Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control. 
+/// Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control.  For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory to mark the table's existence without creating actual Lance data files. 
 pub async fn create_empty_table(configuration: &configuration::Configuration, id: &str, create_empty_table_request: models::CreateEmptyTableRequest, delimiter: Option<&str>) -> Result<models::CreateEmptyTableResponse, Error<CreateEmptyTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -1647,7 +1647,7 @@ pub async fn restore_table(configuration: &configuration::Configuration, id: &st
     }
 }
 
-/// Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body. 
+/// Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (empty table created with CreateEmptyTable) 
 pub async fn table_exists(configuration: &configuration::Configuration, id: &str, table_exists_request: models::TableExistsRequest, delimiter: Option<&str>) -> Result<(), Error<TableExistsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;

@@ -32,6 +32,7 @@ import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
+import com.lancedb.lance.namespace.model.JsonArrowSchema;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.model.ListTablesRequest;
@@ -39,6 +40,7 @@ import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
 import com.lancedb.lance.namespace.rest.RestClient;
+import com.lancedb.lance.namespace.util.ArrowIpcUtil;
 import com.lancedb.lance.namespace.util.JsonArrowSchemaConverter;
 import com.lancedb.lance.namespace.util.ValidationUtil;
 
@@ -360,8 +362,18 @@ public class UnityNamespace implements LanceNamespace {
     try {
       // First create an empty Lance table dataset
       String tablePath = config.getRoot() + "/" + catalog + "/" + schema + "/" + table;
-      ValidationUtil.checkNotNull(request.getSchema(), "Schema is required in CreateTableRequest");
-      Schema arrowSchema = JsonArrowSchemaConverter.convertToArrowSchema(request.getSchema());
+      // Extract schema from Arrow IPC stream
+      JsonArrowSchema jsonSchema;
+      try {
+        jsonSchema = ArrowIpcUtil.extractSchemaFromIpc(requestData);
+      } catch (IOException e) {
+        throw LanceNamespaceException.badRequest(
+            "Invalid Arrow IPC stream: " + e.getMessage(),
+            "INVALID_ARROW_IPC",
+            catalog + "." + schema + "." + table,
+            "Failed to extract schema from Arrow IPC stream");
+      }
+      Schema arrowSchema = JsonArrowSchemaConverter.convertToArrowSchema(jsonSchema);
 
       WriteParams writeParams =
           new WriteParams.Builder().withMode(WriteParams.WriteMode.CREATE).build();

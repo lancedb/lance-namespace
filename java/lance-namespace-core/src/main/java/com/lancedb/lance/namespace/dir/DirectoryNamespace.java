@@ -31,12 +31,14 @@ import com.lancedb.lance.namespace.model.DropNamespaceRequest;
 import com.lancedb.lance.namespace.model.DropNamespaceResponse;
 import com.lancedb.lance.namespace.model.DropTableRequest;
 import com.lancedb.lance.namespace.model.DropTableResponse;
+import com.lancedb.lance.namespace.model.JsonArrowSchema;
 import com.lancedb.lance.namespace.model.ListNamespacesRequest;
 import com.lancedb.lance.namespace.model.ListNamespacesResponse;
 import com.lancedb.lance.namespace.model.ListTablesRequest;
 import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
+import com.lancedb.lance.namespace.util.ArrowIpcUtil;
 import com.lancedb.lance.namespace.util.JsonArrowSchemaConverter;
 import com.lancedb.lance.namespace.util.OpenDalUtil;
 import com.lancedb.lance.namespace.util.ValidationUtil;
@@ -111,10 +113,18 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
     ValidationUtil.checkArgument(
         requestData.length > 0, "Request data (Arrow IPC stream) cannot be empty");
 
-    // For now, we're using the schema from the request, but in a full implementation
-    // this would parse the Arrow IPC stream to get the schema and data
-    ValidationUtil.checkNotNull(request.getSchema(), "Schema is required in CreateTableRequest");
-    Schema schema = JsonArrowSchemaConverter.convertToArrowSchema(request.getSchema());
+    // Extract schema from Arrow IPC stream
+    JsonArrowSchema jsonSchema;
+    try {
+      jsonSchema = ArrowIpcUtil.extractSchemaFromIpc(requestData);
+    } catch (IOException e) {
+      throw LanceNamespaceException.badRequest(
+          "Invalid Arrow IPC stream: " + e.getMessage(),
+          "INVALID_ARROW_IPC",
+          tableName,
+          "Failed to extract schema from Arrow IPC stream");
+    }
+    Schema schema = JsonArrowSchemaConverter.convertToArrowSchema(jsonSchema);
 
     WriteParams writeParams =
         new WriteParams.Builder()

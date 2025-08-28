@@ -2474,8 +2474,6 @@ components:
             - create
             - exist_ok
             - overwrite
-        schema:
-          $ref: '#/components/schemas/JsonArrowSchema'
         properties:
           type: object
           additionalProperties:
@@ -2490,8 +2488,6 @@ components:
           type: integer
           format: int64
           minimum: 0
-        schema:
-          $ref: '#/components/schemas/JsonArrowSchema'
         properties:
           type: object
           additionalProperties:

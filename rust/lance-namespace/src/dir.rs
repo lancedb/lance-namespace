@@ -5,7 +5,6 @@
 
 use std::collections::HashMap;
 use std::str::FromStr;
-use std::sync::Arc;
 
 use async_trait::async_trait;
 use bytes::Bytes;
@@ -13,15 +12,15 @@ use lance::dataset::{Dataset, WriteParams};
 use opendal::Operator;
 
 use lance_namespace_reqwest_client::models::{
-    CreateNamespaceRequest, CreateNamespaceResponse, CreateTableRequest, CreateTableResponse,
-    DescribeNamespaceRequest, DescribeNamespaceResponse, DescribeTableRequest,
-    DescribeTableResponse, DropNamespaceRequest, DropNamespaceResponse, DropTableRequest,
-    DropTableResponse, ListNamespacesRequest, ListNamespacesResponse, ListTablesRequest,
-    ListTablesResponse, NamespaceExistsRequest, TableExistsRequest,
+    CreateEmptyTableRequest, CreateEmptyTableResponse, CreateNamespaceRequest,
+    CreateNamespaceResponse, CreateTableRequest, CreateTableResponse, DescribeNamespaceRequest,
+    DescribeNamespaceResponse, DescribeTableRequest, DescribeTableResponse, DropNamespaceRequest,
+    DropNamespaceResponse, DropTableRequest, DropTableResponse, ListNamespacesRequest,
+    ListNamespacesResponse, ListTablesRequest, ListTablesResponse, NamespaceExistsRequest,
+    TableExistsRequest,
 };
 
 use crate::namespace::{LanceNamespace, NamespaceError, Result};
-use crate::schema::convert_json_arrow_schema;
 
 /// Configuration for DirectoryNamespace.
 #[derive(Debug, Clone)]
@@ -324,13 +323,33 @@ impl LanceNamespace for DirectoryNamespace {
             // Extract table name (remove .lance suffix)
             let table_name = &path[..path.len() - 6];
 
-            // Check if there are any versions to verify it's a valid Lance dataset
-            let versions_path = self.table_versions_path(table_name);
-            if let Ok(version_entries) = self.operator.list(&versions_path).await {
-                // If there's at least one version file, it's a valid Lance dataset
-                if !version_entries.is_empty() {
-                    tables.push(table_name.to_string());
+            // Check if it's a valid Lance dataset or has .lance-reserved file
+            let mut is_table = false;
+
+            // First check for .lance-reserved file
+            let reserved_file_path = format!("{}.lance/.lance-reserved", table_name);
+            if self
+                .operator
+                .exists(&reserved_file_path)
+                .await
+                .unwrap_or(false)
+            {
+                is_table = true;
+            }
+
+            // If not found, check for _versions directory
+            if !is_table {
+                let versions_path = self.table_versions_path(table_name);
+                if let Ok(version_entries) = self.operator.list(&versions_path).await {
+                    // If there's at least one version file, it's a valid Lance dataset
+                    if !version_entries.is_empty() {
+                        is_table = true;
+                    }
                 }
+            }
+
+            if is_table {
+                tables.push(table_name.to_string());
             }
         }
 
@@ -342,14 +361,31 @@ impl LanceNamespace for DirectoryNamespace {
         let table_name = Self::table_name_from_id(&request.id)?;
         let table_path = self.table_full_path(&table_name);
 
-        // Check if the table exists by looking for _versions directory
-        let versions_path = self.table_versions_path(&table_name);
-        let entries =
-            self.operator.list(&versions_path).await.map_err(|_| {
-                NamespaceError::Other(format!("Table does not exist: {}", table_name))
-            })?;
+        // Check if table exists - either as Lance dataset or with .lance-reserved file
+        let mut table_exists = false;
 
-        if entries.is_empty() {
+        // First check for .lance-reserved file
+        let reserved_file_path = format!("{}.lance/.lance-reserved", table_name);
+        if self
+            .operator
+            .exists(&reserved_file_path)
+            .await
+            .unwrap_or(false)
+        {
+            table_exists = true;
+        }
+
+        // If not found, check if it's a Lance dataset by looking for _versions directory
+        if !table_exists {
+            let versions_path = self.table_versions_path(&table_name);
+            if let Ok(entries) = self.operator.list(&versions_path).await {
+                if !entries.is_empty() {
+                    table_exists = true;
+                }
+            }
+        }
+
+        if !table_exists {
             return Err(NamespaceError::Other(format!(
                 "Table does not exist: {}",
                 table_name
@@ -368,14 +404,31 @@ impl LanceNamespace for DirectoryNamespace {
     async fn table_exists(&self, request: TableExistsRequest) -> Result<()> {
         let table_name = Self::table_name_from_id(&request.id)?;
 
-        // Check if the table exists by looking for _versions directory
-        let versions_path = self.table_versions_path(&table_name);
-        let entries =
-            self.operator.list(&versions_path).await.map_err(|_| {
-                NamespaceError::Other(format!("Table does not exist: {}", table_name))
-            })?;
+        // Check if table exists - either as Lance dataset or with .lance-reserved file
+        let mut table_exists = false;
 
-        if entries.is_empty() {
+        // First check for .lance-reserved file
+        let reserved_file_path = format!("{}.lance/.lance-reserved", table_name);
+        if self
+            .operator
+            .exists(&reserved_file_path)
+            .await
+            .unwrap_or(false)
+        {
+            table_exists = true;
+        }
+
+        // If not found, check if it's a Lance dataset by looking for _versions directory
+        if !table_exists {
+            let versions_path = self.table_versions_path(&table_name);
+            if let Ok(entries) = self.operator.list(&versions_path).await {
+                if !entries.is_empty() {
+                    table_exists = true;
+                }
+            }
+        }
+
+        if !table_exists {
             return Err(NamespaceError::Other(format!(
                 "Table does not exist: {}",
                 table_name
@@ -393,10 +446,12 @@ impl LanceNamespace for DirectoryNamespace {
         let table_name = Self::table_name_from_id(&request.id)?;
         let table_path = self.table_full_path(&table_name);
 
-        // Validate schema is provided
-        let json_schema = request.schema.as_ref().ok_or_else(|| {
-            NamespaceError::Other("Schema is required in CreateTableRequest".to_string())
-        })?;
+        // Validate that request_data is provided and is a valid Arrow IPC stream
+        if request_data.is_empty() {
+            return Err(NamespaceError::Other(
+                "Request data (Arrow IPC stream) is required for create_table".to_string(),
+            ));
+        }
 
         // Validate location if provided
         if let Some(location) = &request.location {
@@ -409,46 +464,35 @@ impl LanceNamespace for DirectoryNamespace {
             }
         }
 
-        // Convert schema
-        let arrow_schema = convert_json_arrow_schema(json_schema)?;
-        let arrow_schema = Arc::new(arrow_schema);
+        // Parse the Arrow IPC stream from request_data
+        use arrow::ipc::reader::StreamReader;
+        use std::io::Cursor;
 
-        // Create RecordBatchReader from request_data (Arrow IPC stream)
-        let reader = if request_data.is_empty() {
-            // If no data provided, create an empty batch with the schema
+        let cursor = Cursor::new(request_data.to_vec());
+        let stream_reader = StreamReader::try_new(cursor, None)
+            .map_err(|e| NamespaceError::Other(format!("Invalid Arrow IPC stream: {}", e)))?;
+
+        // Extract schema from the IPC stream
+        let arrow_schema = stream_reader.schema();
+
+        // Collect all batches from the stream
+        let mut batches = Vec::new();
+        for batch_result in stream_reader {
+            batches.push(batch_result.map_err(|e| {
+                NamespaceError::Other(format!("Failed to read batch from IPC stream: {}", e))
+            })?);
+        }
+
+        // Create RecordBatchReader from the batches
+        let reader = if batches.is_empty() {
+            // If no batches in the stream, create an empty batch with the schema
             let batch = arrow::record_batch::RecordBatch::new_empty(arrow_schema.clone());
             let batches = vec![Ok(batch)];
             arrow::record_batch::RecordBatchIterator::new(batches, arrow_schema.clone())
         } else {
-            // Parse the Arrow IPC stream from request_data
-            use arrow::ipc::reader::StreamReader;
-            use std::io::Cursor;
-
-            let cursor = Cursor::new(request_data.to_vec());
-            let stream_reader = StreamReader::try_new(cursor, None).map_err(|e| {
-                NamespaceError::Other(format!("Failed to parse Arrow IPC stream: {}", e))
-            })?;
-
-            // Collect all batches from the stream
-            let mut batches = Vec::new();
-            let actual_schema = stream_reader.schema();
-
-            // Verify schema matches
-            if actual_schema != arrow_schema {
-                return Err(NamespaceError::Other(
-                    "Schema in IPC stream does not match the provided schema".to_string(),
-                ));
-            }
-
-            for batch_result in stream_reader {
-                batches.push(batch_result.map_err(|e| {
-                    NamespaceError::Other(format!("Failed to read batch from IPC stream: {}", e))
-                })?);
-            }
-
             // Convert to RecordBatchIterator
             let batch_results: Vec<_> = batches.into_iter().map(Ok).collect();
-            arrow::record_batch::RecordBatchIterator::new(batch_results, actual_schema)
+            arrow::record_batch::RecordBatchIterator::new(batch_results, arrow_schema)
         };
 
         // Set up write parameters for creating a new dataset
@@ -465,7 +509,43 @@ impl LanceNamespace for DirectoryNamespace {
         Ok(CreateTableResponse {
             version: Some(1),
             location: Some(table_path),
-            schema: None,
+            properties: None,
+            storage_options: Some(self.config.storage_options.clone()),
+        })
+    }
+
+    async fn create_empty_table(
+        &self,
+        request: CreateEmptyTableRequest,
+    ) -> Result<CreateEmptyTableResponse> {
+        let table_name = Self::table_name_from_id(&request.id)?;
+        let table_path = self.table_full_path(&table_name);
+
+        // Validate location if provided
+        if let Some(location) = &request.location {
+            let location = location.trim_end_matches('/');
+            if location != table_path {
+                return Err(NamespaceError::Other(format!(
+                    "Cannot create table {} at location {}, must be at location {}",
+                    table_name, location, table_path
+                )));
+            }
+        }
+
+        // Create the .lance-reserved file to mark the table as existing
+        let reserved_file_path = format!("{}.lance/.lance-reserved", table_name);
+        self.operator
+            .write(&reserved_file_path, Vec::<u8>::new())
+            .await
+            .map_err(|e| {
+                NamespaceError::Other(format!(
+                    "Failed to create .lance-reserved file for table {}: {}",
+                    table_name, e
+                ))
+            })?;
+
+        Ok(CreateEmptyTableResponse {
+            location: Some(table_path),
             properties: None,
             storage_options: Some(self.config.storage_options.clone()),
         })
@@ -493,10 +573,12 @@ impl LanceNamespace for DirectoryNamespace {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::schema::convert_json_arrow_schema;
     use lance_namespace_reqwest_client::models::{
         JsonArrowDataType, JsonArrowField, JsonArrowSchema,
     };
     use std::collections::HashMap;
+    use std::sync::Arc;
     use tempfile::TempDir;
 
     /// Helper to create a test DirectoryNamespace with a temporary directory
@@ -510,6 +592,22 @@ mod tests {
 
         let namespace = DirectoryNamespace::new(properties).unwrap();
         (namespace, temp_dir)
+    }
+
+    /// Helper to create test IPC data from a schema
+    fn create_test_ipc_data(schema: &JsonArrowSchema) -> Vec<u8> {
+        use arrow::ipc::writer::StreamWriter;
+
+        let arrow_schema = convert_json_arrow_schema(schema).unwrap();
+        let arrow_schema = Arc::new(arrow_schema);
+        let batch = arrow::record_batch::RecordBatch::new_empty(arrow_schema.clone());
+        let mut buffer = Vec::new();
+        {
+            let mut writer = StreamWriter::try_new(&mut buffer, &arrow_schema).unwrap();
+            writer.write(&batch).unwrap();
+            writer.finish().unwrap();
+        }
+        buffer
     }
 
     /// Helper to create a simple test schema
@@ -541,12 +639,15 @@ mod tests {
     async fn test_create_table() {
         let (namespace, _temp_dir) = create_test_namespace().await;
 
+        // Create test IPC data
+        let schema = create_test_schema();
+        let ipc_data = create_test_ipc_data(&schema);
+
         let mut request = CreateTableRequest::new();
         request.id = Some(vec!["test_table".to_string()]);
-        request.schema = Some(Box::new(create_test_schema()));
 
         let response = namespace
-            .create_table(request, bytes::Bytes::new())
+            .create_table(request, bytes::Bytes::from(ipc_data))
             .await
             .unwrap();
 
@@ -556,7 +657,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_create_table_without_schema() {
+    async fn test_create_table_without_data() {
         let (namespace, _temp_dir) = create_test_namespace().await;
 
         let mut request = CreateTableRequest::new();
@@ -567,27 +668,33 @@ mod tests {
         assert!(result
             .unwrap_err()
             .to_string()
-            .contains("Schema is required"));
+            .contains("Arrow IPC stream) is required"));
     }
 
     #[tokio::test]
     async fn test_create_table_with_invalid_id() {
         let (namespace, _temp_dir) = create_test_namespace().await;
 
+        // Create test IPC data
+        let schema = create_test_schema();
+        let ipc_data = create_test_ipc_data(&schema);
+
         // Test with empty ID
         let mut request = CreateTableRequest::new();
         request.id = Some(vec![]);
-        request.schema = Some(Box::new(create_test_schema()));
 
-        let result = namespace.create_table(request, bytes::Bytes::new()).await;
+        let result = namespace
+            .create_table(request, bytes::Bytes::from(ipc_data.clone()))
+            .await;
         assert!(result.is_err());
 
         // Test with multi-level ID
         let mut request = CreateTableRequest::new();
         request.id = Some(vec!["namespace".to_string(), "table".to_string()]);
-        request.schema = Some(Box::new(create_test_schema()));
 
-        let result = namespace.create_table(request, bytes::Bytes::new()).await;
+        let result = namespace
+            .create_table(request, bytes::Bytes::from(ipc_data))
+            .await;
         assert!(result.is_err());
         assert!(result
             .unwrap_err()
@@ -599,12 +706,17 @@ mod tests {
     async fn test_create_table_with_wrong_location() {
         let (namespace, _temp_dir) = create_test_namespace().await;
 
+        // Create test IPC data
+        let schema = create_test_schema();
+        let ipc_data = create_test_ipc_data(&schema);
+
         let mut request = CreateTableRequest::new();
         request.id = Some(vec!["test_table".to_string()]);
-        request.schema = Some(Box::new(create_test_schema()));
         request.location = Some("/wrong/path/table.lance".to_string());
 
-        let result = namespace.create_table(request, bytes::Bytes::new()).await;
+        let result = namespace
+            .create_table(request, bytes::Bytes::from(ipc_data))
+            .await;
         assert!(result.is_err());
         assert!(result
             .unwrap_err()
@@ -621,21 +733,23 @@ mod tests {
         let response = namespace.list_tables(request).await.unwrap();
         assert_eq!(response.tables.len(), 0);
 
+        // Create test IPC data
+        let schema = create_test_schema();
+        let ipc_data = create_test_ipc_data(&schema);
+
         // Create a table
         let mut create_request = CreateTableRequest::new();
         create_request.id = Some(vec!["table1".to_string()]);
-        create_request.schema = Some(Box::new(create_test_schema()));
         namespace
-            .create_table(create_request, bytes::Bytes::new())
+            .create_table(create_request, bytes::Bytes::from(ipc_data.clone()))
             .await
             .unwrap();
 
         // Create another table
         let mut create_request = CreateTableRequest::new();
         create_request.id = Some(vec!["table2".to_string()]);
-        create_request.schema = Some(Box::new(create_test_schema()));
         namespace
-            .create_table(create_request, bytes::Bytes::new())
+            .create_table(create_request, bytes::Bytes::from(ipc_data))
             .await
             .unwrap();
 
@@ -668,11 +782,13 @@ mod tests {
         let (namespace, _temp_dir) = create_test_namespace().await;
 
         // Create a table first
+        let schema = create_test_schema();
+        let ipc_data = create_test_ipc_data(&schema);
+
         let mut create_request = CreateTableRequest::new();
         create_request.id = Some(vec!["test_table".to_string()]);
-        create_request.schema = Some(Box::new(create_test_schema()));
         namespace
-            .create_table(create_request, bytes::Bytes::new())
+            .create_table(create_request, bytes::Bytes::from(ipc_data))
             .await
             .unwrap();
 
@@ -705,11 +821,13 @@ mod tests {
         let (namespace, _temp_dir) = create_test_namespace().await;
 
         // Create a table
+        let schema = create_test_schema();
+        let ipc_data = create_test_ipc_data(&schema);
+
         let mut create_request = CreateTableRequest::new();
         create_request.id = Some(vec!["existing_table".to_string()]);
-        create_request.schema = Some(Box::new(create_test_schema()));
         namespace
-            .create_table(create_request, bytes::Bytes::new())
+            .create_table(create_request, bytes::Bytes::from(ipc_data))
             .await
             .unwrap();
 
@@ -735,11 +853,13 @@ mod tests {
         let (namespace, _temp_dir) = create_test_namespace().await;
 
         // Create a table
+        let schema = create_test_schema();
+        let ipc_data = create_test_ipc_data(&schema);
+
         let mut create_request = CreateTableRequest::new();
         create_request.id = Some(vec!["table_to_drop".to_string()]);
-        create_request.schema = Some(Box::new(create_test_schema()));
         namespace
-            .create_table(create_request, bytes::Bytes::new())
+            .create_table(create_request, bytes::Bytes::from(ipc_data))
             .await
             .unwrap();
 
@@ -849,13 +969,16 @@ mod tests {
 
         let namespace = DirectoryNamespace::new(properties).unwrap();
 
+        // Create test IPC data
+        let schema = create_test_schema();
+        let ipc_data = create_test_ipc_data(&schema);
+
         // Create a table and verify location
         let mut request = CreateTableRequest::new();
         request.id = Some(vec!["test_table".to_string()]);
-        request.schema = Some(Box::new(create_test_schema()));
 
         let response = namespace
-            .create_table(request, bytes::Bytes::new())
+            .create_table(request, bytes::Bytes::from(ipc_data))
             .await
             .unwrap();
 
@@ -875,13 +998,16 @@ mod tests {
 
         let namespace = DirectoryNamespace::new(properties).unwrap();
 
+        // Create test IPC data
+        let schema = create_test_schema();
+        let ipc_data = create_test_ipc_data(&schema);
+
         // Create a table and check storage options are included
         let mut request = CreateTableRequest::new();
         request.id = Some(vec!["test_table".to_string()]);
-        request.schema = Some(Box::new(create_test_schema()));
 
         let response = namespace
-            .create_table(request, bytes::Bytes::new())
+            .create_table(request, bytes::Bytes::from(ipc_data))
             .await
             .unwrap();
 
@@ -927,12 +1053,14 @@ mod tests {
             metadata: None,
         };
 
+        // Create IPC data
+        let ipc_data = create_test_ipc_data(&schema);
+
         let mut request = CreateTableRequest::new();
         request.id = Some(vec!["complex_table".to_string()]);
-        request.schema = Some(Box::new(schema));
 
         let response = namespace
-            .create_table(request, bytes::Bytes::new())
+            .create_table(request, bytes::Bytes::from(ipc_data))
             .await
             .unwrap();
 
@@ -1129,7 +1257,6 @@ mod tests {
         // Create table with the IPC data
         let mut request = CreateTableRequest::new();
         request.id = Some(vec!["test_table_with_data".to_string()]);
-        request.schema = Some(Box::new(schema));
 
         let response = namespace
             .create_table(request, Bytes::from(buffer))
@@ -1149,25 +1276,41 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_create_table_with_empty_data() {
+    async fn test_create_empty_table() {
         let (namespace, _temp_dir) = create_test_namespace().await;
 
-        // Create a schema
-        let schema = create_test_schema();
-
-        // Create table with empty data (should create empty dataset with schema)
-        let mut request = CreateTableRequest::new();
+        let mut request = CreateEmptyTableRequest::new();
         request.id = Some(vec!["empty_table".to_string()]);
-        request.schema = Some(Box::new(schema));
 
-        let response = namespace.create_table(request, Bytes::new()).await.unwrap();
+        let response = namespace.create_empty_table(request).await.unwrap();
 
-        assert_eq!(response.version, Some(1));
-        assert!(response.location.unwrap().contains("empty_table.lance"));
+        assert!(response.location.is_some());
+        assert!(response.location.unwrap().ends_with("empty_table.lance"));
 
-        // Verify table exists
+        // Verify table exists by checking for .lance-reserved file
         let mut exists_request = TableExistsRequest::new();
         exists_request.id = Some(vec!["empty_table".to_string()]);
         namespace.table_exists(exists_request).await.unwrap();
+
+        // List tables should include the empty table
+        let list_request = ListTablesRequest::new();
+        let list_response = namespace.list_tables(list_request).await.unwrap();
+        assert!(list_response.tables.contains(&"empty_table".to_string()));
+    }
+
+    #[tokio::test]
+    async fn test_create_empty_table_with_wrong_location() {
+        let (namespace, _temp_dir) = create_test_namespace().await;
+
+        let mut request = CreateEmptyTableRequest::new();
+        request.id = Some(vec!["test_table".to_string()]);
+        request.location = Some("/wrong/path/table.lance".to_string());
+
+        let result = namespace.create_empty_table(request).await;
+        assert!(result.is_err());
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("must be at location"));
     }
 }

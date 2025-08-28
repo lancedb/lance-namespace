@@ -87,7 +87,6 @@ public class ClientToServerResponse {
     DescribeTableResponse converted = new DescribeTableResponse();
     converted.setVersion(response.getVersion());
     converted.setLocation(response.getLocation());
-    converted.setSchema(convertJsonSchema(response.getSchema()));
     converted.setProperties(response.getProperties());
     converted.setStorageOptions(response.getStorageOptions());
     return converted;
@@ -200,7 +199,6 @@ public class ClientToServerResponse {
     CreateTableResponse converted = new CreateTableResponse();
     converted.setLocation(response.getLocation());
     converted.setVersion(response.getVersion());
-    converted.setSchema(convertJsonSchema(response.getSchema()));
     converted.setProperties(response.getProperties());
     converted.setStorageOptions(response.getStorageOptions());
     return converted;

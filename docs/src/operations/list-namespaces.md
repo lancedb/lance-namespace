@@ -9,22 +9,22 @@
 ## Request Schema
 
 ```yaml
---8<-- "src/rest.yaml:1693:1704"
+--8<-- "src/rest.yaml:1700:1711"
 ```
 ## Response Schema
 
 ```yaml
---8<-- "src/rest.yaml:1705:1719"
+--8<-- "src/rest.yaml:1712:1726"
 ```
 
 ## Related Components Schema
 ### Page Token
 
 ```yaml
---8<-- "src/rest.yaml:1792:1811"
+--8<-- "src/rest.yaml:1799:1818"
 ```
 ### Page Limit
 
 ```yaml
---8<-- "src/rest.yaml:1812:1818"
+--8<-- "src/rest.yaml:1819:1825"
 ```

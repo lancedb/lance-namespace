@@ -30,6 +30,8 @@ from lance_namespace_urllib3_client.models import (
     CountTableRowsRequest,
     CreateTableRequest,
     CreateTableResponse,
+    CreateEmptyTableRequest,
+    CreateEmptyTableResponse,
     InsertIntoTableRequest,
     InsertIntoTableResponse,
     MergeInsertIntoTableRequest,
@@ -104,8 +106,12 @@ class LanceNamespace(ABC):
         raise NotImplementedError("Not supported: count_table_rows")
     
     def create_table(self, request: CreateTableRequest, request_data: bytes) -> CreateTableResponse:
-        """Create a new table."""
+        """Create a new table with data from Arrow IPC stream."""
         raise NotImplementedError("Not supported: create_table")
+    
+    def create_empty_table(self, request: CreateEmptyTableRequest) -> CreateEmptyTableResponse:
+        """Create an empty table (metadata only operation)."""
+        raise NotImplementedError("Not supported: create_empty_table")
     
     def insert_into_table(self, request: InsertIntoTableRequest, request_data: bytes) -> InsertIntoTableResponse:
         """Insert data into a table."""

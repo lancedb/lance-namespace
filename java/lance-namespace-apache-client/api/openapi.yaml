@@ -3420,37 +3420,11 @@ components:
           - exist_ok
           - overwrite
           type: string
-        schema:
-          $ref: '#/components/schemas/JsonArrowSchema'
         properties:
           additionalProperties:
             type: string
     CreateTableResponse:
       example:
-        schema:
-          metadata:
-            key: metadata
-          fields:
-          - metadata:
-              key: metadata
-            nullable: true
-            name: name
-            type:
-              length: 0
-              fields:
-              - null
-              - null
-              type: type
-          - metadata:
-              key: metadata
-            nullable: true
-            name: name
-            type:
-              length: 0
-              fields:
-              - null
-              - null
-              type: type
         location: location
         version: 0
         properties:
@@ -3458,14 +3432,12 @@ components:
         storage_options:
           key: storage_options
       properties:
+        location:
+          type: string
         version:
           format: int64
           minimum: 0
           type: integer
-        location:
-          type: string
-        schema:
-          $ref: '#/components/schemas/JsonArrowSchema'
         properties:
           additionalProperties:
             type: string

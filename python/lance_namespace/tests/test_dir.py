@@ -73,6 +73,29 @@ class TestDirectoryNamespace:
         schema = JsonArrowSchema(fields=[id_field, name_field])
         return schema
     
+    def create_test_ipc_data(self):
+        """Create test Arrow IPC stream data."""
+        import pyarrow as pa
+        import io
+        
+        # Create an empty Arrow table with schema
+        arrow_schema = pa.schema([
+            pa.field('id', pa.int32(), nullable=False),
+            pa.field('name', pa.utf8(), nullable=True),
+        ])
+        # Create empty arrays for each field
+        empty_arrays = [
+            pa.array([], type=pa.int32()),
+            pa.array([], type=pa.utf8())
+        ]
+        empty_table = pa.table(empty_arrays, schema=arrow_schema)
+        
+        # Convert to Arrow IPC stream
+        buffer = io.BytesIO()
+        with pa.ipc.RecordBatchStreamWriter(buffer, arrow_schema) as writer:
+            writer.write_table(empty_table)
+        return buffer.getvalue()
+    
     def test_init_with_absolute_path(self):
         """Test initialization with absolute path."""
         namespace = DirectoryNamespace(root=self.temp_dir)
@@ -97,11 +120,10 @@ class TestDirectoryNamespace:
     def test_create_table(self):
         """Test creating a table."""
         request = CreateTableRequest(
-            id=["test_table"],
-            schema=self.create_test_schema()
+            id=["test_table"]
         )
         
-        response = self.namespace.create_table(request, b"")
+        response = self.namespace.create_table(request, self.create_test_ipc_data())
         assert response.location is not None
         assert "test_table" in response.location
         assert response.version == 1
@@ -120,10 +142,9 @@ class TestDirectoryNamespace:
         # Create some tables
         for table_name in ["table1", "table2", "table3"]:
             request = CreateTableRequest(
-                id=[table_name],
-                schema=self.create_test_schema()
+                id=[table_name]
             )
-            self.namespace.create_table(request, b"")
+            self.namespace.create_table(request, self.create_test_ipc_data())
         
         # List tables
         request = ListTablesRequest()
@@ -136,10 +157,9 @@ class TestDirectoryNamespace:
         """Test dropping a table."""
         # First create a table
         create_request = CreateTableRequest(
-            id=["test_table"],
-            schema=self.create_test_schema()
+            id=["test_table"]
         )
-        self.namespace.create_table(create_request, b"")
+        self.namespace.create_table(create_request, self.create_test_ipc_data())
         
         table_dir = Path(self.temp_dir) / "test_table.lance"
         assert table_dir.exists()
@@ -187,10 +207,9 @@ class TestDirectoryNamespace:
         """Test describing a table."""
         # First create a table
         create_request = CreateTableRequest(
-            id=["test_table"],
-            schema=self.create_test_schema()
+            id=["test_table"]
         )
-        self.namespace.create_table(create_request, b"")
+        self.namespace.create_table(create_request, self.create_test_ipc_data())
         
         # Now describe the table
         describe_request = DescribeTableRequest()
@@ -213,33 +232,30 @@ class TestDirectoryNamespace:
     def test_create_table_invalid_id(self):
         """Test creating table with invalid ID."""
         request = CreateTableRequest(
-            id=[],  # Empty ID
-            schema=self.create_test_schema()
+            id=[]  # Empty ID
         )
         
         with pytest.raises(ValueError, match="table ID cannot be empty"):
-            self.namespace.create_table(request, b"")
+            self.namespace.create_table(request, self.create_test_ipc_data())
     
     
     
     def test_create_table_with_invalid_multi_level_id(self):
         """Test creating table with invalid multi-level ID."""
         request = CreateTableRequest(
-            id=["namespace1", "test_table"],
-            schema=self.create_test_schema()
+            id=["namespace1", "test_table"]
         )
         
         with pytest.raises(ValueError, match="single-level table IDs"):
-            self.namespace.create_table(request, b"")
+            self.namespace.create_table(request, self.create_test_ipc_data())
     
     def test_list_tables_with_root_namespace_id(self):
         """Test listing tables with empty namespace ID (root)."""
         # Create a table first
         request = CreateTableRequest(
-            id=["test_table"],
-            schema=self.create_test_schema()
+            id=["test_table"]
         )
-        self.namespace.create_table(request, b"")
+        self.namespace.create_table(request, self.create_test_ipc_data())
         
         # List tables with empty namespace ID (root)
         list_request = ListTablesRequest()
@@ -253,10 +269,9 @@ class TestDirectoryNamespace:
         """Test listing tables with non-empty namespace ID should fail."""
         # Create a table first
         request = CreateTableRequest(
-            id=["test_table"],
-            schema=self.create_test_schema()
+            id=["test_table"]
         )
-        self.namespace.create_table(request, b"")
+        self.namespace.create_table(request, self.create_test_ipc_data())
         
         # List tables with non-empty namespace ID should fail
         list_request = ListTablesRequest()

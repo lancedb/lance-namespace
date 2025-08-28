@@ -42,6 +42,7 @@ import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
+import com.lancedb.lance.namespace.util.ArrowIpcUtil;
 import com.lancedb.lance.namespace.util.JsonArrowSchemaConverter;
 import com.lancedb.lance.namespace.util.OpenDalUtil;
 
@@ -73,6 +74,7 @@ import software.amazon.awssdk.services.glue.model.Table;
 import software.amazon.awssdk.services.glue.model.TableInput;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -388,8 +390,18 @@ public class GlueNamespace implements LanceNamespace, Closeable {
       params.put(MANAGED_BY_PROP, params.getOrDefault(MANAGED_BY_PROP, STORAGE_VALUE));
       params.put(VERSION_PROP, "1");
 
-      validateSchemaNotNull(request.getSchema(), namespaceName, tableName);
-      Schema schema = JsonArrowSchemaConverter.convertToArrowSchema(request.getSchema());
+      // Extract schema from Arrow IPC stream
+      JsonArrowSchema jsonSchema;
+      try {
+        jsonSchema = ArrowIpcUtil.extractSchemaFromIpc(requestData);
+      } catch (IOException e) {
+        throw LanceNamespaceException.badRequest(
+            "Invalid Arrow IPC stream: " + e.getMessage(),
+            "INVALID_ARROW_IPC",
+            namespaceName + "." + tableName,
+            "Failed to extract schema from Arrow IPC stream");
+      }
+      Schema schema = JsonArrowSchemaConverter.convertToArrowSchema(jsonSchema);
 
       WriteParams writeParams =
           new WriteParams.Builder()

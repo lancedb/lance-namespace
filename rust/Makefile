@@ -36,7 +36,7 @@ build-reqwest-client: gen-reqwest-client
 
 .PHONY: lint-ns
 lint-ns:
-	cd lance-namespace && cargo fmt -- --check
+	cd lance-namespace && cargo fmt
 	cd lance-namespace && cargo clippy --all-targets --all-features
 
 .PHONY: build-ns

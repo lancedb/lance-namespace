@@ -19,7 +19,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from lance_namespace_urllib3_client.models.json_arrow_schema import JsonArrowSchema
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,9 +29,8 @@ class CreateTableRequest(BaseModel):
     id: Optional[List[StrictStr]] = None
     location: Optional[StrictStr] = None
     mode: Optional[StrictStr] = Field(default=None, description="There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing table is kept.   * overwrite: the existing table is dropped and a new table with this name is created. ")
-    var_schema: Optional[JsonArrowSchema] = Field(default=None, alias="schema")
     properties: Optional[Dict[str, StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["id", "location", "mode", "schema", "properties"]
+    __properties: ClassVar[List[str]] = ["id", "location", "mode", "properties"]
 
     @field_validator('mode')
     def mode_validate_enum(cls, value):
@@ -83,9 +81,6 @@ class CreateTableRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of var_schema
-        if self.var_schema:
-            _dict['schema'] = self.var_schema.to_dict()
         return _dict
 
     @classmethod
@@ -101,7 +96,6 @@ class CreateTableRequest(BaseModel):
             "id": obj.get("id"),
             "location": obj.get("location"),
             "mode": obj.get("mode"),
-            "schema": JsonArrowSchema.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
             "properties": obj.get("properties")
         })
         return _obj

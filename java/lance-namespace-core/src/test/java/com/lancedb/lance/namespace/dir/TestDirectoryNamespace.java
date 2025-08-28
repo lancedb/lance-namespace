@@ -32,6 +32,7 @@ import com.lancedb.lance.namespace.model.ListTablesRequest;
 import com.lancedb.lance.namespace.model.ListTablesResponse;
 import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
+import com.lancedb.lance.namespace.util.ArrowIpcUtil;
 
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
@@ -43,6 +44,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -109,9 +111,10 @@ public class TestDirectoryNamespace {
     return schema;
   }
 
-  private byte[] createTestArrowData() {
-    // For testing, return empty byte array since we only need schema
-    return new byte[0];
+  private byte[] createTestArrowData() throws IOException {
+    // Create a valid Arrow IPC stream with test schema
+    JsonArrowSchema schema = createTestSchema();
+    return ArrowIpcUtil.createEmptyArrowIpcStream(schema);
   }
 
   @Test
@@ -143,7 +146,7 @@ public class TestDirectoryNamespace {
   }
 
   @Test
-  public void testCreateTable() {
+  public void testCreateTable() throws IOException {
     Map<String, String> properties = new HashMap<>();
     properties.put("root", tempDir.toString());
     namespace.initialize(properties, allocator);
@@ -152,7 +155,6 @@ public class TestDirectoryNamespace {
     List<String> tableId = new ArrayList<>();
     tableId.add("test_table");
     request.setId(tableId);
-    request.setSchema(createTestSchema());
 
     CreateTableResponse response = namespace.createTable(request, createTestArrowData());
     assertNotNull(response);
@@ -192,21 +194,18 @@ public class TestDirectoryNamespace {
     List<String> tableId1 = new ArrayList<>();
     tableId1.add("table1");
     request1.setId(tableId1);
-    request1.setSchema(createTestSchema());
     namespace.createTable(request1, createTestArrowData());
 
     CreateTableRequest request2 = new CreateTableRequest();
     List<String> tableId2 = new ArrayList<>();
     tableId2.add("table2");
     request2.setId(tableId2);
-    request2.setSchema(createTestSchema());
     namespace.createTable(request2, createTestArrowData());
 
     CreateTableRequest request3 = new CreateTableRequest();
     List<String> tableId3 = new ArrayList<>();
     tableId3.add("table3");
     request3.setId(tableId3);
-    request3.setSchema(createTestSchema());
     namespace.createTable(request3, createTestArrowData());
 
     // List tables
@@ -232,7 +231,6 @@ public class TestDirectoryNamespace {
     List<String> tableId = new ArrayList<>();
     tableId.add("test_table");
     createRequest.setId(tableId);
-    createRequest.setSchema(createTestSchema());
     namespace.createTable(createRequest, createTestArrowData());
 
     // Verify it exists
@@ -253,7 +251,7 @@ public class TestDirectoryNamespace {
   }
 
   @Test
-  public void testDescribeTable() {
+  public void testDescribeTable() throws IOException {
     Map<String, String> properties = new HashMap<>();
     properties.put("root", tempDir.toString());
     namespace.initialize(properties, allocator);
@@ -263,7 +261,6 @@ public class TestDirectoryNamespace {
     List<String> tableId = new ArrayList<>();
     tableId.add("test_table");
     createRequest.setId(tableId);
-    createRequest.setSchema(createTestSchema());
     namespace.createTable(createRequest, createTestArrowData());
 
     // Now describe the table
@@ -362,7 +359,6 @@ public class TestDirectoryNamespace {
     tableId.add("namespace1");
     tableId.add("test_table");
     request.setId(tableId);
-    request.setSchema(createTestSchema());
 
     // Should fail because only single-level table IDs are supported
     assertThrows(
@@ -373,7 +369,7 @@ public class TestDirectoryNamespace {
   }
 
   @Test
-  public void testListTablesWithRootNamespaceId() {
+  public void testListTablesWithRootNamespaceId() throws IOException {
     Map<String, String> properties = new HashMap<>();
     properties.put("root", tempDir.toString());
     namespace.initialize(properties, allocator);
@@ -383,7 +379,6 @@ public class TestDirectoryNamespace {
     List<String> tableId = new ArrayList<>();
     tableId.add("test_table");
     request.setId(tableId);
-    request.setSchema(createTestSchema());
     namespace.createTable(request, createTestArrowData());
 
     // List tables with empty namespace ID (root)
@@ -398,7 +393,7 @@ public class TestDirectoryNamespace {
   }
 
   @Test
-  public void testListTablesWithNonEmptyNamespaceId() {
+  public void testListTablesWithNonEmptyNamespaceId() throws IOException {
     Map<String, String> properties = new HashMap<>();
     properties.put("root", tempDir.toString());
     namespace.initialize(properties, allocator);
@@ -408,7 +403,6 @@ public class TestDirectoryNamespace {
     List<String> tableId = new ArrayList<>();
     tableId.add("test_table");
     request.setId(tableId);
-    request.setSchema(createTestSchema());
     namespace.createTable(request, createTestArrowData());
 
     // List tables with non-empty namespace ID should fail
@@ -444,7 +438,7 @@ public class TestDirectoryNamespace {
   }
 
   @Test
-  public void testTableExists() {
+  public void testTableExists() throws IOException {
     Map<String, String> properties = new HashMap<>();
     properties.put("root", tempDir.toString());
     namespace.initialize(properties, allocator);
@@ -454,7 +448,6 @@ public class TestDirectoryNamespace {
     List<String> tableId = new ArrayList<>();
     tableId.add("test_table");
     createRequest.setId(tableId);
-    createRequest.setSchema(createTestSchema());
     namespace.createTable(createRequest, createTestArrowData());
 
     // Test that the table exists - should not throw exception

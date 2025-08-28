@@ -26,9 +26,8 @@ import java.util.StringJoiner;
 
 /** CreateTableResponse */
 @JsonPropertyOrder({
-  CreateTableResponse.JSON_PROPERTY_VERSION,
   CreateTableResponse.JSON_PROPERTY_LOCATION,
-  CreateTableResponse.JSON_PROPERTY_SCHEMA,
+  CreateTableResponse.JSON_PROPERTY_VERSION,
   CreateTableResponse.JSON_PROPERTY_PROPERTIES,
   CreateTableResponse.JSON_PROPERTY_STORAGE_OPTIONS
 })
@@ -36,14 +35,11 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class CreateTableResponse {
-  public static final String JSON_PROPERTY_VERSION = "version";
-  @javax.annotation.Nullable private Long version;
-
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nullable private String location;
 
-  public static final String JSON_PROPERTY_SCHEMA = "schema";
-  @javax.annotation.Nullable private JsonArrowSchema schema;
+  public static final String JSON_PROPERTY_VERSION = "version";
+  @javax.annotation.Nullable private Long version;
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
@@ -52,30 +48,6 @@ public class CreateTableResponse {
   @javax.annotation.Nullable private Map<String, String> storageOptions = new HashMap<>();
 
   public CreateTableResponse() {}
-
-  public CreateTableResponse version(@javax.annotation.Nullable Long version) {
-
-    this.version = version;
-    return this;
-  }
-
-  /**
-   * Get version minimum: 0
-   *
-   * @return version
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_VERSION)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Long getVersion() {
-    return version;
-  }
-
-  @JsonProperty(JSON_PROPERTY_VERSION)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setVersion(@javax.annotation.Nullable Long version) {
-    this.version = version;
-  }
 
   public CreateTableResponse location(@javax.annotation.Nullable String location) {
 
@@ -101,28 +73,28 @@ public class CreateTableResponse {
     this.location = location;
   }
 
-  public CreateTableResponse schema(@javax.annotation.Nullable JsonArrowSchema schema) {
+  public CreateTableResponse version(@javax.annotation.Nullable Long version) {
 
-    this.schema = schema;
+    this.version = version;
     return this;
   }
 
   /**
-   * Get schema
+   * Get version minimum: 0
    *
-   * @return schema
+   * @return version
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_SCHEMA)
+  @JsonProperty(JSON_PROPERTY_VERSION)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonArrowSchema getSchema() {
-    return schema;
+  public Long getVersion() {
+    return version;
   }
 
-  @JsonProperty(JSON_PROPERTY_SCHEMA)
+  @JsonProperty(JSON_PROPERTY_VERSION)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setSchema(@javax.annotation.Nullable JsonArrowSchema schema) {
-    this.schema = schema;
+  public void setVersion(@javax.annotation.Nullable Long version) {
+    this.version = version;
   }
 
   public CreateTableResponse properties(@javax.annotation.Nullable Map<String, String> properties) {
@@ -200,25 +172,23 @@ public class CreateTableResponse {
       return false;
     }
     CreateTableResponse createTableResponse = (CreateTableResponse) o;
-    return Objects.equals(this.version, createTableResponse.version)
-        && Objects.equals(this.location, createTableResponse.location)
-        && Objects.equals(this.schema, createTableResponse.schema)
+    return Objects.equals(this.location, createTableResponse.location)
+        && Objects.equals(this.version, createTableResponse.version)
         && Objects.equals(this.properties, createTableResponse.properties)
         && Objects.equals(this.storageOptions, createTableResponse.storageOptions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version, location, schema, properties, storageOptions);
+    return Objects.hash(location, version, properties, storageOptions);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableResponse {\n");
-    sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
-    sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
     sb.append("}");
@@ -267,21 +237,6 @@ public class CreateTableResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `version` to the URL query string
-    if (getVersion() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sversion%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
     // add `location` to the URL query string
     if (getLocation() != null) {
       try {
@@ -298,9 +253,19 @@ public class CreateTableResponse {
       }
     }
 
-    // add `schema` to the URL query string
-    if (getSchema() != null) {
-      joiner.add(getSchema().toUrlQueryString(prefix + "schema" + suffix));
+    // add `version` to the URL query string
+    if (getVersion() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sversion%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `properties` to the URL query string
