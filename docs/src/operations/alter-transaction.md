@@ -3,13 +3,13 @@
 ## Description
 
 ```yaml
---8<-- "src/rest.yaml:1524:1526"
+--8<-- "src/rest.yaml:1572:1574"
 ```
 
 ## Request Schema
 
 ```yaml
---8<-- "src/rest.yaml:2566:2583"
+--8<-- "src/rest.yaml:2649:2666"
 ```
 Supporting action schemas:
 
@@ -28,22 +28,22 @@ Supporting action schemas:
 ## Response Schema
 
 ```yaml
---8<-- "src/rest.yaml:2584:2595"
+--8<-- "src/rest.yaml:2667:2678"
 ```
 
 ## Related Components Schema
 ### Set Status Action
 
 ```yaml
---8<-- "src/rest.yaml:2504:2509"
+--8<-- "src/rest.yaml:2587:2592"
 ```
 ### Set Property Action
 
 ```yaml
---8<-- "src/rest.yaml:2510:2519"
+--8<-- "src/rest.yaml:2593:2602"
 ```
 ### Unset Property Action
 
 ```yaml
---8<-- "src/rest.yaml:2532:2539"
+--8<-- "src/rest.yaml:2615:2622"
 ```

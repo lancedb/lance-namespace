@@ -128,7 +128,6 @@ public class TestHive3Namespace {
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Lists.list("test_catalog", "test_db", "test_table"));
     request.setLocation(tmpDirBase + "/test_catalog/test_db/test_table.lance");
-    request.setSchema(TestHelper.createTestSchema());
 
     Map<String, String> properties = Maps.newHashMap();
     properties.put("custom_prop", "custom_value");
@@ -147,7 +146,6 @@ public class TestHive3Namespace {
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Lists.list("test_catalog", "test_db", "test_table"));
     request.setLocation(tmpDirBase + "/test_catalog/test_db/test_table.lance");
-    request.setSchema(TestHelper.createTestSchema());
 
     byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(request, testData);
@@ -164,7 +162,6 @@ public class TestHive3Namespace {
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Lists.list("test_catalog", "test_db", "impl_table"));
     request.setLocation(tmpDirBase + "/test_catalog/test_db/impl_table.lance");
-    request.setSchema(TestHelper.createTestSchema());
 
     Map<String, String> properties = Maps.newHashMap();
     properties.put("managed_by", "impl");
@@ -183,7 +180,6 @@ public class TestHive3Namespace {
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Lists.list("test_catalog", "test_db", "no_data_table"));
     request.setLocation(tmpDirBase + "/test_catalog/test_db/no_data_table.lance");
-    request.setSchema(TestHelper.createTestSchema());
 
     byte[] emptyData = TestHelper.createEmptyArrowData(allocator);
     CreateTableResponse response = namespace.createTable(request, emptyData);
@@ -196,7 +192,6 @@ public class TestHive3Namespace {
     CreateTableRequest createRequest = new CreateTableRequest();
     createRequest.setId(Lists.list("test_catalog", "test_db", "test_table"));
     createRequest.setLocation(tmpDirBase + "/test_catalog/test_db/test_table.lance");
-    createRequest.setSchema(TestHelper.createTestSchema());
 
     byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(createRequest, testData);
@@ -226,7 +221,6 @@ public class TestHive3Namespace {
     CreateTableRequest createRequest = new CreateTableRequest();
     createRequest.setId(Lists.list("test_catalog", "test_db", "test_table"));
     createRequest.setLocation(tmpDirBase + "/test_catalog/test_db/test_table.lance");
-    createRequest.setSchema(TestHelper.createTestSchema());
 
     byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(createRequest, testData);
@@ -282,10 +276,10 @@ public class TestHive3Namespace {
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Lists.list("test_catalog", "test_db_root", "test_table"));
     // Don't set location - it will be derived from database location
-    request.setSchema(TestHelper.createTestSchema());
 
-    // Test without data
-    CreateTableResponse response = customNamespace.createTable(request, null);
+    // Create test Arrow IPC data
+    byte[] testData = TestHelper.createTestArrowData(allocator);
+    CreateTableResponse response = customNamespace.createTable(request, testData);
 
     // Verify: Location should be derived from root-based database location
     // Note: The location may or may not have file: prefix depending on how Hive processes it
@@ -331,10 +325,10 @@ public class TestHive3Namespace {
     CreateTableRequest request = new CreateTableRequest();
     request.setId(Lists.list("test_catalog", "test_db_with_location", "test_table"));
     // Don't set location - should be derived from database location or root fallback
-    request.setSchema(TestHelper.createTestSchema());
 
-    // Test without data
-    CreateTableResponse response = customNamespace.createTable(request, null);
+    // Create test Arrow IPC data
+    byte[] testData = TestHelper.createTestArrowData(allocator);
+    CreateTableResponse response = customNamespace.createTable(request, testData);
 
     // Verify: Location should be derived from either database location or root fallback
     // For now, accept either pattern until database location retrieval is fixed
@@ -469,7 +463,6 @@ public class TestHive3Namespace {
     CreateTableRequest createRequest = new CreateTableRequest();
     createRequest.setId(Lists.list("test_catalog", "test_db", "test_table"));
     createRequest.setLocation(tmpDirBase + "/test_catalog/test_db/test_table.lance");
-    createRequest.setSchema(TestHelper.createTestSchema());
 
     byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(createRequest, testData);
@@ -499,7 +492,6 @@ public class TestHive3Namespace {
     CreateTableRequest createRequest1 = new CreateTableRequest();
     createRequest1.setId(Lists.list("test_catalog", "test_db", "table1"));
     createRequest1.setLocation(tmpDirBase + "/test_catalog/test_db/table1.lance");
-    createRequest1.setSchema(TestHelper.createTestSchema());
 
     byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(createRequest1, testData);
@@ -508,7 +500,6 @@ public class TestHive3Namespace {
     CreateTableRequest createRequest2 = new CreateTableRequest();
     createRequest2.setId(Lists.list("test_catalog", "test_db", "table2"));
     createRequest2.setLocation(tmpDirBase + "/test_catalog/test_db/table2.lance");
-    createRequest2.setSchema(TestHelper.createTestSchema());
 
     namespace.createTable(createRequest2, testData);
 
@@ -541,7 +532,6 @@ public class TestHive3Namespace {
       CreateTableRequest createRequest = new CreateTableRequest();
       createRequest.setId(Lists.list("test_catalog", "test_db", "table" + i));
       createRequest.setLocation(tmpDirBase + "/test_catalog/test_db/table" + i + ".lance");
-      createRequest.setSchema(TestHelper.createTestSchema());
 
       byte[] testData = TestHelper.createTestArrowData(allocator);
       namespace.createTable(createRequest, testData);
@@ -582,7 +572,6 @@ public class TestHive3Namespace {
     CreateTableRequest createRequest = new CreateTableRequest();
     createRequest.setId(Lists.list("test_catalog", "custom_db", "custom_table"));
     createRequest.setLocation(tmpDirBase + "/test_catalog/custom_db/custom_table.lance");
-    createRequest.setSchema(TestHelper.createTestSchema());
 
     byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(createRequest, testData);
@@ -731,7 +720,6 @@ public class TestHive3Namespace {
     CreateTableRequest createRequest = new CreateTableRequest();
     createRequest.setId(Lists.list("test_catalog_restrict", "test_db", "test_table"));
     createRequest.setLocation(tmpDirBase + "/test_catalog_restrict/test_db/test_table.lance");
-    createRequest.setSchema(TestHelper.createTestSchema());
 
     byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(createRequest, testData);
@@ -788,7 +776,6 @@ public class TestHive3Namespace {
     CreateTableRequest createRequest1 = new CreateTableRequest();
     createRequest1.setId(Lists.list("test_catalog_cascade_db", "test_db", "table1"));
     createRequest1.setLocation(tmpDirBase + "/test_catalog_cascade_db/test_db/table1.lance");
-    createRequest1.setSchema(TestHelper.createTestSchema());
 
     byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(createRequest1, testData);
@@ -797,7 +784,6 @@ public class TestHive3Namespace {
     CreateTableRequest createRequest2 = new CreateTableRequest();
     createRequest2.setId(Lists.list("test_catalog_cascade_db", "test_db", "table2"));
     createRequest2.setLocation(tmpDirBase + "/test_catalog_cascade_db/test_db/table2.lance");
-    createRequest2.setSchema(TestHelper.createTestSchema());
 
     namespace.createTable(createRequest2, testData);
 
@@ -836,7 +822,6 @@ public class TestHive3Namespace {
     CreateTableRequest createRequest = new CreateTableRequest();
     createRequest.setId(Lists.list("test_catalog_cascade", "test_db", "test_table"));
     createRequest.setLocation(tmpDirBase + "/test_catalog_cascade/test_db/test_table.lance");
-    createRequest.setSchema(TestHelper.createTestSchema());
 
     byte[] testData = TestHelper.createTestArrowData(allocator);
     namespace.createTable(createRequest, testData);

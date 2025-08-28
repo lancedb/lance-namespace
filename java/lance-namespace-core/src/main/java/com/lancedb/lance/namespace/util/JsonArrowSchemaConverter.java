@@ -168,4 +168,109 @@ public class JsonArrowSchemaConverter {
         throw new IllegalArgumentException("Unsupported Arrow type: " + typeName);
     }
   }
+
+  public static JsonArrowSchema convertToJsonArrowSchema(Schema arrowSchema) {
+    if (arrowSchema == null) {
+      return null;
+    }
+
+    JsonArrowSchema jsonSchema = new JsonArrowSchema();
+
+    // Convert fields
+    List<JsonArrowField> jsonFields = new ArrayList<>();
+    for (Field field : arrowSchema.getFields()) {
+      jsonFields.add(convertToJsonArrowField(field));
+    }
+    jsonSchema.setFields(jsonFields);
+
+    // Convert metadata
+    if (arrowSchema.getCustomMetadata() != null) {
+      jsonSchema.setMetadata(arrowSchema.getCustomMetadata());
+    }
+
+    return jsonSchema;
+  }
+
+  private static JsonArrowField convertToJsonArrowField(Field field) {
+    JsonArrowField jsonField = new JsonArrowField();
+    jsonField.setName(field.getName());
+    jsonField.setNullable(field.isNullable());
+    jsonField.setType(convertToJsonArrowDataType(field.getType(), field.getChildren()));
+
+    if (field.getMetadata() != null && !field.getMetadata().isEmpty()) {
+      jsonField.setMetadata(field.getMetadata());
+    }
+
+    return jsonField;
+  }
+
+  private static JsonArrowDataType convertToJsonArrowDataType(
+      ArrowType arrowType, List<Field> children) {
+    JsonArrowDataType jsonType = new JsonArrowDataType();
+
+    // Convert type name - for now we just set the basic type
+    String typeName = arrowTypeToString(arrowType);
+    jsonType.setType(typeName);
+
+    // Handle children for complex types
+    if (children != null && !children.isEmpty()) {
+      List<JsonArrowField> jsonChildren = new ArrayList<>();
+      for (Field child : children) {
+        jsonChildren.add(convertToJsonArrowField(child));
+      }
+      jsonType.setFields(jsonChildren);
+    }
+
+    return jsonType;
+  }
+
+  private static String arrowTypeToString(ArrowType arrowType) {
+    if (arrowType instanceof ArrowType.Null) {
+      return "null";
+    } else if (arrowType instanceof ArrowType.Bool) {
+      return "bool";
+    } else if (arrowType instanceof ArrowType.Int) {
+      ArrowType.Int intType = (ArrowType.Int) arrowType;
+      return "int" + intType.getBitWidth();
+    } else if (arrowType instanceof ArrowType.FloatingPoint) {
+      ArrowType.FloatingPoint fp = (ArrowType.FloatingPoint) arrowType;
+      return fp.getPrecision() == FloatingPointPrecision.SINGLE ? "float32" : "float64";
+    } else if (arrowType instanceof ArrowType.Utf8) {
+      return "utf8";
+    } else if (arrowType instanceof ArrowType.LargeUtf8) {
+      return "largeutf8";
+    } else if (arrowType instanceof ArrowType.Binary) {
+      return "binary";
+    } else if (arrowType instanceof ArrowType.LargeBinary) {
+      return "largebinary";
+    } else if (arrowType instanceof ArrowType.FixedSizeBinary) {
+      return "fixedsizebinary";
+    } else if (arrowType instanceof ArrowType.Date) {
+      return "date";
+    } else if (arrowType instanceof ArrowType.Time) {
+      return "time";
+    } else if (arrowType instanceof ArrowType.Timestamp) {
+      return "timestamp";
+    } else if (arrowType instanceof ArrowType.Duration) {
+      return "duration";
+    } else if (arrowType instanceof ArrowType.Interval) {
+      return "interval";
+    } else if (arrowType instanceof ArrowType.Decimal) {
+      return "decimal";
+    } else if (arrowType instanceof ArrowType.List) {
+      return "list";
+    } else if (arrowType instanceof ArrowType.LargeList) {
+      return "largelist";
+    } else if (arrowType instanceof ArrowType.FixedSizeList) {
+      return "fixedsizelist";
+    } else if (arrowType instanceof ArrowType.Struct) {
+      return "struct";
+    } else if (arrowType instanceof ArrowType.Map) {
+      return "map";
+    } else if (arrowType instanceof ArrowType.Union) {
+      return "union";
+    } else {
+      return arrowType.getTypeID().toString().toLowerCase();
+    }
+  }
 }

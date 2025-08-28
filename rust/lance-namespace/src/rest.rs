@@ -9,18 +9,19 @@ use lance_namespace_reqwest_client::{
     apis::{configuration::Configuration, namespace_api, table_api, transaction_api},
     models::{
         AlterTransactionRequest, AlterTransactionResponse, CountTableRowsRequest,
-        CreateNamespaceRequest, CreateNamespaceResponse, CreateTableIndexRequest,
-        CreateTableIndexResponse, CreateTableRequest, CreateTableResponse, DeleteFromTableRequest,
-        DeleteFromTableResponse, DeregisterTableRequest, DeregisterTableResponse,
-        DescribeNamespaceRequest, DescribeNamespaceResponse, DescribeTableIndexStatsRequest,
-        DescribeTableIndexStatsResponse, DescribeTableRequest, DescribeTableResponse,
-        DescribeTransactionRequest, DescribeTransactionResponse, DropNamespaceRequest,
-        DropNamespaceResponse, DropTableRequest, DropTableResponse, InsertIntoTableRequest,
-        InsertIntoTableResponse, ListNamespacesRequest, ListNamespacesResponse,
-        ListTableIndicesRequest, ListTableIndicesResponse, ListTablesRequest, ListTablesResponse,
-        MergeInsertIntoTableRequest, MergeInsertIntoTableResponse, NamespaceExistsRequest,
-        QueryTableRequest, RegisterTableRequest, RegisterTableResponse, TableExistsRequest,
-        UpdateTableRequest, UpdateTableResponse,
+        CreateEmptyTableRequest, CreateEmptyTableResponse, CreateNamespaceRequest,
+        CreateNamespaceResponse, CreateTableIndexRequest, CreateTableIndexResponse,
+        CreateTableRequest, CreateTableResponse, DeleteFromTableRequest, DeleteFromTableResponse,
+        DeregisterTableRequest, DeregisterTableResponse, DescribeNamespaceRequest,
+        DescribeNamespaceResponse, DescribeTableIndexStatsRequest, DescribeTableIndexStatsResponse,
+        DescribeTableRequest, DescribeTableResponse, DescribeTransactionRequest,
+        DescribeTransactionResponse, DropNamespaceRequest, DropNamespaceResponse, DropTableRequest,
+        DropTableResponse, InsertIntoTableRequest, InsertIntoTableResponse, ListNamespacesRequest,
+        ListNamespacesResponse, ListTableIndicesRequest, ListTableIndicesResponse,
+        ListTablesRequest, ListTablesResponse, MergeInsertIntoTableRequest,
+        MergeInsertIntoTableResponse, NamespaceExistsRequest, QueryTableRequest,
+        RegisterTableRequest, RegisterTableResponse, TableExistsRequest, UpdateTableRequest,
+        UpdateTableResponse,
     },
 };
 
@@ -367,6 +368,22 @@ impl LanceNamespace for RestNamespace {
             mode,
             request.location.as_deref(),
             properties_json.as_deref(),
+        )
+        .await
+        .map_err(convert_api_error)
+    }
+
+    async fn create_empty_table(
+        &self,
+        request: CreateEmptyTableRequest,
+    ) -> Result<CreateEmptyTableResponse> {
+        let id = object_id_str(&request.id, self.config.delimiter())?;
+
+        table_api::create_empty_table(
+            &self.reqwest_config,
+            &id,
+            request,
+            Some(self.config.delimiter()),
         )
         .await
         .map_err(convert_api_error)
@@ -831,7 +848,6 @@ mod tests {
             ]),
             location: None,
             mode: Some(create_table_request::Mode::Create),
-            schema: None,
             properties: None,
         };
 
@@ -935,7 +951,6 @@ mod tests {
             ]),
             location: None,
             mode: Some(create_table_request::Mode::Create),
-            schema: None,
             properties: None,
         };
 

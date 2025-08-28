@@ -62,7 +62,7 @@ The request and response schema is defined using JSON schema in the
 All error responses follow the JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807):
 
 ```yaml
---8<-- "src/rest.yaml:1574:1614"
+--8<-- "src/rest.yaml:1622:1662"
 ```
 
 ## HTTP Status Codes and Responses
@@ -70,47 +70,47 @@ All error responses follow the JSON error response model based on [RFC-7807](htt
 ### 400 - Bad Request Error Response
 
 ```yaml
---8<-- "src/rest.yaml:3410:3427"
+--8<-- "src/rest.yaml:3493:3510"
 ```
 
 ### 401 - Unauthorized Error Response
 
 ```yaml
---8<-- "src/rest.yaml:3428:3441"
+--8<-- "src/rest.yaml:3511:3524"
 ```
 
 ### 403 - Forbidden Error Response
 
 ```yaml
---8<-- "src/rest.yaml:3442:3455"
+--8<-- "src/rest.yaml:3525:3538"
 ```
 
 ### 404 - Not Found Error Response
 
 ```yaml
---8<-- "src/rest.yaml:3456:3470"
+--8<-- "src/rest.yaml:3539:3553"
 ```
 
 ### 406 - Unsupported Operation Error Response
 
 ```yaml
---8<-- "src/rest.yaml:3471:3484"
+--8<-- "src/rest.yaml:3554:3567"
 ```
 
 ### 409 - Conflict Error Response
 
 ```yaml
---8<-- "src/rest.yaml:3485:3498"
+--8<-- "src/rest.yaml:3568:3581"
 ```
 
 ### 503 - Service Unavailable Error Response
 
 ```yaml
---8<-- "src/rest.yaml:3499:3514"
+--8<-- "src/rest.yaml:3582:3597"
 ```
 
 ### 5XX - Server Error Response
 
 ```yaml
---8<-- "src/rest.yaml:3515:3531"
+--8<-- "src/rest.yaml:3598:3614"
 ```

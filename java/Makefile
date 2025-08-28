@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VERSION = 0.0.8
+VERSION = 0.0.9
 
 .PHONY: clean-apache-client
 clean-apache-client:
@@ -87,6 +87,11 @@ build-glue:
 	./mvnw spotless:apply -pl lance-namespace-glue -am
 	./mvnw install -pl lance-namespace-glue -am
 
+.PHONY: build-unity
+build-unity:
+	./mvnw spotless:apply -pl lance-namespace-unity -am
+	./mvnw install -pl lance-namespace-unity -am
+
 .PHONY: build-lancedb
 build-lancedb:
 	./mvnw spotless:apply -pl lance-namespace-lancedb -am
@@ -99,4 +104,4 @@ clean: clean-apache-client clean-springboot-server
 gen: gen-apache-client gen-springboot-server lint-apache-client lint-springboot-server
 
 .PHONY: build
-build: build-apache-client build-springboot-server build-core build-adapter build-hive2 build-hive3 build-glue build-lancedb
+build: build-apache-client build-springboot-server build-core build-adapter build-hive2 build-hive3 build-glue build-unity build-lancedb

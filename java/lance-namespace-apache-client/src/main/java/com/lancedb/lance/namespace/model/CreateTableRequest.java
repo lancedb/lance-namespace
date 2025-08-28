@@ -33,7 +33,6 @@ import java.util.StringJoiner;
   CreateTableRequest.JSON_PROPERTY_ID,
   CreateTableRequest.JSON_PROPERTY_LOCATION,
   CreateTableRequest.JSON_PROPERTY_MODE,
-  CreateTableRequest.JSON_PROPERTY_SCHEMA,
   CreateTableRequest.JSON_PROPERTY_PROPERTIES
 })
 @javax.annotation.Generated(
@@ -88,9 +87,6 @@ public class CreateTableRequest {
 
   public static final String JSON_PROPERTY_MODE = "mode";
   @javax.annotation.Nullable private ModeEnum mode;
-
-  public static final String JSON_PROPERTY_SCHEMA = "schema";
-  @javax.annotation.Nullable private JsonArrowSchema schema;
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
@@ -180,30 +176,6 @@ public class CreateTableRequest {
     this.mode = mode;
   }
 
-  public CreateTableRequest schema(@javax.annotation.Nullable JsonArrowSchema schema) {
-
-    this.schema = schema;
-    return this;
-  }
-
-  /**
-   * Get schema
-   *
-   * @return schema
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_SCHEMA)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public JsonArrowSchema getSchema() {
-    return schema;
-  }
-
-  @JsonProperty(JSON_PROPERTY_SCHEMA)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setSchema(@javax.annotation.Nullable JsonArrowSchema schema) {
-    this.schema = schema;
-  }
-
   public CreateTableRequest properties(@javax.annotation.Nullable Map<String, String> properties) {
 
     this.properties = properties;
@@ -248,13 +220,12 @@ public class CreateTableRequest {
     return Objects.equals(this.id, createTableRequest.id)
         && Objects.equals(this.location, createTableRequest.location)
         && Objects.equals(this.mode, createTableRequest.mode)
-        && Objects.equals(this.schema, createTableRequest.schema)
         && Objects.equals(this.properties, createTableRequest.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location, mode, schema, properties);
+    return Objects.hash(id, location, mode, properties);
   }
 
   @Override
@@ -264,7 +235,6 @@ public class CreateTableRequest {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
-    sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -362,11 +332,6 @@ public class CreateTableRequest {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);
       }
-    }
-
-    // add `schema` to the URL query string
-    if (getSchema() != null) {
-      joiner.add(getSchema().toUrlQueryString(prefix + "schema" + suffix));
     }
 
     // add `properties` to the URL query string

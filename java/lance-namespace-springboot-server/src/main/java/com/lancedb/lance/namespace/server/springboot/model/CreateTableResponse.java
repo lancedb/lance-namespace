@@ -30,36 +30,13 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CreateTableResponse {
 
-  private Long version;
-
   private String location;
 
-  private JsonArrowSchema schema;
+  private Long version;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
   @Valid private Map<String, String> storageOptions = new HashMap<>();
-
-  public CreateTableResponse version(Long version) {
-    this.version = version;
-    return this;
-  }
-
-  /**
-   * Get version minimum: 0
-   *
-   * @return version
-   */
-  @Min(0L)
-  @Schema(name = "version", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("version")
-  public Long getVersion() {
-    return version;
-  }
-
-  public void setVersion(Long version) {
-    this.version = version;
-  }
 
   public CreateTableResponse location(String location) {
     this.location = location;
@@ -81,25 +58,25 @@ public class CreateTableResponse {
     this.location = location;
   }
 
-  public CreateTableResponse schema(JsonArrowSchema schema) {
-    this.schema = schema;
+  public CreateTableResponse version(Long version) {
+    this.version = version;
     return this;
   }
 
   /**
-   * Get schema
+   * Get version minimum: 0
    *
-   * @return schema
+   * @return version
    */
-  @Valid
-  @Schema(name = "schema", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("schema")
-  public JsonArrowSchema getSchema() {
-    return schema;
+  @Min(0L)
+  @Schema(name = "version", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("version")
+  public Long getVersion() {
+    return version;
   }
 
-  public void setSchema(JsonArrowSchema schema) {
-    this.schema = schema;
+  public void setVersion(Long version) {
+    this.version = version;
   }
 
   public CreateTableResponse properties(Map<String, String> properties) {
@@ -172,25 +149,23 @@ public class CreateTableResponse {
       return false;
     }
     CreateTableResponse createTableResponse = (CreateTableResponse) o;
-    return Objects.equals(this.version, createTableResponse.version)
-        && Objects.equals(this.location, createTableResponse.location)
-        && Objects.equals(this.schema, createTableResponse.schema)
+    return Objects.equals(this.location, createTableResponse.location)
+        && Objects.equals(this.version, createTableResponse.version)
         && Objects.equals(this.properties, createTableResponse.properties)
         && Objects.equals(this.storageOptions, createTableResponse.storageOptions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version, location, schema, properties, storageOptions);
+    return Objects.hash(location, version, properties, storageOptions);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableResponse {\n");
-    sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
-    sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
     sb.append("}");

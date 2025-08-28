@@ -3,16 +3,16 @@
 ## Description
 
 ```yaml
---8<-- "src/rest.yaml:934:935"
+--8<-- "src/rest.yaml:938:939"
 ```
 
 ## Request Schema
 
 ```yaml
---8<-- "src/rest.yaml:1882:1900"
+--8<-- "src/rest.yaml:1930:1948"
 ```
 ## Response Schema
 
 ```yaml
---8<-- "src/rest.yaml:1901:1908"
+--8<-- "src/rest.yaml:1949:1956"
 ```

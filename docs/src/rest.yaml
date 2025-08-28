@@ -410,6 +410,10 @@ paths:
         
         This operation should behave exactly like DescribeTable, 
         except it does not contain a response body.
+        
+        For DirectoryNamespace implementation, a table exists if either:
+        - The table has Lance data versions (regular table created with CreateTable)
+        - A `.lance-reserved` file exists in the table directory (empty table created with CreateEmptyTable)
       requestBody:
         required: true
         content:
@@ -1363,6 +1367,50 @@ paths:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
           $ref: '#/components/responses/NotFoundErrorResponse'
+        503:
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        5XX:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /v1/table/{id}/create-empty:
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+    post:
+      tags:
+        - Table
+        - Metadata
+      summary: Create an empty table
+      operationId: CreateEmptyTable
+      description: |
+        Create an empty table with the given name without touching storage.
+        This is a metadata-only operation that records the table existence and sets up aspects like access control.
+        
+        For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory
+        to mark the table's existence without creating actual Lance data files.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEmptyTableRequest'
+      responses:
+        200:
+          description: Table properties result when creating an empty table
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateEmptyTableResponse'
+        400:
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        404:
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        409:
+          $ref: '#/components/responses/ConflictErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
@@ -2426,8 +2474,6 @@ components:
             - create
             - exist_ok
             - overwrite
-        schema:
-          $ref: '#/components/schemas/JsonArrowSchema'
         properties:
           type: object
           additionalProperties:
@@ -2442,8 +2488,45 @@ components:
           type: integer
           format: int64
           minimum: 0
-        schema:
-          $ref: '#/components/schemas/JsonArrowSchema'
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+        storage_options:
+          type: object
+          description: |
+            Configuration options to be used to access storage. The available
+            options depend on the type of storage in use. These will be
+            passed directly to Lance to initialize storage access.
+          additionalProperties:
+            type: string
+
+    CreateEmptyTableRequest:
+      type: object
+      description: |
+        Request for creating an empty table.
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+        location:
+          type: string
+          description: |
+            Optional storage location for the table.
+            If not provided, the namespace implementation should determine the table location.
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+
+    CreateEmptyTableResponse:
+      type: object
+      description: |
+        Response for creating an empty table.
+      properties:
+        location:
+          type: string
         properties:
           type: object
           additionalProperties:

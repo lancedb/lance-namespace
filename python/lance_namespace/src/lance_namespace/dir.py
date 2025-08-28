@@ -28,6 +28,8 @@ from lance_namespace_urllib3_client.models import (
     ListTablesResponse,
     CreateTableRequest,
     CreateTableResponse,
+    CreateEmptyTableRequest,
+    CreateEmptyTableResponse,
     DropTableRequest,
     DropTableResponse,
     DescribeTableRequest,
@@ -107,15 +109,29 @@ class DirectoryNamespace(LanceNamespace):
                 # Strip .lance suffix to get clean table name
                 table_name = path[:-6]  # Remove '.lance' (6 characters)
                 
-                # Check if it's a valid Lance dataset
+                # Check if it's a valid Lance dataset or has .lance-reserved file
+                is_table = False
+                
+                # First check for .lance-reserved file
                 try:
-                    versions_path = f"{table_name}.lance/_versions/"
-                    version_entries = list(self.operator.list(versions_path, limit=1))
-                    if version_entries:
-                        tables.append(table_name)  # Add clean name without .lance
+                    reserved_file_path = f"{table_name}.lance/.lance-reserved"
+                    if self.operator.stat(reserved_file_path):
+                        is_table = True
                 except:
-                    # If _versions doesn't exist, it's not a Lance dataset
                     pass
+                
+                # If not found, check for _versions directory
+                if not is_table:
+                    try:
+                        versions_path = f"{table_name}.lance/_versions/"
+                        version_entries = list(self.operator.list(versions_path, limit=1))
+                        if version_entries:
+                            is_table = True
+                    except:
+                        pass
+                
+                if is_table:
+                    tables.append(table_name)  # Add clean name without .lance
             
             response = ListTablesResponse(tables=tables)
             return response
@@ -124,12 +140,12 @@ class DirectoryNamespace(LanceNamespace):
     
     
     def create_table(self, request: CreateTableRequest, request_data: bytes) -> CreateTableResponse:
-        """Create a table using Lance dataset."""
+        """Create a table using Lance dataset from Arrow IPC stream."""
         if not request.id:
             raise ValueError("table ID cannot be empty")
         
-        if not request.var_schema:
-            raise ValueError("Schema is required in CreateTableRequest")
+        if not request_data:
+            raise ValueError("Request data (Arrow IPC stream) is required for create_table")
         
         table_name = self._normalize_table_id(request.id)
         table_path = self._get_table_path(table_name)
@@ -137,22 +153,35 @@ class DirectoryNamespace(LanceNamespace):
         if request.location and request.location != table_path:
             raise ValueError(f"Cannot create table {table_name} at location {request.location}, must be at location {table_path}")
         
-        # Convert JsonArrowSchema to PyArrow Schema
-        schema = self._convert_json_arrow_schema_to_pyarrow(request.var_schema)
+        # Extract table from Arrow IPC stream
+        try:
+            reader = pa.ipc.open_stream(request_data)
+            table = reader.read_all()
+        except Exception as e:
+            raise ValueError(f"Invalid Arrow IPC stream: {e}")
         
-        # Create empty table with schema
-        arrays = []
-        for field in schema:
-            # Create empty array for each field
-            empty_array = pa.array([], type=field.type)
-            arrays.append(empty_array)
-        
-        empty_table = pa.Table.from_arrays(arrays, schema=schema)
-        
-        # Create Lance dataset
-        lance.write_dataset(empty_table, table_path, storage_options=self.config.storage_options)
+        # Create Lance dataset with the data
+        lance.write_dataset(table, table_path, storage_options=self.config.storage_options)
         
         response = CreateTableResponse(location=table_path, version=1)
+        return response
+    
+    def create_empty_table(self, request: CreateEmptyTableRequest) -> CreateEmptyTableResponse:
+        """Create an empty table (metadata only) by writing a .lance-reserved file."""
+        if not request.id:
+            raise ValueError("table ID cannot be empty")
+        
+        table_name = self._normalize_table_id(request.id)
+        table_path = self._get_table_path(table_name)
+        
+        if request.location and request.location != table_path:
+            raise ValueError(f"Cannot create table {table_name} at location {request.location}, must be at location {table_path}")
+        
+        # Create the .lance-reserved file
+        reserved_file_path = f"{table_path}/.lance-reserved"
+        self.operator.write(reserved_file_path, b"")
+        
+        response = CreateEmptyTableResponse(location=table_path)
         return response
     
     def drop_table(self, request: DropTableRequest) -> DropTableResponse:
@@ -179,14 +208,29 @@ class DirectoryNamespace(LanceNamespace):
         table_name = self._normalize_table_id(request.id)
         table_path = self._get_table_path(table_name)
         
+        # Check if table exists - either as Lance dataset or with .lance-reserved file
+        table_exists = False
+        
+        # First check for .lance-reserved file
         try:
-            # Check if it's a Lance dataset by looking for objects with _versions/ prefix
-            versions_path = f"{table_name}.lance/_versions/"
-            version_entries = list(self.operator.list(versions_path, limit=1))
-            if not version_entries:
-                raise RuntimeError(f"Table does not exist: {table_name}")
-        except Exception as e:
-            raise RuntimeError(f"Table does not exist: {table_name}: {e}")
+            reserved_file_path = f"{table_name}.lance/.lance-reserved"
+            if self.operator.stat(reserved_file_path):
+                table_exists = True
+        except:
+            pass
+        
+        # If not found, check if it's a Lance dataset by looking for objects with _versions/ prefix
+        if not table_exists:
+            try:
+                versions_path = f"{table_name}.lance/_versions/"
+                version_entries = list(self.operator.list(versions_path, limit=1))
+                if version_entries:
+                    table_exists = True
+            except:
+                pass
+        
+        if not table_exists:
+            raise RuntimeError(f"Table does not exist: {table_name}")
         
         response = DescribeTableResponse(location=table_path)
         return response

@@ -36,6 +36,8 @@ from lance_namespace_urllib3_client.models import (
     ListTablesResponse,
     CreateTableRequest,
     CreateTableResponse,
+    CreateEmptyTableRequest,
+    CreateEmptyTableResponse,
     DropTableRequest,
     DropTableResponse,
     DescribeTableRequest,
@@ -389,11 +391,11 @@ class GlueNamespace(LanceNamespace):
             raise RuntimeError(f"Failed to describe table: {e}")
     
     def create_table(self, request: CreateTableRequest, request_data: bytes) -> CreateTableResponse:
-        """Create a table."""
+        """Create a table with data from Arrow IPC stream."""
         database_name, table_name = self._parse_table_identifier(request.id)
         
-        if not request.var_schema:
-            raise ValueError("Schema is required in CreateTableRequest")
+        if not request_data:
+            raise ValueError("Request data (Arrow IPC stream) is required for create_table")
         
         # Determine table location
         if request.location:
@@ -408,32 +410,13 @@ class GlueNamespace(LanceNamespace):
                 # Use S3 default location
                 table_location = f"s3://lance-namespace/{database_name}/{table_name}.lance"
         
-        # Convert schema for validation
-        schema = convert_json_arrow_schema_to_pyarrow(request.var_schema)
-        
-        # Convert Arrow IPC stream bytes to RecordBatch
-        if request_data:
-            # Read Arrow IPC stream
+        # Extract table from Arrow IPC stream
+        try:
             reader = pa.ipc.open_stream(pa.py_buffer(request_data))
-            batches = [batch for batch in reader]
-            
-            # Convert to table for Lance
-            if batches:
-                table = pa.Table.from_batches(batches, schema=schema)
-            else:
-                # No data, create empty table with schema
-                arrays = []
-                for field in schema:
-                    empty_array = pa.array([], type=field.type)
-                    arrays.append(empty_array)
-                table = pa.Table.from_arrays(arrays, schema=schema)
-        else:
-            # No data provided, create empty table with schema
-            arrays = []
-            for field in schema:
-                empty_array = pa.array([], type=field.type)
-                arrays.append(empty_array)
-            table = pa.Table.from_arrays(arrays, schema=schema)
+            table = reader.read_all()
+            schema = table.schema
+        except Exception as e:
+            raise ValueError(f"Invalid Arrow IPC stream: {e}")
         
         # Write Lance dataset
         lance.write_dataset(table, table_location, storage_options=self.config.storage_options)
@@ -462,6 +445,67 @@ class GlueNamespace(LanceNamespace):
             if error_name == 'AlreadyExistsException':
                 raise RuntimeError(f"Table already exists: {database_name}.{table_name}")
             raise RuntimeError(f"Failed to create table: {e}")
+    
+    def create_empty_table(self, request: CreateEmptyTableRequest) -> CreateEmptyTableResponse:
+        """Create an empty table (metadata only) in Glue catalog."""
+        database_name, table_name = self._parse_table_identifier(request.id)
+        
+        # Determine table location
+        if request.location:
+            table_location = request.location
+        else:
+            # Use default location pattern
+            db_response = self.glue.get_database(Name=database_name)
+            db_location = db_response['Database'].get('LocationUri', '')
+            if db_location:
+                table_location = f"{db_location}/{table_name}.lance"
+            else:
+                # Use S3 default location
+                table_location = f"s3://lance-namespace/{database_name}/{table_name}.lance"
+        
+        # Create a minimal schema for Glue (placeholder schema)
+        glue_columns = [
+            {
+                'Name': '__placeholder_id',
+                'Type': 'bigint',
+                'Comment': 'Placeholder column for empty table'
+            }
+        ]
+        
+        # Create Glue table entry without creating actual Lance dataset
+        table_input = {
+            'Name': table_name,
+            'TableType': EXTERNAL_TABLE,
+            'Parameters': {
+                TABLE_TYPE: LANCE_TABLE_TYPE,
+                'empty_table': 'true',  # Mark as empty table
+            },
+            'StorageDescriptor': {
+                'Location': table_location,
+                'Columns': glue_columns,
+                'InputFormat': 'org.apache.hadoop.mapred.TextInputFormat',
+                'OutputFormat': 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat',
+                'SerdeInfo': {
+                    'SerializationLibrary': 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'
+                }
+            }
+        }
+        
+        # Add additional properties if specified
+        if request.properties:
+            table_input['Parameters'].update(request.properties)
+        
+        try:
+            self.glue.create_table(
+                DatabaseName=database_name,
+                TableInput=table_input
+            )
+        except Exception as e:
+            if 'AlreadyExistsException' in str(e):
+                raise RuntimeError(f"Table already exists: {database_name}.{table_name}")
+            raise RuntimeError(f"Failed to create empty table: {e}")
+        
+        return CreateEmptyTableResponse(location=table_location)
     
     def drop_table(self, request: DropTableRequest) -> DropTableResponse:
         """Drop a table - deletes both the Lance dataset and Glue catalog entry."""

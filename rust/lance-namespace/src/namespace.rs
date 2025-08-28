@@ -6,14 +6,14 @@ use thiserror::Error;
 
 use lance_namespace_reqwest_client::models::{
     AlterTransactionRequest, AlterTransactionResponse, CountTableRowsRequest,
-    CreateNamespaceRequest, CreateNamespaceResponse, CreateTableIndexRequest,
-    CreateTableIndexResponse, CreateTableRequest, CreateTableResponse, DeleteFromTableRequest,
-    DeleteFromTableResponse, DeregisterTableRequest, DeregisterTableResponse,
-    DescribeNamespaceRequest, DescribeNamespaceResponse, DescribeTableIndexStatsRequest,
-    DescribeTableIndexStatsResponse, DescribeTableRequest, DescribeTableResponse,
-    DescribeTransactionRequest, DescribeTransactionResponse, DropNamespaceRequest,
-    DropNamespaceResponse, DropTableRequest, DropTableResponse, InsertIntoTableRequest,
-    InsertIntoTableResponse, ListNamespacesRequest, ListNamespacesResponse,
+    CreateEmptyTableRequest, CreateEmptyTableResponse, CreateNamespaceRequest,
+    CreateNamespaceResponse, CreateTableIndexRequest, CreateTableIndexResponse, CreateTableRequest,
+    CreateTableResponse, DeleteFromTableRequest, DeleteFromTableResponse, DeregisterTableRequest,
+    DeregisterTableResponse, DescribeNamespaceRequest, DescribeNamespaceResponse,
+    DescribeTableIndexStatsRequest, DescribeTableIndexStatsResponse, DescribeTableRequest,
+    DescribeTableResponse, DescribeTransactionRequest, DescribeTransactionResponse,
+    DropNamespaceRequest, DropNamespaceResponse, DropTableRequest, DropTableResponse,
+    InsertIntoTableRequest, InsertIntoTableResponse, ListNamespacesRequest, ListNamespacesResponse,
     ListTableIndicesRequest, ListTableIndicesResponse, ListTablesRequest, ListTablesResponse,
     MergeInsertIntoTableRequest, MergeInsertIntoTableResponse, NamespaceExistsRequest,
     QueryTableRequest, RegisterTableRequest, RegisterTableResponse, TableExistsRequest,
@@ -126,13 +126,23 @@ pub trait LanceNamespace: Send + Sync {
         Err(NamespaceError::NotSupported("count_table_rows".to_string()))
     }
 
-    /// Create a new table.
+    /// Create a new table with data from Arrow IPC stream.
     async fn create_table(
         &self,
         _request: CreateTableRequest,
         _request_data: Bytes,
     ) -> Result<CreateTableResponse> {
         Err(NamespaceError::NotSupported("create_table".to_string()))
+    }
+
+    /// Create an empty table (metadata only operation).
+    async fn create_empty_table(
+        &self,
+        _request: CreateEmptyTableRequest,
+    ) -> Result<CreateEmptyTableResponse> {
+        Err(NamespaceError::NotSupported(
+            "create_empty_table".to_string(),
+        ))
     }
 
     /// Insert data into a table.

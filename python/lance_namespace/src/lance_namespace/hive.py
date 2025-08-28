@@ -105,6 +105,8 @@ from lance_namespace_urllib3_client.models import (
     ListTablesResponse,
     CreateTableRequest,
     CreateTableResponse,
+    CreateEmptyTableRequest,
+    CreateEmptyTableResponse,
     DropTableRequest,
     DropTableResponse,
     DescribeTableRequest,
@@ -633,14 +635,20 @@ class Hive2Namespace(LanceNamespace):
         try:
             database, table_name = self._normalize_identifier(request.id)
             
+            if not request_data:
+                raise ValueError("Request data (Arrow IPC stream) is required for create_table")
+            
             # Determine table location
             location = request.location
             if not location:
                 location = self._get_table_location(database, table_name)
             
-            # Parse Arrow data
-            reader = pa.ipc.open_stream(request_data)
-            table = reader.read_all()
+            # Extract table from Arrow IPC stream
+            try:
+                reader = pa.ipc.open_stream(request_data)
+                table = reader.read_all()
+            except Exception as e:
+                raise ValueError(f"Invalid Arrow IPC stream: {e}")
             
             # Create Lance dataset
             if request.mode == "create":
@@ -668,6 +676,69 @@ class Hive2Namespace(LanceNamespace):
             )
         except Exception as e:
             logger.error(f"Failed to create table {request.id}: {e}")
+            raise
+    
+    def create_empty_table(self, request: CreateEmptyTableRequest) -> CreateEmptyTableResponse:
+        """Create an empty table (metadata only) in Hive metastore."""
+        try:
+            database, table_name = self._normalize_identifier(request.id)
+            
+            # Determine table location
+            location = request.location
+            if not location:
+                location = self._get_table_location(database, table_name)
+            
+            # Create a minimal schema for Hive (placeholder schema)
+            if not FieldSchema:
+                raise ImportError("Hive dependencies not available")
+            
+            fields = [
+                FieldSchema(
+                    name='__placeholder_id',
+                    type='bigint',
+                    comment='Placeholder column for empty table'
+                )
+            ]
+            
+            # Create Hive table metadata without creating actual Lance dataset
+            storage_descriptor = StorageDescriptor(
+                cols=fields,
+                location=location,
+                inputFormat='org.apache.hadoop.mapred.TextInputFormat',
+                outputFormat='org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat',
+                serdeInfo=SerDeInfo(
+                    serializationLib='org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'
+                )
+            )
+            
+            # Set table parameters to identify it as Lance table
+            parameters = {
+                TABLE_TYPE_KEY: "LANCE",
+                MANAGED_BY_KEY: "storage",
+                'empty_table': 'true',  # Mark as empty table
+            }
+            
+            if request.properties:
+                parameters.update(request.properties)
+            
+            hive_table = HiveTable(
+                tableName=table_name,
+                dbName=database,
+                sd=storage_descriptor,
+                parameters=parameters,
+                tableType='EXTERNAL_TABLE'
+            )
+            
+            # Create table in Hive
+            with self.client_pool.get_client() as client:
+                client.create_table(hive_table)
+            
+            return CreateEmptyTableResponse(location=location)
+            
+        except AlreadyExistsException:
+            raise ValueError(f"Table {request.id} already exists")
+        except Exception as e:
+            logger.error(f"Failed to create empty table {request.id}: {e}")
             raise
     
     def _pyarrow_schema_to_hive_fields(self, schema: pa.Schema) -> List[FieldSchema]:

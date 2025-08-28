@@ -16,6 +16,8 @@ package com.lancedb.lance.namespace;
 import com.lancedb.lance.namespace.model.AlterTransactionRequest;
 import com.lancedb.lance.namespace.model.AlterTransactionResponse;
 import com.lancedb.lance.namespace.model.CountTableRowsRequest;
+import com.lancedb.lance.namespace.model.CreateEmptyTableRequest;
+import com.lancedb.lance.namespace.model.CreateEmptyTableResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
@@ -123,6 +125,10 @@ public interface LanceNamespace {
 
   default CreateTableResponse createTable(CreateTableRequest request, byte[] requestData) {
     throw new UnsupportedOperationException("Not supported: createTable");
+  }
+
+  default CreateEmptyTableResponse createEmptyTable(CreateEmptyTableRequest request) {
+    throw new UnsupportedOperationException("Not supported: createEmptyTable");
   }
 
   default InsertIntoTableResponse insertIntoTable(

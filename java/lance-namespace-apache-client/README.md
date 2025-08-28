@@ -51,7 +51,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.lancedb</groupId>
   <artifactId>lance-namespace-apache-client</artifactId>
-  <version>0.0.8</version>
+  <version>0.0.9</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -61,7 +61,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "com.lancedb:lance-namespace-apache-client:0.0.8"
+compile "com.lancedb:lance-namespace-apache-client:0.0.9"
 ```
 
 ### Others
@@ -74,7 +74,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-- `target/lance-namespace-apache-client-0.0.8.jar`
+- `target/lance-namespace-apache-client-0.0.9.jar`
 - `target/lib/*.jar`
 
 ## Getting Started
@@ -136,6 +136,7 @@ Class | Method | HTTP request | Description
 *MetadataApi* | [**alterTableAlterColumns**](docs/MetadataApi.md#alterTableAlterColumns) | **POST** /v1/table/{id}/alter_columns | Modify existing columns
 *MetadataApi* | [**alterTableDropColumns**](docs/MetadataApi.md#alterTableDropColumns) | **POST** /v1/table/{id}/drop_columns | Remove columns from table
 *MetadataApi* | [**alterTransaction**](docs/MetadataApi.md#alterTransaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
+*MetadataApi* | [**createEmptyTable**](docs/MetadataApi.md#createEmptyTable) | **POST** /v1/table/{id}/create-empty | Create an empty table
 *MetadataApi* | [**createNamespace**](docs/MetadataApi.md#createNamespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
 *MetadataApi* | [**createTableIndex**](docs/MetadataApi.md#createTableIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
 *MetadataApi* | [**createTableTag**](docs/MetadataApi.md#createTableTag) | **POST** /v1/table/{id}/tags/create | Create a new tag
@@ -171,6 +172,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**alterTableDropColumns**](docs/TableApi.md#alterTableDropColumns) | **POST** /v1/table/{id}/drop_columns | Remove columns from table
 *TableApi* | [**analyzeTableQueryPlan**](docs/TableApi.md#analyzeTableQueryPlan) | **POST** /v1/table/{id}/analyze_plan | Analyze query execution plan
 *TableApi* | [**countTableRows**](docs/TableApi.md#countTableRows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
+*TableApi* | [**createEmptyTable**](docs/TableApi.md#createEmptyTable) | **POST** /v1/table/{id}/create-empty | Create an empty table
 *TableApi* | [**createTable**](docs/TableApi.md#createTable) | **POST** /v1/table/{id}/create | Create a table with the given name
 *TableApi* | [**createTableIndex**](docs/TableApi.md#createTableIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
 *TableApi* | [**createTableTag**](docs/TableApi.md#createTableTag) | **POST** /v1/table/{id}/tags/create | Create a new tag
@@ -225,6 +227,8 @@ Class | Method | HTTP request | Description
  - [BoostQuery](docs/BoostQuery.md)
  - [ColumnAlteration](docs/ColumnAlteration.md)
  - [CountTableRowsRequest](docs/CountTableRowsRequest.md)
+ - [CreateEmptyTableRequest](docs/CreateEmptyTableRequest.md)
+ - [CreateEmptyTableResponse](docs/CreateEmptyTableResponse.md)
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
  - [CreateTableIndexRequest](docs/CreateTableIndexRequest.md)

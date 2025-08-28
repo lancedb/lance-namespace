@@ -35,6 +35,8 @@ from lance_namespace_urllib3_client.models import (
     CountTableRowsRequest,
     CreateTableRequest,
     CreateTableResponse,
+    CreateEmptyTableRequest,
+    CreateEmptyTableResponse,
     InsertIntoTableRequest,
     InsertIntoTableResponse,
     MergeInsertIntoTableRequest,
@@ -224,6 +226,14 @@ class LanceRestNamespace(LanceNamespace):
             body=request_data,
             delimiter=self.config.delimiter(),
             x_lance_table_properties=table_properties,
+            _headers=self.config.additional_headers(),
+        )
+    
+    def create_empty_table(self, request: CreateEmptyTableRequest) -> CreateEmptyTableResponse:
+        return self.table_api.create_empty_table(
+            id=object_id_str(request.id, self.config.delimiter(), request),
+            create_empty_table_request=request,
+            delimiter=self.config.delimiter(),
             _headers=self.config.additional_headers(),
         )
     

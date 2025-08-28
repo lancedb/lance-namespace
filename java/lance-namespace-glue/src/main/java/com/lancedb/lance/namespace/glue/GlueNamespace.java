@@ -17,6 +17,8 @@ import com.lancedb.lance.Dataset;
 import com.lancedb.lance.WriteParams;
 import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.LanceNamespaceException;
+import com.lancedb.lance.namespace.model.CreateEmptyTableRequest;
+import com.lancedb.lance.namespace.model.CreateEmptyTableResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
 import com.lancedb.lance.namespace.model.CreateTableRequest;
@@ -40,6 +42,7 @@ import com.lancedb.lance.namespace.model.NamespaceExistsRequest;
 import com.lancedb.lance.namespace.model.RegisterTableRequest;
 import com.lancedb.lance.namespace.model.RegisterTableResponse;
 import com.lancedb.lance.namespace.model.TableExistsRequest;
+import com.lancedb.lance.namespace.util.ArrowIpcUtil;
 import com.lancedb.lance.namespace.util.JsonArrowSchemaConverter;
 import com.lancedb.lance.namespace.util.OpenDalUtil;
 
@@ -71,6 +74,7 @@ import software.amazon.awssdk.services.glue.model.Table;
 import software.amazon.awssdk.services.glue.model.TableInput;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -359,6 +363,15 @@ public class GlueNamespace implements LanceNamespace, Closeable {
 
   @Override
   public CreateTableResponse createTable(CreateTableRequest request, byte[] requestData) {
+    // Validate that requestData is a valid Arrow IPC stream
+    if (requestData == null || requestData.length == 0) {
+      throw LanceNamespaceException.badRequest(
+          "Request data (Arrow IPC stream) is required for createTable",
+          "INVALID_REQUEST",
+          String.join(".", request.getId()),
+          "Arrow IPC stream data is required");
+    }
+
     validateTableId(request.getId());
     String namespaceName = request.getId().get(0);
     String tableName = request.getId().get(1);
@@ -377,8 +390,18 @@ public class GlueNamespace implements LanceNamespace, Closeable {
       params.put(MANAGED_BY_PROP, params.getOrDefault(MANAGED_BY_PROP, STORAGE_VALUE));
       params.put(VERSION_PROP, "1");
 
-      validateSchemaNotNull(request.getSchema(), namespaceName, tableName);
-      Schema schema = JsonArrowSchemaConverter.convertToArrowSchema(request.getSchema());
+      // Extract schema from Arrow IPC stream
+      JsonArrowSchema jsonSchema;
+      try {
+        jsonSchema = ArrowIpcUtil.extractSchemaFromIpc(requestData);
+      } catch (IOException e) {
+        throw LanceNamespaceException.badRequest(
+            "Invalid Arrow IPC stream: " + e.getMessage(),
+            "INVALID_ARROW_IPC",
+            namespaceName + "." + tableName,
+            "Failed to extract schema from Arrow IPC stream");
+      }
+      Schema schema = JsonArrowSchemaConverter.convertToArrowSchema(jsonSchema);
 
       WriteParams writeParams =
           new WriteParams.Builder()
@@ -428,6 +451,56 @@ public class GlueNamespace implements LanceNamespace, Closeable {
         throw GlueToLanceErrorConverter.serverError(
             e, "Failed to create table: %s.%s", namespaceName, tableName);
       }
+    }
+  }
+
+  @Override
+  public CreateEmptyTableResponse createEmptyTable(CreateEmptyTableRequest request) {
+    validateTableId(request.getId());
+    String namespaceName = request.getId().get(0);
+    String tableName = request.getId().get(1);
+
+    String location = request.getLocation();
+    if (location == null || location.isEmpty()) {
+      location = getDefaultTableLocation(namespaceName, tableName);
+    }
+
+    try {
+      Map<String, String> params = Maps.newHashMap();
+      if (request.getProperties() != null) {
+        params.putAll(request.getProperties());
+      }
+      params.put(TABLE_TYPE_PROP, LANCE_TABLE_TYPE_VALUE);
+      params.put(MANAGED_BY_PROP, params.getOrDefault(MANAGED_BY_PROP, STORAGE_VALUE));
+
+      TableInput tableInput =
+          TableInput.builder()
+              .name(tableName)
+              .storageDescriptor(
+                  StorageDescriptor.builder().location(location).parameters(params).build())
+              .parameters(params)
+              .build();
+
+      glueClient.createTable(
+          software.amazon.awssdk.services.glue.model.CreateTableRequest.builder()
+              .catalogId(config.catalogId())
+              .databaseName(namespaceName)
+              .tableInput(tableInput)
+              .build());
+
+      CreateEmptyTableResponse response = new CreateEmptyTableResponse();
+      response.setLocation(location);
+      response.setProperties(request.getProperties());
+      response.setStorageOptions(config.getStorageOptions());
+      return response;
+    } catch (AlreadyExistsException e) {
+      throw GlueToLanceErrorConverter.conflict(
+          e, "Table already exists: %s.%s", namespaceName, tableName);
+    } catch (EntityNotFoundException e) {
+      throw GlueToLanceErrorConverter.notFound(e, "Namespace not found: %s", namespaceName);
+    } catch (GlueException e) {
+      throw GlueToLanceErrorConverter.serverError(
+          e, "Failed to create empty table: %s.%s", namespaceName, tableName);
     }
   }
 

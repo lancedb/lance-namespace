@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VERSION = 0.0.8
+VERSION = 0.0.9
 
 .PHONY: clean-reqwest-client
 clean-reqwest-client:
@@ -36,7 +36,7 @@ build-reqwest-client: gen-reqwest-client
 
 .PHONY: lint-ns
 lint-ns:
-	cd lance-namespace && cargo fmt -- --check
+	cd lance-namespace && cargo fmt
 	cd lance-namespace && cargo clippy --all-targets --all-features
 
 .PHONY: build-ns

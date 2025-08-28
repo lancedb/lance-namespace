@@ -519,7 +519,6 @@ public class TestGlueNamespace {
     com.lancedb.lance.namespace.model.CreateTableRequest createReq =
         new com.lancedb.lance.namespace.model.CreateTableRequest()
             .id(ImmutableList.of(namespace, "tbl1"))
-            .schema(createTestSchema())
             .location(lanceTable.toString());
     when(glue.createTable(any(software.amazon.awssdk.services.glue.model.CreateTableRequest.class)))
         .thenReturn(
@@ -954,10 +953,7 @@ public class TestGlueNamespace {
   public void testBasicCreateTable() {
     String location = tempDir.resolve("ns1/tbl").toString();
     CreateTableRequest request =
-        new CreateTableRequest()
-            .id(ImmutableList.of("ns1", "tbl"))
-            .schema(createTestSchema())
-            .location(location);
+        new CreateTableRequest().id(ImmutableList.of("ns1", "tbl")).location(location);
 
     when(glue.createTable(any(software.amazon.awssdk.services.glue.model.CreateTableRequest.class)))
         .thenReturn(
@@ -994,8 +990,7 @@ public class TestGlueNamespace {
   public void testCreateTableDerivesLocationFromNamespaceUri() throws Exception {
     com.lancedb.lance.namespace.model.CreateTableRequest req =
         new com.lancedb.lance.namespace.model.CreateTableRequest()
-            .id(ImmutableList.of("ns1", "tbl"))
-            .schema(createTestSchema());
+            .id(ImmutableList.of("ns1", "tbl"));
 
     Database db =
         Database.builder()
@@ -1030,8 +1025,7 @@ public class TestGlueNamespace {
 
     com.lancedb.lance.namespace.model.CreateTableRequest req =
         new com.lancedb.lance.namespace.model.CreateTableRequest()
-            .id(ImmutableList.of("ns1", "tbl"))
-            .schema(createTestSchema());
+            .id(ImmutableList.of("ns1", "tbl"));
 
     Database db = Database.builder().name("ns1").build();
 
@@ -1066,7 +1060,6 @@ public class TestGlueNamespace {
     com.lancedb.lance.namespace.model.CreateTableRequest req =
         new com.lancedb.lance.namespace.model.CreateTableRequest()
             .id(ImmutableList.of(namespace, tbl))
-            .schema(createTestSchema())
             .location(loc.toString());
 
     when(glue.createTable(any(software.amazon.awssdk.services.glue.model.CreateTableRequest.class)))
@@ -1087,7 +1080,7 @@ public class TestGlueNamespace {
     LanceNamespaceException ex =
         assertThrows(
             LanceNamespaceException.class, () -> glueNamespace.createTable(req, new byte[0]));
-    assertTrue(ex.getMessage().contains("Schema is required"));
+    assertTrue(ex.getMessage().contains("Arrow IPC"));
   }
 
   @Test
@@ -1098,7 +1091,6 @@ public class TestGlueNamespace {
     com.lancedb.lance.namespace.model.CreateTableRequest request =
         new com.lancedb.lance.namespace.model.CreateTableRequest()
             .id(tableId)
-            .schema(createTestSchema())
             .location(location.toString());
 
     when(glue.createTable(any(software.amazon.awssdk.services.glue.model.CreateTableRequest.class)))
@@ -1171,7 +1163,12 @@ public class TestGlueNamespace {
   }
 
   private byte[] createTestArrowData() {
-    // For testing, return empty byte array since we only need schema
-    return new byte[0];
+    // Create a proper Arrow IPC stream with test schema
+    try {
+      return com.lancedb.lance.namespace.util.ArrowIpcUtil.createEmptyArrowIpcStream(
+          createTestSchema());
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to create test Arrow data", e);
+    }
   }
 }

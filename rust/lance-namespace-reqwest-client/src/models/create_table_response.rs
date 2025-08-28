@@ -13,12 +13,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateTableResponse {
-    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
-    pub version: Option<i64>,
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
-    #[serde(rename = "schema", skip_serializing_if = "Option::is_none")]
-    pub schema: Option<Box<models::JsonArrowSchema>>,
+    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
+    pub version: Option<i64>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
     /// Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. 
@@ -29,9 +27,8 @@ pub struct CreateTableResponse {
 impl CreateTableResponse {
     pub fn new() -> CreateTableResponse {
         CreateTableResponse {
-            version: None,
             location: None,
-            schema: None,
+            version: None,
             properties: None,
             storage_options: None,
         }

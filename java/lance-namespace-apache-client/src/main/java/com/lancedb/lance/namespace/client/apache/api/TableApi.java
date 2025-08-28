@@ -27,6 +27,8 @@ import com.lancedb.lance.namespace.model.AlterTableDropColumnsResponse;
 import com.lancedb.lance.namespace.model.AnalyzeTableQueryPlanRequest;
 import com.lancedb.lance.namespace.model.AnalyzeTableQueryPlanResponse;
 import com.lancedb.lance.namespace.model.CountTableRowsRequest;
+import com.lancedb.lance.namespace.model.CreateEmptyTableRequest;
+import com.lancedb.lance.namespace.model.CreateEmptyTableResponse;
 import com.lancedb.lance.namespace.model.CreateTableIndexRequest;
 import com.lancedb.lance.namespace.model.CreateTableIndexResponse;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
@@ -583,6 +585,114 @@ public class TableApi extends BaseApi {
     String[] localVarAuthNames = new String[] {};
 
     TypeReference<Long> localVarReturnType = new TypeReference<Long>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Create an empty table Create an empty table with the given name without touching storage. This
+   * is a metadata-only operation that records the table existence and sets up aspects like access
+   * control. For DirectoryNamespace implementation, this creates a &#x60;.lance-reserved&#x60; file
+   * in the table directory to mark the table&#39;s existence without creating actual Lance data
+   * files.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param createEmptyTableRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return CreateEmptyTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public CreateEmptyTableResponse createEmptyTable(
+      String id, CreateEmptyTableRequest createEmptyTableRequest, String delimiter)
+      throws ApiException {
+    return this.createEmptyTable(id, createEmptyTableRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Create an empty table Create an empty table with the given name without touching storage. This
+   * is a metadata-only operation that records the table existence and sets up aspects like access
+   * control. For DirectoryNamespace implementation, this creates a &#x60;.lance-reserved&#x60; file
+   * in the table directory to mark the table&#39;s existence without creating actual Lance data
+   * files.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param createEmptyTableRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return CreateEmptyTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public CreateEmptyTableResponse createEmptyTable(
+      String id,
+      CreateEmptyTableRequest createEmptyTableRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = createEmptyTableRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling createEmptyTable");
+    }
+
+    // verify the required parameter 'createEmptyTableRequest' is set
+    if (createEmptyTableRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'createEmptyTableRequest' when calling createEmptyTable");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/create-empty"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {};
+
+    TypeReference<CreateEmptyTableResponse> localVarReturnType =
+        new TypeReference<CreateEmptyTableResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",
@@ -2979,7 +3089,10 @@ public class TableApi extends BaseApi {
 
   /**
    * Check if a table exists Check if table &#x60;id&#x60; exists. This operation should behave
-   * exactly like DescribeTable, except it does not contain a response body.
+   * exactly like DescribeTable, except it does not contain a response body. For DirectoryNamespace
+   * implementation, a table exists if either: - The table has Lance data versions (regular table
+   * created with CreateTable) - A &#x60;.lance-reserved&#x60; file exists in the table directory
+   * (empty table created with CreateEmptyTable)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -2998,7 +3111,10 @@ public class TableApi extends BaseApi {
 
   /**
    * Check if a table exists Check if table &#x60;id&#x60; exists. This operation should behave
-   * exactly like DescribeTable, except it does not contain a response body.
+   * exactly like DescribeTable, except it does not contain a response body. For DirectoryNamespace
+   * implementation, a table exists if either: - The table has Lance data versions (regular table
+   * created with CreateTable) - A &#x60;.lance-reserved&#x60; file exists in the table directory
+   * (empty table created with CreateEmptyTable)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.

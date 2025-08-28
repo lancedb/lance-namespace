@@ -7,6 +7,7 @@ Method | HTTP request | Description
 [**alter_table_alter_columns**](MetadataApi.md#alter_table_alter_columns) | **POST** /v1/table/{id}/alter_columns | Modify existing columns
 [**alter_table_drop_columns**](MetadataApi.md#alter_table_drop_columns) | **POST** /v1/table/{id}/drop_columns | Remove columns from table
 [**alter_transaction**](MetadataApi.md#alter_transaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
+[**create_empty_table**](MetadataApi.md#create_empty_table) | **POST** /v1/table/{id}/create-empty | Create an empty table
 [**create_namespace**](MetadataApi.md#create_namespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
 [**create_table_index**](MetadataApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
 [**create_table_tag**](MetadataApi.md#create_table_tag) | **POST** /v1/table/{id}/tags/create | Create a new tag
@@ -117,6 +118,38 @@ Name | Type | Description  | Required | Notes
 ### Return type
 
 [**models::AlterTransactionResponse**](AlterTransactionResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## create_empty_table
+
+> models::CreateEmptyTableResponse create_empty_table(id, create_empty_table_request, delimiter)
+Create an empty table
+
+Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control.  For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory to mark the table's existence without creating actual Lance data files. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
+**create_empty_table_request** | [**CreateEmptyTableRequest**](CreateEmptyTableRequest.md) |  | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
+
+### Return type
+
+[**models::CreateEmptyTableResponse**](CreateEmptyTableResponse.md)
 
 ### Authorization
 
@@ -844,7 +877,7 @@ No authorization required
 > table_exists(id, table_exists_request, delimiter)
 Check if a table exists
 
-Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body. 
+Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (empty table created with CreateEmptyTable) 
 
 ### Parameters
 
