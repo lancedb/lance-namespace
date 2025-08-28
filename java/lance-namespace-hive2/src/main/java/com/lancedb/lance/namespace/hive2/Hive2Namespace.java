@@ -280,9 +280,11 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
   @Override
   public CreateTableResponse createTable(CreateTableRequest request, byte[] requestData) {
     // Validate that requestData is a valid Arrow IPC stream
-    ValidationUtil.checkNotNull(requestData, "Request data (Arrow IPC stream) is required for createTable");
-    ValidationUtil.checkArgument(requestData.length > 0, "Request data (Arrow IPC stream) cannot be empty");
-    
+    ValidationUtil.checkNotNull(
+        requestData, "Request data (Arrow IPC stream) is required for createTable");
+    ValidationUtil.checkArgument(
+        requestData.length > 0, "Request data (Arrow IPC stream) cannot be empty");
+
     ObjectIdentifier tableId = ObjectIdentifier.of(request.getId());
     Schema schema = JsonArrowSchemaConverter.convertToArrowSchema(request.getSchema());
 
@@ -306,7 +308,7 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
   @Override
   public CreateEmptyTableResponse createEmptyTable(CreateEmptyTableRequest request) {
     ObjectIdentifier tableId = ObjectIdentifier.of(request.getId());
-    
+
     ValidationUtil.checkArgument(
         tableId.levels() == 2, "Expect 2-level table identifier but get %s", tableId);
 

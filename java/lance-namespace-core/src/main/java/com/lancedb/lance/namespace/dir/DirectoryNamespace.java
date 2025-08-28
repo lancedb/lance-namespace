@@ -104,11 +104,13 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
   @Override
   public CreateTableResponse createTable(CreateTableRequest request, byte[] requestData) {
     String tableName = tableNameFromId(request.getId());
-    
+
     // Validate that requestData is a valid Arrow IPC stream
-    ValidationUtil.checkNotNull(requestData, "Request data (Arrow IPC stream) is required for createTable");
-    ValidationUtil.checkArgument(requestData.length > 0, "Request data (Arrow IPC stream) cannot be empty");
-    
+    ValidationUtil.checkNotNull(
+        requestData, "Request data (Arrow IPC stream) is required for createTable");
+    ValidationUtil.checkArgument(
+        requestData.length > 0, "Request data (Arrow IPC stream) cannot be empty");
+
     // For now, we're using the schema from the request, but in a full implementation
     // this would parse the Arrow IPC stream to get the schema and data
     ValidationUtil.checkNotNull(request.getSchema(), "Schema is required in CreateTableRequest");
@@ -142,7 +144,7 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
   public CreateEmptyTableResponse createEmptyTable(CreateEmptyTableRequest request) {
     String tableName = tableNameFromId(request.getId());
     String tablePath = tableFullPath(tableName);
-    
+
     ValidationUtil.checkArgument(
         request.getLocation() == null
             || OpenDalUtil.stripTrailingSlash(request.getLocation()).equals(tablePath),
@@ -156,7 +158,7 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
     List<Entry> versionEntries =
         operator.list(versionsPath, ListOptions.builder().limit(1).build());
     if (!versionEntries.isEmpty()) {
-      throw LanceNamespaceException.alreadyExists(
+      throw LanceNamespaceException.conflict(
           "Table already exists: " + tableName,
           "TABLE_ALREADY_EXISTS",
           tableName,
@@ -168,11 +170,11 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
     try {
       operator.write(reservedFilePath, new byte[0]);
     } catch (Exception e) {
-      throw LanceNamespaceException.internal(
+      throw LanceNamespaceException.serverError(
           "Failed to create empty table: " + tableName,
           "CREATE_EMPTY_TABLE_FAILED",
           tableName,
-          "Failed to create .lance-reserved file", e);
+          "Failed to create .lance-reserved file");
     }
 
     CreateEmptyTableResponse response = new CreateEmptyTableResponse();

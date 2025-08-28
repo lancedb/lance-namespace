@@ -424,7 +424,7 @@ No authorization required
 
 Create an empty table
 
-Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control. 
+Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control.  For DirectoryNamespace implementation, this creates a &#x60;.lance-reserved&#x60; file in the table directory to mark the table&#39;s existence without creating actual Lance data files. 
 
 ### Example
 
@@ -2203,7 +2203,7 @@ No authorization required
 
 Check if a table exists
 
-Check if table &#x60;id&#x60; exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body. 
+Check if table &#x60;id&#x60; exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A &#x60;.lance-reserved&#x60; file exists in the table directory (empty table created with CreateEmptyTable) 
 
 ### Example
 

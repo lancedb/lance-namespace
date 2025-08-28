@@ -210,7 +210,6 @@ public class ClientToServerResponse {
       com.lancedb.lance.namespace.model.CreateEmptyTableResponse response) {
     CreateEmptyTableResponse converted = new CreateEmptyTableResponse();
     converted.setLocation(response.getLocation());
-    converted.setVersion(response.getVersion());
     converted.setProperties(response.getProperties());
     converted.setStorageOptions(response.getStorageOptions());
     return converted;

@@ -604,7 +604,9 @@ public class TableApi extends BaseApi {
   /**
    * Create an empty table Create an empty table with the given name without touching storage. This
    * is a metadata-only operation that records the table existence and sets up aspects like access
-   * control.
+   * control. For DirectoryNamespace implementation, this creates a &#x60;.lance-reserved&#x60; file
+   * in the table directory to mark the table&#39;s existence without creating actual Lance data
+   * files.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -626,7 +628,9 @@ public class TableApi extends BaseApi {
   /**
    * Create an empty table Create an empty table with the given name without touching storage. This
    * is a metadata-only operation that records the table existence and sets up aspects like access
-   * control.
+   * control. For DirectoryNamespace implementation, this creates a &#x60;.lance-reserved&#x60; file
+   * in the table directory to mark the table&#39;s existence without creating actual Lance data
+   * files.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -3085,7 +3089,10 @@ public class TableApi extends BaseApi {
 
   /**
    * Check if a table exists Check if table &#x60;id&#x60; exists. This operation should behave
-   * exactly like DescribeTable, except it does not contain a response body.
+   * exactly like DescribeTable, except it does not contain a response body. For DirectoryNamespace
+   * implementation, a table exists if either: - The table has Lance data versions (regular table
+   * created with CreateTable) - A &#x60;.lance-reserved&#x60; file exists in the table directory
+   * (empty table created with CreateEmptyTable)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -3104,7 +3111,10 @@ public class TableApi extends BaseApi {
 
   /**
    * Check if a table exists Check if table &#x60;id&#x60; exists. This operation should behave
-   * exactly like DescribeTable, except it does not contain a response body.
+   * exactly like DescribeTable, except it does not contain a response body. For DirectoryNamespace
+   * implementation, a table exists if either: - The table has Lance data versions (regular table
+   * created with CreateTable) - A &#x60;.lance-reserved&#x60; file exists in the table directory
+   * (empty table created with CreateEmptyTable)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.

@@ -936,7 +936,9 @@ public interface TableApi {
   /**
    * POST /v1/table/{id}/create-empty : Create an empty table Create an empty table with the given
    * name without touching storage. This is a metadata-only operation that records the table
-   * existence and sets up aspects like access control.
+   * existence and sets up aspects like access control. For DirectoryNamespace implementation, this
+   * creates a &#x60;.lance-reserved&#x60; file in the table directory to mark the table&#39;s
+   * existence without creating actual Lance data files.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -964,7 +966,7 @@ public interface TableApi {
       operationId = "createEmptyTable",
       summary = "Create an empty table",
       description =
-          "Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control. ",
+          "Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control.  For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory to mark the table's existence without creating actual Lance data files. ",
       tags = {"Table", "Metadata"},
       responses = {
         @ApiResponse(
@@ -4886,6 +4888,9 @@ public interface TableApi {
   /**
    * POST /v1/table/{id}/exists : Check if a table exists Check if table &#x60;id&#x60; exists. This
    * operation should behave exactly like DescribeTable, except it does not contain a response body.
+   * For DirectoryNamespace implementation, a table exists if either: - The table has Lance data
+   * versions (regular table created with CreateTable) - A &#x60;.lance-reserved&#x60; file exists
+   * in the table directory (empty table created with CreateEmptyTable)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -4912,7 +4917,7 @@ public interface TableApi {
       operationId = "tableExists",
       summary = "Check if a table exists",
       description =
-          "Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body. ",
+          "Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (empty table created with CreateEmptyTable) ",
       tags = {"Table", "Metadata"},
       responses = {
         @ApiResponse(responseCode = "200", description = "Success, no content"),

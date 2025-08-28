@@ -212,8 +212,9 @@ public class ServerToClientRequest {
   public static CreateEmptyTableRequest createEmptyTable(
       com.lancedb.lance.namespace.server.springboot.model.CreateEmptyTableRequest request) {
     CreateEmptyTableRequest converted = new CreateEmptyTableRequest();
-    converted.setId(ObjectIdentifier.of(request.getId()));
+    converted.setId(request.getId());
     converted.setLocation(request.getLocation());
+    converted.setProperties(request.getProperties());
     return converted;
   }
 

@@ -369,7 +369,7 @@ public class GlueNamespace implements LanceNamespace, Closeable {
           String.join(".", request.getId()),
           "Arrow IPC stream data is required");
     }
-    
+
     validateTableId(request.getId());
     String namespaceName = request.getId().get(0);
     String tableName = request.getId().get(1);
@@ -460,7 +460,7 @@ public class GlueNamespace implements LanceNamespace, Closeable {
       }
       params.put(TABLE_TYPE_PROP, LANCE_TABLE_TYPE_VALUE);
       params.put(MANAGED_BY_PROP, params.getOrDefault(MANAGED_BY_PROP, STORAGE_VALUE));
-      
+
       // For empty table, we don't have a version yet
       params.put("empty_table", "true");
 
