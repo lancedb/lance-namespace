@@ -84,7 +84,7 @@ public class RestNamespace implements LanceNamespace {
 
   @Override
   public void initialize(Map<String, String> configProperties, BufferAllocator allocator) {
-    this.config = new RestNamespaceConfig(configProperties);
+    RestNamespaceConfig config = new RestNamespaceConfig(configProperties);
     // Note: RestNamespace doesn't use BufferAllocator, parameter ignored
 
     // Create ApiClient and set URI if provided
@@ -98,7 +98,11 @@ public class RestNamespace implements LanceNamespace {
     objectMapper.registerModule(new LanceNamespaceJacksonModule());
     client.setObjectMapper(objectMapper);
 
-    // Initialize API instances
+    initApiInstances(client, config);
+  }
+
+  protected void initApiInstances(ApiClient client, RestNamespaceConfig config) {
+    this.config = config;
     this.namespaceApi = new NamespaceApi(client);
     this.tableApi = new TableApi(client);
     this.transactionApi = new TransactionApi(client);
