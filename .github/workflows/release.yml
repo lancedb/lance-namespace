@@ -35,21 +35,23 @@ jobs:
     steps:
     - name: Output Inputs
       run: echo "${{ toJSON(github.event.inputs) }}"
-    
-    - name: Checkout repository
+
+    - name: Checkout repo
       uses: actions/checkout@v4
-    
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
-
+        python-version: 3.11
     - name: Set up Java
       uses: actions/setup-java@v4
       with:
         distribution: temurin
         java-version: 17
         cache: "maven"
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+    - name: Install dependencies
+      run: uv sync --all-packages
 
     - name: Install python dependencies
       run: |
@@ -94,14 +96,6 @@ jobs:
         echo "tag=$TAG" >> $GITHUB_OUTPUT
         echo "Tag will be: $TAG"
 
-    - name: Install uv
-      uses: astral-sh/setup-uv@v4
-
-    - name: Install openapi-generator-cli (stable releases only)
-      if: inputs.release_channel == 'stable'
-      run: |
-        uv tool install openapi-generator-cli
-
     - name: Configure git identity
       run: |
         git config user.name 'github-actions[bot]'
@@ -112,6 +106,7 @@ jobs:
       run: |
         python ci/bump_version.py --version "${{ steps.new_version.outputs.version }}"
         git diff
+        make clean
         make gen
     
     - name: Create release commit (stable releases only)
