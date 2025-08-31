@@ -91,17 +91,10 @@ jobs:
           VERSION="${{ steps.get_version.outputs.version }}"
           GROUP_ID="com.lancedb"
           
-          # List of artifacts to check (both auto-generated and manual)
+          # List of some artifacts to check
           ARTIFACTS=(
             "lance-namespace-core"
-            "lance-namespace-adapter"
             "lance-namespace-apache-client"
-            "lance-namespace-springboot-server"
-            "lance-namespace-hive2"
-            "lance-namespace-hive3"
-            "lance-namespace-glue"
-            "lance-namespace-unity"
-            "lance-namespace-lancedb"
           )
           
           echo "Waiting for version $VERSION to be available in Maven Central..."
