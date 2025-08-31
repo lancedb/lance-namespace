@@ -48,6 +48,11 @@ search = "<version>{current_version}</version>"
 replace = "<version>{new_version}</version>"
 
 [[tool.bumpversion.files]]
+filename = "java/springboot-server-pom.xml"
+search = "<version>{current_version}</version>"
+replace = "<version>{new_version}</version>"
+
+[[tool.bumpversion.files]]
 filename = "java/lance-namespace-adapter/pom.xml"
 search = "<version>{current_version}</version>"
 replace = "<version>{new_version}</version>"
