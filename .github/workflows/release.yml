@@ -35,25 +35,23 @@ jobs:
     steps:
     - name: Output Inputs
       run: echo "${{ toJSON(github.event.inputs) }}"
-    
-    - name: Checkout repository
+
+    - name: Checkout repo
       uses: actions/checkout@v4
-      with:
-        ref: main
-        token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
-    
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
-
+        python-version: 3.11
     - name: Set up Java
       uses: actions/setup-java@v4
       with:
         distribution: temurin
         java-version: 17
         cache: "maven"
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+    - name: Install dependencies
+      run: uv sync --all-packages
 
     - name: Install python dependencies
       run: |
@@ -98,31 +96,18 @@ jobs:
         echo "tag=$TAG" >> $GITHUB_OUTPUT
         echo "Tag will be: $TAG"
 
-    - name: Install uv for code generation (stable releases only)
-      if: inputs.release_channel == 'stable'
+    - name: Configure git identity
       run: |
-        curl -LsSf https://astral.sh/uv/install.sh | sh
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-    - name: Install openapi-generator-cli (stable releases only)
-      if: inputs.release_channel == 'stable'
-      run: |
-        uv tool install openapi-generator-cli
+        git config user.name 'github-actions[bot]'
+        git config user.email 'github-actions[bot]@users.noreply.github.com'
 
     - name: Update version (stable releases only)
       if: inputs.release_channel == 'stable'
       run: |
         python ci/bump_version.py --version "${{ steps.new_version.outputs.version }}"
-
-    - name: Regenerate auto-generated code (stable releases only)
-      if: inputs.release_channel == 'stable'
-      run: |
+        git diff
+        make clean
         make gen
-    
-    - name: Configure git identity
-      run: |
-        git config user.name 'github-actions[bot]'
-        git config user.email 'github-actions[bot]@users.noreply.github.com'
     
     - name: Create release commit (stable releases only)
       if: inputs.release_channel == 'stable'
