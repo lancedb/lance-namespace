@@ -107,6 +107,11 @@ jobs:
       run: |
         python ci/bump_version.py --version "${{ steps.new_version.outputs.version }}"
     
+    - name: Regenerate auto-generated code (stable releases only)
+      if: inputs.release_channel == 'stable'
+      run: |
+        make build
+    
     - name: Configure git identity
       run: |
         git config user.name 'github-actions[bot]'

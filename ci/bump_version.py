@@ -62,15 +62,7 @@ def main():
                "--new-version", new_version, "--no-commit", "--no-tag", "--allow-dirty"]
         run_command(cmd)
         
-        # Now regenerate auto-generated modules with the new version
-        print("\nRegenerating auto-generated modules with new version...")
-        
-        # Build all modules (this will regenerate auto-generated code with new versions)
-        print("Running make build to regenerate auto-generated modules...")
-        run_command(["make", "build"], capture_output=False)
-        
         print(f"\nSuccessfully updated version from {current_version} to {new_version}")
-        print("Auto-generated modules have been regenerated with the new version.")
 
 
 if __name__ == '__main__':

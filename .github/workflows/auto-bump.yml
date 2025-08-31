@@ -137,9 +137,13 @@ jobs:
       run: |
         uv tool install openapi-generator-cli
     
-    - name: Bump version and regenerate auto-generated code
+    - name: Bump version
       run: |
         python ci/bump_version.py --version "${{ steps.new_version.outputs.version }}"
+    
+    - name: Regenerate auto-generated code
+      run: |
+        make build
     
     - name: Configure git
       run: |

@@ -57,6 +57,5 @@ jobs:
         if: |
           (github.event_name == 'release' && github.event.action == 'released') ||
           (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
-        working-directory: python/lance_namespace_urllib3_client
         run: |
           uv publish --trusted-publishing always
