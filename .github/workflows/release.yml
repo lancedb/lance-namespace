@@ -50,12 +50,12 @@ jobs:
     
     - name: Install dependencies
       run: |
-        pip install packaging lxml toml
+        pip install packaging bump-my-version toml
     
-    - name: Get current version from Java Makefile
+    - name: Get current version
       id: current_version
       run: |
-        CURRENT_VERSION=$(grep "^VERSION = " java/Makefile | cut -d' ' -f3)
+        CURRENT_VERSION=$(python -c "import toml; print(toml.load('.bumpversion.toml')['tool']['bumpversion']['current_version'])")
         echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
         echo "Current version: $CURRENT_VERSION"
     
@@ -91,33 +91,21 @@ jobs:
         echo "tag=$TAG" >> $GITHUB_OUTPUT
         echo "Tag will be: $TAG"
     
+    - name: Install uv for code generation (stable releases only)
+      if: inputs.release_channel == 'stable'
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+    
+    - name: Install openapi-generator-cli (stable releases only)
+      if: inputs.release_channel == 'stable'
+      run: |
+        uv tool install openapi-generator-cli
+    
     - name: Update version (stable releases only)
       if: inputs.release_channel == 'stable'
       run: |
         python ci/bump_version.py --version "${{ steps.new_version.outputs.version }}"
-        
-        # Regenerate auto-generated code with new version
-        # Install uv for Python code generation
-        curl -LsSf https://astral.sh/uv/install.sh | sh
-        export PATH="$HOME/.local/bin:$PATH"
-        
-        # Install openapi-generator-cli
-        uv tool install openapi-generator-cli
-        
-        # Generate Java auto-generated code
-        cd java
-        make gen
-        cd ..
-        
-        # Generate Python auto-generated code  
-        cd python
-        make gen
-        cd ..
-        
-        # Generate Rust auto-generated code
-        cd rust
-        make gen
-        cd ..
     
     - name: Configure git identity
       run: |

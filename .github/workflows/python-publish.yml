@@ -60,4 +60,3 @@ jobs:
         working-directory: python/lance_namespace_urllib3_client
         run: |
           uv publish --trusted-publishing always
-          echo "✅ Successfully published version ${{ steps.get_versions.outputs.urllib3_version }} to PyPI!"

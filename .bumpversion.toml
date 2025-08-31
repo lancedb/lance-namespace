@@ -1,0 +1,97 @@
+[tool.bumpversion]
+current_version = "0.0.9"
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
+serialize = ["{major}.{minor}.{patch}"]
+search = "{current_version}"
+replace = "{new_version}"
+regex = false
+ignore_missing_files = false
+ignore_missing_version = false
+tag = false
+sign_tags = false
+tag_name = "v{new_version}"
+tag_message = "Release version {new_version}"
+allow_dirty = false
+commit = false
+message = "chore: bump version {current_version} → {new_version}"
+
+# Makefiles - VERSION variable
+[[tool.bumpversion.files]]
+filename = "java/Makefile"
+search = "VERSION = {current_version}"
+replace = "VERSION = {new_version}"
+
+[[tool.bumpversion.files]]
+filename = "python/Makefile"
+search = "VERSION = {current_version}"
+replace = "VERSION = {new_version}"
+
+[[tool.bumpversion.files]]
+filename = "rust/Makefile"
+search = "VERSION = {current_version}"
+replace = "VERSION = {new_version}"
+
+# Java pom.xml files (non-auto-generated)
+[[tool.bumpversion.files]]
+filename = "java/pom.xml"
+search = "<version>{current_version}</version>"
+replace = "<version>{new_version}</version>"
+
+[[tool.bumpversion.files]]
+filename = "java/lance-namespace-core/pom.xml"
+search = "<version>{current_version}</version>"
+replace = "<version>{new_version}</version>"
+
+[[tool.bumpversion.files]]
+filename = "java/lance-namespace-adapter/pom.xml"
+search = "<version>{current_version}</version>"
+replace = "<version>{new_version}</version>"
+
+[[tool.bumpversion.files]]
+filename = "java/lance-namespace-hive2/pom.xml"
+search = "<version>{current_version}</version>"
+replace = "<version>{new_version}</version>"
+
+[[tool.bumpversion.files]]
+filename = "java/lance-namespace-hive3/pom.xml"
+search = "<version>{current_version}</version>"
+replace = "<version>{new_version}</version>"
+
+[[tool.bumpversion.files]]
+filename = "java/lance-namespace-glue/pom.xml"
+search = "<version>{current_version}</version>"
+replace = "<version>{new_version}</version>"
+
+[[tool.bumpversion.files]]
+filename = "java/lance-namespace-unity/pom.xml"
+search = "<version>{current_version}</version>"
+replace = "<version>{new_version}</version>"
+
+[[tool.bumpversion.files]]
+filename = "java/lance-namespace-lancedb/pom.xml"
+search = "<version>{current_version}</version>"
+replace = "<version>{new_version}</version>"
+
+# Python pyproject.toml files (non-auto-generated)
+[[tool.bumpversion.files]]
+filename = "python/lance_namespace/pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+# Root pyproject.toml if exists
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+ignore_missing_files = true
+
+# Rust Cargo.toml files (non-auto-generated)
+[[tool.bumpversion.files]]
+filename = "rust/Cargo.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "rust/lance-namespace/Cargo.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
