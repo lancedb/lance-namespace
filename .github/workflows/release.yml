@@ -47,18 +47,25 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-    
-    - name: Install dependencies
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: 17
+        cache: "maven"
+
+    - name: Install python dependencies
       run: |
         pip install packaging bump-my-version toml
-    
+
     - name: Get current version
       id: current_version
       run: |
         CURRENT_VERSION=$(python -c "import toml; print(toml.load('.bumpversion.toml')['tool']['bumpversion']['current_version'])")
         echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
         echo "Current version: $CURRENT_VERSION"
-    
+
     - name: Calculate new version
       id: new_version
       run: |
@@ -66,7 +73,7 @@ jobs:
           --current "${{ steps.current_version.outputs.version }}" \
           --type "${{ inputs.release_type }}" \
           --channel "${{ inputs.release_channel }}"
-    
+
     - name: Determine tag name
       id: tag_name
       run: |
@@ -90,27 +97,27 @@ jobs:
         
         echo "tag=$TAG" >> $GITHUB_OUTPUT
         echo "Tag will be: $TAG"
-    
+
     - name: Install uv for code generation (stable releases only)
       if: inputs.release_channel == 'stable'
       run: |
         curl -LsSf https://astral.sh/uv/install.sh | sh
         echo "$HOME/.local/bin" >> $GITHUB_PATH
-    
+
     - name: Install openapi-generator-cli (stable releases only)
       if: inputs.release_channel == 'stable'
       run: |
         uv tool install openapi-generator-cli
-    
+
     - name: Update version (stable releases only)
       if: inputs.release_channel == 'stable'
       run: |
         python ci/bump_version.py --version "${{ steps.new_version.outputs.version }}"
-    
+
     - name: Regenerate auto-generated code (stable releases only)
       if: inputs.release_channel == 'stable'
       run: |
-        make build
+        make gen
     
     - name: Configure git identity
       run: |
