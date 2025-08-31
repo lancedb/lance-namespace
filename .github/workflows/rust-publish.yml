@@ -1,4 +1,16 @@
-name: Rust Release
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Rust Publish
 
 on:
   release:
@@ -6,7 +18,7 @@ on:
       - released
   pull_request:
     paths:
-      - .github/workflows/rust-release.yml
+      - .github/workflows/rust-publish.yml
   workflow_dispatch:
     inputs:
       mode:
@@ -17,24 +29,43 @@ on:
         options:
           - dry_run
           - release
-      ref:
-        description: 'The branch, tag or SHA to checkout'
-        required: false
-        type: string
+
+env:
+  # This env var is used by Swatinem/rust-cache@v2 for the cache
+  # key, so we set it to make sure it is always consistent.
+  CARGO_TERM_COLOR: always
+  # Disable full debug symbol generation to speed up CI build and keep memory down
+  # "1" means line tables only, which is useful for panic tracebacks.
+  RUSTFLAGS: "-C debuginfo=1"
+  RUST_BACKTRACE: "1"
+  # according to: https://matklad.github.io/2021/09/04/fast-rust-builds.html
+  # CI builds are faster with incremental disabled.
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "1"
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          # When triggered by a release, use the release tag
-          # When triggered manually, use the provided ref
-          ref: ${{ github.event.release.tag_name || inputs.ref }}
 
-      - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y protobuf-compiler libssl-dev
+
+      # pin the toolchain version to avoid surprises
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - uses: rui314/setup-mold@v1
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
 
       - name: Set up Python for code generation
         uses: actions/setup-python@v5
@@ -44,22 +75,13 @@ jobs:
       - name: Install uv and openapi-generator-cli
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
-          export PATH="$HOME/.local/bin:$PATH"
-          uv tool install openapi-generator-cli
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          $HOME/.local/bin/uv tool install openapi-generator-cli
 
       - name: Generate auto-generated Rust client
+        working-directory: rust
         run: |
-          export PATH="$HOME/.local/bin:$PATH"
-          cd rust
           make gen-reqwest-client
-          cd ..
-
-      - name: Build and test
-        run: |
-          cd rust
-          cargo build --all
-          cargo test --all
-          cd ..
 
       - name: Get package versions
         id: get_versions
@@ -78,7 +100,7 @@ jobs:
       - name: Dry run - check publishability
         if: |
           github.event_name == 'pull_request' ||
-          inputs.mode == 'dry_run'
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'dry_run')
         run: |
           cd rust
           
@@ -98,8 +120,8 @@ jobs:
         if: |
           (github.event_name == 'release' && github.event.action == 'released') ||
           (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
+        working-directory: rust/lance-namespace-reqwest-client
         run: |
-          cd rust/lance-namespace-reqwest-client
           cargo publish --token ${{ secrets.CRATES_IO_TOKEN }}
           echo "✅ Successfully published lance-namespace-reqwest-client version ${{ steps.get_versions.outputs.reqwest_version }} to crates.io!"
         env:
@@ -117,8 +139,8 @@ jobs:
         if: |
           (github.event_name == 'release' && github.event.action == 'released') ||
           (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
+        working-directory: rust/lance-namespace
         run: |
-          cd rust/lance-namespace
           cargo publish --token ${{ secrets.CRATES_IO_TOKEN }}
           echo "✅ Successfully published lance-namespace version ${{ steps.get_versions.outputs.ns_version }} to crates.io!"
         env:
