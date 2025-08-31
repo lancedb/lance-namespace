@@ -78,19 +78,12 @@ filename = "python/lance_namespace/pyproject.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
 
-# Root pyproject.toml if exists
 [[tool.bumpversion.files]]
-filename = "pyproject.toml"
+filename = "python/pyproject.urllib3_client.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
-ignore_missing_files = true
 
 # Rust Cargo.toml files (non-auto-generated)
-[[tool.bumpversion.files]]
-filename = "rust/Cargo.toml"
-search = 'version = "{current_version}"'
-replace = 'version = "{new_version}"'
-
 [[tool.bumpversion.files]]
 filename = "rust/lance-namespace/Cargo.toml"
 search = 'version = "{current_version}"'
