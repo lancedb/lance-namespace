@@ -6,9 +6,6 @@ Generate release notes for a given tag
 import argparse
 import subprocess
 import sys
-from pathlib import Path
-import requests
-import json
 
 def get_commits_since_last_tag(tag):
     """Get commits since the last tag"""
