@@ -1,0 +1,133 @@
+name: Python Release
+
+on:
+  release:
+    types:
+      - released
+  pull_request:
+    paths:
+      - .github/workflows/python-release.yml
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "dry_run: build & test only, release: build & publish to PyPI"
+        required: true
+        default: "dry_run"
+        type: choice
+        options:
+          - dry_run
+          - release
+      ref:
+        description: 'The branch, tag or SHA to checkout'
+        required: false
+        type: string
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for PyPI trusted publishing
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # When triggered by a release, use the release tag
+          # When triggered manually, use the provided ref
+          ref: ${{ github.event.release.tag_name || inputs.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install openapi-generator-cli
+        run: |
+          uv tool install openapi-generator-cli
+
+      - name: Generate auto-generated Python client
+        run: |
+          cd python
+          make gen-urllib3-client
+          cd ..
+
+      - name: Build lance_namespace_urllib3_client
+        run: |
+          cd python/lance_namespace_urllib3_client
+          uv build
+          cd ../..
+
+      - name: Build lance_namespace
+        run: |
+          cd python/lance_namespace
+          # Copy README for package
+          cp ../../README.md README.md
+          uv build
+          cd ../..
+
+      - name: Get package versions
+        id: get_versions
+        run: |
+          # Get urllib3_client version
+          URLLIB3_VERSION=$(python -c "import tomllib; print(tomllib.load(open('python/lance_namespace_urllib3_client/pyproject.toml', 'rb'))['project']['version'])")
+          echo "urllib3_version=$URLLIB3_VERSION" >> $GITHUB_OUTPUT
+          
+          # Get lance_namespace version
+          NS_VERSION=$(python -c "import tomllib; print(tomllib.load(open('python/lance_namespace/pyproject.toml', 'rb'))['project']['version'])")
+          echo "ns_version=$NS_VERSION" >> $GITHUB_OUTPUT
+          
+          echo "lance_namespace_urllib3_client version: $URLLIB3_VERSION"
+          echo "lance_namespace version: $NS_VERSION"
+
+      - name: Publish lance_namespace_urllib3_client to PyPI
+        if: |
+          (github.event_name == 'release' && github.event.action == 'released') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
+        run: |
+          cd python/lance_namespace_urllib3_client
+          uv publish --trusted-publishing always
+          echo "✅ Successfully published lance_namespace_urllib3_client version ${{ steps.get_versions.outputs.urllib3_version }} to PyPI!"
+          cd ../..
+
+      - name: Publish lance_namespace to PyPI
+        if: |
+          (github.event_name == 'release' && github.event.action == 'released') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
+        run: |
+          cd python/lance_namespace
+          uv publish --trusted-publishing always
+          echo "✅ Successfully published lance_namespace version ${{ steps.get_versions.outputs.ns_version }} to PyPI!"
+          cd ../..
+
+      - name: Verify PyPI availability
+        if: |
+          (github.event_name == 'release' && github.event.action == 'released') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
+        run: |
+          echo "Waiting for packages to be available on PyPI..."
+          sleep 30
+          
+          # Check urllib3_client
+          URLLIB3_VERSION="${{ steps.get_versions.outputs.urllib3_version }}"
+          if pip index versions lance_namespace_urllib3_client | grep -q "$URLLIB3_VERSION"; then
+            echo "✓ lance_namespace_urllib3_client $URLLIB3_VERSION is available on PyPI"
+          else
+            echo "⚠️ lance_namespace_urllib3_client $URLLIB3_VERSION not yet visible on PyPI (this is normal, may take a few minutes)"
+          fi
+          
+          # Check lance_namespace
+          NS_VERSION="${{ steps.get_versions.outputs.ns_version }}"
+          if pip index versions lance_namespace | grep -q "$NS_VERSION"; then
+            echo "✓ lance_namespace $NS_VERSION is available on PyPI"
+          else
+            echo "⚠️ lance_namespace $NS_VERSION not yet visible on PyPI (this is normal, may take a few minutes)"
+          fi
+          
+          echo ""
+          echo "Users can install the packages with:"
+          echo ""
+          echo "pip install lance-namespace==$NS_VERSION"
+          echo "pip install lance-namespace-urllib3-client==$URLLIB3_VERSION"

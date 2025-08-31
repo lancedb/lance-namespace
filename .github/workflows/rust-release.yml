@@ -1,0 +1,142 @@
+name: Rust Release
+
+on:
+  release:
+    types:
+      - released
+  pull_request:
+    paths:
+      - .github/workflows/rust-release.yml
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "dry_run: build & test only, release: build & publish to crates.io"
+        required: true
+        default: "dry_run"
+        type: choice
+        options:
+          - dry_run
+          - release
+      ref:
+        description: 'The branch, tag or SHA to checkout'
+        required: false
+        type: string
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # When triggered by a release, use the release tag
+          # When triggered manually, use the provided ref
+          ref: ${{ github.event.release.tag_name || inputs.ref }}
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Set up Python for code generation
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv and openapi-generator-cli
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          export PATH="$HOME/.local/bin:$PATH"
+          uv tool install openapi-generator-cli
+
+      - name: Generate auto-generated Rust client
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          cd rust
+          make gen-reqwest-client
+          cd ..
+
+      - name: Build and test
+        run: |
+          cd rust
+          cargo build --all
+          cargo test --all
+          cd ..
+
+      - name: Get package versions
+        id: get_versions
+        run: |
+          # Get reqwest-client version
+          REQWEST_VERSION=$(grep "^version = " rust/lance-namespace-reqwest-client/Cargo.toml | cut -d'"' -f2)
+          echo "reqwest_version=$REQWEST_VERSION" >> $GITHUB_OUTPUT
+          
+          # Get lance-namespace version
+          NS_VERSION=$(grep "^version = " rust/lance-namespace/Cargo.toml | cut -d'"' -f2)
+          echo "ns_version=$NS_VERSION" >> $GITHUB_OUTPUT
+          
+          echo "lance-namespace-reqwest-client version: $REQWEST_VERSION"
+          echo "lance-namespace version: $NS_VERSION"
+
+      - name: Dry run - check publishability
+        if: |
+          github.event_name == 'pull_request' ||
+          inputs.mode == 'dry_run'
+        run: |
+          cd rust
+          
+          # Check lance-namespace-reqwest-client
+          cd lance-namespace-reqwest-client
+          cargo publish --dry-run
+          cd ..
+          
+          # Check lance-namespace
+          cd lance-namespace
+          cargo publish --dry-run
+          cd ..
+          
+          echo "✅ Dry run successful - packages are ready to publish"
+
+      - name: Publish lance-namespace-reqwest-client to crates.io
+        if: |
+          (github.event_name == 'release' && github.event.action == 'released') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
+        run: |
+          cd rust/lance-namespace-reqwest-client
+          cargo publish --token ${{ secrets.CRATES_IO_TOKEN }}
+          echo "✅ Successfully published lance-namespace-reqwest-client version ${{ steps.get_versions.outputs.reqwest_version }} to crates.io!"
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+
+      - name: Wait for dependency availability
+        if: |
+          (github.event_name == 'release' && github.event.action == 'released') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
+        run: |
+          echo "Waiting for lance-namespace-reqwest-client to be available on crates.io..."
+          sleep 60
+
+      - name: Publish lance-namespace to crates.io
+        if: |
+          (github.event_name == 'release' && github.event.action == 'released') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
+        run: |
+          cd rust/lance-namespace
+          cargo publish --token ${{ secrets.CRATES_IO_TOKEN }}
+          echo "✅ Successfully published lance-namespace version ${{ steps.get_versions.outputs.ns_version }} to crates.io!"
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+
+      - name: Verify crates.io availability
+        if: |
+          (github.event_name == 'release' && github.event.action == 'released') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
+        run: |
+          echo "Packages published to crates.io!"
+          echo ""
+          echo "Users can add the following to their Cargo.toml:"
+          echo ""
+          echo "[dependencies]"
+          echo "lance-namespace = \"${{ steps.get_versions.outputs.ns_version }}\""
+          echo "lance-namespace-reqwest-client = \"${{ steps.get_versions.outputs.reqwest_version }}\""
+          echo ""
+          echo "View on crates.io:"
+          echo "- https://crates.io/crates/lance-namespace"
+          echo "- https://crates.io/crates/lance-namespace-reqwest-client"
