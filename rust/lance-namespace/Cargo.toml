@@ -23,7 +23,7 @@ serde_json = "1.0"
 url = "2.5"
 
 # Use models from the reqwest client
-lance-namespace-reqwest-client = { path = "../lance-namespace-reqwest-client" }
+lance-namespace-reqwest-client = { workspace = true }
 
 [dev-dependencies]
 tokio = { version = "1.35", features = ["full"] }
