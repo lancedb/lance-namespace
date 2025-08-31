@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VERSION = 0.0.11
+VERSION = 0.0.12
 
 .PHONY: clean-apache-client
 clean-apache-client:
