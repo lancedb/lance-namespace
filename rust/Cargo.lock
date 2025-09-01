@@ -3214,7 +3214,7 @@ dependencies = [
 
 [[package]]
 name = "lance-namespace"
-version = "0.0.12"
+version = "0.0.13"
 dependencies = [
  "arrow",
  "async-trait",
@@ -3234,7 +3234,7 @@ dependencies = [
 
 [[package]]
 name = "lance-namespace-reqwest-client"
-version = "0.0.12"
+version = "0.0.13"
 dependencies = [
  "reqwest",
  "serde",
