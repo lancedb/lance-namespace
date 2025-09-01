@@ -26,6 +26,24 @@ on:
         default: true
         type: boolean
 
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  # This env var is used by Swatinem/rust-cache@v2 for the cache
+  # key, so we set it to make sure it is always consistent.
+  CARGO_TERM_COLOR: always
+  # Disable full debug symbol generation to speed up CI build and keep memory down
+  # "1" means line tables only, which is useful for panic tracebacks.
+  RUSTFLAGS: "-C debuginfo=1"
+  RUST_BACKTRACE: "1"
+  # according to: https://matklad.github.io/2021/09/04/fast-rust-builds.html
+  # CI builds are faster with incremental disabled.
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "1"
+
 jobs:
   create-release:
     runs-on: ubuntu-latest
@@ -52,18 +70,29 @@ jobs:
       uses: astral-sh/setup-uv@v4
     - name: Install dependencies
       run: uv sync --all-packages
-
     - name: Install python dependencies
       run: |
         pip install packaging bump-my-version toml
-
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y protobuf-compiler libssl-dev
+      # pin the toolchain version to avoid surprises
+    - uses: actions-rust-lang/setup-rust-toolchain@v1
+      with:
+        toolchain: stable
+    - uses: rui314/setup-mold@v1
+    - name: Install cargo-llvm-cov
+      uses: taiki-e/install-action@cargo-llvm-cov
+    - uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: rust
     - name: Get current version
       id: current_version
       run: |
         CURRENT_VERSION=$(python -c "import toml; print(toml.load('.bumpversion.toml')['tool']['bumpversion']['current_version'])")
         echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
         echo "Current version: $CURRENT_VERSION"
-
     - name: Calculate new version
       id: new_version
       run: |
@@ -71,7 +100,6 @@ jobs:
           --current "${{ steps.current_version.outputs.version }}" \
           --type "${{ inputs.release_type }}" \
           --channel "${{ inputs.release_channel }}"
-
     - name: Determine tag name
       id: tag_name
       run: |
@@ -95,12 +123,10 @@ jobs:
         
         echo "tag=$TAG" >> $GITHUB_OUTPUT
         echo "Tag will be: $TAG"
-
     - name: Configure git identity
       run: |
         git config user.name 'github-actions[bot]'
         git config user.email 'github-actions[bot]@users.noreply.github.com'
-
     - name: Update version (stable releases only)
       if: inputs.release_channel == 'stable'
       run: |
@@ -108,17 +134,19 @@ jobs:
         git diff
         make clean
         make gen
-    
+    - name: Update Cargo lock version (stable releases only)
+      if: inputs.release_channel == 'stable'
+      working-directory: rust
+      run: |
+        make build
     - name: Create release commit (stable releases only)
       if: inputs.release_channel == 'stable'
       run: |
         git add -A
         git commit -m "chore: release version ${{ steps.new_version.outputs.version }}" || echo "No changes to commit"
-    
     - name: Create tag
       run: |
         git tag -a "${{ steps.tag_name.outputs.tag }}" -m "Release ${{ steps.tag_name.outputs.tag }}"
-    
     - name: Push changes (if not dry run)
       if: ${{ !inputs.dry_run }}
       run: |
@@ -128,7 +156,6 @@ jobs:
         fi
         # Always push the tag
         git push origin "${{ steps.tag_name.outputs.tag }}"
-    
     - name: Generate release notes
       id: release_notes
       if: ${{ !inputs.dry_run }}
@@ -137,7 +164,6 @@ jobs:
           --tag "${{ steps.tag_name.outputs.tag }}" \
           --repo "${{ github.repository }}" \
           --token "${{ secrets.GITHUB_TOKEN }}"
-    
     - name: Create GitHub Release Draft (if not dry run)
       if: ${{ !inputs.dry_run }}
       uses: softprops/action-gh-release@v2
@@ -148,7 +174,6 @@ jobs:
         draft: true
         prerelease: ${{ inputs.release_channel == 'preview' }}
         token: ${{ secrets.GITHUB_TOKEN }}
-    
     - name: Summary
       run: |
         echo "## Release Summary" >> $GITHUB_STEP_SUMMARY

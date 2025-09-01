@@ -24,6 +24,9 @@ gen-reqwest-client: clean-reqwest-client
 	  -o lance-namespace-reqwest-client \
 	  --type-mappings='Binary=Vec<u8>,binary=Vec<u8>,file=Vec<u8>' \
 	  --additional-properties=packageName=lance-namespace-reqwest-client,packageVersion=$(VERSION),asyncApi=true,library=reqwest
+	sed -i -e 's#license = "Apache 2.0"#license = "Apache-2.0"#g' lance-namespace-reqwest-client/Cargo.toml
+	sed -i -e 's#edition = "2021"#edition = "2021"\nreadme = "README.md"#g' lance-namespace-reqwest-client/Cargo.toml
+	rm -f lance-namespace-reqwest-client/Cargo.toml-e
 	rm -rf lance-namespace-reqwest-client/.openapi-generator-ignore
 	rm -rf lance-namespace-reqwest-client/.openapi-generator
 	rm -rf lance-namespace-reqwest-client/.gitignore
@@ -41,7 +44,9 @@ lint-ns:
 
 .PHONY: build-ns
 build-ns:
-	cd lance-namespace && cargo test
+	cd lance-namespace; \
+		cargo test; \
+		cp ../../README.md README.md
 
 .PHONY: clean
 clean: clean-reqwest-client
