@@ -117,6 +117,70 @@ pub struct RestNamespace {
 }
 
 impl RestNamespace {
+    /// Create a configuration with override headers from the provided config
+    fn create_config_with_overrides(
+        &self,
+        override_config: Option<HashMap<String, String>>,
+    ) -> Configuration {
+        // If no override config, return the base configuration
+        let Some(config) = override_config else {
+            return self.reqwest_config.clone();
+        };
+
+        // Extract headers from override config
+        let mut override_headers = reqwest::header::HeaderMap::new();
+        for (key, value) in &config {
+            if key.starts_with(RestNamespaceConfig::HEADER_PREFIX) {
+                let header_name = &key[RestNamespaceConfig::HEADER_PREFIX.len()..];
+                if let (Ok(header_name), Ok(header_value)) = (
+                    reqwest::header::HeaderName::from_bytes(header_name.as_bytes()),
+                    reqwest::header::HeaderValue::from_str(&value),
+                ) {
+                    override_headers.insert(header_name, header_value);
+                }
+            }
+        }
+
+        // If no override headers, return base configuration
+        if override_headers.is_empty() {
+            return self.reqwest_config.clone();
+        }
+
+        // Build a new client with merged headers
+        let mut client_builder = reqwest::Client::builder();
+        
+        // Start with base headers from the original config
+        let mut merged_headers = reqwest::header::HeaderMap::new();
+        for (key, value) in self.config.additional_headers() {
+            if let (Ok(header_name), Ok(header_value)) = (
+                reqwest::header::HeaderName::from_bytes(key.as_bytes()),
+                reqwest::header::HeaderValue::from_str(value),
+            ) {
+                merged_headers.insert(header_name, header_value);
+            }
+        }
+        
+        // Override with new headers
+        merged_headers.extend(override_headers);
+        
+        client_builder = client_builder.default_headers(merged_headers);
+
+        let client = client_builder
+            .build()
+            .unwrap_or_else(|_| reqwest::Client::new());
+
+        let mut new_config = Configuration::new();
+        new_config.client = client;
+        new_config.base_path = self.reqwest_config.base_path.clone();
+        new_config.user_agent = self.reqwest_config.user_agent.clone();
+        new_config.basic_auth = self.reqwest_config.basic_auth.clone();
+        new_config.oauth_access_token = self.reqwest_config.oauth_access_token.clone();
+        new_config.bearer_access_token = self.reqwest_config.bearer_access_token.clone();
+        new_config.api_key = self.reqwest_config.api_key.clone();
+
+        new_config
+    }
+
     /// Create a new REST namespace with the given configuration
     pub fn new(properties: HashMap<String, String>) -> Self {
         let config = RestNamespaceConfig::new(properties);
@@ -174,11 +238,13 @@ impl LanceNamespace for RestNamespace {
     async fn list_namespaces(
         &self,
         request: ListNamespacesRequest,
+        config: Option<HashMap<String, String>>,
     ) -> Result<ListNamespacesResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         namespace_api::list_namespaces(
-            &self.reqwest_config,
+            &req_config,
             &id,
             Some(self.config.delimiter()),
             request.page_token.as_deref(),
@@ -191,11 +257,13 @@ impl LanceNamespace for RestNamespace {
     async fn describe_namespace(
         &self,
         request: DescribeNamespaceRequest,
+        config: Option<HashMap<String, String>>,
     ) -> Result<DescribeNamespaceResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         namespace_api::describe_namespace(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -207,11 +275,13 @@ impl LanceNamespace for RestNamespace {
     async fn create_namespace(
         &self,
         request: CreateNamespaceRequest,
+        config: Option<HashMap<String, String>>,
     ) -> Result<CreateNamespaceResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         namespace_api::create_namespace(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -220,11 +290,16 @@ impl LanceNamespace for RestNamespace {
         .map_err(convert_api_error)
     }
 
-    async fn drop_namespace(&self, request: DropNamespaceRequest) -> Result<DropNamespaceResponse> {
+    async fn drop_namespace(
+        &self,
+        request: DropNamespaceRequest,
+        config: Option<HashMap<String, String>>,
+    ) -> Result<DropNamespaceResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         namespace_api::drop_namespace(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -233,11 +308,16 @@ impl LanceNamespace for RestNamespace {
         .map_err(convert_api_error)
     }
 
-    async fn namespace_exists(&self, request: NamespaceExistsRequest) -> Result<()> {
+    async fn namespace_exists(
+        &self,
+        request: NamespaceExistsRequest,
+        config: Option<HashMap<String, String>>,
+    ) -> Result<()> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         namespace_api::namespace_exists(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -246,11 +326,16 @@ impl LanceNamespace for RestNamespace {
         .map_err(convert_api_error)
     }
 
-    async fn list_tables(&self, request: ListTablesRequest) -> Result<ListTablesResponse> {
+    async fn list_tables(
+        &self,
+        request: ListTablesRequest,
+        config: Option<HashMap<String, String>>,
+    ) -> Result<ListTablesResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         table_api::list_tables(
-            &self.reqwest_config,
+            &req_config,
             &id,
             Some(self.config.delimiter()),
             request.page_token.as_deref(),
@@ -260,11 +345,16 @@ impl LanceNamespace for RestNamespace {
         .map_err(convert_api_error)
     }
 
-    async fn describe_table(&self, request: DescribeTableRequest) -> Result<DescribeTableResponse> {
+    async fn describe_table(
+        &self,
+        request: DescribeTableRequest,
+        config: Option<HashMap<String, String>>,
+    ) -> Result<DescribeTableResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         table_api::describe_table(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -273,11 +363,16 @@ impl LanceNamespace for RestNamespace {
         .map_err(convert_api_error)
     }
 
-    async fn register_table(&self, request: RegisterTableRequest) -> Result<RegisterTableResponse> {
+    async fn register_table(
+        &self,
+        request: RegisterTableRequest,
+        config: Option<HashMap<String, String>>,
+    ) -> Result<RegisterTableResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         table_api::register_table(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -286,11 +381,16 @@ impl LanceNamespace for RestNamespace {
         .map_err(convert_api_error)
     }
 
-    async fn table_exists(&self, request: TableExistsRequest) -> Result<()> {
+    async fn table_exists(
+        &self,
+        request: TableExistsRequest,
+        config: Option<HashMap<String, String>>,
+    ) -> Result<()> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         table_api::table_exists(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -299,11 +399,16 @@ impl LanceNamespace for RestNamespace {
         .map_err(convert_api_error)
     }
 
-    async fn drop_table(&self, request: DropTableRequest) -> Result<DropTableResponse> {
+    async fn drop_table(
+        &self,
+        request: DropTableRequest,
+        config: Option<HashMap<String, String>>,
+    ) -> Result<DropTableResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         table_api::drop_table(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -315,11 +420,13 @@ impl LanceNamespace for RestNamespace {
     async fn deregister_table(
         &self,
         request: DeregisterTableRequest,
+        config: Option<HashMap<String, String>>,
     ) -> Result<DeregisterTableResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         table_api::deregister_table(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -328,11 +435,16 @@ impl LanceNamespace for RestNamespace {
         .map_err(convert_api_error)
     }
 
-    async fn count_table_rows(&self, request: CountTableRowsRequest) -> Result<i64> {
+    async fn count_table_rows(
+        &self,
+        request: CountTableRowsRequest,
+        config: Option<HashMap<String, String>>,
+    ) -> Result<i64> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         table_api::count_table_rows(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -345,8 +457,10 @@ impl LanceNamespace for RestNamespace {
         &self,
         request: CreateTableRequest,
         request_data: Bytes,
+        config: Option<HashMap<String, String>>,
     ) -> Result<CreateTableResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         let properties_json = request
             .properties
@@ -361,7 +475,7 @@ impl LanceNamespace for RestNamespace {
         });
 
         table_api::create_table(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request_data.to_vec(),
             Some(self.config.delimiter()),
@@ -376,11 +490,13 @@ impl LanceNamespace for RestNamespace {
     async fn create_empty_table(
         &self,
         request: CreateEmptyTableRequest,
+        config: Option<HashMap<String, String>>,
     ) -> Result<CreateEmptyTableResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         table_api::create_empty_table(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -393,8 +509,10 @@ impl LanceNamespace for RestNamespace {
         &self,
         request: InsertIntoTableRequest,
         request_data: Bytes,
+        config: Option<HashMap<String, String>>,
     ) -> Result<InsertIntoTableResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         use lance_namespace_reqwest_client::models::insert_into_table_request::Mode;
         let mode = request.mode.as_ref().map(|m| match m {
@@ -403,7 +521,7 @@ impl LanceNamespace for RestNamespace {
         });
 
         table_api::insert_into_table(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request_data.to_vec(),
             Some(self.config.delimiter()),
@@ -417,15 +535,17 @@ impl LanceNamespace for RestNamespace {
         &self,
         request: MergeInsertIntoTableRequest,
         request_data: Bytes,
+        config: Option<HashMap<String, String>>,
     ) -> Result<MergeInsertIntoTableResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         let on = request.on.as_deref().ok_or_else(|| {
             NamespaceError::Other("'on' field is required for merge insert".to_string())
         })?;
 
         table_api::merge_insert_into_table(
-            &self.reqwest_config,
+            &req_config,
             &id,
             on,
             request_data.to_vec(),
@@ -440,11 +560,16 @@ impl LanceNamespace for RestNamespace {
         .map_err(convert_api_error)
     }
 
-    async fn update_table(&self, request: UpdateTableRequest) -> Result<UpdateTableResponse> {
+    async fn update_table(
+        &self,
+        request: UpdateTableRequest,
+        config: Option<HashMap<String, String>>,
+    ) -> Result<UpdateTableResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         table_api::update_table(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -456,11 +581,13 @@ impl LanceNamespace for RestNamespace {
     async fn delete_from_table(
         &self,
         request: DeleteFromTableRequest,
+        config: Option<HashMap<String, String>>,
     ) -> Result<DeleteFromTableResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         table_api::delete_from_table(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -469,11 +596,16 @@ impl LanceNamespace for RestNamespace {
         .map_err(convert_api_error)
     }
 
-    async fn query_table(&self, request: QueryTableRequest) -> Result<Bytes> {
+    async fn query_table(
+        &self,
+        request: QueryTableRequest,
+        config: Option<HashMap<String, String>>,
+    ) -> Result<Bytes> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         let response = table_api::query_table(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -495,11 +627,13 @@ impl LanceNamespace for RestNamespace {
     async fn create_table_index(
         &self,
         request: CreateTableIndexRequest,
+        config: Option<HashMap<String, String>>,
     ) -> Result<CreateTableIndexResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         table_api::create_table_index(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -511,11 +645,13 @@ impl LanceNamespace for RestNamespace {
     async fn list_table_indices(
         &self,
         request: ListTableIndicesRequest,
+        config: Option<HashMap<String, String>>,
     ) -> Result<ListTableIndicesResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         table_api::list_table_indices(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -527,15 +663,17 @@ impl LanceNamespace for RestNamespace {
     async fn describe_table_index_stats(
         &self,
         request: DescribeTableIndexStatsRequest,
+        config: Option<HashMap<String, String>>,
     ) -> Result<DescribeTableIndexStatsResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         // Note: The index_name parameter seems to be missing from the request structure
         // This might need to be adjusted based on the actual API
         let index_name = ""; // This should come from somewhere in the request
 
         table_api::describe_table_index_stats(
-            &self.reqwest_config,
+            &req_config,
             &id,
             index_name,
             request,
@@ -548,11 +686,13 @@ impl LanceNamespace for RestNamespace {
     async fn describe_transaction(
         &self,
         request: DescribeTransactionRequest,
+        config: Option<HashMap<String, String>>,
     ) -> Result<DescribeTransactionResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         transaction_api::describe_transaction(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -564,11 +704,13 @@ impl LanceNamespace for RestNamespace {
     async fn alter_transaction(
         &self,
         request: AlterTransactionRequest,
+        config: Option<HashMap<String, String>>,
     ) -> Result<AlterTransactionResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
+        let req_config = self.create_config_with_overrides(config);
 
         transaction_api::alter_transaction(
-            &self.reqwest_config,
+            &req_config,
             &id,
             request,
             Some(self.config.delimiter()),
@@ -609,6 +751,62 @@ mod tests {
 
         // Successfully created the namespace
         assert!(true);
+    }
+
+    #[tokio::test]
+    async fn test_per_operation_config_override() {
+        // Start a mock server
+        let mock_server = MockServer::start().await;
+
+        // Create mock that expects custom headers that are only sent with override config
+        Mock::given(method("GET"))
+            .and(path("/v1/namespace/test/list"))
+            .and(wiremock::matchers::header(
+                "X-Override-Header",
+                "override-value",
+            ))
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                "namespaces": ["override_worked"]
+            })))
+            .mount(&mock_server)
+            .await;
+
+        // Create namespace WITHOUT the override header in base config
+        let mut properties = HashMap::new();
+        properties.insert("uri".to_string(), mock_server.uri());
+        properties.insert(
+            "header.Authorization".to_string(),
+            "Bearer base-token".to_string(),
+        );
+
+        let namespace = RestNamespace::new(properties);
+
+        // Create override config with additional header
+        let mut override_config = HashMap::new();
+        override_config.insert(
+            "header.X-Override-Header".to_string(),
+            "override-value".to_string(),
+        );
+
+        let request = ListNamespacesRequest {
+            id: Some(vec!["test".to_string()]),
+            page_token: None,
+            limit: None,
+        };
+
+        // Call with override config should succeed
+        let result = namespace
+            .list_namespaces(request.clone(), Some(override_config))
+            .await;
+
+        assert!(result.is_ok());
+        let response = result.unwrap();
+        assert_eq!(response.namespaces.len(), 1);
+        assert_eq!(response.namespaces[0], "override_worked");
+
+        // Same call without override config should fail (no X-Override-Header)
+        let result_without_override = namespace.list_namespaces(request, None).await;
+        assert!(result_without_override.is_err());
     }
 
     #[tokio::test]
@@ -653,7 +851,7 @@ mod tests {
             limit: None,
         };
 
-        let result = namespace.list_namespaces(request).await;
+        let result = namespace.list_namespaces(request, None).await;
 
         // Should succeed, meaning headers were sent correctly
         assert!(result.is_ok());
@@ -710,7 +908,7 @@ mod tests {
             limit: Some(10),
         };
 
-        let result = namespace.list_namespaces(request).await;
+        let result = namespace.list_namespaces(request, None).await;
 
         // Should succeed with mock server
         assert!(result.is_ok());
@@ -752,7 +950,7 @@ mod tests {
             limit: Some(10),
         };
 
-        let result = namespace.list_namespaces(request).await;
+        let result = namespace.list_namespaces(request, None).await;
 
         // Should return an error
         assert!(result.is_err());
@@ -768,7 +966,7 @@ mod tests {
             limit: Some(10),
         };
 
-        let result = namespace.list_namespaces(request).await;
+        let result = namespace.list_namespaces(request, None).await;
 
         // The actual assertion depends on whether the server is running
         // In a real test, you would either mock the server or ensure it's running
@@ -807,7 +1005,7 @@ mod tests {
             mode: None,
         };
 
-        let result = namespace.create_namespace(request).await;
+        let result = namespace.create_namespace(request, None).await;
 
         // Should succeed with mock server
         assert!(result.is_ok());
@@ -852,7 +1050,7 @@ mod tests {
         };
 
         let data = Bytes::from("arrow data here");
-        let result = namespace.create_table(request, data).await;
+        let result = namespace.create_table(request, data, None).await;
 
         // Should succeed with mock server
         assert!(result.is_ok());
@@ -891,7 +1089,7 @@ mod tests {
         };
 
         let data = Bytes::from("arrow data here");
-        let result = namespace.insert_into_table(request, data).await;
+        let result = namespace.insert_into_table(request, data, None).await;
 
         // Should succeed with mock server
         assert!(result.is_ok());
@@ -909,7 +1107,7 @@ mod tests {
             mode: None,
         };
 
-        let result = namespace.create_namespace(request).await;
+        let result = namespace.create_namespace(request, None).await;
         assert!(result.is_err() || result.is_ok());
     }
 
@@ -921,7 +1119,7 @@ mod tests {
             id: Some(vec!["test".to_string(), "namespace".to_string()]),
         };
 
-        let result = namespace.describe_namespace(request).await;
+        let result = namespace.describe_namespace(request, None).await;
         assert!(result.is_err() || result.is_ok());
     }
 
@@ -935,7 +1133,7 @@ mod tests {
             limit: Some(10),
         };
 
-        let result = namespace.list_tables(request).await;
+        let result = namespace.list_tables(request, None).await;
         assert!(result.is_err() || result.is_ok());
     }
 
@@ -955,7 +1153,7 @@ mod tests {
         };
 
         let data = Bytes::from("test data");
-        let result = namespace.create_table(request, data).await;
+        let result = namespace.create_table(request, data, None).await;
         assert!(result.is_err() || result.is_ok());
     }
 
@@ -971,7 +1169,7 @@ mod tests {
             ]),
         };
 
-        let result = namespace.drop_table(request).await;
+        let result = namespace.drop_table(request, None).await;
         assert!(result.is_err() || result.is_ok());
     }
 
@@ -989,7 +1187,7 @@ mod tests {
         };
 
         let data = Bytes::from("test data");
-        let result = namespace.insert_into_table(request, data).await;
+        let result = namespace.insert_into_table(request, data, None).await;
         assert!(result.is_err() || result.is_ok());
     }
 
@@ -1007,7 +1205,7 @@ mod tests {
         };
 
         let data = Bytes::from("test data");
-        let result = namespace.insert_into_table(request, data).await;
+        let result = namespace.insert_into_table(request, data, None).await;
         assert!(result.is_err() || result.is_ok());
     }
 
@@ -1030,7 +1228,7 @@ mod tests {
         };
 
         let data = Bytes::from("test data");
-        let result = namespace.merge_insert_into_table(request, data).await;
+        let result = namespace.merge_insert_into_table(request, data, None).await;
         assert!(result.is_err() || result.is_ok());
     }
 
@@ -1047,7 +1245,7 @@ mod tests {
             predicate: "id > 10".to_string(),
         };
 
-        let result = namespace.delete_from_table(request).await;
+        let result = namespace.delete_from_table(request, None).await;
         assert!(result.is_err() || result.is_ok());
     }
 
@@ -1059,7 +1257,7 @@ mod tests {
             id: Some(vec!["test".to_string(), "transaction".to_string()]),
         };
 
-        let result = namespace.describe_transaction(request).await;
+        let result = namespace.describe_transaction(request, None).await;
         assert!(result.is_err() || result.is_ok());
     }
 
@@ -1072,7 +1270,7 @@ mod tests {
             actions: vec![],
         };
 
-        let result = namespace.alter_transaction(request).await;
+        let result = namespace.alter_transaction(request, None).await;
         assert!(result.is_err() || result.is_ok());
     }
 }

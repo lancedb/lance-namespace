@@ -2,6 +2,7 @@
 
 use async_trait::async_trait;
 use bytes::Bytes;
+use std::collections::HashMap;
 use thiserror::Error;
 
 use lance_namespace_reqwest_client::models::{
@@ -47,6 +48,7 @@ pub trait LanceNamespace: Send + Sync {
     async fn list_namespaces(
         &self,
         _request: ListNamespacesRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<ListNamespacesResponse> {
         Err(NamespaceError::NotSupported("list_namespaces".to_string()))
     }
@@ -55,6 +57,7 @@ pub trait LanceNamespace: Send + Sync {
     async fn describe_namespace(
         &self,
         _request: DescribeNamespaceRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<DescribeNamespaceResponse> {
         Err(NamespaceError::NotSupported(
             "describe_namespace".to_string(),
@@ -65,6 +68,7 @@ pub trait LanceNamespace: Send + Sync {
     async fn create_namespace(
         &self,
         _request: CreateNamespaceRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<CreateNamespaceResponse> {
         Err(NamespaceError::NotSupported("create_namespace".to_string()))
     }
@@ -73,17 +77,26 @@ pub trait LanceNamespace: Send + Sync {
     async fn drop_namespace(
         &self,
         _request: DropNamespaceRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<DropNamespaceResponse> {
         Err(NamespaceError::NotSupported("drop_namespace".to_string()))
     }
 
     /// Check if a namespace exists.
-    async fn namespace_exists(&self, _request: NamespaceExistsRequest) -> Result<()> {
+    async fn namespace_exists(
+        &self,
+        _request: NamespaceExistsRequest,
+        _config: Option<HashMap<String, String>>,
+    ) -> Result<()> {
         Err(NamespaceError::NotSupported("namespace_exists".to_string()))
     }
 
     /// List tables in a namespace.
-    async fn list_tables(&self, _request: ListTablesRequest) -> Result<ListTablesResponse> {
+    async fn list_tables(
+        &self,
+        _request: ListTablesRequest,
+        _config: Option<HashMap<String, String>>,
+    ) -> Result<ListTablesResponse> {
         Err(NamespaceError::NotSupported("list_tables".to_string()))
     }
 
@@ -91,6 +104,7 @@ pub trait LanceNamespace: Send + Sync {
     async fn describe_table(
         &self,
         _request: DescribeTableRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<DescribeTableResponse> {
         Err(NamespaceError::NotSupported("describe_table".to_string()))
     }
@@ -99,17 +113,26 @@ pub trait LanceNamespace: Send + Sync {
     async fn register_table(
         &self,
         _request: RegisterTableRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<RegisterTableResponse> {
         Err(NamespaceError::NotSupported("register_table".to_string()))
     }
 
     /// Check if a table exists.
-    async fn table_exists(&self, _request: TableExistsRequest) -> Result<()> {
+    async fn table_exists(
+        &self,
+        _request: TableExistsRequest,
+        _config: Option<HashMap<String, String>>,
+    ) -> Result<()> {
         Err(NamespaceError::NotSupported("table_exists".to_string()))
     }
 
     /// Drop a table.
-    async fn drop_table(&self, _request: DropTableRequest) -> Result<DropTableResponse> {
+    async fn drop_table(
+        &self,
+        _request: DropTableRequest,
+        _config: Option<HashMap<String, String>>,
+    ) -> Result<DropTableResponse> {
         Err(NamespaceError::NotSupported("drop_table".to_string()))
     }
 
@@ -117,12 +140,17 @@ pub trait LanceNamespace: Send + Sync {
     async fn deregister_table(
         &self,
         _request: DeregisterTableRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<DeregisterTableResponse> {
         Err(NamespaceError::NotSupported("deregister_table".to_string()))
     }
 
     /// Count rows in a table.
-    async fn count_table_rows(&self, _request: CountTableRowsRequest) -> Result<i64> {
+    async fn count_table_rows(
+        &self,
+        _request: CountTableRowsRequest,
+        _config: Option<HashMap<String, String>>,
+    ) -> Result<i64> {
         Err(NamespaceError::NotSupported("count_table_rows".to_string()))
     }
 
@@ -131,6 +159,7 @@ pub trait LanceNamespace: Send + Sync {
         &self,
         _request: CreateTableRequest,
         _request_data: Bytes,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<CreateTableResponse> {
         Err(NamespaceError::NotSupported("create_table".to_string()))
     }
@@ -139,6 +168,7 @@ pub trait LanceNamespace: Send + Sync {
     async fn create_empty_table(
         &self,
         _request: CreateEmptyTableRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<CreateEmptyTableResponse> {
         Err(NamespaceError::NotSupported(
             "create_empty_table".to_string(),
@@ -150,6 +180,7 @@ pub trait LanceNamespace: Send + Sync {
         &self,
         _request: InsertIntoTableRequest,
         _request_data: Bytes,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<InsertIntoTableResponse> {
         Err(NamespaceError::NotSupported(
             "insert_into_table".to_string(),
@@ -161,6 +192,7 @@ pub trait LanceNamespace: Send + Sync {
         &self,
         _request: MergeInsertIntoTableRequest,
         _request_data: Bytes,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<MergeInsertIntoTableResponse> {
         Err(NamespaceError::NotSupported(
             "merge_insert_into_table".to_string(),
@@ -168,7 +200,11 @@ pub trait LanceNamespace: Send + Sync {
     }
 
     /// Update a table.
-    async fn update_table(&self, _request: UpdateTableRequest) -> Result<UpdateTableResponse> {
+    async fn update_table(
+        &self,
+        _request: UpdateTableRequest,
+        _config: Option<HashMap<String, String>>,
+    ) -> Result<UpdateTableResponse> {
         Err(NamespaceError::NotSupported("update_table".to_string()))
     }
 
@@ -176,6 +212,7 @@ pub trait LanceNamespace: Send + Sync {
     async fn delete_from_table(
         &self,
         _request: DeleteFromTableRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<DeleteFromTableResponse> {
         Err(NamespaceError::NotSupported(
             "delete_from_table".to_string(),
@@ -183,7 +220,11 @@ pub trait LanceNamespace: Send + Sync {
     }
 
     /// Query a table.
-    async fn query_table(&self, _request: QueryTableRequest) -> Result<Bytes> {
+    async fn query_table(
+        &self,
+        _request: QueryTableRequest,
+        _config: Option<HashMap<String, String>>,
+    ) -> Result<Bytes> {
         Err(NamespaceError::NotSupported("query_table".to_string()))
     }
 
@@ -191,6 +232,7 @@ pub trait LanceNamespace: Send + Sync {
     async fn create_table_index(
         &self,
         _request: CreateTableIndexRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<CreateTableIndexResponse> {
         Err(NamespaceError::NotSupported(
             "create_table_index".to_string(),
@@ -201,6 +243,7 @@ pub trait LanceNamespace: Send + Sync {
     async fn list_table_indices(
         &self,
         _request: ListTableIndicesRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<ListTableIndicesResponse> {
         Err(NamespaceError::NotSupported(
             "list_table_indices".to_string(),
@@ -211,6 +254,7 @@ pub trait LanceNamespace: Send + Sync {
     async fn describe_table_index_stats(
         &self,
         _request: DescribeTableIndexStatsRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<DescribeTableIndexStatsResponse> {
         Err(NamespaceError::NotSupported(
             "describe_table_index_stats".to_string(),
@@ -221,6 +265,7 @@ pub trait LanceNamespace: Send + Sync {
     async fn describe_transaction(
         &self,
         _request: DescribeTransactionRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<DescribeTransactionResponse> {
         Err(NamespaceError::NotSupported(
             "describe_transaction".to_string(),
@@ -231,6 +276,7 @@ pub trait LanceNamespace: Send + Sync {
     async fn alter_transaction(
         &self,
         _request: AlterTransactionRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<AlterTransactionResponse> {
         Err(NamespaceError::NotSupported(
             "alter_transaction".to_string(),

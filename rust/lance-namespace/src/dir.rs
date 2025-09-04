@@ -235,6 +235,7 @@ impl LanceNamespace for DirectoryNamespace {
     async fn list_namespaces(
         &self,
         request: ListNamespacesRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<ListNamespacesResponse> {
         // Validate this is a request for the root namespace
         Self::validate_root_namespace_id(&request.id)?;
@@ -246,6 +247,7 @@ impl LanceNamespace for DirectoryNamespace {
     async fn describe_namespace(
         &self,
         request: DescribeNamespaceRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<DescribeNamespaceResponse> {
         // Validate this is a request for the root namespace
         Self::validate_root_namespace_id(&request.id)?;
@@ -259,6 +261,7 @@ impl LanceNamespace for DirectoryNamespace {
     async fn create_namespace(
         &self,
         request: CreateNamespaceRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<CreateNamespaceResponse> {
         // Root namespace always exists and cannot be created
         if request.id.is_none() || request.id.as_ref().unwrap().is_empty() {
@@ -273,7 +276,11 @@ impl LanceNamespace for DirectoryNamespace {
         ))
     }
 
-    async fn drop_namespace(&self, request: DropNamespaceRequest) -> Result<DropNamespaceResponse> {
+    async fn drop_namespace(
+        &self,
+        request: DropNamespaceRequest,
+        _config: Option<HashMap<String, String>>,
+    ) -> Result<DropNamespaceResponse> {
         // Root namespace always exists and cannot be dropped
         if request.id.is_none() || request.id.as_ref().unwrap().is_empty() {
             return Err(NamespaceError::Other(
@@ -287,7 +294,11 @@ impl LanceNamespace for DirectoryNamespace {
         ))
     }
 
-    async fn namespace_exists(&self, request: NamespaceExistsRequest) -> Result<()> {
+    async fn namespace_exists(
+        &self,
+        request: NamespaceExistsRequest,
+        _config: Option<HashMap<String, String>>,
+    ) -> Result<()> {
         // Root namespace always exists
         if request.id.is_none() || request.id.as_ref().unwrap().is_empty() {
             return Ok(());
@@ -299,7 +310,11 @@ impl LanceNamespace for DirectoryNamespace {
         ))
     }
 
-    async fn list_tables(&self, request: ListTablesRequest) -> Result<ListTablesResponse> {
+    async fn list_tables(
+        &self,
+        request: ListTablesRequest,
+        _config: Option<HashMap<String, String>>,
+    ) -> Result<ListTablesResponse> {
         Self::validate_root_namespace_id(&request.id)?;
 
         let mut tables = Vec::new();
@@ -357,7 +372,11 @@ impl LanceNamespace for DirectoryNamespace {
         Ok(response)
     }
 
-    async fn describe_table(&self, request: DescribeTableRequest) -> Result<DescribeTableResponse> {
+    async fn describe_table(
+        &self,
+        request: DescribeTableRequest,
+        _config: Option<HashMap<String, String>>,
+    ) -> Result<DescribeTableResponse> {
         let table_name = Self::table_name_from_id(&request.id)?;
         let table_path = self.table_full_path(&table_name);
 
@@ -401,7 +420,11 @@ impl LanceNamespace for DirectoryNamespace {
         })
     }
 
-    async fn table_exists(&self, request: TableExistsRequest) -> Result<()> {
+    async fn table_exists(
+        &self,
+        request: TableExistsRequest,
+        _config: Option<HashMap<String, String>>,
+    ) -> Result<()> {
         let table_name = Self::table_name_from_id(&request.id)?;
 
         // Check if table exists - either as Lance dataset or with .lance-reserved file
@@ -442,6 +465,7 @@ impl LanceNamespace for DirectoryNamespace {
         &self,
         request: CreateTableRequest,
         request_data: Bytes,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<CreateTableResponse> {
         let table_name = Self::table_name_from_id(&request.id)?;
         let table_path = self.table_full_path(&table_name);
@@ -517,6 +541,7 @@ impl LanceNamespace for DirectoryNamespace {
     async fn create_empty_table(
         &self,
         request: CreateEmptyTableRequest,
+        _config: Option<HashMap<String, String>>,
     ) -> Result<CreateEmptyTableResponse> {
         let table_name = Self::table_name_from_id(&request.id)?;
         let table_path = self.table_full_path(&table_name);
@@ -551,7 +576,11 @@ impl LanceNamespace for DirectoryNamespace {
         })
     }
 
-    async fn drop_table(&self, request: DropTableRequest) -> Result<DropTableResponse> {
+    async fn drop_table(
+        &self,
+        request: DropTableRequest,
+        _config: Option<HashMap<String, String>>,
+    ) -> Result<DropTableResponse> {
         let table_name = Self::table_name_from_id(&request.id)?;
         let table_path = self.table_full_path(&table_name);
 
@@ -647,7 +676,7 @@ mod tests {
         request.id = Some(vec!["test_table".to_string()]);
 
         let response = namespace
-            .create_table(request, bytes::Bytes::from(ipc_data))
+            .create_table(request, bytes::Bytes::from(ipc_data), None)
             .await
             .unwrap();
 
@@ -663,7 +692,7 @@ mod tests {
         let mut request = CreateTableRequest::new();
         request.id = Some(vec!["test_table".to_string()]);
 
-        let result = namespace.create_table(request, bytes::Bytes::new()).await;
+        let result = namespace.create_table(request, bytes::Bytes::new(), None).await;
         assert!(result.is_err());
         assert!(result
             .unwrap_err()
@@ -684,7 +713,7 @@ mod tests {
         request.id = Some(vec![]);
 
         let result = namespace
-            .create_table(request, bytes::Bytes::from(ipc_data.clone()))
+            .create_table(request, bytes::Bytes::from(ipc_data.clone()), None)
             .await;
         assert!(result.is_err());
 
@@ -693,7 +722,7 @@ mod tests {
         request.id = Some(vec!["namespace".to_string(), "table".to_string()]);
 
         let result = namespace
-            .create_table(request, bytes::Bytes::from(ipc_data))
+            .create_table(request, bytes::Bytes::from(ipc_data), None)
             .await;
         assert!(result.is_err());
         assert!(result
@@ -715,7 +744,7 @@ mod tests {
         request.location = Some("/wrong/path/table.lance".to_string());
 
         let result = namespace
-            .create_table(request, bytes::Bytes::from(ipc_data))
+            .create_table(request, bytes::Bytes::from(ipc_data), None)
             .await;
         assert!(result.is_err());
         assert!(result
@@ -730,7 +759,7 @@ mod tests {
 
         // Initially, no tables
         let request = ListTablesRequest::new();
-        let response = namespace.list_tables(request).await.unwrap();
+        let response = namespace.list_tables(request, None).await.unwrap();
         assert_eq!(response.tables.len(), 0);
 
         // Create test IPC data
@@ -741,7 +770,7 @@ mod tests {
         let mut create_request = CreateTableRequest::new();
         create_request.id = Some(vec!["table1".to_string()]);
         namespace
-            .create_table(create_request, bytes::Bytes::from(ipc_data.clone()))
+            .create_table(create_request, bytes::Bytes::from(ipc_data.clone()), None)
             .await
             .unwrap();
 
@@ -749,13 +778,13 @@ mod tests {
         let mut create_request = CreateTableRequest::new();
         create_request.id = Some(vec!["table2".to_string()]);
         namespace
-            .create_table(create_request, bytes::Bytes::from(ipc_data))
+            .create_table(create_request, bytes::Bytes::from(ipc_data), None)
             .await
             .unwrap();
 
         // List tables should return both
         let request = ListTablesRequest::new();
-        let response = namespace.list_tables(request).await.unwrap();
+        let response = namespace.list_tables(request, None).await.unwrap();
         let tables = response.tables;
         assert_eq!(tables.len(), 2);
         assert!(tables.contains(&"table1".to_string()));
@@ -769,7 +798,7 @@ mod tests {
         let mut request = ListTablesRequest::new();
         request.id = Some(vec!["namespace".to_string()]);
 
-        let result = namespace.list_tables(request).await;
+        let result = namespace.list_tables(request, None).await;
         assert!(result.is_err());
         assert!(result
             .unwrap_err()
@@ -788,14 +817,14 @@ mod tests {
         let mut create_request = CreateTableRequest::new();
         create_request.id = Some(vec!["test_table".to_string()]);
         namespace
-            .create_table(create_request, bytes::Bytes::from(ipc_data))
+            .create_table(create_request, bytes::Bytes::from(ipc_data), None)
             .await
             .unwrap();
 
         // Describe the table
         let mut request = DescribeTableRequest::new();
         request.id = Some(vec!["test_table".to_string()]);
-        let response = namespace.describe_table(request).await.unwrap();
+        let response = namespace.describe_table(request, None).await.unwrap();
 
         assert!(response.location.is_some());
         assert!(response.location.unwrap().ends_with("test_table.lance"));
@@ -808,7 +837,7 @@ mod tests {
         let mut request = DescribeTableRequest::new();
         request.id = Some(vec!["nonexistent".to_string()]);
 
-        let result = namespace.describe_table(request).await;
+        let result = namespace.describe_table(request, None).await;
         assert!(result.is_err());
         assert!(result
             .unwrap_err()
@@ -827,20 +856,20 @@ mod tests {
         let mut create_request = CreateTableRequest::new();
         create_request.id = Some(vec!["existing_table".to_string()]);
         namespace
-            .create_table(create_request, bytes::Bytes::from(ipc_data))
+            .create_table(create_request, bytes::Bytes::from(ipc_data), None)
             .await
             .unwrap();
 
         // Check existing table
         let mut request = TableExistsRequest::new();
         request.id = Some(vec!["existing_table".to_string()]);
-        let result = namespace.table_exists(request).await;
+        let result = namespace.table_exists(request, None).await;
         assert!(result.is_ok());
 
         // Check non-existent table
         let mut request = TableExistsRequest::new();
         request.id = Some(vec!["nonexistent".to_string()]);
-        let result = namespace.table_exists(request).await;
+        let result = namespace.table_exists(request, None).await;
         assert!(result.is_err());
         assert!(result
             .unwrap_err()
@@ -859,23 +888,23 @@ mod tests {
         let mut create_request = CreateTableRequest::new();
         create_request.id = Some(vec!["table_to_drop".to_string()]);
         namespace
-            .create_table(create_request, bytes::Bytes::from(ipc_data))
+            .create_table(create_request, bytes::Bytes::from(ipc_data), None)
             .await
             .unwrap();
 
         // Verify it exists
         let mut exists_request = TableExistsRequest::new();
         exists_request.id = Some(vec!["table_to_drop".to_string()]);
-        assert!(namespace.table_exists(exists_request.clone()).await.is_ok());
+        assert!(namespace.table_exists(exists_request.clone(), None).await.is_ok());
 
         // Drop the table
         let mut drop_request = DropTableRequest::new();
         drop_request.id = Some(vec!["table_to_drop".to_string()]);
-        let response = namespace.drop_table(drop_request).await.unwrap();
+        let response = namespace.drop_table(drop_request, None).await.unwrap();
         assert!(response.location.is_some());
 
         // Verify it no longer exists
-        assert!(namespace.table_exists(exists_request).await.is_err());
+        assert!(namespace.table_exists(exists_request, None).await.is_err());
     }
 
     #[tokio::test]
@@ -886,7 +915,7 @@ mod tests {
         request.id = Some(vec!["nonexistent".to_string()]);
 
         // Should not fail when dropping non-existent table (idempotent)
-        let result = namespace.drop_table(request).await;
+        let result = namespace.drop_table(request, None).await;
         // The operation might succeed or fail depending on implementation
         // But it should not panic
         let _ = result;
@@ -898,29 +927,29 @@ mod tests {
 
         // Test list_namespaces - should return empty list for root
         let request = ListNamespacesRequest::new();
-        let result = namespace.list_namespaces(request).await;
+        let result = namespace.list_namespaces(request, None).await;
         assert!(result.is_ok());
         assert_eq!(result.unwrap().namespaces.len(), 0);
 
         // Test describe_namespace - should succeed for root
         let request = DescribeNamespaceRequest::new();
-        let result = namespace.describe_namespace(request).await;
+        let result = namespace.describe_namespace(request, None).await;
         assert!(result.is_ok());
 
         // Test namespace_exists - root always exists
         let request = NamespaceExistsRequest::new();
-        let result = namespace.namespace_exists(request).await;
+        let result = namespace.namespace_exists(request, None).await;
         assert!(result.is_ok());
 
         // Test create_namespace - root cannot be created
         let request = CreateNamespaceRequest::new();
-        let result = namespace.create_namespace(request).await;
+        let result = namespace.create_namespace(request, None).await;
         assert!(result.is_err());
         assert!(result.unwrap_err().to_string().contains("already exists"));
 
         // Test drop_namespace - root cannot be dropped
         let request = DropNamespaceRequest::new();
-        let result = namespace.drop_namespace(request).await;
+        let result = namespace.drop_namespace(request, None).await;
         assert!(result.is_err());
         assert!(result
             .unwrap_err()
@@ -935,13 +964,13 @@ mod tests {
         // Test create_namespace for non-root - not supported
         let mut request = CreateNamespaceRequest::new();
         request.id = Some(vec!["child".to_string()]);
-        let result = namespace.create_namespace(request).await;
+        let result = namespace.create_namespace(request, None).await;
         assert!(matches!(result, Err(NamespaceError::NotSupported(_))));
 
         // Test namespace_exists for non-root - should not exist
         let mut request = NamespaceExistsRequest::new();
         request.id = Some(vec!["child".to_string()]);
-        let result = namespace.namespace_exists(request).await;
+        let result = namespace.namespace_exists(request, None).await;
         assert!(result.is_err());
         assert!(result
             .unwrap_err()
@@ -951,7 +980,7 @@ mod tests {
         // Test drop_namespace for non-root - not supported
         let mut request = DropNamespaceRequest::new();
         request.id = Some(vec!["child".to_string()]);
-        let result = namespace.drop_namespace(request).await;
+        let result = namespace.drop_namespace(request, None).await;
         assert!(matches!(result, Err(NamespaceError::NotSupported(_))));
     }
 
@@ -978,7 +1007,7 @@ mod tests {
         request.id = Some(vec!["test_table".to_string()]);
 
         let response = namespace
-            .create_table(request, bytes::Bytes::from(ipc_data))
+            .create_table(request, bytes::Bytes::from(ipc_data), None)
             .await
             .unwrap();
 
@@ -1007,7 +1036,7 @@ mod tests {
         request.id = Some(vec!["test_table".to_string()]);
 
         let response = namespace
-            .create_table(request, bytes::Bytes::from(ipc_data))
+            .create_table(request, bytes::Bytes::from(ipc_data), None)
             .await
             .unwrap();
 
@@ -1060,7 +1089,7 @@ mod tests {
         request.id = Some(vec!["complex_table".to_string()]);
 
         let response = namespace
-            .create_table(request, bytes::Bytes::from(ipc_data))
+            .create_table(request, bytes::Bytes::from(ipc_data), None)
             .await
             .unwrap();
 
@@ -1080,7 +1109,7 @@ mod tests {
 
         // Test basic operation through the trait object
         let request = ListTablesRequest::new();
-        let response = namespace.list_tables(request).await.unwrap();
+        let response = namespace.list_tables(request, None).await.unwrap();
         assert_eq!(response.tables.len(), 0);
     }
 
@@ -1259,7 +1288,7 @@ mod tests {
         request.id = Some(vec!["test_table_with_data".to_string()]);
 
         let response = namespace
-            .create_table(request, Bytes::from(buffer))
+            .create_table(request, Bytes::from(buffer), None)
             .await
             .unwrap();
 
@@ -1272,7 +1301,7 @@ mod tests {
         // Verify table exists
         let mut exists_request = TableExistsRequest::new();
         exists_request.id = Some(vec!["test_table_with_data".to_string()]);
-        namespace.table_exists(exists_request).await.unwrap();
+        namespace.table_exists(exists_request, None).await.unwrap();
     }
 
     #[tokio::test]
@@ -1282,7 +1311,7 @@ mod tests {
         let mut request = CreateEmptyTableRequest::new();
         request.id = Some(vec!["empty_table".to_string()]);
 
-        let response = namespace.create_empty_table(request).await.unwrap();
+        let response = namespace.create_empty_table(request, None).await.unwrap();
 
         assert!(response.location.is_some());
         assert!(response.location.unwrap().ends_with("empty_table.lance"));
@@ -1290,11 +1319,11 @@ mod tests {
         // Verify table exists by checking for .lance-reserved file
         let mut exists_request = TableExistsRequest::new();
         exists_request.id = Some(vec!["empty_table".to_string()]);
-        namespace.table_exists(exists_request).await.unwrap();
+        namespace.table_exists(exists_request, None).await.unwrap();
 
         // List tables should include the empty table
         let list_request = ListTablesRequest::new();
-        let list_response = namespace.list_tables(list_request).await.unwrap();
+        let list_response = namespace.list_tables(list_request, None).await.unwrap();
         assert!(list_response.tables.contains(&"empty_table".to_string()));
     }
 
@@ -1306,7 +1335,7 @@ mod tests {
         request.id = Some(vec!["test_table".to_string()]);
         request.location = Some("/wrong/path/table.lance".to_string());
 
-        let result = namespace.create_empty_table(request).await;
+        let result = namespace.create_empty_table(request, None).await;
         assert!(result.is_err());
         assert!(result
             .unwrap_err()
