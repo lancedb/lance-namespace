@@ -163,6 +163,7 @@ NATIVE_IMPLS = {
     "dir": "lance_namespace.dir.DirectoryNamespace",
     "glue": "lance_namespace.glue.GlueNamespace",
     "hive2": "lance_namespace.hive.Hive2Namespace",
+    "unity": "lance_namespace.unity.UnityNamespace",
 }
 
 def connect(impl: str, properties: Dict[str, str]) -> LanceNamespace:
