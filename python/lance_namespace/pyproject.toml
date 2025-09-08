@@ -29,9 +29,6 @@ hive2 = [
     "thrift>=0.13.0",
     "hive-metastore-client>=1.0.9",
 ]
-unity = [
-    "urllib3>=2.0.0",
-]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
