@@ -15,6 +15,8 @@ package com.lancedb.lance.namespace.dir;
 
 import com.lancedb.lance.Dataset;
 import com.lancedb.lance.namespace.LanceNamespaceException;
+import com.lancedb.lance.namespace.model.CreateEmptyTableRequest;
+import com.lancedb.lance.namespace.model.CreateEmptyTableResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateTableRequest;
 import com.lancedb.lance.namespace.model.CreateTableResponse;
@@ -475,5 +477,105 @@ public class TestDirectoryNamespace {
 
     assertTrue(exception.getMessage().contains("Table does not exist"));
     assertTrue(exception.getMessage().contains("non_existent_table"));
+  }
+
+  @Test
+  public void testCreateEmptyTable() {
+    Map<String, String> properties = new HashMap<>();
+    properties.put("root", tempDir.toString());
+    namespace.initialize(properties, allocator);
+
+    // Create an empty table
+    CreateEmptyTableRequest request = new CreateEmptyTableRequest();
+    List<String> tableId = new ArrayList<>();
+    tableId.add("empty_table");
+    request.setId(tableId);
+
+    CreateEmptyTableResponse response = namespace.createEmptyTable(request);
+    assertNotNull(response);
+    assertNotNull(response.getLocation());
+    assertTrue(response.getLocation().contains("empty_table"));
+
+    // Verify the .lance-reserved file was created in the correct location
+    File tableDir = new File(tempDir.toFile(), "empty_table.lance");
+    assertTrue(tableDir.exists());
+    assertTrue(tableDir.isDirectory());
+
+    File reservedFile = new File(tableDir, ".lance-reserved");
+    assertTrue(reservedFile.exists());
+    assertTrue(reservedFile.isFile());
+    assertEquals(0, reservedFile.length()); // Should be empty
+
+    // Verify the table is listed
+    ListTablesRequest listRequest = new ListTablesRequest();
+    ListTablesResponse listResponse = namespace.listTables(listRequest);
+    assertNotNull(listResponse);
+    assertTrue(listResponse.getTables().contains("empty_table"));
+
+    // Verify the table can be described
+    DescribeTableRequest describeRequest = new DescribeTableRequest();
+    describeRequest.setId(tableId);
+    DescribeTableResponse describeResponse = namespace.describeTable(describeRequest);
+    assertNotNull(describeResponse);
+    assertNotNull(describeResponse.getLocation());
+    assertTrue(describeResponse.getLocation().contains("empty_table"));
+
+    // Verify tableExists works for empty table
+    TableExistsRequest existsRequest = new TableExistsRequest();
+    existsRequest.setId(tableId);
+    // This should complete without throwing an exception
+    namespace.tableExists(existsRequest);
+  }
+
+  @Test
+  public void testCreateEmptyTableWithWrongLocation() {
+    Map<String, String> properties = new HashMap<>();
+    properties.put("root", tempDir.toString());
+    namespace.initialize(properties, allocator);
+
+    // Try to create an empty table with wrong location
+    CreateEmptyTableRequest request = new CreateEmptyTableRequest();
+    List<String> tableId = new ArrayList<>();
+    tableId.add("test_table");
+    request.setId(tableId);
+    request.setLocation("/wrong/path/test_table.lance");
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          namespace.createEmptyTable(request);
+        });
+  }
+
+  @Test
+  public void testCreateEmptyTableThenDropIt() {
+    Map<String, String> properties = new HashMap<>();
+    properties.put("root", tempDir.toString());
+    namespace.initialize(properties, allocator);
+
+    // Create an empty table
+    CreateEmptyTableRequest createRequest = new CreateEmptyTableRequest();
+    List<String> tableId = new ArrayList<>();
+    tableId.add("empty_table_to_drop");
+    createRequest.setId(tableId);
+
+    CreateEmptyTableResponse createResponse = namespace.createEmptyTable(createRequest);
+    assertNotNull(createResponse);
+
+    // Verify it exists
+    File tableDir = new File(tempDir.toFile(), "empty_table_to_drop.lance");
+    assertTrue(tableDir.exists());
+    File reservedFile = new File(tableDir, ".lance-reserved");
+    assertTrue(reservedFile.exists());
+
+    // Drop the table
+    DropTableRequest dropRequest = new DropTableRequest();
+    dropRequest.setId(tableId);
+    DropTableResponse dropResponse = namespace.dropTable(dropRequest);
+    assertNotNull(dropResponse);
+
+    // Verify table directory was removed
+    assertFalse(tableDir.exists());
+    assertFalse(reservedFile.exists());
   }
 }

@@ -175,8 +175,8 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
           "The table already exists in the namespace");
     }
 
-    // Create .lance-reserved file to mark table existence
-    String reservedFilePath = tablePath + "/.lance-reserved";
+    // Create .lance-reserved file to mark table existence - use relative path for operator
+    String reservedFilePath = tableName + ".lance/.lance-reserved";
     try {
       operator.write(reservedFilePath, new byte[0]);
     } catch (Exception e) {
@@ -230,15 +230,33 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
       }
 
       String tableName = path.substring(0, path.length() - 6);
+
+      // Check if it's a valid Lance dataset with versions
+      boolean isTable = false;
       try {
         String versionsPath = tableVersionsPath(tableName);
         List<Entry> versionEntries =
             operator.list(versionsPath, ListOptions.builder().limit(1).build());
         if (!versionEntries.isEmpty()) {
-          tables.add(tableName);
+          isTable = true;
         }
       } catch (Exception e) {
-        LOG.debug("Invalid Lance table directory {}, skipping", path);
+        // No versions directory, check for .lance-reserved file
+      }
+
+      // Check for .lance-reserved file (empty table)
+      if (!isTable) {
+        try {
+          String reservedFilePath = tableName + ".lance/.lance-reserved";
+          operator.stat(reservedFilePath);
+          isTable = true;
+        } catch (Exception e) {
+          // No .lance-reserved file either
+        }
+      }
+
+      if (isTable) {
+        tables.add(tableName);
       }
     }
 
@@ -262,7 +280,7 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
     }
 
     // Check if .lance-reserved file exists (empty table created with createEmptyTable)
-    String reservedFilePath = tableFullPath(tableName) + "/.lance-reserved";
+    String reservedFilePath = tableName + ".lance/.lance-reserved";
     try {
       operator.stat(reservedFilePath);
       return; // Table exists as empty table
@@ -284,23 +302,38 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
 
     LOG.debug("Describing table {} at path {}", tableName, tablePath);
 
+    // Check if table exists - either as Lance dataset or with .lance-reserved file
+    boolean tableExists = false;
+
+    // Check if table has versions (actual Lance table)
     try {
       String versionsPath = tableVersionsPath(tableName);
       List<Entry> versionEntries =
           operator.list(versionsPath, ListOptions.builder().limit(1).build());
-      if (versionEntries.isEmpty()) {
-        throw LanceNamespaceException.notFound(
-            "Table does not exist: " + tableName,
-            "TABLE_NOT_FOUND",
-            tableName,
-            "The requested table was not found in the namespace");
+      if (!versionEntries.isEmpty()) {
+        tableExists = true;
       }
     } catch (Exception e) {
+      // No versions directory, check for .lance-reserved file
+    }
+
+    // Check for .lance-reserved file (empty table)
+    if (!tableExists) {
+      try {
+        String reservedFilePath = tableName + ".lance/.lance-reserved";
+        operator.stat(reservedFilePath);
+        tableExists = true;
+      } catch (Exception e) {
+        // No .lance-reserved file either
+      }
+    }
+
+    if (!tableExists) {
       throw LanceNamespaceException.notFound(
           "Table does not exist: " + tableName,
           "TABLE_NOT_FOUND",
           tableName,
-          "The requested table was not found in the namespace: " + e.getMessage());
+          "The requested table was not found in the namespace");
     }
 
     DescribeTableResponse response = new DescribeTableResponse();
