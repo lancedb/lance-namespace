@@ -284,6 +284,36 @@ class TestDirectoryNamespace:
         """Test listing tables with invalid namespace ID."""
         list_request = ListTablesRequest()
         list_request.id = ["namespace1"]
-        
+
         with pytest.raises(ValueError, match="root namespace operations"):
             self.namespace.list_tables(list_request)
+
+    def test_create_empty_table(self):
+        """Test creating an empty table with .lance-reserved file."""
+        from lance_namespace_urllib3_client.models import CreateEmptyTableRequest
+
+        request = CreateEmptyTableRequest(
+            id=["test_empty_table"]
+        )
+
+        response = self.namespace.create_empty_table(request)
+        assert response.location is not None
+        assert "test_empty_table" in response.location
+
+        # Verify the .lance-reserved file was created in the correct location
+        table_dir = Path(self.temp_dir) / "test_empty_table.lance"
+        reserved_file = table_dir / ".lance-reserved"
+        assert reserved_file.exists()
+        assert reserved_file.is_file()
+
+        # Verify the table is listed
+        list_request = ListTablesRequest()
+        list_response = self.namespace.list_tables(list_request)
+        assert "test_empty_table" in list_response.tables
+
+        # Verify the table can be described
+        describe_request = DescribeTableRequest()
+        describe_request.id = ["test_empty_table"]
+        describe_response = self.namespace.describe_table(describe_request)
+        assert describe_response.location is not None
+        assert "test_empty_table" in describe_response.location
