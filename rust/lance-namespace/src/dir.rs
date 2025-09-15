@@ -1277,7 +1277,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_create_empty_table() {
-        let (namespace, _temp_dir) = create_test_namespace().await;
+        let (namespace, temp_dir) = create_test_namespace().await;
 
         let mut request = CreateEmptyTableRequest::new();
         request.id = Some(vec!["empty_table".to_string()]);
@@ -1286,6 +1286,19 @@ mod tests {
 
         assert!(response.location.is_some());
         assert!(response.location.unwrap().ends_with("empty_table.lance"));
+
+        // Verify the .lance-reserved file was created in the correct location
+        let table_dir = temp_dir.path().join("empty_table.lance");
+        assert!(table_dir.exists());
+        assert!(table_dir.is_dir());
+
+        let reserved_file = table_dir.join(".lance-reserved");
+        assert!(reserved_file.exists());
+        assert!(reserved_file.is_file());
+
+        // Verify file is empty
+        let metadata = std::fs::metadata(&reserved_file).unwrap();
+        assert_eq!(metadata.len(), 0);
 
         // Verify table exists by checking for .lance-reserved file
         let mut exists_request = TableExistsRequest::new();
@@ -1296,6 +1309,13 @@ mod tests {
         let list_request = ListTablesRequest::new();
         let list_response = namespace.list_tables(list_request).await.unwrap();
         assert!(list_response.tables.contains(&"empty_table".to_string()));
+
+        // Verify describe table works for empty table
+        let mut describe_request = DescribeTableRequest::new();
+        describe_request.id = Some(vec!["empty_table".to_string()]);
+        let describe_response = namespace.describe_table(describe_request).await.unwrap();
+        assert!(describe_response.location.is_some());
+        assert!(describe_response.location.unwrap().contains("empty_table"));
     }
 
     #[tokio::test]
@@ -1312,5 +1332,39 @@ mod tests {
             .unwrap_err()
             .to_string()
             .contains("must be at location"));
+    }
+
+    #[tokio::test]
+    async fn test_create_empty_table_then_drop() {
+        let (namespace, temp_dir) = create_test_namespace().await;
+
+        // Create an empty table
+        let mut create_request = CreateEmptyTableRequest::new();
+        create_request.id = Some(vec!["empty_table_to_drop".to_string()]);
+
+        let create_response = namespace.create_empty_table(create_request).await.unwrap();
+        assert!(create_response.location.is_some());
+
+        // Verify it exists
+        let table_dir = temp_dir.path().join("empty_table_to_drop.lance");
+        assert!(table_dir.exists());
+        let reserved_file = table_dir.join(".lance-reserved");
+        assert!(reserved_file.exists());
+
+        // Drop the table
+        let mut drop_request = DropTableRequest::new();
+        drop_request.id = Some(vec!["empty_table_to_drop".to_string()]);
+        let drop_response = namespace.drop_table(drop_request).await.unwrap();
+        assert!(drop_response.location.is_some());
+
+        // Verify table directory was removed
+        assert!(!table_dir.exists());
+        assert!(!reserved_file.exists());
+
+        // Verify table no longer exists
+        let mut exists_request = TableExistsRequest::new();
+        exists_request.id = Some(vec!["empty_table_to_drop".to_string()]);
+        let exists_result = namespace.table_exists(exists_request).await;
+        assert!(exists_result.is_err());
     }
 }
