@@ -48,13 +48,13 @@ For examples:
 - the list style identifier of `cat5` is `[cat2, cat5]`
 - the list style identifier of `t1` is `[cat2, cat5, t1]`
 
-The dot (`.`) symbol is typically used as the delimiter to join all the names to form an **string style identifier**,
+The dollar (`$`) symbol is used as the default delimiter to join all the names to form an **string style identifier**,
 but other symbols could also be used if dot is used in the object name.
 For examples:
 
-- the string style identifier of `cat5` is `cat2.cat5`
-- the string style identifier of `t1` is `cat2.cat5.t1`
-- the string style identifier of `t3` is `cat4$t3` when using delimiter `$`
+- the string style identifier of `cat5` is `cat2$cat5`
+- the string style identifier of `t1` is `cat2$cat5$t1`
+- the string style identifier of `t3` is `cat4#t3` when using delimiter `#`
 
 ## Name and Identifier for Root Namespace
 
@@ -70,11 +70,11 @@ and they are both configured to connect to the same root namespace.
 ## Object Level
 
 The root namespace is always at level 0.
-This means if an object has list style identifier with list size `N`, 
+This means if an object has list style identifier with list size `N`,
 the object is at the `N`th level in the entire namespace hierarchy.
 We also say the object identifier has `N` levels.
-For examples, a namespace `[ns1, ns2]` is at level 2, the identifier `ns1.ns2` has 2 levels.
-A table `[catalog1, database2, table3]` is at level 3, the identifier `catalog1.database2.table3` has 3 levels.
+For examples, a namespace `[ns1, ns2]` is at level 2, the identifier `ns1$ns2` has 2 levels.
+A table `[catalog1, database2, table3]` is at level 3, the identifier `catalog1$database2$table3` has 3 levels.
 
 ### Leveled Namespace
 
