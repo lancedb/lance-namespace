@@ -13,3 +13,16 @@ pub mod schema;
 pub use connect::{connect, ConnectError};
 pub use dir::DirectoryNamespace;
 pub use namespace::{LanceNamespace, NamespaceError, Result};
+
+// Re-export reqwest client for convenience
+pub use lance_namespace_reqwest_client as reqwest_client;
+
+// Re-export commonly used models from the reqwest client
+pub mod models {
+    pub use lance_namespace_reqwest_client::models::*;
+}
+
+// Re-export APIs from the reqwest client
+pub mod apis {
+    pub use lance_namespace_reqwest_client::apis::*;
+}
