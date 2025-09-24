@@ -9,18 +9,17 @@ use crate::apis::{configuration::Configuration, namespace_api, table_api, transa
 use crate::models::{
     AlterTransactionRequest, AlterTransactionResponse, CountTableRowsRequest,
     CreateEmptyTableRequest, CreateEmptyTableResponse, CreateNamespaceRequest,
-    CreateNamespaceResponse, CreateTableIndexRequest, CreateTableIndexResponse,
-    CreateTableRequest, CreateTableResponse, DeleteFromTableRequest, DeleteFromTableResponse,
-    DeregisterTableRequest, DeregisterTableResponse, DescribeNamespaceRequest,
-    DescribeNamespaceResponse, DescribeTableIndexStatsRequest, DescribeTableIndexStatsResponse,
-    DescribeTableRequest, DescribeTableResponse, DescribeTransactionRequest,
-    DescribeTransactionResponse, DropNamespaceRequest, DropNamespaceResponse, DropTableRequest,
-    DropTableResponse, InsertIntoTableRequest, InsertIntoTableResponse, ListNamespacesRequest,
-    ListNamespacesResponse, ListTableIndicesRequest, ListTableIndicesResponse,
-    ListTablesRequest, ListTablesResponse, MergeInsertIntoTableRequest,
-    MergeInsertIntoTableResponse, NamespaceExistsRequest, QueryTableRequest,
-    RegisterTableRequest, RegisterTableResponse, TableExistsRequest, UpdateTableRequest,
-    UpdateTableResponse,
+    CreateNamespaceResponse, CreateTableIndexRequest, CreateTableIndexResponse, CreateTableRequest,
+    CreateTableResponse, DeleteFromTableRequest, DeleteFromTableResponse, DeregisterTableRequest,
+    DeregisterTableResponse, DescribeNamespaceRequest, DescribeNamespaceResponse,
+    DescribeTableIndexStatsRequest, DescribeTableIndexStatsResponse, DescribeTableRequest,
+    DescribeTableResponse, DescribeTransactionRequest, DescribeTransactionResponse,
+    DropNamespaceRequest, DropNamespaceResponse, DropTableRequest, DropTableResponse,
+    InsertIntoTableRequest, InsertIntoTableResponse, ListNamespacesRequest, ListNamespacesResponse,
+    ListTableIndicesRequest, ListTableIndicesResponse, ListTablesRequest, ListTablesResponse,
+    MergeInsertIntoTableRequest, MergeInsertIntoTableResponse, NamespaceExistsRequest,
+    QueryTableRequest, RegisterTableRequest, RegisterTableResponse, TableExistsRequest,
+    UpdateTableRequest, UpdateTableResponse,
 };
 
 use crate::namespace::{LanceNamespace, NamespaceError, Result};
@@ -577,8 +576,8 @@ impl LanceNamespace for RestNamespace {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use bytes::Bytes;
     use crate::models::{create_table_request, insert_into_table_request};
+    use bytes::Bytes;
     use wiremock::matchers::{method, path};
     use wiremock::{Mock, MockServer, ResponseTemplate};
 
