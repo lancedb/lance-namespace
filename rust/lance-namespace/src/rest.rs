@@ -5,24 +5,22 @@ use std::collections::HashMap;
 use async_trait::async_trait;
 use bytes::Bytes;
 
-use lance_namespace_reqwest_client::{
-    apis::{configuration::Configuration, namespace_api, table_api, transaction_api},
-    models::{
-        AlterTransactionRequest, AlterTransactionResponse, CountTableRowsRequest,
-        CreateEmptyTableRequest, CreateEmptyTableResponse, CreateNamespaceRequest,
-        CreateNamespaceResponse, CreateTableIndexRequest, CreateTableIndexResponse,
-        CreateTableRequest, CreateTableResponse, DeleteFromTableRequest, DeleteFromTableResponse,
-        DeregisterTableRequest, DeregisterTableResponse, DescribeNamespaceRequest,
-        DescribeNamespaceResponse, DescribeTableIndexStatsRequest, DescribeTableIndexStatsResponse,
-        DescribeTableRequest, DescribeTableResponse, DescribeTransactionRequest,
-        DescribeTransactionResponse, DropNamespaceRequest, DropNamespaceResponse, DropTableRequest,
-        DropTableResponse, InsertIntoTableRequest, InsertIntoTableResponse, ListNamespacesRequest,
-        ListNamespacesResponse, ListTableIndicesRequest, ListTableIndicesResponse,
-        ListTablesRequest, ListTablesResponse, MergeInsertIntoTableRequest,
-        MergeInsertIntoTableResponse, NamespaceExistsRequest, QueryTableRequest,
-        RegisterTableRequest, RegisterTableResponse, TableExistsRequest, UpdateTableRequest,
-        UpdateTableResponse,
-    },
+use crate::apis::{configuration::Configuration, namespace_api, table_api, transaction_api};
+use crate::models::{
+    AlterTransactionRequest, AlterTransactionResponse, CountTableRowsRequest,
+    CreateEmptyTableRequest, CreateEmptyTableResponse, CreateNamespaceRequest,
+    CreateNamespaceResponse, CreateTableIndexRequest, CreateTableIndexResponse,
+    CreateTableRequest, CreateTableResponse, DeleteFromTableRequest, DeleteFromTableResponse,
+    DeregisterTableRequest, DeregisterTableResponse, DescribeNamespaceRequest,
+    DescribeNamespaceResponse, DescribeTableIndexStatsRequest, DescribeTableIndexStatsResponse,
+    DescribeTableRequest, DescribeTableResponse, DescribeTransactionRequest,
+    DescribeTransactionResponse, DropNamespaceRequest, DropNamespaceResponse, DropTableRequest,
+    DropTableResponse, InsertIntoTableRequest, InsertIntoTableResponse, ListNamespacesRequest,
+    ListNamespacesResponse, ListTableIndicesRequest, ListTableIndicesResponse,
+    ListTablesRequest, ListTablesResponse, MergeInsertIntoTableRequest,
+    MergeInsertIntoTableResponse, NamespaceExistsRequest, QueryTableRequest,
+    RegisterTableRequest, RegisterTableResponse, TableExistsRequest, UpdateTableRequest,
+    UpdateTableResponse,
 };
 
 use crate::namespace::{LanceNamespace, NamespaceError, Result};
@@ -95,10 +93,8 @@ fn object_id_str(id: &Option<Vec<String>>, delimiter: &str) -> Result<String> {
 }
 
 /// Convert API error to namespace error
-fn convert_api_error<T: std::fmt::Debug>(
-    err: lance_namespace_reqwest_client::apis::Error<T>,
-) -> NamespaceError {
-    use lance_namespace_reqwest_client::apis::Error;
+fn convert_api_error<T: std::fmt::Debug>(err: crate::apis::Error<T>) -> NamespaceError {
+    use crate::apis::Error;
     match err {
         Error::Reqwest(e) => NamespaceError::Io(std::io::Error::new(
             std::io::ErrorKind::Other,
@@ -353,7 +349,7 @@ impl LanceNamespace for RestNamespace {
             .as_ref()
             .map(|props| serde_json::to_string(props).unwrap_or_else(|_| "{}".to_string()));
 
-        use lance_namespace_reqwest_client::models::create_table_request::Mode;
+        use crate::models::create_table_request::Mode;
         let mode = request.mode.as_ref().map(|m| match m {
             Mode::Create => "create",
             Mode::ExistOk => "exist_ok",
@@ -396,7 +392,7 @@ impl LanceNamespace for RestNamespace {
     ) -> Result<InsertIntoTableResponse> {
         let id = object_id_str(&request.id, self.config.delimiter())?;
 
-        use lance_namespace_reqwest_client::models::insert_into_table_request::Mode;
+        use crate::models::insert_into_table_request::Mode;
         let mode = request.mode.as_ref().map(|m| match m {
             Mode::Append => "append",
             Mode::Overwrite => "overwrite",
@@ -582,7 +578,7 @@ impl LanceNamespace for RestNamespace {
 mod tests {
     use super::*;
     use bytes::Bytes;
-    use lance_namespace_reqwest_client::models::{create_table_request, insert_into_table_request};
+    use crate::models::{create_table_request, insert_into_table_request};
     use wiremock::matchers::{method, path};
     use wiremock::{Mock, MockServer, ResponseTemplate};
 

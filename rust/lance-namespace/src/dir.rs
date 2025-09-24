@@ -11,7 +11,7 @@ use bytes::Bytes;
 use lance::dataset::{Dataset, WriteParams};
 use opendal::Operator;
 
-use lance_namespace_reqwest_client::models::{
+use crate::models::{
     CreateEmptyTableRequest, CreateEmptyTableResponse, CreateNamespaceRequest,
     CreateNamespaceResponse, CreateTableRequest, CreateTableResponse, DescribeNamespaceRequest,
     DescribeNamespaceResponse, DescribeTableRequest, DescribeTableResponse, DropNamespaceRequest,
@@ -573,10 +573,8 @@ impl LanceNamespace for DirectoryNamespace {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::models::{JsonArrowDataType, JsonArrowField, JsonArrowSchema};
     use crate::schema::convert_json_arrow_schema;
-    use lance_namespace_reqwest_client::models::{
-        JsonArrowDataType, JsonArrowField, JsonArrowSchema,
-    };
     use std::collections::HashMap;
     use std::sync::Arc;
     use tempfile::TempDir;
