@@ -15,7 +15,7 @@ categories = ["database"]
 async-trait = "0.1"
 thiserror = "1.0"
 bytes = "1.5"
-reqwest = { version = "0.12", features = ["json"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "charset", "gzip", "http2", "stream", "rustls-tls-native-roots"] }
 lance = "0.31"
 opendal = { version = "0.54", features = ["services-fs", "services-s3", "services-gcs", "services-azblob"] }
 arrow = "55.2"
