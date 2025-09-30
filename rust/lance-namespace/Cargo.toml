@@ -23,10 +23,9 @@ reqwest = { version = "0.12", default-features = false, features = [
     "stream",
     "rustls-tls-native-roots"
 ] }
-lance = "0.31"
-opendal = { version = "0.54", features = ["services-fs", "services-s3", "services-gcs", "services-azblob"] }
+lance = ">=0.37"
+opendal = { version = ">=0.54", features = ["services-fs", "services-s3", "services-gcs", "services-azblob"] }
 arrow = "55.2"
-serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 url = "2.5"
 
