@@ -1,6 +1,6 @@
 [package]
 name = "lance-namespace"
-version = "0.0.15"
+version = "0.0.16"
 edition = "2021"
 authors = ["Lance Namespace Contributors"]
 description = "Lance Namespace Rust Client - A unified interface for managing namespaces and tables"
