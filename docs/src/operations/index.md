@@ -42,6 +42,24 @@ The Lance Namespace Specification defines a list of operations that can be perfo
 | [DescribeTransaction](describe-transaction.md)           | 1               |           |       |       | ✓        |      | ✓           |
 | [AlterTransaction](alter-transaction.md)                 | 1               |           |       |       | ✓        |      | ✓           |
 
+## Recommended Basic Operations
+
+To have a functional basic namespace implementation, the following metadata operations are recommended as a minimum:
+
+**Namespace Metadata Operations:**
+- [CreateNamespace](create-namespace.md) - Create a new namespace
+- [ListNamespaces](list-namespaces.md) - List available namespaces
+- [DescribeNamespace](describe-namespace.md) - Get namespace details
+- [DropNamespace](drop-namespace.md) - Remove a namespace
+
+**Table Metadata Operations:**
+- [CreateEmptyTable](create-empty-table.md) - Create an empty table (metadata only)
+- [ListTables](list-tables.md) - List tables in a namespace
+- [DescribeTable](describe-table.md) - Get table details
+- [DropTable](drop-table.md) - Remove a table
+
+These operations provide the foundational metadata management capabilities needed for namespace and table administration without requiring data or index operation support. With the namespace able to provide basic information about the table, the Lance SDK can be used to fulfill the other operations.
+
 ## Operation Versioning
 
 When backwards incompatible change is introduced,
