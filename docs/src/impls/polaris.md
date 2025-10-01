@@ -5,7 +5,7 @@ The Polaris namespace uses the following API endpoints:
 - **Namespace operations**: Standard Iceberg REST API endpoints (`/namespaces`)
 - **Table operations**: Generic Table API endpoints (`/namespaces/{namespace}/generic-tables`)
 
-For more details about Polaris Catalog, please read the [Polaris Catalog Documentation](https://github.com/polaris-catalog/polaris).
+For more details about Polaris Catalog, please read the [Polaris Catalog Documentation](https://polaris.apache.org).
 
 ## Configuration
 

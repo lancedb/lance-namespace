@@ -4,5 +4,6 @@ nav:
   - REST: rest
   - Directory: dir.md
   - Apache Hive MetaStore: hive.md
+  - Apache Polaris: polaris.md
   - AWS Glue: glue.md
   - Unity Catalog: unity.md
