@@ -1,6 +1,6 @@
 [project]
 name = "lance-namespace"
-version = "0.0.16"
+version = "0.0.17"
 description = "Python client for Lance Namespace API"
 readme = "README.md"
 license = {text = "Apache-2.0"}
