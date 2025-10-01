@@ -2,6 +2,7 @@
 
 **Lance Polaris Namespace** is an implementation using Polaris Catalog's Generic Table API.
 The Polaris namespace uses the following API endpoints:
+
 - **Namespace operations**: Standard Iceberg REST API endpoints (`/namespaces`)
 - **Table operations**: Generic Table API endpoints (`/namespaces/{namespace}/generic-tables`)
 

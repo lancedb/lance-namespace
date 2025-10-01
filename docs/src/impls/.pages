@@ -4,6 +4,8 @@ nav:
   - REST: rest
   - Directory: dir.md
   - Apache Hive MetaStore: hive.md
+  - Apache Gravitino: gravitino.md
   - Apache Polaris: polaris.md
   - AWS Glue: glue.md
+  - Google Dataproc: dataproc.md
   - Unity Catalog: unity.md
