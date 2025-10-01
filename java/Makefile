@@ -97,6 +97,11 @@ build-lancedb:
 	./mvnw spotless:apply -pl lance-namespace-lancedb -am
 	./mvnw install -pl lance-namespace-lancedb -am
 
+.PHONY: build-polaris
+build-polaris:
+	./mvnw spotless:apply -pl lance-namespace-polaris -am
+	./mvnw install -pl lance-namespace-polaris -am
+
 .PHONY: clean
 clean: clean-apache-client clean-springboot-server
 
@@ -104,4 +109,4 @@ clean: clean-apache-client clean-springboot-server
 gen: gen-apache-client gen-springboot-server lint-apache-client lint-springboot-server
 
 .PHONY: build
-build: build-apache-client build-springboot-server build-core build-adapter build-hive2 build-hive3 build-glue build-unity build-lancedb
+build: build-apache-client build-springboot-server build-core build-adapter build-hive2 build-hive3 build-glue build-unity build-lancedb build-polaris

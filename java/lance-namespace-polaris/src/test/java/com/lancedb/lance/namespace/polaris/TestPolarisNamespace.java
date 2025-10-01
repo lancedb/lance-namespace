@@ -14,10 +14,10 @@
 package com.lancedb.lance.namespace.polaris;
 
 import com.lancedb.lance.namespace.LanceNamespaceException;
+import com.lancedb.lance.namespace.model.CreateEmptyTableRequest;
+import com.lancedb.lance.namespace.model.CreateEmptyTableResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
-import com.lancedb.lance.namespace.model.CreateTableRequest;
-import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
 import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
@@ -211,14 +211,14 @@ public class TestPolarisNamespace {
   }
 
   @Test
-  public void testCreateTable() throws IOException {
+  public void testCreateEmptyTable() throws IOException {
     PolarisModels.GenericTable mockTable = new PolarisModels.GenericTable();
     mockTable.setName("test_table");
     mockTable.setFormat("lance");
     mockTable.setBaseLocation("s3://bucket/path/to/table");
     mockTable.setDoc("Test table"); // Should be returned in doc field
     Map<String, String> props = new HashMap<>();
-    props.put("table_type", "lance");
+    props.put("managed_by", "storage");
     mockTable.setProperties(props);
 
     PolarisModels.LoadGenericTableResponse mockResponse =
@@ -231,15 +231,15 @@ public class TestPolarisNamespace {
             eq(PolarisModels.LoadGenericTableResponse.class)))
         .thenReturn(mockResponse);
 
-    CreateTableRequest request = new CreateTableRequest();
+    CreateEmptyTableRequest request = new CreateEmptyTableRequest();
     request.setId(Arrays.asList("test_catalog", "schema1", "test_table"));
     request.setLocation("s3://bucket/path/to/table");
     request.setProperties(Collections.singletonMap("comment", "Test table"));
 
-    CreateTableResponse response = namespace.createTable(request, new byte[0]);
+    CreateEmptyTableResponse response = namespace.createEmptyTable(request);
 
     assertThat(response.getLocation()).isEqualTo("s3://bucket/path/to/table");
-    assertThat(response.getProperties()).containsEntry("table_type", "lance");
+    assertThat(response.getProperties()).containsEntry("managed_by", "storage");
     assertThat(response.getProperties()).containsEntry("comment", "Test table");
   }
 
@@ -251,7 +251,7 @@ public class TestPolarisNamespace {
     mockTable.setBaseLocation("s3://bucket/path/to/table");
     mockTable.setDoc("Test table");
     Map<String, String> props = new HashMap<>();
-    props.put("table_type", "lance");
+    props.put("managed_by", "storage");
     mockTable.setProperties(props);
 
     PolarisModels.LoadGenericTableResponse mockResponse =
@@ -270,7 +270,7 @@ public class TestPolarisNamespace {
 
     assertThat(response.getLocation()).isEqualTo("s3://bucket/path/to/table");
     assertThat(response.getProperties()).containsEntry("comment", "Test table");
-    assertThat(response.getProperties()).containsEntry("table_type", "lance");
+    assertThat(response.getProperties()).containsEntry("managed_by", "storage");
   }
 
   @Test

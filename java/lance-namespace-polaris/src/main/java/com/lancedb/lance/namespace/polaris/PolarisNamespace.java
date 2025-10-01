@@ -18,10 +18,10 @@ import com.lancedb.lance.WriteParams;
 import com.lancedb.lance.namespace.LanceNamespace;
 import com.lancedb.lance.namespace.LanceNamespaceException;
 import com.lancedb.lance.namespace.ObjectIdentifier;
+import com.lancedb.lance.namespace.model.CreateEmptyTableRequest;
+import com.lancedb.lance.namespace.model.CreateEmptyTableResponse;
 import com.lancedb.lance.namespace.model.CreateNamespaceRequest;
 import com.lancedb.lance.namespace.model.CreateNamespaceResponse;
-import com.lancedb.lance.namespace.model.CreateTableRequest;
-import com.lancedb.lance.namespace.model.CreateTableResponse;
 import com.lancedb.lance.namespace.model.DescribeNamespaceRequest;
 import com.lancedb.lance.namespace.model.DescribeNamespaceResponse;
 import com.lancedb.lance.namespace.model.DescribeTableRequest;
@@ -57,7 +57,6 @@ public class PolarisNamespace implements LanceNamespace {
   private static final Logger LOG = LoggerFactory.getLogger(PolarisNamespace.class);
   private static final String TABLE_FORMAT_LANCE = "lance";
   private static final String MANAGED_BY_KEY = "managed_by";
-  private static final String TABLE_TYPE_KEY = "table_type";
   private static final String VERSION_KEY = "version";
 
   private PolarisNamespaceConfig config;
@@ -275,7 +274,7 @@ public class PolarisNamespace implements LanceNamespace {
   }
 
   @Override
-  public CreateTableResponse createTable(CreateTableRequest request, byte[] requestData) {
+  public CreateEmptyTableResponse createEmptyTable(CreateEmptyTableRequest request) {
     ObjectIdentifier tableId = ObjectIdentifier.of(request.getId());
     ValidationUtil.checkArgument(
         tableId.levels() >= 2, "Table identifier must have at least 2 levels");
@@ -297,7 +296,6 @@ public class PolarisNamespace implements LanceNamespace {
       }
 
       // Add Lance-specific properties
-      properties.put(TABLE_TYPE_KEY, TABLE_FORMAT_LANCE);
       // Default to storage-managed unless specified
       if (!properties.containsKey(MANAGED_BY_KEY)) {
         properties.put(MANAGED_BY_KEY, "storage");
@@ -325,7 +323,7 @@ public class PolarisNamespace implements LanceNamespace {
 
       LOG.info("Created Lance table: {}.{}", namespacePath, tableName);
 
-      CreateTableResponse result = new CreateTableResponse();
+      CreateEmptyTableResponse result = new CreateEmptyTableResponse();
       result.setLocation(response.getTable().getBaseLocation());
       Map<String, String> resultProps = new HashMap<>(response.getTable().getProperties());
       if (response.getTable().getDoc() != null) {
