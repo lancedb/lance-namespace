@@ -78,6 +78,11 @@ search = "<version>{current_version}</version>"
 replace = "<version>{new_version}</version>"
 
 [[tool.bumpversion.files]]
+filename = "java/lance-namespace-polaris/pom.xml"
+search = "<version>{current_version}</version>"
+replace = "<version>{new_version}</version>"
+
+[[tool.bumpversion.files]]
 filename = "java/lance-namespace-lancedb/pom.xml"
 search = "<version>{current_version}</version>"
 replace = "<version>{new_version}</version>"
