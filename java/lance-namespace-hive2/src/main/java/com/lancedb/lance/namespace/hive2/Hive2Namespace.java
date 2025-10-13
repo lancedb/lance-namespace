@@ -729,4 +729,8 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
     return String.format(
         "%s/%s/%s.lance", config.getRoot(), namespaceName.toLowerCase(), tableName.toLowerCase());
   }
+
+  public Hive2ClientPool getClientPool() {
+    return clientPool;
+  }
 }
