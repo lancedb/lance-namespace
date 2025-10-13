@@ -254,7 +254,7 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
           CommonUtil.formatCurrentStackTrace());
     }
 
-    Hive2Util.validateLanceTable(hmsTable.get());
+    Hive2Util.validateLanceTable(hmsTable.get(), config.isSkipValidationLanceFormatTable());
   }
 
   @Override
@@ -461,7 +461,7 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
       return Optional.empty();
     }
 
-    Hive2Util.validateLanceTable(hmsTable.get());
+    Hive2Util.validateLanceTable(hmsTable.get(), config.isSkipValidationLanceFormatTable());
     return Optional.of(hmsTable.get().getSd().getLocation());
   }
 
@@ -594,7 +594,7 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
             CommonUtil.formatCurrentStackTrace());
       }
 
-      Hive2Util.validateLanceTable(hmsTable.get());
+      Hive2Util.validateLanceTable(hmsTable.get(), config.isSkipValidationLanceFormatTable());
       String location = hmsTable.get().getSd().getLocation();
 
       clientPool.run(

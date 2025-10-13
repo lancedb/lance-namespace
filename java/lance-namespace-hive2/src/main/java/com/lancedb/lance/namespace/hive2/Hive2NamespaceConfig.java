@@ -36,9 +36,13 @@ public class Hive2NamespaceConfig {
 
   public static final String ROOT_DEFAULT = System.getProperty("user.dir");
 
+  public static final String SKIP_LANCE_TABLE_VALIDATION = "skip.validate.lance.format.table";
+  public static final boolean SKIP_LANCE_TABLE_VALIDATION_DEFAULT = false;
+
   private final int clientPoolSize;
   private final Map<String, String> storageOptions;
   private final String root;
+  private final boolean skipValidationLanceFormatTable;
 
   public Hive2NamespaceConfig(Map<String, String> properties) {
     this.clientPoolSize =
@@ -47,6 +51,9 @@ public class Hive2NamespaceConfig {
     this.root =
         OpenDalUtil.stripTrailingSlash(
             PropertyUtil.propertyAsString(properties, ROOT, ROOT_DEFAULT));
+    this.skipValidationLanceFormatTable =
+        PropertyUtil.propertyAsBoolean(properties,
+            SKIP_LANCE_TABLE_VALIDATION, SKIP_LANCE_TABLE_VALIDATION_DEFAULT);
   }
 
   public int getClientPoolSize() {
@@ -59,5 +66,9 @@ public class Hive2NamespaceConfig {
 
   public String getRoot() {
     return root;
+  }
+
+  public boolean isSkipValidationLanceFormatTable() {
+    return skipValidationLanceFormatTable;
   }
 }
