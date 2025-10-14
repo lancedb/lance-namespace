@@ -53,8 +53,8 @@ public class Hive3NamespaceConfig {
         OpenDalUtil.stripTrailingSlash(
             PropertyUtil.propertyAsString(properties, ROOT, ROOT_DEFAULT));
     this.skipValidationLanceFormatTable =
-        PropertyUtil.propertyAsBoolean(properties,
-            SKIP_LANCE_TABLE_VALIDATION, SKIP_LANCE_TABLE_VALIDATION_DEFAULT);
+        PropertyUtil.propertyAsBoolean(
+            properties, SKIP_LANCE_TABLE_VALIDATION, SKIP_LANCE_TABLE_VALIDATION_DEFAULT);
   }
 
   public int getClientPoolSize() {
