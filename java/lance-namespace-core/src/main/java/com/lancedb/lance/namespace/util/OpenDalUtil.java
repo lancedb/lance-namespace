@@ -87,12 +87,58 @@ public class OpenDalUtil {
       case "s3n":
         return "s3";
       case "abfs":
+      case "az":
         return "azblob";
       case "file":
         return "fs";
       default:
         return scheme.toLowerCase();
     }
+  }
+
+  /**
+   * Denormalize scheme names to Lance-compatible format. This is the reverse of normalizeScheme,
+   * converting OpenDAL schemes back to Lance schemes.
+   *
+   * @param scheme the OpenDAL scheme
+   * @return denormalized scheme for Lance
+   */
+  public static String denormalizeScheme(String scheme) {
+    switch (scheme.toLowerCase()) {
+      case "azblob":
+        return "az";
+      default:
+        return scheme.toLowerCase();
+    }
+  }
+
+  /**
+   * Convert an OpenDAL-compatible URI to a Lance-compatible URI. This converts schemes like
+   * azblob:// back to az:// for Lance operations.
+   *
+   * @param uri the OpenDAL-compatible URI
+   * @return Lance-compatible URI
+   */
+  public static String denormalizeUri(String uri) {
+    if (uri == null) {
+      return null;
+    }
+
+    String[] schemeSplit = uri.split("://", 2);
+    if (schemeSplit.length < 2) {
+      // No scheme, return as-is
+      return uri;
+    }
+
+    String scheme = schemeSplit[0];
+    String denormalizedScheme = denormalizeScheme(scheme);
+
+    if (denormalizedScheme.equals(scheme)) {
+      // No change needed
+      return uri;
+    }
+
+    return denormalizedScheme + "://" + schemeSplit[1];
   }
 
   public static String stripTrailingSlash(String path) {
