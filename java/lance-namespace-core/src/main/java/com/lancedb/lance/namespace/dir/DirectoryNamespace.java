@@ -144,7 +144,7 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
     // Create the Lance dataset with data
     Dataset.create(allocator, tablePath, schema, writeParams);
     CreateTableResponse response = new CreateTableResponse();
-    response.setLocation(tablePath);
+    response.setLocation(OpenDalUtil.denormalizeUri(tablePath));
     response.setVersion(1L);
     response.setStorageOptions(config.getStorageOptions());
     return response;
@@ -188,7 +188,7 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
     }
 
     CreateEmptyTableResponse response = new CreateEmptyTableResponse();
-    response.setLocation(tablePath);
+    response.setLocation(OpenDalUtil.denormalizeUri(tablePath));
     response.setStorageOptions(config.getStorageOptions());
     return response;
   }
@@ -203,7 +203,7 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
     try {
       Dataset.drop(tablePath, config.getStorageOptions());
       DropTableResponse response = new DropTableResponse();
-      response.setLocation(tablePath);
+      response.setLocation(OpenDalUtil.denormalizeUri(tablePath));
       response.setId(request.getId());
       return response;
     } catch (Exception e) {
@@ -337,7 +337,7 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
     }
 
     DescribeTableResponse response = new DescribeTableResponse();
-    response.setLocation(tablePath);
+    response.setLocation(OpenDalUtil.denormalizeUri(tablePath));
     response.setStorageOptions(config.getStorageOptions());
     return response;
   }
