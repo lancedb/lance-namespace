@@ -47,12 +47,14 @@ The Lance Namespace Specification defines a list of operations that can be perfo
 To have a functional basic namespace implementation, the following metadata operations are recommended as a minimum:
 
 **Namespace Metadata Operations:**
+
 - [CreateNamespace](create-namespace.md) - Create a new namespace
 - [ListNamespaces](list-namespaces.md) - List available namespaces
 - [DescribeNamespace](describe-namespace.md) - Get namespace details
 - [DropNamespace](drop-namespace.md) - Remove a namespace
 
 **Table Metadata Operations:**
+
 - [CreateEmptyTable](create-empty-table.md) - Create an empty table (metadata only)
 - [ListTables](list-tables.md) - List tables in a namespace
 - [DescribeTable](describe-table.md) - Get table details
