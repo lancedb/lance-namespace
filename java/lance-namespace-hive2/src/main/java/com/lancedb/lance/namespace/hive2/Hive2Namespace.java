@@ -95,6 +95,15 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
   }
 
   @Override
+  public String namespaceId() {
+    String metastoreUri =
+        hadoopConf != null
+            ? hadoopConf.get(HiveConf.ConfVars.METASTOREURIS.varname, "default")
+            : "default";
+    return String.format("Hive2Namespace { metastoreUri: \"%s\" }", metastoreUri);
+  }
+
+  @Override
   public ListNamespacesResponse listNamespaces(ListNamespacesRequest request) {
     ObjectIdentifier nsId = ObjectIdentifier.of(request.getId());
 

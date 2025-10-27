@@ -113,6 +113,16 @@ public class GlueNamespace implements LanceNamespace, Closeable {
   }
 
   @Override
+  public String namespaceId() {
+    String catalogId = config.catalogId() != null ? config.catalogId() : "default";
+    String region =
+        glueClient.serviceClientConfiguration().region() != null
+            ? glueClient.serviceClientConfiguration().region().id()
+            : "default";
+    return String.format("GlueNamespace { catalogId: \"%s\", region: \"%s\" }", catalogId, region);
+  }
+
+  @Override
   public ListNamespacesResponse listNamespaces(ListNamespacesRequest request) {
     validateParent(request.getId());
 

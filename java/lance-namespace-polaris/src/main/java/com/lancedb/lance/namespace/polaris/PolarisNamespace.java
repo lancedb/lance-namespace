@@ -90,6 +90,12 @@ public class PolarisNamespace implements LanceNamespace {
   }
 
   @Override
+  public String namespaceId() {
+    String endpoint = this.config.getEndpoint();
+    return String.format("PolarisNamespace { endpoint: \"%s\" }", endpoint);
+  }
+
+  @Override
   public CreateNamespaceResponse createNamespace(CreateNamespaceRequest request) {
     ObjectIdentifier namespaceId = ObjectIdentifier.of(request.getId());
     ValidationUtil.checkArgument(

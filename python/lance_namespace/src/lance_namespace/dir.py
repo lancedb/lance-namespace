@@ -61,6 +61,11 @@ class DirectoryNamespace(LanceNamespace):
         self.namespace_path = self._parse_path(root)
         self.operator = self._initialize_operator(root)
 
+    def namespace_id(self) -> str:
+        """Return a human-readable unique identifier for this namespace instance."""
+        root = self.config.root if self.config.root else os.getcwd()
+        return f"DirectoryNamespace {{ root: {root!r} }}"
+
     def create_namespace(self, request: CreateNamespaceRequest) -> CreateNamespaceResponse:
         """Create a namespace - not supported for directory namespace."""
         raise NotImplementedError(

@@ -4,9 +4,13 @@ from lance_namespace import LanceNamespace, connect
 
 
 class MockNamespace(LanceNamespace):
-    
+
     def __init__(self, **kwargs):
         self.properties = kwargs
+
+    def namespace_id(self) -> str:
+        """Return a mock namespace ID."""
+        return "MockNamespace { }"
 
 def test_connect_with_short_name_rest():
     with patch('lance_namespace.namespace.importlib.import_module') as mock_import:

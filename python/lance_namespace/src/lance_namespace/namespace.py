@@ -57,6 +57,24 @@ from lance_namespace_urllib3_client.models import (
 class LanceNamespace(ABC):
     """Base interface for Lance Namespace implementations."""
 
+    @abstractmethod
+    def namespace_id(self) -> str:
+        """Return a human-readable unique identifier for this namespace instance.
+
+        This is used for equality comparison and hashing when the namespace is
+        used as part of a storage options provider. Two namespace instances with
+        the same ID are considered equal and will share cached resources.
+
+        The ID should be human-readable for debugging and logging purposes.
+        For example:
+        - REST namespace: "LanceRestNamespace { endpoint: 'https://api.example.com', delimiter: '.' }"
+        - Directory namespace: "DirectoryNamespace { root: '/path/to/data' }"
+
+        Returns:
+            A human-readable unique identifier string
+        """
+        pass
+
     def list_namespaces(self, request: ListNamespacesRequest) -> ListNamespacesResponse:
         """List namespaces."""
         raise NotImplementedError("Not supported: list_namespaces")

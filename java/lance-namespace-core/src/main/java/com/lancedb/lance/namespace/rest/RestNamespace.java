@@ -109,6 +109,13 @@ public class RestNamespace implements LanceNamespace {
   }
 
   @Override
+  public String namespaceId() {
+    String uri = this.config.getUri() != null ? this.config.getUri() : "";
+    String delimiter = this.config.getDelimiter();
+    return String.format("RestNamespace { endpoint: \"%s\", delimiter: \"%s\" }", uri, delimiter);
+  }
+
+  @Override
   public CreateNamespaceResponse createNamespace(CreateNamespaceRequest request) {
     try {
       return namespaceApi.createNamespace(

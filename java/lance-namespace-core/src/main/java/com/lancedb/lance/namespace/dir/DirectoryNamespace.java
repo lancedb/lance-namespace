@@ -74,6 +74,11 @@ public class DirectoryNamespace implements LanceNamespace, Closeable {
   }
 
   @Override
+  public String namespaceId() {
+    return String.format("DirectoryNamespace { root: \"%s\" }", this.config.getRoot());
+  }
+
+  @Override
   public CreateNamespaceResponse createNamespace(CreateNamespaceRequest request) {
     throw new UnsupportedOperationException(
         "Directory namespace only contains a flat list of tables");

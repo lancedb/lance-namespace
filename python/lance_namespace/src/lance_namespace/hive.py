@@ -210,7 +210,11 @@ class Hive2Namespace(LanceNamespace):
         
         # Lazy initialization to support pickling
         self._client = None
-    
+
+    def namespace_id(self) -> str:
+        """Return a human-readable unique identifier for this namespace instance."""
+        return f"Hive2Namespace {{ uri: {self.uri!r} }}"
+
     @property
     def client(self):
         """Get the Hive client, initializing it if necessary."""
