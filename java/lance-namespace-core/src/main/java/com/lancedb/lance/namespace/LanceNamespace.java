@@ -75,6 +75,24 @@ public interface LanceNamespace {
    */
   void initialize(Map<String, String> configProperties, BufferAllocator allocator);
 
+  /**
+   * Return a human-readable unique identifier for this namespace instance.
+   *
+   * <p>This is used for equality comparison and hashing when the namespace is used as part of a
+   * storage options provider. Two namespace instances with the same ID are considered equal and
+   * will share cached resources.
+   *
+   * <p>The ID should be human-readable for debugging and logging purposes. For example:
+   *
+   * <ul>
+   *   <li>Glue namespace: "GlueNamespace { region: 'us-east-1', catalog: 'my-catalog' }"
+   *   <li>REST namespace: "RestNamespace { endpoint: 'https://api.example.com', delimiter: '.' }"
+   * </ul>
+   *
+   * @return A human-readable unique identifier string
+   */
+  String namespaceId();
+
   default ListNamespacesResponse listNamespaces(ListNamespacesRequest request) {
     throw new UnsupportedOperationException("Not supported: listNamespaces");
   }

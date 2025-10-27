@@ -136,7 +136,13 @@ class GlueNamespace(LanceNamespace):
         
         self.config = GlueNamespaceConfig(properties)
         self._glue = None  # Lazy initialization to support pickling
-    
+
+    def namespace_id(self) -> str:
+        """Return a human-readable unique identifier for this namespace instance."""
+        catalog_id = self.config.catalog_id if self.config.catalog_id else "default"
+        region = self.config.region if self.config.region else "default"
+        return f"GlueNamespace {{ catalog_id: {catalog_id!r}, region: {region!r} }}"
+
     @property
     def glue(self):
         """Get the Glue client, initializing it if necessary."""

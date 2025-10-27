@@ -325,9 +325,13 @@ class UnityNamespace(LanceNamespace):
             read_timeout=self.config.read_timeout,
             max_retries=self.config.max_retries
         )
-        
+
         logger.info(f"Initialized Unity namespace with endpoint: {self.config.endpoint}")
-    
+
+    def namespace_id(self) -> str:
+        """Return a human-readable unique identifier for this namespace instance."""
+        return f"UnityNamespace {{ endpoint: {self.config.endpoint!r}, catalog: {self.config.catalog!r} }}"
+
     def list_namespaces(self, request: ListNamespacesRequest) -> ListNamespacesResponse:
         """List namespaces."""
         ns_id = self._parse_identifier(request.id)
@@ -538,7 +542,7 @@ class UnityNamespace(LanceNamespace):
             
             # Sort and deduplicate
             tables = sorted(set(tables))
-            
+
             response = ListTablesResponse()
             response.tables = tables
             return response

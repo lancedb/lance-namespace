@@ -119,7 +119,12 @@ class LanceRestNamespace(LanceNamespace):
         self.table_api = TableApi(self.api_client)
         self.transaction_api = TransactionApi(self.api_client)
         self.config = RestNamespaceConfig(kwargs)
-    
+        self.uri = kwargs.get("uri", "")
+
+    def namespace_id(self) -> str:
+        """Return a human-readable unique identifier for this namespace instance."""
+        return f"LanceRestNamespace {{ endpoint: {self.uri!r}, delimiter: {self.config.delimiter()!r} }}"
+
     def list_namespaces(self, request: ListNamespacesRequest) -> ListNamespacesResponse:
         return self.namespace_api.list_namespaces(
             id=object_id_str(request.id, self.config.delimiter(), request),

@@ -102,6 +102,13 @@ public class UnityNamespace implements LanceNamespace {
   }
 
   @Override
+  public String namespaceId() {
+    String endpoint = this.config.getEndpoint();
+    String catalog = this.config.getCatalog();
+    return String.format("UnityNamespace { endpoint: \"%s\", catalog: \"%s\" }", endpoint, catalog);
+  }
+
+  @Override
   public ListNamespacesResponse listNamespaces(ListNamespacesRequest request) {
     ObjectIdentifier nsId = ObjectIdentifier.of(request.getId());
 
