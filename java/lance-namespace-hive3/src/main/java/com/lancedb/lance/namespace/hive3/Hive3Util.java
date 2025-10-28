@@ -24,6 +24,8 @@ import org.apache.hadoop.hive.metastore.api.PrincipalType;
 import org.apache.hadoop.hive.metastore.api.Table;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.thrift.TException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -36,6 +38,8 @@ import static com.lancedb.lance.namespace.hive3.Hive3ErrorType.InvalidLanceTable
 import static com.lancedb.lance.namespace.hive3.Hive3ErrorType.UnknownCatalog;
 
 public class Hive3Util {
+  private static final Logger LOG = LoggerFactory.getLogger(Hive3Util.class);
+
   public static Catalog getCatalogOrNull(Hive3ClientPool clientPool, String catalog) {
     try {
       return clientPool.run(client -> client.getCatalog(catalog));
@@ -172,6 +176,14 @@ public class Hive3Util {
   }
 
   public static void validateLanceTable(Table table) {
+    validateLanceTable(table, false);
+  }
+
+  public static void validateLanceTable(Table table, boolean skipValidation) {
+    if (skipValidation) {
+      LOG.info("Skip validate lance format table procedure.");
+      return;
+    }
     Map<String, String> params = table.getParameters();
     if (params == null || !"lance".equalsIgnoreCase(params.get("table_type"))) {
       throw LanceNamespaceException.badRequest(
