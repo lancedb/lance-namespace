@@ -21,9 +21,8 @@ reqwest = { version = "0.12", default-features = false, features = [
     "gzip",
     "http2",
     "stream",
-    "rustls-tls-native-roots"
 ] }
-lance = ">=0.38"
+lance = { version = ">=0.38", default-features = false }
 opendal = { version = ">=0.54", features = ["services-fs", "services-s3", "services-gcs", "services-azblob"] }
 arrow = "56.1"
 serde_json = "1.0"
@@ -36,3 +35,12 @@ lance-namespace-reqwest-client = { workspace = true }
 tokio = { version = "1.35", features = ["full"] }
 wiremock = "0.6"
 tempfile = "3.20"
+
+
+[features]
+default = ["rustls-tls-native-roots"]
+
+rustls-tls-native-roots-no-provider = [
+    "reqwest/rustls-tls-native-roots-no-provider",
+]
+rustls-tls-native-roots = ["reqwest/rustls-tls-native-roots"]
