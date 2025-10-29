@@ -67,5 +67,15 @@ public class TestObjectIdentifier {
 
     oid = ObjectIdentifier.of(Lists.newArrayList("a", "b", "c"));
     assertEquals(Lists.newArrayList("a", "b"), oid.parent());
+
+    // Case 5: parse from string
+    oid = ObjectIdentifier.of(".");
+    assertEquals(0, oid.levels());
+
+    oid = ObjectIdentifier.of("a.b.c");
+    assertEquals(3, oid.levels());
+    assertEquals("a", oid.levelAtListPos(0));
+    assertEquals("b", oid.levelAtListPos(1));
+    assertEquals("c", oid.levelAtListPos(2));
   }
 }

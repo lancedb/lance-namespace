@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class ObjectIdentifier {
 
@@ -51,7 +52,8 @@ public class ObjectIdentifier {
     if (id.equals(delimiter)) {
       return new ObjectIdentifier(new String[0]);
     }
-    return new ObjectIdentifier(id.split(delimiter));
+    // Split by the delimiter literally(i.e., escape any regex special characters)
+    return new ObjectIdentifier(id.split(Pattern.quote(delimiter)));
   }
 
   public String levelAtListPos(int pos) {
