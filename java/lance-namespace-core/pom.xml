@@ -31,24 +31,24 @@
         <dependency>
             <groupId>org.apache.opendal</groupId>
             <artifactId>opendal</artifactId>
-            <version>0.48.0</version>
+            <version>0.48.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.opendal</groupId>
             <artifactId>opendal</artifactId>
-            <version>0.48.0</version>
+            <version>0.48.1</version>
             <classifier>linux-aarch_64</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.opendal</groupId>
             <artifactId>opendal</artifactId>
-            <version>0.48.0</version>
+            <version>0.48.1</version>
             <classifier>linux-x86_64</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.opendal</groupId>
             <artifactId>opendal</artifactId>
-            <version>0.48.0</version>
+            <version>0.48.1</version>
             <classifier>osx-aarch_64</classifier>
         </dependency>
         <dependency>
