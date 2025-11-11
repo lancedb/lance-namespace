@@ -102,8 +102,14 @@ def object_id_str(id_list: list[str], delimiter: str = ".", obj: Any = None) -> 
         object_type = type(obj).__name__ if obj is not None else "Unknown"
         raise ValueError(f"Object of type '{object_type}' must have an 'id' field")
     if len(id_list) == 0:
-        return delimiter
-    return delimiter.join(id_list)
+        id_str = delimiter
+    else:
+        id_str = delimiter.join(id_list)
+    if id_str == ".":
+        # https://github.com/lancedb/lance-namespace/issues/248
+        # Escape single dot to avoid server path normalization issues
+        id_str = "%2E"
+    return id_str
 
 
 class LanceRestNamespace(LanceNamespace):
@@ -111,14 +117,19 @@ class LanceRestNamespace(LanceNamespace):
     
     def __init__(self, **kwargs):
         configuration = Configuration()
+        config = RestNamespaceConfig(kwargs)
         if "uri" in kwargs:
             configuration.host = kwargs["uri"]
+        if "safe_chars_for_path_param" in kwargs:
+            configuration.safe_chars_for_path_param = kwargs["safe_chars_for_path_param"]
+        if config.delimiter() == "." and not configuration.safe_chars_for_path_param:
+            configuration.safe_chars_for_path_param = "%"
 
         self.api_client = ApiClient(configuration)
         self.namespace_api = NamespaceApi(self.api_client)
         self.table_api = TableApi(self.api_client)
         self.transaction_api = TransactionApi(self.api_client)
-        self.config = RestNamespaceConfig(kwargs)
+        self.config = config
         self.uri = kwargs.get("uri", "")
 
     def namespace_id(self) -> str:

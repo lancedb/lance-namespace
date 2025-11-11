@@ -93,10 +93,11 @@ def test_object_id_with_list_id():
     assert object_id_str(obj.id, ".", obj) == "ns1.ns2.table1"
 
 def test_object_id_with_empty_list_id():
-    """Test object with empty id list returns delimiter."""
+    """Test object with empty id list returns delimiter.
+    Single dot will be escaped to %2E."""
     obj = Mock()
     obj.id = []
-    assert object_id_str(obj.id, ".", obj) == "."
+    assert object_id_str(obj.id, ".", obj) == "%2E"
 
 def test_object_id_with_string_id():
     """Test object with id field as list containing single string."""
