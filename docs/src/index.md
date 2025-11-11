@@ -8,19 +8,7 @@ as well as how ML/AI tools and analytics compute engines should integrate with L
 
 ## Why _Namespace_ not _Catalog_?
 
-There are many terms used to describe the concept of a container in database systems
-— such as _namespace_, _catalog_, _schema_, _database_, _metastore_, and _metalake_. 
-Among these, namespace and catalog have become the most prominent in modern lakehouse architectures.
-
-The term catalog typically implies a hierarchical structure with at least two levels. 
-For example, Apache Hive uses a catalog → database → table model, 
-while Apache Iceberg’s REST catalog adopts a catalog → multi-level namespace → table hierarchy.
-
-In contrast, the ML and AI communities tend to favor a flatter organizational model. 
-It’s common to store datasets in simple directories 
-and categorize them using flexible systems like tagging, rather than rigid hierarchies.
-
-To better support this usage pattern, Lance adopts the term **_namespace_** to represent all container concepts 
-— including what would traditionally be called a catalog. 
-With **Lance Namespace**, we provide a flexible, multi-level namespace abstraction 
-that allows users to structure and manage Lance datasets in ways that best align with their data organization strategies.
+The specification is called "Namespace" rather than "Catalog" because there are already many open catalog specifications and catalog services in the market today.
+The goal of Lance Namespace is not to create yet another catalog spec, but to provide a consistent abstraction that adapts to all of them easily, so that users can choose to use any catalog to store and use Lance tables.
+Namespace can mean catalog, schema, metastore, database, metalake, or any other organizational concept.
+Lance Namespace provides a consistent interface to convert among different catalog specifications and map them into the connector interfaces of various compute engines.
