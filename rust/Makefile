@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VERSION = 0.0.20
+VERSION = 0.0.21
 
 .PHONY: clean-reqwest-client
 clean-reqwest-client:
