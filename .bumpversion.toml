@@ -110,11 +110,6 @@ search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
 
 [[tool.bumpversion.files]]
-filename = "rust/lance-namespace/Cargo.toml"
-search = 'version = "{current_version}"'
-replace = 'version = "{new_version}"'
-
-[[tool.bumpversion.files]]
 filename = "rust/reqwest-client.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'

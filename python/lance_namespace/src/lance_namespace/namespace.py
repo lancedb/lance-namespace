@@ -177,8 +177,8 @@ class LanceNamespace(ABC):
 
 
 NATIVE_IMPLS = {
-    "rest": "lance_namespace.rest.LanceRestNamespace",
-    "dir": "lance_namespace.dir.DirectoryNamespace",
+    "rest": "lance.namespace.RestNamespace",  # Rust-backed implementation
+    "dir": "lance.namespace.DirectoryNamespace",  # Rust-backed implementation
     "glue": "lance_namespace.glue.GlueNamespace",
     "hive2": "lance_namespace.hive.Hive2Namespace",
     "unity": "lance_namespace.unity.UnityNamespace",
