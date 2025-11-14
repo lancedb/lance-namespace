@@ -8,7 +8,6 @@ The Lance Namespace codebase is at [lancedb/lance-namespace](https://github.com/
 |------------------------------|----------|----------------------------------------|---------------------------------------------------------------------------|
 | spec                         |          | docs/src/spec                          | Lance Namespace Specification                                             |
 | Rust Reqwest Client          | Rust     | rust/lance-namespace-reqwest-client    | Generated Rust reqwest client for Lance REST Namespace                    |
-| Rust Lance Namespace Core    | Rust     | rust/lance-namespace                   | Lance Namespace Rust Core SDK                                             |
 | Python UrlLib3 Client        | Python   | python/lance_namespace_urllib3_client  | Generated Python urllib3 client for Lance REST Namespace                  |
 | Python Lance Namespace Core  | Python   | python/lance_namespace                 | Lance Namespace Python Core SDK                                           |
 | Java Apache Client           | Java     | java/lance-namespace-apache-client     | Generated Java Apache HTTP client for Lance REST Namespace                |
