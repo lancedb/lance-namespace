@@ -91,6 +91,7 @@ import lance
 import pyarrow as pa
 
 from lance_namespace.namespace import LanceNamespace
+from lance_namespace.schema import convert_pyarrow_schema_to_json_arrow
 from lance_namespace_urllib3_client.models import (
     ListNamespacesRequest,
     ListNamespacesResponse,
@@ -440,7 +441,9 @@ class Hive2Namespace(LanceNamespace):
                 location = table.sd.location if table.sd else None
                 if not location:
                     raise ValueError(f"Table {request.id} has no location")
-                
+                dataset = lance.dataset(location, storage_options=self.storage_properties)
+                schema = convert_pyarrow_schema_to_json_arrow(dataset.schema)
+
                 # Build properties from Hive metadata
                 properties = {}
                 if table.parameters:
@@ -459,7 +462,7 @@ class Hive2Namespace(LanceNamespace):
                 # Note: We don't load the Lance dataset here, just return Hive metadata
                 # Schema will be None as we're not opening the dataset
                 return DescribeTableResponse(
-                    var_schema=None,
+                    schema=schema,
                     location=location,
                     version=version,
                     properties=properties
@@ -483,7 +486,7 @@ class Hive2Namespace(LanceNamespace):
             managed_by = request.properties.get(MANAGED_BY_KEY, "storage") if request.properties else "storage"
             
             # We always need to open the dataset to get schema for Hive columns
-            dataset = lance.dataset(request.location)
+            dataset = lance.dataset(request.location, storage_options=self.storage_properties)
             schema = dataset.schema
             
             # Only track version if managed_by is "impl"
@@ -659,9 +662,9 @@ class Hive2Namespace(LanceNamespace):
                 # Check if dataset already exists
                 if os.path.exists(location):
                     raise ValueError(f"Table {request.id} already exists at {location}")
-                dataset = lance.write_dataset(table, location)
+                dataset = lance.write_dataset(table, location, storage_options=self.storage_properties)
             elif request.mode == "create_or_replace":
-                dataset = lance.write_dataset(table, location, mode="overwrite")
+                dataset = lance.write_dataset(table, location, mode="overwrite", storage_options=self.storage_properties)
             else:
                 raise ValueError(f"Unsupported create mode: {request.mode}")
             
@@ -734,7 +737,7 @@ class Hive2Namespace(LanceNamespace):
             )
             
             # Create table in Hive
-            with self.client_pool.get_client() as client:
+            with self.client as client:
                 client.create_table(hive_table)
             
             return CreateEmptyTableResponse(location=location)

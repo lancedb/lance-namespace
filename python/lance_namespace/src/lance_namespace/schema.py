@@ -66,11 +66,21 @@ def convert_pyarrow_schema_to_json_arrow(schema: "pa.Schema") -> JsonArrowSchema
             name=field.name,
             nullable=field.nullable,
             type=convert_pyarrow_type_to_json_arrow(field.type),
-            metadata=field.metadata
+            metadata=validate_metadata(field.metadata)
         )
         fields.append(json_field)
     
     return JsonArrowSchema(fields=fields)
+
+def validate_metadata(metadata):
+    if not metadata:
+        return {}
+
+    return {
+        (k.decode('utf-8') if isinstance(k, bytes) else k):
+            (v.decode('utf-8') if isinstance(v, bytes) else v)
+        for k, v in metadata.items()
+    }
 
 
 def convert_pyarrow_type_to_json_arrow(dtype: "pa.DataType") -> JsonArrowDataType:
@@ -89,55 +99,57 @@ def convert_pyarrow_type_to_json_arrow(dtype: "pa.DataType") -> JsonArrowDataTyp
         raise ImportError("PyArrow is required for schema conversion")
     
     if pa.types.is_boolean(dtype):
-        return JsonArrowDataType(name="bool")
+        return JsonArrowDataType(type="bool")
     elif pa.types.is_int8(dtype):
-        return JsonArrowDataType(name="int", bitWidth=8, isSigned=True)
+        return JsonArrowDataType(type="int", bitWidth=8, isSigned=True)
     elif pa.types.is_int16(dtype):
-        return JsonArrowDataType(name="int", bitWidth=16, isSigned=True)
+        return JsonArrowDataType(type="int", bitWidth=16, isSigned=True)
     elif pa.types.is_int32(dtype):
-        return JsonArrowDataType(name="int", bitWidth=32, isSigned=True)
+        return JsonArrowDataType(type="int", bitWidth=32, isSigned=True)
     elif pa.types.is_int64(dtype):
-        return JsonArrowDataType(name="int", bitWidth=64, isSigned=True)
+        return JsonArrowDataType(type="int", bitWidth=64, isSigned=True)
     elif pa.types.is_uint8(dtype):
-        return JsonArrowDataType(name="int", bitWidth=8, isSigned=False)
+        return JsonArrowDataType(type="int", bitWidth=8, isSigned=False)
     elif pa.types.is_uint16(dtype):
-        return JsonArrowDataType(name="int", bitWidth=16, isSigned=False)
+        return JsonArrowDataType(type="int", bitWidth=16, isSigned=False)
     elif pa.types.is_uint32(dtype):
-        return JsonArrowDataType(name="int", bitWidth=32, isSigned=False)
+        return JsonArrowDataType(type="int", bitWidth=32, isSigned=False)
     elif pa.types.is_uint64(dtype):
-        return JsonArrowDataType(name="int", bitWidth=64, isSigned=False)
+        return JsonArrowDataType(type="int", bitWidth=64, isSigned=False)
     elif pa.types.is_float32(dtype):
-        return JsonArrowDataType(name="floatingpoint", precision="SINGLE")
+        return JsonArrowDataType(type="floatingpoint", precision="SINGLE")
     elif pa.types.is_float64(dtype):
-        return JsonArrowDataType(name="floatingpoint", precision="DOUBLE")
+        return JsonArrowDataType(type="floatingpoint", precision="DOUBLE")
     elif pa.types.is_string(dtype):
-        return JsonArrowDataType(name="utf8")
+        return JsonArrowDataType(type="utf8")
     elif pa.types.is_binary(dtype):
-        return JsonArrowDataType(name="binary")
+        return JsonArrowDataType(type="binary")
     elif pa.types.is_timestamp(dtype):
         return JsonArrowDataType(
-            name="timestamp",
+            type="timestamp",
             unit=dtype.unit,
             timezone=dtype.tz
         )
     elif pa.types.is_date32(dtype):
-        return JsonArrowDataType(name="date", unit="DAY")
+        return JsonArrowDataType(type="date", unit="DAY")
     elif pa.types.is_date64(dtype):
-        return JsonArrowDataType(name="date", unit="MILLISECOND")
+        return JsonArrowDataType(type="date", unit="MILLISECOND")
     elif pa.types.is_decimal(dtype):
         return JsonArrowDataType(
-            name="decimal",
+            type="decimal",
             precision=dtype.precision,
             scale=dtype.scale
         )
+    elif pa.types.is_fixed_size_list(dtype):
+        return JsonArrowDataType(type="fixed_size_list")
     elif pa.types.is_list(dtype):
-        return JsonArrowDataType(name="list")
+        return JsonArrowDataType(type="list")
     elif pa.types.is_struct(dtype):
-        return JsonArrowDataType(name="struct")
+        return JsonArrowDataType(type="struct")
     elif pa.types.is_map(dtype):
-        return JsonArrowDataType(name="map")
+        return JsonArrowDataType(type="map")
     else:
-        return JsonArrowDataType(name="unknown")
+        return JsonArrowDataType(type="unknown")
 
 
 def convert_json_arrow_type_to_pyarrow(json_type: JsonArrowDataType) -> "pa.DataType":
