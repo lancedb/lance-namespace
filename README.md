@@ -6,6 +6,6 @@ It describes how a metadata service like Apache Hive MetaStore (HMS),
 Apache Gravitino, Unity Catalog, etc. should store and use Lance tables, 
 as well as how ML/AI tools and analytics compute engines should integrate with Lance tables.
 
-For more details, please visit the [documentation website](https://lance.org/format/namespace/e).
+For more details, please visit the [documentation website](https://lance.org/format/namespace).
 
 For development setup and contribution guidelines, please see [CONTRIBUTING.md](CONTRIBUTING.md).
