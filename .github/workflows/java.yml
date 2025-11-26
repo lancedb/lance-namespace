@@ -23,26 +23,13 @@ on:
       - ready_for_review
       - reopened
     paths:
-      - docs/src/spec/**
+      - docs/src/rest.yaml
       - java/**
       - .github/workflows/java.yml
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
-
-env:
-  # This env var is used by Swatinem/rust-cache@v2 for the cache
-  # key, so we set it to make sure it is always consistent.
-  CARGO_TERM_COLOR: always
-  # Disable full debug symbol generation to speed up CI build and keep memory down
-  # "1" means line tables only, which is useful for panic tracebacks.
-  RUSTFLAGS: "-C debuginfo=1"
-  RUST_BACKTRACE: "1"
-  # according to: https://matklad.github.io/2021/09/04/fast-rust-builds.html
-  # CI builds are faster with incremental disabled.
-  CARGO_INCREMENTAL: "0"
-  CARGO_BUILD_JOBS: "1"
 
 jobs:
   linux-build:
@@ -52,18 +39,6 @@ jobs:
       matrix:
         java-version: [ 17 ]
     steps:
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y protobuf-compiler libssl-dev
-      # pin the toolchain version to avoid surprises
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: stable
-          components: rustfmt, clippy
-      - uses: rui314/setup-mold@v1
-      - name: Install cargo-llvm-cov
-        uses: taiki-e/install-action@cargo-llvm-cov
       - name: Checkout lance-namespace repo
         uses: actions/checkout@v4
       - name: Set up Java
@@ -74,7 +49,7 @@ jobs:
           cache: "maven"
       - name: Check code style
         working-directory: java
-        run: mvn checkstyle:check spotless:check
-      - name: Running tests with Java ${{ matrix.java-version }}
+        run: make check
+      - name: Running build with Java ${{ matrix.java-version }}
         working-directory: java
-        run: mvn install
+        run: make build

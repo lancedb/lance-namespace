@@ -68,5 +68,19 @@ clean: clean-apache-client clean-springboot-server
 .PHONY: gen
 gen: gen-apache-client gen-springboot-server lint-apache-client lint-springboot-server
 
+.PHONY: check-apache-client
+check-apache-client:
+	./mvnw checkstyle:check spotless:check -pl lance-namespace-apache-client -am
+
+.PHONY: check-springboot-server
+check-springboot-server:
+	./mvnw checkstyle:check spotless:check -pl lance-namespace-springboot-server -am
+
+.PHONY: check
+check: check-apache-client check-springboot-server
+
+.PHONY: lint
+lint: lint-apache-client lint-springboot-server
+
 .PHONY: build
 build: build-apache-client build-springboot-server

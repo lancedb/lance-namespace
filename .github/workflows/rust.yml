@@ -66,12 +66,6 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: rust
-      - name: Run clippy for lance-namespace-reqwest-client
-        working-directory: rust/lance-namespace-reqwest-client
-        run: cargo clippy --all-targets --all-features
       - name: Build lance-namespace-reqwest-client
         working-directory: rust/lance-namespace-reqwest-client
-        run: cargo build --all-features
-      - name: Running lance-namespace-reqwest-client tests
-        working-directory: rust/lance-namespace-reqwest-client
-        run: cargo test --all-features
+        run: make build
