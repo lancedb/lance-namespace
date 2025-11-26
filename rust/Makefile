@@ -33,7 +33,6 @@ gen-reqwest-client: clean-reqwest-client
 
 .PHONY: build-reqwest-client
 build-reqwest-client: gen-reqwest-client
-	cargo build --all-features
 	cargo test --all-features
 
 .PHONY: clean
