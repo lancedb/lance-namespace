@@ -1,5 +1,6 @@
 name: Create Release
-
+permissions:
+  contents: write
 on:
   workflow_dispatch:
     inputs:
@@ -126,8 +127,8 @@ jobs:
         echo "Tag will be: $TAG"
     - name: Configure git identity
       run: |
-        git config user.name 'github-actions[bot]'
-        git config user.email 'github-actions[bot]@users.noreply.github.com'
+        git config user.name 'Lance Release Bot'
+        git config user.email 'dev+gha@lance.org'
     - name: Update version (stable releases only)
       if: inputs.release_channel == 'stable'
       run: |
