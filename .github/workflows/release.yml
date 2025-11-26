@@ -158,21 +158,13 @@ jobs:
         fi
         # Always push the tag
         git push origin "${{ steps.tag_name.outputs.tag }}"
-    - name: Generate release notes
-      id: release_notes
-      if: ${{ !inputs.dry_run }}
-      run: |
-        python ci/generate_release_notes.py \
-          --tag "${{ steps.tag_name.outputs.tag }}" \
-          --repo "${{ github.repository }}" \
-          --token "${{ secrets.GITHUB_TOKEN }}"
     - name: Create GitHub Release Draft (if not dry run)
       if: ${{ !inputs.dry_run }}
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ steps.tag_name.outputs.tag }}
         name: ${{ steps.tag_name.outputs.tag }}
-        body_path: release_notes.md
+        generate_release_notes: true
         draft: true
         prerelease: ${{ inputs.release_channel == 'preview' }}
         token: ${{ secrets.GITHUB_TOKEN }}

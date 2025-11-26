@@ -89,11 +89,10 @@ jobs:
           (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
         run: |
           VERSION="${{ steps.get_version.outputs.version }}"
-          GROUP_ID="com.lancedb"
-          
+          GROUP_ID="org.lance"
+
           # List of some artifacts to check
           ARTIFACTS=(
-            "lance-namespace-core"
             "lance-namespace-apache-client"
           )
           
@@ -109,7 +108,7 @@ jobs:
             ALL_AVAILABLE=true
             
             for ARTIFACT_ID in "${ARTIFACTS[@]}"; do
-              URL="https://repo1.maven.org/maven2/com/lancedb/${ARTIFACT_ID}/${VERSION}/${ARTIFACT_ID}-${VERSION}.pom"
+              URL="https://repo1.maven.org/maven2/org/lance/${ARTIFACT_ID}/${VERSION}/${ARTIFACT_ID}-${VERSION}.pom"
               
               if curl --head --silent --fail "$URL" > /dev/null 2>&1; then
                 echo "✓ ${ARTIFACT_ID} is available"
@@ -127,16 +126,16 @@ jobs:
               echo ""
               echo "Maven:"
               echo "<dependency>"
-              echo "  <groupId>com.lancedb</groupId>"
-              echo "  <artifactId>lance-namespace-core</artifactId>"
+              echo "  <groupId>org.lance</groupId>"
+              echo "  <artifactId>lance-namespace-apache-client</artifactId>"
               echo "  <version>${VERSION}</version>"
               echo "</dependency>"
               echo ""
               echo "Gradle:"
-              echo "implementation 'com.lancedb:lance-namespace-core:${VERSION}'"
+              echo "implementation 'org.lance:lance-namespace-apache-client:${VERSION}'"
               echo ""
               echo "SBT:"
-              echo "libraryDependencies += \"com.lancedb\" % \"lance-namespace-core\" % \"${VERSION}\""
+              echo "libraryDependencies += \"org.lance\" % \"lance-namespace-apache-client\" % \"${VERSION}\""
               exit 0
             fi
             
@@ -152,7 +151,7 @@ jobs:
           echo ""
           echo "⚠️ WARNING: Artifacts are not yet available in Maven Central after ${MAX_WAIT} seconds."
           echo "This is normal - Maven Central sync can take up to 2 hours."
-          echo "The artifacts will appear at: https://central.sonatype.com/artifact/com.lancedb/lance-namespace-core/${VERSION}"
+          echo "The artifacts will appear at: https://central.sonatype.com/artifact/org.lance/lance-namespace-apache-client/${VERSION}"
           echo ""
           echo "You can check the sync status at: https://s01.oss.sonatype.org/"
           exit 0
