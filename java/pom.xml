@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.lancedb</groupId>
+    <groupId>org.lance</groupId>
     <artifactId>lance-namespace-root</artifactId>
     <version>0.0.21</version>
     <packaging>pom</packaging>
@@ -91,14 +91,6 @@
     <modules>
         <module>lance-namespace-apache-client</module>
         <module>lance-namespace-springboot-server</module>
-        <module>lance-namespace-core</module>
-        <module>lance-namespace-adapter</module>
-        <module>lance-namespace-hive2</module>
-        <module>lance-namespace-hive3</module>
-        <module>lance-namespace-glue</module>
-        <module>lance-namespace-unity</module>
-        <module>lance-namespace-polaris</module>
-        <module>lance-namespace-lancedb</module>
     </modules>
 
     <dependencyManagement>
@@ -189,7 +181,7 @@
                             </googleJavaFormat>
 
                             <importOrder>
-                                <order>com.lancedb.lance,,javax,java,\#</order>
+                                <order>org.lance,,javax,java,\#</order>
                             </importOrder>
 
                             <removeUnusedImports />
@@ -353,8 +345,7 @@
                             <nohelp>true</nohelp>
                             <detectJavaApiLink>false</detectJavaApiLink>
                             <links>
-                                <link>https://javadoc.io/doc/com.lancedb/lance-namespace-apache-client</link>
-                                <link>https://javadoc.io/doc/com.lancedb/lance-namespace-core</link>
+                                <link>https://javadoc.io/doc/org.lance/lance-namespace-apache-client</link>
                             </links>
                         </configuration>
                         <executions>

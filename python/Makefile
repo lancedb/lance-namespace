@@ -35,18 +35,6 @@ build-urllib3-client: gen-urllib3-client
 	cd lance_namespace_urllib3_client; \
 		uv run pytest
 
-.PHONY: build-ns
-build-ns: build-urllib3-client
-	cd lance_namespace; \
-		cp ../../README.md README.md; \
-		uv pip install ".[glue,hive2,test]"; \
-		uv run pytest
-
-.PHONY: publish-ns
-publish-ns:
-	cd lance_namespace; \
-		uv build
-
 .PHONY: publish-urllib3-client
 publish-urllib3-client:
 	cd lance_namespace_urllib3_client; \
@@ -59,7 +47,7 @@ clean: clean-urllib3-client
 gen: gen-urllib3-client
 
 .PHONY: build
-build: build-urllib3-client build-ns
+build: build-urllib3-client
 
 .PHONY: publish
-publish: publish-urllib3-client publish-ns
+publish: publish-urllib3-client

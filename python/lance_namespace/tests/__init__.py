@@ -1,1 +1,0 @@
-"""Tests for lance_namespace package."""
