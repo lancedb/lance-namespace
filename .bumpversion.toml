@@ -31,19 +31,9 @@ filename = "rust/Makefile"
 search = "VERSION = {current_version}"
 replace = "VERSION = {new_version}"
 
-# Java pom.xml files (non-auto-generated)
+# Java pom.xml files
 [[tool.bumpversion.files]]
 filename = "java/pom.xml"
-search = "<version>{current_version}</version>"
-replace = "<version>{new_version}</version>"
-
-[[tool.bumpversion.files]]
-filename = "java/pom.xml"
-search = "<lance-namespace.version>{current_version}</lance-namespace.version>"
-replace = "<lance-namespace.version>{new_version}</lance-namespace.version>"
-
-[[tool.bumpversion.files]]
-filename = "java/lance-namespace-core/pom.xml"
 search = "<version>{current_version}</version>"
 replace = "<version>{new_version}</version>"
 
@@ -52,47 +42,7 @@ filename = "java/springboot-server-pom.xml"
 search = "<version>{current_version}</version>"
 replace = "<version>{new_version}</version>"
 
-[[tool.bumpversion.files]]
-filename = "java/lance-namespace-adapter/pom.xml"
-search = "<version>{current_version}</version>"
-replace = "<version>{new_version}</version>"
-
-[[tool.bumpversion.files]]
-filename = "java/lance-namespace-hive2/pom.xml"
-search = "<version>{current_version}</version>"
-replace = "<version>{new_version}</version>"
-
-[[tool.bumpversion.files]]
-filename = "java/lance-namespace-hive3/pom.xml"
-search = "<version>{current_version}</version>"
-replace = "<version>{new_version}</version>"
-
-[[tool.bumpversion.files]]
-filename = "java/lance-namespace-glue/pom.xml"
-search = "<version>{current_version}</version>"
-replace = "<version>{new_version}</version>"
-
-[[tool.bumpversion.files]]
-filename = "java/lance-namespace-unity/pom.xml"
-search = "<version>{current_version}</version>"
-replace = "<version>{new_version}</version>"
-
-[[tool.bumpversion.files]]
-filename = "java/lance-namespace-polaris/pom.xml"
-search = "<version>{current_version}</version>"
-replace = "<version>{new_version}</version>"
-
-[[tool.bumpversion.files]]
-filename = "java/lance-namespace-lancedb/pom.xml"
-search = "<version>{current_version}</version>"
-replace = "<version>{new_version}</version>"
-
-# Python pyproject.toml files (non-auto-generated)
-[[tool.bumpversion.files]]
-filename = "python/lance_namespace/pyproject.toml"
-search = 'version = "{current_version}"'
-replace = 'version = "{new_version}"'
-
+# Python pyproject.toml files
 [[tool.bumpversion.files]]
 filename = "python/pyproject.urllib3_client.toml"
 search = 'version = "{current_version}"'
@@ -103,7 +53,7 @@ filename = "pyproject.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
 
-# Rust Cargo.toml files (non-auto-generated)
+# Rust Cargo.toml files
 [[tool.bumpversion.files]]
 filename = "rust/Cargo.toml"
 search = 'version = "{current_version}"'

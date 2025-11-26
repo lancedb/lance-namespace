@@ -56,8 +56,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <lance-namespace.version>0.0.21</lance-namespace.version>
         <arrow.version>15.0.0</arrow.version>
         <springboot.version>3.5.5</springboot.version>
         <junit-version>5.8.2</junit-version>
