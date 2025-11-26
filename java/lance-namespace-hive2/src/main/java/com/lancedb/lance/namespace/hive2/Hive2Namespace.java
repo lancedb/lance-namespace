@@ -263,7 +263,7 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
           CommonUtil.formatCurrentStackTrace());
     }
 
-    Hive2Util.validateLanceTable(hmsTable.get());
+    Hive2Util.validateLanceTable(hmsTable.get(), config.isSkipValidationLanceFormatTable());
   }
 
   @Override
@@ -470,7 +470,7 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
       return Optional.empty();
     }
 
-    Hive2Util.validateLanceTable(hmsTable.get());
+    Hive2Util.validateLanceTable(hmsTable.get(), config.isSkipValidationLanceFormatTable());
     return Optional.of(hmsTable.get().getSd().getLocation());
   }
 
@@ -603,7 +603,7 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
             CommonUtil.formatCurrentStackTrace());
       }
 
-      Hive2Util.validateLanceTable(hmsTable.get());
+      Hive2Util.validateLanceTable(hmsTable.get(), config.isSkipValidationLanceFormatTable());
       String location = hmsTable.get().getSd().getLocation();
 
       clientPool.run(
@@ -737,5 +737,9 @@ public class Hive2Namespace implements LanceNamespace, Configurable<Configuratio
     // Use the configured root as fallback
     return String.format(
         "%s/%s/%s.lance", config.getRoot(), namespaceName.toLowerCase(), tableName.toLowerCase());
+  }
+
+  public Hive2ClientPool getClientPool() {
+    return clientPool;
   }
 }

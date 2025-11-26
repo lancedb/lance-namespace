@@ -58,11 +58,13 @@ public class TestHive2NamespaceConfig {
         ImmutableMap.of(
             "root", "/custom/root",
             "client.pool-size", "5",
-            "storage.s3.region", "us-west-2");
+            "storage.s3.region", "us-west-2",
+            "skip.validate.lance.format.table", "true");
     Hive2NamespaceConfig config = new Hive2NamespaceConfig(properties);
 
     assertEquals("/custom/root", config.getRoot());
     assertEquals(5, config.getClientPoolSize());
     assertEquals("us-west-2", config.getStorageOptions().get("s3.region"));
+    assertEquals(true, config.isSkipValidationLanceFormatTable());
   }
 }
