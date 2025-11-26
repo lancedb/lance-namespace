@@ -1,5 +1,5 @@
 title: Implementations
 nav:
   - Overview: index.md
-  - REST: rest
   - Directory: dir.md
+  - REST: rest

@@ -1,6 +1,6 @@
 # Contributing to Lance Namespace
 
-The Lance Namespace codebase is at [lancedb/lance-namespace](https://github.com/lancedb/lance-namespace).
+The Lance Namespace codebase is at [lance-format/lance-namespace](https://github.com/lance-format/lance-namespace).
 This codebase contains code of the Lance Namespace specification 
 as well as generated clients and servers using OpenAPI generator.
 
@@ -13,7 +13,7 @@ For contributing changes to directory and REST namespaces, please go to the [lan
 
 For contributing changes to implementations other than the directory and REST namespace, 
 or for adding new namespace implementations,
-please go to the [lance-namespace-impls](https://github.com/lancedb/lance-namespace-impls) repo.
+please go to the [lance-namespace-impls](https://github.com/lance-format/lance-namespace-impls) repo.
 
 ## Repository structure
 
