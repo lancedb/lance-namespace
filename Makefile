@@ -18,7 +18,7 @@ lint:
 clean-rust:
 	cd rust; make clean
 
-.PHONY: gen-rust
+.PHONY: sync gen-rust
 gen-rust:
 	cd rust; make gen
 
@@ -30,7 +30,7 @@ build-rust:
 clean-python:
 	cd python; make clean
 
-.PHONY: gen-python
+.PHONY: sync gen-python
 gen-python:
 	cd python; make gen
 
@@ -50,7 +50,7 @@ gen-java:
 build-java:
 	cd java; make build
 
-.PHONY: gen-docs
+.PHONY: sync gen-docs
 gen-docs:
 	cd docs; make gen
 
@@ -61,6 +61,10 @@ build-docs:
 .PHONY: serve-docs
 serve-docs:
 	cd docs; make serve
+
+.PHONY: sync
+sync:
+	uv sync --all-packages
 
 .PHONY: clean
 clean: clean-rust clean-python clean-java

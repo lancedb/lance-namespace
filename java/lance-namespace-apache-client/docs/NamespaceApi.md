@@ -25,11 +25,11 @@ Create new namespace &#x60;id&#x60;.  During the creation process, the implement
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.NamespaceApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -103,11 +103,11 @@ Describe the detailed information for namespace &#x60;id&#x60;.
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.NamespaceApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -179,11 +179,11 @@ Drop namespace &#x60;id&#x60; from its parent namespace.
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.NamespaceApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -256,11 +256,11 @@ List all child namespace names of the parent namespace &#x60;id&#x60;.  REST NAM
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.NamespaceApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -335,11 +335,11 @@ List all child table names of the parent namespace &#x60;id&#x60;.  REST NAMESPA
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.NamespaceApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -414,11 +414,11 @@ Check if namespace &#x60;id&#x60; exists.  This operation must behave exactly li
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.NamespaceApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.NamespaceApi;
 
 public class Example {
     public static void main(String[] args) {

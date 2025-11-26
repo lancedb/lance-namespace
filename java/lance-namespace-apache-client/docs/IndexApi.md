@@ -23,11 +23,11 @@ Create an index on a table column for faster search operations. Supports vector 
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.IndexApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.IndexApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -99,11 +99,11 @@ Get statistics for a specific index on a table. Returns information about the in
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.IndexApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.IndexApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -177,11 +177,11 @@ Drop the specified index from table &#x60;id&#x60;.
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.IndexApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.IndexApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -255,11 +255,11 @@ List all indices created on a table. Returns information about each index includ
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.IndexApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.IndexApi;
 
 public class Example {
     public static void main(String[] args) {

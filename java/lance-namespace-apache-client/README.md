@@ -49,7 +49,7 @@ Add this dependency to your project's POM:
 
 ```xml
 <dependency>
-  <groupId>com.lancedb</groupId>
+  <groupId>org.lance</groupId>
   <artifactId>lance-namespace-apache-client</artifactId>
   <version>0.0.21</version>
   <scope>compile</scope>
@@ -61,7 +61,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "com.lancedb:lance-namespace-apache-client:0.0.21"
+compile "org.lance:lance-namespace-apache-client:0.0.21"
 ```
 
 ### Others
@@ -83,10 +83,10 @@ Please follow the [installation](#installation) instruction and execute the foll
 
 ```java
 
-import com.lancedb.lance.namespace.client.apache.*;
-import com.lancedb.lance.namespace.client.apache.auth.*;
-import com.lancedb.lance.namespace.model.*;
-import com.lancedb.lance.namespace.client.apache.api.DataApi;
+import org.lance.namespace.client.apache.*;
+import org.lance.namespace.client.apache.auth.*;
+import org.lance.namespace.model.*;
+import org.lance.namespace.client.apache.api.DataApi;
 
 public class DataApiExample {
 

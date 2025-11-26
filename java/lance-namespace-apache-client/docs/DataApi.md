@@ -29,11 +29,11 @@ Add new columns to table &#x60;id&#x60; using SQL expressions or default values.
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.DataApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.DataApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -105,11 +105,11 @@ Analyze the query execution plan for a query against table &#x60;id&#x60;. Retur
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.DataApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.DataApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -181,11 +181,11 @@ Count the number of rows in table &#x60;id&#x60;
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.DataApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.DataApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -257,11 +257,11 @@ Create table &#x60;id&#x60; in the namespace with the given data in Arrow IPC st
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.DataApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.DataApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -339,11 +339,11 @@ Delete rows from table &#x60;id&#x60;.
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.DataApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.DataApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -415,11 +415,11 @@ Get the query execution plan for a query against table &#x60;id&#x60;. Returns a
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.DataApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.DataApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -491,11 +491,11 @@ Insert new records into table &#x60;id&#x60;.  REST NAMESPACE ONLY REST namespac
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.DataApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.DataApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -569,11 +569,11 @@ Performs a merge insert (upsert) operation on table &#x60;id&#x60;. This operati
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.DataApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.DataApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -657,11 +657,11 @@ Query table &#x60;id&#x60; with vector search, full text search and optional SQL
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.DataApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.DataApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -733,11 +733,11 @@ Update existing rows in table &#x60;id&#x60;.
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.DataApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.DataApi;
 
 public class Example {
     public static void main(String[] args) {

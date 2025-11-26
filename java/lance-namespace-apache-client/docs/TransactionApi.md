@@ -21,11 +21,11 @@ Alter a transaction with a list of actions such as setting status or properties.
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.TransactionApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.TransactionApi;
 
 public class Example {
     public static void main(String[] args) {
@@ -98,11 +98,11 @@ Return a detailed information for a given transaction
 
 ```java
 // Import classes:
-import com.lancedb.lance.namespace.client.apache.ApiClient;
-import com.lancedb.lance.namespace.client.apache.ApiException;
-import com.lancedb.lance.namespace.client.apache.Configuration;
-import com.lancedb.lance.namespace.client.apache.models.*;
-import com.lancedb.lance.namespace.client.apache.api.TransactionApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.models.*;
+import org.lance.namespace.client.apache.api.TransactionApi;
 
 public class Example {
     public static void main(String[] args) {
