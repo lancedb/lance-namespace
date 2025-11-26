@@ -1,6 +1,6 @@
 [project]
 name = "lance-namespace-workspace"
-version = "0.0.21"
+version = "0.1.0"
 description = "Lance Namespace workspace with all Python packages"
 requires-python = ">=3.10"
 dependencies = []
