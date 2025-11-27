@@ -66,7 +66,7 @@ replace = 'version = "{new_version}"'
 
 # Python lance_namespace package
 [[tool.bumpversion.files]]
-filename = "python/pyproject.lance_namespace.toml"
+filename = "python/lance_namespace/pyproject.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
 
