@@ -40,6 +40,22 @@ publish-urllib3-client:
 	cd lance_namespace_urllib3_client; \
 		uv build
 
+# lance_namespace package (hand-written, no codegen)
+.PHONY: setup-lance-namespace
+setup-lance-namespace:
+	cp pyproject.lance_namespace.toml lance_namespace/pyproject.toml
+
+.PHONY: build-lance-namespace
+build-lance-namespace: setup-lance-namespace build-urllib3-client
+	cd lance_namespace; \
+		uv sync; \
+		uv run pytest
+
+.PHONY: publish-lance-namespace
+publish-lance-namespace: setup-lance-namespace
+	cd lance_namespace; \
+		uv build
+
 .PHONY: clean
 clean: clean-urllib3-client
 
@@ -47,7 +63,7 @@ clean: clean-urllib3-client
 gen: gen-urllib3-client
 
 .PHONY: build
-build: build-urllib3-client
+build: build-urllib3-client build-lance-namespace
 
 .PHONY: publish
-publish: publish-urllib3-client
+publish: publish-urllib3-client publish-lance-namespace

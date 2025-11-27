@@ -94,6 +94,7 @@ jobs:
           # List of some artifacts to check
           ARTIFACTS=(
             "lance-namespace-apache-client"
+            "lance-namespace-core"
           )
           
           echo "Waiting for version $VERSION to be available in Maven Central..."
@@ -124,7 +125,14 @@ jobs:
               echo ""
               echo "Users can now add the following dependencies to their projects:"
               echo ""
-              echo "Maven:"
+              echo "Maven (interface):"
+              echo "<dependency>"
+              echo "  <groupId>org.lance</groupId>"
+              echo "  <artifactId>lance-namespace-core</artifactId>"
+              echo "  <version>${VERSION}</version>"
+              echo "</dependency>"
+              echo ""
+              echo "Maven (generated client):"
               echo "<dependency>"
               echo "  <groupId>org.lance</groupId>"
               echo "  <artifactId>lance-namespace-apache-client</artifactId>"
@@ -132,10 +140,8 @@ jobs:
               echo "</dependency>"
               echo ""
               echo "Gradle:"
+              echo "implementation 'org.lance:lance-namespace-core:${VERSION}'"
               echo "implementation 'org.lance:lance-namespace-apache-client:${VERSION}'"
-              echo ""
-              echo "SBT:"
-              echo "libraryDependencies += \"org.lance\" % \"lance-namespace-apache-client\" % \"${VERSION}\""
               exit 0
             fi
             

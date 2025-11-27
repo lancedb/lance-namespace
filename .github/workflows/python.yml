@@ -79,3 +79,11 @@ jobs:
         run: |
           uv sync
           uv run pytest
+      - name: Setup lance_namespace package
+        working-directory: python
+        run: make setup-lance-namespace
+      - name: Test lance_namespace with Python ${{ matrix.python-version }}
+        working-directory: python/lance_namespace
+        run: |
+          uv sync
+          uv run pytest

@@ -18,7 +18,9 @@ dev = [
 [tool.uv.workspace]
 members = [
     "python/lance_namespace_urllib3_client",
+    "python/lance_namespace",
 ]
 
 [tool.uv.sources]
 lance-namespace-urllib3-client = { workspace = true }
+lance-namespace = { workspace = true }

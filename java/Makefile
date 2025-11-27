@@ -62,6 +62,19 @@ lint-springboot-server: gen-apache-client gen-springboot-server
 build-springboot-server: gen-springboot-server lint-springboot-server
 	./mvnw install -pl lance-namespace-springboot-server -am
 
+# lance-namespace-core module (hand-written, no codegen)
+.PHONY: lint-core
+lint-core: gen-apache-client
+	./mvnw spotless:apply -pl lance-namespace-core -am
+
+.PHONY: build-core
+build-core: build-apache-client lint-core
+	./mvnw install -pl lance-namespace-core -am
+
+.PHONY: check-core
+check-core:
+	./mvnw checkstyle:check spotless:check -pl lance-namespace-core -am
+
 .PHONY: clean
 clean: clean-apache-client clean-springboot-server
 
@@ -77,10 +90,10 @@ check-springboot-server:
 	./mvnw checkstyle:check spotless:check -pl lance-namespace-springboot-server -am
 
 .PHONY: check
-check: check-apache-client check-springboot-server
+check: check-apache-client check-springboot-server check-core
 
 .PHONY: lint
-lint: lint-apache-client lint-springboot-server
+lint: lint-apache-client lint-springboot-server lint-core
 
 .PHONY: build
-build: build-apache-client build-springboot-server
+build: build-apache-client build-springboot-server build-core
