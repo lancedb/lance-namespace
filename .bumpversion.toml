@@ -63,3 +63,15 @@ replace = 'version = "{new_version}"'
 filename = "rust/reqwest-client.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
+
+# Python lance_namespace package
+[[tool.bumpversion.files]]
+filename = "python/pyproject.lance_namespace.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+# Java lance-namespace-core module
+[[tool.bumpversion.files]]
+filename = "java/lance-namespace-core/pom.xml"
+search = "<version>{current_version}</version>"
+replace = "<version>{new_version}</version>"

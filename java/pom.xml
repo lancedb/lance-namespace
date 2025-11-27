@@ -12,7 +12,7 @@
 
     <name>${project.artifactId}</name>
     <description>Lance Namespace</description>
-    <url>https://lancedb.github.io/lance-namespace</url>
+    <url>https://lance.org/format/namespace/</url>
 
     <licenses>
         <license>
@@ -23,23 +23,23 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git@github.com:lancedb/lance-namespace.git</connection>
-        <developerConnection>scm:git:git@github.com:lancedb/lance-namespace.git</developerConnection>
-        <url>git@github.com:lancedb/lance-namespace.git</url>
+        <connection>scm:git:git@github.com:lance-format/lance-namespace.git</connection>
+        <developerConnection>scm:git:git@github.com:lance-format/lance-namespace.git</developerConnection>
+        <url>git@github.com:lance-format/lance-namespace.git</url>
         <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/lancedb/lance-namespace/issues</url>
+        <url>https://github.com/lance-format/lance-namespace/issues</url>
     </issueManagement>
 
     <developers>
         <developer>
-            <name>LanceDB Developers</name>
-            <email>developers@lancedb.com</email>
-            <organization>LanceDB</organization>
-            <organizationUrl>https://lancedb.com</organizationUrl>
+            <name>Lance Developers</name>
+            <email>dev@lance.org</email>
+            <organization>Lance Format</organization>
+            <organizationUrl>https://lance.org</organizationUrl>
         </developer>
     </developers>
 
@@ -89,6 +89,7 @@
     <modules>
         <module>lance-namespace-apache-client</module>
         <module>lance-namespace-springboot-server</module>
+        <module>lance-namespace-core</module>
     </modules>
 
     <dependencyManagement>
