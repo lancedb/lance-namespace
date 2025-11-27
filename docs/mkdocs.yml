@@ -1,10 +1,10 @@
 site_name: Lance Namespace
 site_description: open specification on top of the storage-based Lance data format to standardize access to a collection of Lance tables
-site_url: https://lancedb.github.io/lance-namespace/
+site_url: https://lance.org/format/namespace/
 docs_dir: src
 
-repo_name: lancedb/lance-namespace
-repo_url: https://github.com/lancedb/lance-namespace
+repo_name: lance-format/lance-namespace
+repo_url: https://github.com/lance-format/lance-namespace
 
 theme:
   name: material
@@ -60,9 +60,7 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/lancedb/lance-namespace
+      link: https://github.com/lance-format/lance-namespace
     - icon: fontawesome/brands/discord
-      link: https://discord.gg/zMM32dvNtd
-    - icon: fontawesome/brands/twitter
-      link: https://twitter.com/lancedb
+      link: https://discord.gg/lance
 
