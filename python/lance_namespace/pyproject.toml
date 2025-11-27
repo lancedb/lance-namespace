@@ -18,8 +18,8 @@ dev = [
 ]
 
 [project.urls]
-Repository = "https://github.com/lancedb/lance-namespace"
-Documentation = "https://lancedb.github.io/lance-namespace"
+Repository = "https://github.com/lance-format/lance-namespace"
+Documentation = "https://lance.org/format/namespace/"
 
 [build-system]
 requires = ["hatchling"]
