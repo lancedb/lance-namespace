@@ -15,6 +15,77 @@ For contributing changes to implementations other than the directory and REST na
 or for adding new namespace implementations,
 please go to the [lance-namespace-impls](https://github.com/lance-format/lance-namespace-impls) repo.
 
+## Project Dependency
+
+This project contains the core Lance Namespace specification and generated modules across all languages.
+The dependency structure varies by language due to different build and distribution models.
+
+### Rust
+
+For Rust, the interface module `lance-namespace` and implementations (`lance-namespace-impls` for REST and directory namespaces)
+are located in the core [lance-format/lance](https://github.com/lance-format/lance) repository.
+This is because Rust uses source code builds, and separating modules across repositories makes dependency management complicated.
+
+The dependency chain is: `lance-namespace` → `lance` → `lance-namespace-impls`
+
+### Python and Java
+
+For Python, Java, and other languages, the core `LanceNamespace` interface and generic connect functionality
+are maintained in **this repository** (e.g., `lance-namespace` for Python, `lance-namespace-core` for Java).
+The core [lance-format/lance](https://github.com/lance-format/lance) repository then imports these modules.
+
+The reason for this import direction is that `lance-namespace-impls` (REST and directory namespace implementations)
+are used in the Lance Python and Java bindings, and are exposed back through the corresponding language interfaces.
+
+### Other Implementations
+
+For namespace implementations other than directory and REST namespaces,
+those are stored in the [lance-format/lance-namespace-impls](https://github.com/lance-format/lance-namespace-impls) repository,
+with one implementation per language.
+
+### Dependency Diagram
+
+```mermaid
+flowchart TB
+    subgraph this_repo["lance-namespace (this repo)"]
+        spec["Spec & Generated Clients"]
+        py_core["Python: lance-namespace"]
+        java_core["Java: lance-namespace-core"]
+    end
+
+    subgraph lance_repo["lance-format/lance"]
+        subgraph rust_modules["Rust Modules"]
+            rs_ns["lance-namespace"]
+            rs_lance["lance"]
+            rs_impls["lance-namespace-impls<br/>(dir, rest)"]
+        end
+        py_lance["Python: lance"]
+        java_lance["Java: lance"]
+    end
+
+    subgraph impls_repo["lance-format/lance-namespace-impls"]
+        other_impls["Other Implementations<br/>(1 per language)"]
+    end
+
+    %% Rust dependencies (source build)
+    rs_ns --> rs_lance
+    rs_lance --> rs_impls
+
+    %% Python/Java dependencies
+    py_core --> py_lance
+    java_core --> java_lance
+    rs_impls -.-> py_lance
+    rs_impls -.-> java_lance
+
+    %% Other implementations
+    py_core -.-> other_impls
+    java_core -.-> other_impls
+
+    style this_repo fill:#e1f5fe
+    style lance_repo fill:#fff3e0
+    style impls_repo fill:#f3e5f5
+```
+
 ## Repository structure
 
 This repository currently contains the following components:

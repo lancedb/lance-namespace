@@ -6,6 +6,22 @@ It describes how a metadata service like Apache Hive MetaStore (HMS),
 Apache Gravitino, Unity Catalog, etc. should store and use Lance tables,
 as well as how ML/AI tools and analytics compute engines should integrate with Lance tables.
 
+## What Lance Namespace Contains
+
+Lance Namespace consists of three main parts:
+
+1. **Client-Side Standardized Access Spec**: A consistent abstraction that adapts to various catalog specifications,
+   allowing users to choose any catalog to store and use Lance tables. This is the core reason why we call it
+   "Namespace" rather than "Catalog" — it provides a unified interface across different organizational concepts.
+
+2. **Directory Namespace**: A natively maintained storage-only catalog implementation that requires no external
+   metadata service. Tables are organized directly on storage (local filesystem, S3, GCS, etc.) with metadata
+   stored alongside the data.
+
+3. **REST Namespace**: A natively maintained REST-based catalog implementation suitable for teams that want to
+   develop their own custom handling. This is ideal for adoption by data infrastructure teams in enterprise
+   environments who need centralized metadata management and fine-grained access control.
+
 ## Why _Namespace_ not _Catalog_?
 
 The specification is called "Namespace" rather than "Catalog" because there are already many open catalog specifications and catalog services in the market today.
