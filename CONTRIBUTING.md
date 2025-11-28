@@ -47,7 +47,7 @@ with one implementation per language.
 
 ```mermaid
 flowchart TB
-    subgraph this_repo["This Repo"]
+    subgraph this_repo["lance-namespace repo"]
         spec["Spec & Generated Clients"]
         py_core["Python: lance-namespace"]
         java_core["Java: lance-namespace-core"]
@@ -63,12 +63,13 @@ flowchart TB
         java_lance["Java: lance"]
     end
 
-    subgraph impls_repo["lance-namespace-impls repo"]
+    subgraph impls_repo["namespace-impls repo"]
         polaris["Apache Polaris"]
         hive["Apache Hive"]
         iceberg_rest["Iceberg REST"]
         unity["Unity Catalog"]
         glue["AWS Glue"]
+        more["..."]
     end
 
     %% Rust dependencies (source build)
@@ -81,9 +82,11 @@ flowchart TB
     rs_impls -.-> py_lance
     rs_impls -.-> java_lance
 
-    %% Other implementations depend on core interfaces
+    %% Other implementations depend on core interfaces and lance bindings
     py_core -.-> impls_repo
     java_core -.-> impls_repo
+    py_lance -.-> impls_repo
+    java_lance -.-> impls_repo
 
     style this_repo fill:#1565c0,color:#fff
     style lance_repo fill:#e65100,color:#fff
