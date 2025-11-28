@@ -68,6 +68,7 @@ flowchart TB
     end
 
     subgraph impls_repo["namespace-impls repo"]
+        direction LR
         polaris["Apache Polaris"]
         hive["Apache Hive"]
         iceberg_rest["Iceberg REST"]
