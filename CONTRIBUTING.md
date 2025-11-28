@@ -68,7 +68,7 @@ flowchart TB
     end
 
     subgraph impls_repo["namespace-impls repo"]
-        polaris["Apache Polaris"] ~~~ hive["Apache Hive"] ~~~ iceberg_rest["Iceberg REST"] ~~~ unity["Unity Catalog"] ~~~ glue["AWS Glue"] ~~~ more["..."]
+        polaris["Apache Polaris"] ~~~ hive["Apache Hive"] ~~~ iceberg_rest["Apache Iceberg REST"] ~~~ unity["Unity Catalog"] ~~~ glue["AWS Glue"]
     end
 
     %% Rust dependencies (source build)
