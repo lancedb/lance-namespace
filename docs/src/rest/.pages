@@ -1,0 +1,9 @@
+nav:
+  - Overview: index.md
+  - Non-Standard Operations:
+      - ListNamespaces: list-namespaces.md
+      - ListTables: list-tables.md
+      - InsertIntoTable: insert-into-table.md
+      - MergeInsertIntoTable: merge-insert-into-table.md
+      - CreateTable: create-table.md
+      - ListTableTags: list-table-tags.md

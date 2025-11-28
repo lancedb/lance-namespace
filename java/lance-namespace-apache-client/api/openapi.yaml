@@ -3,10 +3,10 @@ info:
   description: "This OpenAPI specification is a part of the Lance namespace specification.\
     \ It contains 2 parts:\n\nThe `components/schemas`, `components/responses`, `components/examples`,\
     \ `tags` sections define\nthe request and response shape for each operation in\
-    \ a Lance Namespace across all implementations.\nSee https://lancedb.github.io/lance-namespace/spec/operations\
+    \ a Lance Namespace across all implementations.\nSee https://lance.org/format/namespace/operations\
     \ for more details.\n\nThe `servers`, `security`, `paths`, `components/parameters`\
     \ sections are for the \nLance REST Namespace implementation, which defines a\
-    \ complete REST server that can work with Lance datasets.\nSee https://lancedb.github.io/lance-namespace/spec/impls/rest\
+    \ complete REST server that can work with Lance datasets.\nSee https://lance.org/format/namespace/rest\
     \ for more details.\n"
   license:
     name: Apache 2.0

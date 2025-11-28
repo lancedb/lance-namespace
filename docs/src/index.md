@@ -8,22 +8,22 @@ and the operations available on these objects — enabling integration with meta
 
 The Lance Namespace spec consists of three main parts:
 
-1. **Client-Side Standardized Access Spec**: A consistent abstraction that adapts to various catalog specs
-   (e.g. Apache Gravitino, Apache Polaris, Unity Catalog, Apache Hive Metastore, Apache Iceberg REST Catalog), 
+1. **Client-Side Standardized Access Spec**: A consistent abstraction that adapts to various catalog specs, 
    allowing users to choose any catalog to store and use tables. This is the core reason why we call it
    "Namespace" rather than "Catalog" — namespace can mean catalog, schema, metastore, database, metalake, etc., 
    and the spec provides a unified interface across all of them.
 
 2. **Directory Namespace Spec**: A natively maintained storage-only catalog spec that is compliant with the
-   Lance Namespace client-side access spec. It requires no external metadata service — tables are organized directly
-   on storage (local filesystem, S3, GCS, etc.) with metadata stored alongside the data.
+   Lance Namespace client-side access spec. It requires no external metadata service dependencis — 
+   tables are organized directly on storage (local filesystem, S3, GCS, etc.)
 
 3. **REST Namespace Spec**: A natively maintained REST-based catalog spec that is compliant with the Lance
-   Namespace client-side access spec. It is suitable for teams that want to develop their own custom handling,
-   ideal for adoption by data infrastructure teams in enterprise environments with high customization requirements.
+   Namespace client-side access spec. It is ideal for data infrastructure teams that want to develop their own custom handling
+   in their specific enterprise environments.
 
-There are also dedicated specs for how different open source and commercial catalog specs integrate with the Lance Namespace
-client-side access spec. Those are not considered part of the core spec, and are considered as spec extensions.
+There are also dedicated specs for how different open source and commercial catalog specs 
+(e.g. Apache Gravitino, Apache Polaris, Unity Catalog, Apache Hive Metastore, Apache Iceberg REST Catalog)
+integrate with the Lance Namespace client-side access spec. Those are not considered part of the core spec, and are considered as spec extensions.
 
 ## Namespace Definition
 
@@ -105,7 +105,7 @@ A table `[catalog1, database2, table3]` is at level 3, and its identifier `catal
 
 If every table in the root namespace are at the same level `N`, the namespace is called **leveled**,
 and we say this namespace is a `N`-level namespace.
-For example, a [directory namespace](impls/dir.md) is a 1-level namespace,
+For example, a [directory namespace](dir.md) is a 1-level namespace,
 and a Hive 2.x namespace is a 2-level namespace.
 The [example above](#namespace-definition) is not leveled
 because `t1` has 2 namespaces `ns1` and `ns4` before root, whereas `t2` has 1 namespace `ns2` before root.

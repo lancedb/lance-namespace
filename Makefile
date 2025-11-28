@@ -50,16 +50,12 @@ gen-java:
 build-java:
 	cd java; make build
 
-.PHONY: sync gen-docs
-gen-docs:
-	cd docs; make gen
-
 .PHONY: build-docs
-build-docs:
+build-docs: gen-java
 	cd docs; make build
 
 .PHONY: serve-docs
-serve-docs:
+serve-docs: gen-java
 	cd docs; make serve
 
 .PHONY: sync
@@ -70,7 +66,7 @@ sync:
 clean: clean-rust clean-python clean-java
 
 .PHONY: gen
-gen: lint gen-docs gen-rust gen-python gen-java
+gen: lint gen-rust gen-python gen-java
 
 .PHONY: build
 build: lint build-docs build-rust build-python build-java

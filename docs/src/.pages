@@ -1,4 +1,5 @@
 nav:
   - index.md
   - operations
-  - impls
+  - Directory Namespace: dir.md
+  - REST Namespace: rest
