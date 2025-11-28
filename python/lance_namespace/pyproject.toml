@@ -29,4 +29,4 @@ build-backend = "hatchling.build"
 packages = ["lance_namespace"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["lance_namespace/tests"]

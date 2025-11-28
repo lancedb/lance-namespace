@@ -1,29 +1,45 @@
 # Lance Namespace Spec
 
-**Lance Namespace** is an open specification on top of the storage-based Lance table and file format
-to standardize access to a collection of Lance tables (a.k.a. Lance datasets).
-It describes how a metadata service like Apache Hive MetaStore (HMS),
-Apache Gravitino, Unity Catalog, etc. should store and use Lance tables,
-as well as how ML/AI tools and analytics compute engines should integrate with Lance tables.
+**Lance Namespace** is an open specification for describing access and operations against a collection of tables in a multimodal lakehouse.
+The spec provides a unified model for table-related objects, their relationships within a hierarchy,
+and the operations available on these objects — enabling integration with metadata services and compute engines alike.
 
-## Why _Namespace_ not _Catalog_?
+## What the Lance Namespace Spec Contains
 
-The specification is called "Namespace" rather than "Catalog" because there are already many open catalog specifications and catalog services in the market today.
-The goal of Lance Namespace is not to create yet another catalog spec, but to provide a consistent abstraction that adapts to all of them easily, so that users can choose to use any catalog to store and use Lance tables.
+![Namespace Overview](overview.png)
 
-Namespace can mean catalog, schema, metastore, database, metalake, or any other organizational concept.
-Lance Namespace provides a consistent interface to convert among different catalog specifications and map them into the connector interfaces of various compute engines.
+The Lance Namespace spec consists of three main parts:
+
+1. **Client-Side Standardized Access Spec (Client Spec)**: A consistent abstraction that adapts to various catalog specs,
+   allowing users to choose any catalog to store and use tables. This is the core reason why we call it
+   "Namespace" rather than "Catalog" — namespace can mean catalog, schema, metastore, database, metalake, etc.,
+   and the spec provides a unified interface across all of them.
+
+2. **Native Catalog Specs**: Natively maintained catalog specs that are compliant with the Lance Namespace client spec:
+    - **Directory Namespace Spec**: A storage-only catalog spec that requires no external metadata service dependencies —
+      tables are organized directly on storage (local filesystem, S3, GCS, etc.)
+    - **REST Namespace Spec**: A REST-based catalog spec ideal for data infrastructure teams that want to develop
+      their own custom handling in their specific enterprise environments.
+
+3. **Implementation Specs**: Defines how a given catalog spec integrates with the client spec.
+   It details how an object in a Lance Namespace maps to an object in the specific catalog spec,
+   and how each operation in Lance Namespace is fulfilled by the catalog spec.
+   The implementation specs for Directory and REST namespaces are part of Lance Namespace spec.
+   Implementation specs for other catalog specs
+   (e.g. Apache Gravitino, Apache Polaris, Unity Catalog, Apache Hive Metastore, Apache Iceberg REST Catalog)
+   are considered integrations — anyone can provide additional implementation specs outside Lance Namespace,
+   and they can be owned by external parties without needing to go through the Lance community voting process to be adopted.
 
 ## Namespace Definition
 
-A Lance namespace is a centralized repository for discovering, organizing, and managing Lance tables.
-It can either contain a collection of tables, or a collection of Lance namespaces recursively.
+A namespace is a centralized repository for discovering, organizing, and managing tables.
+It can not only contain a collection of tables, but also a collection of namespaces recursively.
 It is designed to encapsulates concepts including namespace, metastore, database, schema, etc.
 that frequently appear in other similar data systems to allow easy integration with any system of any type of object hierarchy.
 
-Here is an example layout of a Lance namespace:
+Here is an example layout of a namespace:
 
-![Lance namespace layout](layout.png)
+![Namespace Layout](layout.png)
 
 ## Parent & Child
 
@@ -63,7 +79,7 @@ For examples:
 - the list style identifier of `t1` is `[cat2, cat5, t1]`
 
 The dollar (`$`) symbol is used as the default delimiter to join all the names to form an **string style identifier**,
-but other symbols could also be used if dot is used in the object name.
+but other symbols could also be used if the dollar sign is used in the object name.
 For examples:
 
 - the string style identifier of `cat5` is `cat2$cat5`
@@ -85,16 +101,16 @@ and they are both configured to connect to the same root namespace.
 
 The root namespace is always at level 0.
 This means if an object has list style identifier with list size `N`,
-the object is at the `N`th level in the entire namespace hierarchy.
-We also say the object identifier has `N` levels.
-For examples, a namespace `[ns1, ns2]` is at level 2, the identifier `ns1$ns2` has 2 levels.
-A table `[catalog1, database2, table3]` is at level 3, the identifier `catalog1$database2$table3` has 3 levels.
+the object is at the `N`th level in the entire namespace hierarchy,
+and its corresponding object identifier has `N` levels.
+For examples, a namespace `[ns1, ns2]` is at level 2, and its identifier `ns1$ns2` has 2 levels.
+A table `[catalog1, database2, table3]` is at level 3, and its identifier `catalog1$database2$table3` has 3 levels.
 
 ### Leveled Namespace
 
 If every table in the root namespace are at the same level `N`, the namespace is called **leveled**,
 and we say this namespace is a `N`-level namespace.
-For example, a [directory namespace](impls/dir.md) is a 1-level namespace,
+For example, a [directory namespace](dir/catalog-spec.md) is a 1-level namespace,
 and a Hive 2.x namespace is a 2-level namespace.
 The [example above](#namespace-definition) is not leveled
 because `t1` has 2 namespaces `ns1` and `ns4` before root, whereas `t2` has 1 namespace `ns2` before root.

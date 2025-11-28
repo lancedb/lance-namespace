@@ -10,14 +10,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-.PHONY: gen
-gen:
-	cd src; uv run update_line_numbers.py
+# Java model docs source and destination
+JAVA_DOCS_SRC := ../java/lance-namespace-apache-client/docs
+MODELS_DEST := src/operations/models
+
+# API files to exclude (Java-specific, not data models)
+API_FILES := DataApi.md IndexApi.md MetadataApi.md NamespaceApi.md TableApi.md TagApi.md TransactionApi.md
+
+.PHONY: gen-models
+gen-models:
+	@echo "Copying model docs from Java generated docs..."
+	@rm -rf $(MODELS_DEST)
+	@mkdir -p $(MODELS_DEST)
+	@for f in $(JAVA_DOCS_SRC)/*.md; do \
+		filename=$$(basename "$$f"); \
+		skip=false; \
+		for api in $(API_FILES); do \
+			if [ "$$filename" = "$$api" ]; then \
+				skip=true; \
+				break; \
+			fi; \
+		done; \
+		if [ "$$skip" = "false" ]; then \
+			cp "$$f" $(MODELS_DEST)/; \
+		fi; \
+	done
+	@echo "title: Models" > $(MODELS_DEST)/.pages
+	@echo "Model docs copied to $(MODELS_DEST)"
 
 .PHONY: build
-build: gen
+build: gen-models
 	uv run mkdocs build
 
 .PHONY: serve
-serve: gen
+serve: gen-models
 	uv run mkdocs serve
