@@ -47,13 +47,13 @@ with one implementation per language.
 
 ```mermaid
 flowchart TB
-    subgraph this_repo["lance-namespace (this repo)"]
+    subgraph this_repo["This Repo"]
         spec["Spec & Generated Clients"]
         py_core["Python: lance-namespace"]
         java_core["Java: lance-namespace-core"]
     end
 
-    subgraph lance_repo["lance-format/lance"]
+    subgraph lance_repo["lance repo"]
         subgraph rust_modules["Rust Modules"]
             rs_ns["lance-namespace"]
             rs_lance["lance"]
@@ -63,8 +63,12 @@ flowchart TB
         java_lance["Java: lance"]
     end
 
-    subgraph impls_repo["lance-format/lance-namespace-impls"]
-        other_impls["Other Implementations<br/>(1 per language)"]
+    subgraph impls_repo["lance-namespace-impls repo"]
+        polaris["Apache Polaris"]
+        hive["Apache Hive"]
+        iceberg_rest["Iceberg REST"]
+        unity["Unity Catalog"]
+        glue["AWS Glue"]
     end
 
     %% Rust dependencies (source build)
@@ -77,13 +81,14 @@ flowchart TB
     rs_impls -.-> py_lance
     rs_impls -.-> java_lance
 
-    %% Other implementations
-    py_core -.-> other_impls
-    java_core -.-> other_impls
+    %% Other implementations depend on core interfaces
+    py_core -.-> impls_repo
+    java_core -.-> impls_repo
 
-    style this_repo fill:#e1f5fe
-    style lance_repo fill:#fff3e0
-    style impls_repo fill:#f3e5f5
+    style this_repo fill:#1565c0,color:#fff
+    style lance_repo fill:#e65100,color:#fff
+    style impls_repo fill:#7b1fa2,color:#fff
+    style rust_modules fill:#ff8a65,color:#000
 ```
 
 ## Repository structure

@@ -2,4 +2,4 @@ nav:
   - index.md
   - operations
   - Directory Namespace: dir.md
-  - REST Namespace: rest
+  - REST Namespace: rest.md

@@ -18,6 +18,25 @@ The actual execution of an operation can be:
 This flexibility allows the same client interface to work across different namespace implementations
 while maintaining consistent request/response contracts.
 
+## Duality with REST Namespace Spec
+
+The request and response models defined here are designed to work seamlessly with the
+[REST Namespace](../rest.md) spec. The REST namespace uses these same schemas directly as
+HTTP request and response bodies, minimizing data conversion between client and server.
+
+This duality explains why certain fields like `id` are marked as optional in the request models:
+
+- **In REST Namespace Spec**: The object identifier is already present in the REST route path
+  (e.g., `/v1/table/{id}/describe`), so the `id` field in the request body is optional and
+  can be omitted to avoid redundancy.
+- **In Client-Side Access Spec**: When invoking operations directly through a client library
+  (e.g., for directory namespace), the `id` field **must be specified** in the request since
+  there is no REST route to carry this information.
+
+When both the route path and request body contain the `id`, the REST server must validate
+that they match and return a 400 Bad Request error if they differ. 
+See [REST Routes](../rest.md#rest-routes) for more details.
+
 ## Operation List
 
 | Operation ID             | Current Version | Namespace | Table | Index | Metadata | Data | Transaction |

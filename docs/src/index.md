@@ -1,6 +1,6 @@
 # Lance Namespace Spec
 
-**Lance Namespace** is an open specification for describing access and operations against a collection of tables.
+**Lance Namespace** is an open specification for describing access and operations against a collection of tables in a multimodal lakehouse.
 The spec provides a unified model for table-related objects, their relationships within a hierarchy,
 and the operations available on these objects — enabling integration with metadata services and compute engines alike.
 

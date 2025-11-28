@@ -1,4 +1,4 @@
-# Lance Directory Namespace
+# Lance Directory Namespace Spec
 
 **Lance directory namespace** is a Lance namespace implementation that stores tables in a directory structure
 on any local or remote storage system. It supports two modes:
