@@ -1,0 +1,3 @@
+nav:
+  - Catalog Spec: catalog-spec.md
+  - Implementation Spec: impl-spec.md

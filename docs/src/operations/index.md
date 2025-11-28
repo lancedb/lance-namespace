@@ -21,7 +21,7 @@ while maintaining consistent request/response contracts.
 ## Duality with REST Namespace Spec
 
 The request and response models defined here are designed to work seamlessly with the
-[REST Namespace](../rest.md) spec. The REST namespace uses these same schemas directly as
+[REST Namespace](../rest/catalog-spec.md) spec. The REST namespace uses these same schemas directly as
 HTTP request and response bodies, minimizing data conversion between client and server.
 
 This duality explains why certain fields like `id` are marked as optional in the request models:
@@ -35,7 +35,7 @@ This duality explains why certain fields like `id` are marked as optional in the
 
 When both the route path and request body contain the `id`, the REST server must validate
 that they match and return a 400 Bad Request error if they differ. 
-See [REST Routes](../rest.md#rest-routes) for more details.
+See [REST Routes](../rest/catalog-spec.md#rest-routes) for more details.
 
 ## Operation List
 

@@ -27,7 +27,7 @@ The Lance Namespace spec consists of three main parts:
    The implementation specs for Directory and REST namespaces are part of Lance Namespace spec.
    Implementation specs for other catalog specs
    (e.g. Apache Gravitino, Apache Polaris, Unity Catalog, Apache Hive Metastore, Apache Iceberg REST Catalog)
-   are considered extensions — anyone can provide additional implementation specs outside Lance Namespace,
+   are considered integrations — anyone can provide additional implementation specs outside Lance Namespace,
    and they can be owned by external parties without needing to go through the Lance community voting process to be adopted.
 
 ## Namespace Definition
@@ -110,7 +110,7 @@ A table `[catalog1, database2, table3]` is at level 3, and its identifier `catal
 
 If every table in the root namespace are at the same level `N`, the namespace is called **leveled**,
 and we say this namespace is a `N`-level namespace.
-For example, a [directory namespace](dir.md) is a 1-level namespace,
+For example, a [directory namespace](dir/catalog-spec.md) is a 1-level namespace,
 and a Hive 2.x namespace is a 2-level namespace.
 The [example above](#namespace-definition) is not leveled
 because `t1` has 2 namespaces `ns1` and `ns4` before root, whereas `t2` has 1 namespace `ns2` before root.

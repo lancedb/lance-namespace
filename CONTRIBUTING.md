@@ -21,7 +21,7 @@ please go to the [lance-namespace-impls](https://github.com/lance-format/lance-n
 
 ## Project Dependency
 
-This project contains the core Lance Namespace specification and generated modules across all languages.
+This project contains the core Lance Namespace specification, interface and generated modules across all languages.
 The dependency structure varies by language due to different build and distribution models.
 
 ### Rust
@@ -32,7 +32,7 @@ This is because Rust uses source code builds, and separating modules across repo
 
 The dependency chain is: `lance-namespace` → `lance` → `lance-namespace-impls`
 
-### Python and Java
+### Other Languages (e.g. Python, Java)
 
 For Python, Java, and other languages, the core `LanceNamespace` interface and generic connect functionality
 are maintained in **this repository** (e.g., `lance-namespace` for Python, `lance-namespace-core` for Java).
@@ -40,6 +40,7 @@ The core [lance-format/lance](https://github.com/lance-format/lance) repository 
 
 The reason for this import direction is that `lance-namespace-impls` (REST and directory namespace implementations)
 are used in the Lance Python and Java bindings, and are exposed back through the corresponding language interfaces.
+These language interfaces can also be imported dynamically without the need to have a dependency of the Lance core library bindings in those languages.
 
 ### Other Implementations
 
