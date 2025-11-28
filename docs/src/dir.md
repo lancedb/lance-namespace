@@ -1,7 +1,7 @@
 # Lance Directory Namespace Spec
 
 **Lance directory namespace** is a Lance namespace implementation that stores tables in a directory structure
-on any local or remote storage system. It supports two modes:
+on any local or remote storage system. It has gone through 2 major spec versions:
 
 - **V1 (Directory Listing)**: A lightweight, simple 1-level namespace that discovers tables by scanning the directory.
 - **V2 (Manifest)**: A more advanced implementation backed by a manifest table (a Lance table) that supports nested namespaces and better performance at scale.
@@ -140,17 +140,17 @@ Please visit [Lance ObjectStore Configurations](https://lance.org/guide/object_s
 
 ### Compatibility Mode
 
-`manifest_enabled` and `dir_listing_enabled` are used to control using V1 or V2 scheme.
+`manifest_enabled` and `dir_listing_enabled` are used to control using V1 or V2 spec.
 By default we enable both V1 and V2, this means:
 
 1. When checking if a table exists in root namespace, it first checks if the table exists in the manifest, then checks if the `<table_name>.lance` exists.
 2. When listing tables in root namespace, it merges tables from both manifest and directory listing, deduplicating by location and table names, manifest tables taking precedence.
 3. When creating tables in root namespaces, it registers them in the manifest and uses V1 `<table_name>.lance` naming for root namespace tables.
 4. If a table in root namespace is renamed, it will start to follow the V2 path definition. 
-5. For operations in child namespaces, only V2 scheme is used.
+5. For operations in child namespaces, only V2 spec is used.
 
 ### Migration from V1 to V2
 
 A migration should add all the V1 table directory paths to the manifest. 
-Once the user is certain there is no table following v1 scheme,
+Once the user is certain there is no table following v1 spec,
 `dir_listing_enabled` can be set to `false` to disable the compatibility mode.

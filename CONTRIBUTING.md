@@ -1,10 +1,14 @@
 # Contributing to Lance Namespace
 
 The Lance Namespace codebase is at [lance-format/lance-namespace](https://github.com/lance-format/lance-namespace).
-This codebase contains code of the Lance Namespace specification 
-as well as generated clients and servers using OpenAPI generator.
+This codebase contains:
 
-This project should only be used to make spec changes to Lance Namespace,
+- The Lance Namespace specification
+- The core `LanceNamespace` interface and generic connect functionality for all languages except Rust
+  (for Rust, these are located in the [lance-format/lance](https://github.com/lance-format/lance) repo)
+- Generated clients and servers using OpenAPI generator
+
+This project should only be used to make spec and interface changes to Lance Namespace,
 or to add new clients and servers to be generated based on community demand.
 In general, we welcome more generated components to be added as long as 
 the contributor is willing to set up all the automations for generation and publication.
@@ -98,13 +102,15 @@ flowchart TB
 
 This repository currently contains the following components:
 
-| Component            | Language | Path                                   | Description                                                |
-|----------------------|----------|----------------------------------------|------------------------------------------------------------|
-| spec                 |          | docs/src/spec                          | Lance Namespace Specification                              |
-| Rust Reqwest Client  | Rust     | rust/lance-namespace-reqwest-client    | Generated Rust reqwest client for Lance REST Namespace     |
-| Python UrlLib3 Client| Python   | python/lance_namespace_urllib3_client  | Generated Python urllib3 client for Lance REST Namespace   |
-| Java Apache Client   | Java     | java/lance-namespace-apache-client     | Generated Java Apache HTTP client for Lance REST Namespace |
-| Java Springboot Server| Java    | java/lance-namespace-springboot-server | Generated Java SpringBoot server for Lance REST Namespace  |
+| Component             | Language | Path                                   | Description                                                |
+|-----------------------|----------|----------------------------------------|------------------------------------------------------------|
+| Spec                  |          | docs/src                               | Lance Namespace Specification                              |
+| Python Core           | Python   | python/lance_namespace                 | Core LanceNamespace interface and connect functionality    |
+| Python UrlLib3 Client | Python   | python/lance_namespace_urllib3_client  | Generated Python urllib3 client for Lance REST Namespace   |
+| Java Core             | Java     | java/lance-namespace-core              | Core LanceNamespace interface and connect functionality    |
+| Java Apache Client    | Java     | java/lance-namespace-apache-client     | Generated Java Apache HTTP client for Lance REST Namespace |
+| Java SpringBoot Server| Java     | java/lance-namespace-springboot-server | Generated Java SpringBoot server for Lance REST Namespace  |
+| Rust Reqwest Client   | Rust     | rust/lance-namespace-reqwest-client    | Generated Rust reqwest client for Lance REST Namespace     |
 
 
 ## Install uv
@@ -153,14 +159,19 @@ Start the server with:
 make serve-docs
 ```
 
-### Generated Doc from OpenAPI Spec
+### Generated Model Documentation
 
-The OpenAPI spec at `docs/src/rest.yaml` is digested and generated as Markdown documents for better readability.
-Generate the latest documents with:
+The operation request and response model documentation is generated from the Java Apache Client.
+When building or serving docs, the Java client must be generated first to produce the model Markdown files,
+which are then copied to `docs/src/operations/models/`.
+
+This happens automatically when running:
 
 ```shell
-make gen-docs
+make build-docs  # or make serve-docs
 ```
+
+These commands depend on `gen-java` to ensure the Java client docs are up-to-date before building the documentation.
 
 ### Understanding the Build Process
 

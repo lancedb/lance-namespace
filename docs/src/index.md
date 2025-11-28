@@ -6,24 +6,29 @@ and the operations available on these objects — enabling integration with meta
 
 ## What the Lance Namespace Spec Contains
 
+![Namespace Overview](overview.png)
+
 The Lance Namespace spec consists of three main parts:
 
-1. **Client-Side Standardized Access Spec**: A consistent abstraction that adapts to various catalog specs, 
+1. **Client-Side Standardized Access Spec (Client Spec)**: A consistent abstraction that adapts to various catalog specs,
    allowing users to choose any catalog to store and use tables. This is the core reason why we call it
-   "Namespace" rather than "Catalog" — namespace can mean catalog, schema, metastore, database, metalake, etc., 
+   "Namespace" rather than "Catalog" — namespace can mean catalog, schema, metastore, database, metalake, etc.,
    and the spec provides a unified interface across all of them.
 
-2. **Directory Namespace Spec**: A natively maintained storage-only catalog spec that is compliant with the
-   Lance Namespace client-side access spec. It requires no external metadata service dependencis — 
-   tables are organized directly on storage (local filesystem, S3, GCS, etc.)
+2. **Native Catalog Specs**: Natively maintained catalog specs that are compliant with the Lance Namespace client spec:
+    - **Directory Namespace Spec**: A storage-only catalog spec that requires no external metadata service dependencies —
+      tables are organized directly on storage (local filesystem, S3, GCS, etc.)
+    - **REST Namespace Spec**: A REST-based catalog spec ideal for data infrastructure teams that want to develop
+      their own custom handling in their specific enterprise environments.
 
-3. **REST Namespace Spec**: A natively maintained REST-based catalog spec that is compliant with the Lance
-   Namespace client-side access spec. It is ideal for data infrastructure teams that want to develop their own custom handling
-   in their specific enterprise environments.
-
-There are also dedicated specs for how different open source and commercial catalog specs 
-(e.g. Apache Gravitino, Apache Polaris, Unity Catalog, Apache Hive Metastore, Apache Iceberg REST Catalog)
-integrate with the Lance Namespace client-side access spec. Those are not considered part of the core spec, and are considered as spec extensions.
+3. **Implementation Specs**: Defines how a given catalog spec integrates with the client spec.
+   It details how an object in a Lance Namespace maps to an object in the specific catalog spec,
+   and how each operation in Lance Namespace is fulfilled by the catalog spec.
+   The implementation specs for Directory and REST namespaces are part of Lance Namespace spec.
+   Implementation specs for other catalog specs
+   (e.g. Apache Gravitino, Apache Polaris, Unity Catalog, Apache Hive Metastore, Apache Iceberg REST Catalog)
+   are considered extensions — anyone can provide additional implementation specs outside Lance Namespace,
+   and they can be owned by external parties without needing to go through the Lance community voting process to be adopted.
 
 ## Namespace Definition
 
@@ -34,7 +39,7 @@ that frequently appear in other similar data systems to allow easy integration w
 
 Here is an example layout of a namespace:
 
-![Lance namespace layout](layout.png)
+![Namespace Layout](layout.png)
 
 ## Parent & Child
 
