@@ -108,8 +108,8 @@ class TransactionApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '409': "ErrorResponse",
+            '404': "TransactionNotFoundError",
+            '409': "TransactionConflictError",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -190,8 +190,8 @@ class TransactionApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '409': "ErrorResponse",
+            '404': "TransactionNotFoundError",
+            '409': "TransactionConflictError",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -272,8 +272,8 @@ class TransactionApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '409': "ErrorResponse",
+            '404': "TransactionNotFoundError",
+            '409': "TransactionConflictError",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -434,7 +434,7 @@ class TransactionApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TransactionNotFoundError",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -515,7 +515,7 @@ class TransactionApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TransactionNotFoundError",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -596,7 +596,7 @@ class TransactionApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TransactionNotFoundError",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }

@@ -116,12 +116,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "AlterTableAddColumnsResponse",
-            '400': "ErrorResponse",
+            '400': "AlterTableAddColumns400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -197,12 +197,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "AlterTableAddColumnsResponse",
-            '400': "ErrorResponse",
+            '400': "AlterTableAddColumns400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -278,12 +278,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "AlterTableAddColumnsResponse",
-            '400': "ErrorResponse",
+            '400': "AlterTableAddColumns400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -439,12 +439,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "AnalyzeTableQueryPlanResponse",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -520,12 +520,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "AnalyzeTableQueryPlanResponse",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -601,12 +601,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "AnalyzeTableQueryPlanResponse",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -762,12 +762,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "int",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -843,12 +843,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "int",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -924,12 +924,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "int",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1097,12 +1097,13 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CreateTableResponse",
-            '400': "ErrorResponse",
+            '400': "CreateTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "ParentNamespaceNotFoundError",
+            '409': "TableAlreadyExistsError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1190,12 +1191,13 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CreateTableResponse",
-            '400': "ErrorResponse",
+            '400': "CreateTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "ParentNamespaceNotFoundError",
+            '409': "TableAlreadyExistsError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1283,12 +1285,13 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CreateTableResponse",
-            '400': "ErrorResponse",
+            '400': "CreateTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "ParentNamespaceNotFoundError",
+            '409': "TableAlreadyExistsError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1463,12 +1466,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DeleteFromTableResponse",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1544,12 +1547,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DeleteFromTableResponse",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1625,12 +1628,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DeleteFromTableResponse",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1786,12 +1789,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ExplainTableQueryPlanResponse",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1867,12 +1870,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ExplainTableQueryPlanResponse",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1948,12 +1951,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ExplainTableQueryPlanResponse",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2113,12 +2116,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "InsertIntoTableResponse",
-            '400': "ErrorResponse",
+            '400': "InsertIntoTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2198,12 +2201,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "InsertIntoTableResponse",
-            '400': "ErrorResponse",
+            '400': "InsertIntoTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2283,12 +2286,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "InsertIntoTableResponse",
-            '400': "ErrorResponse",
+            '400': "InsertIntoTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2481,12 +2484,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "MergeInsertIntoTableResponse",
-            '400': "ErrorResponse",
+            '400': "MergeInsertIntoTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2586,12 +2589,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "MergeInsertIntoTableResponse",
-            '400': "ErrorResponse",
+            '400': "MergeInsertIntoTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2691,12 +2694,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "MergeInsertIntoTableResponse",
-            '400': "ErrorResponse",
+            '400': "MergeInsertIntoTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2890,12 +2893,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "bytearray",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2971,12 +2974,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "bytearray",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3052,12 +3055,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "bytearray",
-            '400': "ErrorResponse",
+            '400': "DeleteFromTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3215,12 +3218,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "UpdateTableResponse",
-            '400': "ErrorResponse",
+            '400': "UpdateTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3296,12 +3299,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "UpdateTableResponse",
-            '400': "ErrorResponse",
+            '400': "UpdateTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3377,12 +3380,12 @@ class DataApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "UpdateTableResponse",
-            '400': "ErrorResponse",
+            '400': "UpdateTable400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,

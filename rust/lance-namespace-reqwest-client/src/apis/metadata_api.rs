@@ -19,12 +19,12 @@ use super::{Error, configuration, ContentType};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum AlterTableAlterColumnsError {
-    Status400(models::ErrorResponse),
+    Status400(models::AlterTableAlterColumns400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -32,12 +32,12 @@ pub enum AlterTableAlterColumnsError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum AlterTableDropColumnsError {
-    Status400(models::ErrorResponse),
+    Status400(models::AlterTableAlterColumns400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -48,8 +48,8 @@ pub enum AlterTransactionError {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
-    Status409(models::ErrorResponse),
+    Status404(models::TransactionNotFoundError),
+    Status409(models::TransactionConflictError),
     Status503(models::ErrorResponse),
     Status5XX(models::ErrorResponse),
     UnknownValue(serde_json::Value),
@@ -62,8 +62,8 @@ pub enum CreateEmptyTableError {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
-    Status409(models::ErrorResponse),
+    Status404(models::ParentNamespaceNotFoundError),
+    Status409(models::TableAlreadyExistsError),
     Status503(models::ErrorResponse),
     Status5XX(models::ErrorResponse),
     UnknownValue(serde_json::Value),
@@ -73,14 +73,14 @@ pub enum CreateEmptyTableError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateNamespaceError {
-    Status400(models::ErrorResponse),
+    Status400(models::CreateNamespace400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::ParentNamespaceNotFoundError),
     Status406(models::ErrorResponse),
-    Status409(models::ErrorResponse),
+    Status409(models::NamespaceAlreadyExistsError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -88,12 +88,13 @@ pub enum CreateNamespaceError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateTableIndexError {
-    Status400(models::ErrorResponse),
+    Status400(models::CreateTableIndex400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
+    Status409(models::TableIndexAlreadyExistsError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -104,8 +105,8 @@ pub enum CreateTableTagError {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
-    Status409(models::ErrorResponse),
+    Status404(models::RestoreTable404Response),
+    Status409(models::TableTagAlreadyExistsError),
     Status503(models::ErrorResponse),
     Status5XX(models::ErrorResponse),
     UnknownValue(serde_json::Value),
@@ -118,7 +119,7 @@ pub enum DeleteTableTagError {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::GetTableTagVersion404Response),
     Status503(models::ErrorResponse),
     Status5XX(models::ErrorResponse),
     UnknownValue(serde_json::Value),
@@ -128,12 +129,12 @@ pub enum DeleteTableTagError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DeregisterTableError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -141,12 +142,12 @@ pub enum DeregisterTableError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DescribeNamespaceError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::NamespaceNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -154,12 +155,12 @@ pub enum DescribeNamespaceError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DescribeTableError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -167,12 +168,12 @@ pub enum DescribeTableError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DescribeTableIndexStatsError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::DescribeTableIndexStats404Response),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -183,7 +184,7 @@ pub enum DescribeTransactionError {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TransactionNotFoundError),
     Status503(models::ErrorResponse),
     Status5XX(models::ErrorResponse),
     UnknownValue(serde_json::Value),
@@ -193,13 +194,13 @@ pub enum DescribeTransactionError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DropNamespaceError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
-    Status409(models::ErrorResponse),
+    Status404(models::NamespaceNotFoundError),
+    Status409(models::NamespaceNotEmptyError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -207,12 +208,12 @@ pub enum DropNamespaceError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DropTableError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -223,7 +224,7 @@ pub enum DropTableIndexError {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::DescribeTableIndexStats404Response),
     Status503(models::ErrorResponse),
     Status5XX(models::ErrorResponse),
     UnknownValue(serde_json::Value),
@@ -233,12 +234,12 @@ pub enum DropTableIndexError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GetTableStatsError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -249,7 +250,7 @@ pub enum GetTableTagVersionError {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::GetTableTagVersion404Response),
     Status503(models::ErrorResponse),
     Status5XX(models::ErrorResponse),
     UnknownValue(serde_json::Value),
@@ -259,13 +260,13 @@ pub enum GetTableTagVersionError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ListNamespacesError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::NamespaceNotFoundError),
     Status406(models::ErrorResponse),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -273,12 +274,12 @@ pub enum ListNamespacesError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ListTableIndicesError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -289,7 +290,7 @@ pub enum ListTableTagsError {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
     Status5XX(models::ErrorResponse),
     UnknownValue(serde_json::Value),
@@ -299,12 +300,12 @@ pub enum ListTableTagsError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ListTableVersionsError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -312,13 +313,13 @@ pub enum ListTableVersionsError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ListTablesError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::NamespaceNotFoundError),
     Status406(models::ErrorResponse),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -326,12 +327,12 @@ pub enum ListTablesError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum NamespaceExistsError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::NamespaceNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -339,14 +340,14 @@ pub enum NamespaceExistsError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum RegisterTableError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::ParentNamespaceNotFoundError),
     Status406(models::ErrorResponse),
-    Status409(models::ErrorResponse),
+    Status409(models::TableAlreadyExistsError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -354,12 +355,12 @@ pub enum RegisterTableError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum RestoreTableError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::RestoreTable404Response),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -367,12 +368,12 @@ pub enum RestoreTableError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum TableExistsError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -383,7 +384,7 @@ pub enum UpdateTableTagError {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::UpdateTableTag404Response),
     Status503(models::ErrorResponse),
     Status5XX(models::ErrorResponse),
     UnknownValue(serde_json::Value),

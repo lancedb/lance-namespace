@@ -19,12 +19,12 @@ use super::{Error, configuration, ContentType};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum AlterTableAddColumnsError {
-    Status400(models::ErrorResponse),
+    Status400(models::AlterTableAddColumns400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -32,12 +32,12 @@ pub enum AlterTableAddColumnsError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum AnalyzeTableQueryPlanError {
-    Status400(models::ErrorResponse),
+    Status400(models::DeleteFromTable400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -45,12 +45,12 @@ pub enum AnalyzeTableQueryPlanError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CountTableRowsError {
-    Status400(models::ErrorResponse),
+    Status400(models::DeleteFromTable400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -58,12 +58,13 @@ pub enum CountTableRowsError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateTableError {
-    Status400(models::ErrorResponse),
+    Status400(models::CreateTable400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::ParentNamespaceNotFoundError),
+    Status409(models::TableAlreadyExistsError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -71,12 +72,12 @@ pub enum CreateTableError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DeleteFromTableError {
-    Status400(models::ErrorResponse),
+    Status400(models::DeleteFromTable400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -84,12 +85,12 @@ pub enum DeleteFromTableError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ExplainTableQueryPlanError {
-    Status400(models::ErrorResponse),
+    Status400(models::DeleteFromTable400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -97,12 +98,12 @@ pub enum ExplainTableQueryPlanError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum InsertIntoTableError {
-    Status400(models::ErrorResponse),
+    Status400(models::InsertIntoTable400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -110,12 +111,12 @@ pub enum InsertIntoTableError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum MergeInsertIntoTableError {
-    Status400(models::ErrorResponse),
+    Status400(models::MergeInsertIntoTable400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -123,12 +124,12 @@ pub enum MergeInsertIntoTableError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum QueryTableError {
-    Status400(models::ErrorResponse),
+    Status400(models::DeleteFromTable400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -136,12 +137,12 @@ pub enum QueryTableError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum UpdateTableError {
-    Status400(models::ErrorResponse),
+    Status400(models::UpdateTable400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
