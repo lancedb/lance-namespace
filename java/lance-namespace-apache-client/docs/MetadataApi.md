@@ -103,12 +103,12 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Alter columns operation result |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Bad request - invalid request or column not found |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested table does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## alterTableDropColumns
@@ -179,12 +179,12 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Drop columns operation result |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Bad request - invalid request or column not found |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested table does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## alterTransaction
@@ -258,8 +258,8 @@ No authorization required
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
-| **409** | The request conflicts with the current state of the target resource. |  -  |
+| **404** | The requested transaction does not exist |  -  |
+| **409** | Transaction failed due to concurrent modification |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
@@ -335,8 +335,8 @@ No authorization required
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
-| **409** | The request conflicts with the current state of the target resource. |  -  |
+| **404** | The parent namespace does not exist |  -  |
+| **409** | A table with the same name already exists |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
@@ -409,14 +409,14 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Result of creating a namespace |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Bad request - invalid request format or identifier |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The parent namespace does not exist |  -  |
 | **406** | Not Acceptable / Unsupported Operation. The server does not support this operation. |  -  |
-| **409** | The request conflicts with the current state of the target resource. |  -  |
+| **409** | A namespace with the same name already exists |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## createTableIndex
@@ -487,12 +487,13 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Index created successfully |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Bad request - invalid request, column not found, or invalid index config |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested table does not exist |  -  |
+| **409** | An index with the same name already exists |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## createTableTag
@@ -565,8 +566,8 @@ No authorization required
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
-| **409** | The request conflicts with the current state of the target resource. |  -  |
+| **404** | Not found - table or version does not exist |  -  |
+| **409** | A tag with the same name already exists |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
@@ -641,7 +642,7 @@ No authorization required
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | Not found - table or tag does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
@@ -714,12 +715,12 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Response of DeregisterTable |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested table does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## describeNamespace
@@ -790,12 +791,12 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Returns a namespace, as well as any properties stored on the namespace if namespace properties are supported by the server. |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested namespace does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## describeTable
@@ -866,12 +867,12 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Table properties result when loading a table |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested table does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## describeTableIndexStats
@@ -944,12 +945,12 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Index statistics |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | Not found - table or index does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## describeTransaction
@@ -1023,7 +1024,7 @@ No authorization required
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested transaction does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
@@ -1096,13 +1097,13 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Result of dropping a namespace |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
-| **409** | The request conflicts with the current state of the target resource. |  -  |
+| **404** | The requested namespace does not exist |  -  |
+| **409** | Cannot drop namespace because it contains tables or child namespaces |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## dropTable
@@ -1173,12 +1174,12 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Response of DropTable |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested table does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## dropTableIndex
@@ -1254,7 +1255,7 @@ No authorization required
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | Not found - table or index does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
@@ -1327,12 +1328,12 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Table statistics |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested table does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## getTableTagVersion
@@ -1406,7 +1407,7 @@ No authorization required
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | Not found - table or tag does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
@@ -1481,13 +1482,13 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | A list of namespaces |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested namespace does not exist |  -  |
 | **406** | Not Acceptable / Unsupported Operation. The server does not support this operation. |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## listTableIndices
@@ -1558,12 +1559,12 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | List of indices on the table |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested table does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## listTableTags
@@ -1639,7 +1640,7 @@ No authorization required
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested table does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
@@ -1712,12 +1713,12 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | List of table versions |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested table does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## listTables
@@ -1790,13 +1791,13 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | A list of tables |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested namespace does not exist |  -  |
 | **406** | Not Acceptable / Unsupported Operation. The server does not support this operation. |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## namespaceExists
@@ -1866,12 +1867,12 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Success, no content |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested namespace does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## registerTable
@@ -1942,14 +1943,14 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Table properties result when registering a table |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The parent namespace does not exist |  -  |
 | **406** | Not Acceptable / Unsupported Operation. The server does not support this operation. |  -  |
-| **409** | The request conflicts with the current state of the target resource. |  -  |
+| **409** | A table with the same name already exists |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## restoreTable
@@ -2020,12 +2021,12 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Table restore operation result |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | Not found - table or version does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## tableExists
@@ -2095,12 +2096,12 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Success, no content |  -  |
-| **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+| **400** | Malformed request or validation failure |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | The requested table does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
-| **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+| **5XX** | Unknown or unclassified error |  -  |
 
 
 ## updateTableTag
@@ -2173,7 +2174,7 @@ No authorization required
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
-| **404** | A server-side problem that means can not find the specified resource. |  -  |
+| **404** | Not found - table, tag, or version does not exist |  -  |
 | **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
 | **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 

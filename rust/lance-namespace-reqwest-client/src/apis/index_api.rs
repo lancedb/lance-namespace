@@ -19,12 +19,13 @@ use super::{Error, configuration, ContentType};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateTableIndexError {
-    Status400(models::ErrorResponse),
+    Status400(models::CreateTableIndex400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
+    Status409(models::TableIndexAlreadyExistsError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -32,12 +33,12 @@ pub enum CreateTableIndexError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DescribeTableIndexStatsError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::DescribeTableIndexStats404Response),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -48,7 +49,7 @@ pub enum DropTableIndexError {
     Status400(models::ErrorResponse),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::DescribeTableIndexStats404Response),
     Status503(models::ErrorResponse),
     Status5XX(models::ErrorResponse),
     UnknownValue(serde_json::Value),
@@ -58,12 +59,12 @@ pub enum DropTableIndexError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ListTableIndicesError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::TableNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 

@@ -13,8 +13,10 @@
  */
 package org.lance.namespace.server.springboot.api;
 
+import org.lance.namespace.server.springboot.model.AlterTableAddColumns400Response;
 import org.lance.namespace.server.springboot.model.AlterTableAddColumnsRequest;
 import org.lance.namespace.server.springboot.model.AlterTableAddColumnsResponse;
+import org.lance.namespace.server.springboot.model.AlterTableAlterColumns400Response;
 import org.lance.namespace.server.springboot.model.AlterTableAlterColumnsRequest;
 import org.lance.namespace.server.springboot.model.AlterTableAlterColumnsResponse;
 import org.lance.namespace.server.springboot.model.AlterTableDropColumnsRequest;
@@ -24,15 +26,19 @@ import org.lance.namespace.server.springboot.model.AnalyzeTableQueryPlanResponse
 import org.lance.namespace.server.springboot.model.CountTableRowsRequest;
 import org.lance.namespace.server.springboot.model.CreateEmptyTableRequest;
 import org.lance.namespace.server.springboot.model.CreateEmptyTableResponse;
+import org.lance.namespace.server.springboot.model.CreateTable400Response;
+import org.lance.namespace.server.springboot.model.CreateTableIndex400Response;
 import org.lance.namespace.server.springboot.model.CreateTableIndexRequest;
 import org.lance.namespace.server.springboot.model.CreateTableIndexResponse;
 import org.lance.namespace.server.springboot.model.CreateTableResponse;
 import org.lance.namespace.server.springboot.model.CreateTableTagRequest;
+import org.lance.namespace.server.springboot.model.DeleteFromTable400Response;
 import org.lance.namespace.server.springboot.model.DeleteFromTableRequest;
 import org.lance.namespace.server.springboot.model.DeleteFromTableResponse;
 import org.lance.namespace.server.springboot.model.DeleteTableTagRequest;
 import org.lance.namespace.server.springboot.model.DeregisterTableRequest;
 import org.lance.namespace.server.springboot.model.DeregisterTableResponse;
+import org.lance.namespace.server.springboot.model.DescribeTableIndexStats404Response;
 import org.lance.namespace.server.springboot.model.DescribeTableIndexStatsRequest;
 import org.lance.namespace.server.springboot.model.DescribeTableIndexStatsResponse;
 import org.lance.namespace.server.springboot.model.DescribeTableRequest;
@@ -46,23 +52,36 @@ import org.lance.namespace.server.springboot.model.ExplainTableQueryPlanRequest;
 import org.lance.namespace.server.springboot.model.ExplainTableQueryPlanResponse;
 import org.lance.namespace.server.springboot.model.GetTableStatsRequest;
 import org.lance.namespace.server.springboot.model.GetTableStatsResponse;
+import org.lance.namespace.server.springboot.model.GetTableTagVersion404Response;
 import org.lance.namespace.server.springboot.model.GetTableTagVersionRequest;
 import org.lance.namespace.server.springboot.model.GetTableTagVersionResponse;
+import org.lance.namespace.server.springboot.model.InsertIntoTable400Response;
 import org.lance.namespace.server.springboot.model.InsertIntoTableResponse;
+import org.lance.namespace.server.springboot.model.InvalidRequestError;
 import org.lance.namespace.server.springboot.model.ListTableIndicesRequest;
 import org.lance.namespace.server.springboot.model.ListTableIndicesResponse;
 import org.lance.namespace.server.springboot.model.ListTableTagsResponse;
 import org.lance.namespace.server.springboot.model.ListTableVersionsRequest;
 import org.lance.namespace.server.springboot.model.ListTableVersionsResponse;
+import org.lance.namespace.server.springboot.model.MergeInsertIntoTable400Response;
 import org.lance.namespace.server.springboot.model.MergeInsertIntoTableResponse;
+import org.lance.namespace.server.springboot.model.ParentNamespaceNotFoundError;
 import org.lance.namespace.server.springboot.model.QueryTableRequest;
 import org.lance.namespace.server.springboot.model.RegisterTableRequest;
 import org.lance.namespace.server.springboot.model.RegisterTableResponse;
+import org.lance.namespace.server.springboot.model.RestoreTable404Response;
 import org.lance.namespace.server.springboot.model.RestoreTableRequest;
 import org.lance.namespace.server.springboot.model.RestoreTableResponse;
+import org.lance.namespace.server.springboot.model.TableAlreadyExistsError;
 import org.lance.namespace.server.springboot.model.TableExistsRequest;
+import org.lance.namespace.server.springboot.model.TableIndexAlreadyExistsError;
+import org.lance.namespace.server.springboot.model.TableNotFoundError;
+import org.lance.namespace.server.springboot.model.TableTagAlreadyExistsError;
+import org.lance.namespace.server.springboot.model.UnknownError;
+import org.lance.namespace.server.springboot.model.UpdateTable400Response;
 import org.lance.namespace.server.springboot.model.UpdateTableRequest;
 import org.lance.namespace.server.springboot.model.UpdateTableResponse;
+import org.lance.namespace.server.springboot.model.UpdateTableTag404Response;
 import org.lance.namespace.server.springboot.model.UpdateTableTagRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -107,18 +126,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Add columns operation result (status code 200) or Indicates a bad request error. It
-   *     could be caused by an unexpected request body format or other forms of request validation
-   *     failure, such as invalid json. Usually serves application/json content, although in some
-   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
-   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
-   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or The service is not ready to handle the request.
-   *     The client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return Add columns operation result (status code 200) or Bad request - invalid request,
+   *     invalid schema, or invalid SQL (status code 400) or Unauthorized. The request lacks valid
+   *     authentication credentials for the operation. (status code 401) or Forbidden. Authenticated
+   *     user does not have the necessary permissions. (status code 403) or The requested table does
+   *     not exist (status code 404) or The service is not ready to handle the request. The client
+   *     should wait and retry. The service may additionally send a Retry-After header to indicate
+   *     when to retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "alterTableAddColumns",
@@ -136,12 +150,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Bad request - invalid request, invalid schema, or invalid SQL",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = AlterTableAddColumns400Response.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -162,11 +175,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -179,12 +192,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -224,7 +236,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -242,7 +254,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -254,7 +266,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -275,18 +287,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Alter columns operation result (status code 200) or Indicates a bad request error. It
-   *     could be caused by an unexpected request body format or other forms of request validation
-   *     failure, such as invalid json. Usually serves application/json content, although in some
-   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
-   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
-   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or The service is not ready to handle the request.
-   *     The client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return Alter columns operation result (status code 200) or Bad request - invalid request or
+   *     column not found (status code 400) or Unauthorized. The request lacks valid authentication
+   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
+   *     have the necessary permissions. (status code 403) or The requested table does not exist
+   *     (status code 404) or The service is not ready to handle the request. The client should wait
+   *     and retry. The service may additionally send a Retry-After header to indicate when to
+   *     retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "alterTableAlterColumns",
@@ -305,12 +312,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Bad request - invalid request or column not found",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = AlterTableAlterColumns400Response.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -331,11 +337,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -348,12 +354,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -393,7 +398,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -411,7 +416,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -423,7 +428,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -444,18 +449,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Drop columns operation result (status code 200) or Indicates a bad request error. It
-   *     could be caused by an unexpected request body format or other forms of request validation
-   *     failure, such as invalid json. Usually serves application/json content, although in some
-   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
-   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
-   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or The service is not ready to handle the request.
-   *     The client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return Drop columns operation result (status code 200) or Bad request - invalid request or
+   *     column not found (status code 400) or Unauthorized. The request lacks valid authentication
+   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
+   *     have the necessary permissions. (status code 403) or The requested table does not exist
+   *     (status code 404) or The service is not ready to handle the request. The client should wait
+   *     and retry. The service may additionally send a Retry-After header to indicate when to
+   *     retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "alterTableDropColumns",
@@ -473,12 +473,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Bad request - invalid request or column not found",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = AlterTableAlterColumns400Response.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -499,11 +498,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -516,12 +515,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -561,7 +559,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -579,7 +577,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -591,7 +589,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -613,18 +611,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Query execution plan analysis (status code 200) or Indicates a bad request error. It
-   *     could be caused by an unexpected request body format or other forms of request validation
-   *     failure, such as invalid json. Usually serves application/json content, although in some
-   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
-   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
-   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or The service is not ready to handle the request.
-   *     The client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return Query execution plan analysis (status code 200) or Bad request - invalid request or
+   *     invalid SQL (status code 400) or Unauthorized. The request lacks valid authentication
+   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
+   *     have the necessary permissions. (status code 403) or The requested table does not exist
+   *     (status code 404) or The service is not ready to handle the request. The client should wait
+   *     and retry. The service may additionally send a Retry-After header to indicate when to
+   *     retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "analyzeTableQueryPlan",
@@ -643,12 +636,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Bad request - invalid request or invalid SQL",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = DeleteFromTable400Response.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -669,11 +661,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -686,12 +678,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -731,7 +722,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -749,7 +740,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -761,7 +752,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -782,18 +773,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Result of counting rows in a table (status code 200) or Indicates a bad request error.
-   *     It could be caused by an unexpected request body format or other forms of request
-   *     validation failure, such as invalid json. Usually serves application/json content, although
-   *     in some cases simple text/plain content might be returned by the server&#39;s middleware.
-   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
-   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
-   *     necessary permissions. (status code 403) or A server-side problem that means can not find
-   *     the specified resource. (status code 404) or The service is not ready to handle the
-   *     request. The client should wait and retry. The service may additionally send a Retry-After
-   *     header to indicate when to retry. (status code 503) or A server-side problem that might not
-   *     be addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return Result of counting rows in a table (status code 200) or Bad request - invalid request
+   *     or invalid SQL (status code 400) or Unauthorized. The request lacks valid authentication
+   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
+   *     have the necessary permissions. (status code 403) or The requested table does not exist
+   *     (status code 404) or The service is not ready to handle the request. The client should wait
+   *     and retry. The service may additionally send a Retry-After header to indicate when to
+   *     retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "countTableRows",
@@ -811,12 +797,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Bad request - invalid request or invalid SQL",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = DeleteFromTable400Response.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -837,11 +822,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -854,12 +839,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -894,7 +878,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -912,7 +896,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -924,7 +908,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -954,13 +938,13 @@ public interface TableApi {
    *     content, although in some cases simple text/plain content might be returned by the
    *     server&#39;s middleware. (status code 400) or Unauthorized. The request lacks valid
    *     authentication credentials for the operation. (status code 401) or Forbidden. Authenticated
-   *     user does not have the necessary permissions. (status code 403) or A server-side problem
-   *     that means can not find the specified resource. (status code 404) or The request conflicts
-   *     with the current state of the target resource. (status code 409) or The service is not
-   *     ready to handle the request. The client should wait and retry. The service may additionally
-   *     send a Retry-After header to indicate when to retry. (status code 503) or A server-side
-   *     problem that might not be addressable from the client side. Used for server 5xx errors
-   *     without more specific documentation in individual routes. (status code 5XX)
+   *     user does not have the necessary permissions. (status code 403) or The parent namespace
+   *     does not exist (status code 404) or A table with the same name already exists (status code
+   *     409) or The service is not ready to handle the request. The client should wait and retry.
+   *     The service may additionally send a Retry-After header to indicate when to retry. (status
+   *     code 503) or A server-side problem that might not be addressable from the client side. Used
+   *     for server 5xx errors without more specific documentation in individual routes. (status
+   *     code 5XX)
    */
   @Operation(
       operationId = "createEmptyTable",
@@ -1005,19 +989,19 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The parent namespace does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = ParentNamespaceNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "409",
-            description = "The request conflicts with the current state of the target resource.",
+            description = "A table with the same name already exists",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableAlreadyExistsError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -1094,13 +1078,13 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 6, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Parent namespace not found\", \"type\" : \"lance-namespace:103\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table already exists\", \"type\" : \"lance-namespace:202\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1143,18 +1127,14 @@ public interface TableApi {
    * @param xLanceTableLocation URI pointing to root location to create the table at (optional)
    * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
    *     \&quot;jack\&quot; }) (optional)
-   * @return Table properties result when creating a table (status code 200) or Indicates a bad
-   *     request error. It could be caused by an unexpected request body format or other forms of
-   *     request validation failure, such as invalid json. Usually serves application/json content,
-   *     although in some cases simple text/plain content might be returned by the server&#39;s
-   *     middleware. (status code 400) or Unauthorized. The request lacks valid authentication
-   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
-   *     have the necessary permissions. (status code 403) or A server-side problem that means can
-   *     not find the specified resource. (status code 404) or The service is not ready to handle
-   *     the request. The client should wait and retry. The service may additionally send a
-   *     Retry-After header to indicate when to retry. (status code 503) or A server-side problem
-   *     that might not be addressable from the client side. Used for server 5xx errors without more
-   *     specific documentation in individual routes. (status code 5XX)
+   * @return Table properties result when creating a table (status code 200) or Bad request -
+   *     invalid request or invalid schema (status code 400) or Unauthorized. The request lacks
+   *     valid authentication credentials for the operation. (status code 401) or Forbidden.
+   *     Authenticated user does not have the necessary permissions. (status code 403) or The parent
+   *     namespace does not exist (status code 404) or A table with the same name already exists
+   *     (status code 409) or The service is not ready to handle the request. The client should wait
+   *     and retry. The service may additionally send a Retry-After header to indicate when to
+   *     retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "createTable",
@@ -1173,12 +1153,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Bad request - invalid request or invalid schema",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = CreateTable400Response.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -1199,11 +1178,19 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The parent namespace does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = ParentNamespaceNotFoundError.class))
+            }),
+        @ApiResponse(
+            responseCode = "409",
+            description = "A table with the same name already exists",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = TableAlreadyExistsError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -1216,12 +1203,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -1276,7 +1262,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1294,7 +1280,13 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 6, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Parent namespace not found\", \"type\" : \"lance-namespace:103\" }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table already exists\", \"type\" : \"lance-namespace:202\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1306,7 +1298,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1330,18 +1322,14 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Index created successfully (status code 200) or Indicates a bad request error. It could
-   *     be caused by an unexpected request body format or other forms of request validation
-   *     failure, such as invalid json. Usually serves application/json content, although in some
-   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
-   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
-   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or The service is not ready to handle the request.
-   *     The client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return Index created successfully (status code 200) or Bad request - invalid request, column
+   *     not found, or invalid index config (status code 400) or Unauthorized. The request lacks
+   *     valid authentication credentials for the operation. (status code 401) or Forbidden.
+   *     Authenticated user does not have the necessary permissions. (status code 403) or The
+   *     requested table does not exist (status code 404) or An index with the same name already
+   *     exists (status code 409) or The service is not ready to handle the request. The client
+   *     should wait and retry. The service may additionally send a Retry-After header to indicate
+   *     when to retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "createTableIndex",
@@ -1361,11 +1349,11 @@ public interface TableApi {
         @ApiResponse(
             responseCode = "400",
             description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+                "Bad request - invalid request, column not found, or invalid index config",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = CreateTableIndex400Response.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -1386,11 +1374,19 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
+            }),
+        @ApiResponse(
+            responseCode = "409",
+            description = "An index with the same name already exists",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = TableIndexAlreadyExistsError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -1403,12 +1399,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -1452,7 +1447,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1470,7 +1465,13 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Index already exists\", \"type\" : \"lance-namespace:302\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1482,7 +1483,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1509,13 +1510,12 @@ public interface TableApi {
    *     simple text/plain content might be returned by the server&#39;s middleware. (status code
    *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
    *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The request conflicts with the current state of the target resource.
-   *     (status code 409) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   *     (status code 403) or Not found - table or version does not exist (status code 404) or A tag
+   *     with the same name already exists (status code 409) or The service is not ready to handle
+   *     the request. The client should wait and retry. The service may additionally send a
+   *     Retry-After header to indicate when to retry. (status code 503) or A server-side problem
+   *     that might not be addressable from the client side. Used for server 5xx errors without more
+   *     specific documentation in individual routes. (status code 5XX)
    */
   @Operation(
       operationId = "createTableTag",
@@ -1552,19 +1552,19 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "Not found - table or version does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = RestoreTable404Response.class))
             }),
         @ApiResponse(
             responseCode = "409",
-            description = "The request conflicts with the current state of the target resource.",
+            description = "A tag with the same name already exists",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableTagAlreadyExistsError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -1635,13 +1635,13 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Tag already exists\", \"type\" : \"lance-namespace:402\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1673,18 +1673,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Delete successful (status code 200) or Indicates a bad request error. It could be
-   *     caused by an unexpected request body format or other forms of request validation failure,
-   *     such as invalid json. Usually serves application/json content, although in some cases
-   *     simple text/plain content might be returned by the server&#39;s middleware. (status code
-   *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
-   *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   * @return Delete successful (status code 200) or Bad request - invalid request or invalid SQL
+   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
+   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
+   *     necessary permissions. (status code 403) or The requested table does not exist (status code
+   *     404) or The service is not ready to handle the request. The client should wait and retry.
+   *     The service may additionally send a Retry-After header to indicate when to retry. (status
+   *     code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "deleteFromTable",
@@ -1702,12 +1697,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Bad request - invalid request or invalid SQL",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = DeleteFromTable400Response.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -1728,11 +1722,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -1745,12 +1739,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -1790,7 +1783,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1808,7 +1801,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1820,7 +1813,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1847,12 +1840,11 @@ public interface TableApi {
    *     simple text/plain content might be returned by the server&#39;s middleware. (status code
    *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
    *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   *     (status code 403) or Not found - table or tag does not exist (status code 404) or The
+   *     service is not ready to handle the request. The client should wait and retry. The service
+   *     may additionally send a Retry-After header to indicate when to retry. (status code 503) or
+   *     A server-side problem that might not be addressable from the client side. Used for server
+   *     5xx errors without more specific documentation in individual routes. (status code 5XX)
    */
   @Operation(
       operationId = "deleteTableTag",
@@ -1889,11 +1881,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "Not found - table or tag does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = GetTableTagVersion404Response.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -1964,7 +1956,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1997,18 +1989,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Response of DeregisterTable (status code 200) or Indicates a bad request error. It
-   *     could be caused by an unexpected request body format or other forms of request validation
-   *     failure, such as invalid json. Usually serves application/json content, although in some
-   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
-   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
-   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or The service is not ready to handle the request.
-   *     The client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return Response of DeregisterTable (status code 200) or Malformed request or validation
+   *     failure (status code 400) or Unauthorized. The request lacks valid authentication
+   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
+   *     have the necessary permissions. (status code 403) or The requested table does not exist
+   *     (status code 404) or The service is not ready to handle the request. The client should wait
+   *     and retry. The service may additionally send a Retry-After header to indicate when to
+   *     retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "deregisterTable",
@@ -2026,12 +2013,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -2052,11 +2038,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -2069,12 +2055,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -2115,7 +2100,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2133,7 +2118,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2145,7 +2130,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2166,18 +2151,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Table properties result when loading a table (status code 200) or Indicates a bad
-   *     request error. It could be caused by an unexpected request body format or other forms of
-   *     request validation failure, such as invalid json. Usually serves application/json content,
-   *     although in some cases simple text/plain content might be returned by the server&#39;s
-   *     middleware. (status code 400) or Unauthorized. The request lacks valid authentication
-   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
-   *     have the necessary permissions. (status code 403) or A server-side problem that means can
-   *     not find the specified resource. (status code 404) or The service is not ready to handle
-   *     the request. The client should wait and retry. The service may additionally send a
-   *     Retry-After header to indicate when to retry. (status code 503) or A server-side problem
-   *     that might not be addressable from the client side. Used for server 5xx errors without more
-   *     specific documentation in individual routes. (status code 5XX)
+   * @return Table properties result when loading a table (status code 200) or Malformed request or
+   *     validation failure (status code 400) or Unauthorized. The request lacks valid
+   *     authentication credentials for the operation. (status code 401) or Forbidden. Authenticated
+   *     user does not have the necessary permissions. (status code 403) or The requested table does
+   *     not exist (status code 404) or The service is not ready to handle the request. The client
+   *     should wait and retry. The service may additionally send a Retry-After header to indicate
+   *     when to retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "describeTable",
@@ -2195,12 +2175,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -2221,11 +2200,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -2238,12 +2217,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -2284,7 +2262,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2302,7 +2280,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2314,7 +2292,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2337,18 +2315,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Index statistics (status code 200) or Indicates a bad request error. It could be caused
-   *     by an unexpected request body format or other forms of request validation failure, such as
-   *     invalid json. Usually serves application/json content, although in some cases simple
-   *     text/plain content might be returned by the server&#39;s middleware. (status code 400) or
-   *     Unauthorized. The request lacks valid authentication credentials for the operation. (status
-   *     code 401) or Forbidden. Authenticated user does not have the necessary permissions. (status
-   *     code 403) or A server-side problem that means can not find the specified resource. (status
-   *     code 404) or The service is not ready to handle the request. The client should wait and
-   *     retry. The service may additionally send a Retry-After header to indicate when to retry.
-   *     (status code 503) or A server-side problem that might not be addressable from the client
-   *     side. Used for server 5xx errors without more specific documentation in individual routes.
-   *     (status code 5XX)
+   * @return Index statistics (status code 200) or Malformed request or validation failure (status
+   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
+   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
+   *     permissions. (status code 403) or Not found - table or index does not exist (status code
+   *     404) or The service is not ready to handle the request. The client should wait and retry.
+   *     The service may additionally send a Retry-After header to indicate when to retry. (status
+   *     code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "describeTableIndexStats",
@@ -2367,12 +2340,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -2393,11 +2365,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "Not found - table or index does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = DescribeTableIndexStats404Response.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -2410,12 +2382,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -2466,7 +2437,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2484,7 +2455,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2496,7 +2467,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2516,18 +2487,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Response of DropTable (status code 200) or Indicates a bad request error. It could be
-   *     caused by an unexpected request body format or other forms of request validation failure,
-   *     such as invalid json. Usually serves application/json content, although in some cases
-   *     simple text/plain content might be returned by the server&#39;s middleware. (status code
-   *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
-   *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   * @return Response of DropTable (status code 200) or Malformed request or validation failure
+   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
+   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
+   *     necessary permissions. (status code 403) or The requested table does not exist (status code
+   *     404) or The service is not ready to handle the request. The client should wait and retry.
+   *     The service may additionally send a Retry-After header to indicate when to retry. (status
+   *     code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "dropTable",
@@ -2545,12 +2511,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -2571,11 +2536,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -2588,12 +2553,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -2632,7 +2596,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2650,7 +2614,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2662,7 +2626,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2690,12 +2654,12 @@ public interface TableApi {
    *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
    *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
    *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or The service is not ready to handle the request.
-   *     The client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   *     permissions. (status code 403) or Not found - table or index does not exist (status code
+   *     404) or The service is not ready to handle the request. The client should wait and retry.
+   *     The service may additionally send a Retry-After header to indicate when to retry. (status
+   *     code 503) or A server-side problem that might not be addressable from the client side. Used
+   *     for server 5xx errors without more specific documentation in individual routes. (status
+   *     code 5XX)
    */
   @Operation(
       operationId = "dropTableIndex",
@@ -2739,11 +2703,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "Not found - table or index does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = DescribeTableIndexStats404Response.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -2826,7 +2790,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2860,18 +2824,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Query execution plan explanation (status code 200) or Indicates a bad request error. It
-   *     could be caused by an unexpected request body format or other forms of request validation
-   *     failure, such as invalid json. Usually serves application/json content, although in some
-   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
-   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
-   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or The service is not ready to handle the request.
-   *     The client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return Query execution plan explanation (status code 200) or Bad request - invalid request or
+   *     invalid SQL (status code 400) or Unauthorized. The request lacks valid authentication
+   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
+   *     have the necessary permissions. (status code 403) or The requested table does not exist
+   *     (status code 404) or The service is not ready to handle the request. The client should wait
+   *     and retry. The service may additionally send a Retry-After header to indicate when to
+   *     retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "explainTableQueryPlan",
@@ -2890,12 +2849,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Bad request - invalid request or invalid SQL",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = DeleteFromTable400Response.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -2916,11 +2874,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -2933,12 +2891,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -2978,7 +2935,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -2996,7 +2953,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -3008,7 +2965,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -3029,18 +2986,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Table statistics (status code 200) or Indicates a bad request error. It could be caused
-   *     by an unexpected request body format or other forms of request validation failure, such as
-   *     invalid json. Usually serves application/json content, although in some cases simple
-   *     text/plain content might be returned by the server&#39;s middleware. (status code 400) or
-   *     Unauthorized. The request lacks valid authentication credentials for the operation. (status
-   *     code 401) or Forbidden. Authenticated user does not have the necessary permissions. (status
-   *     code 403) or A server-side problem that means can not find the specified resource. (status
-   *     code 404) or The service is not ready to handle the request. The client should wait and
-   *     retry. The service may additionally send a Retry-After header to indicate when to retry.
-   *     (status code 503) or A server-side problem that might not be addressable from the client
-   *     side. Used for server 5xx errors without more specific documentation in individual routes.
-   *     (status code 5XX)
+   * @return Table statistics (status code 200) or Malformed request or validation failure (status
+   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
+   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
+   *     permissions. (status code 403) or The requested table does not exist (status code 404) or
+   *     The service is not ready to handle the request. The client should wait and retry. The
+   *     service may additionally send a Retry-After header to indicate when to retry. (status code
+   *     503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "getTableStats",
@@ -3059,12 +3011,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -3085,11 +3036,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -3102,12 +3053,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -3148,7 +3098,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -3166,7 +3116,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -3178,7 +3128,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -3205,12 +3155,11 @@ public interface TableApi {
    *     simple text/plain content might be returned by the server&#39;s middleware. (status code
    *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
    *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   *     (status code 403) or Not found - table or tag does not exist (status code 404) or The
+   *     service is not ready to handle the request. The client should wait and retry. The service
+   *     may additionally send a Retry-After header to indicate when to retry. (status code 503) or
+   *     A server-side problem that might not be addressable from the client side. Used for server
+   *     5xx errors without more specific documentation in individual routes. (status code 5XX)
    */
   @Operation(
       operationId = "getTableTagVersion",
@@ -3254,11 +3203,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "Not found - table or tag does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = GetTableTagVersion404Response.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -3334,7 +3283,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -3373,18 +3322,13 @@ public interface TableApi {
    * @param mode How the insert should behave: - append (default): insert data to the existing table
    *     - overwrite: remove all data in the table and then insert data to it (optional, default to
    *     append)
-   * @return Result of inserting records into a table (status code 200) or Indicates a bad request
-   *     error. It could be caused by an unexpected request body format or other forms of request
-   *     validation failure, such as invalid json. Usually serves application/json content, although
-   *     in some cases simple text/plain content might be returned by the server&#39;s middleware.
-   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
-   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
-   *     necessary permissions. (status code 403) or A server-side problem that means can not find
-   *     the specified resource. (status code 404) or The service is not ready to handle the
-   *     request. The client should wait and retry. The service may additionally send a Retry-After
-   *     header to indicate when to retry. (status code 503) or A server-side problem that might not
-   *     be addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return Result of inserting records into a table (status code 200) or Bad request - invalid
+   *     request or schema mismatch (status code 400) or Unauthorized. The request lacks valid
+   *     authentication credentials for the operation. (status code 401) or Forbidden. Authenticated
+   *     user does not have the necessary permissions. (status code 403) or The requested table does
+   *     not exist (status code 404) or The service is not ready to handle the request. The client
+   *     should wait and retry. The service may additionally send a Retry-After header to indicate
+   *     when to retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "insertIntoTable",
@@ -3403,12 +3347,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Bad request - invalid request or schema mismatch",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InsertIntoTable400Response.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -3429,11 +3372,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -3446,12 +3389,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -3502,7 +3444,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -3520,7 +3462,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -3532,7 +3474,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -3553,18 +3495,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return List of indices on the table (status code 200) or Indicates a bad request error. It
-   *     could be caused by an unexpected request body format or other forms of request validation
-   *     failure, such as invalid json. Usually serves application/json content, although in some
-   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
-   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
-   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or The service is not ready to handle the request.
-   *     The client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return List of indices on the table (status code 200) or Malformed request or validation
+   *     failure (status code 400) or Unauthorized. The request lacks valid authentication
+   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
+   *     have the necessary permissions. (status code 403) or The requested table does not exist
+   *     (status code 404) or The service is not ready to handle the request. The client should wait
+   *     and retry. The service may additionally send a Retry-After header to indicate when to
+   *     retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "listTableIndices",
@@ -3583,12 +3520,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -3609,11 +3545,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -3626,12 +3562,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -3675,7 +3610,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -3693,7 +3628,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -3705,7 +3640,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -3738,12 +3673,11 @@ public interface TableApi {
    *     simple text/plain content might be returned by the server&#39;s middleware. (status code
    *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
    *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   *     (status code 403) or The requested table does not exist (status code 404) or The service is
+   *     not ready to handle the request. The client should wait and retry. The service may
+   *     additionally send a Retry-After header to indicate when to retry. (status code 503) or A
+   *     server-side problem that might not be addressable from the client side. Used for server 5xx
+   *     errors without more specific documentation in individual routes. (status code 5XX)
    */
   @Operation(
       operationId = "listTableTags",
@@ -3788,11 +3722,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -3871,7 +3805,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -3904,18 +3838,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return List of table versions (status code 200) or Indicates a bad request error. It could be
-   *     caused by an unexpected request body format or other forms of request validation failure,
-   *     such as invalid json. Usually serves application/json content, although in some cases
-   *     simple text/plain content might be returned by the server&#39;s middleware. (status code
-   *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
-   *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   * @return List of table versions (status code 200) or Malformed request or validation failure
+   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
+   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
+   *     necessary permissions. (status code 403) or The requested table does not exist (status code
+   *     404) or The service is not ready to handle the request. The client should wait and retry.
+   *     The service may additionally send a Retry-After header to indicate when to retry. (status
+   *     code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "listTableVersions",
@@ -3933,12 +3862,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -3959,11 +3887,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -3976,12 +3904,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -4022,7 +3949,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4040,7 +3967,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4052,7 +3979,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4093,18 +4020,14 @@ public interface TableApi {
    *     row in the source table (optional, default to false)
    * @param whenNotMatchedBySourceDeleteFilt Delete rows from the target table if there is no match
    *     AND the SQL expression evaluates to true (optional)
-   * @return Result of merge insert operation (status code 200) or Indicates a bad request error. It
-   *     could be caused by an unexpected request body format or other forms of request validation
-   *     failure, such as invalid json. Usually serves application/json content, although in some
-   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
-   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
-   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or The service is not ready to handle the request.
-   *     The client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return Result of merge insert operation (status code 200) or Bad request - invalid request,
+   *     column not found, or schema mismatch (status code 400) or Unauthorized. The request lacks
+   *     valid authentication credentials for the operation. (status code 401) or Forbidden.
+   *     Authenticated user does not have the necessary permissions. (status code 403) or The
+   *     requested table does not exist (status code 404) or The service is not ready to handle the
+   *     request. The client should wait and retry. The service may additionally send a Retry-After
+   *     header to indicate when to retry. (status code 503) or Unknown or unclassified error
+   *     (status code 5XX)
    */
   @Operation(
       operationId = "mergeInsertIntoTable",
@@ -4123,12 +4046,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Bad request - invalid request, column not found, or schema mismatch",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = MergeInsertIntoTable400Response.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -4149,11 +4071,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -4166,12 +4088,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -4268,7 +4189,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4286,7 +4207,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4298,7 +4219,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4319,18 +4240,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Query results in Arrow IPC file or stream format (status code 200) or Indicates a bad
-   *     request error. It could be caused by an unexpected request body format or other forms of
-   *     request validation failure, such as invalid json. Usually serves application/json content,
-   *     although in some cases simple text/plain content might be returned by the server&#39;s
-   *     middleware. (status code 400) or Unauthorized. The request lacks valid authentication
-   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
-   *     have the necessary permissions. (status code 403) or A server-side problem that means can
-   *     not find the specified resource. (status code 404) or The service is not ready to handle
-   *     the request. The client should wait and retry. The service may additionally send a
-   *     Retry-After header to indicate when to retry. (status code 503) or A server-side problem
-   *     that might not be addressable from the client side. Used for server 5xx errors without more
-   *     specific documentation in individual routes. (status code 5XX)
+   * @return Query results in Arrow IPC file or stream format (status code 200) or Bad request -
+   *     invalid request or invalid SQL (status code 400) or Unauthorized. The request lacks valid
+   *     authentication credentials for the operation. (status code 401) or Forbidden. Authenticated
+   *     user does not have the necessary permissions. (status code 403) or The requested table does
+   *     not exist (status code 404) or The service is not ready to handle the request. The client
+   *     should wait and retry. The service may additionally send a Retry-After header to indicate
+   *     when to retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "queryTable",
@@ -4355,18 +4271,17 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Bad request - invalid request or invalid SQL",
             content = {
               @Content(
                   mediaType = "application/vnd.apache.arrow.file",
-                  schema = @Schema(implementation = ErrorResponse.class)),
+                  schema = @Schema(implementation = DeleteFromTable400Response.class)),
               @Content(
                   mediaType = "application/vnd.apache.arrow.stream",
-                  schema = @Schema(implementation = ErrorResponse.class)),
+                  schema = @Schema(implementation = DeleteFromTable400Response.class)),
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = DeleteFromTable400Response.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -4399,17 +4314,17 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/vnd.apache.arrow.file",
-                  schema = @Schema(implementation = ErrorResponse.class)),
+                  schema = @Schema(implementation = TableNotFoundError.class)),
               @Content(
                   mediaType = "application/vnd.apache.arrow.stream",
-                  schema = @Schema(implementation = ErrorResponse.class)),
+                  schema = @Schema(implementation = TableNotFoundError.class)),
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -4428,18 +4343,17 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/vnd.apache.arrow.file",
-                  schema = @Schema(implementation = ErrorResponse.class)),
+                  schema = @Schema(implementation = UnknownError.class)),
               @Content(
                   mediaType = "application/vnd.apache.arrow.stream",
-                  schema = @Schema(implementation = ErrorResponse.class)),
+                  schema = @Schema(implementation = UnknownError.class)),
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -4478,7 +4392,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4496,7 +4410,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4508,7 +4422,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4529,20 +4443,15 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Table properties result when registering a table (status code 200) or Indicates a bad
-   *     request error. It could be caused by an unexpected request body format or other forms of
-   *     request validation failure, such as invalid json. Usually serves application/json content,
-   *     although in some cases simple text/plain content might be returned by the server&#39;s
-   *     middleware. (status code 400) or Unauthorized. The request lacks valid authentication
-   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
-   *     have the necessary permissions. (status code 403) or A server-side problem that means can
-   *     not find the specified resource. (status code 404) or Not Acceptable / Unsupported
-   *     Operation. The server does not support this operation. (status code 406) or The request
-   *     conflicts with the current state of the target resource. (status code 409) or The service
-   *     is not ready to handle the request. The client should wait and retry. The service may
-   *     additionally send a Retry-After header to indicate when to retry. (status code 503) or A
-   *     server-side problem that might not be addressable from the client side. Used for server 5xx
-   *     errors without more specific documentation in individual routes. (status code 5XX)
+   * @return Table properties result when registering a table (status code 200) or Malformed request
+   *     or validation failure (status code 400) or Unauthorized. The request lacks valid
+   *     authentication credentials for the operation. (status code 401) or Forbidden. Authenticated
+   *     user does not have the necessary permissions. (status code 403) or The parent namespace
+   *     does not exist (status code 404) or Not Acceptable / Unsupported Operation. The server does
+   *     not support this operation. (status code 406) or A table with the same name already exists
+   *     (status code 409) or The service is not ready to handle the request. The client should wait
+   *     and retry. The service may additionally send a Retry-After header to indicate when to
+   *     retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "registerTable",
@@ -4560,12 +4469,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -4586,11 +4494,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The parent namespace does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = ParentNamespaceNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "406",
@@ -4603,11 +4511,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "409",
-            description = "The request conflicts with the current state of the target resource.",
+            description = "A table with the same name already exists",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableAlreadyExistsError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -4620,12 +4528,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -4666,7 +4573,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4684,7 +4591,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 6, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Parent namespace not found\", \"type\" : \"lance-namespace:103\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4696,7 +4603,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table already exists\", \"type\" : \"lance-namespace:202\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4708,7 +4615,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4729,18 +4636,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Table restore operation result (status code 200) or Indicates a bad request error. It
-   *     could be caused by an unexpected request body format or other forms of request validation
-   *     failure, such as invalid json. Usually serves application/json content, although in some
-   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
-   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
-   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or The service is not ready to handle the request.
-   *     The client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return Table restore operation result (status code 200) or Malformed request or validation
+   *     failure (status code 400) or Unauthorized. The request lacks valid authentication
+   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
+   *     have the necessary permissions. (status code 403) or Not found - table or version does not
+   *     exist (status code 404) or The service is not ready to handle the request. The client
+   *     should wait and retry. The service may additionally send a Retry-After header to indicate
+   *     when to retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "restoreTable",
@@ -4758,12 +4660,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -4784,11 +4685,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "Not found - table or version does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = RestoreTable404Response.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -4801,12 +4702,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -4846,7 +4746,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4864,7 +4764,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4876,7 +4776,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -4900,18 +4800,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Success, no content (status code 200) or Indicates a bad request error. It could be
-   *     caused by an unexpected request body format or other forms of request validation failure,
-   *     such as invalid json. Usually serves application/json content, although in some cases
-   *     simple text/plain content might be returned by the server&#39;s middleware. (status code
-   *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
-   *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   * @return Success, no content (status code 200) or Malformed request or validation failure
+   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
+   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
+   *     necessary permissions. (status code 403) or The requested table does not exist (status code
+   *     404) or The service is not ready to handle the request. The client should wait and retry.
+   *     The service may additionally send a Retry-After header to indicate when to retry. (status
+   *     code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "tableExists",
@@ -4923,12 +4818,11 @@ public interface TableApi {
         @ApiResponse(responseCode = "200", description = "Success, no content"),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -4949,11 +4843,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -4966,12 +4860,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -5004,7 +4897,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -5022,7 +4915,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -5034,7 +4927,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -5055,18 +4948,13 @@ public interface TableApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Update successful (status code 200) or Indicates a bad request error. It could be
-   *     caused by an unexpected request body format or other forms of request validation failure,
-   *     such as invalid json. Usually serves application/json content, although in some cases
-   *     simple text/plain content might be returned by the server&#39;s middleware. (status code
-   *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
-   *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
+   * @return Update successful (status code 200) or Bad request - invalid request, column not found,
+   *     or invalid SQL (status code 400) or Unauthorized. The request lacks valid authentication
+   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
+   *     have the necessary permissions. (status code 403) or The requested table does not exist
    *     (status code 404) or The service is not ready to handle the request. The client should wait
    *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   *     retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "updateTable",
@@ -5084,12 +4972,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Bad request - invalid request, column not found, or invalid SQL",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UpdateTable400Response.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -5110,11 +4997,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested table does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TableNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -5127,12 +5014,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -5172,7 +5058,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -5190,7 +5076,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -5202,7 +5088,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -5229,12 +5115,12 @@ public interface TableApi {
    *     simple text/plain content might be returned by the server&#39;s middleware. (status code
    *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
    *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   *     (status code 403) or Not found - table, tag, or version does not exist (status code 404) or
+   *     The service is not ready to handle the request. The client should wait and retry. The
+   *     service may additionally send a Retry-After header to indicate when to retry. (status code
+   *     503) or A server-side problem that might not be addressable from the client side. Used for
+   *     server 5xx errors without more specific documentation in individual routes. (status code
+   *     5XX)
    */
   @Operation(
       operationId = "updateTableTag",
@@ -5271,11 +5157,11 @@ public interface TableApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "Not found - table, tag, or version does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UpdateTableTag404Response.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -5346,7 +5232,7 @@ public interface TableApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Table not found\", \"type\" : \"lance-namespace:201\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }

@@ -18,6 +18,8 @@ import org.lance.namespace.server.springboot.model.AlterTransactionResponse;
 import org.lance.namespace.server.springboot.model.DescribeTransactionRequest;
 import org.lance.namespace.server.springboot.model.DescribeTransactionResponse;
 import org.lance.namespace.server.springboot.model.ErrorResponse;
+import org.lance.namespace.server.springboot.model.TransactionConflictError;
+import org.lance.namespace.server.springboot.model.TransactionNotFoundError;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -68,13 +70,12 @@ public interface TransactionApi {
    *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
    *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
    *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or The request conflicts with the current state of
-   *     the target resource. (status code 409) or The service is not ready to handle the request.
-   *     The client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   *     permissions. (status code 403) or The requested transaction does not exist (status code
+   *     404) or Transaction failed due to concurrent modification (status code 409) or The service
+   *     is not ready to handle the request. The client should wait and retry. The service may
+   *     additionally send a Retry-After header to indicate when to retry. (status code 503) or A
+   *     server-side problem that might not be addressable from the client side. Used for server 5xx
+   *     errors without more specific documentation in individual routes. (status code 5XX)
    */
   @Operation(
       operationId = "alterTransaction",
@@ -119,19 +120,19 @@ public interface TransactionApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested transaction does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TransactionNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "409",
-            description = "The request conflicts with the current state of the target resource.",
+            description = "Transaction failed due to concurrent modification",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TransactionConflictError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -208,13 +209,13 @@ public interface TransactionApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Transaction not found\", \"type\" : \"lance-namespace:501\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Transaction conflict\", \"type\" : \"lance-namespace:502\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -253,12 +254,12 @@ public interface TransactionApi {
    *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
    *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
    *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or The service is not ready to handle the request.
-   *     The client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   *     permissions. (status code 403) or The requested transaction does not exist (status code
+   *     404) or The service is not ready to handle the request. The client should wait and retry.
+   *     The service may additionally send a Retry-After header to indicate when to retry. (status
+   *     code 503) or A server-side problem that might not be addressable from the client side. Used
+   *     for server 5xx errors without more specific documentation in individual routes. (status
+   *     code 5XX)
    */
   @Operation(
       operationId = "describeTransaction",
@@ -302,11 +303,11 @@ public interface TransactionApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested transaction does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = TransactionNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -383,7 +384,7 @@ public interface TransactionApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Transaction not found\", \"type\" : \"lance-namespace:501\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }

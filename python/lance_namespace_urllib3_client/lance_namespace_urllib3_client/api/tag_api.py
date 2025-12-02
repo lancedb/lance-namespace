@@ -110,8 +110,8 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '409': "ErrorResponse",
+            '404': "RestoreTable404Response",
+            '409': "TableTagAlreadyExistsError",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -192,8 +192,8 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '409': "ErrorResponse",
+            '404': "RestoreTable404Response",
+            '409': "TableTagAlreadyExistsError",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -274,8 +274,8 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '409': "ErrorResponse",
+            '404': "RestoreTable404Response",
+            '409': "TableTagAlreadyExistsError",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -436,7 +436,7 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "GetTableTagVersion404Response",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -517,7 +517,7 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "GetTableTagVersion404Response",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -598,7 +598,7 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "GetTableTagVersion404Response",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -759,7 +759,7 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "GetTableTagVersion404Response",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -840,7 +840,7 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "GetTableTagVersion404Response",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -921,7 +921,7 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "GetTableTagVersion404Response",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -1086,7 +1086,7 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -1171,7 +1171,7 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -1256,7 +1256,7 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "TableNotFoundError",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -1411,7 +1411,7 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "UpdateTableTag404Response",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -1492,7 +1492,7 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "UpdateTableTag404Response",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }
@@ -1573,7 +1573,7 @@ class TagApi:
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "UpdateTableTag404Response",
             '503': "ErrorResponse",
             '5XX': "ErrorResponse",
         }

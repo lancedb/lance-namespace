@@ -107,21 +107,27 @@ paths:
         200:
           $ref: '#/components/responses/CreateNamespaceResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          description: Bad request - invalid request format or identifier
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidRequestError'
+                  - $ref: '#/components/schemas/InvalidIdentifierError'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/ParentNamespaceNotFoundErrorResponse'
         406:
           $ref: '#/components/responses/UnsupportedOperationErrorResponse'
         409:
-          $ref: '#/components/responses/ConflictErrorResponse'
+          $ref: '#/components/responses/NamespaceAlreadyExistsErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/namespace/{id}/list:
     parameters:
@@ -154,19 +160,19 @@ paths:
         200:
           $ref: '#/components/responses/ListNamespacesResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/NamespaceNotFoundErrorResponse'
         406:
           $ref: '#/components/responses/UnsupportedOperationErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/namespace/{id}/describe:
     parameters:
@@ -190,17 +196,17 @@ paths:
         200:
           $ref: '#/components/responses/DescribeNamespaceResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/NamespaceNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/namespace/{id}/drop:
     parameters:
@@ -224,19 +230,19 @@ paths:
         200:
           $ref: '#/components/responses/DropNamespaceResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/NamespaceNotFoundErrorResponse'
         409:
-          $ref: '#/components/responses/ConflictErrorResponse'
+          $ref: '#/components/responses/NamespaceNotEmptyErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/namespace/{id}/exists:
     parameters:
@@ -263,17 +269,17 @@ paths:
         200:
           description: Success, no content
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/NamespaceNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/namespace/{id}/table/list:
     parameters:
@@ -307,19 +313,19 @@ paths:
         200:
           $ref: '#/components/responses/ListTablesResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/NamespaceNotFoundErrorResponse'
         406:
           $ref: '#/components/responses/UnsupportedOperationErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   # Table Metadata APIs
 
@@ -345,21 +351,21 @@ paths:
         200:
           $ref: '#/components/responses/RegisterTableResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/ParentNamespaceNotFoundErrorResponse'
         406:
           $ref: '#/components/responses/UnsupportedOperationErrorResponse'
         409:
-          $ref: '#/components/responses/ConflictErrorResponse'
+          $ref: '#/components/responses/TableAlreadyExistsErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/describe:
     parameters:
@@ -383,17 +389,17 @@ paths:
         200:
           $ref: '#/components/responses/DescribeTableResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/exists:
     parameters:
@@ -424,17 +430,17 @@ paths:
         200:
           description: Success, no content
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/drop:
     parameters:
@@ -458,17 +464,17 @@ paths:
         200:
           $ref: '#/components/responses/DropTableResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/deregister:
     parameters:
@@ -492,17 +498,17 @@ paths:
         200:
           $ref: '#/components/responses/DeregisterTableResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/restore:
     parameters:
@@ -526,17 +532,23 @@ paths:
         200:
           $ref: '#/components/responses/RestoreTableResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          description: Not found - table or version does not exist
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TableNotFoundError'
+                  - $ref: '#/components/schemas/TableVersionNotFoundError'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/version/list:
     parameters:
@@ -560,17 +572,17 @@ paths:
         200:
           $ref: '#/components/responses/ListTableVersionsResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/alter_columns:
     parameters:
@@ -594,17 +606,23 @@ paths:
         200:
           $ref: '#/components/responses/AlterTableAlterColumnsResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          description: Bad request - invalid request or column not found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidRequestError'
+                  - $ref: '#/components/schemas/TableColumnNotFoundError'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/drop_columns:
     parameters:
@@ -628,17 +646,23 @@ paths:
         200:
           $ref: '#/components/responses/AlterTableDropColumnsResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          description: Bad request - invalid request or column not found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidRequestError'
+                  - $ref: '#/components/schemas/TableColumnNotFoundError'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/stats:
     parameters:
@@ -662,17 +686,17 @@ paths:
         200:
           $ref: '#/components/responses/GetTableStatsResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   # Table Data APIs
 
@@ -719,17 +743,23 @@ paths:
         200:
           $ref: '#/components/responses/InsertIntoTableResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          description: Bad request - invalid request or schema mismatch
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidRequestError'
+                  - $ref: '#/components/schemas/TableSchemaMismatchError'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/merge_insert:
     parameters:
@@ -807,17 +837,24 @@ paths:
         200:
           $ref: '#/components/responses/MergeInsertIntoTableResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          description: Bad request - invalid request, column not found, or schema mismatch
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidRequestError'
+                  - $ref: '#/components/schemas/TableColumnNotFoundError'
+                  - $ref: '#/components/schemas/TableSchemaMismatchError'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/update:
     parameters:
@@ -842,17 +879,24 @@ paths:
         200:
           $ref: '#/components/responses/UpdateTableResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          description: Bad request - invalid request, column not found, or invalid SQL
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidRequestError'
+                  - $ref: '#/components/schemas/TableColumnNotFoundError'
+                  - $ref: '#/components/schemas/InvalidSqlExpressionError'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/delete:
     parameters:
@@ -877,17 +921,23 @@ paths:
         200:
           $ref: '#/components/responses/DeleteFromTableResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          description: Bad request - invalid request or invalid SQL
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidRequestError'
+                  - $ref: '#/components/schemas/InvalidSqlExpressionError'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/query:
     parameters:
@@ -913,17 +963,23 @@ paths:
         200:
           $ref: '#/components/responses/QueryTableResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          description: Bad request - invalid request or invalid SQL
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidRequestError'
+                  - $ref: '#/components/schemas/InvalidSqlExpressionError'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/count_rows:
     parameters:
@@ -947,17 +1003,23 @@ paths:
         200:
           $ref: '#/components/responses/CountTableRowsResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          description: Bad request - invalid request or invalid SQL
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidRequestError'
+                  - $ref: '#/components/schemas/InvalidSqlExpressionError'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/create:
     parameters:
@@ -1012,17 +1074,25 @@ paths:
         200:
           $ref: '#/components/responses/CreateTableResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          description: Bad request - invalid request or invalid schema
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidRequestError'
+                  - $ref: '#/components/schemas/InvalidTableSchemaError'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/ParentNamespaceNotFoundErrorResponse'
+        409:
+          $ref: '#/components/responses/TableAlreadyExistsErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/explain_plan:
     parameters:
@@ -1047,17 +1117,23 @@ paths:
         200:
           $ref: '#/components/responses/ExplainTableQueryPlanResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          description: Bad request - invalid request or invalid SQL
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidRequestError'
+                  - $ref: '#/components/schemas/InvalidSqlExpressionError'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/analyze_plan:
     parameters:
@@ -1082,17 +1158,23 @@ paths:
         200:
           $ref: '#/components/responses/AnalyzeTableQueryPlanResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          description: Bad request - invalid request or invalid SQL
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidRequestError'
+                  - $ref: '#/components/schemas/InvalidSqlExpressionError'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/add_columns:
     parameters:
@@ -1116,17 +1198,24 @@ paths:
         200:
           $ref: '#/components/responses/AlterTableAddColumnsResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          description: Bad request - invalid request, invalid schema, or invalid SQL
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidRequestError'
+                  - $ref: '#/components/schemas/InvalidTableSchemaError'
+                  - $ref: '#/components/schemas/InvalidSqlExpressionError'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   # Table Index APIs
 
@@ -1157,17 +1246,26 @@ paths:
         200:
           $ref: '#/components/responses/CreateTableIndexResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          description: Bad request - invalid request, column not found, or invalid index config
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidRequestError'
+                  - $ref: '#/components/schemas/TableColumnNotFoundError'
+                  - $ref: '#/components/schemas/InvalidTableIndexConfigurationError'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
+        409:
+          $ref: '#/components/responses/TableIndexAlreadyExistsErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/index/list:
     parameters:
@@ -1194,17 +1292,17 @@ paths:
         200:
           $ref: '#/components/responses/ListTableIndicesResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/index/{index_name}/stats:
     parameters:
@@ -1237,17 +1335,23 @@ paths:
         200:
           $ref: '#/components/responses/DescribeTableIndexStatsResponse'
         400:
-          $ref: '#/components/responses/BadRequestErrorResponse'
+          $ref: '#/components/responses/InvalidRequestErrorResponse'
         401:
           $ref: '#/components/responses/UnauthorizedErrorResponse'
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          description: Not found - table or index does not exist
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TableNotFoundError'
+                  - $ref: '#/components/schemas/TableIndexNotFoundError'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
-          $ref: '#/components/responses/ServerErrorResponse'
+          $ref: '#/components/responses/UnknownErrorResponse'
 
   /v1/table/{id}/index/{index_name}/drop:
     parameters:
@@ -1284,7 +1388,13 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          description: Not found - table or index does not exist
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TableNotFoundError'
+                  - $ref: '#/components/schemas/TableIndexNotFoundError'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
@@ -1331,7 +1441,7 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TableNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
@@ -1366,7 +1476,13 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          description: Not found - table or tag does not exist
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TableNotFoundError'
+                  - $ref: '#/components/schemas/TableTagNotFoundError'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
@@ -1408,9 +1524,9 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/ParentNamespaceNotFoundErrorResponse'
         409:
-          $ref: '#/components/responses/ConflictErrorResponse'
+          $ref: '#/components/responses/TableAlreadyExistsErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
@@ -1445,9 +1561,15 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          description: Not found - table or version does not exist
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TableNotFoundError'
+                  - $ref: '#/components/schemas/TableVersionNotFoundError'
         409:
-          $ref: '#/components/responses/ConflictErrorResponse'
+          $ref: '#/components/responses/TableTagAlreadyExistsErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
@@ -1482,7 +1604,13 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          description: Not found - table or tag does not exist
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TableNotFoundError'
+                  - $ref: '#/components/schemas/TableTagNotFoundError'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
@@ -1517,7 +1645,14 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          description: Not found - table, tag, or version does not exist
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TableNotFoundError'
+                  - $ref: '#/components/schemas/TableTagNotFoundError'
+                  - $ref: '#/components/schemas/TableVersionNotFoundError'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
@@ -1553,7 +1688,7 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TransactionNotFoundErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
@@ -1588,9 +1723,9 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenErrorResponse'
         404:
-          $ref: '#/components/responses/NotFoundErrorResponse'
+          $ref: '#/components/responses/TransactionNotFoundErrorResponse'
         409:
-          $ref: '#/components/responses/ConflictErrorResponse'
+          $ref: '#/components/responses/TransactionConflictErrorResponse'
         503:
           $ref: '#/components/responses/ServiceUnavailableErrorResponse'
         5XX:
@@ -1659,6 +1794,595 @@ components:
             This can be a URI, a request or response ID, 
             or anything that the implementation can recognize to trace specific occurrence of the error.
           example: /login/log/abc123
+
+    # Lance Namespace Specific Error Schemas
+    # Error codes are grouped by category:
+    # - 0: Unknown error
+    # - 1xx: Namespace errors
+    # - 2xx: Table errors
+    # - 3xx: Index errors
+    # - 4xx: Tag errors
+    # - 5xx: Transaction errors
+    # - 6xx: Generic/validation errors
+
+    # Generic Errors
+
+    UnknownError:
+      type: object
+      description: Unknown or unclassified error
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Unknown error"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [500]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:0"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    InvalidRequestError:
+      type: object
+      description: Malformed request or validation failure
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Invalid request"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [400]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:601"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    InvalidSqlExpressionError:
+      type: object
+      description: Invalid SQL expression provided
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Invalid SQL expression"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [400]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:602"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    InvalidIdentifierError:
+      type: object
+      description: Invalid identifier format
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Invalid identifier"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [400]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:603"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    # Namespace Errors (1xx)
+
+    NamespaceNotFoundError:
+      type: object
+      description: The requested namespace does not exist
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Namespace not found"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [404]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:101"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    NamespaceAlreadyExistsError:
+      type: object
+      description: A namespace with the same name already exists
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Namespace already exists"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [409]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:102"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    ParentNamespaceNotFoundError:
+      type: object
+      description: The parent namespace does not exist
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Parent namespace not found"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [404]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:103"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    NamespaceNotEmptyError:
+      type: object
+      description: Cannot drop namespace because it contains tables or child namespaces
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Namespace not empty"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [409]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:104"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    # Table Errors (2xx)
+
+    TableNotFoundError:
+      type: object
+      description: The requested table does not exist
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Table not found"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [404]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:201"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    TableAlreadyExistsError:
+      type: object
+      description: A table with the same name already exists
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Table already exists"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [409]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:202"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    TableVersionNotFoundError:
+      type: object
+      description: The requested table version does not exist
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Table version not found"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [404]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:203"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    TableColumnNotFoundError:
+      type: object
+      description: The specified column does not exist in the table
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Column not found"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [400]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:204"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    InvalidTableSchemaError:
+      type: object
+      description: The provided schema is invalid
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Invalid schema"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [400]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:205"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    TableSchemaMismatchError:
+      type: object
+      description: The data schema does not match the table schema
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Schema mismatch"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [400]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:206"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    # Index Errors (3xx)
+
+    TableIndexNotFoundError:
+      type: object
+      description: The requested index does not exist
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Index not found"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [404]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:301"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    TableIndexAlreadyExistsError:
+      type: object
+      description: An index with the same name already exists
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Index already exists"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [409]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:302"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    InvalidTableIndexConfigurationError:
+      type: object
+      description: The provided index configuration is invalid
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Invalid index configuration"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [400]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:303"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    # Tag Errors (4xx)
+
+    TableTagNotFoundError:
+      type: object
+      description: The requested tag does not exist
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Tag not found"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [404]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:401"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    TableTagAlreadyExistsError:
+      type: object
+      description: A tag with the same name already exists
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Tag already exists"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [409]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:402"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    # Transaction Errors (5xx)
+
+    TransactionNotFoundError:
+      type: object
+      description: The requested transaction does not exist
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Transaction not found"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [404]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:501"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
+
+    TransactionConflictError:
+      type: object
+      description: Transaction failed due to concurrent modification
+      required:
+        - error
+        - code
+        - type
+      properties:
+        error:
+          type: string
+          description: Brief error message
+          example: "Transaction conflict"
+        code:
+          type: integer
+          description: HTTP status code
+          enum: [409]
+        type:
+          type: string
+          description: Error type identifier
+          enum: ["lance-namespace:502"]
+        detail:
+          type: string
+          description: Detailed error explanation
+        instance:
+          type: string
+          description: Specific occurrence identifier
 
     CreateNamespaceRequest:
       type: object
@@ -3610,6 +4334,314 @@ components:
             "status": 500,
             "detail": "",
             "instance": "/v1/namespaces"
+          }
+
+    # Lance Namespace Specific Error Responses
+
+    # Generic Error Responses
+
+    UnknownErrorResponse:
+      description: Unknown or unclassified error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnknownError'
+          example: {
+            "error": "Unknown error",
+            "code": 500,
+            "type": "lance-namespace:0",
+            "detail": "An unexpected error occurred",
+            "instance": "/v1/namespace/my-ns"
+          }
+
+    InvalidRequestErrorResponse:
+      description: Malformed request or validation failure
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidRequestError'
+          example: {
+            "error": "Invalid request",
+            "code": 400,
+            "type": "lance-namespace:601",
+            "detail": "Request body is not valid JSON",
+            "instance": "/v1/namespace/my-ns/create"
+          }
+
+    InvalidSqlExpressionErrorResponse:
+      description: Invalid SQL expression provided
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidSqlExpressionError'
+          example: {
+            "error": "Invalid SQL expression",
+            "code": 400,
+            "type": "lance-namespace:602",
+            "detail": "Syntax error in filter expression: unexpected token 'FORM'",
+            "instance": "/v1/table/my-table/query"
+          }
+
+    InvalidIdentifierErrorResponse:
+      description: Invalid identifier format
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidIdentifierError'
+          example: {
+            "error": "Invalid identifier",
+            "code": 400,
+            "type": "lance-namespace:603",
+            "detail": "Identifier contains invalid characters",
+            "instance": "/v1/namespace/my-ns/create"
+          }
+
+    # Namespace Error Responses
+
+    NamespaceNotFoundErrorResponse:
+      description: The requested namespace does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NamespaceNotFoundError'
+          example: {
+            "error": "Namespace not found",
+            "code": 404,
+            "type": "lance-namespace:101",
+            "detail": "Namespace 'prod$analytics' does not exist",
+            "instance": "/v1/namespace/prod$analytics/describe"
+          }
+
+    NamespaceAlreadyExistsErrorResponse:
+      description: A namespace with the same name already exists
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NamespaceAlreadyExistsError'
+          example: {
+            "error": "Namespace already exists",
+            "code": 409,
+            "type": "lance-namespace:102",
+            "detail": "Namespace 'prod$analytics' already exists",
+            "instance": "/v1/namespace/prod$analytics/create"
+          }
+
+    ParentNamespaceNotFoundErrorResponse:
+      description: The parent namespace does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ParentNamespaceNotFoundError'
+          example: {
+            "error": "Parent namespace not found",
+            "code": 404,
+            "type": "lance-namespace:103",
+            "detail": "Parent namespace 'prod' does not exist",
+            "instance": "/v1/namespace/prod$analytics/create"
+          }
+
+    NamespaceNotEmptyErrorResponse:
+      description: Cannot drop namespace because it contains tables or child namespaces
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NamespaceNotEmptyError'
+          example: {
+            "error": "Namespace not empty",
+            "code": 409,
+            "type": "lance-namespace:104",
+            "detail": "Namespace 'prod' contains 3 tables and 2 child namespaces",
+            "instance": "/v1/namespace/prod/drop"
+          }
+
+    # Table Error Responses
+
+    TableNotFoundErrorResponse:
+      description: The requested table does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TableNotFoundError'
+          example: {
+            "error": "Table not found",
+            "code": 404,
+            "type": "lance-namespace:201",
+            "detail": "Table 'prod$analytics$users' does not exist",
+            "instance": "/v1/table/prod$analytics$users/describe"
+          }
+
+    TableAlreadyExistsErrorResponse:
+      description: A table with the same name already exists
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TableAlreadyExistsError'
+          example: {
+            "error": "Table already exists",
+            "code": 409,
+            "type": "lance-namespace:202",
+            "detail": "Table 'prod$analytics$users' already exists",
+            "instance": "/v1/table/prod$analytics$users/create"
+          }
+
+    TableVersionNotFoundErrorResponse:
+      description: The requested table version does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TableVersionNotFoundError'
+          example: {
+            "error": "Table version not found",
+            "code": 404,
+            "type": "lance-namespace:203",
+            "detail": "Version 42 does not exist for table 'prod$analytics$users'",
+            "instance": "/v1/table/prod$analytics$users/restore"
+          }
+
+    TableColumnNotFoundErrorResponse:
+      description: The specified column does not exist in the table
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TableColumnNotFoundError'
+          example: {
+            "error": "Column not found",
+            "code": 400,
+            "type": "lance-namespace:204",
+            "detail": "Column 'user_email' does not exist in table 'users'",
+            "instance": "/v1/table/prod$analytics$users/alter_columns"
+          }
+
+    InvalidTableSchemaErrorResponse:
+      description: The provided schema is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidTableSchemaError'
+          example: {
+            "error": "Invalid schema",
+            "code": 400,
+            "type": "lance-namespace:205",
+            "detail": "Invalid data type 'varchar' for column 'id'",
+            "instance": "/v1/table/prod$analytics$users/create"
+          }
+
+    TableSchemaMismatchErrorResponse:
+      description: The data schema does not match the table schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TableSchemaMismatchError'
+          example: {
+            "error": "Schema mismatch",
+            "code": 400,
+            "type": "lance-namespace:206",
+            "detail": "Column 'age' has type Int32 but data has type String",
+            "instance": "/v1/table/prod$analytics$users/insert"
+          }
+
+    # Index Error Responses
+
+    TableIndexNotFoundErrorResponse:
+      description: The requested index does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TableIndexNotFoundError'
+          example: {
+            "error": "Index not found",
+            "code": 404,
+            "type": "lance-namespace:301",
+            "detail": "Index 'vector_idx' does not exist on table 'users'",
+            "instance": "/v1/table/prod$analytics$users/index/vector_idx/stats"
+          }
+
+    TableIndexAlreadyExistsErrorResponse:
+      description: An index with the same name already exists
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TableIndexAlreadyExistsError'
+          example: {
+            "error": "Index already exists",
+            "code": 409,
+            "type": "lance-namespace:302",
+            "detail": "Index 'vector_idx' already exists on table 'users'",
+            "instance": "/v1/table/prod$analytics$users/create_index"
+          }
+
+    InvalidTableIndexConfigurationErrorResponse:
+      description: The provided index configuration is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidTableIndexConfigurationError'
+          example: {
+            "error": "Invalid index configuration",
+            "code": 400,
+            "type": "lance-namespace:303",
+            "detail": "Invalid distance metric 'hamming' for vector column",
+            "instance": "/v1/table/prod$analytics$users/create_index"
+          }
+
+    # Tag Error Responses
+
+    TableTagNotFoundErrorResponse:
+      description: The requested tag does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TableTagNotFoundError'
+          example: {
+            "error": "Tag not found",
+            "code": 404,
+            "type": "lance-namespace:401",
+            "detail": "Tag 'v1.0' does not exist on table 'users'",
+            "instance": "/v1/table/prod$analytics$users/tags/version"
+          }
+
+    TableTagAlreadyExistsErrorResponse:
+      description: A tag with the same name already exists
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TableTagAlreadyExistsError'
+          example: {
+            "error": "Tag already exists",
+            "code": 409,
+            "type": "lance-namespace:402",
+            "detail": "Tag 'v1.0' already exists on table 'users'",
+            "instance": "/v1/table/prod$analytics$users/tags/create"
+          }
+
+    # Transaction Error Responses
+
+    TransactionNotFoundErrorResponse:
+      description: The requested transaction does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TransactionNotFoundError'
+          example: {
+            "error": "Transaction not found",
+            "code": 404,
+            "type": "lance-namespace:501",
+            "detail": "Transaction 'tx-12345' does not exist",
+            "instance": "/v1/transaction/tx-12345/describe"
+          }
+
+    TransactionConflictErrorResponse:
+      description: Transaction failed due to concurrent modification
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TransactionConflictError'
+          example: {
+            "error": "Transaction conflict",
+            "code": 409,
+            "type": "lance-namespace:502",
+            "detail": "Transaction 'tx-12345' conflicts with another transaction",
+            "instance": "/v1/transaction/tx-12345/alter"
           }
 
   examples:

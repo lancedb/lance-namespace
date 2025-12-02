@@ -13,6 +13,7 @@
  */
 package org.lance.namespace.server.springboot.api;
 
+import org.lance.namespace.server.springboot.model.CreateNamespace400Response;
 import org.lance.namespace.server.springboot.model.CreateNamespaceRequest;
 import org.lance.namespace.server.springboot.model.CreateNamespaceResponse;
 import org.lance.namespace.server.springboot.model.DescribeNamespaceRequest;
@@ -20,9 +21,15 @@ import org.lance.namespace.server.springboot.model.DescribeNamespaceResponse;
 import org.lance.namespace.server.springboot.model.DropNamespaceRequest;
 import org.lance.namespace.server.springboot.model.DropNamespaceResponse;
 import org.lance.namespace.server.springboot.model.ErrorResponse;
+import org.lance.namespace.server.springboot.model.InvalidRequestError;
 import org.lance.namespace.server.springboot.model.ListNamespacesResponse;
 import org.lance.namespace.server.springboot.model.ListTablesResponse;
+import org.lance.namespace.server.springboot.model.NamespaceAlreadyExistsError;
 import org.lance.namespace.server.springboot.model.NamespaceExistsRequest;
+import org.lance.namespace.server.springboot.model.NamespaceNotEmptyError;
+import org.lance.namespace.server.springboot.model.NamespaceNotFoundError;
+import org.lance.namespace.server.springboot.model.ParentNamespaceNotFoundError;
+import org.lance.namespace.server.springboot.model.UnknownError;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -69,20 +76,15 @@ public interface NamespaceApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Result of creating a namespace (status code 200) or Indicates a bad request error. It
-   *     could be caused by an unexpected request body format or other forms of request validation
-   *     failure, such as invalid json. Usually serves application/json content, although in some
-   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
-   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
-   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or Not Acceptable / Unsupported Operation. The server
-   *     does not support this operation. (status code 406) or The request conflicts with the
-   *     current state of the target resource. (status code 409) or The service is not ready to
-   *     handle the request. The client should wait and retry. The service may additionally send a
-   *     Retry-After header to indicate when to retry. (status code 503) or A server-side problem
-   *     that might not be addressable from the client side. Used for server 5xx errors without more
-   *     specific documentation in individual routes. (status code 5XX)
+   * @return Result of creating a namespace (status code 200) or Bad request - invalid request
+   *     format or identifier (status code 400) or Unauthorized. The request lacks valid
+   *     authentication credentials for the operation. (status code 401) or Forbidden. Authenticated
+   *     user does not have the necessary permissions. (status code 403) or The parent namespace
+   *     does not exist (status code 404) or Not Acceptable / Unsupported Operation. The server does
+   *     not support this operation. (status code 406) or A namespace with the same name already
+   *     exists (status code 409) or The service is not ready to handle the request. The client
+   *     should wait and retry. The service may additionally send a Retry-After header to indicate
+   *     when to retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "createNamespace",
@@ -101,12 +103,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Bad request - invalid request format or identifier",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = CreateNamespace400Response.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -127,11 +128,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The parent namespace does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = ParentNamespaceNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "406",
@@ -144,11 +145,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "409",
-            description = "The request conflicts with the current state of the target resource.",
+            description = "A namespace with the same name already exists",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = NamespaceAlreadyExistsError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -161,12 +162,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -206,7 +206,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -224,7 +224,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 6, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Parent namespace not found\", \"type\" : \"lance-namespace:103\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -236,7 +236,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 1, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Namespace already exists\", \"type\" : \"lance-namespace:102\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -248,7 +248,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -270,18 +270,14 @@ public interface NamespaceApi {
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return Returns a namespace, as well as any properties stored on the namespace if namespace
-   *     properties are supported by the server. (status code 200) or Indicates a bad request error.
-   *     It could be caused by an unexpected request body format or other forms of request
-   *     validation failure, such as invalid json. Usually serves application/json content, although
-   *     in some cases simple text/plain content might be returned by the server&#39;s middleware.
-   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
-   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
-   *     necessary permissions. (status code 403) or A server-side problem that means can not find
-   *     the specified resource. (status code 404) or The service is not ready to handle the
-   *     request. The client should wait and retry. The service may additionally send a Retry-After
-   *     header to indicate when to retry. (status code 503) or A server-side problem that might not
-   *     be addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   *     properties are supported by the server. (status code 200) or Malformed request or
+   *     validation failure (status code 400) or Unauthorized. The request lacks valid
+   *     authentication credentials for the operation. (status code 401) or Forbidden. Authenticated
+   *     user does not have the necessary permissions. (status code 403) or The requested namespace
+   *     does not exist (status code 404) or The service is not ready to handle the request. The
+   *     client should wait and retry. The service may additionally send a Retry-After header to
+   *     indicate when to retry. (status code 503) or Unknown or unclassified error (status code
+   *     5XX)
    */
   @Operation(
       operationId = "describeNamespace",
@@ -300,12 +296,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -326,11 +321,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested namespace does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = NamespaceNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -343,12 +338,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -389,7 +383,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -407,7 +401,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Namespace not found\", \"type\" : \"lance-namespace:101\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -419,7 +413,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -440,19 +434,14 @@ public interface NamespaceApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Result of dropping a namespace (status code 200) or Indicates a bad request error. It
-   *     could be caused by an unexpected request body format or other forms of request validation
-   *     failure, such as invalid json. Usually serves application/json content, although in some
-   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
-   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
-   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
-   *     permissions. (status code 403) or A server-side problem that means can not find the
-   *     specified resource. (status code 404) or The request conflicts with the current state of
-   *     the target resource. (status code 409) or The service is not ready to handle the request.
-   *     The client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return Result of dropping a namespace (status code 200) or Malformed request or validation
+   *     failure (status code 400) or Unauthorized. The request lacks valid authentication
+   *     credentials for the operation. (status code 401) or Forbidden. Authenticated user does not
+   *     have the necessary permissions. (status code 403) or The requested namespace does not exist
+   *     (status code 404) or Cannot drop namespace because it contains tables or child namespaces
+   *     (status code 409) or The service is not ready to handle the request. The client should wait
+   *     and retry. The service may additionally send a Retry-After header to indicate when to
+   *     retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "dropNamespace",
@@ -470,12 +459,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -496,19 +484,19 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested namespace does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = NamespaceNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "409",
-            description = "The request conflicts with the current state of the target resource.",
+            description = "Cannot drop namespace because it contains tables or child namespaces",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = NamespaceNotEmptyError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -521,12 +509,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -567,7 +554,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -585,7 +572,13 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Namespace not found\", \"type\" : \"lance-namespace:101\" }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Namespace not empty\", \"type\" : \"lance-namespace:104\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -597,13 +590,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
-                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                  break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -629,19 +616,14 @@ public interface NamespaceApi {
    *     (optional)
    * @param pageToken (optional)
    * @param limit (optional)
-   * @return A list of namespaces (status code 200) or Indicates a bad request error. It could be
-   *     caused by an unexpected request body format or other forms of request validation failure,
-   *     such as invalid json. Usually serves application/json content, although in some cases
-   *     simple text/plain content might be returned by the server&#39;s middleware. (status code
-   *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
-   *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or Not Acceptable / Unsupported Operation. The server does not support
-   *     this operation. (status code 406) or The service is not ready to handle the request. The
-   *     client should wait and retry. The service may additionally send a Retry-After header to
-   *     indicate when to retry. (status code 503) or A server-side problem that might not be
-   *     addressable from the client side. Used for server 5xx errors without more specific
-   *     documentation in individual routes. (status code 5XX)
+   * @return A list of namespaces (status code 200) or Malformed request or validation failure
+   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
+   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
+   *     necessary permissions. (status code 403) or The requested namespace does not exist (status
+   *     code 404) or Not Acceptable / Unsupported Operation. The server does not support this
+   *     operation. (status code 406) or The service is not ready to handle the request. The client
+   *     should wait and retry. The service may additionally send a Retry-After header to indicate
+   *     when to retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "listNamespaces",
@@ -660,12 +642,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -686,11 +667,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested namespace does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = NamespaceNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "406",
@@ -712,12 +693,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -761,7 +741,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -779,7 +759,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Namespace not found\", \"type\" : \"lance-namespace:101\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -797,7 +777,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -823,19 +803,14 @@ public interface NamespaceApi {
    *     (optional)
    * @param pageToken (optional)
    * @param limit (optional)
-   * @return A list of tables (status code 200) or Indicates a bad request error. It could be caused
-   *     by an unexpected request body format or other forms of request validation failure, such as
-   *     invalid json. Usually serves application/json content, although in some cases simple
-   *     text/plain content might be returned by the server&#39;s middleware. (status code 400) or
-   *     Unauthorized. The request lacks valid authentication credentials for the operation. (status
-   *     code 401) or Forbidden. Authenticated user does not have the necessary permissions. (status
-   *     code 403) or A server-side problem that means can not find the specified resource. (status
-   *     code 404) or Not Acceptable / Unsupported Operation. The server does not support this
-   *     operation. (status code 406) or The service is not ready to handle the request. The client
-   *     should wait and retry. The service may additionally send a Retry-After header to indicate
-   *     when to retry. (status code 503) or A server-side problem that might not be addressable
-   *     from the client side. Used for server 5xx errors without more specific documentation in
-   *     individual routes. (status code 5XX)
+   * @return A list of tables (status code 200) or Malformed request or validation failure (status
+   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
+   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
+   *     permissions. (status code 403) or The requested namespace does not exist (status code 404)
+   *     or Not Acceptable / Unsupported Operation. The server does not support this operation.
+   *     (status code 406) or The service is not ready to handle the request. The client should wait
+   *     and retry. The service may additionally send a Retry-After header to indicate when to
+   *     retry. (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "listTables",
@@ -854,12 +829,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -880,11 +854,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested namespace does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = NamespaceNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "406",
@@ -906,12 +880,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -955,7 +928,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -973,7 +946,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Namespace not found\", \"type\" : \"lance-namespace:101\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -991,7 +964,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1013,18 +986,13 @@ public interface NamespaceApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Success, no content (status code 200) or Indicates a bad request error. It could be
-   *     caused by an unexpected request body format or other forms of request validation failure,
-   *     such as invalid json. Usually serves application/json content, although in some cases
-   *     simple text/plain content might be returned by the server&#39;s middleware. (status code
-   *     400) or Unauthorized. The request lacks valid authentication credentials for the operation.
-   *     (status code 401) or Forbidden. Authenticated user does not have the necessary permissions.
-   *     (status code 403) or A server-side problem that means can not find the specified resource.
-   *     (status code 404) or The service is not ready to handle the request. The client should wait
-   *     and retry. The service may additionally send a Retry-After header to indicate when to
-   *     retry. (status code 503) or A server-side problem that might not be addressable from the
-   *     client side. Used for server 5xx errors without more specific documentation in individual
-   *     routes. (status code 5XX)
+   * @return Success, no content (status code 200) or Malformed request or validation failure
+   *     (status code 400) or Unauthorized. The request lacks valid authentication credentials for
+   *     the operation. (status code 401) or Forbidden. Authenticated user does not have the
+   *     necessary permissions. (status code 403) or The requested namespace does not exist (status
+   *     code 404) or The service is not ready to handle the request. The client should wait and
+   *     retry. The service may additionally send a Retry-After header to indicate when to retry.
+   *     (status code 503) or Unknown or unclassified error (status code 5XX)
    */
   @Operation(
       operationId = "namespaceExists",
@@ -1036,12 +1004,11 @@ public interface NamespaceApi {
         @ApiResponse(responseCode = "200", description = "Success, no content"),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            description = "Malformed request or validation failure",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = InvalidRequestError.class))
             }),
         @ApiResponse(
             responseCode = "401",
@@ -1062,11 +1029,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "404",
-            description = "A server-side problem that means can not find the specified resource.",
+            description = "The requested namespace does not exist",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = NamespaceNotFoundError.class))
             }),
         @ApiResponse(
             responseCode = "503",
@@ -1079,12 +1046,11 @@ public interface NamespaceApi {
             }),
         @ApiResponse(
             responseCode = "5XX",
-            description =
-                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            description = "Unknown or unclassified error",
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+                  schema = @Schema(implementation = UnknownError.class))
             })
       })
   @RequestMapping(
@@ -1119,7 +1085,7 @@ public interface NamespaceApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Invalid request\", \"type\" : \"lance-namespace:601\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1137,7 +1103,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 0, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Namespace not found\", \"type\" : \"lance-namespace:101\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -1149,7 +1115,7 @@ public interface NamespaceApi {
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 404, \"instance\" : \"/login/log/abc123\", \"detail\" : \"Authentication failed due to incorrect username or password\", \"error\" : \"Incorrect username or password\", \"type\" : \"/errors/incorrect-user-pass\" }";
+                      "{ \"code\" : 5, \"instance\" : \"instance\", \"detail\" : \"detail\", \"error\" : \"Unknown error\", \"type\" : \"lance-namespace:0\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }

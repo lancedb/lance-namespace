@@ -110,14 +110,14 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CreateNamespaceResponse",
-            '400': "ErrorResponse",
+            '400': "CreateNamespace400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "ParentNamespaceNotFoundError",
             '406': "ErrorResponse",
-            '409': "ErrorResponse",
+            '409': "NamespaceAlreadyExistsError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -193,14 +193,14 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CreateNamespaceResponse",
-            '400': "ErrorResponse",
+            '400': "CreateNamespace400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "ParentNamespaceNotFoundError",
             '406': "ErrorResponse",
-            '409': "ErrorResponse",
+            '409': "NamespaceAlreadyExistsError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -276,14 +276,14 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CreateNamespaceResponse",
-            '400': "ErrorResponse",
+            '400': "CreateNamespace400Response",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "ParentNamespaceNotFoundError",
             '406': "ErrorResponse",
-            '409': "ErrorResponse",
+            '409': "NamespaceAlreadyExistsError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -439,12 +439,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DescribeNamespaceResponse",
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -520,12 +520,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DescribeNamespaceResponse",
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -601,12 +601,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DescribeNamespaceResponse",
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -762,13 +762,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DropNamespaceResponse",
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '409': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
+            '409': "NamespaceNotEmptyError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -844,13 +844,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DropNamespaceResponse",
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '409': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
+            '409': "NamespaceNotEmptyError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -926,13 +926,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "DropNamespaceResponse",
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
-            '409': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
+            '409': "NamespaceNotEmptyError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1092,13 +1092,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListNamespacesResponse",
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
             '406': "ErrorResponse",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1178,13 +1178,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListNamespacesResponse",
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
             '406': "ErrorResponse",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1264,13 +1264,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListNamespacesResponse",
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
             '406': "ErrorResponse",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1424,13 +1424,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListTablesResponse",
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
             '406': "ErrorResponse",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1510,13 +1510,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListTablesResponse",
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
             '406': "ErrorResponse",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1596,13 +1596,13 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListTablesResponse",
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
             '406': "ErrorResponse",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1752,12 +1752,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1833,12 +1833,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1914,12 +1914,12 @@ class NamespaceApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
-            '400': "ErrorResponse",
+            '400': "InvalidRequestError",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
-            '404': "ErrorResponse",
+            '404': "NamespaceNotFoundError",
             '503': "ErrorResponse",
-            '5XX': "ErrorResponse",
+            '5XX': "UnknownError",
         }
         response_data = self.api_client.call_api(
             *_param,

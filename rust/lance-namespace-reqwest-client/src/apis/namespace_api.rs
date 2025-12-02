@@ -19,14 +19,14 @@ use super::{Error, configuration, ContentType};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateNamespaceError {
-    Status400(models::ErrorResponse),
+    Status400(models::CreateNamespace400Response),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::ParentNamespaceNotFoundError),
     Status406(models::ErrorResponse),
-    Status409(models::ErrorResponse),
+    Status409(models::NamespaceAlreadyExistsError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -34,12 +34,12 @@ pub enum CreateNamespaceError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DescribeNamespaceError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::NamespaceNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -47,13 +47,13 @@ pub enum DescribeNamespaceError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DropNamespaceError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
-    Status409(models::ErrorResponse),
+    Status404(models::NamespaceNotFoundError),
+    Status409(models::NamespaceNotEmptyError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -61,13 +61,13 @@ pub enum DropNamespaceError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ListNamespacesError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::NamespaceNotFoundError),
     Status406(models::ErrorResponse),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -75,13 +75,13 @@ pub enum ListNamespacesError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ListTablesError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::NamespaceNotFoundError),
     Status406(models::ErrorResponse),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
@@ -89,12 +89,12 @@ pub enum ListTablesError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum NamespaceExistsError {
-    Status400(models::ErrorResponse),
+    Status400(models::InvalidRequestError),
     Status401(models::ErrorResponse),
     Status403(models::ErrorResponse),
-    Status404(models::ErrorResponse),
+    Status404(models::NamespaceNotFoundError),
     Status503(models::ErrorResponse),
-    Status5XX(models::ErrorResponse),
+    Status5XX(models::UnknownError),
     UnknownValue(serde_json::Value),
 }
 
