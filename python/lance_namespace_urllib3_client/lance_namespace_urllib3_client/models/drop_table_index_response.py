@@ -17,18 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
 class DropTableIndexResponse(BaseModel):
     """
-    DropTableIndexResponse
+    Response for drop index operation
     """ # noqa: E501
-    version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Version of the table after dropping the index")
-    __properties: ClassVar[List[str]] = ["version"]
+    transaction_id: Optional[StrictStr] = Field(default=None, description="Optional transaction identifier")
+    __properties: ClassVar[List[str]] = ["transaction_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,7 +80,7 @@ class DropTableIndexResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "version": obj.get("version")
+            "transaction_id": obj.get("transaction_id")
         })
         return _obj
 

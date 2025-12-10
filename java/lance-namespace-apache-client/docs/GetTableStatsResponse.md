@@ -7,9 +7,10 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**numRows** | **Long** | Total number of rows in the table |  |
-|**sizeBytes** | **Long** | Total size of the table in bytes |  |
-|**numFragments** | **Long** | Number of data fragments |  [optional] |
+|**totalBytes** | **Long** | The total number of bytes in the table |  |
+|**numRows** | **Long** | The number of rows in the table |  |
+|**numIndices** | **Long** | The number of indices in the table |  |
+|**fragmentStats** | [**FragmentStats**](FragmentStats.md) | Statistics on table fragments |  |
 
 
 

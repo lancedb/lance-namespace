@@ -37,7 +37,7 @@ public class AlterTableAlterColumnsRequest {
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public static final String JSON_PROPERTY_ALTERATIONS = "alterations";
-  @javax.annotation.Nonnull private List<ColumnAlteration> alterations = new ArrayList<>();
+  @javax.annotation.Nonnull private List<AlterColumnsEntry> alterations = new ArrayList<>();
 
   public AlterTableAlterColumnsRequest() {}
 
@@ -74,13 +74,13 @@ public class AlterTableAlterColumnsRequest {
   }
 
   public AlterTableAlterColumnsRequest alterations(
-      @javax.annotation.Nonnull List<ColumnAlteration> alterations) {
+      @javax.annotation.Nonnull List<AlterColumnsEntry> alterations) {
 
     this.alterations = alterations;
     return this;
   }
 
-  public AlterTableAlterColumnsRequest addAlterationsItem(ColumnAlteration alterationsItem) {
+  public AlterTableAlterColumnsRequest addAlterationsItem(AlterColumnsEntry alterationsItem) {
     if (this.alterations == null) {
       this.alterations = new ArrayList<>();
     }
@@ -96,13 +96,13 @@ public class AlterTableAlterColumnsRequest {
   @javax.annotation.Nonnull
   @JsonProperty(JSON_PROPERTY_ALTERATIONS)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public List<ColumnAlteration> getAlterations() {
+  public List<AlterColumnsEntry> getAlterations() {
     return alterations;
   }
 
   @JsonProperty(JSON_PROPERTY_ALTERATIONS)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setAlterations(@javax.annotation.Nonnull List<ColumnAlteration> alterations) {
+  public void setAlterations(@javax.annotation.Nonnull List<AlterColumnsEntry> alterations) {
     this.alterations = alterations;
   }
 

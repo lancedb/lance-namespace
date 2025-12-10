@@ -26,6 +26,9 @@ Add new columns to table `id` using SQL expressions or default values.
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
@@ -40,6 +43,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -75,7 +95,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -97,21 +117,27 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **analyze_table_query_plan**
-> AnalyzeTableQueryPlanResponse analyze_table_query_plan(id, analyze_table_query_plan_request, delimiter=delimiter)
+> str analyze_table_query_plan(id, analyze_table_query_plan_request, delimiter=delimiter)
 
 Analyze query execution plan
 
 Analyze the query execution plan for a query against table `id`.
 Returns detailed statistics and analysis of the query execution plan.
 
+REST NAMESPACE ONLY
+REST namespace returns the response as a plain string
+instead of the `AnalyzeTableQueryPlanResponse` JSON object.
+
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
 from lance_namespace_urllib3_client.models.analyze_table_query_plan_request import AnalyzeTableQueryPlanRequest
-from lance_namespace_urllib3_client.models.analyze_table_query_plan_response import AnalyzeTableQueryPlanResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
 
@@ -121,6 +147,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -152,11 +195,11 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**AnalyzeTableQueryPlanResponse**](AnalyzeTableQueryPlanResponse.md)
+**str**
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -184,9 +227,16 @@ Count rows in a table
 
 Count the number of rows in table `id`
 
+REST NAMESPACE ONLY
+REST namespace returns the response as a plain integer
+instead of the `CountTableRowsResponse` JSON object.
+
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
@@ -200,6 +250,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -235,7 +302,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -257,13 +324,13 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **create_table**
-> CreateTableResponse create_table(id, body, delimiter=delimiter, mode=mode, x_lance_table_location=x_lance_table_location, x_lance_table_properties=x_lance_table_properties)
+> CreateTableResponse create_table(id, body, delimiter=delimiter, mode=mode)
 
 Create a table with the given name
 
 Create table `id` in the namespace with the given data in Arrow IPC stream.
 
-The schema of the Arrow IPC stream is used as the table schema.    
+The schema of the Arrow IPC stream is used as the table schema.
 If the stream is empty, the API creates a new empty table.
 
 REST NAMESPACE ONLY
@@ -271,12 +338,13 @@ REST namespace uses Arrow IPC stream as the request body.
 It passes in the `CreateTableRequest` information in the following way:
 - `id`: pass through path parameter of the same name
 - `mode`: pass through query parameter of the same name
-- `location`: pass through header `x-lance-table-location`
-- `properties`: pass through header `x-lance-table-properties`
 
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
@@ -290,6 +358,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -299,12 +384,10 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     body = None # bytearray | Arrow IPC data
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
     mode = 'mode_example' # str |  (optional)
-    x_lance_table_location = 'x_lance_table_location_example' # str | URI pointing to root location to create the table at (optional)
-    x_lance_table_properties = 'x_lance_table_properties_example' # str | JSON-encoded string map (e.g. { \"owner\": \"jack\" })  (optional)
 
     try:
         # Create a table with the given name
-        api_response = api_instance.create_table(id, body, delimiter=delimiter, mode=mode, x_lance_table_location=x_lance_table_location, x_lance_table_properties=x_lance_table_properties)
+        api_response = api_instance.create_table(id, body, delimiter=delimiter, mode=mode)
         print("The response of DataApi->create_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -322,8 +405,6 @@ Name | Type | Description  | Notes
  **body** | **bytearray**| Arrow IPC data | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] 
  **mode** | **str**|  | [optional] 
- **x_lance_table_location** | **str**| URI pointing to root location to create the table at | [optional] 
- **x_lance_table_properties** | **str**| JSON-encoded string map (e.g. { \&quot;owner\&quot;: \&quot;jack\&quot; })  | [optional] 
 
 ### Return type
 
@@ -331,7 +412,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -362,6 +443,9 @@ Delete rows from table `id`.
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
@@ -376,6 +460,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -411,7 +512,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -433,21 +534,27 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **explain_table_query_plan**
-> ExplainTableQueryPlanResponse explain_table_query_plan(id, explain_table_query_plan_request, delimiter=delimiter)
+> str explain_table_query_plan(id, explain_table_query_plan_request, delimiter=delimiter)
 
 Get query execution plan explanation
 
 Get the query execution plan for a query against table `id`.
 Returns a human-readable explanation of how the query will be executed.
 
+REST NAMESPACE ONLY
+REST namespace returns the response as a plain string
+instead of the `ExplainTableQueryPlanResponse` JSON object.
+
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
 from lance_namespace_urllib3_client.models.explain_table_query_plan_request import ExplainTableQueryPlanRequest
-from lance_namespace_urllib3_client.models.explain_table_query_plan_response import ExplainTableQueryPlanResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
 
@@ -457,6 +564,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -488,11 +612,11 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**ExplainTableQueryPlanResponse**](ExplainTableQueryPlanResponse.md)
+**str**
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -529,6 +653,9 @@ It passes in the `InsertIntoTableRequest` information in the following way:
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
@@ -542,6 +669,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -579,7 +723,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -601,7 +745,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merge_insert_into_table**
-> MergeInsertIntoTableResponse merge_insert_into_table(id, on, body, delimiter=delimiter, when_matched_update_all=when_matched_update_all, when_matched_update_all_filt=when_matched_update_all_filt, when_not_matched_insert_all=when_not_matched_insert_all, when_not_matched_by_source_delete=when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt)
+> MergeInsertIntoTableResponse merge_insert_into_table(id, on, body, delimiter=delimiter, when_matched_update_all=when_matched_update_all, when_matched_update_all_filt=when_matched_update_all_filt, when_not_matched_insert_all=when_not_matched_insert_all, when_not_matched_by_source_delete=when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt, timeout=timeout, use_index=use_index)
 
 Merge insert (upsert) records into a table
 
@@ -624,6 +768,9 @@ It passes in the `MergeInsertIntoTableRequest` information in the following way:
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
@@ -637,6 +784,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -651,10 +815,12 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     when_not_matched_insert_all = False # bool | Insert all columns when rows don't match (optional) (default to False)
     when_not_matched_by_source_delete = False # bool | Delete all rows from target table that don't match a row in the source table (optional) (default to False)
     when_not_matched_by_source_delete_filt = 'when_not_matched_by_source_delete_filt_example' # str | Delete rows from the target table if there is no match AND the SQL expression evaluates to true (optional)
+    timeout = 'timeout_example' # str | Timeout for the operation (e.g., \"30s\", \"5m\") (optional)
+    use_index = False # bool | Whether to use index for matching rows (optional) (default to False)
 
     try:
         # Merge insert (upsert) records into a table
-        api_response = api_instance.merge_insert_into_table(id, on, body, delimiter=delimiter, when_matched_update_all=when_matched_update_all, when_matched_update_all_filt=when_matched_update_all_filt, when_not_matched_insert_all=when_not_matched_insert_all, when_not_matched_by_source_delete=when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt)
+        api_response = api_instance.merge_insert_into_table(id, on, body, delimiter=delimiter, when_matched_update_all=when_matched_update_all, when_matched_update_all_filt=when_matched_update_all_filt, when_not_matched_insert_all=when_not_matched_insert_all, when_not_matched_by_source_delete=when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt, timeout=timeout, use_index=use_index)
         print("The response of DataApi->merge_insert_into_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -677,6 +843,8 @@ Name | Type | Description  | Notes
  **when_not_matched_insert_all** | **bool**| Insert all columns when rows don&#39;t match | [optional] [default to False]
  **when_not_matched_by_source_delete** | **bool**| Delete all rows from target table that don&#39;t match a row in the source table | [optional] [default to False]
  **when_not_matched_by_source_delete_filt** | **str**| Delete rows from the target table if there is no match AND the SQL expression evaluates to true | [optional] 
+ **timeout** | **str**| Timeout for the operation (e.g., \&quot;30s\&quot;, \&quot;5m\&quot;) | [optional] 
+ **use_index** | **bool**| Whether to use index for matching rows | [optional] [default to False]
 
 ### Return type
 
@@ -684,7 +852,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -713,9 +881,16 @@ Query a table
 Query table `id` with vector search, full text search and optional SQL filtering.
 Returns results in Arrow IPC file or stream format.
 
+REST NAMESPACE ONLY
+REST namespace returns the response as Arrow IPC file binary data
+instead of the `QueryTableResponse` JSON object.
+
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
@@ -729,6 +904,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -764,18 +956,18 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: application/vnd.apache.arrow.file, application/vnd.apache.arrow.stream, application/json
+ - **Accept**: application/vnd.apache.arrow.file, application/json
 
 ### HTTP response details
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Query results in Arrow IPC file or stream format |  -  |
+**200** | Query results in Arrow IPC file format |  -  |
 **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -795,6 +987,9 @@ Update existing rows in table `id`.
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
@@ -809,6 +1004,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -844,7 +1056,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 

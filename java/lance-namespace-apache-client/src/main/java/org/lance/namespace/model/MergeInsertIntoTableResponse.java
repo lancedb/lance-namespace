@@ -24,6 +24,7 @@ import java.util.StringJoiner;
 
 /** Response from merge insert operation */
 @JsonPropertyOrder({
+  MergeInsertIntoTableResponse.JSON_PROPERTY_TRANSACTION_ID,
   MergeInsertIntoTableResponse.JSON_PROPERTY_NUM_UPDATED_ROWS,
   MergeInsertIntoTableResponse.JSON_PROPERTY_NUM_INSERTED_ROWS,
   MergeInsertIntoTableResponse.JSON_PROPERTY_NUM_DELETED_ROWS,
@@ -33,6 +34,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class MergeInsertIntoTableResponse {
+  public static final String JSON_PROPERTY_TRANSACTION_ID = "transaction_id";
+  @javax.annotation.Nullable private String transactionId;
+
   public static final String JSON_PROPERTY_NUM_UPDATED_ROWS = "num_updated_rows";
   @javax.annotation.Nullable private Long numUpdatedRows;
 
@@ -46,6 +50,31 @@ public class MergeInsertIntoTableResponse {
   @javax.annotation.Nullable private Long version;
 
   public MergeInsertIntoTableResponse() {}
+
+  public MergeInsertIntoTableResponse transactionId(
+      @javax.annotation.Nullable String transactionId) {
+
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTransactionId(@javax.annotation.Nullable String transactionId) {
+    this.transactionId = transactionId;
+  }
 
   public MergeInsertIntoTableResponse numUpdatedRows(
       @javax.annotation.Nullable Long numUpdatedRows) {
@@ -155,7 +184,8 @@ public class MergeInsertIntoTableResponse {
       return false;
     }
     MergeInsertIntoTableResponse mergeInsertIntoTableResponse = (MergeInsertIntoTableResponse) o;
-    return Objects.equals(this.numUpdatedRows, mergeInsertIntoTableResponse.numUpdatedRows)
+    return Objects.equals(this.transactionId, mergeInsertIntoTableResponse.transactionId)
+        && Objects.equals(this.numUpdatedRows, mergeInsertIntoTableResponse.numUpdatedRows)
         && Objects.equals(this.numInsertedRows, mergeInsertIntoTableResponse.numInsertedRows)
         && Objects.equals(this.numDeletedRows, mergeInsertIntoTableResponse.numDeletedRows)
         && Objects.equals(this.version, mergeInsertIntoTableResponse.version);
@@ -163,13 +193,14 @@ public class MergeInsertIntoTableResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(numUpdatedRows, numInsertedRows, numDeletedRows, version);
+    return Objects.hash(transactionId, numUpdatedRows, numInsertedRows, numDeletedRows, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class MergeInsertIntoTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    numUpdatedRows: ").append(toIndentedString(numUpdatedRows)).append("\n");
     sb.append("    numInsertedRows: ").append(toIndentedString(numInsertedRows)).append("\n");
     sb.append("    numDeletedRows: ").append(toIndentedString(numDeletedRows)).append("\n");
@@ -219,6 +250,22 @@ public class MergeInsertIntoTableResponse {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `transaction_id` to the URL query string
+    if (getTransactionId() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%stransaction_id%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getTransactionId()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
 
     // add `num_updated_rows` to the URL query string
     if (getNumUpdatedRows() != null) {

@@ -18,6 +18,9 @@ pub struct DescribeTableRequest {
     /// Version of the table to describe. If not specified, server should resolve it to the latest version. 
     #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
     pub version: Option<i64>,
+    /// Whether to include the table URI in the response. Default is false. 
+    #[serde(rename = "with_table_uri", skip_serializing_if = "Option::is_none")]
+    pub with_table_uri: Option<bool>,
 }
 
 impl DescribeTableRequest {
@@ -25,6 +28,7 @@ impl DescribeTableRequest {
         DescribeTableRequest {
             id: None,
             version: None,
+            with_table_uri: None,
         }
     }
 }

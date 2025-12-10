@@ -24,12 +24,10 @@ from typing_extensions import Self
 
 class CreateTableIndexResponse(BaseModel):
     """
-    CreateTableIndexResponse
+    Response for create index operation
     """ # noqa: E501
-    id: Optional[List[StrictStr]] = None
-    location: StrictStr = Field(description="Table location (usually empty)")
-    properties: Optional[Dict[str, StrictStr]] = Field(default=None, description="Additional properties (usually empty)")
-    __properties: ClassVar[List[str]] = ["id", "location", "properties"]
+    transaction_id: Optional[StrictStr] = Field(default=None, description="Optional transaction identifier")
+    __properties: ClassVar[List[str]] = ["transaction_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -82,9 +80,7 @@ class CreateTableIndexResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "location": obj.get("location"),
-            "properties": obj.get("properties")
+            "transaction_id": obj.get("transaction_id")
         })
         return _obj
 

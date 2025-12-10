@@ -356,6 +356,9 @@ class NamespaceApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -679,6 +682,9 @@ class NamespaceApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -1005,6 +1011,9 @@ class NamespaceApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -1030,8 +1039,8 @@ class NamespaceApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1053,9 +1062,9 @@ class NamespaceApi:
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1116,8 +1125,8 @@ class NamespaceApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1139,9 +1148,9 @@ class NamespaceApi:
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1202,8 +1211,8 @@ class NamespaceApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1225,9 +1234,9 @@ class NamespaceApi:
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1337,6 +1346,9 @@ class NamespaceApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -1362,8 +1374,8 @@ class NamespaceApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1385,9 +1397,9 @@ class NamespaceApi:
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1448,8 +1460,8 @@ class NamespaceApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1471,9 +1483,9 @@ class NamespaceApi:
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1534,8 +1546,8 @@ class NamespaceApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1557,9 +1569,9 @@ class NamespaceApi:
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1669,6 +1681,9 @@ class NamespaceApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -1992,6 +2007,9 @@ class NamespaceApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(

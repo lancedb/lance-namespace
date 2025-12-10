@@ -15,16 +15,16 @@ use serde::{Deserialize, Serialize};
 pub struct RestoreTableRequest {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
-    /// Version to restore to (if not specified, restores to current version)
-    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
-    pub version: Option<i64>,
+    /// Version to restore to
+    #[serde(rename = "version")]
+    pub version: i64,
 }
 
 impl RestoreTableRequest {
-    pub fn new() -> RestoreTableRequest {
+    pub fn new(version: i64) -> RestoreTableRequest {
         RestoreTableRequest {
             id: None,
-            version: None,
+            version,
         }
     }
 }

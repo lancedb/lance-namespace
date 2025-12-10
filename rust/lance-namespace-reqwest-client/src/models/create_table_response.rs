@@ -13,12 +13,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateTableResponse {
+    /// Optional transaction identifier
+    #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
     #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
     pub version: Option<i64>,
-    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
-    pub properties: Option<std::collections::HashMap<String, String>>,
     /// Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. 
     #[serde(rename = "storage_options", skip_serializing_if = "Option::is_none")]
     pub storage_options: Option<std::collections::HashMap<String, String>>,
@@ -27,9 +28,9 @@ pub struct CreateTableResponse {
 impl CreateTableResponse {
     pub fn new() -> CreateTableResponse {
         CreateTableResponse {
+            transaction_id: None,
             location: None,
             version: None,
-            properties: None,
             storage_options: None,
         }
     }

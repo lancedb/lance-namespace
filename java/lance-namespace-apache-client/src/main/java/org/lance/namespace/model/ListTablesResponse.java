@@ -57,7 +57,9 @@ public class ListTablesResponse {
   }
 
   /**
-   * The list of names of the tables relative to the parent namespace &#x60;id&#x60; in the request.
+   * The list of names of all the tables under the connected namespace implementation. This should
+   * recursively list all the tables in all child namespaces. Each string in the list is the full
+   * identifier in string form.
    *
    * @return tables
    */

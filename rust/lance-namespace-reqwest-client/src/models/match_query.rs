@@ -15,8 +15,8 @@ use serde::{Deserialize, Serialize};
 pub struct MatchQuery {
     #[serde(rename = "boost", skip_serializing_if = "Option::is_none")]
     pub boost: Option<f32>,
-    #[serde(rename = "column")]
-    pub column: String,
+    #[serde(rename = "column", skip_serializing_if = "Option::is_none")]
+    pub column: Option<String>,
     #[serde(rename = "fuzziness", skip_serializing_if = "Option::is_none")]
     pub fuzziness: Option<i32>,
     /// The maximum number of terms to expand for fuzzy matching. Default to 50.
@@ -33,10 +33,10 @@ pub struct MatchQuery {
 }
 
 impl MatchQuery {
-    pub fn new(column: String, terms: String) -> MatchQuery {
+    pub fn new(terms: String) -> MatchQuery {
         MatchQuery {
             boost: None,
-            column,
+            column: None,
             fuzziness: None,
             max_expansions: None,
             operator: None,

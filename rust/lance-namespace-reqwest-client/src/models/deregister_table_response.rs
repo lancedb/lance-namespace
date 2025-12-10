@@ -13,6 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DeregisterTableResponse {
+    /// Optional transaction identifier
+    #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
@@ -24,6 +27,7 @@ pub struct DeregisterTableResponse {
 impl DeregisterTableResponse {
     pub fn new() -> DeregisterTableResponse {
         DeregisterTableResponse {
+            transaction_id: None,
             id: None,
             location: None,
             properties: None,

@@ -35,7 +35,7 @@ class TestRestoreTableResponse(unittest.TestCase):
         model = RestoreTableResponse()
         if include_optional:
             return RestoreTableResponse(
-                version = 0
+                transaction_id = ''
             )
         else:
             return RestoreTableResponse(

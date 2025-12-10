@@ -30,13 +30,36 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CreateTableResponse {
 
+  private String transactionId;
+
   private String location;
 
   private Long version;
 
-  @Valid private Map<String, String> properties = new HashMap<>();
-
   @Valid private Map<String, String> storageOptions = new HashMap<>();
+
+  public CreateTableResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @Schema(
+      name = "transaction_id",
+      description = "Optional transaction identifier",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
 
   public CreateTableResponse location(String location) {
     this.location = location;
@@ -77,34 +100,6 @@ public class CreateTableResponse {
 
   public void setVersion(Long version) {
     this.version = version;
-  }
-
-  public CreateTableResponse properties(Map<String, String> properties) {
-    this.properties = properties;
-    return this;
-  }
-
-  public CreateTableResponse putPropertiesItem(String key, String propertiesItem) {
-    if (this.properties == null) {
-      this.properties = new HashMap<>();
-    }
-    this.properties.put(key, propertiesItem);
-    return this;
-  }
-
-  /**
-   * Get properties
-   *
-   * @return properties
-   */
-  @Schema(name = "properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("properties")
-  public Map<String, String> getProperties() {
-    return properties;
-  }
-
-  public void setProperties(Map<String, String> properties) {
-    this.properties = properties;
   }
 
   public CreateTableResponse storageOptions(Map<String, String> storageOptions) {
@@ -149,24 +144,24 @@ public class CreateTableResponse {
       return false;
     }
     CreateTableResponse createTableResponse = (CreateTableResponse) o;
-    return Objects.equals(this.location, createTableResponse.location)
+    return Objects.equals(this.transactionId, createTableResponse.transactionId)
+        && Objects.equals(this.location, createTableResponse.location)
         && Objects.equals(this.version, createTableResponse.version)
-        && Objects.equals(this.properties, createTableResponse.properties)
         && Objects.equals(this.storageOptions, createTableResponse.storageOptions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(location, version, properties, storageOptions);
+    return Objects.hash(transactionId, location, version, storageOptions);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
-    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
     sb.append("}");
     return sb.toString();

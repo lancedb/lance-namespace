@@ -28,7 +28,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({
   CountTableRowsRequest.JSON_PROPERTY_ID,
   CountTableRowsRequest.JSON_PROPERTY_VERSION,
-  CountTableRowsRequest.JSON_PROPERTY_FILTER
+  CountTableRowsRequest.JSON_PROPERTY_PREDICATE
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -40,8 +40,8 @@ public class CountTableRowsRequest {
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nullable private Long version;
 
-  public static final String JSON_PROPERTY_FILTER = "filter";
-  @javax.annotation.Nullable private String filter;
+  public static final String JSON_PROPERTY_PREDICATE = "predicate";
+  @javax.annotation.Nullable private String predicate;
 
   public CountTableRowsRequest() {}
 
@@ -102,28 +102,28 @@ public class CountTableRowsRequest {
     this.version = version;
   }
 
-  public CountTableRowsRequest filter(@javax.annotation.Nullable String filter) {
+  public CountTableRowsRequest predicate(@javax.annotation.Nullable String predicate) {
 
-    this.filter = filter;
+    this.predicate = predicate;
     return this;
   }
 
   /**
-   * SQL filter expression to be applied
+   * Optional SQL predicate to filter rows for counting
    *
-   * @return filter
+   * @return predicate
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_FILTER)
+  @JsonProperty(JSON_PROPERTY_PREDICATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getFilter() {
-    return filter;
+  public String getPredicate() {
+    return predicate;
   }
 
-  @JsonProperty(JSON_PROPERTY_FILTER)
+  @JsonProperty(JSON_PROPERTY_PREDICATE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setFilter(@javax.annotation.Nullable String filter) {
-    this.filter = filter;
+  public void setPredicate(@javax.annotation.Nullable String predicate) {
+    this.predicate = predicate;
   }
 
   @Override
@@ -137,12 +137,12 @@ public class CountTableRowsRequest {
     CountTableRowsRequest countTableRowsRequest = (CountTableRowsRequest) o;
     return Objects.equals(this.id, countTableRowsRequest.id)
         && Objects.equals(this.version, countTableRowsRequest.version)
-        && Objects.equals(this.filter, countTableRowsRequest.filter);
+        && Objects.equals(this.predicate, countTableRowsRequest.predicate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version, filter);
+    return Objects.hash(id, version, predicate);
   }
 
   @Override
@@ -151,7 +151,7 @@ public class CountTableRowsRequest {
     sb.append("class CountTableRowsRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
-    sb.append("    filter: ").append(toIndentedString(filter)).append("\n");
+    sb.append("    predicate: ").append(toIndentedString(predicate)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -234,15 +234,16 @@ public class CountTableRowsRequest {
       }
     }
 
-    // add `filter` to the URL query string
-    if (getFilter() != null) {
+    // add `predicate` to the URL query string
+    if (getPredicate() != null) {
       try {
         joiner.add(
             String.format(
-                "%sfilter%s=%s",
+                "%spredicate%s=%s",
                 prefix,
                 suffix,
-                URLEncoder.encode(String.valueOf(getFilter()), "UTF-8").replaceAll("\\+", "%20")));
+                URLEncoder.encode(String.valueOf(getPredicate()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

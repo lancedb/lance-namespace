@@ -13,15 +13,23 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct TagContents {
+    /// Branch name that the tag was created on (if any)
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// Version number that the tag points to
     #[serde(rename = "version")]
     pub version: i64,
+    /// Size of the manifest file in bytes
+    #[serde(rename = "manifestSize")]
+    pub manifest_size: i64,
 }
 
 impl TagContents {
-    pub fn new(version: i64) -> TagContents {
+    pub fn new(version: i64, manifest_size: i64) -> TagContents {
         TagContents {
+            branch: None,
             version,
+            manifest_size,
         }
     }
 }

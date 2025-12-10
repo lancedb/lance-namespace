@@ -9,8 +9,9 @@
 |------------ | ------------- | ------------- | -------------|
 |**id** | **List&lt;String&gt;** |  |  [optional] |
 |**column** | **String** | Name of the column to create index on |  |
-|**indexType** | [**IndexTypeEnum**](#IndexTypeEnum) | Type of index to create |  |
-|**metricType** | [**MetricTypeEnum**](#MetricTypeEnum) | Distance metric type for vector indexes |  [optional] |
+|**indexType** | **String** | Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS) |  |
+|**name** | **String** | Optional name for the index. If not provided, a name will be auto-generated. |  [optional] |
+|**distanceType** | **String** | Distance metric type for vector indexes (e.g., l2, cosine, dot) |  [optional] |
 |**withPosition** | **Boolean** | Optional FTS parameter for position tracking |  [optional] |
 |**baseTokenizer** | **String** | Optional FTS parameter for base tokenizer |  [optional] |
 |**language** | **String** | Optional FTS parameter for language |  [optional] |
@@ -19,30 +20,6 @@
 |**stem** | **Boolean** | Optional FTS parameter for stemming |  [optional] |
 |**removeStopWords** | **Boolean** | Optional FTS parameter for stop word removal |  [optional] |
 |**asciiFolding** | **Boolean** | Optional FTS parameter for ASCII folding |  [optional] |
-
-
-
-## Enum: IndexTypeEnum
-
-| Name | Value |
-|---- | -----|
-| BTREE | &quot;BTREE&quot; |
-| BITMAP | &quot;BITMAP&quot; |
-| LABEL_LIST | &quot;LABEL_LIST&quot; |
-| IVF_FLAT | &quot;IVF_FLAT&quot; |
-| IVF_PQ | &quot;IVF_PQ&quot; |
-| IVF_HNSW_SQ | &quot;IVF_HNSW_SQ&quot; |
-| FTS | &quot;FTS&quot; |
-
-
-
-## Enum: MetricTypeEnum
-
-| Name | Value |
-|---- | -----|
-| L2 | &quot;l2&quot; |
-| COSINE | &quot;cosine&quot; |
-| DOT | &quot;dot&quot; |
 
 
 

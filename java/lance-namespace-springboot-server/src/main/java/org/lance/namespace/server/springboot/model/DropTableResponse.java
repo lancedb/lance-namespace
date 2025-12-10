@@ -32,13 +32,36 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DropTableResponse {
 
+  private String transactionId;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private String location;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
-  @Valid private List<String> transactionId = new ArrayList<>();
+  public DropTableResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @Schema(
+      name = "transaction_id",
+      description = "Optional transaction identifier",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
 
   public DropTableResponse id(List<String> id) {
     this.id = id;
@@ -116,38 +139,6 @@ public class DropTableResponse {
     this.properties = properties;
   }
 
-  public DropTableResponse transactionId(List<String> transactionId) {
-    this.transactionId = transactionId;
-    return this;
-  }
-
-  public DropTableResponse addTransactionIdItem(String transactionIdItem) {
-    if (this.transactionId == null) {
-      this.transactionId = new ArrayList<>();
-    }
-    this.transactionId.add(transactionIdItem);
-    return this;
-  }
-
-  /**
-   * If present, indicating the operation is long running and should be tracked using GetTransaction
-   *
-   * @return transactionId
-   */
-  @Schema(
-      name = "transactionId",
-      description =
-          "If present, indicating the operation is long running and should be tracked using GetTransaction ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("transactionId")
-  public List<String> getTransactionId() {
-    return transactionId;
-  }
-
-  public void setTransactionId(List<String> transactionId) {
-    this.transactionId = transactionId;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -157,25 +148,25 @@ public class DropTableResponse {
       return false;
     }
     DropTableResponse dropTableResponse = (DropTableResponse) o;
-    return Objects.equals(this.id, dropTableResponse.id)
+    return Objects.equals(this.transactionId, dropTableResponse.transactionId)
+        && Objects.equals(this.id, dropTableResponse.id)
         && Objects.equals(this.location, dropTableResponse.location)
-        && Objects.equals(this.properties, dropTableResponse.properties)
-        && Objects.equals(this.transactionId, dropTableResponse.transactionId);
+        && Objects.equals(this.properties, dropTableResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location, properties, transactionId);
+    return Objects.hash(transactionId, id, location, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DropTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
-    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

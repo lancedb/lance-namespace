@@ -11,6 +11,8 @@ Name | Type | Description | Notes
 **when_not_matched_insert_all** | Option<**bool**> | Insert all columns when rows don't match | [optional][default to false]
 **when_not_matched_by_source_delete** | Option<**bool**> | Delete all rows from target table that don't match a row in the source table | [optional][default to false]
 **when_not_matched_by_source_delete_filt** | Option<**String**> | Delete rows from the target table if there is no match AND the SQL expression evaluates to true | [optional]
+**timeout** | Option<**String**> | Timeout for the operation (e.g., \"30s\", \"5m\") | [optional]
+**use_index** | Option<**bool**> | Whether to use index for matching rows | [optional][default to false]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -8,6 +8,7 @@ Response from merge insert operation
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
+|**transactionId** | **String** | Optional transaction identifier |  [optional] |
 |**numUpdatedRows** | **Long** | Number of rows updated |  [optional] |
 |**numInsertedRows** | **Long** | Number of rows inserted |  [optional] |
 |**numDeletedRows** | **Long** | Number of rows deleted (typically 0 for merge insert) |  [optional] |

@@ -38,7 +38,7 @@ public class DropNamespaceResponse {
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
-  public static final String JSON_PROPERTY_TRANSACTION_ID = "transactionId";
+  public static final String JSON_PROPERTY_TRANSACTION_ID = "transaction_id";
   @javax.annotation.Nullable private List<String> transactionId = new ArrayList<>();
 
   public DropNamespaceResponse() {}
@@ -201,13 +201,13 @@ public class DropNamespaceResponse {
       }
     }
 
-    // add `transactionId` to the URL query string
+    // add `transaction_id` to the URL query string
     if (getTransactionId() != null) {
       for (int i = 0; i < getTransactionId().size(); i++) {
         try {
           joiner.add(
               String.format(
-                  "%stransactionId%s%s=%s",
+                  "%stransaction_id%s%s=%s",
                   prefix,
                   suffix,
                   "".equals(suffix)

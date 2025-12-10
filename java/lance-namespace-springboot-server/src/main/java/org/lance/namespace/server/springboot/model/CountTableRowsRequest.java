@@ -34,7 +34,7 @@ public class CountTableRowsRequest {
 
   private Long version;
 
-  private String filter;
+  private String predicate;
 
   public CountTableRowsRequest id(List<String> id) {
     this.id = id;
@@ -90,27 +90,27 @@ public class CountTableRowsRequest {
     this.version = version;
   }
 
-  public CountTableRowsRequest filter(String filter) {
-    this.filter = filter;
+  public CountTableRowsRequest predicate(String predicate) {
+    this.predicate = predicate;
     return this;
   }
 
   /**
-   * SQL filter expression to be applied
+   * Optional SQL predicate to filter rows for counting
    *
-   * @return filter
+   * @return predicate
    */
   @Schema(
-      name = "filter",
-      description = "SQL filter expression to be applied ",
+      name = "predicate",
+      description = "Optional SQL predicate to filter rows for counting ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("filter")
-  public String getFilter() {
-    return filter;
+  @JsonProperty("predicate")
+  public String getPredicate() {
+    return predicate;
   }
 
-  public void setFilter(String filter) {
-    this.filter = filter;
+  public void setPredicate(String predicate) {
+    this.predicate = predicate;
   }
 
   @Override
@@ -124,12 +124,12 @@ public class CountTableRowsRequest {
     CountTableRowsRequest countTableRowsRequest = (CountTableRowsRequest) o;
     return Objects.equals(this.id, countTableRowsRequest.id)
         && Objects.equals(this.version, countTableRowsRequest.version)
-        && Objects.equals(this.filter, countTableRowsRequest.filter);
+        && Objects.equals(this.predicate, countTableRowsRequest.predicate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version, filter);
+    return Objects.hash(id, version, predicate);
   }
 
   @Override
@@ -138,7 +138,7 @@ public class CountTableRowsRequest {
     sb.append("class CountTableRowsRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
-    sb.append("    filter: ").append(toIndentedString(filter)).append("\n");
+    sb.append("    predicate: ").append(toIndentedString(predicate)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -13,27 +13,41 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DescribeTableResponse {
+    /// Table name
+    #[serde(rename = "table", skip_serializing_if = "Option::is_none")]
+    pub table: Option<String>,
+    /// The namespace identifier as a list of parts
+    #[serde(rename = "namespace", skip_serializing_if = "Option::is_none")]
+    pub namespace: Option<Vec<String>>,
     #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
     pub version: Option<i64>,
+    /// Table storage location (e.g., S3/GCS path)
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
+    /// Table URI (deprecated, use `location` instead)
+    #[serde(rename = "table_uri", skip_serializing_if = "Option::is_none")]
+    pub table_uri: Option<String>,
     #[serde(rename = "schema", skip_serializing_if = "Option::is_none")]
     pub schema: Option<Box<models::JsonArrowSchema>>,
-    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
-    pub properties: Option<std::collections::HashMap<String, String>>,
     /// Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. 
     #[serde(rename = "storage_options", skip_serializing_if = "Option::is_none")]
     pub storage_options: Option<std::collections::HashMap<String, String>>,
+    /// Table statistics
+    #[serde(rename = "stats", skip_serializing_if = "Option::is_none")]
+    pub stats: Option<Box<models::TableBasicStats>>,
 }
 
 impl DescribeTableResponse {
     pub fn new() -> DescribeTableResponse {
         DescribeTableResponse {
+            table: None,
+            namespace: None,
             version: None,
             location: None,
+            table_uri: None,
             schema: None,
-            properties: None,
             storage_options: None,
+            stats: None,
         }
     }
 }

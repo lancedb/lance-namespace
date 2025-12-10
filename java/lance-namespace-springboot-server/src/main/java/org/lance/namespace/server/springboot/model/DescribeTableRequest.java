@@ -34,6 +34,8 @@ public class DescribeTableRequest {
 
   private Long version;
 
+  private Boolean withTableUri = false;
+
   public DescribeTableRequest id(List<String> id) {
     this.id = id;
     return this;
@@ -88,6 +90,29 @@ public class DescribeTableRequest {
     this.version = version;
   }
 
+  public DescribeTableRequest withTableUri(Boolean withTableUri) {
+    this.withTableUri = withTableUri;
+    return this;
+  }
+
+  /**
+   * Whether to include the table URI in the response. Default is false.
+   *
+   * @return withTableUri
+   */
+  @Schema(
+      name = "with_table_uri",
+      description = "Whether to include the table URI in the response. Default is false. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("with_table_uri")
+  public Boolean getWithTableUri() {
+    return withTableUri;
+  }
+
+  public void setWithTableUri(Boolean withTableUri) {
+    this.withTableUri = withTableUri;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -98,12 +123,13 @@ public class DescribeTableRequest {
     }
     DescribeTableRequest describeTableRequest = (DescribeTableRequest) o;
     return Objects.equals(this.id, describeTableRequest.id)
-        && Objects.equals(this.version, describeTableRequest.version);
+        && Objects.equals(this.version, describeTableRequest.version)
+        && Objects.equals(this.withTableUri, describeTableRequest.withTableUri);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version);
+    return Objects.hash(id, version, withTableUri);
   }
 
   @Override
@@ -112,6 +138,7 @@ public class DescribeTableRequest {
     sb.append("class DescribeTableRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    withTableUri: ").append(toIndentedString(withTableUri)).append("\n");
     sb.append("}");
     return sb.toString();
   }

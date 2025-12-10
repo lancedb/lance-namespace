@@ -5,7 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**version** | **int** | The commit version associated with the operation | 
+**transaction_id** | **str** | Optional transaction identifier | [optional] 
+**version** | **int** | The commit version associated with the operation | [optional] 
 
 ## Example
 

@@ -13,15 +13,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DeleteFromTableResponse {
+    /// Optional transaction identifier
+    #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
     /// The commit version associated with the operation
-    #[serde(rename = "version")]
-    pub version: i64,
+    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
+    pub version: Option<i64>,
 }
 
 impl DeleteFromTableResponse {
-    pub fn new(version: i64) -> DeleteFromTableResponse {
+    pub fn new() -> DeleteFromTableResponse {
         DeleteFromTableResponse {
-            version,
+            transaction_id: None,
+            version: None,
         }
     }
 }

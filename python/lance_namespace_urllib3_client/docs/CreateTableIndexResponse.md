@@ -1,13 +1,12 @@
 # CreateTableIndexResponse
 
+Response for create index operation
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **List[str]** |  | [optional] 
-**location** | **str** | Table location (usually empty) | 
-**properties** | **Dict[str, str]** | Additional properties (usually empty) | [optional] 
+**transaction_id** | **str** | Optional transaction identifier | [optional] 
 
 ## Example
 

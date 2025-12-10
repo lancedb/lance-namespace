@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | Option<**Vec<String>**> |  | [optional]
 **bypass_vector_index** | Option<**bool**> | Whether to bypass vector index | [optional]
-**columns** | Option<**Vec<String>**> | Optional list of columns to return | [optional]
+**columns** | Option<[**models::QueryTableRequestColumns**](QueryTableRequest_columns.md)> |  | [optional]
 **distance_type** | Option<**String**> | Distance metric to use | [optional]
 **ef** | Option<**i32**> | Search effort parameter for HNSW index | [optional]
 **fast_search** | Option<**bool**> | Whether to use fast search | [optional]

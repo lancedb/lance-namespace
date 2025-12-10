@@ -13,11 +13,9 @@
  */
 package org.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -31,7 +29,8 @@ import java.util.StringJoiner;
   CreateTableIndexRequest.JSON_PROPERTY_ID,
   CreateTableIndexRequest.JSON_PROPERTY_COLUMN,
   CreateTableIndexRequest.JSON_PROPERTY_INDEX_TYPE,
-  CreateTableIndexRequest.JSON_PROPERTY_METRIC_TYPE,
+  CreateTableIndexRequest.JSON_PROPERTY_NAME,
+  CreateTableIndexRequest.JSON_PROPERTY_DISTANCE_TYPE,
   CreateTableIndexRequest.JSON_PROPERTY_WITH_POSITION,
   CreateTableIndexRequest.JSON_PROPERTY_BASE_TOKENIZER,
   CreateTableIndexRequest.JSON_PROPERTY_LANGUAGE,
@@ -51,89 +50,14 @@ public class CreateTableIndexRequest {
   public static final String JSON_PROPERTY_COLUMN = "column";
   @javax.annotation.Nonnull private String column;
 
-  /** Type of index to create */
-  public enum IndexTypeEnum {
-    BTREE(String.valueOf("BTREE")),
-
-    BITMAP(String.valueOf("BITMAP")),
-
-    LABEL_LIST(String.valueOf("LABEL_LIST")),
-
-    IVF_FLAT(String.valueOf("IVF_FLAT")),
-
-    IVF_PQ(String.valueOf("IVF_PQ")),
-
-    IVF_HNSW_SQ(String.valueOf("IVF_HNSW_SQ")),
-
-    FTS(String.valueOf("FTS"));
-
-    private String value;
-
-    IndexTypeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static IndexTypeEnum fromValue(String value) {
-      for (IndexTypeEnum b : IndexTypeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
   public static final String JSON_PROPERTY_INDEX_TYPE = "index_type";
-  @javax.annotation.Nonnull private IndexTypeEnum indexType;
+  @javax.annotation.Nonnull private String indexType;
 
-  /** Distance metric type for vector indexes */
-  public enum MetricTypeEnum {
-    L2(String.valueOf("l2")),
+  public static final String JSON_PROPERTY_NAME = "name";
+  @javax.annotation.Nullable private String name;
 
-    COSINE(String.valueOf("cosine")),
-
-    DOT(String.valueOf("dot"));
-
-    private String value;
-
-    MetricTypeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static MetricTypeEnum fromValue(String value) {
-      for (MetricTypeEnum b : MetricTypeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  public static final String JSON_PROPERTY_METRIC_TYPE = "metric_type";
-  @javax.annotation.Nullable private MetricTypeEnum metricType;
+  public static final String JSON_PROPERTY_DISTANCE_TYPE = "distance_type";
+  @javax.annotation.Nullable private String distanceType;
 
   public static final String JSON_PROPERTY_WITH_POSITION = "with_position";
   @javax.annotation.Nullable private Boolean withPosition;
@@ -217,52 +141,76 @@ public class CreateTableIndexRequest {
     this.column = column;
   }
 
-  public CreateTableIndexRequest indexType(@javax.annotation.Nonnull IndexTypeEnum indexType) {
+  public CreateTableIndexRequest indexType(@javax.annotation.Nonnull String indexType) {
 
     this.indexType = indexType;
     return this;
   }
 
   /**
-   * Type of index to create
+   * Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS)
    *
    * @return indexType
    */
   @javax.annotation.Nonnull
   @JsonProperty(JSON_PROPERTY_INDEX_TYPE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public IndexTypeEnum getIndexType() {
+  public String getIndexType() {
     return indexType;
   }
 
   @JsonProperty(JSON_PROPERTY_INDEX_TYPE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setIndexType(@javax.annotation.Nonnull IndexTypeEnum indexType) {
+  public void setIndexType(@javax.annotation.Nonnull String indexType) {
     this.indexType = indexType;
   }
 
-  public CreateTableIndexRequest metricType(@javax.annotation.Nullable MetricTypeEnum metricType) {
+  public CreateTableIndexRequest name(@javax.annotation.Nullable String name) {
 
-    this.metricType = metricType;
+    this.name = name;
     return this;
   }
 
   /**
-   * Distance metric type for vector indexes
+   * Optional name for the index. If not provided, a name will be auto-generated.
    *
-   * @return metricType
+   * @return name
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_METRIC_TYPE)
+  @JsonProperty(JSON_PROPERTY_NAME)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public MetricTypeEnum getMetricType() {
-    return metricType;
+  public String getName() {
+    return name;
   }
 
-  @JsonProperty(JSON_PROPERTY_METRIC_TYPE)
+  @JsonProperty(JSON_PROPERTY_NAME)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMetricType(@javax.annotation.Nullable MetricTypeEnum metricType) {
-    this.metricType = metricType;
+  public void setName(@javax.annotation.Nullable String name) {
+    this.name = name;
+  }
+
+  public CreateTableIndexRequest distanceType(@javax.annotation.Nullable String distanceType) {
+
+    this.distanceType = distanceType;
+    return this;
+  }
+
+  /**
+   * Distance metric type for vector indexes (e.g., l2, cosine, dot)
+   *
+   * @return distanceType
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_DISTANCE_TYPE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getDistanceType() {
+    return distanceType;
+  }
+
+  @JsonProperty(JSON_PROPERTY_DISTANCE_TYPE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDistanceType(@javax.annotation.Nullable String distanceType) {
+    this.distanceType = distanceType;
   }
 
   public CreateTableIndexRequest withPosition(@javax.annotation.Nullable Boolean withPosition) {
@@ -470,7 +418,8 @@ public class CreateTableIndexRequest {
     return Objects.equals(this.id, createTableIndexRequest.id)
         && Objects.equals(this.column, createTableIndexRequest.column)
         && Objects.equals(this.indexType, createTableIndexRequest.indexType)
-        && Objects.equals(this.metricType, createTableIndexRequest.metricType)
+        && Objects.equals(this.name, createTableIndexRequest.name)
+        && Objects.equals(this.distanceType, createTableIndexRequest.distanceType)
         && Objects.equals(this.withPosition, createTableIndexRequest.withPosition)
         && Objects.equals(this.baseTokenizer, createTableIndexRequest.baseTokenizer)
         && Objects.equals(this.language, createTableIndexRequest.language)
@@ -487,7 +436,8 @@ public class CreateTableIndexRequest {
         id,
         column,
         indexType,
-        metricType,
+        name,
+        distanceType,
         withPosition,
         baseTokenizer,
         language,
@@ -505,7 +455,8 @@ public class CreateTableIndexRequest {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
-    sb.append("    metricType: ").append(toIndentedString(metricType)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    distanceType: ").append(toIndentedString(distanceType)).append("\n");
     sb.append("    withPosition: ").append(toIndentedString(withPosition)).append("\n");
     sb.append("    baseTokenizer: ").append(toIndentedString(baseTokenizer)).append("\n");
     sb.append("    language: ").append(toIndentedString(language)).append("\n");
@@ -612,15 +563,30 @@ public class CreateTableIndexRequest {
       }
     }
 
-    // add `metric_type` to the URL query string
-    if (getMetricType() != null) {
+    // add `name` to the URL query string
+    if (getName() != null) {
       try {
         joiner.add(
             String.format(
-                "%smetric_type%s=%s",
+                "%sname%s=%s",
                 prefix,
                 suffix,
-                URLEncoder.encode(String.valueOf(getMetricType()), "UTF-8")
+                URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `distance_type` to the URL query string
+    if (getDistanceType() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sdistance_type%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getDistanceType()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported

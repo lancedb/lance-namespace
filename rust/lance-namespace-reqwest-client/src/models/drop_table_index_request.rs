@@ -13,18 +13,18 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DropTableIndexRequest {
-    #[serde(rename = "id")]
-    pub id: Vec<String>,
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<Vec<String>>,
     /// Name of the index to drop
-    #[serde(rename = "index_name")]
-    pub index_name: String,
+    #[serde(rename = "index_name", skip_serializing_if = "Option::is_none")]
+    pub index_name: Option<String>,
 }
 
 impl DropTableIndexRequest {
-    pub fn new(id: Vec<String>, index_name: String) -> DropTableIndexRequest {
+    pub fn new() -> DropTableIndexRequest {
         DropTableIndexRequest {
-            id,
-            index_name,
+            id: None,
+            index_name: None,
         }
     }
 }

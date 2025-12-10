@@ -11,17 +11,19 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
+/// RestoreTableResponse : Response for restore table operation
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RestoreTableResponse {
-    /// Version of the table after restore operation
-    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
-    pub version: Option<i64>,
+    /// Optional transaction identifier
+    #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
 }
 
 impl RestoreTableResponse {
+    /// Response for restore table operation
     pub fn new() -> RestoreTableResponse {
         RestoreTableResponse {
-            version: None,
+            transaction_id: None,
         }
     }
 }

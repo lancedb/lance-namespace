@@ -16,16 +16,20 @@ pub struct NewColumnTransform {
     /// Name of the new column
     #[serde(rename = "name")]
     pub name: String,
-    /// SQL expression to compute the column value
-    #[serde(rename = "expression")]
-    pub expression: String,
+    /// SQL expression to compute the column value (optional if virtual_column is specified)
+    #[serde(rename = "expression", skip_serializing_if = "Option::is_none")]
+    pub expression: Option<String>,
+    /// Virtual column definition (optional if expression is specified)
+    #[serde(rename = "virtual_column", skip_serializing_if = "Option::is_none")]
+    pub virtual_column: Option<Box<models::AddVirtualColumnEntry>>,
 }
 
 impl NewColumnTransform {
-    pub fn new(name: String, expression: String) -> NewColumnTransform {
+    pub fn new(name: String) -> NewColumnTransform {
         NewColumnTransform {
             name,
-            expression,
+            expression: None,
+            virtual_column: None,
         }
     }
 }

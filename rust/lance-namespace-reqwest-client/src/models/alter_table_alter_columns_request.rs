@@ -17,11 +17,11 @@ pub struct AlterTableAlterColumnsRequest {
     pub id: Option<Vec<String>>,
     /// List of column alterations to perform
     #[serde(rename = "alterations")]
-    pub alterations: Vec<models::ColumnAlteration>,
+    pub alterations: Vec<models::AlterColumnsEntry>,
 }
 
 impl AlterTableAlterColumnsRequest {
-    pub fn new(alterations: Vec<models::ColumnAlteration>) -> AlterTableAlterColumnsRequest {
+    pub fn new(alterations: Vec<models::AlterColumnsEntry>) -> AlterTableAlterColumnsRequest {
         AlterTableAlterColumnsRequest {
             id: None,
             alterations,

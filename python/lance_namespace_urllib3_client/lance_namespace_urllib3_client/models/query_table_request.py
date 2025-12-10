@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
+from lance_namespace_urllib3_client.models.query_table_request_columns import QueryTableRequestColumns
 from lance_namespace_urllib3_client.models.query_table_request_full_text_query import QueryTableRequestFullTextQuery
 from lance_namespace_urllib3_client.models.query_table_request_vector import QueryTableRequestVector
 from typing import Optional, Set
@@ -31,7 +32,7 @@ class QueryTableRequest(BaseModel):
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
     bypass_vector_index: Optional[StrictBool] = Field(default=None, description="Whether to bypass vector index")
-    columns: Optional[List[StrictStr]] = Field(default=None, description="Optional list of columns to return")
+    columns: Optional[QueryTableRequestColumns] = None
     distance_type: Optional[StrictStr] = Field(default=None, description="Distance metric to use")
     ef: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Search effort parameter for HNSW index")
     fast_search: Optional[StrictBool] = Field(default=None, description="Whether to use fast search")
@@ -89,6 +90,9 @@ class QueryTableRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of columns
+        if self.columns:
+            _dict['columns'] = self.columns.to_dict()
         # override the default output from pydantic by calling `to_dict()` of full_text_query
         if self.full_text_query:
             _dict['full_text_query'] = self.full_text_query.to_dict()
@@ -109,7 +113,7 @@ class QueryTableRequest(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "bypass_vector_index": obj.get("bypass_vector_index"),
-            "columns": obj.get("columns"),
+            "columns": QueryTableRequestColumns.from_dict(obj["columns"]) if obj.get("columns") is not None else None,
             "distance_type": obj.get("distance_type"),
             "ef": obj.get("ef"),
             "fast_search": obj.get("fast_search"),

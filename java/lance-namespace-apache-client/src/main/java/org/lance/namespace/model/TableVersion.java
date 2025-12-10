@@ -20,11 +20,17 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 /** TableVersion */
-@JsonPropertyOrder({TableVersion.JSON_PROPERTY_VERSION, TableVersion.JSON_PROPERTY_TIMESTAMP})
+@JsonPropertyOrder({
+  TableVersion.JSON_PROPERTY_VERSION,
+  TableVersion.JSON_PROPERTY_TIMESTAMP,
+  TableVersion.JSON_PROPERTY_METADATA
+})
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
@@ -34,6 +40,9 @@ public class TableVersion {
 
   public static final String JSON_PROPERTY_TIMESTAMP = "timestamp";
   @javax.annotation.Nonnull private OffsetDateTime timestamp;
+
+  public static final String JSON_PROPERTY_METADATA = "metadata";
+  @javax.annotation.Nonnull private Map<String, String> metadata = new HashMap<>();
 
   public TableVersion() {}
 
@@ -85,6 +94,35 @@ public class TableVersion {
     this.timestamp = timestamp;
   }
 
+  public TableVersion metadata(@javax.annotation.Nonnull Map<String, String> metadata) {
+
+    this.metadata = metadata;
+    return this;
+  }
+
+  public TableVersion putMetadataItem(String key, String metadataItem) {
+    this.metadata.put(key, metadataItem);
+    return this;
+  }
+
+  /**
+   * Key-value pairs of metadata
+   *
+   * @return metadata
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_METADATA)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public Map<String, String> getMetadata() {
+    return metadata;
+  }
+
+  @JsonProperty(JSON_PROPERTY_METADATA)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setMetadata(@javax.annotation.Nonnull Map<String, String> metadata) {
+    this.metadata = metadata;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -95,12 +133,13 @@ public class TableVersion {
     }
     TableVersion tableVersion = (TableVersion) o;
     return Objects.equals(this.version, tableVersion.version)
-        && Objects.equals(this.timestamp, tableVersion.timestamp);
+        && Objects.equals(this.timestamp, tableVersion.timestamp)
+        && Objects.equals(this.metadata, tableVersion.metadata);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version, timestamp);
+    return Objects.hash(version, timestamp, metadata);
   }
 
   @Override
@@ -109,6 +148,7 @@ public class TableVersion {
     sb.append("class TableVersion {\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    timestamp: ").append(toIndentedString(timestamp)).append("\n");
+    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -183,6 +223,28 @@ public class TableVersion {
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);
+      }
+    }
+
+    // add `metadata` to the URL query string
+    if (getMetadata() != null) {
+      for (String _key : getMetadata().keySet()) {
+        try {
+          joiner.add(
+              String.format(
+                  "%smetadata%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
+                  getMetadata().get(_key),
+                  URLEncoder.encode(String.valueOf(getMetadata().get(_key)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 

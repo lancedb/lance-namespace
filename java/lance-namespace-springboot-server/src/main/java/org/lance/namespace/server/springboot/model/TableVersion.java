@@ -22,6 +22,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /** TableVersion */
@@ -35,14 +37,17 @@ public class TableVersion {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private OffsetDateTime timestamp;
 
+  @Valid private Map<String, String> metadata = new HashMap<>();
+
   public TableVersion() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public TableVersion(Long version, OffsetDateTime timestamp) {
+  public TableVersion(Long version, OffsetDateTime timestamp, Map<String, String> metadata) {
     this.version = version;
     this.timestamp = timestamp;
+    this.metadata = metadata;
   }
 
   public TableVersion version(Long version) {
@@ -95,6 +100,38 @@ public class TableVersion {
     this.timestamp = timestamp;
   }
 
+  public TableVersion metadata(Map<String, String> metadata) {
+    this.metadata = metadata;
+    return this;
+  }
+
+  public TableVersion putMetadataItem(String key, String metadataItem) {
+    if (this.metadata == null) {
+      this.metadata = new HashMap<>();
+    }
+    this.metadata.put(key, metadataItem);
+    return this;
+  }
+
+  /**
+   * Key-value pairs of metadata
+   *
+   * @return metadata
+   */
+  @NotNull
+  @Schema(
+      name = "metadata",
+      description = "Key-value pairs of metadata",
+      requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("metadata")
+  public Map<String, String> getMetadata() {
+    return metadata;
+  }
+
+  public void setMetadata(Map<String, String> metadata) {
+    this.metadata = metadata;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -105,12 +142,13 @@ public class TableVersion {
     }
     TableVersion tableVersion = (TableVersion) o;
     return Objects.equals(this.version, tableVersion.version)
-        && Objects.equals(this.timestamp, tableVersion.timestamp);
+        && Objects.equals(this.timestamp, tableVersion.timestamp)
+        && Objects.equals(this.metadata, tableVersion.metadata);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version, timestamp);
+    return Objects.hash(version, timestamp, metadata);
   }
 
   @Override
@@ -119,6 +157,7 @@ public class TableVersion {
     sb.append("class TableVersion {\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    timestamp: ").append(toIndentedString(timestamp)).append("\n");
+    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("}");
     return sb.toString();
   }

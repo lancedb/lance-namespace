@@ -28,15 +28,18 @@ import java.util.StringJoiner;
 
 /** DropTableResponse */
 @JsonPropertyOrder({
+  DropTableResponse.JSON_PROPERTY_TRANSACTION_ID,
   DropTableResponse.JSON_PROPERTY_ID,
   DropTableResponse.JSON_PROPERTY_LOCATION,
-  DropTableResponse.JSON_PROPERTY_PROPERTIES,
-  DropTableResponse.JSON_PROPERTY_TRANSACTION_ID
+  DropTableResponse.JSON_PROPERTY_PROPERTIES
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DropTableResponse {
+  public static final String JSON_PROPERTY_TRANSACTION_ID = "transaction_id";
+  @javax.annotation.Nullable private String transactionId;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -46,10 +49,31 @@ public class DropTableResponse {
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
-  public static final String JSON_PROPERTY_TRANSACTION_ID = "transactionId";
-  @javax.annotation.Nullable private List<String> transactionId = new ArrayList<>();
-
   public DropTableResponse() {}
+
+  public DropTableResponse transactionId(@javax.annotation.Nullable String transactionId) {
+
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTransactionId(@javax.annotation.Nullable String transactionId) {
+    this.transactionId = transactionId;
+  }
 
   public DropTableResponse id(@javax.annotation.Nullable List<String> id) {
 
@@ -139,38 +163,6 @@ public class DropTableResponse {
     this.properties = properties;
   }
 
-  public DropTableResponse transactionId(@javax.annotation.Nullable List<String> transactionId) {
-
-    this.transactionId = transactionId;
-    return this;
-  }
-
-  public DropTableResponse addTransactionIdItem(String transactionIdItem) {
-    if (this.transactionId == null) {
-      this.transactionId = new ArrayList<>();
-    }
-    this.transactionId.add(transactionIdItem);
-    return this;
-  }
-
-  /**
-   * If present, indicating the operation is long running and should be tracked using GetTransaction
-   *
-   * @return transactionId
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getTransactionId() {
-    return transactionId;
-  }
-
-  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setTransactionId(@javax.annotation.Nullable List<String> transactionId) {
-    this.transactionId = transactionId;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -180,25 +172,25 @@ public class DropTableResponse {
       return false;
     }
     DropTableResponse dropTableResponse = (DropTableResponse) o;
-    return Objects.equals(this.id, dropTableResponse.id)
+    return Objects.equals(this.transactionId, dropTableResponse.transactionId)
+        && Objects.equals(this.id, dropTableResponse.id)
         && Objects.equals(this.location, dropTableResponse.location)
-        && Objects.equals(this.properties, dropTableResponse.properties)
-        && Objects.equals(this.transactionId, dropTableResponse.transactionId);
+        && Objects.equals(this.properties, dropTableResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location, properties, transactionId);
+    return Objects.hash(transactionId, id, location, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DropTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
-    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -244,6 +236,22 @@ public class DropTableResponse {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `transaction_id` to the URL query string
+    if (getTransactionId() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%stransaction_id%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getTransactionId()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {
@@ -296,27 +304,6 @@ public class DropTableResponse {
                       : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
                   getProperties().get(_key),
                   URLEncoder.encode(String.valueOf(getProperties().get(_key)), "UTF-8")
-                      .replaceAll("\\+", "%20")));
-        } catch (UnsupportedEncodingException e) {
-          // Should never happen, UTF-8 is always supported
-          throw new RuntimeException(e);
-        }
-      }
-    }
-
-    // add `transactionId` to the URL query string
-    if (getTransactionId() != null) {
-      for (int i = 0; i < getTransactionId().size(); i++) {
-        try {
-          joiner.add(
-              String.format(
-                  "%stransactionId%s%s=%s",
-                  prefix,
-                  suffix,
-                  "".equals(suffix)
-                      ? ""
-                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getTransactionId().get(i)), "UTF-8")
                       .replaceAll("\\+", "%20")));
         } catch (UnsupportedEncodingException e) {
           // Should never happen, UTF-8 is always supported

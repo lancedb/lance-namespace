@@ -23,9 +23,7 @@ import jakarta.validation.constraints.*;
 
 import java.util.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /** Request for creating a table, excluding the Arrow IPC stream. */
@@ -39,20 +37,18 @@ public class CreateTableRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
-  private String location;
-
   /**
    * There are three modes when trying to create a table, to differentiate the behavior when a table
-   * of the same name already exists: * create: the operation fails with 409. * exist_ok: the
-   * operation succeeds and the existing table is kept. * overwrite: the existing table is dropped
+   * of the same name already exists: * Create: the operation fails with 409. * ExistOk: the
+   * operation succeeds and the existing table is kept. * Overwrite: the existing table is dropped
    * and a new table with this name is created.
    */
   public enum ModeEnum {
-    CREATE("create"),
+    CREATE("Create"),
 
-    EXIST_OK("exist_ok"),
+    EXIST_OK("ExistOk"),
 
-    OVERWRITE("overwrite");
+    OVERWRITE("Overwrite");
 
     private String value;
 
@@ -83,8 +79,6 @@ public class CreateTableRequest {
 
   private ModeEnum mode;
 
-  @Valid private Map<String, String> properties = new HashMap<>();
-
   public CreateTableRequest id(List<String> id) {
     this.id = id;
     return this;
@@ -113,26 +107,6 @@ public class CreateTableRequest {
     this.id = id;
   }
 
-  public CreateTableRequest location(String location) {
-    this.location = location;
-    return this;
-  }
-
-  /**
-   * Get location
-   *
-   * @return location
-   */
-  @Schema(name = "location", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("location")
-  public String getLocation() {
-    return location;
-  }
-
-  public void setLocation(String location) {
-    this.location = location;
-  }
-
   public CreateTableRequest mode(ModeEnum mode) {
     this.mode = mode;
     return this;
@@ -140,8 +114,8 @@ public class CreateTableRequest {
 
   /**
    * There are three modes when trying to create a table, to differentiate the behavior when a table
-   * of the same name already exists: * create: the operation fails with 409. * exist_ok: the
-   * operation succeeds and the existing table is kept. * overwrite: the existing table is dropped
+   * of the same name already exists: * Create: the operation fails with 409. * ExistOk: the
+   * operation succeeds and the existing table is kept. * Overwrite: the existing table is dropped
    * and a new table with this name is created.
    *
    * @return mode
@@ -149,7 +123,7 @@ public class CreateTableRequest {
   @Schema(
       name = "mode",
       description =
-          "There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing table is kept.   * overwrite: the existing table is dropped and a new table with this name is created. ",
+          "There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * Create: the operation fails with 409.   * ExistOk: the operation succeeds and the existing table is kept.   * Overwrite: the existing table is dropped and a new table with this name is created. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
   public ModeEnum getMode() {
@@ -158,34 +132,6 @@ public class CreateTableRequest {
 
   public void setMode(ModeEnum mode) {
     this.mode = mode;
-  }
-
-  public CreateTableRequest properties(Map<String, String> properties) {
-    this.properties = properties;
-    return this;
-  }
-
-  public CreateTableRequest putPropertiesItem(String key, String propertiesItem) {
-    if (this.properties == null) {
-      this.properties = new HashMap<>();
-    }
-    this.properties.put(key, propertiesItem);
-    return this;
-  }
-
-  /**
-   * Get properties
-   *
-   * @return properties
-   */
-  @Schema(name = "properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("properties")
-  public Map<String, String> getProperties() {
-    return properties;
-  }
-
-  public void setProperties(Map<String, String> properties) {
-    this.properties = properties;
   }
 
   @Override
@@ -198,14 +144,12 @@ public class CreateTableRequest {
     }
     CreateTableRequest createTableRequest = (CreateTableRequest) o;
     return Objects.equals(this.id, createTableRequest.id)
-        && Objects.equals(this.location, createTableRequest.location)
-        && Objects.equals(this.mode, createTableRequest.mode)
-        && Objects.equals(this.properties, createTableRequest.properties);
+        && Objects.equals(this.mode, createTableRequest.mode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location, mode, properties);
+    return Objects.hash(id, mode);
   }
 
   @Override
@@ -213,9 +157,7 @@ public class CreateTableRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
-    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
   }

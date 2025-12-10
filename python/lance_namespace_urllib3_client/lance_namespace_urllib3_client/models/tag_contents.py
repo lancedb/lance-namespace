@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,8 +27,10 @@ class TagContents(BaseModel):
     """
     TagContents
     """ # noqa: E501
+    branch: Optional[StrictStr] = Field(default=None, description="Branch name that the tag was created on (if any)")
     version: Annotated[int, Field(strict=True, ge=0)] = Field(description="Version number that the tag points to")
-    __properties: ClassVar[List[str]] = ["version"]
+    manifest_size: Annotated[int, Field(strict=True, ge=0)] = Field(description="Size of the manifest file in bytes", alias="manifestSize")
+    __properties: ClassVar[List[str]] = ["branch", "version", "manifestSize"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,7 +83,9 @@ class TagContents(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "version": obj.get("version")
+            "branch": obj.get("branch"),
+            "version": obj.get("version"),
+            "manifestSize": obj.get("manifestSize")
         })
         return _obj
 

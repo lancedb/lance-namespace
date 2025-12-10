@@ -8,7 +8,7 @@ Response from inserting records into a table
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**version** | **Long** | The version of the table after the insert |  [optional] |
+|**transactionId** | **String** | Optional transaction identifier |  [optional] |
 
 
 

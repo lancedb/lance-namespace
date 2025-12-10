@@ -38,7 +38,10 @@ class TestListTableVersionsResponse(unittest.TestCase):
                 versions = [
                     lance_namespace_urllib3_client.models.table_version.TableVersion(
                         version = 0, 
-                        timestamp = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), )
+                        timestamp = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
+                        metadata = {
+                            'key' : ''
+                            }, )
                     ],
                 page_token = ''
             )
@@ -47,7 +50,10 @@ class TestListTableVersionsResponse(unittest.TestCase):
                 versions = [
                     lance_namespace_urllib3_client.models.table_version.TableVersion(
                         version = 0, 
-                        timestamp = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), )
+                        timestamp = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
+                        metadata = {
+                            'key' : ''
+                            }, )
                     ],
         )
         """

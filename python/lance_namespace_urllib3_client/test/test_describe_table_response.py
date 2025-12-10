@@ -35,8 +35,13 @@ class TestDescribeTableResponse(unittest.TestCase):
         model = DescribeTableResponse()
         if include_optional:
             return DescribeTableResponse(
+                table = '',
+                namespace = [
+                    ''
+                    ],
                 version = 0,
                 location = '',
+                table_uri = '',
                 var_schema = lance_namespace_urllib3_client.models.json_arrow_schema.JsonArrowSchema(
                     fields = [
                         lance_namespace_urllib3_client.models.json_arrow_field.JsonArrowField(
@@ -52,12 +57,12 @@ class TestDescribeTableResponse(unittest.TestCase):
                     metadata = {
                         'key' : ''
                         }, ),
-                properties = {
-                    'key' : ''
-                    },
                 storage_options = {
                     'key' : ''
-                    }
+                    },
+                stats = lance_namespace_urllib3_client.models.table_basic_stats.TableBasicStats(
+                    num_deleted_rows = 0, 
+                    num_fragments = 0, )
             )
         else:
             return DescribeTableResponse(

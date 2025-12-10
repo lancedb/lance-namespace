@@ -49,6 +49,7 @@ The request and response bodies follow the OpenAPI specification, with exception
 | TableExists | `/v1/table/{id}/exists` | POST |
 | DropTable | `/v1/table/{id}/drop` | POST |
 | DeregisterTable | `/v1/table/{id}/deregister` | POST |
+| RenameTable | `/v1/table/{id}/rename` | POST |
 
 ### Table Data Operations
 
@@ -82,7 +83,7 @@ The request and response bodies follow the OpenAPI specification, with exception
 
 | Operation | REST Route | HTTP Method |
 |-----------|-----------|-------------|
-| ListTableTags | `/v1/table/{id}/tags/list` | GET |
+| ListTableTags | `/v1/table/{id}/tags/list` | POST |
 | GetTableTagVersion | `/v1/table/{id}/tags/get` | POST |
 | CreateTableTag | `/v1/table/{id}/tags/create` | POST |
 | DeleteTableTag | `/v1/table/{id}/tags/delete` | POST |
@@ -95,6 +96,7 @@ The request and response bodies follow the OpenAPI specification, with exception
 | AlterTableAddColumns | `/v1/table/{id}/alter/add_columns` | POST |
 | AlterTableAlterColumns | `/v1/table/{id}/alter/alter_columns` | POST |
 | AlterTableDropColumns | `/v1/table/{id}/alter/drop_columns` | POST |
+| UpdateTableSchemaMetadata | `/v1/table/{id}/schema_metadata/update` | POST |
 
 ### Statistics Operations
 

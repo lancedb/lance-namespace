@@ -5,9 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**num_rows** | **int** | Total number of rows in the table | 
-**size_bytes** | **int** | Total size of the table in bytes | 
-**num_fragments** | **int** | Number of data fragments | [optional] 
+**total_bytes** | **int** | The total number of bytes in the table | 
+**num_rows** | **int** | The number of rows in the table | 
+**num_indices** | **int** | The number of indices in the table | 
+**fragment_stats** | [**FragmentStats**](FragmentStats.md) | Statistics on table fragments | 
 
 ## Example
 

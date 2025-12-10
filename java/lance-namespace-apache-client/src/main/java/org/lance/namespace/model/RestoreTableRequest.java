@@ -37,7 +37,7 @@ public class RestoreTableRequest {
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public static final String JSON_PROPERTY_VERSION = "version";
-  @javax.annotation.Nullable private Long version;
+  @javax.annotation.Nonnull private Long version;
 
   public RestoreTableRequest() {}
 
@@ -73,27 +73,27 @@ public class RestoreTableRequest {
     this.id = id;
   }
 
-  public RestoreTableRequest version(@javax.annotation.Nullable Long version) {
+  public RestoreTableRequest version(@javax.annotation.Nonnull Long version) {
 
     this.version = version;
     return this;
   }
 
   /**
-   * Version to restore to (if not specified, restores to current version) minimum: 0
+   * Version to restore to minimum: 0
    *
    * @return version
    */
-  @javax.annotation.Nullable
+  @javax.annotation.Nonnull
   @JsonProperty(JSON_PROPERTY_VERSION)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public Long getVersion() {
     return version;
   }
 
   @JsonProperty(JSON_PROPERTY_VERSION)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setVersion(@javax.annotation.Nullable Long version) {
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setVersion(@javax.annotation.Nonnull Long version) {
     this.version = version;
   }
 

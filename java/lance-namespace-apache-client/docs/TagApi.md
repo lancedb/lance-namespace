@@ -7,14 +7,14 @@ All URIs are relative to *http://localhost:2333*
 | [**createTableTag**](TagApi.md#createTableTag) | **POST** /v1/table/{id}/tags/create | Create a new tag |
 | [**deleteTableTag**](TagApi.md#deleteTableTag) | **POST** /v1/table/{id}/tags/delete | Delete a tag |
 | [**getTableTagVersion**](TagApi.md#getTableTagVersion) | **POST** /v1/table/{id}/tags/version | Get version for a specific tag |
-| [**listTableTags**](TagApi.md#listTableTags) | **GET** /v1/table/{id}/tags/list | List all tags for a table |
+| [**listTableTags**](TagApi.md#listTableTags) | **POST** /v1/table/{id}/tags/list | List all tags for a table |
 | [**updateTableTag**](TagApi.md#updateTableTag) | **POST** /v1/table/{id}/tags/update | Update a tag to point to a different version |
 
 
 
 ## createTableTag
 
-> createTableTag(id, createTableTagRequest, delimiter)
+> CreateTableTagResponse createTableTag(id, createTableTagRequest, delimiter)
 
 Create a new tag
 
@@ -27,6 +27,7 @@ Create a new tag for table &#x60;id&#x60; that points to a specific version.
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.TagApi;
 
@@ -34,13 +35,28 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         TagApi apiInstance = new TagApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         CreateTableTagRequest createTableTagRequest = new CreateTableTagRequest(); // CreateTableTagRequest | 
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         try {
-            apiInstance.createTableTag(id, createTableTagRequest, delimiter);
+            CreateTableTagResponse result = apiInstance.createTableTag(id, createTableTagRequest, delimiter);
+            System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TagApi#createTableTag");
             System.err.println("Status code: " + e.getCode());
@@ -63,11 +79,11 @@ public class Example {
 
 ### Return type
 
-null (empty response body)
+[**CreateTableTagResponse**](CreateTableTagResponse.md)
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -78,7 +94,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Success, no content |  -  |
+| **200** | Create tag response |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -90,7 +106,7 @@ No authorization required
 
 ## deleteTableTag
 
-> deleteTableTag(id, deleteTableTagRequest, delimiter)
+> DeleteTableTagResponse deleteTableTag(id, deleteTableTagRequest, delimiter)
 
 Delete a tag
 
@@ -103,6 +119,7 @@ Delete an existing tag from table &#x60;id&#x60;.
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.TagApi;
 
@@ -110,13 +127,28 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         TagApi apiInstance = new TagApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         DeleteTableTagRequest deleteTableTagRequest = new DeleteTableTagRequest(); // DeleteTableTagRequest | 
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         try {
-            apiInstance.deleteTableTag(id, deleteTableTagRequest, delimiter);
+            DeleteTableTagResponse result = apiInstance.deleteTableTag(id, deleteTableTagRequest, delimiter);
+            System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TagApi#deleteTableTag");
             System.err.println("Status code: " + e.getCode());
@@ -139,11 +171,11 @@ public class Example {
 
 ### Return type
 
-null (empty response body)
+[**DeleteTableTagResponse**](DeleteTableTagResponse.md)
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -154,7 +186,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Success, no content |  -  |
+| **200** | Delete tag response |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -178,6 +210,7 @@ Get the version number that a specific tag points to for table &#x60;id&#x60;.
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.TagApi;
 
@@ -185,6 +218,20 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         TagApi apiInstance = new TagApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
@@ -219,7 +266,7 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -245,7 +292,7 @@ No authorization required
 
 List all tags for a table
 
-List all tags that have been created for table &#x60;id&#x60;. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the &#x60;ListTableTagsRequest&#x60; information in the following way: - &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of the same name 
+List all tags that have been created for table &#x60;id&#x60;. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The &#x60;ListTableTagsRequest&#x60; information is passed in the following way: - &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of the same name 
 
 ### Example
 
@@ -254,6 +301,7 @@ List all tags that have been created for table &#x60;id&#x60;. Returns a map of 
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.TagApi;
 
@@ -261,12 +309,26 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         TagApi apiInstance = new TagApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
-        String pageToken = "pageToken_example"; // String | 
-        Integer limit = 56; // Integer | 
+        String pageToken = "pageToken_example"; // String | Pagination token from a previous request
+        Integer limit = 56; // Integer | Maximum number of items to return
         try {
             ListTableTagsResponse result = apiInstance.listTableTags(id, delimiter, pageToken, limit);
             System.out.println(result);
@@ -288,8 +350,8 @@ public class Example {
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] |
-| **pageToken** | **String**|  | [optional] |
-| **limit** | **Integer**|  | [optional] |
+| **pageToken** | **String**| Pagination token from a previous request | [optional] |
+| **limit** | **Integer**| Maximum number of items to return | [optional] |
 
 ### Return type
 
@@ -297,7 +359,7 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -319,7 +381,7 @@ No authorization required
 
 ## updateTableTag
 
-> updateTableTag(id, updateTableTagRequest, delimiter)
+> UpdateTableTagResponse updateTableTag(id, updateTableTagRequest, delimiter)
 
 Update a tag to point to a different version
 
@@ -332,6 +394,7 @@ Update an existing tag for table &#x60;id&#x60; to point to a different version.
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.TagApi;
 
@@ -339,13 +402,28 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         TagApi apiInstance = new TagApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         UpdateTableTagRequest updateTableTagRequest = new UpdateTableTagRequest(); // UpdateTableTagRequest | 
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         try {
-            apiInstance.updateTableTag(id, updateTableTagRequest, delimiter);
+            UpdateTableTagResponse result = apiInstance.updateTableTag(id, updateTableTagRequest, delimiter);
+            System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling TagApi#updateTableTag");
             System.err.println("Status code: " + e.getCode());
@@ -368,11 +446,11 @@ public class Example {
 
 ### Return type
 
-null (empty response body)
+[**UpdateTableTagResponse**](UpdateTableTagResponse.md)
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -383,7 +461,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Success, no content |  -  |
+| **200** | Update tag response |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |

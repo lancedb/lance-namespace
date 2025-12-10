@@ -17,6 +17,7 @@ Request for inserting records into a table, excluding the Arrow IPC stream.
 
 | Name | Value |
 |---- | -----|
+| CREATE | &quot;create&quot; |
 | APPEND | &quot;append&quot; |
 | OVERWRITE | &quot;overwrite&quot; |
 

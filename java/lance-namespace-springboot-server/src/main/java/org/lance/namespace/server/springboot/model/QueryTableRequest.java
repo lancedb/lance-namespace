@@ -34,7 +34,7 @@ public class QueryTableRequest {
 
   private Boolean bypassVectorIndex;
 
-  @Valid private List<String> columns = new ArrayList<>();
+  private QueryTableRequestColumns columns;
 
   private String distanceType;
 
@@ -129,34 +129,24 @@ public class QueryTableRequest {
     this.bypassVectorIndex = bypassVectorIndex;
   }
 
-  public QueryTableRequest columns(List<String> columns) {
+  public QueryTableRequest columns(QueryTableRequestColumns columns) {
     this.columns = columns;
     return this;
   }
 
-  public QueryTableRequest addColumnsItem(String columnsItem) {
-    if (this.columns == null) {
-      this.columns = new ArrayList<>();
-    }
-    this.columns.add(columnsItem);
-    return this;
-  }
-
   /**
-   * Optional list of columns to return
+   * Get columns
    *
    * @return columns
    */
-  @Schema(
-      name = "columns",
-      description = "Optional list of columns to return",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Valid
+  @Schema(name = "columns", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("columns")
-  public List<String> getColumns() {
+  public QueryTableRequestColumns getColumns() {
     return columns;
   }
 
-  public void setColumns(List<String> columns) {
+  public void setColumns(QueryTableRequestColumns columns) {
     this.columns = columns;
   }
 

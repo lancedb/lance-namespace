@@ -26,8 +26,9 @@ class CreateNamespaceResponse(BaseModel):
     """
     CreateNamespaceResponse
     """ # noqa: E501
+    transaction_id: Optional[StrictStr] = Field(default=None, description="Optional transaction identifier")
     properties: Optional[Dict[str, StrictStr]] = Field(default=None, description="Properties after the namespace is created.  If the server does not support namespace properties, it should return null for this field. If namespace properties are supported, but none are set, it should return an empty object. ")
-    __properties: ClassVar[List[str]] = ["properties"]
+    __properties: ClassVar[List[str]] = ["transaction_id", "properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -80,6 +81,7 @@ class CreateNamespaceResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "transaction_id": obj.get("transaction_id"),
             "properties": obj.get("properties")
         })
         return _obj

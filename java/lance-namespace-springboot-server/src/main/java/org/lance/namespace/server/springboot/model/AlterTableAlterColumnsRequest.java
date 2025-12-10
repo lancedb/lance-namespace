@@ -32,14 +32,14 @@ public class AlterTableAlterColumnsRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
-  @Valid private List<@Valid ColumnAlteration> alterations = new ArrayList<>();
+  @Valid private List<@Valid AlterColumnsEntry> alterations = new ArrayList<>();
 
   public AlterTableAlterColumnsRequest() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public AlterTableAlterColumnsRequest(List<@Valid ColumnAlteration> alterations) {
+  public AlterTableAlterColumnsRequest(List<@Valid AlterColumnsEntry> alterations) {
     this.alterations = alterations;
   }
 
@@ -71,12 +71,12 @@ public class AlterTableAlterColumnsRequest {
     this.id = id;
   }
 
-  public AlterTableAlterColumnsRequest alterations(List<@Valid ColumnAlteration> alterations) {
+  public AlterTableAlterColumnsRequest alterations(List<@Valid AlterColumnsEntry> alterations) {
     this.alterations = alterations;
     return this;
   }
 
-  public AlterTableAlterColumnsRequest addAlterationsItem(ColumnAlteration alterationsItem) {
+  public AlterTableAlterColumnsRequest addAlterationsItem(AlterColumnsEntry alterationsItem) {
     if (this.alterations == null) {
       this.alterations = new ArrayList<>();
     }
@@ -96,11 +96,11 @@ public class AlterTableAlterColumnsRequest {
       description = "List of column alterations to perform",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("alterations")
-  public List<@Valid ColumnAlteration> getAlterations() {
+  public List<@Valid AlterColumnsEntry> getAlterations() {
     return alterations;
   }
 
-  public void setAlterations(List<@Valid ColumnAlteration> alterations) {
+  public void setAlterations(List<@Valid AlterColumnsEntry> alterations) {
     this.alterations = alterations;
   }
 

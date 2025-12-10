@@ -6,6 +6,7 @@ Response from merge insert operation
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**transaction_id** | **str** | Optional transaction identifier | [optional] 
 **num_updated_rows** | **int** | Number of rows updated | [optional] 
 **num_inserted_rows** | **int** | Number of rows inserted | [optional] 
 **num_deleted_rows** | **int** | Number of rows deleted (typically 0 for merge insert) | [optional] 

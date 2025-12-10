@@ -18,8 +18,9 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from typing_extensions import Annotated
+from lance_namespace_urllib3_client.models.fragment_stats import FragmentStats
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,10 +28,11 @@ class GetTableStatsResponse(BaseModel):
     """
     GetTableStatsResponse
     """ # noqa: E501
-    num_rows: Annotated[int, Field(strict=True, ge=0)] = Field(description="Total number of rows in the table")
-    size_bytes: Annotated[int, Field(strict=True, ge=0)] = Field(description="Total size of the table in bytes")
-    num_fragments: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of data fragments")
-    __properties: ClassVar[List[str]] = ["num_rows", "size_bytes", "num_fragments"]
+    total_bytes: Annotated[int, Field(strict=True, ge=0)] = Field(description="The total number of bytes in the table")
+    num_rows: Annotated[int, Field(strict=True, ge=0)] = Field(description="The number of rows in the table")
+    num_indices: Annotated[int, Field(strict=True, ge=0)] = Field(description="The number of indices in the table")
+    fragment_stats: FragmentStats = Field(description="Statistics on table fragments")
+    __properties: ClassVar[List[str]] = ["total_bytes", "num_rows", "num_indices", "fragment_stats"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -71,6 +73,9 @@ class GetTableStatsResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of fragment_stats
+        if self.fragment_stats:
+            _dict['fragment_stats'] = self.fragment_stats.to_dict()
         return _dict
 
     @classmethod
@@ -83,9 +88,10 @@ class GetTableStatsResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "total_bytes": obj.get("total_bytes"),
             "num_rows": obj.get("num_rows"),
-            "size_bytes": obj.get("size_bytes"),
-            "num_fragments": obj.get("num_fragments")
+            "num_indices": obj.get("num_indices"),
+            "fragment_stats": FragmentStats.from_dict(obj["fragment_stats"]) if obj.get("fragment_stats") is not None else None
         })
         return _obj
 

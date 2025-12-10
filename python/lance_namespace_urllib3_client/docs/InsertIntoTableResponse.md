@@ -6,7 +6,7 @@ Response from inserting records into a table
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**version** | **int** | The version of the table after the insert | [optional] 
+**transaction_id** | **str** | Optional transaction identifier | [optional] 
 
 ## Example
 

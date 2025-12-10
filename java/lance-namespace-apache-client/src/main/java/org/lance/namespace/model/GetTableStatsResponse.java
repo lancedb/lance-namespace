@@ -24,24 +24,52 @@ import java.util.StringJoiner;
 
 /** GetTableStatsResponse */
 @JsonPropertyOrder({
+  GetTableStatsResponse.JSON_PROPERTY_TOTAL_BYTES,
   GetTableStatsResponse.JSON_PROPERTY_NUM_ROWS,
-  GetTableStatsResponse.JSON_PROPERTY_SIZE_BYTES,
-  GetTableStatsResponse.JSON_PROPERTY_NUM_FRAGMENTS
+  GetTableStatsResponse.JSON_PROPERTY_NUM_INDICES,
+  GetTableStatsResponse.JSON_PROPERTY_FRAGMENT_STATS
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class GetTableStatsResponse {
+  public static final String JSON_PROPERTY_TOTAL_BYTES = "total_bytes";
+  @javax.annotation.Nonnull private Long totalBytes;
+
   public static final String JSON_PROPERTY_NUM_ROWS = "num_rows";
   @javax.annotation.Nonnull private Long numRows;
 
-  public static final String JSON_PROPERTY_SIZE_BYTES = "size_bytes";
-  @javax.annotation.Nonnull private Long sizeBytes;
+  public static final String JSON_PROPERTY_NUM_INDICES = "num_indices";
+  @javax.annotation.Nonnull private Long numIndices;
 
-  public static final String JSON_PROPERTY_NUM_FRAGMENTS = "num_fragments";
-  @javax.annotation.Nullable private Long numFragments;
+  public static final String JSON_PROPERTY_FRAGMENT_STATS = "fragment_stats";
+  @javax.annotation.Nonnull private FragmentStats fragmentStats;
 
   public GetTableStatsResponse() {}
+
+  public GetTableStatsResponse totalBytes(@javax.annotation.Nonnull Long totalBytes) {
+
+    this.totalBytes = totalBytes;
+    return this;
+  }
+
+  /**
+   * The total number of bytes in the table minimum: 0
+   *
+   * @return totalBytes
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_TOTAL_BYTES)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public Long getTotalBytes() {
+    return totalBytes;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TOTAL_BYTES)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setTotalBytes(@javax.annotation.Nonnull Long totalBytes) {
+    this.totalBytes = totalBytes;
+  }
 
   public GetTableStatsResponse numRows(@javax.annotation.Nonnull Long numRows) {
 
@@ -50,7 +78,7 @@ public class GetTableStatsResponse {
   }
 
   /**
-   * Total number of rows in the table minimum: 0
+   * The number of rows in the table minimum: 0
    *
    * @return numRows
    */
@@ -67,52 +95,53 @@ public class GetTableStatsResponse {
     this.numRows = numRows;
   }
 
-  public GetTableStatsResponse sizeBytes(@javax.annotation.Nonnull Long sizeBytes) {
+  public GetTableStatsResponse numIndices(@javax.annotation.Nonnull Long numIndices) {
 
-    this.sizeBytes = sizeBytes;
+    this.numIndices = numIndices;
     return this;
   }
 
   /**
-   * Total size of the table in bytes minimum: 0
+   * The number of indices in the table minimum: 0
    *
-   * @return sizeBytes
+   * @return numIndices
    */
   @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_SIZE_BYTES)
+  @JsonProperty(JSON_PROPERTY_NUM_INDICES)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public Long getSizeBytes() {
-    return sizeBytes;
+  public Long getNumIndices() {
+    return numIndices;
   }
 
-  @JsonProperty(JSON_PROPERTY_SIZE_BYTES)
+  @JsonProperty(JSON_PROPERTY_NUM_INDICES)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setSizeBytes(@javax.annotation.Nonnull Long sizeBytes) {
-    this.sizeBytes = sizeBytes;
+  public void setNumIndices(@javax.annotation.Nonnull Long numIndices) {
+    this.numIndices = numIndices;
   }
 
-  public GetTableStatsResponse numFragments(@javax.annotation.Nullable Long numFragments) {
+  public GetTableStatsResponse fragmentStats(
+      @javax.annotation.Nonnull FragmentStats fragmentStats) {
 
-    this.numFragments = numFragments;
+    this.fragmentStats = fragmentStats;
     return this;
   }
 
   /**
-   * Number of data fragments minimum: 0
+   * Statistics on table fragments
    *
-   * @return numFragments
+   * @return fragmentStats
    */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_NUM_FRAGMENTS)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Long getNumFragments() {
-    return numFragments;
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_FRAGMENT_STATS)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public FragmentStats getFragmentStats() {
+    return fragmentStats;
   }
 
-  @JsonProperty(JSON_PROPERTY_NUM_FRAGMENTS)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setNumFragments(@javax.annotation.Nullable Long numFragments) {
-    this.numFragments = numFragments;
+  @JsonProperty(JSON_PROPERTY_FRAGMENT_STATS)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setFragmentStats(@javax.annotation.Nonnull FragmentStats fragmentStats) {
+    this.fragmentStats = fragmentStats;
   }
 
   @Override
@@ -124,23 +153,25 @@ public class GetTableStatsResponse {
       return false;
     }
     GetTableStatsResponse getTableStatsResponse = (GetTableStatsResponse) o;
-    return Objects.equals(this.numRows, getTableStatsResponse.numRows)
-        && Objects.equals(this.sizeBytes, getTableStatsResponse.sizeBytes)
-        && Objects.equals(this.numFragments, getTableStatsResponse.numFragments);
+    return Objects.equals(this.totalBytes, getTableStatsResponse.totalBytes)
+        && Objects.equals(this.numRows, getTableStatsResponse.numRows)
+        && Objects.equals(this.numIndices, getTableStatsResponse.numIndices)
+        && Objects.equals(this.fragmentStats, getTableStatsResponse.fragmentStats);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(numRows, sizeBytes, numFragments);
+    return Objects.hash(totalBytes, numRows, numIndices, fragmentStats);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class GetTableStatsResponse {\n");
+    sb.append("    totalBytes: ").append(toIndentedString(totalBytes)).append("\n");
     sb.append("    numRows: ").append(toIndentedString(numRows)).append("\n");
-    sb.append("    sizeBytes: ").append(toIndentedString(sizeBytes)).append("\n");
-    sb.append("    numFragments: ").append(toIndentedString(numFragments)).append("\n");
+    sb.append("    numIndices: ").append(toIndentedString(numIndices)).append("\n");
+    sb.append("    fragmentStats: ").append(toIndentedString(fragmentStats)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -187,6 +218,22 @@ public class GetTableStatsResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
+    // add `total_bytes` to the URL query string
+    if (getTotalBytes() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%stotal_bytes%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getTotalBytes()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
     // add `num_rows` to the URL query string
     if (getNumRows() != null) {
       try {
@@ -202,15 +249,15 @@ public class GetTableStatsResponse {
       }
     }
 
-    // add `size_bytes` to the URL query string
-    if (getSizeBytes() != null) {
+    // add `num_indices` to the URL query string
+    if (getNumIndices() != null) {
       try {
         joiner.add(
             String.format(
-                "%ssize_bytes%s=%s",
+                "%snum_indices%s=%s",
                 prefix,
                 suffix,
-                URLEncoder.encode(String.valueOf(getSizeBytes()), "UTF-8")
+                URLEncoder.encode(String.valueOf(getNumIndices()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
@@ -218,20 +265,9 @@ public class GetTableStatsResponse {
       }
     }
 
-    // add `num_fragments` to the URL query string
-    if (getNumFragments() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%snum_fragments%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getNumFragments()), "UTF-8")
-                    .replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
+    // add `fragment_stats` to the URL query string
+    if (getFragmentStats() != null) {
+      joiner.add(getFragmentStats().toUrlQueryString(prefix + "fragment_stats" + suffix));
     }
 
     return joiner.toString();

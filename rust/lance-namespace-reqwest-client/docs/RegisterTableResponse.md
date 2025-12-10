@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**transaction_id** | Option<**String**> | Optional transaction identifier | [optional]
 **location** | **String** |  | 
 **properties** | Option<**std::collections::HashMap<String, String>**> |  | [optional]
 

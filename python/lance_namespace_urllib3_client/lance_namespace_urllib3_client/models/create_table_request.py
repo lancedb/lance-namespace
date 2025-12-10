@@ -27,10 +27,8 @@ class CreateTableRequest(BaseModel):
     Request for creating a table, excluding the Arrow IPC stream. 
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
-    location: Optional[StrictStr] = None
-    mode: Optional[StrictStr] = Field(default=None, description="There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing table is kept.   * overwrite: the existing table is dropped and a new table with this name is created. ")
-    properties: Optional[Dict[str, StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["id", "location", "mode", "properties"]
+    mode: Optional[StrictStr] = Field(default=None, description="There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * Create: the operation fails with 409.   * ExistOk: the operation succeeds and the existing table is kept.   * Overwrite: the existing table is dropped and a new table with this name is created. ")
+    __properties: ClassVar[List[str]] = ["id", "mode"]
 
     @field_validator('mode')
     def mode_validate_enum(cls, value):
@@ -38,8 +36,8 @@ class CreateTableRequest(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['create', 'exist_ok', 'overwrite']):
-            raise ValueError("must be one of enum values ('create', 'exist_ok', 'overwrite')")
+        if value not in set(['Create', 'ExistOk', 'Overwrite']):
+            raise ValueError("must be one of enum values ('Create', 'ExistOk', 'Overwrite')")
         return value
 
     model_config = ConfigDict(
@@ -94,9 +92,7 @@ class CreateTableRequest(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
-            "location": obj.get("location"),
-            "mode": obj.get("mode"),
-            "properties": obj.get("properties")
+            "mode": obj.get("mode")
         })
         return _obj
 

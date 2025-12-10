@@ -23,15 +23,49 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /** TagContents */
-@JsonPropertyOrder({TagContents.JSON_PROPERTY_VERSION})
+@JsonPropertyOrder({
+  TagContents.JSON_PROPERTY_BRANCH,
+  TagContents.JSON_PROPERTY_VERSION,
+  TagContents.JSON_PROPERTY_MANIFEST_SIZE
+})
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class TagContents {
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
+
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nonnull private Long version;
 
+  public static final String JSON_PROPERTY_MANIFEST_SIZE = "manifestSize";
+  @javax.annotation.Nonnull private Long manifestSize;
+
   public TagContents() {}
+
+  public TagContents branch(@javax.annotation.Nullable String branch) {
+
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch name that the tag was created on (if any)
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
 
   public TagContents version(@javax.annotation.Nonnull Long version) {
 
@@ -57,6 +91,30 @@ public class TagContents {
     this.version = version;
   }
 
+  public TagContents manifestSize(@javax.annotation.Nonnull Long manifestSize) {
+
+    this.manifestSize = manifestSize;
+    return this;
+  }
+
+  /**
+   * Size of the manifest file in bytes minimum: 0
+   *
+   * @return manifestSize
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(JSON_PROPERTY_MANIFEST_SIZE)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public Long getManifestSize() {
+    return manifestSize;
+  }
+
+  @JsonProperty(JSON_PROPERTY_MANIFEST_SIZE)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setManifestSize(@javax.annotation.Nonnull Long manifestSize) {
+    this.manifestSize = manifestSize;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -66,19 +124,23 @@ public class TagContents {
       return false;
     }
     TagContents tagContents = (TagContents) o;
-    return Objects.equals(this.version, tagContents.version);
+    return Objects.equals(this.branch, tagContents.branch)
+        && Objects.equals(this.version, tagContents.version)
+        && Objects.equals(this.manifestSize, tagContents.manifestSize);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version);
+    return Objects.hash(branch, version, manifestSize);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class TagContents {\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    manifestSize: ").append(toIndentedString(manifestSize)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -125,6 +187,21 @@ public class TagContents {
 
     StringJoiner joiner = new StringJoiner("&");
 
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sbranch%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getBranch()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
     // add `version` to the URL query string
     if (getVersion() != null) {
       try {
@@ -134,6 +211,22 @@ public class TagContents {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `manifestSize` to the URL query string
+    if (getManifestSize() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%smanifestSize%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getManifestSize()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

@@ -6,6 +6,7 @@ Response for creating an empty table.
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**transaction_id** | **str** | Optional transaction identifier | [optional] 
 **location** | **str** |  | [optional] 
 **properties** | **Dict[str, str]** |  | [optional] 
 **storage_options** | **Dict[str, str]** | Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access.  | [optional] 

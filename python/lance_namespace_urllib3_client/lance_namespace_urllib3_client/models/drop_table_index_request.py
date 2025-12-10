@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,8 +26,8 @@ class DropTableIndexRequest(BaseModel):
     """
     DropTableIndexRequest
     """ # noqa: E501
-    id: List[StrictStr]
-    index_name: StrictStr = Field(description="Name of the index to drop")
+    id: Optional[List[StrictStr]] = None
+    index_name: Optional[StrictStr] = Field(default=None, description="Name of the index to drop")
     __properties: ClassVar[List[str]] = ["id", "index_name"]
 
     model_config = ConfigDict(

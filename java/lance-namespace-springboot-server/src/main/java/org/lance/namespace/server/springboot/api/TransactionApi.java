@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
@@ -151,6 +152,11 @@ public interface TransactionApi {
                   mediaType = "application/json",
                   schema = @Schema(implementation = ErrorResponse.class))
             })
+      },
+      security = {
+        @SecurityRequirement(name = "OAuth2"),
+        @SecurityRequirement(name = "ApiKeyAuth"),
+        @SecurityRequirement(name = "BearerAuth")
       })
   @RequestMapping(
       method = RequestMethod.POST,
@@ -326,6 +332,11 @@ public interface TransactionApi {
                   mediaType = "application/json",
                   schema = @Schema(implementation = ErrorResponse.class))
             })
+      },
+      security = {
+        @SecurityRequirement(name = "OAuth2"),
+        @SecurityRequirement(name = "ApiKeyAuth"),
+        @SecurityRequirement(name = "BearerAuth")
       })
   @RequestMapping(
       method = RequestMethod.POST,

@@ -28,8 +28,15 @@ from abc import ABC, abstractmethod
 from typing import Dict
 
 from lance_namespace_urllib3_client.models import (
+    AlterTableAddColumnsRequest,
+    AlterTableAddColumnsResponse,
+    AlterTableAlterColumnsRequest,
+    AlterTableAlterColumnsResponse,
+    AlterTableDropColumnsRequest,
+    AlterTableDropColumnsResponse,
     AlterTransactionRequest,
     AlterTransactionResponse,
+    AnalyzeTableQueryPlanRequest,
     CountTableRowsRequest,
     CreateEmptyTableRequest,
     CreateEmptyTableResponse,
@@ -37,10 +44,15 @@ from lance_namespace_urllib3_client.models import (
     CreateNamespaceResponse,
     CreateTableIndexRequest,
     CreateTableIndexResponse,
+    CreateTableScalarIndexResponse,
     CreateTableRequest,
     CreateTableResponse,
+    CreateTableTagRequest,
+    CreateTableTagResponse,
     DeleteFromTableRequest,
     DeleteFromTableResponse,
+    DeleteTableTagRequest,
+    DeleteTableTagResponse,
     DeregisterTableRequest,
     DeregisterTableResponse,
     DescribeNamespaceRequest,
@@ -53,14 +65,25 @@ from lance_namespace_urllib3_client.models import (
     DescribeTransactionResponse,
     DropNamespaceRequest,
     DropNamespaceResponse,
+    DropTableIndexRequest,
+    DropTableIndexResponse,
     DropTableRequest,
     DropTableResponse,
+    ExplainTableQueryPlanRequest,
+    GetTableStatsRequest,
+    GetTableStatsResponse,
+    GetTableTagVersionRequest,
+    GetTableTagVersionResponse,
     InsertIntoTableRequest,
     InsertIntoTableResponse,
     ListNamespacesRequest,
     ListNamespacesResponse,
     ListTableIndicesRequest,
     ListTableIndicesResponse,
+    ListTableTagsRequest,
+    ListTableTagsResponse,
+    ListTableVersionsRequest,
+    ListTableVersionsResponse,
     ListTablesRequest,
     ListTablesResponse,
     MergeInsertIntoTableRequest,
@@ -69,9 +92,17 @@ from lance_namespace_urllib3_client.models import (
     QueryTableRequest,
     RegisterTableRequest,
     RegisterTableResponse,
+    RenameTableRequest,
+    RenameTableResponse,
+    RestoreTableRequest,
+    RestoreTableResponse,
     TableExistsRequest,
     UpdateTableRequest,
     UpdateTableResponse,
+    UpdateTableSchemaMetadataRequest,
+    UpdateTableSchemaMetadataResponse,
+    UpdateTableTagRequest,
+    UpdateTableTagResponse,
 )
 
 __all__ = [
@@ -82,8 +113,15 @@ __all__ = [
     # Registry access
     "NATIVE_IMPLS",
     # Request/Response types (re-exported from lance_namespace_urllib3_client)
+    "AlterTableAddColumnsRequest",
+    "AlterTableAddColumnsResponse",
+    "AlterTableAlterColumnsRequest",
+    "AlterTableAlterColumnsResponse",
+    "AlterTableDropColumnsRequest",
+    "AlterTableDropColumnsResponse",
     "AlterTransactionRequest",
     "AlterTransactionResponse",
+    "AnalyzeTableQueryPlanRequest",
     "CountTableRowsRequest",
     "CreateEmptyTableRequest",
     "CreateEmptyTableResponse",
@@ -91,10 +129,15 @@ __all__ = [
     "CreateNamespaceResponse",
     "CreateTableIndexRequest",
     "CreateTableIndexResponse",
+    "CreateTableScalarIndexResponse",
     "CreateTableRequest",
     "CreateTableResponse",
+    "CreateTableTagRequest",
+    "CreateTableTagResponse",
     "DeleteFromTableRequest",
     "DeleteFromTableResponse",
+    "DeleteTableTagRequest",
+    "DeleteTableTagResponse",
     "DeregisterTableRequest",
     "DeregisterTableResponse",
     "DescribeNamespaceRequest",
@@ -107,14 +150,25 @@ __all__ = [
     "DescribeTransactionResponse",
     "DropNamespaceRequest",
     "DropNamespaceResponse",
+    "DropTableIndexRequest",
+    "DropTableIndexResponse",
     "DropTableRequest",
     "DropTableResponse",
+    "ExplainTableQueryPlanRequest",
+    "GetTableStatsRequest",
+    "GetTableStatsResponse",
+    "GetTableTagVersionRequest",
+    "GetTableTagVersionResponse",
     "InsertIntoTableRequest",
     "InsertIntoTableResponse",
     "ListNamespacesRequest",
     "ListNamespacesResponse",
     "ListTableIndicesRequest",
     "ListTableIndicesResponse",
+    "ListTableTagsRequest",
+    "ListTableTagsResponse",
+    "ListTableVersionsRequest",
+    "ListTableVersionsResponse",
     "ListTablesRequest",
     "ListTablesResponse",
     "MergeInsertIntoTableRequest",
@@ -123,9 +177,17 @@ __all__ = [
     "QueryTableRequest",
     "RegisterTableRequest",
     "RegisterTableResponse",
+    "RenameTableRequest",
+    "RenameTableResponse",
+    "RestoreTableRequest",
+    "RestoreTableResponse",
     "TableExistsRequest",
     "UpdateTableRequest",
     "UpdateTableResponse",
+    "UpdateTableSchemaMetadataRequest",
+    "UpdateTableSchemaMetadataResponse",
+    "UpdateTableTagRequest",
+    "UpdateTableTagResponse",
 ]
 
 
@@ -263,6 +325,12 @@ class LanceNamespace(ABC):
         """Create a table index."""
         raise NotImplementedError("Not supported: create_table_index")
 
+    def create_table_scalar_index(
+        self, request: CreateTableIndexRequest
+    ) -> CreateTableScalarIndexResponse:
+        """Create a scalar index on a table."""
+        raise NotImplementedError("Not supported: create_table_scalar_index")
+
     def list_table_indices(
         self, request: ListTableIndicesRequest
     ) -> ListTableIndicesResponse:
@@ -274,6 +342,94 @@ class LanceNamespace(ABC):
     ) -> DescribeTableIndexStatsResponse:
         """Describe table index statistics."""
         raise NotImplementedError("Not supported: describe_table_index_stats")
+
+    def drop_table_index(
+        self, request: DropTableIndexRequest
+    ) -> DropTableIndexResponse:
+        """Drop a table index."""
+        raise NotImplementedError("Not supported: drop_table_index")
+
+    def list_all_tables(self, request: ListTablesRequest) -> ListTablesResponse:
+        """List all tables across all namespaces."""
+        raise NotImplementedError("Not supported: list_all_tables")
+
+    def restore_table(self, request: RestoreTableRequest) -> RestoreTableResponse:
+        """Restore a table to a specific version."""
+        raise NotImplementedError("Not supported: restore_table")
+
+    def rename_table(self, request: RenameTableRequest) -> RenameTableResponse:
+        """Rename a table."""
+        raise NotImplementedError("Not supported: rename_table")
+
+    def list_table_versions(
+        self, request: ListTableVersionsRequest
+    ) -> ListTableVersionsResponse:
+        """List all versions of a table."""
+        raise NotImplementedError("Not supported: list_table_versions")
+
+    def update_table_schema_metadata(
+        self, request: UpdateTableSchemaMetadataRequest
+    ) -> UpdateTableSchemaMetadataResponse:
+        """Update table schema metadata."""
+        raise NotImplementedError("Not supported: update_table_schema_metadata")
+
+    def get_table_stats(self, request: GetTableStatsRequest) -> GetTableStatsResponse:
+        """Get table statistics."""
+        raise NotImplementedError("Not supported: get_table_stats")
+
+    def explain_table_query_plan(self, request: ExplainTableQueryPlanRequest) -> str:
+        """Explain a table query plan."""
+        raise NotImplementedError("Not supported: explain_table_query_plan")
+
+    def analyze_table_query_plan(self, request: AnalyzeTableQueryPlanRequest) -> str:
+        """Analyze a table query plan."""
+        raise NotImplementedError("Not supported: analyze_table_query_plan")
+
+    def alter_table_add_columns(
+        self, request: AlterTableAddColumnsRequest
+    ) -> AlterTableAddColumnsResponse:
+        """Add columns to a table."""
+        raise NotImplementedError("Not supported: alter_table_add_columns")
+
+    def alter_table_alter_columns(
+        self, request: AlterTableAlterColumnsRequest
+    ) -> AlterTableAlterColumnsResponse:
+        """Alter columns in a table."""
+        raise NotImplementedError("Not supported: alter_table_alter_columns")
+
+    def alter_table_drop_columns(
+        self, request: AlterTableDropColumnsRequest
+    ) -> AlterTableDropColumnsResponse:
+        """Drop columns from a table."""
+        raise NotImplementedError("Not supported: alter_table_drop_columns")
+
+    def list_table_tags(self, request: ListTableTagsRequest) -> ListTableTagsResponse:
+        """List all tags for a table."""
+        raise NotImplementedError("Not supported: list_table_tags")
+
+    def get_table_tag_version(
+        self, request: GetTableTagVersionRequest
+    ) -> GetTableTagVersionResponse:
+        """Get the version for a specific tag."""
+        raise NotImplementedError("Not supported: get_table_tag_version")
+
+    def create_table_tag(
+        self, request: CreateTableTagRequest
+    ) -> CreateTableTagResponse:
+        """Create a tag for a table."""
+        raise NotImplementedError("Not supported: create_table_tag")
+
+    def delete_table_tag(
+        self, request: DeleteTableTagRequest
+    ) -> DeleteTableTagResponse:
+        """Delete a tag from a table."""
+        raise NotImplementedError("Not supported: delete_table_tag")
+
+    def update_table_tag(
+        self, request: UpdateTableTagRequest
+    ) -> UpdateTableTagResponse:
+        """Update a tag for a table."""
+        raise NotImplementedError("Not supported: update_table_tag")
 
     def describe_transaction(
         self, request: DescribeTransactionRequest

@@ -36,8 +36,8 @@ class InsertIntoTableRequest(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['append', 'overwrite']):
-            raise ValueError("must be one of enum values ('append', 'overwrite')")
+        if value not in set(['create', 'append', 'overwrite']):
+            raise ValueError("must be one of enum values ('create', 'append', 'overwrite')")
         return value
 
     model_config = ConfigDict(

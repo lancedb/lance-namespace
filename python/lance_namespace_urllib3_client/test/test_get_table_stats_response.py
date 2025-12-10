@@ -35,14 +35,37 @@ class TestGetTableStatsResponse(unittest.TestCase):
         model = GetTableStatsResponse()
         if include_optional:
             return GetTableStatsResponse(
+                total_bytes = 0,
                 num_rows = 0,
-                size_bytes = 0,
-                num_fragments = 0
+                num_indices = 0,
+                fragment_stats = lance_namespace_urllib3_client.models.fragment_stats.FragmentStats(
+                    num_fragments = 0, 
+                    num_small_fragments = 0, 
+                    lengths = lance_namespace_urllib3_client.models.fragment_summary.FragmentSummary(
+                        min = 0, 
+                        max = 0, 
+                        mean = 0, 
+                        p25 = 0, 
+                        p50 = 0, 
+                        p75 = 0, 
+                        p99 = 0, ), )
             )
         else:
             return GetTableStatsResponse(
+                total_bytes = 0,
                 num_rows = 0,
-                size_bytes = 0,
+                num_indices = 0,
+                fragment_stats = lance_namespace_urllib3_client.models.fragment_stats.FragmentStats(
+                    num_fragments = 0, 
+                    num_small_fragments = 0, 
+                    lengths = lance_namespace_urllib3_client.models.fragment_summary.FragmentSummary(
+                        min = 0, 
+                        max = 0, 
+                        mean = 0, 
+                        p25 = 0, 
+                        p50 = 0, 
+                        p75 = 0, 
+                        p99 = 0, ), ),
         )
         """
 

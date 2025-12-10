@@ -43,7 +43,9 @@ class TestMergeInsertIntoTableRequest(unittest.TestCase):
                 when_matched_update_all_filt = '',
                 when_not_matched_insert_all = True,
                 when_not_matched_by_source_delete = True,
-                when_not_matched_by_source_delete_filt = ''
+                when_not_matched_by_source_delete_filt = '',
+                timeout = '',
+                use_index = True
             )
         else:
             return MergeInsertIntoTableRequest(

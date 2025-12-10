@@ -34,6 +34,12 @@ pub struct MergeInsertIntoTableRequest {
     /// Delete rows from the target table if there is no match AND the SQL expression evaluates to true
     #[serde(rename = "when_not_matched_by_source_delete_filt", skip_serializing_if = "Option::is_none")]
     pub when_not_matched_by_source_delete_filt: Option<String>,
+    /// Timeout for the operation (e.g., \"30s\", \"5m\")
+    #[serde(rename = "timeout", skip_serializing_if = "Option::is_none")]
+    pub timeout: Option<String>,
+    /// Whether to use index for matching rows
+    #[serde(rename = "use_index", skip_serializing_if = "Option::is_none")]
+    pub use_index: Option<bool>,
 }
 
 impl MergeInsertIntoTableRequest {
@@ -47,6 +53,8 @@ impl MergeInsertIntoTableRequest {
             when_not_matched_insert_all: None,
             when_not_matched_by_source_delete: None,
             when_not_matched_by_source_delete_filt: None,
+            timeout: None,
+            use_index: None,
         }
     }
 }

@@ -20,9 +20,9 @@ import org.lance.namespace.client.apache.Configuration;
 import org.lance.namespace.client.apache.Pair;
 import org.lance.namespace.model.CreateTableIndexRequest;
 import org.lance.namespace.model.CreateTableIndexResponse;
+import org.lance.namespace.model.CreateTableScalarIndexResponse;
 import org.lance.namespace.model.DescribeTableIndexStatsRequest;
 import org.lance.namespace.model.DescribeTableIndexStatsResponse;
-import org.lance.namespace.model.DropTableIndexRequest;
 import org.lance.namespace.model.DropTableIndexResponse;
 import org.lance.namespace.model.ListTableIndicesRequest;
 import org.lance.namespace.model.ListTableIndicesResponse;
@@ -137,10 +137,119 @@ public class IndexApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<CreateTableIndexResponse> localVarReturnType =
         new TypeReference<CreateTableIndexResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Create a scalar index on a table Create a scalar index on a table column for faster filtering
+   * operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias
+   * for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously.
+   * Use the &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to
+   * monitor index creation progress.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param createTableIndexRequest Scalar index creation request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return CreateTableScalarIndexResponse
+   * @throws ApiException if fails to make API call
+   */
+  public CreateTableScalarIndexResponse createTableScalarIndex(
+      String id, CreateTableIndexRequest createTableIndexRequest, String delimiter)
+      throws ApiException {
+    return this.createTableScalarIndex(
+        id, createTableIndexRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Create a scalar index on a table Create a scalar index on a table column for faster filtering
+   * operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias
+   * for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously.
+   * Use the &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to
+   * monitor index creation progress.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param createTableIndexRequest Scalar index creation request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return CreateTableScalarIndexResponse
+   * @throws ApiException if fails to make API call
+   */
+  public CreateTableScalarIndexResponse createTableScalarIndex(
+      String id,
+      CreateTableIndexRequest createTableIndexRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = createTableIndexRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling createTableScalarIndex");
+    }
+
+    // verify the required parameter 'createTableIndexRequest' is set
+    if (createTableIndexRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'createTableIndexRequest' when calling createTableScalarIndex");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/create_scalar_index"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
+
+    TypeReference<CreateTableScalarIndexResponse> localVarReturnType =
+        new TypeReference<CreateTableScalarIndexResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",
@@ -255,7 +364,7 @@ public class IndexApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<DescribeTableIndexStatsResponse> localVarReturnType =
         new TypeReference<DescribeTableIndexStatsResponse>() {};
@@ -276,36 +385,40 @@ public class IndexApi extends BaseApi {
   }
 
   /**
-   * Drop a specific index Drop the specified index from table &#x60;id&#x60;.
+   * Drop a specific index Drop the specified index from table &#x60;id&#x60;. REST NAMESPACE ONLY
+   * REST namespace does not use a request body for this operation. The
+   * &#x60;DropTableIndexRequest&#x60; information is passed in the following way: - &#x60;id&#x60;:
+   * pass through path parameter of the same name - &#x60;index_name&#x60;: pass through path
+   * parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param indexName Name of the index to drop (required)
-   * @param dropTableIndexRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return DropTableIndexResponse
    * @throws ApiException if fails to make API call
    */
-  public DropTableIndexResponse dropTableIndex(
-      String id, String indexName, DropTableIndexRequest dropTableIndexRequest, String delimiter)
+  public DropTableIndexResponse dropTableIndex(String id, String indexName, String delimiter)
       throws ApiException {
-    return this.dropTableIndex(
-        id, indexName, dropTableIndexRequest, delimiter, Collections.emptyMap());
+    return this.dropTableIndex(id, indexName, delimiter, Collections.emptyMap());
   }
 
   /**
-   * Drop a specific index Drop the specified index from table &#x60;id&#x60;.
+   * Drop a specific index Drop the specified index from table &#x60;id&#x60;. REST NAMESPACE ONLY
+   * REST namespace does not use a request body for this operation. The
+   * &#x60;DropTableIndexRequest&#x60; information is passed in the following way: - &#x60;id&#x60;:
+   * pass through path parameter of the same name - &#x60;index_name&#x60;: pass through path
+   * parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param indexName Name of the index to drop (required)
-   * @param dropTableIndexRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
@@ -314,13 +427,9 @@ public class IndexApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public DropTableIndexResponse dropTableIndex(
-      String id,
-      String indexName,
-      DropTableIndexRequest dropTableIndexRequest,
-      String delimiter,
-      Map<String, String> additionalHeaders)
+      String id, String indexName, String delimiter, Map<String, String> additionalHeaders)
       throws ApiException {
-    Object localVarPostBody = dropTableIndexRequest;
+    Object localVarPostBody = null;
 
     // verify the required parameter 'id' is set
     if (id == null) {
@@ -332,13 +441,6 @@ public class IndexApi extends BaseApi {
     if (indexName == null) {
       throw new ApiException(
           400, "Missing the required parameter 'indexName' when calling dropTableIndex");
-    }
-
-    // verify the required parameter 'dropTableIndexRequest' is set
-    if (dropTableIndexRequest == null) {
-      throw new ApiException(
-          400,
-          "Missing the required parameter 'dropTableIndexRequest' when calling dropTableIndex");
     }
 
     // create path and map variables
@@ -365,10 +467,11 @@ public class IndexApi extends BaseApi {
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {"application/json"};
+    final String[] localVarContentTypes = {};
+
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<DropTableIndexResponse> localVarReturnType =
         new TypeReference<DropTableIndexResponse>() {};
@@ -470,7 +573,7 @@ public class IndexApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<ListTableIndicesResponse> localVarReturnType =
         new TypeReference<ListTableIndicesResponse>() {};
@@ -514,7 +617,7 @@ public class IndexApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     return apiClient.invokeAPI(
         localVarPath,

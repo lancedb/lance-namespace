@@ -1,11 +1,12 @@
 # RestoreTableResponse
 
+Response for restore table operation
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**version** | **int** | Version of the table after restore operation | [optional] 
+**transaction_id** | **str** | Optional transaction identifier | [optional] 
 
 ## Example
 

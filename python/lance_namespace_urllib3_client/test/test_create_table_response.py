@@ -35,11 +35,9 @@ class TestCreateTableResponse(unittest.TestCase):
         model = CreateTableResponse()
         if include_optional:
             return CreateTableResponse(
+                transaction_id = '',
                 location = '',
                 version = 0,
-                properties = {
-                    'key' : ''
-                    },
                 storage_options = {
                     'key' : ''
                     }

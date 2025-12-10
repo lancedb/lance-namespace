@@ -38,11 +38,7 @@ class TestCreateTableRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
-                location = '',
-                mode = 'create',
-                properties = {
-                    'key' : ''
-                    }
+                mode = 'Create'
             )
         else:
             return CreateTableRequest(

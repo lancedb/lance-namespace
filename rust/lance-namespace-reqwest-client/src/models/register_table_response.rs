@@ -13,6 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RegisterTableResponse {
+    /// Optional transaction identifier
+    #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
     #[serde(rename = "location")]
     pub location: String,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
@@ -22,6 +25,7 @@ pub struct RegisterTableResponse {
 impl RegisterTableResponse {
     pub fn new(location: String) -> RegisterTableResponse {
         RegisterTableResponse {
+            transaction_id: None,
             location,
             properties: None,
         }

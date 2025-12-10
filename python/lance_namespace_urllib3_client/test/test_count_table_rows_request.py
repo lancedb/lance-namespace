@@ -39,7 +39,7 @@ class TestCountTableRowsRequest(unittest.TestCase):
                     ''
                     ],
                 version = 0,
-                filter = ''
+                predicate = ''
             )
         else:
             return CountTableRowsRequest(

@@ -31,7 +31,8 @@ class DescribeTableIndexStatsResponse(BaseModel):
     index_type: Optional[StrictStr] = Field(default=None, description="Type of the index")
     num_indexed_rows: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of indexed rows")
     num_unindexed_rows: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of unindexed rows")
-    __properties: ClassVar[List[str]] = ["distance_type", "index_type", "num_indexed_rows", "num_unindexed_rows"]
+    num_indices: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of indices")
+    __properties: ClassVar[List[str]] = ["distance_type", "index_type", "num_indexed_rows", "num_unindexed_rows", "num_indices"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -87,7 +88,8 @@ class DescribeTableIndexStatsResponse(BaseModel):
             "distance_type": obj.get("distance_type"),
             "index_type": obj.get("index_type"),
             "num_indexed_rows": obj.get("num_indexed_rows"),
-            "num_unindexed_rows": obj.get("num_unindexed_rows")
+            "num_unindexed_rows": obj.get("num_unindexed_rows"),
+            "num_indices": obj.get("num_indices")
         })
         return _obj
 

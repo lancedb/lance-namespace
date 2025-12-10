@@ -7,12 +7,12 @@ Method | HTTP request | Description
 [**create_table_tag**](TagApi.md#create_table_tag) | **POST** /v1/table/{id}/tags/create | Create a new tag
 [**delete_table_tag**](TagApi.md#delete_table_tag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
 [**get_table_tag_version**](TagApi.md#get_table_tag_version) | **POST** /v1/table/{id}/tags/version | Get version for a specific tag
-[**list_table_tags**](TagApi.md#list_table_tags) | **GET** /v1/table/{id}/tags/list | List all tags for a table
+[**list_table_tags**](TagApi.md#list_table_tags) | **POST** /v1/table/{id}/tags/list | List all tags for a table
 [**update_table_tag**](TagApi.md#update_table_tag) | **POST** /v1/table/{id}/tags/update | Update a tag to point to a different version
 
 
 # **create_table_tag**
-> create_table_tag(id, create_table_tag_request, delimiter=delimiter)
+> CreateTableTagResponse create_table_tag(id, create_table_tag_request, delimiter=delimiter)
 
 Create a new tag
 
@@ -21,10 +21,14 @@ Create a new tag for table `id` that points to a specific version.
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
 from lance_namespace_urllib3_client.models.create_table_tag_request import CreateTableTagRequest
+from lance_namespace_urllib3_client.models.create_table_tag_response import CreateTableTagResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
 
@@ -34,6 +38,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -45,7 +66,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
     try:
         # Create a new tag
-        api_instance.create_table_tag(id, create_table_tag_request, delimiter=delimiter)
+        api_response = api_instance.create_table_tag(id, create_table_tag_request, delimiter=delimiter)
+        print("The response of TagApi->create_table_tag:\n")
+        pprint(api_response)
     except Exception as e:
         print("Exception when calling TagApi->create_table_tag: %s\n" % e)
 ```
@@ -63,11 +86,11 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**CreateTableTagResponse**](CreateTableTagResponse.md)
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -78,7 +101,7 @@ No authorization required
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Success, no content |  -  |
+**200** | Create tag response |  -  |
 **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -90,7 +113,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_table_tag**
-> delete_table_tag(id, delete_table_tag_request, delimiter=delimiter)
+> DeleteTableTagResponse delete_table_tag(id, delete_table_tag_request, delimiter=delimiter)
 
 Delete a tag
 
@@ -99,10 +122,14 @@ Delete an existing tag from table `id`.
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
 from lance_namespace_urllib3_client.models.delete_table_tag_request import DeleteTableTagRequest
+from lance_namespace_urllib3_client.models.delete_table_tag_response import DeleteTableTagResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
 
@@ -112,6 +139,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -123,7 +167,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
     try:
         # Delete a tag
-        api_instance.delete_table_tag(id, delete_table_tag_request, delimiter=delimiter)
+        api_response = api_instance.delete_table_tag(id, delete_table_tag_request, delimiter=delimiter)
+        print("The response of TagApi->delete_table_tag:\n")
+        pprint(api_response)
     except Exception as e:
         print("Exception when calling TagApi->delete_table_tag: %s\n" % e)
 ```
@@ -141,11 +187,11 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**DeleteTableTagResponse**](DeleteTableTagResponse.md)
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -156,7 +202,7 @@ No authorization required
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Success, no content |  -  |
+**200** | Delete tag response |  -  |
 **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -176,6 +222,9 @@ Get the version number that a specific tag points to for table `id`.
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
@@ -190,6 +239,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -225,7 +291,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -255,8 +321,8 @@ List all tags that have been created for table `id`.
 Returns a map of tag names to their corresponding version numbers and metadata.
 
 REST NAMESPACE ONLY
-REST namespace uses GET to perform this operation without a request body.
-It passes in the `ListTableTagsRequest` information in the following way:
+REST namespace does not use a request body for this operation.
+The `ListTableTagsRequest` information is passed in the following way:
 - `id`: pass through path parameter of the same name
 - `page_token`: pass through query parameter of the same name
 - `limit`: pass through query parameter of the same name
@@ -264,6 +330,9 @@ It passes in the `ListTableTagsRequest` information in the following way:
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
@@ -277,6 +346,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -284,8 +370,8 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     api_instance = lance_namespace_urllib3_client.TagApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
-    page_token = 'page_token_example' # str |  (optional)
-    limit = 56 # int |  (optional)
+    page_token = 'page_token_example' # str | Pagination token from a previous request (optional)
+    limit = 56 # int | Maximum number of items to return (optional)
 
     try:
         # List all tags for a table
@@ -305,8 +391,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] 
- **page_token** | **str**|  | [optional] 
- **limit** | **int**|  | [optional] 
+ **page_token** | **str**| Pagination token from a previous request | [optional] 
+ **limit** | **int**| Maximum number of items to return | [optional] 
 
 ### Return type
 
@@ -314,7 +400,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -336,7 +422,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_table_tag**
-> update_table_tag(id, update_table_tag_request, delimiter=delimiter)
+> UpdateTableTagResponse update_table_tag(id, update_table_tag_request, delimiter=delimiter)
 
 Update a tag to point to a different version
 
@@ -345,10 +431,14 @@ Update an existing tag for table `id` to point to a different version.
 
 ### Example
 
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
 
 ```python
 import lance_namespace_urllib3_client
 from lance_namespace_urllib3_client.models.update_table_tag_request import UpdateTableTagRequest
+from lance_namespace_urllib3_client.models.update_table_tag_response import UpdateTableTagResponse
 from lance_namespace_urllib3_client.rest import ApiException
 from pprint import pprint
 
@@ -358,6 +448,23 @@ configuration = lance_namespace_urllib3_client.Configuration(
     host = "http://localhost:2333"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
 
 # Enter a context with an instance of the API client
 with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
@@ -369,7 +476,9 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
     try:
         # Update a tag to point to a different version
-        api_instance.update_table_tag(id, update_table_tag_request, delimiter=delimiter)
+        api_response = api_instance.update_table_tag(id, update_table_tag_request, delimiter=delimiter)
+        print("The response of TagApi->update_table_tag:\n")
+        pprint(api_response)
     except Exception as e:
         print("Exception when calling TagApi->update_table_tag: %s\n" % e)
 ```
@@ -387,11 +496,11 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**UpdateTableTagResponse**](UpdateTableTagResponse.md)
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -402,7 +511,7 @@ No authorization required
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Success, no content |  -  |
+**200** | Update tag response |  -  |
 **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |

@@ -39,19 +39,37 @@ class TestAlterTableAlterColumnsRequest(unittest.TestCase):
                     ''
                     ],
                 alterations = [
-                    lance_namespace_urllib3_client.models.column_alteration.ColumnAlteration(
-                        column = '', 
+                    lance_namespace_urllib3_client.models.alter_columns_entry.AlterColumnsEntry(
+                        path = '', 
+                        data_type = lance_namespace_urllib3_client.models.data_type.data_type(), 
                         rename = '', 
-                        cast_to = '', )
+                        nullable = True, 
+                        virtual_column = lance_namespace_urllib3_client.models.alter_virtual_column_entry.AlterVirtualColumnEntry(
+                            input_columns = [
+                                ''
+                                ], 
+                            image = '', 
+                            udf = '', 
+                            udf_name = '', 
+                            udf_version = '', ), )
                     ]
             )
         else:
             return AlterTableAlterColumnsRequest(
                 alterations = [
-                    lance_namespace_urllib3_client.models.column_alteration.ColumnAlteration(
-                        column = '', 
+                    lance_namespace_urllib3_client.models.alter_columns_entry.AlterColumnsEntry(
+                        path = '', 
+                        data_type = lance_namespace_urllib3_client.models.data_type.data_type(), 
                         rename = '', 
-                        cast_to = '', )
+                        nullable = True, 
+                        virtual_column = lance_namespace_urllib3_client.models.alter_virtual_column_entry.AlterVirtualColumnEntry(
+                            input_columns = [
+                                ''
+                                ], 
+                            image = '', 
+                            udf = '', 
+                            udf_name = '', 
+                            udf_version = '', ), )
                     ],
         )
         """

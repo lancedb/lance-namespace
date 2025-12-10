@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**transaction_id** | Option<**String**> | Optional transaction identifier | [optional]
 **num_updated_rows** | Option<**i64**> | Number of rows updated | [optional]
 **num_inserted_rows** | Option<**i64**> | Number of rows inserted | [optional]
 **num_deleted_rows** | Option<**i64**> | Number of rows deleted (typically 0 for merge insert) | [optional]

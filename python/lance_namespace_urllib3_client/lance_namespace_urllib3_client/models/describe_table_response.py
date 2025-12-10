@@ -21,6 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.json_arrow_schema import JsonArrowSchema
+from lance_namespace_urllib3_client.models.table_basic_stats import TableBasicStats
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,12 +29,15 @@ class DescribeTableResponse(BaseModel):
     """
     DescribeTableResponse
     """ # noqa: E501
+    table: Optional[StrictStr] = Field(default=None, description="Table name")
+    namespace: Optional[List[StrictStr]] = Field(default=None, description="The namespace identifier as a list of parts")
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
-    location: Optional[StrictStr] = None
+    location: Optional[StrictStr] = Field(default=None, description="Table storage location (e.g., S3/GCS path)")
+    table_uri: Optional[StrictStr] = Field(default=None, description="Table URI (deprecated, use `location` instead)")
     var_schema: Optional[JsonArrowSchema] = Field(default=None, alias="schema")
-    properties: Optional[Dict[str, StrictStr]] = None
     storage_options: Optional[Dict[str, StrictStr]] = Field(default=None, description="Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. ")
-    __properties: ClassVar[List[str]] = ["version", "location", "schema", "properties", "storage_options"]
+    stats: Optional[TableBasicStats] = Field(default=None, description="Table statistics")
+    __properties: ClassVar[List[str]] = ["table", "namespace", "version", "location", "table_uri", "schema", "storage_options", "stats"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -77,6 +81,9 @@ class DescribeTableResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of var_schema
         if self.var_schema:
             _dict['schema'] = self.var_schema.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of stats
+        if self.stats:
+            _dict['stats'] = self.stats.to_dict()
         return _dict
 
     @classmethod
@@ -89,11 +96,14 @@ class DescribeTableResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "table": obj.get("table"),
+            "namespace": obj.get("namespace"),
             "version": obj.get("version"),
             "location": obj.get("location"),
+            "table_uri": obj.get("table_uri"),
             "schema": JsonArrowSchema.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
-            "properties": obj.get("properties"),
-            "storage_options": obj.get("storage_options")
+            "storage_options": obj.get("storage_options"),
+            "stats": TableBasicStats.from_dict(obj["stats"]) if obj.get("stats") is not None else None
         })
         return _obj
 

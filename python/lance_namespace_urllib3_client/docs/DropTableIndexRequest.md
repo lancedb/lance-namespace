@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **List[str]** |  | 
-**index_name** | **str** | Name of the index to drop | 
+**id** | **List[str]** |  | [optional] 
+**index_name** | **str** | Name of the index to drop | [optional] 
 
 ## Example
 

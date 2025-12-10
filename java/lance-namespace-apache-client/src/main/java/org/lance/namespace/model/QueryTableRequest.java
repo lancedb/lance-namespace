@@ -57,7 +57,7 @@ public class QueryTableRequest {
   @javax.annotation.Nullable private Boolean bypassVectorIndex;
 
   public static final String JSON_PROPERTY_COLUMNS = "columns";
-  @javax.annotation.Nullable private List<String> columns = new ArrayList<>();
+  @javax.annotation.Nullable private QueryTableRequestColumns columns;
 
   public static final String JSON_PROPERTY_DISTANCE_TYPE = "distance_type";
   @javax.annotation.Nullable private String distanceType;
@@ -165,35 +165,27 @@ public class QueryTableRequest {
     this.bypassVectorIndex = bypassVectorIndex;
   }
 
-  public QueryTableRequest columns(@javax.annotation.Nullable List<String> columns) {
+  public QueryTableRequest columns(@javax.annotation.Nullable QueryTableRequestColumns columns) {
 
     this.columns = columns;
     return this;
   }
 
-  public QueryTableRequest addColumnsItem(String columnsItem) {
-    if (this.columns == null) {
-      this.columns = new ArrayList<>();
-    }
-    this.columns.add(columnsItem);
-    return this;
-  }
-
   /**
-   * Optional list of columns to return
+   * Get columns
    *
    * @return columns
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_COLUMNS)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public List<String> getColumns() {
+  public QueryTableRequestColumns getColumns() {
     return columns;
   }
 
   @JsonProperty(JSON_PROPERTY_COLUMNS)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setColumns(@javax.annotation.Nullable List<String> columns) {
+  public void setColumns(@javax.annotation.Nullable QueryTableRequestColumns columns) {
     this.columns = columns;
   }
 
@@ -745,23 +737,7 @@ public class QueryTableRequest {
 
     // add `columns` to the URL query string
     if (getColumns() != null) {
-      for (int i = 0; i < getColumns().size(); i++) {
-        try {
-          joiner.add(
-              String.format(
-                  "%scolumns%s%s=%s",
-                  prefix,
-                  suffix,
-                  "".equals(suffix)
-                      ? ""
-                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getColumns().get(i)), "UTF-8")
-                      .replaceAll("\\+", "%20")));
-        } catch (UnsupportedEncodingException e) {
-          // Should never happen, UTF-8 is always supported
-          throw new RuntimeException(e);
-        }
-      }
+      joiner.add(getColumns().toUrlQueryString(prefix + "columns" + suffix));
     }
 
     // add `distance_type` to the URL query string

@@ -20,11 +20,14 @@ from pydantic import Field, StrictInt, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.create_table_tag_request import CreateTableTagRequest
+from lance_namespace_urllib3_client.models.create_table_tag_response import CreateTableTagResponse
 from lance_namespace_urllib3_client.models.delete_table_tag_request import DeleteTableTagRequest
+from lance_namespace_urllib3_client.models.delete_table_tag_response import DeleteTableTagResponse
 from lance_namespace_urllib3_client.models.get_table_tag_version_request import GetTableTagVersionRequest
 from lance_namespace_urllib3_client.models.get_table_tag_version_response import GetTableTagVersionResponse
 from lance_namespace_urllib3_client.models.list_table_tags_response import ListTableTagsResponse
 from lance_namespace_urllib3_client.models.update_table_tag_request import UpdateTableTagRequest
+from lance_namespace_urllib3_client.models.update_table_tag_response import UpdateTableTagResponse
 
 from lance_namespace_urllib3_client.api_client import ApiClient, RequestSerialized
 from lance_namespace_urllib3_client.api_response import ApiResponse
@@ -62,7 +65,7 @@ class TagApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> CreateTableTagResponse:
         """Create a new tag
 
         Create a new tag for table `id` that points to a specific version. 
@@ -106,7 +109,7 @@ class TagApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "CreateTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -144,7 +147,7 @@ class TagApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[CreateTableTagResponse]:
         """Create a new tag
 
         Create a new tag for table `id` that points to a specific version. 
@@ -188,7 +191,7 @@ class TagApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "CreateTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -270,7 +273,7 @@ class TagApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "CreateTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -350,6 +353,9 @@ class TagApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -388,7 +394,7 @@ class TagApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> DeleteTableTagResponse:
         """Delete a tag
 
         Delete an existing tag from table `id`. 
@@ -432,7 +438,7 @@ class TagApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "DeleteTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -469,7 +475,7 @@ class TagApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[DeleteTableTagResponse]:
         """Delete a tag
 
         Delete an existing tag from table `id`. 
@@ -513,7 +519,7 @@ class TagApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "DeleteTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -594,7 +600,7 @@ class TagApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "DeleteTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -673,6 +679,9 @@ class TagApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -996,6 +1005,9 @@ class TagApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -1021,8 +1033,8 @@ class TagApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1038,15 +1050,15 @@ class TagApi:
     ) -> ListTableTagsResponse:
         """List all tags for a table
 
-        List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTableTagsRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+        List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableTagsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1106,8 +1118,8 @@ class TagApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1123,15 +1135,15 @@ class TagApi:
     ) -> ApiResponse[ListTableTagsResponse]:
         """List all tags for a table
 
-        List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTableTagsRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+        List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableTagsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1191,8 +1203,8 @@ class TagApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1208,15 +1220,15 @@ class TagApi:
     ) -> RESTResponseType:
         """List all tags for a table
 
-        List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTableTagsRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+        List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableTagsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1325,10 +1337,13 @@ class TagApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
-            method='GET',
+            method='POST',
             resource_path='/v1/table/{id}/tags/list',
             path_params=_path_params,
             query_params=_query_params,
@@ -1363,7 +1378,7 @@ class TagApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> UpdateTableTagResponse:
         """Update a tag to point to a different version
 
         Update an existing tag for table `id` to point to a different version. 
@@ -1407,7 +1422,7 @@ class TagApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "UpdateTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -1444,7 +1459,7 @@ class TagApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[UpdateTableTagResponse]:
         """Update a tag to point to a different version
 
         Update an existing tag for table `id` to point to a different version. 
@@ -1488,7 +1503,7 @@ class TagApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "UpdateTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -1569,7 +1584,7 @@ class TagApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "UpdateTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -1648,6 +1663,9 @@ class TagApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(

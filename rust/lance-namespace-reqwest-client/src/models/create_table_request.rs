@@ -16,13 +16,9 @@ use serde::{Deserialize, Serialize};
 pub struct CreateTableRequest {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
-    #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
-    pub location: Option<String>,
-    /// There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing table is kept.   * overwrite: the existing table is dropped and a new table with this name is created. 
+    /// There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * Create: the operation fails with 409.   * ExistOk: the operation succeeds and the existing table is kept.   * Overwrite: the existing table is dropped and a new table with this name is created. 
     #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
     pub mode: Option<Mode>,
-    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
-    pub properties: Option<std::collections::HashMap<String, String>>,
 }
 
 impl CreateTableRequest {
@@ -30,20 +26,18 @@ impl CreateTableRequest {
     pub fn new() -> CreateTableRequest {
         CreateTableRequest {
             id: None,
-            location: None,
             mode: None,
-            properties: None,
         }
     }
 }
-/// There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing table is kept.   * overwrite: the existing table is dropped and a new table with this name is created. 
+/// There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * Create: the operation fails with 409.   * ExistOk: the operation succeeds and the existing table is kept.   * Overwrite: the existing table is dropped and a new table with this name is created. 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum Mode {
-    #[serde(rename = "create")]
+    #[serde(rename = "Create")]
     Create,
-    #[serde(rename = "exist_ok")]
+    #[serde(rename = "ExistOk")]
     ExistOk,
-    #[serde(rename = "overwrite")]
+    #[serde(rename = "Overwrite")]
     Overwrite,
 }
 

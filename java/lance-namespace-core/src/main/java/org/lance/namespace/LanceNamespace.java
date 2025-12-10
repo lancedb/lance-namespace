@@ -378,6 +378,16 @@ public interface LanceNamespace {
   }
 
   /**
+   * Create a scalar index on a table.
+   *
+   * @param request The create table index request
+   * @return The create table scalar index response
+   */
+  default CreateTableScalarIndexResponse createTableScalarIndex(CreateTableIndexRequest request) {
+    throw new UnsupportedOperationException("Not supported: createTableScalarIndex");
+  }
+
+  /**
    * List table indices.
    *
    * @param request The list table indices request
@@ -397,6 +407,188 @@ public interface LanceNamespace {
   default DescribeTableIndexStatsResponse describeTableIndexStats(
       DescribeTableIndexStatsRequest request, String indexName) {
     throw new UnsupportedOperationException("Not supported: describeTableIndexStats");
+  }
+
+  /**
+   * Drop a table index.
+   *
+   * @param request The drop table index request
+   * @param indexName The name of the index
+   * @return The drop table index response
+   */
+  default DropTableIndexResponse dropTableIndex(DropTableIndexRequest request, String indexName) {
+    throw new UnsupportedOperationException("Not supported: dropTableIndex");
+  }
+
+  // Table version and schema operations
+
+  /**
+   * List all tables across all namespaces.
+   *
+   * @param request The list tables request
+   * @return The list tables response
+   */
+  default ListTablesResponse listAllTables(ListTablesRequest request) {
+    throw new UnsupportedOperationException("Not supported: listAllTables");
+  }
+
+  /**
+   * Restore a table to a specific version.
+   *
+   * @param request The restore table request
+   * @return The restore table response
+   */
+  default RestoreTableResponse restoreTable(RestoreTableRequest request) {
+    throw new UnsupportedOperationException("Not supported: restoreTable");
+  }
+
+  /**
+   * Rename a table.
+   *
+   * @param request The rename table request
+   * @return The rename table response
+   */
+  default RenameTableResponse renameTable(RenameTableRequest request) {
+    throw new UnsupportedOperationException("Not supported: renameTable");
+  }
+
+  /**
+   * List all versions of a table.
+   *
+   * @param request The list table versions request
+   * @return The list table versions response
+   */
+  default ListTableVersionsResponse listTableVersions(ListTableVersionsRequest request) {
+    throw new UnsupportedOperationException("Not supported: listTableVersions");
+  }
+
+  /**
+   * Update table schema metadata.
+   *
+   * @param request The update table schema metadata request
+   * @return The update table schema metadata response
+   */
+  default UpdateTableSchemaMetadataResponse updateTableSchemaMetadata(
+      UpdateTableSchemaMetadataRequest request) {
+    throw new UnsupportedOperationException("Not supported: updateTableSchemaMetadata");
+  }
+
+  /**
+   * Get table statistics.
+   *
+   * @param request The get table stats request
+   * @return The get table stats response
+   */
+  default GetTableStatsResponse getTableStats(GetTableStatsRequest request) {
+    throw new UnsupportedOperationException("Not supported: getTableStats");
+  }
+
+  // Query plan operations
+
+  /**
+   * Explain a table query plan.
+   *
+   * @param request The explain table query plan request
+   * @return The query plan explanation as a string
+   */
+  default String explainTableQueryPlan(ExplainTableQueryPlanRequest request) {
+    throw new UnsupportedOperationException("Not supported: explainTableQueryPlan");
+  }
+
+  /**
+   * Analyze a table query plan.
+   *
+   * @param request The analyze table query plan request
+   * @return The query plan analysis as a string
+   */
+  default String analyzeTableQueryPlan(AnalyzeTableQueryPlanRequest request) {
+    throw new UnsupportedOperationException("Not supported: analyzeTableQueryPlan");
+  }
+
+  // Column operations
+
+  /**
+   * Add columns to a table.
+   *
+   * @param request The alter table add columns request
+   * @return The alter table add columns response
+   */
+  default AlterTableAddColumnsResponse alterTableAddColumns(AlterTableAddColumnsRequest request) {
+    throw new UnsupportedOperationException("Not supported: alterTableAddColumns");
+  }
+
+  /**
+   * Alter columns in a table.
+   *
+   * @param request The alter table alter columns request
+   * @return The alter table alter columns response
+   */
+  default AlterTableAlterColumnsResponse alterTableAlterColumns(
+      AlterTableAlterColumnsRequest request) {
+    throw new UnsupportedOperationException("Not supported: alterTableAlterColumns");
+  }
+
+  /**
+   * Drop columns from a table.
+   *
+   * @param request The alter table drop columns request
+   * @return The alter table drop columns response
+   */
+  default AlterTableDropColumnsResponse alterTableDropColumns(
+      AlterTableDropColumnsRequest request) {
+    throw new UnsupportedOperationException("Not supported: alterTableDropColumns");
+  }
+
+  // Tag operations
+
+  /**
+   * List all tags for a table.
+   *
+   * @param request The list table tags request
+   * @return The list table tags response
+   */
+  default ListTableTagsResponse listTableTags(ListTableTagsRequest request) {
+    throw new UnsupportedOperationException("Not supported: listTableTags");
+  }
+
+  /**
+   * Get the version for a specific tag.
+   *
+   * @param request The get table tag version request
+   * @return The get table tag version response
+   */
+  default GetTableTagVersionResponse getTableTagVersion(GetTableTagVersionRequest request) {
+    throw new UnsupportedOperationException("Not supported: getTableTagVersion");
+  }
+
+  /**
+   * Create a tag for a table.
+   *
+   * @param request The create table tag request
+   * @return The create table tag response
+   */
+  default CreateTableTagResponse createTableTag(CreateTableTagRequest request) {
+    throw new UnsupportedOperationException("Not supported: createTableTag");
+  }
+
+  /**
+   * Delete a tag from a table.
+   *
+   * @param request The delete table tag request
+   * @return The delete table tag response
+   */
+  default DeleteTableTagResponse deleteTableTag(DeleteTableTagRequest request) {
+    throw new UnsupportedOperationException("Not supported: deleteTableTag");
+  }
+
+  /**
+   * Update a tag for a table.
+   *
+   * @param request The update table tag request
+   * @return The update table tag response
+   */
+  default UpdateTableTagResponse updateTableTag(UpdateTableTagRequest request) {
+    throw new UnsupportedOperationException("Not supported: updateTableTag");
   }
 
   // Transaction operations

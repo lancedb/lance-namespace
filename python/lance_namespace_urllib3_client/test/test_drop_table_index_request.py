@@ -42,10 +42,6 @@ class TestDropTableIndexRequest(unittest.TestCase):
             )
         else:
             return DropTableIndexRequest(
-                id = [
-                    ''
-                    ],
-                index_name = '',
         )
         """
 

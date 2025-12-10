@@ -26,6 +26,7 @@ import java.util.StringJoiner;
 
 /** RegisterTableResponse */
 @JsonPropertyOrder({
+  RegisterTableResponse.JSON_PROPERTY_TRANSACTION_ID,
   RegisterTableResponse.JSON_PROPERTY_LOCATION,
   RegisterTableResponse.JSON_PROPERTY_PROPERTIES
 })
@@ -33,6 +34,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class RegisterTableResponse {
+  public static final String JSON_PROPERTY_TRANSACTION_ID = "transaction_id";
+  @javax.annotation.Nullable private String transactionId;
+
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nonnull private String location;
 
@@ -40,6 +44,30 @@ public class RegisterTableResponse {
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public RegisterTableResponse() {}
+
+  public RegisterTableResponse transactionId(@javax.annotation.Nullable String transactionId) {
+
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTransactionId(@javax.annotation.Nullable String transactionId) {
+    this.transactionId = transactionId;
+  }
 
   public RegisterTableResponse location(@javax.annotation.Nonnull String location) {
 
@@ -107,19 +135,21 @@ public class RegisterTableResponse {
       return false;
     }
     RegisterTableResponse registerTableResponse = (RegisterTableResponse) o;
-    return Objects.equals(this.location, registerTableResponse.location)
+    return Objects.equals(this.transactionId, registerTableResponse.transactionId)
+        && Objects.equals(this.location, registerTableResponse.location)
         && Objects.equals(this.properties, registerTableResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(location, properties);
+    return Objects.hash(transactionId, location, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class RegisterTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
@@ -167,6 +197,22 @@ public class RegisterTableResponse {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `transaction_id` to the URL query string
+    if (getTransactionId() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%stransaction_id%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getTransactionId()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
 
     // add `location` to the URL query string
     if (getLocation() != null) {

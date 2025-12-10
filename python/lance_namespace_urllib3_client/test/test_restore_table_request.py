@@ -42,6 +42,7 @@ class TestRestoreTableRequest(unittest.TestCase):
             )
         else:
             return RestoreTableRequest(
+                version = 0,
         )
         """
 

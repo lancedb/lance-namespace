@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **version** | **int** | Version number | 
 **timestamp** | **datetime** | Timestamp when the version was created | 
+**metadata** | **Dict[str, str]** | Key-value pairs of metadata | 
 
 ## Example
 

@@ -33,6 +33,13 @@ class TestIndexApi(unittest.TestCase):
         """
         pass
 
+    def test_create_table_scalar_index(self) -> None:
+        """Test case for create_table_scalar_index
+
+        Create a scalar index on a table
+        """
+        pass
+
     def test_describe_table_index_stats(self) -> None:
         """Test case for describe_table_index_stats
 

@@ -19,11 +19,14 @@ import org.lance.namespace.client.apache.BaseApi;
 import org.lance.namespace.client.apache.Configuration;
 import org.lance.namespace.client.apache.Pair;
 import org.lance.namespace.model.CreateTableTagRequest;
+import org.lance.namespace.model.CreateTableTagResponse;
 import org.lance.namespace.model.DeleteTableTagRequest;
+import org.lance.namespace.model.DeleteTableTagResponse;
 import org.lance.namespace.model.GetTableTagVersionRequest;
 import org.lance.namespace.model.GetTableTagVersionResponse;
 import org.lance.namespace.model.ListTableTagsResponse;
 import org.lance.namespace.model.UpdateTableTagRequest;
+import org.lance.namespace.model.UpdateTableTagResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -58,12 +61,13 @@ public class TagApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @return CreateTableTagResponse
    * @throws ApiException if fails to make API call
    */
-  public void createTableTag(
+  public CreateTableTagResponse createTableTag(
       String id, CreateTableTagRequest createTableTagRequest, String delimiter)
       throws ApiException {
-    this.createTableTag(id, createTableTagRequest, delimiter, Collections.emptyMap());
+    return this.createTableTag(id, createTableTagRequest, delimiter, Collections.emptyMap());
   }
 
   /**
@@ -78,9 +82,10 @@ public class TagApi extends BaseApi {
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
+   * @return CreateTableTagResponse
    * @throws ApiException if fails to make API call
    */
-  public void createTableTag(
+  public CreateTableTagResponse createTableTag(
       String id,
       CreateTableTagRequest createTableTagRequest,
       String delimiter,
@@ -125,9 +130,11 @@ public class TagApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
-    apiClient.invokeAPI(
+    TypeReference<CreateTableTagResponse> localVarReturnType =
+        new TypeReference<CreateTableTagResponse>() {};
+    return apiClient.invokeAPI(
         localVarPath,
         "POST",
         localVarQueryParams,
@@ -140,7 +147,7 @@ public class TagApi extends BaseApi {
         localVarAccept,
         localVarContentType,
         localVarAuthNames,
-        null);
+        localVarReturnType);
   }
 
   /**
@@ -154,12 +161,13 @@ public class TagApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @return DeleteTableTagResponse
    * @throws ApiException if fails to make API call
    */
-  public void deleteTableTag(
+  public DeleteTableTagResponse deleteTableTag(
       String id, DeleteTableTagRequest deleteTableTagRequest, String delimiter)
       throws ApiException {
-    this.deleteTableTag(id, deleteTableTagRequest, delimiter, Collections.emptyMap());
+    return this.deleteTableTag(id, deleteTableTagRequest, delimiter, Collections.emptyMap());
   }
 
   /**
@@ -174,9 +182,10 @@ public class TagApi extends BaseApi {
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
+   * @return DeleteTableTagResponse
    * @throws ApiException if fails to make API call
    */
-  public void deleteTableTag(
+  public DeleteTableTagResponse deleteTableTag(
       String id,
       DeleteTableTagRequest deleteTableTagRequest,
       String delimiter,
@@ -221,9 +230,11 @@ public class TagApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
-    apiClient.invokeAPI(
+    TypeReference<DeleteTableTagResponse> localVarReturnType =
+        new TypeReference<DeleteTableTagResponse>() {};
+    return apiClient.invokeAPI(
         localVarPath,
         "POST",
         localVarQueryParams,
@@ -236,7 +247,7 @@ public class TagApi extends BaseApi {
         localVarAccept,
         localVarContentType,
         localVarAuthNames,
-        null);
+        localVarReturnType);
   }
 
   /**
@@ -322,7 +333,7 @@ public class TagApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<GetTableTagVersionResponse> localVarReturnType =
         new TypeReference<GetTableTagVersionResponse>() {};
@@ -345,10 +356,10 @@ public class TagApi extends BaseApi {
   /**
    * List all tags for a table List all tags that have been created for table &#x60;id&#x60;.
    * Returns a map of tag names to their corresponding version numbers and metadata. REST NAMESPACE
-   * ONLY REST namespace uses GET to perform this operation without a request body. It passes in the
-   * &#x60;ListTableTagsRequest&#x60; information in the following way: - &#x60;id&#x60;: pass
-   * through path parameter of the same name - &#x60;page_token&#x60;: pass through query parameter
-   * of the same name - &#x60;limit&#x60;: pass through query parameter of the same name
+   * ONLY REST namespace does not use a request body for this operation. The
+   * &#x60;ListTableTagsRequest&#x60; information is passed in the following way: - &#x60;id&#x60;:
+   * pass through path parameter of the same name - &#x60;page_token&#x60;: pass through query
+   * parameter of the same name - &#x60;limit&#x60;: pass through query parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -357,8 +368,8 @@ public class TagApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @param pageToken (optional)
-   * @param limit (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
    * @return ListTableTagsResponse
    * @throws ApiException if fails to make API call
    */
@@ -370,10 +381,10 @@ public class TagApi extends BaseApi {
   /**
    * List all tags for a table List all tags that have been created for table &#x60;id&#x60;.
    * Returns a map of tag names to their corresponding version numbers and metadata. REST NAMESPACE
-   * ONLY REST namespace uses GET to perform this operation without a request body. It passes in the
-   * &#x60;ListTableTagsRequest&#x60; information in the following way: - &#x60;id&#x60;: pass
-   * through path parameter of the same name - &#x60;page_token&#x60;: pass through query parameter
-   * of the same name - &#x60;limit&#x60;: pass through query parameter of the same name
+   * ONLY REST namespace does not use a request body for this operation. The
+   * &#x60;ListTableTagsRequest&#x60; information is passed in the following way: - &#x60;id&#x60;:
+   * pass through path parameter of the same name - &#x60;page_token&#x60;: pass through query
+   * parameter of the same name - &#x60;limit&#x60;: pass through query parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -382,8 +393,8 @@ public class TagApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @param pageToken (optional)
-   * @param limit (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return ListTableTagsResponse
    * @throws ApiException if fails to make API call
@@ -429,13 +440,13 @@ public class TagApi extends BaseApi {
 
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<ListTableTagsResponse> localVarReturnType =
         new TypeReference<ListTableTagsResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
-        "GET",
+        "POST",
         localVarQueryParams,
         localVarCollectionQueryParams,
         localVarQueryStringJoiner.toString(),
@@ -461,12 +472,13 @@ public class TagApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @return UpdateTableTagResponse
    * @throws ApiException if fails to make API call
    */
-  public void updateTableTag(
+  public UpdateTableTagResponse updateTableTag(
       String id, UpdateTableTagRequest updateTableTagRequest, String delimiter)
       throws ApiException {
-    this.updateTableTag(id, updateTableTagRequest, delimiter, Collections.emptyMap());
+    return this.updateTableTag(id, updateTableTagRequest, delimiter, Collections.emptyMap());
   }
 
   /**
@@ -482,9 +494,10 @@ public class TagApi extends BaseApi {
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
+   * @return UpdateTableTagResponse
    * @throws ApiException if fails to make API call
    */
-  public void updateTableTag(
+  public UpdateTableTagResponse updateTableTag(
       String id,
       UpdateTableTagRequest updateTableTagRequest,
       String delimiter,
@@ -529,9 +542,11 @@ public class TagApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
-    apiClient.invokeAPI(
+    TypeReference<UpdateTableTagResponse> localVarReturnType =
+        new TypeReference<UpdateTableTagResponse>() {};
+    return apiClient.invokeAPI(
         localVarPath,
         "POST",
         localVarQueryParams,
@@ -544,7 +559,7 @@ public class TagApi extends BaseApi {
         localVarAccept,
         localVarContentType,
         localVarAuthNames,
-        null);
+        localVarReturnType);
   }
 
   @Override
@@ -571,7 +586,7 @@ public class TagApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     return apiClient.invokeAPI(
         localVarPath,

@@ -21,36 +21,36 @@ import jakarta.validation.constraints.*;
 import java.util.*;
 import java.util.Objects;
 
-/** DropTableIndexResponse */
+/** Response for drop index operation */
+@Schema(name = "DropTableIndexResponse", description = "Response for drop index operation")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class DropTableIndexResponse {
 
-  private Long version;
+  private String transactionId;
 
-  public DropTableIndexResponse version(Long version) {
-    this.version = version;
+  public DropTableIndexResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
     return this;
   }
 
   /**
-   * Version of the table after dropping the index minimum: 0
+   * Optional transaction identifier
    *
-   * @return version
+   * @return transactionId
    */
-  @Min(0L)
   @Schema(
-      name = "version",
-      description = "Version of the table after dropping the index",
+      name = "transaction_id",
+      description = "Optional transaction identifier",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("version")
-  public Long getVersion() {
-    return version;
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
   }
 
-  public void setVersion(Long version) {
-    this.version = version;
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
   }
 
   @Override
@@ -62,19 +62,19 @@ public class DropTableIndexResponse {
       return false;
     }
     DropTableIndexResponse dropTableIndexResponse = (DropTableIndexResponse) o;
-    return Objects.equals(this.version, dropTableIndexResponse.version);
+    return Objects.equals(this.transactionId, dropTableIndexResponse.transactionId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version);
+    return Objects.hash(transactionId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DropTableIndexResponse {\n");
-    sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

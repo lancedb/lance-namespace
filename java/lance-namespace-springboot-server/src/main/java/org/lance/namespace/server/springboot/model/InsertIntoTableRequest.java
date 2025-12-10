@@ -39,6 +39,8 @@ public class InsertIntoTableRequest {
 
   /** Gets or Sets mode */
   public enum ModeEnum {
+    CREATE("create"),
+
     APPEND("append"),
 
     OVERWRITE("overwrite");

@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing_extensions import Annotated
 from typing import Optional, Set
@@ -30,7 +30,8 @@ class TableVersion(BaseModel):
     """ # noqa: E501
     version: Annotated[int, Field(strict=True, ge=0)] = Field(description="Version number")
     timestamp: datetime = Field(description="Timestamp when the version was created")
-    __properties: ClassVar[List[str]] = ["version", "timestamp"]
+    metadata: Dict[str, StrictStr] = Field(description="Key-value pairs of metadata")
+    __properties: ClassVar[List[str]] = ["version", "timestamp", "metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -84,7 +85,8 @@ class TableVersion(BaseModel):
 
         _obj = cls.model_validate({
             "version": obj.get("version"),
-            "timestamp": obj.get("timestamp")
+            "timestamp": obj.get("timestamp"),
+            "metadata": obj.get("metadata")
         })
         return _obj
 

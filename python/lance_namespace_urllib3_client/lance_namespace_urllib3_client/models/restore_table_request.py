@@ -28,7 +28,7 @@ class RestoreTableRequest(BaseModel):
     RestoreTableRequest
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
-    version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Version to restore to (if not specified, restores to current version)")
+    version: Annotated[int, Field(strict=True, ge=0)] = Field(description="Version to restore to")
     __properties: ClassVar[List[str]] = ["id", "version"]
 
     model_config = ConfigDict(

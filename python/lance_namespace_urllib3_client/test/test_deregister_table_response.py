@@ -35,6 +35,7 @@ class TestDeregisterTableResponse(unittest.TestCase):
         model = DeregisterTableResponse()
         if include_optional:
             return DeregisterTableResponse(
+                transaction_id = '',
                 id = [
                     ''
                     ],

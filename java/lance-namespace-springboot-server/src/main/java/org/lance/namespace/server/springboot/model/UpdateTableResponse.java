@@ -27,6 +27,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class UpdateTableResponse {
 
+  private String transactionId;
+
   private Long updatedRows;
 
   private Long version;
@@ -39,6 +41,29 @@ public class UpdateTableResponse {
   public UpdateTableResponse(Long updatedRows, Long version) {
     this.updatedRows = updatedRows;
     this.version = version;
+  }
+
+  public UpdateTableResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @Schema(
+      name = "transaction_id",
+      description = "Optional transaction identifier",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
   }
 
   public UpdateTableResponse updatedRows(Long updatedRows) {
@@ -100,19 +125,21 @@ public class UpdateTableResponse {
       return false;
     }
     UpdateTableResponse updateTableResponse = (UpdateTableResponse) o;
-    return Objects.equals(this.updatedRows, updateTableResponse.updatedRows)
+    return Objects.equals(this.transactionId, updateTableResponse.transactionId)
+        && Objects.equals(this.updatedRows, updateTableResponse.updatedRows)
         && Objects.equals(this.version, updateTableResponse.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(updatedRows, version);
+    return Objects.hash(transactionId, updatedRows, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UpdateTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    updatedRows: ").append(toIndentedString(updatedRows)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");

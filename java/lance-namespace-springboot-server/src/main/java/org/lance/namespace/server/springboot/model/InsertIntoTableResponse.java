@@ -30,30 +30,29 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class InsertIntoTableResponse {
 
-  private Long version;
+  private String transactionId;
 
-  public InsertIntoTableResponse version(Long version) {
-    this.version = version;
+  public InsertIntoTableResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
     return this;
   }
 
   /**
-   * The version of the table after the insert minimum: 0
+   * Optional transaction identifier
    *
-   * @return version
+   * @return transactionId
    */
-  @Min(0L)
   @Schema(
-      name = "version",
-      description = "The version of the table after the insert",
+      name = "transaction_id",
+      description = "Optional transaction identifier",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("version")
-  public Long getVersion() {
-    return version;
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
   }
 
-  public void setVersion(Long version) {
-    this.version = version;
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
   }
 
   @Override
@@ -65,19 +64,19 @@ public class InsertIntoTableResponse {
       return false;
     }
     InsertIntoTableResponse insertIntoTableResponse = (InsertIntoTableResponse) o;
-    return Objects.equals(this.version, insertIntoTableResponse.version);
+    return Objects.equals(this.transactionId, insertIntoTableResponse.transactionId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version);
+    return Objects.hash(transactionId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class InsertIntoTableResponse {\n");
-    sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

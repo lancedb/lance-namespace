@@ -40,6 +40,8 @@ public class InsertIntoTableRequest {
 
   /** Gets or Sets mode */
   public enum ModeEnum {
+    CREATE(String.valueOf("create")),
+
     APPEND(String.valueOf("append")),
 
     OVERWRITE(String.valueOf("overwrite"));

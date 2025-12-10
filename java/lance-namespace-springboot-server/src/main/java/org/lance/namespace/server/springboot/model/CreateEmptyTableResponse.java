@@ -31,11 +31,36 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CreateEmptyTableResponse {
 
+  private String transactionId;
+
   private String location;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
   @Valid private Map<String, String> storageOptions = new HashMap<>();
+
+  public CreateEmptyTableResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @Schema(
+      name = "transaction_id",
+      description = "Optional transaction identifier",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
 
   public CreateEmptyTableResponse location(String location) {
     this.location = location;
@@ -127,20 +152,22 @@ public class CreateEmptyTableResponse {
       return false;
     }
     CreateEmptyTableResponse createEmptyTableResponse = (CreateEmptyTableResponse) o;
-    return Objects.equals(this.location, createEmptyTableResponse.location)
+    return Objects.equals(this.transactionId, createEmptyTableResponse.transactionId)
+        && Objects.equals(this.location, createEmptyTableResponse.location)
         && Objects.equals(this.properties, createEmptyTableResponse.properties)
         && Objects.equals(this.storageOptions, createEmptyTableResponse.storageOptions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(location, properties, storageOptions);
+    return Objects.hash(transactionId, location, properties, storageOptions);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateEmptyTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");

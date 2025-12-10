@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **List[str]** |  | [optional] 
 **version** | **int** | Version of the table to describe. If not specified, server should resolve it to the latest version.  | [optional] 
+**with_table_uri** | **bool** | Whether to include the table URI in the response. Default is false.  | [optional] [default to False]
 
 ## Example
 

@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
@@ -29,7 +29,8 @@ class DescribeTableRequest(BaseModel):
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Version of the table to describe. If not specified, server should resolve it to the latest version. ")
-    __properties: ClassVar[List[str]] = ["id", "version"]
+    with_table_uri: Optional[StrictBool] = Field(default=False, description="Whether to include the table URI in the response. Default is false. ")
+    __properties: ClassVar[List[str]] = ["id", "version", "with_table_uri"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,7 +84,8 @@ class DescribeTableRequest(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
-            "version": obj.get("version")
+            "version": obj.get("version"),
+            "with_table_uri": obj.get("with_table_uri") if obj.get("with_table_uri") is not None else False
         })
         return _obj
 
