@@ -178,7 +178,7 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table URI (deprecated, use &#x60;location&#x60; instead)
+   * Table URI. Unlike location, this field must be a complete and valid URI
    *
    * @return tableUri
    */

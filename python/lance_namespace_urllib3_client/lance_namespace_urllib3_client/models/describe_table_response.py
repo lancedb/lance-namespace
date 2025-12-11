@@ -33,7 +33,7 @@ class DescribeTableResponse(BaseModel):
     namespace: Optional[List[StrictStr]] = Field(default=None, description="The namespace identifier as a list of parts")
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
     location: Optional[StrictStr] = Field(default=None, description="Table storage location (e.g., S3/GCS path)")
-    table_uri: Optional[StrictStr] = Field(default=None, description="Table URI (deprecated, use `location` instead)")
+    table_uri: Optional[StrictStr] = Field(default=None, description="Table URI. Unlike location, this field must be a complete and valid URI ")
     var_schema: Optional[JsonArrowSchema] = Field(default=None, alias="schema")
     storage_options: Optional[Dict[str, StrictStr]] = Field(default=None, description="Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. ")
     stats: Optional[TableBasicStats] = Field(default=None, description="Table statistics")

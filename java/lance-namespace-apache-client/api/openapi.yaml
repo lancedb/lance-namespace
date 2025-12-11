@@ -2905,7 +2905,8 @@ components:
           description: "Table storage location (e.g., S3/GCS path)"
           type: string
         table_uri:
-          description: "Table URI (deprecated, use `location` instead)"
+          description: |
+            Table URI. Unlike location, this field must be a complete and valid URI
           type: string
         schema:
           $ref: '#/components/schemas/JsonArrowSchema'

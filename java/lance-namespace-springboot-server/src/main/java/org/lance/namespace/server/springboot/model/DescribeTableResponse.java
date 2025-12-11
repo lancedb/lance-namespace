@@ -152,13 +152,13 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table URI (deprecated, use `location` instead)
+   * Table URI. Unlike location, this field must be a complete and valid URI
    *
    * @return tableUri
    */
   @Schema(
       name = "table_uri",
-      description = "Table URI (deprecated, use `location` instead)",
+      description = "Table URI. Unlike location, this field must be a complete and valid URI ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("table_uri")
   public String getTableUri() {

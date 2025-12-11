@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **namespace** | **List[str]** | The namespace identifier as a list of parts | [optional] 
 **version** | **int** |  | [optional] 
 **location** | **str** | Table storage location (e.g., S3/GCS path) | [optional] 
-**table_uri** | **str** | Table URI (deprecated, use &#x60;location&#x60; instead) | [optional] 
+**table_uri** | **str** | Table URI. Unlike location, this field must be a complete and valid URI  | [optional] 
 **var_schema** | [**JsonArrowSchema**](JsonArrowSchema.md) |  | [optional] 
 **storage_options** | **Dict[str, str]** | Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access.  | [optional] 
 **stats** | [**TableBasicStats**](TableBasicStats.md) | Table statistics | [optional] 

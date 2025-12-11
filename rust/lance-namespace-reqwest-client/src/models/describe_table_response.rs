@@ -24,7 +24,7 @@ pub struct DescribeTableResponse {
     /// Table storage location (e.g., S3/GCS path)
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
-    /// Table URI (deprecated, use `location` instead)
+    /// Table URI. Unlike location, this field must be a complete and valid URI 
     #[serde(rename = "table_uri", skip_serializing_if = "Option::is_none")]
     pub table_uri: Option<String>,
     #[serde(rename = "schema", skip_serializing_if = "Option::is_none")]
