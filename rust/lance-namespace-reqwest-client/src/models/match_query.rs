@@ -22,9 +22,9 @@ pub struct MatchQuery {
     /// The maximum number of terms to expand for fuzzy matching. Default to 50.
     #[serde(rename = "max_expansions", skip_serializing_if = "Option::is_none")]
     pub max_expansions: Option<i32>,
-    /// The operator to use for combining terms. This can be either `And` or `Or`, it's 'Or' by default. - `And`: All terms must match. - `Or`: At least one term must match.
+    /// The operator to use for combining terms. Case insensitive. Valid values are: - And: All terms must match. - Or: At least one term must match. 
     #[serde(rename = "operator", skip_serializing_if = "Option::is_none")]
-    pub operator: Option<models::Operator>,
+    pub operator: Option<String>,
     /// The number of beginning characters being unchanged for fuzzy matching. Default to 0.
     #[serde(rename = "prefix_length", skip_serializing_if = "Option::is_none")]
     pub prefix_length: Option<i32>,

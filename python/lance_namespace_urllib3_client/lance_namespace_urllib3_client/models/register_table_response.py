@@ -27,7 +27,7 @@ class RegisterTableResponse(BaseModel):
     RegisterTableResponse
     """ # noqa: E501
     transaction_id: Optional[StrictStr] = Field(default=None, description="Optional transaction identifier")
-    location: StrictStr
+    location: Optional[StrictStr] = None
     properties: Optional[Dict[str, StrictStr]] = None
     __properties: ClassVar[List[str]] = ["transaction_id", "location", "properties"]
 

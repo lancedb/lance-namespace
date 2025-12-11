@@ -19,61 +19,21 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 /** DescribeNamespaceResponse */
-@JsonPropertyOrder({
-  DescribeNamespaceResponse.JSON_PROPERTY_ID,
-  DescribeNamespaceResponse.JSON_PROPERTY_PROPERTIES
-})
+@JsonPropertyOrder({DescribeNamespaceResponse.JSON_PROPERTY_PROPERTIES})
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DescribeNamespaceResponse {
-  public static final String JSON_PROPERTY_ID = "id";
-  @javax.annotation.Nonnull private List<String> id = new ArrayList<>();
-
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public DescribeNamespaceResponse() {}
-
-  public DescribeNamespaceResponse id(@javax.annotation.Nonnull List<String> id) {
-
-    this.id = id;
-    return this;
-  }
-
-  public DescribeNamespaceResponse addIdItem(String idItem) {
-    if (this.id == null) {
-      this.id = new ArrayList<>();
-    }
-    this.id.add(idItem);
-    return this;
-  }
-
-  /**
-   * The namespace identifier as a list of parts
-   *
-   * @return id
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_ID)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public List<String> getId() {
-    return id;
-  }
-
-  @JsonProperty(JSON_PROPERTY_ID)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setId(@javax.annotation.Nonnull List<String> id) {
-    this.id = id;
-  }
 
   public DescribeNamespaceResponse properties(
       @javax.annotation.Nullable Map<String, String> properties) {
@@ -119,20 +79,18 @@ public class DescribeNamespaceResponse {
       return false;
     }
     DescribeNamespaceResponse describeNamespaceResponse = (DescribeNamespaceResponse) o;
-    return Objects.equals(this.id, describeNamespaceResponse.id)
-        && Objects.equals(this.properties, describeNamespaceResponse.properties);
+    return Objects.equals(this.properties, describeNamespaceResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, properties);
+    return Objects.hash(properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeNamespaceResponse {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -179,27 +137,6 @@ public class DescribeNamespaceResponse {
     }
 
     StringJoiner joiner = new StringJoiner("&");
-
-    // add `id` to the URL query string
-    if (getId() != null) {
-      for (int i = 0; i < getId().size(); i++) {
-        try {
-          joiner.add(
-              String.format(
-                  "%sid%s%s=%s",
-                  prefix,
-                  suffix,
-                  "".equals(suffix)
-                      ? ""
-                      : String.format("%s%d%s", containerPrefix, i, containerSuffix),
-                  URLEncoder.encode(String.valueOf(getId().get(i)), "UTF-8")
-                      .replaceAll("\\+", "%20")));
-        } catch (UnsupportedEncodingException e) {
-          // Should never happen, UTF-8 is always supported
-          throw new RuntimeException(e);
-        }
-      }
-    }
 
     // add `properties` to the URL query string
     if (getProperties() != null) {

@@ -26,9 +26,8 @@ class DescribeNamespaceResponse(BaseModel):
     """
     DescribeNamespaceResponse
     """ # noqa: E501
-    id: List[StrictStr] = Field(description="The namespace identifier as a list of parts")
     properties: Optional[Dict[str, StrictStr]] = Field(default=None, description="Properties stored on the namespace, if supported by the server. If the server does not support namespace properties, it should return null for this field. If namespace properties are supported, but none are set, it should return an empty object.")
-    __properties: ClassVar[List[str]] = ["id", "properties"]
+    __properties: ClassVar[List[str]] = ["properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,7 +80,6 @@ class DescribeNamespaceResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
             "properties": obj.get("properties")
         })
         return _obj

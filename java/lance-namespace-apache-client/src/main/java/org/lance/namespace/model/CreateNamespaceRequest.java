@@ -13,11 +13,9 @@
  */
 package org.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -41,48 +39,8 @@ public class CreateNamespaceRequest {
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
-  /**
-   * There are three modes when trying to create a namespace, to differentiate the behavior when a
-   * namespace of the same name already exists: * create: the operation fails with 409. * exist_ok:
-   * the operation succeeds and the existing namespace is kept. * overwrite: the existing namespace
-   * is dropped and a new empty namespace with this name is created.
-   */
-  public enum ModeEnum {
-    CREATE(String.valueOf("create")),
-
-    EXIST_OK(String.valueOf("exist_ok")),
-
-    OVERWRITE(String.valueOf("overwrite"));
-
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
   public static final String JSON_PROPERTY_MODE = "mode";
-  @javax.annotation.Nullable private ModeEnum mode;
+  @javax.annotation.Nullable private String mode;
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
@@ -121,7 +79,7 @@ public class CreateNamespaceRequest {
     this.id = id;
   }
 
-  public CreateNamespaceRequest mode(@javax.annotation.Nullable ModeEnum mode) {
+  public CreateNamespaceRequest mode(@javax.annotation.Nullable String mode) {
 
     this.mode = mode;
     return this;
@@ -129,22 +87,23 @@ public class CreateNamespaceRequest {
 
   /**
    * There are three modes when trying to create a namespace, to differentiate the behavior when a
-   * namespace of the same name already exists: * create: the operation fails with 409. * exist_ok:
-   * the operation succeeds and the existing namespace is kept. * overwrite: the existing namespace
-   * is dropped and a new empty namespace with this name is created.
+   * namespace of the same name already exists. Case insensitive. Valid values are: * create: the
+   * operation fails with 409. * exist_ok: the operation succeeds and the existing namespace is
+   * kept. * overwrite: the existing namespace is dropped and a new empty namespace with this name
+   * is created.
    *
    * @return mode
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public ModeEnum getMode() {
+  public String getMode() {
     return mode;
   }
 
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMode(@javax.annotation.Nullable ModeEnum mode) {
+  public void setMode(@javax.annotation.Nullable String mode) {
     this.mode = mode;
   }
 

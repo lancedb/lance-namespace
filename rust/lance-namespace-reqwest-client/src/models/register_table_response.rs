@@ -16,17 +16,17 @@ pub struct RegisterTableResponse {
     /// Optional transaction identifier
     #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
     pub transaction_id: Option<String>,
-    #[serde(rename = "location")]
-    pub location: String,
+    #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
+    pub location: Option<String>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
 }
 
 impl RegisterTableResponse {
-    pub fn new(location: String) -> RegisterTableResponse {
+    pub fn new() -> RegisterTableResponse {
         RegisterTableResponse {
             transaction_id: None,
-            location,
+            location: None,
             properties: None,
         }
     }

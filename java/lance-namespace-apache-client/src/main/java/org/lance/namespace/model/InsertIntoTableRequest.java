@@ -13,11 +13,9 @@
  */
 package org.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -38,43 +36,8 @@ public class InsertIntoTableRequest {
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
-  /** Gets or Sets mode */
-  public enum ModeEnum {
-    CREATE(String.valueOf("create")),
-
-    APPEND(String.valueOf("append")),
-
-    OVERWRITE(String.valueOf("overwrite"));
-
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
   public static final String JSON_PROPERTY_MODE = "mode";
-  @javax.annotation.Nullable private ModeEnum mode = ModeEnum.APPEND;
+  @javax.annotation.Nullable private String mode = "append";
 
   public InsertIntoTableRequest() {}
 
@@ -110,27 +73,29 @@ public class InsertIntoTableRequest {
     this.id = id;
   }
 
-  public InsertIntoTableRequest mode(@javax.annotation.Nullable ModeEnum mode) {
+  public InsertIntoTableRequest mode(@javax.annotation.Nullable String mode) {
 
     this.mode = mode;
     return this;
   }
 
   /**
-   * Get mode
+   * How the insert should behave. Case insensitive. Valid values are: - create: create new table,
+   * fail if table already exists - append (default): insert data to the existing table - overwrite:
+   * remove all data in the table and then insert data to it
    *
    * @return mode
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public ModeEnum getMode() {
+  public String getMode() {
     return mode;
   }
 
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMode(@javax.annotation.Nullable ModeEnum mode) {
+  public void setMode(@javax.annotation.Nullable String mode) {
     this.mode = mode;
   }
 

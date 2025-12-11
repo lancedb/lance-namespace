@@ -27,7 +27,7 @@ class DropNamespaceResponse(BaseModel):
     DropNamespaceResponse
     """ # noqa: E501
     properties: Optional[Dict[str, StrictStr]] = None
-    transaction_id: Optional[List[StrictStr]] = Field(default=None, description="If present, indicating the operation is long running and should be tracked using GetTransaction ")
+    transaction_id: Optional[List[StrictStr]] = Field(default=None, description="If present, indicating the operation is long running and should be tracked using DescribeTransaction ")
     __properties: ClassVar[List[str]] = ["properties", "transaction_id"]
 
     model_config = ConfigDict(

@@ -17,9 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from lance_namespace_urllib3_client.models.transaction_status import TransactionStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +26,7 @@ class DescribeTransactionResponse(BaseModel):
     """
     DescribeTransactionResponse
     """ # noqa: E501
-    status: TransactionStatus
+    status: StrictStr = Field(description="The status of a transaction. Case insensitive. Valid values are: - QUEUED: the transaction is queued and not yet started - RUNNING: the transaction is currently running - SUCCEEDED: the transaction has completed successfully - FAILED: the transaction has failed - CANCELED: the transaction was canceled ")
     properties: Optional[Dict[str, StrictStr]] = None
     __properties: ClassVar[List[str]] = ["status", "properties"]
 

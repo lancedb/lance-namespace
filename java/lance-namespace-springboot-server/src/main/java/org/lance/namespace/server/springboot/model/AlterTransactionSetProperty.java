@@ -16,7 +16,6 @@ package org.lance.namespace.server.springboot.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.*;
@@ -32,7 +31,7 @@ public class AlterTransactionSetProperty {
 
   private String value;
 
-  private SetPropertyMode mode;
+  private String mode;
 
   public AlterTransactionSetProperty key(String key) {
     this.key = key;
@@ -74,24 +73,29 @@ public class AlterTransactionSetProperty {
     this.value = value;
   }
 
-  public AlterTransactionSetProperty mode(SetPropertyMode mode) {
+  public AlterTransactionSetProperty mode(String mode) {
     this.mode = mode;
     return this;
   }
 
   /**
-   * Get mode
+   * The behavior if the property key already exists. Case insensitive. Valid values are: -
+   * OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the
+   * entire operation - SKIP: keep the existing value and skip setting the provided value
    *
    * @return mode
    */
-  @Valid
-  @Schema(name = "mode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "mode",
+      description =
+          "The behavior if the property key already exists. Case insensitive. Valid values are: - OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value and skip setting the provided value ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
-  public SetPropertyMode getMode() {
+  public String getMode() {
     return mode;
   }
 
-  public void setMode(SetPropertyMode mode) {
+  public void setMode(String mode) {
     this.mode = mode;
   }
 

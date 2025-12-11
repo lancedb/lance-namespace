@@ -39,7 +39,7 @@ class TestRegisterTableRequest(unittest.TestCase):
                     ''
                     ],
                 location = '',
-                mode = 'CREATE',
+                mode = '',
                 properties = {
                     'key' : ''
                     }

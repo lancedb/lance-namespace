@@ -49,7 +49,7 @@ public class MatchQuery {
   @javax.annotation.Nullable private Integer maxExpansions;
 
   public static final String JSON_PROPERTY_OPERATOR = "operator";
-  @javax.annotation.Nullable private Operator operator;
+  @javax.annotation.Nullable private String operator;
 
   public static final String JSON_PROPERTY_PREFIX_LENGTH = "prefix_length";
   @javax.annotation.Nullable private Integer prefixLength;
@@ -155,29 +155,28 @@ public class MatchQuery {
     this.maxExpansions = maxExpansions;
   }
 
-  public MatchQuery operator(@javax.annotation.Nullable Operator operator) {
+  public MatchQuery operator(@javax.annotation.Nullable String operator) {
 
     this.operator = operator;
     return this;
   }
 
   /**
-   * The operator to use for combining terms. This can be either &#x60;And&#x60; or &#x60;Or&#x60;,
-   * it&#39;s &#39;Or&#39; by default. - &#x60;And&#x60;: All terms must match. - &#x60;Or&#x60;: At
-   * least one term must match.
+   * The operator to use for combining terms. Case insensitive. Valid values are: - And: All terms
+   * must match. - Or: At least one term must match.
    *
    * @return operator
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_OPERATOR)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Operator getOperator() {
+  public String getOperator() {
     return operator;
   }
 
   @JsonProperty(JSON_PROPERTY_OPERATOR)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setOperator(@javax.annotation.Nullable Operator operator) {
+  public void setOperator(@javax.annotation.Nullable String operator) {
     this.operator = operator;
   }
 

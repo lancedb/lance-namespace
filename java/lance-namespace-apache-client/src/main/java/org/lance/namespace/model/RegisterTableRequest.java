@@ -13,11 +13,9 @@
  */
 package org.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -45,45 +43,8 @@ public class RegisterTableRequest {
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nonnull private String location;
 
-  /**
-   * There are two modes when trying to register a table, to differentiate the behavior when a table
-   * of the same name already exists: * CREATE (default): the operation fails with 409. * OVERWRITE:
-   * the existing table registration is replaced with the new registration.
-   */
-  public enum ModeEnum {
-    CREATE(String.valueOf("CREATE")),
-
-    OVERWRITE(String.valueOf("OVERWRITE"));
-
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
   public static final String JSON_PROPERTY_MODE = "mode";
-  @javax.annotation.Nullable private ModeEnum mode;
+  @javax.annotation.Nullable private String mode;
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
@@ -146,7 +107,7 @@ public class RegisterTableRequest {
     this.location = location;
   }
 
-  public RegisterTableRequest mode(@javax.annotation.Nullable ModeEnum mode) {
+  public RegisterTableRequest mode(@javax.annotation.Nullable String mode) {
 
     this.mode = mode;
     return this;
@@ -154,21 +115,22 @@ public class RegisterTableRequest {
 
   /**
    * There are two modes when trying to register a table, to differentiate the behavior when a table
-   * of the same name already exists: * CREATE (default): the operation fails with 409. * OVERWRITE:
-   * the existing table registration is replaced with the new registration.
+   * of the same name already exists. Case insensitive. Valid values are: * CREATE (default): the
+   * operation fails with 409. * OVERWRITE: the existing table registration is replaced with the new
+   * registration.
    *
    * @return mode
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public ModeEnum getMode() {
+  public String getMode() {
     return mode;
   }
 
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMode(@javax.annotation.Nullable ModeEnum mode) {
+  public void setMode(@javax.annotation.Nullable String mode) {
     this.mode = mode;
   }
 

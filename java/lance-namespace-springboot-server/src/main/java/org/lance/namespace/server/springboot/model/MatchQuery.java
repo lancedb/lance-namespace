@@ -16,7 +16,6 @@ package org.lance.namespace.server.springboot.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.*;
@@ -36,7 +35,7 @@ public class MatchQuery {
 
   private Integer maxExpansions;
 
-  private Operator operator;
+  private String operator;
 
   private Integer prefixLength;
 
@@ -136,29 +135,28 @@ public class MatchQuery {
     this.maxExpansions = maxExpansions;
   }
 
-  public MatchQuery operator(Operator operator) {
+  public MatchQuery operator(String operator) {
     this.operator = operator;
     return this;
   }
 
   /**
-   * The operator to use for combining terms. This can be either `And` or `Or`, it's 'Or' by
-   * default. - `And`: All terms must match. - `Or`: At least one term must match.
+   * The operator to use for combining terms. Case insensitive. Valid values are: - And: All terms
+   * must match. - Or: At least one term must match.
    *
    * @return operator
    */
-  @Valid
   @Schema(
       name = "operator",
       description =
-          "The operator to use for combining terms. This can be either `And` or `Or`, it's 'Or' by default. - `And`: All terms must match. - `Or`: At least one term must match.",
+          "The operator to use for combining terms. Case insensitive. Valid values are: - And: All terms must match. - Or: At least one term must match. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("operator")
-  public Operator getOperator() {
+  public String getOperator() {
     return operator;
   }
 
-  public void setOperator(Operator operator) {
+  public void setOperator(String operator) {
     this.operator = operator;
   }
 

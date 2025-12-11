@@ -13,11 +13,9 @@
  */
 package org.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -39,86 +37,11 @@ public class DropNamespaceRequest {
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
-  /**
-   * The mode for dropping a namespace, deciding the server behavior when the namespace to drop is
-   * not found. - FAIL (default): the server must return 400 indicating the namespace to drop does
-   * not exist. - SKIP: the server must return 204 indicating the drop operation has succeeded.
-   */
-  public enum ModeEnum {
-    SKIP(String.valueOf("SKIP")),
-
-    FAIL(String.valueOf("FAIL"));
-
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
   public static final String JSON_PROPERTY_MODE = "mode";
-  @javax.annotation.Nullable private ModeEnum mode;
-
-  /**
-   * The behavior for dropping a namespace. - RESTRICT (default): the namespace should not contain
-   * any table or child namespace when drop is initiated. If tables are found, the server should
-   * return error and not drop the namespace. - CASCADE: all tables and child namespaces in the
-   * namespace are dropped before the namespace is dropped.
-   */
-  public enum BehaviorEnum {
-    RESTRICT(String.valueOf("RESTRICT")),
-
-    CASCADE(String.valueOf("CASCADE"));
-
-    private String value;
-
-    BehaviorEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static BehaviorEnum fromValue(String value) {
-      for (BehaviorEnum b : BehaviorEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
+  @javax.annotation.Nullable private String mode;
 
   public static final String JSON_PROPERTY_BEHAVIOR = "behavior";
-  @javax.annotation.Nullable private BehaviorEnum behavior;
+  @javax.annotation.Nullable private String behavior;
 
   public DropNamespaceRequest() {}
 
@@ -154,7 +77,7 @@ public class DropNamespaceRequest {
     this.id = id;
   }
 
-  public DropNamespaceRequest mode(@javax.annotation.Nullable ModeEnum mode) {
+  public DropNamespaceRequest mode(@javax.annotation.Nullable String mode) {
 
     this.mode = mode;
     return this;
@@ -162,48 +85,50 @@ public class DropNamespaceRequest {
 
   /**
    * The mode for dropping a namespace, deciding the server behavior when the namespace to drop is
-   * not found. - FAIL (default): the server must return 400 indicating the namespace to drop does
-   * not exist. - SKIP: the server must return 204 indicating the drop operation has succeeded.
+   * not found. Case insensitive. Valid values are: - FAIL (default): the server must return 400
+   * indicating the namespace to drop does not exist. - SKIP: the server must return 204 indicating
+   * the drop operation has succeeded.
    *
    * @return mode
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public ModeEnum getMode() {
+  public String getMode() {
     return mode;
   }
 
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMode(@javax.annotation.Nullable ModeEnum mode) {
+  public void setMode(@javax.annotation.Nullable String mode) {
     this.mode = mode;
   }
 
-  public DropNamespaceRequest behavior(@javax.annotation.Nullable BehaviorEnum behavior) {
+  public DropNamespaceRequest behavior(@javax.annotation.Nullable String behavior) {
 
     this.behavior = behavior;
     return this;
   }
 
   /**
-   * The behavior for dropping a namespace. - RESTRICT (default): the namespace should not contain
-   * any table or child namespace when drop is initiated. If tables are found, the server should
-   * return error and not drop the namespace. - CASCADE: all tables and child namespaces in the
-   * namespace are dropped before the namespace is dropped.
+   * The behavior for dropping a namespace. Case insensitive. Valid values are: - RESTRICT
+   * (default): the namespace should not contain any table or child namespace when drop is
+   * initiated. If tables are found, the server should return error and not drop the namespace. -
+   * CASCADE: all tables and child namespaces in the namespace are dropped before the namespace is
+   * dropped.
    *
    * @return behavior
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_BEHAVIOR)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public BehaviorEnum getBehavior() {
+  public String getBehavior() {
     return behavior;
   }
 
   @JsonProperty(JSON_PROPERTY_BEHAVIOR)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setBehavior(@javax.annotation.Nullable BehaviorEnum behavior) {
+  public void setBehavior(@javax.annotation.Nullable String behavior) {
     this.behavior = behavior;
   }
 

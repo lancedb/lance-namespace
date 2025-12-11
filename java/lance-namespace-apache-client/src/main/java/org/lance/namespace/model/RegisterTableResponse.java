@@ -38,7 +38,7 @@ public class RegisterTableResponse {
   @javax.annotation.Nullable private String transactionId;
 
   public static final String JSON_PROPERTY_LOCATION = "location";
-  @javax.annotation.Nonnull private String location;
+  @javax.annotation.Nullable private String location;
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
@@ -69,7 +69,7 @@ public class RegisterTableResponse {
     this.transactionId = transactionId;
   }
 
-  public RegisterTableResponse location(@javax.annotation.Nonnull String location) {
+  public RegisterTableResponse location(@javax.annotation.Nullable String location) {
 
     this.location = location;
     return this;
@@ -80,16 +80,16 @@ public class RegisterTableResponse {
    *
    * @return location
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public String getLocation() {
     return location;
   }
 
   @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setLocation(@javax.annotation.Nonnull String location) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setLocation(@javax.annotation.Nullable String location) {
     this.location = location;
   }
 

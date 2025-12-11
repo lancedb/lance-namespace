@@ -36,7 +36,7 @@ class TestAlterTransactionUnsetProperty(unittest.TestCase):
         if include_optional:
             return AlterTransactionUnsetProperty(
                 key = '',
-                mode = 'SKIP'
+                mode = ''
             )
         else:
             return AlterTransactionUnsetProperty(

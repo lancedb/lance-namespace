@@ -17,9 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from lance_namespace_urllib3_client.models.transaction_status import TransactionStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +26,7 @@ class AlterTransactionSetStatus(BaseModel):
     """
     AlterTransactionSetStatus
     """ # noqa: E501
-    status: Optional[TransactionStatus] = None
+    status: Optional[StrictStr] = Field(default=None, description="The status of a transaction. Case insensitive. Valid values are: - QUEUED: the transaction is queued and not yet started - RUNNING: the transaction is currently running - SUCCEEDED: the transaction has completed successfully - FAILED: the transaction has failed - CANCELED: the transaction was canceled ")
     __properties: ClassVar[List[str]] = ["status"]
 
     model_config = ConfigDict(

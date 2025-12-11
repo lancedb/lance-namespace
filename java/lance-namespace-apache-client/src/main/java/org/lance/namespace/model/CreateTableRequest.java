@@ -13,11 +13,9 @@
  */
 package org.lance.namespace.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -35,48 +33,8 @@ public class CreateTableRequest {
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
-  /**
-   * There are three modes when trying to create a table, to differentiate the behavior when a table
-   * of the same name already exists: * Create: the operation fails with 409. * ExistOk: the
-   * operation succeeds and the existing table is kept. * Overwrite: the existing table is dropped
-   * and a new table with this name is created.
-   */
-  public enum ModeEnum {
-    CREATE(String.valueOf("Create")),
-
-    EXIST_OK(String.valueOf("ExistOk")),
-
-    OVERWRITE(String.valueOf("Overwrite"));
-
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
   public static final String JSON_PROPERTY_MODE = "mode";
-  @javax.annotation.Nullable private ModeEnum mode;
+  @javax.annotation.Nullable private String mode;
 
   public CreateTableRequest() {}
 
@@ -112,7 +70,7 @@ public class CreateTableRequest {
     this.id = id;
   }
 
-  public CreateTableRequest mode(@javax.annotation.Nullable ModeEnum mode) {
+  public CreateTableRequest mode(@javax.annotation.Nullable String mode) {
 
     this.mode = mode;
     return this;
@@ -120,22 +78,22 @@ public class CreateTableRequest {
 
   /**
    * There are three modes when trying to create a table, to differentiate the behavior when a table
-   * of the same name already exists: * Create: the operation fails with 409. * ExistOk: the
-   * operation succeeds and the existing table is kept. * Overwrite: the existing table is dropped
-   * and a new table with this name is created.
+   * of the same name already exists. Case insensitive. Valid values are: * Create: the operation
+   * fails with 409. * ExistOk: the operation succeeds and the existing table is kept. * Overwrite:
+   * the existing table is dropped and a new table with this name is created.
    *
    * @return mode
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public ModeEnum getMode() {
+  public String getMode() {
     return mode;
   }
 
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMode(@javax.annotation.Nullable ModeEnum mode) {
+  public void setMode(@javax.annotation.Nullable String mode) {
     this.mode = mode;
   }
 

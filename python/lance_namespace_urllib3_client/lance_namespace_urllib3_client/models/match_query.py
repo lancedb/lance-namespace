@@ -20,7 +20,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
-from lance_namespace_urllib3_client.models.operator import Operator
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -32,7 +31,7 @@ class MatchQuery(BaseModel):
     column: Optional[StrictStr] = None
     fuzziness: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
     max_expansions: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="The maximum number of terms to expand for fuzzy matching. Default to 50.")
-    operator: Optional[Operator] = Field(default=None, description="The operator to use for combining terms. This can be either `And` or `Or`, it's 'Or' by default. - `And`: All terms must match. - `Or`: At least one term must match.")
+    operator: Optional[StrictStr] = Field(default=None, description="The operator to use for combining terms. Case insensitive. Valid values are: - And: All terms must match. - Or: At least one term must match. ")
     prefix_length: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="The number of beginning characters being unchanged for fuzzy matching. Default to 0.")
     terms: StrictStr
     __properties: ClassVar[List[str]] = ["boost", "column", "fuzziness", "max_expansions", "operator", "prefix_length", "terms"]

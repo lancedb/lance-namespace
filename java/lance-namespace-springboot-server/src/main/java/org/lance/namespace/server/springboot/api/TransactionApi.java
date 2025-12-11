@@ -190,7 +190,7 @@ public interface TransactionApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"properties\" : { \"key\" : \"properties\" }, \"status\" : \"QUEUED\" }";
+                      "{ \"properties\" : { \"key\" : \"properties\" }, \"status\" : \"status\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -253,8 +253,8 @@ public interface TransactionApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return Response of GetTransaction (status code 200) or Indicates a bad request error. It could
-   *     be caused by an unexpected request body format or other forms of request validation
+   * @return Response of DescribeTransaction (status code 200) or Indicates a bad request error. It
+   *     could be caused by an unexpected request body format or other forms of request validation
    *     failure, such as invalid json. Usually serves application/json content, although in some
    *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
    *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
@@ -274,7 +274,7 @@ public interface TransactionApi {
       responses = {
         @ApiResponse(
             responseCode = "200",
-            description = "Response of GetTransaction",
+            description = "Response of DescribeTransaction",
             content = {
               @Content(
                   mediaType = "application/json",
@@ -370,7 +370,7 @@ public interface TransactionApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"properties\" : { \"key\" : \"properties\" }, \"status\" : \"QUEUED\" }";
+                      "{ \"properties\" : { \"key\" : \"properties\" }, \"status\" : \"status\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }

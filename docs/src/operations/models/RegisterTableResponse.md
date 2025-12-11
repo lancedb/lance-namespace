@@ -8,7 +8,7 @@
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
 |**transactionId** | **String** | Optional transaction identifier |  [optional] |
-|**location** | **String** |  |  |
+|**location** | **String** |  |  [optional] |
 |**properties** | **Map&lt;String, String&gt;** |  |  [optional] |
 
 

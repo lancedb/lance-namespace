@@ -41,7 +41,7 @@ class TestMultiMatchQuery(unittest.TestCase):
                         column = '', 
                         fuzziness = 0, 
                         max_expansions = 0, 
-                        operator = 'And', 
+                        operator = '', 
                         prefix_length = 0, 
                         terms = '', )
                     ]
@@ -54,7 +54,7 @@ class TestMultiMatchQuery(unittest.TestCase):
                         column = '', 
                         fuzziness = 0, 
                         max_expansions = 0, 
-                        operator = 'And', 
+                        operator = '', 
                         prefix_length = 0, 
                         terms = '', )
                     ],

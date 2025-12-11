@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,18 +27,8 @@ class InsertIntoTableRequest(BaseModel):
     Request for inserting records into a table, excluding the Arrow IPC stream. 
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
-    mode: Optional[StrictStr] = 'append'
+    mode: Optional[StrictStr] = Field(default='append', description="How the insert should behave. Case insensitive. Valid values are: - create: create new table, fail if table already exists - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it ")
     __properties: ClassVar[List[str]] = ["id", "mode"]
-
-    @field_validator('mode')
-    def mode_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['create', 'append', 'overwrite']):
-            raise ValueError("must be one of enum values ('create', 'append', 'overwrite')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

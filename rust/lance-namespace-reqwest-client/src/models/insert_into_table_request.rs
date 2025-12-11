@@ -16,8 +16,9 @@ use serde::{Deserialize, Serialize};
 pub struct InsertIntoTableRequest {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// How the insert should behave. Case insensitive. Valid values are: - create: create new table, fail if table already exists - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it 
     #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
-    pub mode: Option<Mode>,
+    pub mode: Option<String>,
 }
 
 impl InsertIntoTableRequest {
@@ -27,22 +28,6 @@ impl InsertIntoTableRequest {
             id: None,
             mode: None,
         }
-    }
-}
-/// 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Mode {
-    #[serde(rename = "create")]
-    Create,
-    #[serde(rename = "append")]
-    Append,
-    #[serde(rename = "overwrite")]
-    Overwrite,
-}
-
-impl Default for Mode {
-    fn default() -> Mode {
-        Self::Create
     }
 }
 

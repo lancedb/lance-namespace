@@ -35,7 +35,7 @@ public class AlterTransactionUnsetProperty {
   @javax.annotation.Nullable private String key;
 
   public static final String JSON_PROPERTY_MODE = "mode";
-  @javax.annotation.Nullable private UnsetPropertyMode mode;
+  @javax.annotation.Nullable private String mode;
 
   public AlterTransactionUnsetProperty() {}
 
@@ -63,27 +63,28 @@ public class AlterTransactionUnsetProperty {
     this.key = key;
   }
 
-  public AlterTransactionUnsetProperty mode(@javax.annotation.Nullable UnsetPropertyMode mode) {
+  public AlterTransactionUnsetProperty mode(@javax.annotation.Nullable String mode) {
 
     this.mode = mode;
     return this;
   }
 
   /**
-   * Get mode
+   * The behavior if the property key to unset does not exist. Case insensitive. Valid values are: -
+   * SKIP (default): skip the property to unset - FAIL: fail the entire operation
    *
    * @return mode
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public UnsetPropertyMode getMode() {
+  public String getMode() {
     return mode;
   }
 
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMode(@javax.annotation.Nullable UnsetPropertyMode mode) {
+  public void setMode(@javax.annotation.Nullable String mode) {
     this.mode = mode;
   }
 

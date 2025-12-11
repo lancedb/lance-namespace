@@ -29,31 +29,34 @@ import java.util.StringJoiner;
     comments = "Generator version: 7.12.0")
 public class AlterTransactionSetStatus {
   public static final String JSON_PROPERTY_STATUS = "status";
-  @javax.annotation.Nullable private TransactionStatus status;
+  @javax.annotation.Nullable private String status;
 
   public AlterTransactionSetStatus() {}
 
-  public AlterTransactionSetStatus status(@javax.annotation.Nullable TransactionStatus status) {
+  public AlterTransactionSetStatus status(@javax.annotation.Nullable String status) {
 
     this.status = status;
     return this;
   }
 
   /**
-   * Get status
+   * The status of a transaction. Case insensitive. Valid values are: - QUEUED: the transaction is
+   * queued and not yet started - RUNNING: the transaction is currently running - SUCCEEDED: the
+   * transaction has completed successfully - FAILED: the transaction has failed - CANCELED: the
+   * transaction was canceled
    *
    * @return status
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_STATUS)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public TransactionStatus getStatus() {
+  public String getStatus() {
     return status;
   }
 
   @JsonProperty(JSON_PROPERTY_STATUS)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setStatus(@javax.annotation.Nullable TransactionStatus status) {
+  public void setStatus(@javax.annotation.Nullable String status) {
     this.status = status;
   }
 

@@ -13,9 +13,7 @@
  */
 package org.lance.namespace.server.springboot.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
@@ -38,44 +36,7 @@ public class RegisterTableRequest {
 
   private String location;
 
-  /**
-   * There are two modes when trying to register a table, to differentiate the behavior when a table
-   * of the same name already exists: * CREATE (default): the operation fails with 409. * OVERWRITE:
-   * the existing table registration is replaced with the new registration.
-   */
-  public enum ModeEnum {
-    CREATE("CREATE"),
-
-    OVERWRITE("OVERWRITE");
-
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private ModeEnum mode;
+  private String mode;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
@@ -137,29 +98,30 @@ public class RegisterTableRequest {
     this.location = location;
   }
 
-  public RegisterTableRequest mode(ModeEnum mode) {
+  public RegisterTableRequest mode(String mode) {
     this.mode = mode;
     return this;
   }
 
   /**
    * There are two modes when trying to register a table, to differentiate the behavior when a table
-   * of the same name already exists: * CREATE (default): the operation fails with 409. * OVERWRITE:
-   * the existing table registration is replaced with the new registration.
+   * of the same name already exists. Case insensitive. Valid values are: * CREATE (default): the
+   * operation fails with 409. * OVERWRITE: the existing table registration is replaced with the new
+   * registration.
    *
    * @return mode
    */
   @Schema(
       name = "mode",
       description =
-          "There are two modes when trying to register a table, to differentiate the behavior when a table of the same name already exists:   * CREATE (default): the operation fails with 409.   * OVERWRITE: the existing table registration is replaced with the new registration. ",
+          "There are two modes when trying to register a table, to differentiate the behavior when a table of the same name already exists. Case insensitive. Valid values are:   * CREATE (default): the operation fails with 409.   * OVERWRITE: the existing table registration is replaced with the new registration. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
-  public ModeEnum getMode() {
+  public String getMode() {
     return mode;
   }
 
-  public void setMode(ModeEnum mode) {
+  public void setMode(String mode) {
     this.mode = mode;
   }
 

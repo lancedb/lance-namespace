@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **key** | **str** |  | [optional] 
 **value** | **str** |  | [optional] 
-**mode** | [**SetPropertyMode**](SetPropertyMode.md) |  | [optional] 
+**mode** | **str** | The behavior if the property key already exists. Case insensitive. Valid values are: - OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value and skip setting the provided value  | [optional] 
 
 ## Example
 

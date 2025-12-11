@@ -30,7 +30,7 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class AlterTransactionResponse {
 
-  private TransactionStatus status;
+  private String status;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
@@ -39,29 +39,35 @@ public class AlterTransactionResponse {
   }
 
   /** Constructor with only required parameters */
-  public AlterTransactionResponse(TransactionStatus status) {
+  public AlterTransactionResponse(String status) {
     this.status = status;
   }
 
-  public AlterTransactionResponse status(TransactionStatus status) {
+  public AlterTransactionResponse status(String status) {
     this.status = status;
     return this;
   }
 
   /**
-   * Get status
+   * The status of a transaction. Case insensitive. Valid values are: - QUEUED: the transaction is
+   * queued and not yet started - RUNNING: the transaction is currently running - SUCCEEDED: the
+   * transaction has completed successfully - FAILED: the transaction has failed - CANCELED: the
+   * transaction was canceled
    *
    * @return status
    */
   @NotNull
-  @Valid
-  @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(
+      name = "status",
+      description =
+          "The status of a transaction. Case insensitive. Valid values are: - QUEUED: the transaction is queued and not yet started - RUNNING: the transaction is currently running - SUCCEEDED: the transaction has completed successfully - FAILED: the transaction has failed - CANCELED: the transaction was canceled ",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
-  public TransactionStatus getStatus() {
+  public String getStatus() {
     return status;
   }
 
-  public void setStatus(TransactionStatus status) {
+  public void setStatus(String status) {
     this.status = status;
   }
 

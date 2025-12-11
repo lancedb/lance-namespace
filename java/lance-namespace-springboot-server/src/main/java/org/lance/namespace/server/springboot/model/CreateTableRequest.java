@@ -13,9 +13,7 @@
  */
 package org.lance.namespace.server.springboot.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
@@ -37,47 +35,7 @@ public class CreateTableRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
-  /**
-   * There are three modes when trying to create a table, to differentiate the behavior when a table
-   * of the same name already exists: * Create: the operation fails with 409. * ExistOk: the
-   * operation succeeds and the existing table is kept. * Overwrite: the existing table is dropped
-   * and a new table with this name is created.
-   */
-  public enum ModeEnum {
-    CREATE("Create"),
-
-    EXIST_OK("ExistOk"),
-
-    OVERWRITE("Overwrite");
-
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private ModeEnum mode;
+  private String mode;
 
   public CreateTableRequest id(List<String> id) {
     this.id = id;
@@ -107,30 +65,30 @@ public class CreateTableRequest {
     this.id = id;
   }
 
-  public CreateTableRequest mode(ModeEnum mode) {
+  public CreateTableRequest mode(String mode) {
     this.mode = mode;
     return this;
   }
 
   /**
    * There are three modes when trying to create a table, to differentiate the behavior when a table
-   * of the same name already exists: * Create: the operation fails with 409. * ExistOk: the
-   * operation succeeds and the existing table is kept. * Overwrite: the existing table is dropped
-   * and a new table with this name is created.
+   * of the same name already exists. Case insensitive. Valid values are: * Create: the operation
+   * fails with 409. * ExistOk: the operation succeeds and the existing table is kept. * Overwrite:
+   * the existing table is dropped and a new table with this name is created.
    *
    * @return mode
    */
   @Schema(
       name = "mode",
       description =
-          "There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * Create: the operation fails with 409.   * ExistOk: the operation succeeds and the existing table is kept.   * Overwrite: the existing table is dropped and a new table with this name is created. ",
+          "There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists. Case insensitive. Valid values are:   * Create: the operation fails with 409.   * ExistOk: the operation succeeds and the existing table is kept.   * Overwrite: the existing table is dropped and a new table with this name is created. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
-  public ModeEnum getMode() {
+  public String getMode() {
     return mode;
   }
 
-  public void setMode(ModeEnum mode) {
+  public void setMode(String mode) {
     this.mode = mode;
   }
 

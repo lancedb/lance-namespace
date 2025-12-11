@@ -13,9 +13,7 @@
  */
 package org.lance.namespace.server.springboot.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
@@ -37,42 +35,7 @@ public class InsertIntoTableRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
-  /** Gets or Sets mode */
-  public enum ModeEnum {
-    CREATE("create"),
-
-    APPEND("append"),
-
-    OVERWRITE("overwrite");
-
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private ModeEnum mode = ModeEnum.APPEND;
+  private String mode = "append";
 
   public InsertIntoTableRequest id(List<String> id) {
     this.id = id;
@@ -102,23 +65,29 @@ public class InsertIntoTableRequest {
     this.id = id;
   }
 
-  public InsertIntoTableRequest mode(ModeEnum mode) {
+  public InsertIntoTableRequest mode(String mode) {
     this.mode = mode;
     return this;
   }
 
   /**
-   * Get mode
+   * How the insert should behave. Case insensitive. Valid values are: - create: create new table,
+   * fail if table already exists - append (default): insert data to the existing table - overwrite:
+   * remove all data in the table and then insert data to it
    *
    * @return mode
    */
-  @Schema(name = "mode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "mode",
+      description =
+          "How the insert should behave. Case insensitive. Valid values are: - create: create new table, fail if table already exists - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
-  public ModeEnum getMode() {
+  public String getMode() {
     return mode;
   }
 
-  public void setMode(ModeEnum mode) {
+  public void setMode(String mode) {
     this.mode = mode;
   }
 

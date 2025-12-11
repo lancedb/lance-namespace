@@ -13,8 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AlterTransactionSetStatus {
+    /// The status of a transaction. Case insensitive. Valid values are: - QUEUED: the transaction is queued and not yet started - RUNNING: the transaction is currently running - SUCCEEDED: the transaction has completed successfully - FAILED: the transaction has failed - CANCELED: the transaction was canceled 
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
-    pub status: Option<models::TransactionStatus>,
+    pub status: Option<String>,
 }
 
 impl AlterTransactionSetStatus {

@@ -13,9 +13,7 @@
  */
 package org.lance.namespace.server.springboot.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
@@ -34,84 +32,9 @@ public class DropNamespaceRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
-  /**
-   * The mode for dropping a namespace, deciding the server behavior when the namespace to drop is
-   * not found. - FAIL (default): the server must return 400 indicating the namespace to drop does
-   * not exist. - SKIP: the server must return 204 indicating the drop operation has succeeded.
-   */
-  public enum ModeEnum {
-    SKIP("SKIP"),
+  private String mode;
 
-    FAIL("FAIL");
-
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private ModeEnum mode;
-
-  /**
-   * The behavior for dropping a namespace. - RESTRICT (default): the namespace should not contain
-   * any table or child namespace when drop is initiated. If tables are found, the server should
-   * return error and not drop the namespace. - CASCADE: all tables and child namespaces in the
-   * namespace are dropped before the namespace is dropped.
-   */
-  public enum BehaviorEnum {
-    RESTRICT("RESTRICT"),
-
-    CASCADE("CASCADE");
-
-    private String value;
-
-    BehaviorEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static BehaviorEnum fromValue(String value) {
-      for (BehaviorEnum b : BehaviorEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private BehaviorEnum behavior;
+  private String behavior;
 
   public DropNamespaceRequest id(List<String> id) {
     this.id = id;
@@ -141,56 +64,58 @@ public class DropNamespaceRequest {
     this.id = id;
   }
 
-  public DropNamespaceRequest mode(ModeEnum mode) {
+  public DropNamespaceRequest mode(String mode) {
     this.mode = mode;
     return this;
   }
 
   /**
    * The mode for dropping a namespace, deciding the server behavior when the namespace to drop is
-   * not found. - FAIL (default): the server must return 400 indicating the namespace to drop does
-   * not exist. - SKIP: the server must return 204 indicating the drop operation has succeeded.
+   * not found. Case insensitive. Valid values are: - FAIL (default): the server must return 400
+   * indicating the namespace to drop does not exist. - SKIP: the server must return 204 indicating
+   * the drop operation has succeeded.
    *
    * @return mode
    */
   @Schema(
       name = "mode",
       description =
-          "The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. - FAIL (default): the server must return 400 indicating the namespace to drop does not exist. - SKIP: the server must return 204 indicating the drop operation has succeeded. ",
+          "The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. Case insensitive. Valid values are: - FAIL (default): the server must return 400 indicating the namespace to drop does not exist. - SKIP: the server must return 204 indicating the drop operation has succeeded. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
-  public ModeEnum getMode() {
+  public String getMode() {
     return mode;
   }
 
-  public void setMode(ModeEnum mode) {
+  public void setMode(String mode) {
     this.mode = mode;
   }
 
-  public DropNamespaceRequest behavior(BehaviorEnum behavior) {
+  public DropNamespaceRequest behavior(String behavior) {
     this.behavior = behavior;
     return this;
   }
 
   /**
-   * The behavior for dropping a namespace. - RESTRICT (default): the namespace should not contain
-   * any table or child namespace when drop is initiated. If tables are found, the server should
-   * return error and not drop the namespace. - CASCADE: all tables and child namespaces in the
-   * namespace are dropped before the namespace is dropped.
+   * The behavior for dropping a namespace. Case insensitive. Valid values are: - RESTRICT
+   * (default): the namespace should not contain any table or child namespace when drop is
+   * initiated. If tables are found, the server should return error and not drop the namespace. -
+   * CASCADE: all tables and child namespaces in the namespace are dropped before the namespace is
+   * dropped.
    *
    * @return behavior
    */
   @Schema(
       name = "behavior",
       description =
-          "The behavior for dropping a namespace. - RESTRICT (default): the namespace should not contain any table or child namespace when drop is initiated.     If tables are found, the server should return error and not drop the namespace. - CASCADE: all tables and child namespaces in the namespace are dropped before the namespace is dropped. ",
+          "The behavior for dropping a namespace. Case insensitive. Valid values are: - RESTRICT (default): the namespace should not contain any table or child namespace when drop is initiated.     If tables are found, the server should return error and not drop the namespace. - CASCADE: all tables and child namespaces in the namespace are dropped before the namespace is dropped. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("behavior")
-  public BehaviorEnum getBehavior() {
+  public String getBehavior() {
     return behavior;
   }
 
-  public void setBehavior(BehaviorEnum behavior) {
+  public void setBehavior(String behavior) {
     this.behavior = behavior;
   }
 
