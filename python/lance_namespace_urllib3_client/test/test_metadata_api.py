@@ -68,6 +68,13 @@ class TestMetadataApi(unittest.TestCase):
         """
         pass
 
+    def test_create_table_scalar_index(self) -> None:
+        """Test case for create_table_scalar_index
+
+        Create a scalar index on a table
+        """
+        pass
+
     def test_create_table_tag(self) -> None:
         """Test case for create_table_tag
 
@@ -201,6 +208,13 @@ class TestMetadataApi(unittest.TestCase):
         """
         pass
 
+    def test_rename_table(self) -> None:
+        """Test case for rename_table
+
+        Rename a table
+        """
+        pass
+
     def test_restore_table(self) -> None:
         """Test case for restore_table
 
@@ -212,6 +226,13 @@ class TestMetadataApi(unittest.TestCase):
         """Test case for table_exists
 
         Check if a table exists
+        """
+        pass
+
+    def test_update_table_schema_metadata(self) -> None:
+        """Test case for update_table_schema_metadata
+
+        Update table schema metadata
         """
         pass
 

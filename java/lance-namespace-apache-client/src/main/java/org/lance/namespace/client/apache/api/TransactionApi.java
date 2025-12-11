@@ -129,7 +129,7 @@ public class TransactionApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<AlterTransactionResponse> localVarReturnType =
         new TypeReference<AlterTransactionResponse>() {};
@@ -230,7 +230,7 @@ public class TransactionApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<DescribeTransactionResponse> localVarReturnType =
         new TypeReference<DescribeTransactionResponse>() {};
@@ -274,7 +274,7 @@ public class TransactionApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     return apiClient.invokeAPI(
         localVarPath,

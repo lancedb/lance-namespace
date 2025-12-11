@@ -38,7 +38,8 @@ class TestDescribeTableIndexStatsResponse(unittest.TestCase):
                 distance_type = '',
                 index_type = '',
                 num_indexed_rows = 0,
-                num_unindexed_rows = 0
+                num_unindexed_rows = 0,
+                num_indices = 0
             )
         else:
             return DescribeTableIndexStatsResponse(

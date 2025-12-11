@@ -26,6 +26,7 @@ import java.util.StringJoiner;
 
 /** Response for creating an empty table. */
 @JsonPropertyOrder({
+  CreateEmptyTableResponse.JSON_PROPERTY_TRANSACTION_ID,
   CreateEmptyTableResponse.JSON_PROPERTY_LOCATION,
   CreateEmptyTableResponse.JSON_PROPERTY_PROPERTIES,
   CreateEmptyTableResponse.JSON_PROPERTY_STORAGE_OPTIONS
@@ -34,6 +35,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class CreateEmptyTableResponse {
+  public static final String JSON_PROPERTY_TRANSACTION_ID = "transaction_id";
+  @javax.annotation.Nullable private String transactionId;
+
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nullable private String location;
 
@@ -44,6 +48,30 @@ public class CreateEmptyTableResponse {
   @javax.annotation.Nullable private Map<String, String> storageOptions = new HashMap<>();
 
   public CreateEmptyTableResponse() {}
+
+  public CreateEmptyTableResponse transactionId(@javax.annotation.Nullable String transactionId) {
+
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTransactionId(@javax.annotation.Nullable String transactionId) {
+    this.transactionId = transactionId;
+  }
 
   public CreateEmptyTableResponse location(@javax.annotation.Nullable String location) {
 
@@ -145,20 +173,22 @@ public class CreateEmptyTableResponse {
       return false;
     }
     CreateEmptyTableResponse createEmptyTableResponse = (CreateEmptyTableResponse) o;
-    return Objects.equals(this.location, createEmptyTableResponse.location)
+    return Objects.equals(this.transactionId, createEmptyTableResponse.transactionId)
+        && Objects.equals(this.location, createEmptyTableResponse.location)
         && Objects.equals(this.properties, createEmptyTableResponse.properties)
         && Objects.equals(this.storageOptions, createEmptyTableResponse.storageOptions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(location, properties, storageOptions);
+    return Objects.hash(transactionId, location, properties, storageOptions);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateEmptyTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
@@ -207,6 +237,22 @@ public class CreateEmptyTableResponse {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `transaction_id` to the URL query string
+    if (getTransactionId() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%stransaction_id%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getTransactionId()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
 
     // add `location` to the URL query string
     if (getLocation() != null) {

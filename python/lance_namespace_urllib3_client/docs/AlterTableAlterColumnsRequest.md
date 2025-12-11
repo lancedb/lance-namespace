@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **List[str]** |  | [optional] 
-**alterations** | [**List[ColumnAlteration]**](ColumnAlteration.md) | List of column alterations to perform | 
+**alterations** | [**List[AlterColumnsEntry]**](AlterColumnsEntry.md) | List of column alterations to perform | 
 
 ## Example
 

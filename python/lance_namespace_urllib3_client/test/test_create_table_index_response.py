@@ -35,17 +35,10 @@ class TestCreateTableIndexResponse(unittest.TestCase):
         model = CreateTableIndexResponse()
         if include_optional:
             return CreateTableIndexResponse(
-                id = [
-                    ''
-                    ],
-                location = '',
-                properties = {
-                    'key' : ''
-                    }
+                transaction_id = ''
             )
         else:
             return CreateTableIndexResponse(
-                location = '',
         )
         """
 

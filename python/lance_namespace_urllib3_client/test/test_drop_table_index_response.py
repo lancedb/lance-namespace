@@ -35,7 +35,7 @@ class TestDropTableIndexResponse(unittest.TestCase):
         model = DropTableIndexResponse()
         if include_optional:
             return DropTableIndexResponse(
-                version = 0
+                transaction_id = ''
             )
         else:
             return DropTableIndexResponse(

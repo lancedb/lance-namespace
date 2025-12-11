@@ -28,6 +28,7 @@ import java.util.StringJoiner;
 
 /** DeregisterTableResponse */
 @JsonPropertyOrder({
+  DeregisterTableResponse.JSON_PROPERTY_TRANSACTION_ID,
   DeregisterTableResponse.JSON_PROPERTY_ID,
   DeregisterTableResponse.JSON_PROPERTY_LOCATION,
   DeregisterTableResponse.JSON_PROPERTY_PROPERTIES
@@ -36,6 +37,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DeregisterTableResponse {
+  public static final String JSON_PROPERTY_TRANSACTION_ID = "transaction_id";
+  @javax.annotation.Nullable private String transactionId;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -46,6 +50,30 @@ public class DeregisterTableResponse {
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public DeregisterTableResponse() {}
+
+  public DeregisterTableResponse transactionId(@javax.annotation.Nullable String transactionId) {
+
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTransactionId(@javax.annotation.Nullable String transactionId) {
+    this.transactionId = transactionId;
+  }
 
   public DeregisterTableResponse id(@javax.annotation.Nullable List<String> id) {
 
@@ -145,20 +173,22 @@ public class DeregisterTableResponse {
       return false;
     }
     DeregisterTableResponse deregisterTableResponse = (DeregisterTableResponse) o;
-    return Objects.equals(this.id, deregisterTableResponse.id)
+    return Objects.equals(this.transactionId, deregisterTableResponse.transactionId)
+        && Objects.equals(this.id, deregisterTableResponse.id)
         && Objects.equals(this.location, deregisterTableResponse.location)
         && Objects.equals(this.properties, deregisterTableResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location, properties);
+    return Objects.hash(transactionId, id, location, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeregisterTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
@@ -207,6 +237,22 @@ public class DeregisterTableResponse {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `transaction_id` to the URL query string
+    if (getTransactionId() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%stransaction_id%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getTransactionId()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

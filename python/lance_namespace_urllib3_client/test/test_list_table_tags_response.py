@@ -37,14 +37,19 @@ class TestListTableTagsResponse(unittest.TestCase):
             return ListTableTagsResponse(
                 tags = {
                     'key' : lance_namespace_urllib3_client.models.tag_contents.TagContents(
-                        version = 0, )
-                    }
+                        branch = '', 
+                        version = 0, 
+                        manifest_size = 0, )
+                    },
+                page_token = ''
             )
         else:
             return ListTableTagsResponse(
                 tags = {
                     'key' : lance_namespace_urllib3_client.models.tag_contents.TagContents(
-                        version = 0, )
+                        branch = '', 
+                        version = 0, 
+                        manifest_size = 0, )
                     },
         )
         """

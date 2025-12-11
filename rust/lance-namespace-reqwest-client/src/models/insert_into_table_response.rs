@@ -14,16 +14,16 @@ use serde::{Deserialize, Serialize};
 /// InsertIntoTableResponse : Response from inserting records into a table
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct InsertIntoTableResponse {
-    /// The version of the table after the insert
-    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
-    pub version: Option<i64>,
+    /// Optional transaction identifier
+    #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
 }
 
 impl InsertIntoTableResponse {
     /// Response from inserting records into a table
     pub fn new() -> InsertIntoTableResponse {
         InsertIntoTableResponse {
-            version: None,
+            transaction_id: None,
         }
     }
 }

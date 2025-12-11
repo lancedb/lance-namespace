@@ -32,7 +32,9 @@ import java.util.StringJoiner;
   MergeInsertIntoTableRequest.JSON_PROPERTY_WHEN_MATCHED_UPDATE_ALL_FILT,
   MergeInsertIntoTableRequest.JSON_PROPERTY_WHEN_NOT_MATCHED_INSERT_ALL,
   MergeInsertIntoTableRequest.JSON_PROPERTY_WHEN_NOT_MATCHED_BY_SOURCE_DELETE,
-  MergeInsertIntoTableRequest.JSON_PROPERTY_WHEN_NOT_MATCHED_BY_SOURCE_DELETE_FILT
+  MergeInsertIntoTableRequest.JSON_PROPERTY_WHEN_NOT_MATCHED_BY_SOURCE_DELETE_FILT,
+  MergeInsertIntoTableRequest.JSON_PROPERTY_TIMEOUT,
+  MergeInsertIntoTableRequest.JSON_PROPERTY_USE_INDEX
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -62,6 +64,12 @@ public class MergeInsertIntoTableRequest {
   public static final String JSON_PROPERTY_WHEN_NOT_MATCHED_BY_SOURCE_DELETE_FILT =
       "when_not_matched_by_source_delete_filt";
   @javax.annotation.Nullable private String whenNotMatchedBySourceDeleteFilt;
+
+  public static final String JSON_PROPERTY_TIMEOUT = "timeout";
+  @javax.annotation.Nullable private String timeout;
+
+  public static final String JSON_PROPERTY_USE_INDEX = "use_index";
+  @javax.annotation.Nullable private Boolean useIndex = false;
 
   public MergeInsertIntoTableRequest() {}
 
@@ -251,6 +259,54 @@ public class MergeInsertIntoTableRequest {
     this.whenNotMatchedBySourceDeleteFilt = whenNotMatchedBySourceDeleteFilt;
   }
 
+  public MergeInsertIntoTableRequest timeout(@javax.annotation.Nullable String timeout) {
+
+    this.timeout = timeout;
+    return this;
+  }
+
+  /**
+   * Timeout for the operation (e.g., \&quot;30s\&quot;, \&quot;5m\&quot;)
+   *
+   * @return timeout
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TIMEOUT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getTimeout() {
+    return timeout;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TIMEOUT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTimeout(@javax.annotation.Nullable String timeout) {
+    this.timeout = timeout;
+  }
+
+  public MergeInsertIntoTableRequest useIndex(@javax.annotation.Nullable Boolean useIndex) {
+
+    this.useIndex = useIndex;
+    return this;
+  }
+
+  /**
+   * Whether to use index for matching rows
+   *
+   * @return useIndex
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_USE_INDEX)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getUseIndex() {
+    return useIndex;
+  }
+
+  @JsonProperty(JSON_PROPERTY_USE_INDEX)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setUseIndex(@javax.annotation.Nullable Boolean useIndex) {
+    this.useIndex = useIndex;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -273,7 +329,9 @@ public class MergeInsertIntoTableRequest {
             mergeInsertIntoTableRequest.whenNotMatchedBySourceDelete)
         && Objects.equals(
             this.whenNotMatchedBySourceDeleteFilt,
-            mergeInsertIntoTableRequest.whenNotMatchedBySourceDeleteFilt);
+            mergeInsertIntoTableRequest.whenNotMatchedBySourceDeleteFilt)
+        && Objects.equals(this.timeout, mergeInsertIntoTableRequest.timeout)
+        && Objects.equals(this.useIndex, mergeInsertIntoTableRequest.useIndex);
   }
 
   @Override
@@ -285,7 +343,9 @@ public class MergeInsertIntoTableRequest {
         whenMatchedUpdateAllFilt,
         whenNotMatchedInsertAll,
         whenNotMatchedBySourceDelete,
-        whenNotMatchedBySourceDeleteFilt);
+        whenNotMatchedBySourceDeleteFilt,
+        timeout,
+        useIndex);
   }
 
   @Override
@@ -309,6 +369,8 @@ public class MergeInsertIntoTableRequest {
     sb.append("    whenNotMatchedBySourceDeleteFilt: ")
         .append(toIndentedString(whenNotMatchedBySourceDeleteFilt))
         .append("\n");
+    sb.append("    timeout: ").append(toIndentedString(timeout)).append("\n");
+    sb.append("    useIndex: ").append(toIndentedString(useIndex)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -464,6 +526,37 @@ public class MergeInsertIntoTableRequest {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getWhenNotMatchedBySourceDeleteFilt()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `timeout` to the URL query string
+    if (getTimeout() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%stimeout%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getTimeout()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `use_index` to the URL query string
+    if (getUseIndex() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%suse_index%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getUseIndex()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported

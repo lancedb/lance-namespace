@@ -1,11 +1,12 @@
 # DropTableIndexResponse
 
+Response for drop index operation
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**version** | **int** | Version of the table after dropping the index | [optional] 
+**transaction_id** | **str** | Optional transaction identifier | [optional] 
 
 ## Example
 

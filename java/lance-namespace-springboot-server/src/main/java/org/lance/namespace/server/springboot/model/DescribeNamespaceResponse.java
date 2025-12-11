@@ -20,7 +20,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -30,7 +32,50 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DescribeNamespaceResponse {
 
+  @Valid private List<String> id = new ArrayList<>();
+
   @Valid private Map<String, String> properties = new HashMap<>();
+
+  public DescribeNamespaceResponse() {
+    super();
+  }
+
+  /** Constructor with only required parameters */
+  public DescribeNamespaceResponse(List<String> id) {
+    this.id = id;
+  }
+
+  public DescribeNamespaceResponse id(List<String> id) {
+    this.id = id;
+    return this;
+  }
+
+  public DescribeNamespaceResponse addIdItem(String idItem) {
+    if (this.id == null) {
+      this.id = new ArrayList<>();
+    }
+    this.id.add(idItem);
+    return this;
+  }
+
+  /**
+   * The namespace identifier as a list of parts
+   *
+   * @return id
+   */
+  @NotNull
+  @Schema(
+      name = "id",
+      description = "The namespace identifier as a list of parts",
+      requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("id")
+  public List<String> getId() {
+    return id;
+  }
+
+  public void setId(List<String> id) {
+    this.id = id;
+  }
 
   public DescribeNamespaceResponse properties(Map<String, String> properties) {
     this.properties = properties;
@@ -76,18 +121,20 @@ public class DescribeNamespaceResponse {
       return false;
     }
     DescribeNamespaceResponse describeNamespaceResponse = (DescribeNamespaceResponse) o;
-    return Objects.equals(this.properties, describeNamespaceResponse.properties);
+    return Objects.equals(this.id, describeNamespaceResponse.id)
+        && Objects.equals(this.properties, describeNamespaceResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(properties);
+    return Objects.hash(id, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeNamespaceResponse {\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();

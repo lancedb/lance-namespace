@@ -35,11 +35,11 @@ class TestDeleteFromTableResponse(unittest.TestCase):
         model = DeleteFromTableResponse()
         if include_optional:
             return DeleteFromTableResponse(
+                transaction_id = '',
                 version = 0
             )
         else:
             return DeleteFromTableResponse(
-                version = 0,
         )
         """
 

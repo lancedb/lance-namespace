@@ -33,7 +33,9 @@ class MergeInsertIntoTableRequest(BaseModel):
     when_not_matched_insert_all: Optional[StrictBool] = Field(default=False, description="Insert all columns when rows don't match")
     when_not_matched_by_source_delete: Optional[StrictBool] = Field(default=False, description="Delete all rows from target table that don't match a row in the source table")
     when_not_matched_by_source_delete_filt: Optional[StrictStr] = Field(default=None, description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true")
-    __properties: ClassVar[List[str]] = ["id", "on", "when_matched_update_all", "when_matched_update_all_filt", "when_not_matched_insert_all", "when_not_matched_by_source_delete", "when_not_matched_by_source_delete_filt"]
+    timeout: Optional[StrictStr] = Field(default=None, description="Timeout for the operation (e.g., \"30s\", \"5m\")")
+    use_index: Optional[StrictBool] = Field(default=False, description="Whether to use index for matching rows")
+    __properties: ClassVar[List[str]] = ["id", "on", "when_matched_update_all", "when_matched_update_all_filt", "when_not_matched_insert_all", "when_not_matched_by_source_delete", "when_not_matched_by_source_delete_filt", "timeout", "use_index"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -92,7 +94,9 @@ class MergeInsertIntoTableRequest(BaseModel):
             "when_matched_update_all_filt": obj.get("when_matched_update_all_filt"),
             "when_not_matched_insert_all": obj.get("when_not_matched_insert_all") if obj.get("when_not_matched_insert_all") is not None else False,
             "when_not_matched_by_source_delete": obj.get("when_not_matched_by_source_delete") if obj.get("when_not_matched_by_source_delete") is not None else False,
-            "when_not_matched_by_source_delete_filt": obj.get("when_not_matched_by_source_delete_filt")
+            "when_not_matched_by_source_delete_filt": obj.get("when_not_matched_by_source_delete_filt"),
+            "timeout": obj.get("timeout"),
+            "use_index": obj.get("use_index") if obj.get("use_index") is not None else False
         })
         return _obj
 

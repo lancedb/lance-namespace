@@ -47,8 +47,7 @@ public class MatchQuery {
   }
 
   /** Constructor with only required parameters */
-  public MatchQuery(String column, String terms) {
-    this.column = column;
+  public MatchQuery(String terms) {
     this.terms = terms;
   }
 
@@ -82,8 +81,7 @@ public class MatchQuery {
    *
    * @return column
    */
-  @NotNull
-  @Schema(name = "column", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "column", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("column")
   public String getColumn() {
     return column;

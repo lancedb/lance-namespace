@@ -16,6 +16,7 @@ package org.lance.namespace.server.springboot.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.*;
@@ -27,20 +28,50 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class GetTableStatsResponse {
 
+  private Long totalBytes;
+
   private Long numRows;
 
-  private Long sizeBytes;
+  private Long numIndices;
 
-  private Long numFragments;
+  private FragmentStats fragmentStats;
 
   public GetTableStatsResponse() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public GetTableStatsResponse(Long numRows, Long sizeBytes) {
+  public GetTableStatsResponse(
+      Long totalBytes, Long numRows, Long numIndices, FragmentStats fragmentStats) {
+    this.totalBytes = totalBytes;
     this.numRows = numRows;
-    this.sizeBytes = sizeBytes;
+    this.numIndices = numIndices;
+    this.fragmentStats = fragmentStats;
+  }
+
+  public GetTableStatsResponse totalBytes(Long totalBytes) {
+    this.totalBytes = totalBytes;
+    return this;
+  }
+
+  /**
+   * The total number of bytes in the table minimum: 0
+   *
+   * @return totalBytes
+   */
+  @NotNull
+  @Min(0L)
+  @Schema(
+      name = "total_bytes",
+      description = "The total number of bytes in the table",
+      requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("total_bytes")
+  public Long getTotalBytes() {
+    return totalBytes;
+  }
+
+  public void setTotalBytes(Long totalBytes) {
+    this.totalBytes = totalBytes;
   }
 
   public GetTableStatsResponse numRows(Long numRows) {
@@ -49,7 +80,7 @@ public class GetTableStatsResponse {
   }
 
   /**
-   * Total number of rows in the table minimum: 0
+   * The number of rows in the table minimum: 0
    *
    * @return numRows
    */
@@ -57,7 +88,7 @@ public class GetTableStatsResponse {
   @Min(0L)
   @Schema(
       name = "num_rows",
-      description = "Total number of rows in the table",
+      description = "The number of rows in the table",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("num_rows")
   public Long getNumRows() {
@@ -68,53 +99,54 @@ public class GetTableStatsResponse {
     this.numRows = numRows;
   }
 
-  public GetTableStatsResponse sizeBytes(Long sizeBytes) {
-    this.sizeBytes = sizeBytes;
+  public GetTableStatsResponse numIndices(Long numIndices) {
+    this.numIndices = numIndices;
     return this;
   }
 
   /**
-   * Total size of the table in bytes minimum: 0
+   * The number of indices in the table minimum: 0
    *
-   * @return sizeBytes
+   * @return numIndices
    */
   @NotNull
   @Min(0L)
   @Schema(
-      name = "size_bytes",
-      description = "Total size of the table in bytes",
+      name = "num_indices",
+      description = "The number of indices in the table",
       requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("size_bytes")
-  public Long getSizeBytes() {
-    return sizeBytes;
+  @JsonProperty("num_indices")
+  public Long getNumIndices() {
+    return numIndices;
   }
 
-  public void setSizeBytes(Long sizeBytes) {
-    this.sizeBytes = sizeBytes;
+  public void setNumIndices(Long numIndices) {
+    this.numIndices = numIndices;
   }
 
-  public GetTableStatsResponse numFragments(Long numFragments) {
-    this.numFragments = numFragments;
+  public GetTableStatsResponse fragmentStats(FragmentStats fragmentStats) {
+    this.fragmentStats = fragmentStats;
     return this;
   }
 
   /**
-   * Number of data fragments minimum: 0
+   * Statistics on table fragments
    *
-   * @return numFragments
+   * @return fragmentStats
    */
-  @Min(0L)
+  @NotNull
+  @Valid
   @Schema(
-      name = "num_fragments",
-      description = "Number of data fragments",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("num_fragments")
-  public Long getNumFragments() {
-    return numFragments;
+      name = "fragment_stats",
+      description = "Statistics on table fragments",
+      requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("fragment_stats")
+  public FragmentStats getFragmentStats() {
+    return fragmentStats;
   }
 
-  public void setNumFragments(Long numFragments) {
-    this.numFragments = numFragments;
+  public void setFragmentStats(FragmentStats fragmentStats) {
+    this.fragmentStats = fragmentStats;
   }
 
   @Override
@@ -126,23 +158,25 @@ public class GetTableStatsResponse {
       return false;
     }
     GetTableStatsResponse getTableStatsResponse = (GetTableStatsResponse) o;
-    return Objects.equals(this.numRows, getTableStatsResponse.numRows)
-        && Objects.equals(this.sizeBytes, getTableStatsResponse.sizeBytes)
-        && Objects.equals(this.numFragments, getTableStatsResponse.numFragments);
+    return Objects.equals(this.totalBytes, getTableStatsResponse.totalBytes)
+        && Objects.equals(this.numRows, getTableStatsResponse.numRows)
+        && Objects.equals(this.numIndices, getTableStatsResponse.numIndices)
+        && Objects.equals(this.fragmentStats, getTableStatsResponse.fragmentStats);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(numRows, sizeBytes, numFragments);
+    return Objects.hash(totalBytes, numRows, numIndices, fragmentStats);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class GetTableStatsResponse {\n");
+    sb.append("    totalBytes: ").append(toIndentedString(totalBytes)).append("\n");
     sb.append("    numRows: ").append(toIndentedString(numRows)).append("\n");
-    sb.append("    sizeBytes: ").append(toIndentedString(sizeBytes)).append("\n");
-    sb.append("    numFragments: ").append(toIndentedString(numFragments)).append("\n");
+    sb.append("    numIndices: ").append(toIndentedString(numIndices)).append("\n");
+    sb.append("    fragmentStats: ").append(toIndentedString(fragmentStats)).append("\n");
     sb.append("}");
     return sb.toString();
   }

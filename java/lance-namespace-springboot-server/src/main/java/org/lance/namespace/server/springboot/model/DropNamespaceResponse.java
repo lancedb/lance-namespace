@@ -83,11 +83,11 @@ public class DropNamespaceResponse {
    * @return transactionId
    */
   @Schema(
-      name = "transactionId",
+      name = "transaction_id",
       description =
           "If present, indicating the operation is long running and should be tracked using GetTransaction ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("transactionId")
+  @JsonProperty("transaction_id")
   public List<String> getTransactionId() {
     return transactionId;
   }

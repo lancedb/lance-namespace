@@ -29,7 +29,7 @@ class MatchQuery(BaseModel):
     MatchQuery
     """ # noqa: E501
     boost: Optional[Union[StrictFloat, StrictInt]] = None
-    column: StrictStr
+    column: Optional[StrictStr] = None
     fuzziness: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
     max_expansions: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="The maximum number of terms to expand for fuzzy matching. Default to 50.")
     operator: Optional[Operator] = Field(default=None, description="The operator to use for combining terms. This can be either `And` or `Or`, it's 'Or' by default. - `And`: All terms must match. - `Or`: At least one term must match.")

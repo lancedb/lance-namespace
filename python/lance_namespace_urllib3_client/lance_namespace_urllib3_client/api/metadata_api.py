@@ -16,8 +16,8 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictInt, StrictStr
-from typing import Optional
+from pydantic import Field, StrictBool, StrictInt, StrictStr
+from typing import Dict, Optional
 from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.alter_table_alter_columns_request import AlterTableAlterColumnsRequest
 from lance_namespace_urllib3_client.models.alter_table_alter_columns_response import AlterTableAlterColumnsResponse
@@ -31,8 +31,11 @@ from lance_namespace_urllib3_client.models.create_namespace_request import Creat
 from lance_namespace_urllib3_client.models.create_namespace_response import CreateNamespaceResponse
 from lance_namespace_urllib3_client.models.create_table_index_request import CreateTableIndexRequest
 from lance_namespace_urllib3_client.models.create_table_index_response import CreateTableIndexResponse
+from lance_namespace_urllib3_client.models.create_table_scalar_index_response import CreateTableScalarIndexResponse
 from lance_namespace_urllib3_client.models.create_table_tag_request import CreateTableTagRequest
+from lance_namespace_urllib3_client.models.create_table_tag_response import CreateTableTagResponse
 from lance_namespace_urllib3_client.models.delete_table_tag_request import DeleteTableTagRequest
+from lance_namespace_urllib3_client.models.delete_table_tag_response import DeleteTableTagResponse
 from lance_namespace_urllib3_client.models.deregister_table_request import DeregisterTableRequest
 from lance_namespace_urllib3_client.models.deregister_table_response import DeregisterTableResponse
 from lance_namespace_urllib3_client.models.describe_namespace_request import DescribeNamespaceRequest
@@ -45,9 +48,7 @@ from lance_namespace_urllib3_client.models.describe_transaction_request import D
 from lance_namespace_urllib3_client.models.describe_transaction_response import DescribeTransactionResponse
 from lance_namespace_urllib3_client.models.drop_namespace_request import DropNamespaceRequest
 from lance_namespace_urllib3_client.models.drop_namespace_response import DropNamespaceResponse
-from lance_namespace_urllib3_client.models.drop_table_index_request import DropTableIndexRequest
 from lance_namespace_urllib3_client.models.drop_table_index_response import DropTableIndexResponse
-from lance_namespace_urllib3_client.models.drop_table_request import DropTableRequest
 from lance_namespace_urllib3_client.models.drop_table_response import DropTableResponse
 from lance_namespace_urllib3_client.models.get_table_stats_request import GetTableStatsRequest
 from lance_namespace_urllib3_client.models.get_table_stats_response import GetTableStatsResponse
@@ -57,16 +58,18 @@ from lance_namespace_urllib3_client.models.list_namespaces_response import ListN
 from lance_namespace_urllib3_client.models.list_table_indices_request import ListTableIndicesRequest
 from lance_namespace_urllib3_client.models.list_table_indices_response import ListTableIndicesResponse
 from lance_namespace_urllib3_client.models.list_table_tags_response import ListTableTagsResponse
-from lance_namespace_urllib3_client.models.list_table_versions_request import ListTableVersionsRequest
 from lance_namespace_urllib3_client.models.list_table_versions_response import ListTableVersionsResponse
 from lance_namespace_urllib3_client.models.list_tables_response import ListTablesResponse
 from lance_namespace_urllib3_client.models.namespace_exists_request import NamespaceExistsRequest
 from lance_namespace_urllib3_client.models.register_table_request import RegisterTableRequest
 from lance_namespace_urllib3_client.models.register_table_response import RegisterTableResponse
+from lance_namespace_urllib3_client.models.rename_table_request import RenameTableRequest
+from lance_namespace_urllib3_client.models.rename_table_response import RenameTableResponse
 from lance_namespace_urllib3_client.models.restore_table_request import RestoreTableRequest
 from lance_namespace_urllib3_client.models.restore_table_response import RestoreTableResponse
 from lance_namespace_urllib3_client.models.table_exists_request import TableExistsRequest
 from lance_namespace_urllib3_client.models.update_table_tag_request import UpdateTableTagRequest
+from lance_namespace_urllib3_client.models.update_table_tag_response import UpdateTableTagResponse
 
 from lance_namespace_urllib3_client.api_client import ApiClient, RequestSerialized
 from lance_namespace_urllib3_client.api_response import ApiResponse
@@ -389,6 +392,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -712,6 +718,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -1038,6 +1047,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -1364,6 +1376,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -1693,6 +1708,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -2016,11 +2034,340 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
             method='POST',
             resource_path='/v1/table/{id}/create_index',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def create_table_scalar_index(
+        self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
+        create_table_index_request: Annotated[CreateTableIndexRequest, Field(description="Scalar index creation request")],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CreateTableScalarIndexResponse:
+        """Create a scalar index on a table
+
+        Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param create_table_index_request: Scalar index creation request (required)
+        :type create_table_index_request: CreateTableIndexRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
+        :type delimiter: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._create_table_scalar_index_serialize(
+            id=id,
+            create_table_index_request=create_table_index_request,
+            delimiter=delimiter,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateTableScalarIndexResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def create_table_scalar_index_with_http_info(
+        self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
+        create_table_index_request: Annotated[CreateTableIndexRequest, Field(description="Scalar index creation request")],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CreateTableScalarIndexResponse]:
+        """Create a scalar index on a table
+
+        Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param create_table_index_request: Scalar index creation request (required)
+        :type create_table_index_request: CreateTableIndexRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
+        :type delimiter: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._create_table_scalar_index_serialize(
+            id=id,
+            create_table_index_request=create_table_index_request,
+            delimiter=delimiter,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateTableScalarIndexResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def create_table_scalar_index_without_preload_content(
+        self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
+        create_table_index_request: Annotated[CreateTableIndexRequest, Field(description="Scalar index creation request")],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Create a scalar index on a table
+
+        Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param create_table_index_request: Scalar index creation request (required)
+        :type create_table_index_request: CreateTableIndexRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
+        :type delimiter: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._create_table_scalar_index_serialize(
+            id=id,
+            create_table_index_request=create_table_index_request,
+            delimiter=delimiter,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateTableScalarIndexResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _create_table_scalar_index_serialize(
+        self,
+        id,
+        create_table_index_request,
+        delimiter,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
+        # process the query parameters
+        if delimiter is not None:
+            
+            _query_params.append(('delimiter', delimiter))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if create_table_index_request is not None:
+            _body_params = create_table_index_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/v1/table/{id}/create_scalar_index',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2054,7 +2401,7 @@ class MetadataApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> CreateTableTagResponse:
         """Create a new tag
 
         Create a new tag for table `id` that points to a specific version. 
@@ -2098,7 +2445,7 @@ class MetadataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "CreateTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -2136,7 +2483,7 @@ class MetadataApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[CreateTableTagResponse]:
         """Create a new tag
 
         Create a new tag for table `id` that points to a specific version. 
@@ -2180,7 +2527,7 @@ class MetadataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "CreateTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -2262,7 +2609,7 @@ class MetadataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "CreateTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -2342,6 +2689,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -2380,7 +2730,7 @@ class MetadataApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> DeleteTableTagResponse:
         """Delete a tag
 
         Delete an existing tag from table `id`. 
@@ -2424,7 +2774,7 @@ class MetadataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "DeleteTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -2461,7 +2811,7 @@ class MetadataApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[DeleteTableTagResponse]:
         """Delete a tag
 
         Delete an existing tag from table `id`. 
@@ -2505,7 +2855,7 @@ class MetadataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "DeleteTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -2586,7 +2936,7 @@ class MetadataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "DeleteTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -2665,6 +3015,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -2988,6 +3341,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -3311,6 +3667,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -3337,6 +3696,7 @@ class MetadataApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         describe_table_request: DescribeTableRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        with_table_uri: Annotated[Optional[StrictBool], Field(description="Whether to include the table URI in the response")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3352,7 +3712,7 @@ class MetadataApi:
     ) -> DescribeTableResponse:
         """Describe information of a table
 
-        Describe the detailed information for table `id`. 
+        Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` as a query parameter instead of in the request body. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -3360,6 +3720,8 @@ class MetadataApi:
         :type describe_table_request: DescribeTableRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param with_table_uri: Whether to include the table URI in the response
+        :type with_table_uri: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3386,6 +3748,7 @@ class MetadataApi:
             id=id,
             describe_table_request=describe_table_request,
             delimiter=delimiter,
+            with_table_uri=with_table_uri,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3418,6 +3781,7 @@ class MetadataApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         describe_table_request: DescribeTableRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        with_table_uri: Annotated[Optional[StrictBool], Field(description="Whether to include the table URI in the response")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3433,7 +3797,7 @@ class MetadataApi:
     ) -> ApiResponse[DescribeTableResponse]:
         """Describe information of a table
 
-        Describe the detailed information for table `id`. 
+        Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` as a query parameter instead of in the request body. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -3441,6 +3805,8 @@ class MetadataApi:
         :type describe_table_request: DescribeTableRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param with_table_uri: Whether to include the table URI in the response
+        :type with_table_uri: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3467,6 +3833,7 @@ class MetadataApi:
             id=id,
             describe_table_request=describe_table_request,
             delimiter=delimiter,
+            with_table_uri=with_table_uri,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3499,6 +3866,7 @@ class MetadataApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         describe_table_request: DescribeTableRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        with_table_uri: Annotated[Optional[StrictBool], Field(description="Whether to include the table URI in the response")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3514,7 +3882,7 @@ class MetadataApi:
     ) -> RESTResponseType:
         """Describe information of a table
 
-        Describe the detailed information for table `id`. 
+        Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` as a query parameter instead of in the request body. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -3522,6 +3890,8 @@ class MetadataApi:
         :type describe_table_request: DescribeTableRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param with_table_uri: Whether to include the table URI in the response
+        :type with_table_uri: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3548,6 +3918,7 @@ class MetadataApi:
             id=id,
             describe_table_request=describe_table_request,
             delimiter=delimiter,
+            with_table_uri=with_table_uri,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3575,6 +3946,7 @@ class MetadataApi:
         id,
         describe_table_request,
         delimiter,
+        with_table_uri,
         _request_auth,
         _content_type,
         _headers,
@@ -3602,6 +3974,10 @@ class MetadataApi:
         if delimiter is not None:
             
             _query_params.append(('delimiter', delimiter))
+            
+        if with_table_uri is not None:
+            
+            _query_params.append(('with_table_uri', with_table_uri))
             
         # process the header parameters
         # process the form parameters
@@ -3634,6 +4010,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -3972,6 +4351,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -4295,6 +4677,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -4621,6 +5006,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -4645,7 +5033,6 @@ class MetadataApi:
     def drop_table(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
-        drop_table_request: DropTableRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
@@ -4662,12 +5049,10 @@ class MetadataApi:
     ) -> DropTableResponse:
         """Drop a table
 
-        Drop table `id` and delete its data. 
+        Drop table `id` and delete its data.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `DropTableRequest` information is passed in the following way: - `id`: pass through path parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param drop_table_request: (required)
-        :type drop_table_request: DropTableRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -4694,7 +5079,6 @@ class MetadataApi:
 
         _param = self._drop_table_serialize(
             id=id,
-            drop_table_request=drop_table_request,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4726,7 +5110,6 @@ class MetadataApi:
     def drop_table_with_http_info(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
-        drop_table_request: DropTableRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
@@ -4743,12 +5126,10 @@ class MetadataApi:
     ) -> ApiResponse[DropTableResponse]:
         """Drop a table
 
-        Drop table `id` and delete its data. 
+        Drop table `id` and delete its data.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `DropTableRequest` information is passed in the following way: - `id`: pass through path parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param drop_table_request: (required)
-        :type drop_table_request: DropTableRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -4775,7 +5156,6 @@ class MetadataApi:
 
         _param = self._drop_table_serialize(
             id=id,
-            drop_table_request=drop_table_request,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4807,7 +5187,6 @@ class MetadataApi:
     def drop_table_without_preload_content(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
-        drop_table_request: DropTableRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
@@ -4824,12 +5203,10 @@ class MetadataApi:
     ) -> RESTResponseType:
         """Drop a table
 
-        Drop table `id` and delete its data. 
+        Drop table `id` and delete its data.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `DropTableRequest` information is passed in the following way: - `id`: pass through path parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param drop_table_request: (required)
-        :type drop_table_request: DropTableRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -4856,7 +5233,6 @@ class MetadataApi:
 
         _param = self._drop_table_serialize(
             id=id,
-            drop_table_request=drop_table_request,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4883,7 +5259,6 @@ class MetadataApi:
     def _drop_table_serialize(
         self,
         id,
-        drop_table_request,
         delimiter,
         _request_auth,
         _content_type,
@@ -4916,8 +5291,6 @@ class MetadataApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if drop_table_request is not None:
-            _body_params = drop_table_request
 
 
         # set the HTTP header `Accept`
@@ -4928,22 +5301,12 @@ class MetadataApi:
                 ]
             )
 
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -4969,7 +5332,6 @@ class MetadataApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         index_name: Annotated[StrictStr, Field(description="Name of the index to drop")],
-        drop_table_index_request: DropTableIndexRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
@@ -4986,14 +5348,12 @@ class MetadataApi:
     ) -> DropTableIndexResponse:
         """Drop a specific index
 
-        Drop the specified index from table `id`. 
+        Drop the specified index from table `id`.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `DropTableIndexRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `index_name`: pass through path parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
         :param index_name: Name of the index to drop (required)
         :type index_name: str
-        :param drop_table_index_request: (required)
-        :type drop_table_index_request: DropTableIndexRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -5021,7 +5381,6 @@ class MetadataApi:
         _param = self._drop_table_index_serialize(
             id=id,
             index_name=index_name,
-            drop_table_index_request=drop_table_index_request,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -5054,7 +5413,6 @@ class MetadataApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         index_name: Annotated[StrictStr, Field(description="Name of the index to drop")],
-        drop_table_index_request: DropTableIndexRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
@@ -5071,14 +5429,12 @@ class MetadataApi:
     ) -> ApiResponse[DropTableIndexResponse]:
         """Drop a specific index
 
-        Drop the specified index from table `id`. 
+        Drop the specified index from table `id`.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `DropTableIndexRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `index_name`: pass through path parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
         :param index_name: Name of the index to drop (required)
         :type index_name: str
-        :param drop_table_index_request: (required)
-        :type drop_table_index_request: DropTableIndexRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -5106,7 +5462,6 @@ class MetadataApi:
         _param = self._drop_table_index_serialize(
             id=id,
             index_name=index_name,
-            drop_table_index_request=drop_table_index_request,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -5139,7 +5494,6 @@ class MetadataApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         index_name: Annotated[StrictStr, Field(description="Name of the index to drop")],
-        drop_table_index_request: DropTableIndexRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         _request_timeout: Union[
             None,
@@ -5156,14 +5510,12 @@ class MetadataApi:
     ) -> RESTResponseType:
         """Drop a specific index
 
-        Drop the specified index from table `id`. 
+        Drop the specified index from table `id`.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `DropTableIndexRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `index_name`: pass through path parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
         :param index_name: Name of the index to drop (required)
         :type index_name: str
-        :param drop_table_index_request: (required)
-        :type drop_table_index_request: DropTableIndexRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
         :param _request_timeout: timeout setting for this request. If one
@@ -5191,7 +5543,6 @@ class MetadataApi:
         _param = self._drop_table_index_serialize(
             id=id,
             index_name=index_name,
-            drop_table_index_request=drop_table_index_request,
             delimiter=delimiter,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -5219,7 +5570,6 @@ class MetadataApi:
         self,
         id,
         index_name,
-        drop_table_index_request,
         delimiter,
         _request_auth,
         _content_type,
@@ -5254,8 +5604,6 @@ class MetadataApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if drop_table_index_request is not None:
-            _body_params = drop_table_index_request
 
 
         # set the HTTP header `Accept`
@@ -5266,22 +5614,12 @@ class MetadataApi:
                 ]
             )
 
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -5605,6 +5943,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -5928,6 +6269,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -5953,8 +6297,8 @@ class MetadataApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5976,9 +6320,9 @@ class MetadataApi:
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -6039,8 +6383,8 @@ class MetadataApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -6062,9 +6406,9 @@ class MetadataApi:
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -6125,8 +6469,8 @@ class MetadataApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -6148,9 +6492,9 @@ class MetadataApi:
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -6260,6 +6604,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -6583,6 +6930,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -6608,8 +6958,8 @@ class MetadataApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -6625,15 +6975,15 @@ class MetadataApi:
     ) -> ListTableTagsResponse:
         """List all tags for a table
 
-        List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTableTagsRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+        List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableTagsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -6693,8 +7043,8 @@ class MetadataApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -6710,15 +7060,15 @@ class MetadataApi:
     ) -> ApiResponse[ListTableTagsResponse]:
         """List all tags for a table
 
-        List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTableTagsRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+        List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableTagsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -6778,8 +7128,8 @@ class MetadataApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -6795,15 +7145,15 @@ class MetadataApi:
     ) -> RESTResponseType:
         """List all tags for a table
 
-        List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTableTagsRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+        List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableTagsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -6912,10 +7262,13 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
-            method='GET',
+            method='POST',
             resource_path='/v1/table/{id}/tags/list',
             path_params=_path_params,
             query_params=_query_params,
@@ -6936,8 +7289,9 @@ class MetadataApi:
     def list_table_versions(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
-        list_table_versions_request: ListTableVersionsRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -6953,14 +7307,16 @@ class MetadataApi:
     ) -> ListTableVersionsResponse:
         """List all versions of a table
 
-        List all versions (commits) of table `id` with their metadata. 
+        List all versions (commits) of table `id` with their metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableVersionsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param list_table_versions_request: (required)
-        :type list_table_versions_request: ListTableVersionsRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param page_token: Pagination token from a previous request
+        :type page_token: str
+        :param limit: Maximum number of items to return
+        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -6985,8 +7341,9 @@ class MetadataApi:
 
         _param = self._list_table_versions_serialize(
             id=id,
-            list_table_versions_request=list_table_versions_request,
             delimiter=delimiter,
+            page_token=page_token,
+            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7017,8 +7374,9 @@ class MetadataApi:
     def list_table_versions_with_http_info(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
-        list_table_versions_request: ListTableVersionsRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7034,14 +7392,16 @@ class MetadataApi:
     ) -> ApiResponse[ListTableVersionsResponse]:
         """List all versions of a table
 
-        List all versions (commits) of table `id` with their metadata. 
+        List all versions (commits) of table `id` with their metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableVersionsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param list_table_versions_request: (required)
-        :type list_table_versions_request: ListTableVersionsRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param page_token: Pagination token from a previous request
+        :type page_token: str
+        :param limit: Maximum number of items to return
+        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -7066,8 +7426,9 @@ class MetadataApi:
 
         _param = self._list_table_versions_serialize(
             id=id,
-            list_table_versions_request=list_table_versions_request,
             delimiter=delimiter,
+            page_token=page_token,
+            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7098,8 +7459,9 @@ class MetadataApi:
     def list_table_versions_without_preload_content(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
-        list_table_versions_request: ListTableVersionsRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7115,14 +7477,16 @@ class MetadataApi:
     ) -> RESTResponseType:
         """List all versions of a table
 
-        List all versions (commits) of table `id` with their metadata. 
+        List all versions (commits) of table `id` with their metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableVersionsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param list_table_versions_request: (required)
-        :type list_table_versions_request: ListTableVersionsRequest
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param page_token: Pagination token from a previous request
+        :type page_token: str
+        :param limit: Maximum number of items to return
+        :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -7147,8 +7511,9 @@ class MetadataApi:
 
         _param = self._list_table_versions_serialize(
             id=id,
-            list_table_versions_request=list_table_versions_request,
             delimiter=delimiter,
+            page_token=page_token,
+            limit=limit,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7174,8 +7539,9 @@ class MetadataApi:
     def _list_table_versions_serialize(
         self,
         id,
-        list_table_versions_request,
         delimiter,
+        page_token,
+        limit,
         _request_auth,
         _content_type,
         _headers,
@@ -7204,11 +7570,17 @@ class MetadataApi:
             
             _query_params.append(('delimiter', delimiter))
             
+        if page_token is not None:
+            
+            _query_params.append(('page_token', page_token))
+            
+        if limit is not None:
+            
+            _query_params.append(('limit', limit))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if list_table_versions_request is not None:
-            _body_params = list_table_versions_request
 
 
         # set the HTTP header `Accept`
@@ -7219,22 +7591,12 @@ class MetadataApi:
                 ]
             )
 
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -7260,8 +7622,8 @@ class MetadataApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7283,9 +7645,9 @@ class MetadataApi:
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -7346,8 +7708,8 @@ class MetadataApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7369,9 +7731,9 @@ class MetadataApi:
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -7432,8 +7794,8 @@ class MetadataApi:
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
-        page_token: Optional[StrictStr] = None,
-        limit: Optional[StrictInt] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from a previous request")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="Maximum number of items to return")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7455,9 +7817,9 @@ class MetadataApi:
         :type id: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
-        :param page_token:
+        :param page_token: Pagination token from a previous request
         :type page_token: str
-        :param limit:
+        :param limit: Maximum number of items to return
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -7567,6 +7929,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -7890,6 +8255,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -8219,11 +8587,343 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
             method='POST',
             resource_path='/v1/table/{id}/register',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def rename_table(
+        self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
+        rename_table_request: RenameTableRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RenameTableResponse:
+        """Rename a table
+
+        Rename table `id` to a new name. 
+
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param rename_table_request: (required)
+        :type rename_table_request: RenameTableRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
+        :type delimiter: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rename_table_serialize(
+            id=id,
+            rename_table_request=rename_table_request,
+            delimiter=delimiter,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "RenameTableResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '409': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def rename_table_with_http_info(
+        self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
+        rename_table_request: RenameTableRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[RenameTableResponse]:
+        """Rename a table
+
+        Rename table `id` to a new name. 
+
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param rename_table_request: (required)
+        :type rename_table_request: RenameTableRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
+        :type delimiter: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rename_table_serialize(
+            id=id,
+            rename_table_request=rename_table_request,
+            delimiter=delimiter,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "RenameTableResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '409': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def rename_table_without_preload_content(
+        self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
+        rename_table_request: RenameTableRequest,
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Rename a table
+
+        Rename table `id` to a new name. 
+
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param rename_table_request: (required)
+        :type rename_table_request: RenameTableRequest
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
+        :type delimiter: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rename_table_serialize(
+            id=id,
+            rename_table_request=rename_table_request,
+            delimiter=delimiter,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "RenameTableResponse",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '409': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _rename_table_serialize(
+        self,
+        id,
+        rename_table_request,
+        delimiter,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
+        # process the query parameters
+        if delimiter is not None:
+            
+            _query_params.append(('delimiter', delimiter))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if rename_table_request is not None:
+            _body_params = rename_table_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/v1/table/{id}/rename',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -8542,6 +9242,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -8865,11 +9568,340 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
             method='POST',
             resource_path='/v1/table/{id}/exists',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def update_table_schema_metadata(
+        self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
+        request_body: Dict[str, StrictStr],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> Dict[str, str]:
+        """Update table schema metadata
+
+        Replace the schema metadata for table `id` with the provided key-value pairs.  REST NAMESPACE ONLY REST namespace uses a direct object (map of string to string) as both request and response body instead of the wrapped `UpdateTableSchemaMetadataRequest` and `UpdateTableSchemaMetadataResponse`. 
+
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param request_body: (required)
+        :type request_body: Dict[str, str]
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
+        :type delimiter: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._update_table_schema_metadata_serialize(
+            id=id,
+            request_body=request_body,
+            delimiter=delimiter,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "Dict[str, str]",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def update_table_schema_metadata_with_http_info(
+        self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
+        request_body: Dict[str, StrictStr],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[Dict[str, str]]:
+        """Update table schema metadata
+
+        Replace the schema metadata for table `id` with the provided key-value pairs.  REST NAMESPACE ONLY REST namespace uses a direct object (map of string to string) as both request and response body instead of the wrapped `UpdateTableSchemaMetadataRequest` and `UpdateTableSchemaMetadataResponse`. 
+
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param request_body: (required)
+        :type request_body: Dict[str, str]
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
+        :type delimiter: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._update_table_schema_metadata_serialize(
+            id=id,
+            request_body=request_body,
+            delimiter=delimiter,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "Dict[str, str]",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def update_table_schema_metadata_without_preload_content(
+        self,
+        id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
+        request_body: Dict[str, StrictStr],
+        delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Update table schema metadata
+
+        Replace the schema metadata for table `id` with the provided key-value pairs.  REST NAMESPACE ONLY REST namespace uses a direct object (map of string to string) as both request and response body instead of the wrapped `UpdateTableSchemaMetadataRequest` and `UpdateTableSchemaMetadataResponse`. 
+
+        :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
+        :type id: str
+        :param request_body: (required)
+        :type request_body: Dict[str, str]
+        :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
+        :type delimiter: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._update_table_schema_metadata_serialize(
+            id=id,
+            request_body=request_body,
+            delimiter=delimiter,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "Dict[str, str]",
+            '400': "ErrorResponse",
+            '401': "ErrorResponse",
+            '403': "ErrorResponse",
+            '404': "ErrorResponse",
+            '503': "ErrorResponse",
+            '5XX': "ErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _update_table_schema_metadata_serialize(
+        self,
+        id,
+        request_body,
+        delimiter,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
+        # process the query parameters
+        if delimiter is not None:
+            
+            _query_params.append(('delimiter', delimiter))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if request_body is not None:
+            _body_params = request_body
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/v1/table/{id}/schema_metadata/update',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -8903,7 +9935,7 @@ class MetadataApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> UpdateTableTagResponse:
         """Update a tag to point to a different version
 
         Update an existing tag for table `id` to point to a different version. 
@@ -8947,7 +9979,7 @@ class MetadataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "UpdateTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -8984,7 +10016,7 @@ class MetadataApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[UpdateTableTagResponse]:
         """Update a tag to point to a different version
 
         Update an existing tag for table `id` to point to a different version. 
@@ -9028,7 +10060,7 @@ class MetadataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "UpdateTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -9109,7 +10141,7 @@ class MetadataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "UpdateTableTagResponse",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -9188,6 +10220,9 @@ class MetadataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(

@@ -27,7 +27,8 @@ import java.util.StringJoiner;
 /** DescribeTableRequest */
 @JsonPropertyOrder({
   DescribeTableRequest.JSON_PROPERTY_ID,
-  DescribeTableRequest.JSON_PROPERTY_VERSION
+  DescribeTableRequest.JSON_PROPERTY_VERSION,
+  DescribeTableRequest.JSON_PROPERTY_WITH_TABLE_URI
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -38,6 +39,9 @@ public class DescribeTableRequest {
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nullable private Long version;
+
+  public static final String JSON_PROPERTY_WITH_TABLE_URI = "with_table_uri";
+  @javax.annotation.Nullable private Boolean withTableUri = false;
 
   public DescribeTableRequest() {}
 
@@ -98,6 +102,30 @@ public class DescribeTableRequest {
     this.version = version;
   }
 
+  public DescribeTableRequest withTableUri(@javax.annotation.Nullable Boolean withTableUri) {
+
+    this.withTableUri = withTableUri;
+    return this;
+  }
+
+  /**
+   * Whether to include the table URI in the response. Default is false.
+   *
+   * @return withTableUri
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_WITH_TABLE_URI)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getWithTableUri() {
+    return withTableUri;
+  }
+
+  @JsonProperty(JSON_PROPERTY_WITH_TABLE_URI)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setWithTableUri(@javax.annotation.Nullable Boolean withTableUri) {
+    this.withTableUri = withTableUri;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -108,12 +136,13 @@ public class DescribeTableRequest {
     }
     DescribeTableRequest describeTableRequest = (DescribeTableRequest) o;
     return Objects.equals(this.id, describeTableRequest.id)
-        && Objects.equals(this.version, describeTableRequest.version);
+        && Objects.equals(this.version, describeTableRequest.version)
+        && Objects.equals(this.withTableUri, describeTableRequest.withTableUri);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version);
+    return Objects.hash(id, version, withTableUri);
   }
 
   @Override
@@ -122,6 +151,7 @@ public class DescribeTableRequest {
     sb.append("class DescribeTableRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    withTableUri: ").append(toIndentedString(withTableUri)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -198,6 +228,22 @@ public class DescribeTableRequest {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `with_table_uri` to the URL query string
+    if (getWithTableUri() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%swith_table_uri%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getWithTableUri()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

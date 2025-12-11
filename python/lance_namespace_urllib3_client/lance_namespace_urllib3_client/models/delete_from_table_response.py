@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,8 +27,9 @@ class DeleteFromTableResponse(BaseModel):
     """
     DeleteFromTableResponse
     """ # noqa: E501
-    version: Annotated[int, Field(strict=True, ge=0)] = Field(description="The commit version associated with the operation")
-    __properties: ClassVar[List[str]] = ["version"]
+    transaction_id: Optional[StrictStr] = Field(default=None, description="Optional transaction identifier")
+    version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="The commit version associated with the operation")
+    __properties: ClassVar[List[str]] = ["transaction_id", "version"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,6 +82,7 @@ class DeleteFromTableResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "transaction_id": obj.get("transaction_id"),
             "version": obj.get("version")
         })
         return _obj

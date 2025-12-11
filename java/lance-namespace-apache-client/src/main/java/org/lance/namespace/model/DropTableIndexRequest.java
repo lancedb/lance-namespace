@@ -34,14 +34,14 @@ import java.util.StringJoiner;
     comments = "Generator version: 7.12.0")
 public class DropTableIndexRequest {
   public static final String JSON_PROPERTY_ID = "id";
-  @javax.annotation.Nonnull private List<String> id = new ArrayList<>();
+  @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public static final String JSON_PROPERTY_INDEX_NAME = "index_name";
-  @javax.annotation.Nonnull private String indexName;
+  @javax.annotation.Nullable private String indexName;
 
   public DropTableIndexRequest() {}
 
-  public DropTableIndexRequest id(@javax.annotation.Nonnull List<String> id) {
+  public DropTableIndexRequest id(@javax.annotation.Nullable List<String> id) {
 
     this.id = id;
     return this;
@@ -60,20 +60,20 @@ public class DropTableIndexRequest {
    *
    * @return id
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_ID)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public List<String> getId() {
     return id;
   }
 
   @JsonProperty(JSON_PROPERTY_ID)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setId(@javax.annotation.Nonnull List<String> id) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setId(@javax.annotation.Nullable List<String> id) {
     this.id = id;
   }
 
-  public DropTableIndexRequest indexName(@javax.annotation.Nonnull String indexName) {
+  public DropTableIndexRequest indexName(@javax.annotation.Nullable String indexName) {
 
     this.indexName = indexName;
     return this;
@@ -84,16 +84,16 @@ public class DropTableIndexRequest {
    *
    * @return indexName
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_INDEX_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public String getIndexName() {
     return indexName;
   }
 
   @JsonProperty(JSON_PROPERTY_INDEX_NAME)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setIndexName(@javax.annotation.Nonnull String indexName) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIndexName(@javax.annotation.Nullable String indexName) {
     this.indexName = indexName;
   }
 

@@ -22,39 +22,39 @@ import java.net.URLEncoder;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** DropTableIndexResponse */
-@JsonPropertyOrder({DropTableIndexResponse.JSON_PROPERTY_VERSION})
+/** Response for drop index operation */
+@JsonPropertyOrder({DropTableIndexResponse.JSON_PROPERTY_TRANSACTION_ID})
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DropTableIndexResponse {
-  public static final String JSON_PROPERTY_VERSION = "version";
-  @javax.annotation.Nullable private Long version;
+  public static final String JSON_PROPERTY_TRANSACTION_ID = "transaction_id";
+  @javax.annotation.Nullable private String transactionId;
 
   public DropTableIndexResponse() {}
 
-  public DropTableIndexResponse version(@javax.annotation.Nullable Long version) {
+  public DropTableIndexResponse transactionId(@javax.annotation.Nullable String transactionId) {
 
-    this.version = version;
+    this.transactionId = transactionId;
     return this;
   }
 
   /**
-   * Version of the table after dropping the index minimum: 0
+   * Optional transaction identifier
    *
-   * @return version
+   * @return transactionId
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_VERSION)
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Long getVersion() {
-    return version;
+  public String getTransactionId() {
+    return transactionId;
   }
 
-  @JsonProperty(JSON_PROPERTY_VERSION)
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setVersion(@javax.annotation.Nullable Long version) {
-    this.version = version;
+  public void setTransactionId(@javax.annotation.Nullable String transactionId) {
+    this.transactionId = transactionId;
   }
 
   @Override
@@ -66,19 +66,19 @@ public class DropTableIndexResponse {
       return false;
     }
     DropTableIndexResponse dropTableIndexResponse = (DropTableIndexResponse) o;
-    return Objects.equals(this.version, dropTableIndexResponse.version);
+    return Objects.equals(this.transactionId, dropTableIndexResponse.transactionId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version);
+    return Objects.hash(transactionId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DropTableIndexResponse {\n");
-    sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -125,15 +125,16 @@ public class DropTableIndexResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
-    // add `version` to the URL query string
-    if (getVersion() != null) {
+    // add `transaction_id` to the URL query string
+    if (getTransactionId() != null) {
       try {
         joiner.add(
             String.format(
-                "%sversion%s=%s",
+                "%stransaction_id%s=%s",
                 prefix,
                 suffix,
-                URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+                URLEncoder.encode(String.valueOf(getTransactionId()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

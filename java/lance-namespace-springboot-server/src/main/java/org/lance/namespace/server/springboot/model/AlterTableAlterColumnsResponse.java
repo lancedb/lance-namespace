@@ -27,6 +27,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class AlterTableAlterColumnsResponse {
 
+  private String transactionId;
+
   private Long version;
 
   public AlterTableAlterColumnsResponse() {
@@ -36,6 +38,29 @@ public class AlterTableAlterColumnsResponse {
   /** Constructor with only required parameters */
   public AlterTableAlterColumnsResponse(Long version) {
     this.version = version;
+  }
+
+  public AlterTableAlterColumnsResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @Schema(
+      name = "transaction_id",
+      description = "Optional transaction identifier",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
   }
 
   public AlterTableAlterColumnsResponse version(Long version) {
@@ -73,18 +98,20 @@ public class AlterTableAlterColumnsResponse {
     }
     AlterTableAlterColumnsResponse alterTableAlterColumnsResponse =
         (AlterTableAlterColumnsResponse) o;
-    return Objects.equals(this.version, alterTableAlterColumnsResponse.version);
+    return Objects.equals(this.transactionId, alterTableAlterColumnsResponse.transactionId)
+        && Objects.equals(this.version, alterTableAlterColumnsResponse.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version);
+    return Objects.hash(transactionId, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTableAlterColumnsResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -28,6 +28,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class MergeInsertIntoTableResponse {
 
+  private String transactionId;
+
   private Long numUpdatedRows;
 
   private Long numInsertedRows;
@@ -35,6 +37,29 @@ public class MergeInsertIntoTableResponse {
   private Long numDeletedRows;
 
   private Long version;
+
+  public MergeInsertIntoTableResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @Schema(
+      name = "transaction_id",
+      description = "Optional transaction identifier",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
 
   public MergeInsertIntoTableResponse numUpdatedRows(Long numUpdatedRows) {
     this.numUpdatedRows = numUpdatedRows;
@@ -141,7 +166,8 @@ public class MergeInsertIntoTableResponse {
       return false;
     }
     MergeInsertIntoTableResponse mergeInsertIntoTableResponse = (MergeInsertIntoTableResponse) o;
-    return Objects.equals(this.numUpdatedRows, mergeInsertIntoTableResponse.numUpdatedRows)
+    return Objects.equals(this.transactionId, mergeInsertIntoTableResponse.transactionId)
+        && Objects.equals(this.numUpdatedRows, mergeInsertIntoTableResponse.numUpdatedRows)
         && Objects.equals(this.numInsertedRows, mergeInsertIntoTableResponse.numInsertedRows)
         && Objects.equals(this.numDeletedRows, mergeInsertIntoTableResponse.numDeletedRows)
         && Objects.equals(this.version, mergeInsertIntoTableResponse.version);
@@ -149,13 +175,14 @@ public class MergeInsertIntoTableResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(numUpdatedRows, numInsertedRows, numDeletedRows, version);
+    return Objects.hash(transactionId, numUpdatedRows, numInsertedRows, numDeletedRows, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class MergeInsertIntoTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    numUpdatedRows: ").append(toIndentedString(numUpdatedRows)).append("\n");
     sb.append("    numInsertedRows: ").append(toIndentedString(numInsertedRows)).append("\n");
     sb.append("    numDeletedRows: ").append(toIndentedString(numDeletedRows)).append("\n");

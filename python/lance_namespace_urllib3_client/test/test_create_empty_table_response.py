@@ -35,6 +35,7 @@ class TestCreateEmptyTableResponse(unittest.TestCase):
         model = CreateEmptyTableResponse()
         if include_optional:
             return CreateEmptyTableResponse(
+                transaction_id = '',
                 location = '',
                 properties = {
                     'key' : ''

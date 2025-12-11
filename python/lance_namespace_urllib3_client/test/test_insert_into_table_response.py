@@ -35,7 +35,7 @@ class TestInsertIntoTableResponse(unittest.TestCase):
         model = InsertIntoTableResponse()
         if include_optional:
             return InsertIntoTableResponse(
-                version = 0
+                transaction_id = ''
             )
         else:
             return InsertIntoTableResponse(

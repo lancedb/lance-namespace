@@ -32,6 +32,7 @@ Add new columns to table &#x60;id&#x60; using SQL expressions or default values.
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.DataApi;
 
@@ -39,6 +40,20 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
@@ -73,7 +88,7 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -95,11 +110,11 @@ No authorization required
 
 ## analyzeTableQueryPlan
 
-> AnalyzeTableQueryPlanResponse analyzeTableQueryPlan(id, analyzeTableQueryPlanRequest, delimiter)
+> String analyzeTableQueryPlan(id, analyzeTableQueryPlanRequest, delimiter)
 
 Analyze query execution plan
 
-Analyze the query execution plan for a query against table &#x60;id&#x60;. Returns detailed statistics and analysis of the query execution plan. 
+Analyze the query execution plan for a query against table &#x60;id&#x60;. Returns detailed statistics and analysis of the query execution plan.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the &#x60;AnalyzeTableQueryPlanResponse&#x60; JSON object. 
 
 ### Example
 
@@ -108,6 +123,7 @@ Analyze the query execution plan for a query against table &#x60;id&#x60;. Retur
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.DataApi;
 
@@ -115,13 +131,27 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         AnalyzeTableQueryPlanRequest analyzeTableQueryPlanRequest = new AnalyzeTableQueryPlanRequest(); // AnalyzeTableQueryPlanRequest | 
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         try {
-            AnalyzeTableQueryPlanResponse result = apiInstance.analyzeTableQueryPlan(id, analyzeTableQueryPlanRequest, delimiter);
+            String result = apiInstance.analyzeTableQueryPlan(id, analyzeTableQueryPlanRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DataApi#analyzeTableQueryPlan");
@@ -145,11 +175,11 @@ public class Example {
 
 ### Return type
 
-[**AnalyzeTableQueryPlanResponse**](AnalyzeTableQueryPlanResponse.md)
+**String**
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -175,7 +205,7 @@ No authorization required
 
 Count rows in a table
 
-Count the number of rows in table &#x60;id&#x60; 
+Count the number of rows in table &#x60;id&#x60;  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the &#x60;CountTableRowsResponse&#x60; JSON object. 
 
 ### Example
 
@@ -184,6 +214,7 @@ Count the number of rows in table &#x60;id&#x60;
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.DataApi;
 
@@ -191,6 +222,20 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
@@ -225,7 +270,7 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -247,11 +292,11 @@ No authorization required
 
 ## createTable
 
-> CreateTableResponse createTable(id, body, delimiter, mode, xLanceTableLocation, xLanceTableProperties)
+> CreateTableResponse createTable(id, body, delimiter, mode)
 
 Create a table with the given name
 
-Create table &#x60;id&#x60; in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the &#x60;CreateTableRequest&#x60; information in the following way: - &#x60;id&#x60;: pass through path parameter of the same name - &#x60;mode&#x60;: pass through query parameter of the same name - &#x60;location&#x60;: pass through header &#x60;x-lance-table-location&#x60; - &#x60;properties&#x60;: pass through header &#x60;x-lance-table-properties&#x60; 
+Create table &#x60;id&#x60; in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema. If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the &#x60;CreateTableRequest&#x60; information in the following way: - &#x60;id&#x60;: pass through path parameter of the same name - &#x60;mode&#x60;: pass through query parameter of the same name 
 
 ### Example
 
@@ -260,6 +305,7 @@ Create table &#x60;id&#x60; in the namespace with the given data in Arrow IPC st
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.DataApi;
 
@@ -267,16 +313,28 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         byte[] body = null; // byte[] | Arrow IPC data
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         String mode = "mode_example"; // String | 
-        String xLanceTableLocation = "xLanceTableLocation_example"; // String | URI pointing to root location to create the table at
-        String xLanceTableProperties = "xLanceTableProperties_example"; // String | JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
         try {
-            CreateTableResponse result = apiInstance.createTable(id, body, delimiter, mode, xLanceTableLocation, xLanceTableProperties);
+            CreateTableResponse result = apiInstance.createTable(id, body, delimiter, mode);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DataApi#createTable");
@@ -298,8 +356,6 @@ public class Example {
 | **body** | **byte[]**| Arrow IPC data | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] |
 | **mode** | **String**|  | [optional] |
-| **xLanceTableLocation** | **String**| URI pointing to root location to create the table at | [optional] |
-| **xLanceTableProperties** | **String**| JSON-encoded string map (e.g. { \&quot;owner\&quot;: \&quot;jack\&quot; })  | [optional] |
 
 ### Return type
 
@@ -307,7 +363,7 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -342,6 +398,7 @@ Delete rows from table &#x60;id&#x60;.
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.DataApi;
 
@@ -349,6 +406,20 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
@@ -383,7 +454,7 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -405,11 +476,11 @@ No authorization required
 
 ## explainTableQueryPlan
 
-> ExplainTableQueryPlanResponse explainTableQueryPlan(id, explainTableQueryPlanRequest, delimiter)
+> String explainTableQueryPlan(id, explainTableQueryPlanRequest, delimiter)
 
 Get query execution plan explanation
 
-Get the query execution plan for a query against table &#x60;id&#x60;. Returns a human-readable explanation of how the query will be executed. 
+Get the query execution plan for a query against table &#x60;id&#x60;. Returns a human-readable explanation of how the query will be executed.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the &#x60;ExplainTableQueryPlanResponse&#x60; JSON object. 
 
 ### Example
 
@@ -418,6 +489,7 @@ Get the query execution plan for a query against table &#x60;id&#x60;. Returns a
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.DataApi;
 
@@ -425,13 +497,27 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         ExplainTableQueryPlanRequest explainTableQueryPlanRequest = new ExplainTableQueryPlanRequest(); // ExplainTableQueryPlanRequest | 
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         try {
-            ExplainTableQueryPlanResponse result = apiInstance.explainTableQueryPlan(id, explainTableQueryPlanRequest, delimiter);
+            String result = apiInstance.explainTableQueryPlan(id, explainTableQueryPlanRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DataApi#explainTableQueryPlan");
@@ -455,11 +541,11 @@ public class Example {
 
 ### Return type
 
-[**ExplainTableQueryPlanResponse**](ExplainTableQueryPlanResponse.md)
+**String**
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -494,6 +580,7 @@ Insert new records into table &#x60;id&#x60;.  REST NAMESPACE ONLY REST namespac
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.DataApi;
 
@@ -501,12 +588,26 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         byte[] body = null; // byte[] | Arrow IPC stream containing the records to insert
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
-        String mode = "append"; // String | How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it 
+        String mode = "create"; // String | How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it 
         try {
             InsertIntoTableResponse result = apiInstance.insertIntoTable(id, body, delimiter, mode);
             System.out.println(result);
@@ -529,7 +630,7 @@ public class Example {
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **body** | **byte[]**| Arrow IPC stream containing the records to insert | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] |
-| **mode** | **String**| How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it  | [optional] [default to append] [enum: append, overwrite] |
+| **mode** | **String**| How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it  | [optional] [default to append] [enum: create, append, overwrite] |
 
 ### Return type
 
@@ -537,7 +638,7 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -559,7 +660,7 @@ No authorization required
 
 ## mergeInsertIntoTable
 
-> MergeInsertIntoTableResponse mergeInsertIntoTable(id, on, body, delimiter, whenMatchedUpdateAll, whenMatchedUpdateAllFilt, whenNotMatchedInsertAll, whenNotMatchedBySourceDelete, whenNotMatchedBySourceDeleteFilt)
+> MergeInsertIntoTableResponse mergeInsertIntoTable(id, on, body, delimiter, whenMatchedUpdateAll, whenMatchedUpdateAllFilt, whenNotMatchedInsertAll, whenNotMatchedBySourceDelete, whenNotMatchedBySourceDeleteFilt, timeout, useIndex)
 
 Merge insert (upsert) records into a table
 
@@ -572,6 +673,7 @@ Performs a merge insert (upsert) operation on table &#x60;id&#x60;. This operati
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.DataApi;
 
@@ -579,6 +681,20 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
@@ -590,8 +706,10 @@ public class Example {
         Boolean whenNotMatchedInsertAll = false; // Boolean | Insert all columns when rows don't match
         Boolean whenNotMatchedBySourceDelete = false; // Boolean | Delete all rows from target table that don't match a row in the source table
         String whenNotMatchedBySourceDeleteFilt = "whenNotMatchedBySourceDeleteFilt_example"; // String | Delete rows from the target table if there is no match AND the SQL expression evaluates to true
+        String timeout = "timeout_example"; // String | Timeout for the operation (e.g., \"30s\", \"5m\")
+        Boolean useIndex = false; // Boolean | Whether to use index for matching rows
         try {
-            MergeInsertIntoTableResponse result = apiInstance.mergeInsertIntoTable(id, on, body, delimiter, whenMatchedUpdateAll, whenMatchedUpdateAllFilt, whenNotMatchedInsertAll, whenNotMatchedBySourceDelete, whenNotMatchedBySourceDeleteFilt);
+            MergeInsertIntoTableResponse result = apiInstance.mergeInsertIntoTable(id, on, body, delimiter, whenMatchedUpdateAll, whenMatchedUpdateAllFilt, whenNotMatchedInsertAll, whenNotMatchedBySourceDelete, whenNotMatchedBySourceDeleteFilt, timeout, useIndex);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DataApi#mergeInsertIntoTable");
@@ -618,6 +736,8 @@ public class Example {
 | **whenNotMatchedInsertAll** | **Boolean**| Insert all columns when rows don&#39;t match | [optional] [default to false] |
 | **whenNotMatchedBySourceDelete** | **Boolean**| Delete all rows from target table that don&#39;t match a row in the source table | [optional] [default to false] |
 | **whenNotMatchedBySourceDeleteFilt** | **String**| Delete rows from the target table if there is no match AND the SQL expression evaluates to true | [optional] |
+| **timeout** | **String**| Timeout for the operation (e.g., \&quot;30s\&quot;, \&quot;5m\&quot;) | [optional] |
+| **useIndex** | **Boolean**| Whether to use index for matching rows | [optional] [default to false] |
 
 ### Return type
 
@@ -625,7 +745,7 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -651,7 +771,7 @@ No authorization required
 
 Query a table
 
-Query table &#x60;id&#x60; with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
+Query table &#x60;id&#x60; with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the &#x60;QueryTableResponse&#x60; JSON object. 
 
 ### Example
 
@@ -660,6 +780,7 @@ Query table &#x60;id&#x60; with vector search, full text search and optional SQL
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.DataApi;
 
@@ -667,6 +788,20 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
@@ -701,18 +836,18 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: application/vnd.apache.arrow.file, application/vnd.apache.arrow.stream, application/json
+- **Accept**: application/vnd.apache.arrow.file, application/json
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Query results in Arrow IPC file or stream format |  -  |
+| **200** | Query results in Arrow IPC file format |  -  |
 | **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 | **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 | **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -736,6 +871,7 @@ Update existing rows in table &#x60;id&#x60;.
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.DataApi;
 
@@ -743,6 +879,20 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
@@ -777,7 +927,7 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 

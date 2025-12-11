@@ -13,23 +13,27 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetTableStatsResponse {
-    /// Total number of rows in the table
+    /// The total number of bytes in the table
+    #[serde(rename = "total_bytes")]
+    pub total_bytes: i64,
+    /// The number of rows in the table
     #[serde(rename = "num_rows")]
     pub num_rows: i64,
-    /// Total size of the table in bytes
-    #[serde(rename = "size_bytes")]
-    pub size_bytes: i64,
-    /// Number of data fragments
-    #[serde(rename = "num_fragments", skip_serializing_if = "Option::is_none")]
-    pub num_fragments: Option<i64>,
+    /// The number of indices in the table
+    #[serde(rename = "num_indices")]
+    pub num_indices: i64,
+    /// Statistics on table fragments
+    #[serde(rename = "fragment_stats")]
+    pub fragment_stats: Box<models::FragmentStats>,
 }
 
 impl GetTableStatsResponse {
-    pub fn new(num_rows: i64, size_bytes: i64) -> GetTableStatsResponse {
+    pub fn new(total_bytes: i64, num_rows: i64, num_indices: i64, fragment_stats: models::FragmentStats) -> GetTableStatsResponse {
         GetTableStatsResponse {
+            total_bytes,
             num_rows,
-            size_bytes,
-            num_fragments: None,
+            num_indices,
+            fragment_stats: Box::new(fragment_stats),
         }
     }
 }

@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **index_type** | **str** | Type of the index | [optional] 
 **num_indexed_rows** | **int** | Number of indexed rows | [optional] 
 **num_unindexed_rows** | **int** | Number of unindexed rows | [optional] 
+**num_indices** | **int** | Number of indices | [optional] 
 
 ## Example
 

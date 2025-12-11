@@ -82,6 +82,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_create_table_scalar_index(self) -> None:
+        """Test case for create_table_scalar_index
+
+        Create a scalar index on a table
+        """
+        pass
+
     def test_create_table_tag(self) -> None:
         """Test case for create_table_tag
 
@@ -166,6 +173,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_list_all_tables(self) -> None:
+        """Test case for list_all_tables
+
+        List all tables
+        """
+        pass
+
     def test_list_table_indices(self) -> None:
         """Test case for list_table_indices
 
@@ -215,6 +229,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_rename_table(self) -> None:
+        """Test case for rename_table
+
+        Rename a table
+        """
+        pass
+
     def test_restore_table(self) -> None:
         """Test case for restore_table
 
@@ -233,6 +254,13 @@ class TestTableApi(unittest.TestCase):
         """Test case for update_table
 
         Update rows in a table
+        """
+        pass
+
+    def test_update_table_schema_metadata(self) -> None:
+        """Test case for update_table_schema_metadata
+
+        Update table schema metadata
         """
         pass
 

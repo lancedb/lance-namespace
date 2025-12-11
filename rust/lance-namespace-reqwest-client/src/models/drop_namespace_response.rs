@@ -16,7 +16,7 @@ pub struct DropNamespaceResponse {
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
     /// If present, indicating the operation is long running and should be tracked using GetTransaction 
-    #[serde(rename = "transactionId", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
     pub transaction_id: Option<Vec<String>>,
 }
 

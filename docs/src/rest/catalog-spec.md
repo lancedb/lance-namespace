@@ -16,14 +16,13 @@ This duality minimizes data conversion between client and server:
 a client can serialize its request model directly to JSON for the HTTP body,
 and deserialize the HTTP response body directly into the response model.
 
-There are a few exceptions where the REST spec diverges from the client-side access spec:
-
-- **Arrow IPC data operations**: For operations like `InsertIntoTable`, `CreateTable`, `MergeInsertIntoTable`,
-  the HTTP request body is used for transmitting Arrow IPC binary data.
-  In these cases, the operation request fields are transmitted through query parameters instead.
-- **Pagination parameters**: For list operations like `ListNamespaces`, `ListTables`, `ListTableTags`,
-  pagination tokens and limits may be passed as query parameters
-  for easier URL construction and caching.
+There are a few exceptions where the REST spec diverges from the client-side access spec.
+For example, for some operations like `InsertIntoTable`, `CreateTable`, `MergeInsertIntoTable`,
+the HTTP request body is used for transmitting Arrow IPC binary data,
+and the operation request fields are transmitted through query parameters instead.
+For some list operations like `ListNamespaces` and `ListTables`,
+pagination tokens and limits may be passed as query parameters
+for easier URL construction and caching.
 
 These non-standard operations are documented in the [Non-Standard Operations](#non-standard-operations) section below.
 
@@ -55,9 +54,8 @@ The request and response schemas are used as the actual request and response of 
 
 The key design principle of the REST route is that all the necessary information for a reverse proxy
 (e.g. load balancing, authN, authZ) should be available for access without the need to deserialize request body.
-
-For routes that involve multiple objects, all related objects should be present in the route.
-For example, the route for `RenameTable` is thus `POST /v1/table/{from_id}/rename/to/{to_id}`.
+For example, the route for `CreateTable` is `POST /v1/table/{id}/create` instead of `POST /v1/table`
+so that the table identifier is visible to the reverse proxy without parsing the request body.
 
 ## Standard Operations
 
@@ -97,17 +95,28 @@ Uses GET without a request body. Pagination parameters are passed as query param
 | `page_token` | `page_token` | Query parameter |
 | `limit` | `limit` | Query parameter |
 
-### ListTableTags
+### ListAllTables
 
-**Route:** `GET /v1/table/{id}/tags/list`
+**Route:** `GET /v1/table/`
 
 Uses GET without a request body. Pagination parameters are passed as query parameters.
 
 | Request Field | REST Form | Location |
 |---------------|-----------|----------|
-| `id` | `{id}` | Path parameter |
 | `page_token` | `page_token` | Query parameter |
 | `limit` | `limit` | Query parameter |
+| `delimiter` | `delimiter` | Query parameter |
+
+### DescribeTable
+
+**Route:** `POST /v1/table/{id}/describe`
+
+The `with_table_uri` field is passed as a query parameter instead of in the request body.
+
+| Request Field | REST Form | Location |
+|---------------|-----------|----------|
+| `id` | `{id}` | Path parameter |
+| `with_table_uri` | `with_table_uri` | Query parameter |
 
 ### CreateTable
 
@@ -158,7 +167,113 @@ that updates existing rows based on a matching column and inserts new rows that 
 | `when_not_matched_insert_all` | `when_not_matched_insert_all` | Query parameter (boolean) |
 | `when_not_matched_by_source_delete` | `when_not_matched_by_source_delete` | Query parameter (boolean) |
 | `when_not_matched_by_source_delete_filt` | `when_not_matched_by_source_delete_filt` | Query parameter (SQL expression) |
+| `timeout` | `timeout` | Query parameter (duration string, e.g., "30s", "5m") |
+| `use_index` | `use_index` | Query parameter (boolean) |
 | `data` | Request body | Body (Arrow IPC stream) |
+
+### QueryTable
+
+**Route:** `POST /v1/table/{id}/query`
+
+**Response Content-Type:** `application/vnd.apache.arrow.file`
+
+The response body contains Arrow IPC file data instead of JSON.
+
+| Response Field | REST Form | Notes |
+|----------------|-----------|-------|
+| (results) | Response body | Arrow IPC file (binary, not JSON) |
+
+### CountTableRows
+
+**Route:** `POST /v1/table/{id}/count_rows`
+
+The response is returned as a plain integer instead of a JSON object.
+
+| Response Field | REST Form | Notes |
+|----------------|-----------|-------|
+| (count) | Response body | Plain integer (not JSON wrapped) |
+
+### DropTable
+
+**Route:** `POST /v1/table/{id}/drop`
+
+No request body. All parameters are in the path.
+
+### DropTableIndex
+
+**Route:** `POST /v1/table/{id}/index/{index_name}/drop`
+
+No request body. All parameters are in the path.
+
+### ListTableVersions
+
+**Route:** `POST /v1/table/{id}/version/list`
+
+No request body. Pagination parameters are passed as query parameters.
+
+| Request Field | REST Form | Location |
+|---------------|-----------|----------|
+| `id` | `{id}` | Path parameter |
+| `page_token` | `page_token` | Query parameter |
+| `limit` | `limit` | Query parameter |
+
+### ListTableTags
+
+**Route:** `POST /v1/table/{id}/tags/list`
+
+No request body. Pagination parameters are passed as query parameters.
+
+| Request Field | REST Form | Location |
+|---------------|-----------|----------|
+| `id` | `{id}` | Path parameter |
+| `page_token` | `page_token` | Query parameter |
+| `limit` | `limit` | Query parameter |
+
+### ExplainTableQueryPlan
+
+**Route:** `POST /v1/table/{id}/explain_plan`
+
+The response is returned as a plain string instead of a JSON object.
+
+| Request Field | REST Form | Location |
+|---------------|-----------|----------|
+| `id` | `{id}` | Path parameter |
+| `query` | `query` | Request body field |
+| `verbose` | `verbose` | Request body field |
+
+| Response Field | REST Form | Notes |
+|----------------|-----------|-------|
+| `plan` | Response body | Plain string (not JSON wrapped) |
+
+### AnalyzeTableQueryPlan
+
+**Route:** `POST /v1/table/{id}/analyze_plan`
+
+The response is returned as a plain string instead of a JSON object.
+
+| Request Field | REST Form | Location |
+|---------------|-----------|----------|
+| `id` | `{id}` | Path parameter |
+| `query` | `query` | Request body field |
+
+| Response Field | REST Form | Notes |
+|----------------|-----------|-------|
+| `analysis` | Response body | Plain string (not JSON wrapped) |
+
+### UpdateTableSchemaMetadata
+
+**Route:** `POST /v1/table/{id}/schema_metadata/update`
+
+Both request and response bodies are direct objects (map of string to string) instead of being wrapped in a `metadata` field.
+
+| Request Field | REST Form | Location |
+|---------------|-----------|----------|
+| `id` | `{id}` | Path parameter |
+| `metadata` | Request body | Direct object `{"key": "value", ...}` (not `{"metadata": {...}}`) |
+
+| Response Field | REST Form | Notes |
+|----------------|-----------|-------|
+| `metadata` | Response body | Direct object `{"key": "value", ...}` (not `{"metadata": {...}}`) |
 
 ## Namespace Server and Adapter
 

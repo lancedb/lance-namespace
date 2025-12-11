@@ -5,6 +5,7 @@ All URIs are relative to *http://localhost:2333*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**create_table_index**](IndexApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
+[**create_table_scalar_index**](IndexApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 [**describe_table_index_stats**](IndexApi.md#describe_table_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get table index statistics
 [**drop_table_index**](IndexApi.md#drop_table_index) | **POST** /v1/table/{id}/index/{index_name}/drop | Drop a specific index
 [**list_table_indices**](IndexApi.md#list_table_indices) | **POST** /v1/table/{id}/index/list | List indexes on a table
@@ -33,7 +34,39 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## create_table_scalar_index
+
+> models::CreateTableScalarIndexResponse create_table_scalar_index(id, create_table_index_request, delimiter)
+Create a scalar index on a table
+
+Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
+**create_table_index_request** | [**CreateTableIndexRequest**](CreateTableIndexRequest.md) | Scalar index creation request | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
+
+### Return type
+
+[**models::CreateTableScalarIndexResponse**](CreateTableScalarIndexResponse.md)
+
+### Authorization
+
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -66,7 +99,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -78,10 +111,10 @@ No authorization required
 
 ## drop_table_index
 
-> models::DropTableIndexResponse drop_table_index(id, index_name, drop_table_index_request, delimiter)
+> models::DropTableIndexResponse drop_table_index(id, index_name, delimiter)
 Drop a specific index
 
-Drop the specified index from table `id`. 
+Drop the specified index from table `id`.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `DropTableIndexRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `index_name`: pass through path parameter of the same name 
 
 ### Parameters
 
@@ -90,7 +123,6 @@ Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
 **index_name** | **String** | Name of the index to drop | [required] |
-**drop_table_index_request** | [**DropTableIndexRequest**](DropTableIndexRequest.md) |  | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
 
 ### Return type
@@ -99,11 +131,11 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -131,7 +163,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 

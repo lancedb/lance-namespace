@@ -22,19 +22,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 /** Request for creating a table, excluding the Arrow IPC stream. */
-@JsonPropertyOrder({
-  CreateTableRequest.JSON_PROPERTY_ID,
-  CreateTableRequest.JSON_PROPERTY_LOCATION,
-  CreateTableRequest.JSON_PROPERTY_MODE,
-  CreateTableRequest.JSON_PROPERTY_PROPERTIES
-})
+@JsonPropertyOrder({CreateTableRequest.JSON_PROPERTY_ID, CreateTableRequest.JSON_PROPERTY_MODE})
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
@@ -42,21 +35,18 @@ public class CreateTableRequest {
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
-  public static final String JSON_PROPERTY_LOCATION = "location";
-  @javax.annotation.Nullable private String location;
-
   /**
    * There are three modes when trying to create a table, to differentiate the behavior when a table
-   * of the same name already exists: * create: the operation fails with 409. * exist_ok: the
-   * operation succeeds and the existing table is kept. * overwrite: the existing table is dropped
+   * of the same name already exists: * Create: the operation fails with 409. * ExistOk: the
+   * operation succeeds and the existing table is kept. * Overwrite: the existing table is dropped
    * and a new table with this name is created.
    */
   public enum ModeEnum {
-    CREATE(String.valueOf("create")),
+    CREATE(String.valueOf("Create")),
 
-    EXIST_OK(String.valueOf("exist_ok")),
+    EXIST_OK(String.valueOf("ExistOk")),
 
-    OVERWRITE(String.valueOf("overwrite"));
+    OVERWRITE(String.valueOf("Overwrite"));
 
     private String value;
 
@@ -87,9 +77,6 @@ public class CreateTableRequest {
 
   public static final String JSON_PROPERTY_MODE = "mode";
   @javax.annotation.Nullable private ModeEnum mode;
-
-  public static final String JSON_PROPERTY_PROPERTIES = "properties";
-  @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public CreateTableRequest() {}
 
@@ -125,30 +112,6 @@ public class CreateTableRequest {
     this.id = id;
   }
 
-  public CreateTableRequest location(@javax.annotation.Nullable String location) {
-
-    this.location = location;
-    return this;
-  }
-
-  /**
-   * Get location
-   *
-   * @return location
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getLocation() {
-    return location;
-  }
-
-  @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLocation(@javax.annotation.Nullable String location) {
-    this.location = location;
-  }
-
   public CreateTableRequest mode(@javax.annotation.Nullable ModeEnum mode) {
 
     this.mode = mode;
@@ -157,8 +120,8 @@ public class CreateTableRequest {
 
   /**
    * There are three modes when trying to create a table, to differentiate the behavior when a table
-   * of the same name already exists: * create: the operation fails with 409. * exist_ok: the
-   * operation succeeds and the existing table is kept. * overwrite: the existing table is dropped
+   * of the same name already exists: * Create: the operation fails with 409. * ExistOk: the
+   * operation succeeds and the existing table is kept. * Overwrite: the existing table is dropped
    * and a new table with this name is created.
    *
    * @return mode
@@ -176,38 +139,6 @@ public class CreateTableRequest {
     this.mode = mode;
   }
 
-  public CreateTableRequest properties(@javax.annotation.Nullable Map<String, String> properties) {
-
-    this.properties = properties;
-    return this;
-  }
-
-  public CreateTableRequest putPropertiesItem(String key, String propertiesItem) {
-    if (this.properties == null) {
-      this.properties = new HashMap<>();
-    }
-    this.properties.put(key, propertiesItem);
-    return this;
-  }
-
-  /**
-   * Get properties
-   *
-   * @return properties
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_PROPERTIES)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Map<String, String> getProperties() {
-    return properties;
-  }
-
-  @JsonProperty(JSON_PROPERTY_PROPERTIES)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setProperties(@javax.annotation.Nullable Map<String, String> properties) {
-    this.properties = properties;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -218,14 +149,12 @@ public class CreateTableRequest {
     }
     CreateTableRequest createTableRequest = (CreateTableRequest) o;
     return Objects.equals(this.id, createTableRequest.id)
-        && Objects.equals(this.location, createTableRequest.location)
-        && Objects.equals(this.mode, createTableRequest.mode)
-        && Objects.equals(this.properties, createTableRequest.properties);
+        && Objects.equals(this.mode, createTableRequest.mode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location, mode, properties);
+    return Objects.hash(id, mode);
   }
 
   @Override
@@ -233,9 +162,7 @@ public class CreateTableRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
-    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -303,22 +230,6 @@ public class CreateTableRequest {
       }
     }
 
-    // add `location` to the URL query string
-    if (getLocation() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%slocation%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getLocation()), "UTF-8")
-                    .replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
-      }
-    }
-
     // add `mode` to the URL query string
     if (getMode() != null) {
       try {
@@ -331,28 +242,6 @@ public class CreateTableRequest {
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);
-      }
-    }
-
-    // add `properties` to the URL query string
-    if (getProperties() != null) {
-      for (String _key : getProperties().keySet()) {
-        try {
-          joiner.add(
-              String.format(
-                  "%sproperties%s%s=%s",
-                  prefix,
-                  suffix,
-                  "".equals(suffix)
-                      ? ""
-                      : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
-                  getProperties().get(_key),
-                  URLEncoder.encode(String.valueOf(getProperties().get(_key)), "UTF-8")
-                      .replaceAll("\\+", "%20")));
-        } catch (UnsupportedEncodingException e) {
-          // Should never happen, UTF-8 is always supported
-          throw new RuntimeException(e);
-        }
       }
     }
 

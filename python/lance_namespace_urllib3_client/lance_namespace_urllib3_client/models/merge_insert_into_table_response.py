@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
@@ -27,11 +27,12 @@ class MergeInsertIntoTableResponse(BaseModel):
     """
     Response from merge insert operation
     """ # noqa: E501
+    transaction_id: Optional[StrictStr] = Field(default=None, description="Optional transaction identifier")
     num_updated_rows: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of rows updated")
     num_inserted_rows: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of rows inserted")
     num_deleted_rows: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of rows deleted (typically 0 for merge insert)")
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="The commit version associated with the operation")
-    __properties: ClassVar[List[str]] = ["num_updated_rows", "num_inserted_rows", "num_deleted_rows", "version"]
+    __properties: ClassVar[List[str]] = ["transaction_id", "num_updated_rows", "num_inserted_rows", "num_deleted_rows", "version"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -84,6 +85,7 @@ class MergeInsertIntoTableResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "transaction_id": obj.get("transaction_id"),
             "num_updated_rows": obj.get("num_updated_rows"),
             "num_inserted_rows": obj.get("num_inserted_rows"),
             "num_deleted_rows": obj.get("num_deleted_rows"),

@@ -18,9 +18,8 @@ pub struct QueryTableRequest {
     /// Whether to bypass vector index
     #[serde(rename = "bypass_vector_index", skip_serializing_if = "Option::is_none")]
     pub bypass_vector_index: Option<bool>,
-    /// Optional list of columns to return
     #[serde(rename = "columns", skip_serializing_if = "Option::is_none")]
-    pub columns: Option<Vec<String>>,
+    pub columns: Option<Box<models::QueryTableRequestColumns>>,
     /// Distance metric to use
     #[serde(rename = "distance_type", skip_serializing_if = "Option::is_none")]
     pub distance_type: Option<String>,

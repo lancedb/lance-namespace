@@ -39,9 +39,13 @@ class TestQueryTableRequest(unittest.TestCase):
                     ''
                     ],
                 bypass_vector_index = True,
-                columns = [
-                    ''
-                    ],
+                columns = lance_namespace_urllib3_client.models.query_table_request_columns.QueryTableRequest_columns(
+                    column_names = [
+                        ''
+                        ], 
+                    column_aliases = {
+                        'key' : ''
+                        }, ),
                 distance_type = '',
                 ef = 0,
                 fast_search = True,

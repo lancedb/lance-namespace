@@ -12,6 +12,7 @@ Method | HTTP request | Description
 [**create_empty_table**](TableApi.md#create_empty_table) | **POST** /v1/table/{id}/create-empty | Create an empty table
 [**create_table**](TableApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 [**create_table_index**](TableApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
+[**create_table_scalar_index**](TableApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 [**create_table_tag**](TableApi.md#create_table_tag) | **POST** /v1/table/{id}/tags/create | Create a new tag
 [**delete_from_table**](TableApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
 [**delete_table_tag**](TableApi.md#delete_table_tag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
@@ -24,16 +25,19 @@ Method | HTTP request | Description
 [**get_table_stats**](TableApi.md#get_table_stats) | **POST** /v1/table/{id}/stats | Get table statistics
 [**get_table_tag_version**](TableApi.md#get_table_tag_version) | **POST** /v1/table/{id}/tags/version | Get version for a specific tag
 [**insert_into_table**](TableApi.md#insert_into_table) | **POST** /v1/table/{id}/insert | Insert records into a table
+[**list_all_tables**](TableApi.md#list_all_tables) | **GET** /v1/table | List all tables
 [**list_table_indices**](TableApi.md#list_table_indices) | **POST** /v1/table/{id}/index/list | List indexes on a table
-[**list_table_tags**](TableApi.md#list_table_tags) | **GET** /v1/table/{id}/tags/list | List all tags for a table
+[**list_table_tags**](TableApi.md#list_table_tags) | **POST** /v1/table/{id}/tags/list | List all tags for a table
 [**list_table_versions**](TableApi.md#list_table_versions) | **POST** /v1/table/{id}/version/list | List all versions of a table
 [**list_tables**](TableApi.md#list_tables) | **GET** /v1/namespace/{id}/table/list | List tables in a namespace
 [**merge_insert_into_table**](TableApi.md#merge_insert_into_table) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 [**query_table**](TableApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
 [**register_table**](TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
+[**rename_table**](TableApi.md#rename_table) | **POST** /v1/table/{id}/rename | Rename a table
 [**restore_table**](TableApi.md#restore_table) | **POST** /v1/table/{id}/restore | Restore table to a specific version
 [**table_exists**](TableApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
 [**update_table**](TableApi.md#update_table) | **POST** /v1/table/{id}/update | Update rows in a table
+[**update_table_schema_metadata**](TableApi.md#update_table_schema_metadata) | **POST** /v1/table/{id}/schema_metadata/update | Update table schema metadata
 [**update_table_tag**](TableApi.md#update_table_tag) | **POST** /v1/table/{id}/tags/update | Update a tag to point to a different version
 
 
@@ -60,7 +64,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -92,7 +96,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -124,7 +128,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -136,10 +140,10 @@ No authorization required
 
 ## analyze_table_query_plan
 
-> models::AnalyzeTableQueryPlanResponse analyze_table_query_plan(id, analyze_table_query_plan_request, delimiter)
+> String analyze_table_query_plan(id, analyze_table_query_plan_request, delimiter)
 Analyze query execution plan
 
-Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan. 
+Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the `AnalyzeTableQueryPlanResponse` JSON object. 
 
 ### Parameters
 
@@ -152,11 +156,11 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::AnalyzeTableQueryPlanResponse**](AnalyzeTableQueryPlanResponse.md)
+**String**
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -171,7 +175,7 @@ No authorization required
 > i64 count_table_rows(id, count_table_rows_request, delimiter)
 Count rows in a table
 
-Count the number of rows in table `id` 
+Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. 
 
 ### Parameters
 
@@ -188,7 +192,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -220,7 +224,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -232,10 +236,10 @@ No authorization required
 
 ## create_table
 
-> models::CreateTableResponse create_table(id, body, delimiter, mode, x_lance_table_location, x_lance_table_properties)
+> models::CreateTableResponse create_table(id, body, delimiter, mode)
 Create a table with the given name
 
-Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
+Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema. If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
 
 ### Parameters
 
@@ -246,8 +250,6 @@ Name | Type | Description  | Required | Notes
 **body** | **Vec<u8>** | Arrow IPC data | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
 **mode** | Option<**String**> |  |  |
-**x_lance_table_location** | Option<**String**> | URI pointing to root location to create the table at |  |
-**x_lance_table_properties** | Option<**String**> | JSON-encoded string map (e.g. { \"owner\": \"jack\" })  |  |
 
 ### Return type
 
@@ -255,7 +257,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -287,7 +289,39 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## create_table_scalar_index
+
+> models::CreateTableScalarIndexResponse create_table_scalar_index(id, create_table_index_request, delimiter)
+Create a scalar index on a table
+
+Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
+**create_table_index_request** | [**CreateTableIndexRequest**](CreateTableIndexRequest.md) | Scalar index creation request | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
+
+### Return type
+
+[**models::CreateTableScalarIndexResponse**](CreateTableScalarIndexResponse.md)
+
+### Authorization
+
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -299,7 +333,7 @@ No authorization required
 
 ## create_table_tag
 
-> create_table_tag(id, create_table_tag_request, delimiter)
+> models::CreateTableTagResponse create_table_tag(id, create_table_tag_request, delimiter)
 Create a new tag
 
 Create a new tag for table `id` that points to a specific version. 
@@ -315,11 +349,11 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
- (empty response body)
+[**models::CreateTableTagResponse**](CreateTableTagResponse.md)
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -351,7 +385,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -363,7 +397,7 @@ No authorization required
 
 ## delete_table_tag
 
-> delete_table_tag(id, delete_table_tag_request, delimiter)
+> models::DeleteTableTagResponse delete_table_tag(id, delete_table_tag_request, delimiter)
 Delete a tag
 
 Delete an existing tag from table `id`. 
@@ -379,11 +413,11 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
- (empty response body)
+[**models::DeleteTableTagResponse**](DeleteTableTagResponse.md)
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -415,7 +449,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -427,10 +461,10 @@ No authorization required
 
 ## describe_table
 
-> models::DescribeTableResponse describe_table(id, describe_table_request, delimiter)
+> models::DescribeTableResponse describe_table(id, describe_table_request, delimiter, with_table_uri)
 Describe information of a table
 
-Describe the detailed information for table `id`. 
+Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` as a query parameter instead of in the request body. 
 
 ### Parameters
 
@@ -440,6 +474,7 @@ Name | Type | Description  | Required | Notes
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
 **describe_table_request** | [**DescribeTableRequest**](DescribeTableRequest.md) |  | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
+**with_table_uri** | Option<**bool**> | Whether to include the table URI in the response |  |[default to false]
 
 ### Return type
 
@@ -447,7 +482,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -480,7 +515,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -492,10 +527,10 @@ No authorization required
 
 ## drop_table
 
-> models::DropTableResponse drop_table(id, drop_table_request, delimiter)
+> models::DropTableResponse drop_table(id, delimiter)
 Drop a table
 
-Drop table `id` and delete its data. 
+Drop table `id` and delete its data.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `DropTableRequest` information is passed in the following way: - `id`: pass through path parameter of the same name 
 
 ### Parameters
 
@@ -503,7 +538,6 @@ Drop table `id` and delete its data.
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
-**drop_table_request** | [**DropTableRequest**](DropTableRequest.md) |  | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
 
 ### Return type
@@ -512,11 +546,11 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -524,10 +558,10 @@ No authorization required
 
 ## drop_table_index
 
-> models::DropTableIndexResponse drop_table_index(id, index_name, drop_table_index_request, delimiter)
+> models::DropTableIndexResponse drop_table_index(id, index_name, delimiter)
 Drop a specific index
 
-Drop the specified index from table `id`. 
+Drop the specified index from table `id`.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `DropTableIndexRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `index_name`: pass through path parameter of the same name 
 
 ### Parameters
 
@@ -536,7 +570,6 @@ Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
 **index_name** | **String** | Name of the index to drop | [required] |
-**drop_table_index_request** | [**DropTableIndexRequest**](DropTableIndexRequest.md) |  | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
 
 ### Return type
@@ -545,11 +578,11 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -557,10 +590,10 @@ No authorization required
 
 ## explain_table_query_plan
 
-> models::ExplainTableQueryPlanResponse explain_table_query_plan(id, explain_table_query_plan_request, delimiter)
+> String explain_table_query_plan(id, explain_table_query_plan_request, delimiter)
 Get query execution plan explanation
 
-Get the query execution plan for a query against table `id`. Returns a human-readable explanation of how the query will be executed. 
+Get the query execution plan for a query against table `id`. Returns a human-readable explanation of how the query will be executed.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the `ExplainTableQueryPlanResponse` JSON object. 
 
 ### Parameters
 
@@ -573,11 +606,11 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::ExplainTableQueryPlanResponse**](ExplainTableQueryPlanResponse.md)
+**String**
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -609,7 +642,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -641,7 +674,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -674,11 +707,43 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
 - **Content-Type**: application/vnd.apache.arrow.stream
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## list_all_tables
+
+> models::ListTablesResponse list_all_tables(delimiter, page_token, limit)
+List all tables
+
+List all tables across all namespaces.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListAllTablesRequest` information in the following way: - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name - `delimiter`: pass through query parameter of the same name 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
+**page_token** | Option<**String**> | Pagination token from a previous request |  |
+**limit** | Option<**i32**> | Maximum number of items to return |  |
+
+### Return type
+
+[**models::ListTablesResponse**](ListTablesResponse.md)
+
+### Authorization
+
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -706,7 +771,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -721,7 +786,7 @@ No authorization required
 > models::ListTableTagsResponse list_table_tags(id, delimiter, page_token, limit)
 List all tags for a table
 
-List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTableTagsRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableTagsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
 ### Parameters
 
@@ -730,8 +795,8 @@ Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
-**page_token** | Option<**String**> |  |  |
-**limit** | Option<**i32**> |  |  |
+**page_token** | Option<**String**> | Pagination token from a previous request |  |
+**limit** | Option<**i32**> | Maximum number of items to return |  |
 
 ### Return type
 
@@ -739,7 +804,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -751,10 +816,10 @@ No authorization required
 
 ## list_table_versions
 
-> models::ListTableVersionsResponse list_table_versions(id, list_table_versions_request, delimiter)
+> models::ListTableVersionsResponse list_table_versions(id, delimiter, page_token, limit)
 List all versions of a table
 
-List all versions (commits) of table `id` with their metadata. 
+List all versions (commits) of table `id` with their metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableVersionsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
 ### Parameters
 
@@ -762,8 +827,9 @@ List all versions (commits) of table `id` with their metadata.
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
-**list_table_versions_request** | [**ListTableVersionsRequest**](ListTableVersionsRequest.md) |  | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
+**page_token** | Option<**String**> | Pagination token from a previous request |  |
+**limit** | Option<**i32**> | Maximum number of items to return |  |
 
 ### Return type
 
@@ -771,11 +837,11 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -795,8 +861,8 @@ Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
-**page_token** | Option<**String**> |  |  |
-**limit** | Option<**i32**> |  |  |
+**page_token** | Option<**String**> | Pagination token from a previous request |  |
+**limit** | Option<**i32**> | Maximum number of items to return |  |
 
 ### Return type
 
@@ -804,7 +870,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -816,7 +882,7 @@ No authorization required
 
 ## merge_insert_into_table
 
-> models::MergeInsertIntoTableResponse merge_insert_into_table(id, on, body, delimiter, when_matched_update_all, when_matched_update_all_filt, when_not_matched_insert_all, when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt)
+> models::MergeInsertIntoTableResponse merge_insert_into_table(id, on, body, delimiter, when_matched_update_all, when_matched_update_all_filt, when_not_matched_insert_all, when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt, timeout, use_index)
 Merge insert (upsert) records into a table
 
 Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don't match. It returns the number of rows inserted and updated.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
@@ -835,6 +901,8 @@ Name | Type | Description  | Required | Notes
 **when_not_matched_insert_all** | Option<**bool**> | Insert all columns when rows don't match |  |[default to false]
 **when_not_matched_by_source_delete** | Option<**bool**> | Delete all rows from target table that don't match a row in the source table |  |[default to false]
 **when_not_matched_by_source_delete_filt** | Option<**String**> | Delete rows from the target table if there is no match AND the SQL expression evaluates to true |  |
+**timeout** | Option<**String**> | Timeout for the operation (e.g., \"30s\", \"5m\") |  |
+**use_index** | Option<**bool**> | Whether to use index for matching rows |  |[default to false]
 
 ### Return type
 
@@ -842,7 +910,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -857,7 +925,7 @@ No authorization required
 > Vec<u8> query_table(id, query_table_request, delimiter)
 Query a table
 
-Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
+Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. 
 
 ### Parameters
 
@@ -874,12 +942,12 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: application/vnd.apache.arrow.file, application/vnd.apache.arrow.stream, application/json
+- **Accept**: application/vnd.apache.arrow.file, application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -906,7 +974,39 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## rename_table
+
+> models::RenameTableResponse rename_table(id, rename_table_request, delimiter)
+Rename a table
+
+Rename table `id` to a new name. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
+**rename_table_request** | [**RenameTableRequest**](RenameTableRequest.md) |  | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
+
+### Return type
+
+[**models::RenameTableResponse**](RenameTableResponse.md)
+
+### Authorization
+
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -938,7 +1038,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -970,7 +1070,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -1002,7 +1102,39 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## update_table_schema_metadata
+
+> std::collections::HashMap<String, String> update_table_schema_metadata(id, request_body, delimiter)
+Update table schema metadata
+
+Replace the schema metadata for table `id` with the provided key-value pairs.  REST NAMESPACE ONLY REST namespace uses a direct object (map of string to string) as both request and response body instead of the wrapped `UpdateTableSchemaMetadataRequest` and `UpdateTableSchemaMetadataResponse`. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
+**request_body** | [**std::collections::HashMap<String, String>**](String.md) |  | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
+
+### Return type
+
+**std::collections::HashMap<String, String>**
+
+### Authorization
+
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -1014,7 +1146,7 @@ No authorization required
 
 ## update_table_tag
 
-> update_table_tag(id, update_table_tag_request, delimiter)
+> models::UpdateTableTagResponse update_table_tag(id, update_table_tag_request, delimiter)
 Update a tag to point to a different version
 
 Update an existing tag for table `id` to point to a different version. 
@@ -1030,11 +1162,11 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
- (empty response body)
+[**models::UpdateTableTagResponse**](UpdateTableTagResponse.md)
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 

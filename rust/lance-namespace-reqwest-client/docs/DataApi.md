@@ -39,7 +39,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -51,10 +51,10 @@ No authorization required
 
 ## analyze_table_query_plan
 
-> models::AnalyzeTableQueryPlanResponse analyze_table_query_plan(id, analyze_table_query_plan_request, delimiter)
+> String analyze_table_query_plan(id, analyze_table_query_plan_request, delimiter)
 Analyze query execution plan
 
-Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan. 
+Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the `AnalyzeTableQueryPlanResponse` JSON object. 
 
 ### Parameters
 
@@ -67,11 +67,11 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::AnalyzeTableQueryPlanResponse**](AnalyzeTableQueryPlanResponse.md)
+**String**
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -86,7 +86,7 @@ No authorization required
 > i64 count_table_rows(id, count_table_rows_request, delimiter)
 Count rows in a table
 
-Count the number of rows in table `id` 
+Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. 
 
 ### Parameters
 
@@ -103,7 +103,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -115,10 +115,10 @@ No authorization required
 
 ## create_table
 
-> models::CreateTableResponse create_table(id, body, delimiter, mode, x_lance_table_location, x_lance_table_properties)
+> models::CreateTableResponse create_table(id, body, delimiter, mode)
 Create a table with the given name
 
-Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
+Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema. If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
 
 ### Parameters
 
@@ -129,8 +129,6 @@ Name | Type | Description  | Required | Notes
 **body** | **Vec<u8>** | Arrow IPC data | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
 **mode** | Option<**String**> |  |  |
-**x_lance_table_location** | Option<**String**> | URI pointing to root location to create the table at |  |
-**x_lance_table_properties** | Option<**String**> | JSON-encoded string map (e.g. { \"owner\": \"jack\" })  |  |
 
 ### Return type
 
@@ -138,7 +136,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -170,7 +168,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -182,10 +180,10 @@ No authorization required
 
 ## explain_table_query_plan
 
-> models::ExplainTableQueryPlanResponse explain_table_query_plan(id, explain_table_query_plan_request, delimiter)
+> String explain_table_query_plan(id, explain_table_query_plan_request, delimiter)
 Get query execution plan explanation
 
-Get the query execution plan for a query against table `id`. Returns a human-readable explanation of how the query will be executed. 
+Get the query execution plan for a query against table `id`. Returns a human-readable explanation of how the query will be executed.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the `ExplainTableQueryPlanResponse` JSON object. 
 
 ### Parameters
 
@@ -198,11 +196,11 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::ExplainTableQueryPlanResponse**](ExplainTableQueryPlanResponse.md)
+**String**
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -235,7 +233,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -247,7 +245,7 @@ No authorization required
 
 ## merge_insert_into_table
 
-> models::MergeInsertIntoTableResponse merge_insert_into_table(id, on, body, delimiter, when_matched_update_all, when_matched_update_all_filt, when_not_matched_insert_all, when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt)
+> models::MergeInsertIntoTableResponse merge_insert_into_table(id, on, body, delimiter, when_matched_update_all, when_matched_update_all_filt, when_not_matched_insert_all, when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt, timeout, use_index)
 Merge insert (upsert) records into a table
 
 Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don't match. It returns the number of rows inserted and updated.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
@@ -266,6 +264,8 @@ Name | Type | Description  | Required | Notes
 **when_not_matched_insert_all** | Option<**bool**> | Insert all columns when rows don't match |  |[default to false]
 **when_not_matched_by_source_delete** | Option<**bool**> | Delete all rows from target table that don't match a row in the source table |  |[default to false]
 **when_not_matched_by_source_delete_filt** | Option<**String**> | Delete rows from the target table if there is no match AND the SQL expression evaluates to true |  |
+**timeout** | Option<**String**> | Timeout for the operation (e.g., \"30s\", \"5m\") |  |
+**use_index** | Option<**bool**> | Whether to use index for matching rows |  |[default to false]
 
 ### Return type
 
@@ -273,7 +273,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -288,7 +288,7 @@ No authorization required
 > Vec<u8> query_table(id, query_table_request, delimiter)
 Query a table
 
-Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
+Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. 
 
 ### Parameters
 
@@ -305,12 +305,12 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: application/vnd.apache.arrow.file, application/vnd.apache.arrow.stream, application/json
+- **Accept**: application/vnd.apache.arrow.file, application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -337,7 +337,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 

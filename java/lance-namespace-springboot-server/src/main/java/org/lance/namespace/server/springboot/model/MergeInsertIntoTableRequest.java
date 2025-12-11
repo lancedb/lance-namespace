@@ -48,6 +48,10 @@ public class MergeInsertIntoTableRequest {
 
   private String whenNotMatchedBySourceDeleteFilt;
 
+  private String timeout;
+
+  private Boolean useIndex = false;
+
   public MergeInsertIntoTableRequest id(List<String> id) {
     this.id = id;
     return this;
@@ -219,6 +223,52 @@ public class MergeInsertIntoTableRequest {
     this.whenNotMatchedBySourceDeleteFilt = whenNotMatchedBySourceDeleteFilt;
   }
 
+  public MergeInsertIntoTableRequest timeout(String timeout) {
+    this.timeout = timeout;
+    return this;
+  }
+
+  /**
+   * Timeout for the operation (e.g., \"30s\", \"5m\")
+   *
+   * @return timeout
+   */
+  @Schema(
+      name = "timeout",
+      description = "Timeout for the operation (e.g., \"30s\", \"5m\")",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("timeout")
+  public String getTimeout() {
+    return timeout;
+  }
+
+  public void setTimeout(String timeout) {
+    this.timeout = timeout;
+  }
+
+  public MergeInsertIntoTableRequest useIndex(Boolean useIndex) {
+    this.useIndex = useIndex;
+    return this;
+  }
+
+  /**
+   * Whether to use index for matching rows
+   *
+   * @return useIndex
+   */
+  @Schema(
+      name = "use_index",
+      description = "Whether to use index for matching rows",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("use_index")
+  public Boolean getUseIndex() {
+    return useIndex;
+  }
+
+  public void setUseIndex(Boolean useIndex) {
+    this.useIndex = useIndex;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -241,7 +291,9 @@ public class MergeInsertIntoTableRequest {
             mergeInsertIntoTableRequest.whenNotMatchedBySourceDelete)
         && Objects.equals(
             this.whenNotMatchedBySourceDeleteFilt,
-            mergeInsertIntoTableRequest.whenNotMatchedBySourceDeleteFilt);
+            mergeInsertIntoTableRequest.whenNotMatchedBySourceDeleteFilt)
+        && Objects.equals(this.timeout, mergeInsertIntoTableRequest.timeout)
+        && Objects.equals(this.useIndex, mergeInsertIntoTableRequest.useIndex);
   }
 
   @Override
@@ -253,7 +305,9 @@ public class MergeInsertIntoTableRequest {
         whenMatchedUpdateAllFilt,
         whenNotMatchedInsertAll,
         whenNotMatchedBySourceDelete,
-        whenNotMatchedBySourceDeleteFilt);
+        whenNotMatchedBySourceDeleteFilt,
+        timeout,
+        useIndex);
   }
 
   @Override
@@ -277,6 +331,8 @@ public class MergeInsertIntoTableRequest {
     sb.append("    whenNotMatchedBySourceDeleteFilt: ")
         .append(toIndentedString(whenNotMatchedBySourceDeleteFilt))
         .append("\n");
+    sb.append("    timeout: ").append(toIndentedString(timeout)).append("\n");
+    sb.append("    useIndex: ").append(toIndentedString(useIndex)).append("\n");
     sb.append("}");
     return sb.toString();
   }

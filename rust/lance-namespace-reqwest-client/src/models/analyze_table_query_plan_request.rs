@@ -15,15 +15,81 @@ use serde::{Deserialize, Serialize};
 pub struct AnalyzeTableQueryPlanRequest {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
-    #[serde(rename = "query")]
-    pub query: Box<models::QueryTableRequest>,
+    /// Whether to bypass vector index
+    #[serde(rename = "bypass_vector_index", skip_serializing_if = "Option::is_none")]
+    pub bypass_vector_index: Option<bool>,
+    #[serde(rename = "columns", skip_serializing_if = "Option::is_none")]
+    pub columns: Option<Box<models::QueryTableRequestColumns>>,
+    /// Distance metric to use
+    #[serde(rename = "distance_type", skip_serializing_if = "Option::is_none")]
+    pub distance_type: Option<String>,
+    /// Search effort parameter for HNSW index
+    #[serde(rename = "ef", skip_serializing_if = "Option::is_none")]
+    pub ef: Option<i32>,
+    /// Whether to use fast search
+    #[serde(rename = "fast_search", skip_serializing_if = "Option::is_none")]
+    pub fast_search: Option<bool>,
+    /// Optional SQL filter expression
+    #[serde(rename = "filter", skip_serializing_if = "Option::is_none")]
+    pub filter: Option<String>,
+    #[serde(rename = "full_text_query", skip_serializing_if = "Option::is_none")]
+    pub full_text_query: Option<Box<models::QueryTableRequestFullTextQuery>>,
+    /// Number of results to return
+    #[serde(rename = "k")]
+    pub k: i32,
+    /// Lower bound for search
+    #[serde(rename = "lower_bound", skip_serializing_if = "Option::is_none")]
+    pub lower_bound: Option<f32>,
+    /// Number of probes for IVF index
+    #[serde(rename = "nprobes", skip_serializing_if = "Option::is_none")]
+    pub nprobes: Option<i32>,
+    /// Number of results to skip
+    #[serde(rename = "offset", skip_serializing_if = "Option::is_none")]
+    pub offset: Option<i32>,
+    /// Whether to apply filtering before vector search
+    #[serde(rename = "prefilter", skip_serializing_if = "Option::is_none")]
+    pub prefilter: Option<bool>,
+    /// Refine factor for search
+    #[serde(rename = "refine_factor", skip_serializing_if = "Option::is_none")]
+    pub refine_factor: Option<i32>,
+    /// Upper bound for search
+    #[serde(rename = "upper_bound", skip_serializing_if = "Option::is_none")]
+    pub upper_bound: Option<f32>,
+    #[serde(rename = "vector")]
+    pub vector: Box<models::QueryTableRequestVector>,
+    /// Name of the vector column to search
+    #[serde(rename = "vector_column", skip_serializing_if = "Option::is_none")]
+    pub vector_column: Option<String>,
+    /// Table version to query
+    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
+    pub version: Option<i64>,
+    /// If true, return the row id as a column called `_rowid`
+    #[serde(rename = "with_row_id", skip_serializing_if = "Option::is_none")]
+    pub with_row_id: Option<bool>,
 }
 
 impl AnalyzeTableQueryPlanRequest {
-    pub fn new(query: models::QueryTableRequest) -> AnalyzeTableQueryPlanRequest {
+    pub fn new(k: i32, vector: models::QueryTableRequestVector) -> AnalyzeTableQueryPlanRequest {
         AnalyzeTableQueryPlanRequest {
             id: None,
-            query: Box::new(query),
+            bypass_vector_index: None,
+            columns: None,
+            distance_type: None,
+            ef: None,
+            fast_search: None,
+            filter: None,
+            full_text_query: None,
+            k,
+            lower_bound: None,
+            nprobes: None,
+            offset: None,
+            prefilter: None,
+            refine_factor: None,
+            upper_bound: None,
+            vector: Box::new(vector),
+            vector_column: None,
+            version: None,
+            with_row_id: None,
         }
     }
 }

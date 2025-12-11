@@ -20,7 +20,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -30,15 +32,75 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DescribeTableResponse {
 
+  private String table;
+
+  @Valid private List<String> namespace = new ArrayList<>();
+
   private Long version;
 
   private String location;
 
+  private String tableUri;
+
   private JsonArrowSchema schema;
 
-  @Valid private Map<String, String> properties = new HashMap<>();
-
   @Valid private Map<String, String> storageOptions = new HashMap<>();
+
+  private TableBasicStats stats;
+
+  public DescribeTableResponse table(String table) {
+    this.table = table;
+    return this;
+  }
+
+  /**
+   * Table name
+   *
+   * @return table
+   */
+  @Schema(
+      name = "table",
+      description = "Table name",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("table")
+  public String getTable() {
+    return table;
+  }
+
+  public void setTable(String table) {
+    this.table = table;
+  }
+
+  public DescribeTableResponse namespace(List<String> namespace) {
+    this.namespace = namespace;
+    return this;
+  }
+
+  public DescribeTableResponse addNamespaceItem(String namespaceItem) {
+    if (this.namespace == null) {
+      this.namespace = new ArrayList<>();
+    }
+    this.namespace.add(namespaceItem);
+    return this;
+  }
+
+  /**
+   * The namespace identifier as a list of parts
+   *
+   * @return namespace
+   */
+  @Schema(
+      name = "namespace",
+      description = "The namespace identifier as a list of parts",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("namespace")
+  public List<String> getNamespace() {
+    return namespace;
+  }
+
+  public void setNamespace(List<String> namespace) {
+    this.namespace = namespace;
+  }
 
   public DescribeTableResponse version(Long version) {
     this.version = version;
@@ -67,11 +129,14 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Get location
+   * Table storage location (e.g., S3/GCS path)
    *
    * @return location
    */
-  @Schema(name = "location", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "location",
+      description = "Table storage location (e.g., S3/GCS path)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("location")
   public String getLocation() {
     return location;
@@ -79,6 +144,29 @@ public class DescribeTableResponse {
 
   public void setLocation(String location) {
     this.location = location;
+  }
+
+  public DescribeTableResponse tableUri(String tableUri) {
+    this.tableUri = tableUri;
+    return this;
+  }
+
+  /**
+   * Table URI. Unlike location, this field must be a complete and valid URI
+   *
+   * @return tableUri
+   */
+  @Schema(
+      name = "table_uri",
+      description = "Table URI. Unlike location, this field must be a complete and valid URI ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("table_uri")
+  public String getTableUri() {
+    return tableUri;
+  }
+
+  public void setTableUri(String tableUri) {
+    this.tableUri = tableUri;
   }
 
   public DescribeTableResponse schema(JsonArrowSchema schema) {
@@ -100,34 +188,6 @@ public class DescribeTableResponse {
 
   public void setSchema(JsonArrowSchema schema) {
     this.schema = schema;
-  }
-
-  public DescribeTableResponse properties(Map<String, String> properties) {
-    this.properties = properties;
-    return this;
-  }
-
-  public DescribeTableResponse putPropertiesItem(String key, String propertiesItem) {
-    if (this.properties == null) {
-      this.properties = new HashMap<>();
-    }
-    this.properties.put(key, propertiesItem);
-    return this;
-  }
-
-  /**
-   * Get properties
-   *
-   * @return properties
-   */
-  @Schema(name = "properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("properties")
-  public Map<String, String> getProperties() {
-    return properties;
-  }
-
-  public void setProperties(Map<String, String> properties) {
-    this.properties = properties;
   }
 
   public DescribeTableResponse storageOptions(Map<String, String> storageOptions) {
@@ -163,6 +223,30 @@ public class DescribeTableResponse {
     this.storageOptions = storageOptions;
   }
 
+  public DescribeTableResponse stats(TableBasicStats stats) {
+    this.stats = stats;
+    return this;
+  }
+
+  /**
+   * Table statistics
+   *
+   * @return stats
+   */
+  @Valid
+  @Schema(
+      name = "stats",
+      description = "Table statistics",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("stats")
+  public TableBasicStats getStats() {
+    return stats;
+  }
+
+  public void setStats(TableBasicStats stats) {
+    this.stats = stats;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -172,27 +256,34 @@ public class DescribeTableResponse {
       return false;
     }
     DescribeTableResponse describeTableResponse = (DescribeTableResponse) o;
-    return Objects.equals(this.version, describeTableResponse.version)
+    return Objects.equals(this.table, describeTableResponse.table)
+        && Objects.equals(this.namespace, describeTableResponse.namespace)
+        && Objects.equals(this.version, describeTableResponse.version)
         && Objects.equals(this.location, describeTableResponse.location)
+        && Objects.equals(this.tableUri, describeTableResponse.tableUri)
         && Objects.equals(this.schema, describeTableResponse.schema)
-        && Objects.equals(this.properties, describeTableResponse.properties)
-        && Objects.equals(this.storageOptions, describeTableResponse.storageOptions);
+        && Objects.equals(this.storageOptions, describeTableResponse.storageOptions)
+        && Objects.equals(this.stats, describeTableResponse.stats);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version, location, schema, properties, storageOptions);
+    return Objects.hash(
+        table, namespace, version, location, tableUri, schema, storageOptions, stats);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeTableResponse {\n");
+    sb.append("    table: ").append(toIndentedString(table)).append("\n");
+    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    tableUri: ").append(toIndentedString(tableUri)).append("\n");
     sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
-    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
+    sb.append("    stats: ").append(toIndentedString(stats)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
@@ -29,8 +29,9 @@ class CreateTableIndexRequest(BaseModel):
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
     column: StrictStr = Field(description="Name of the column to create index on")
-    index_type: StrictStr = Field(description="Type of index to create")
-    metric_type: Optional[StrictStr] = Field(default=None, description="Distance metric type for vector indexes")
+    index_type: StrictStr = Field(description="Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS)")
+    name: Optional[StrictStr] = Field(default=None, description="Optional name for the index. If not provided, a name will be auto-generated.")
+    distance_type: Optional[StrictStr] = Field(default=None, description="Distance metric type for vector indexes (e.g., l2, cosine, dot)")
     with_position: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for position tracking")
     base_tokenizer: Optional[StrictStr] = Field(default=None, description="Optional FTS parameter for base tokenizer")
     language: Optional[StrictStr] = Field(default=None, description="Optional FTS parameter for language")
@@ -39,24 +40,7 @@ class CreateTableIndexRequest(BaseModel):
     stem: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for stemming")
     remove_stop_words: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for stop word removal")
     ascii_folding: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for ASCII folding")
-    __properties: ClassVar[List[str]] = ["id", "column", "index_type", "metric_type", "with_position", "base_tokenizer", "language", "max_token_length", "lower_case", "stem", "remove_stop_words", "ascii_folding"]
-
-    @field_validator('index_type')
-    def index_type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['BTREE', 'BITMAP', 'LABEL_LIST', 'IVF_FLAT', 'IVF_PQ', 'IVF_HNSW_SQ', 'FTS']):
-            raise ValueError("must be one of enum values ('BTREE', 'BITMAP', 'LABEL_LIST', 'IVF_FLAT', 'IVF_PQ', 'IVF_HNSW_SQ', 'FTS')")
-        return value
-
-    @field_validator('metric_type')
-    def metric_type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['l2', 'cosine', 'dot']):
-            raise ValueError("must be one of enum values ('l2', 'cosine', 'dot')")
-        return value
+    __properties: ClassVar[List[str]] = ["id", "column", "index_type", "name", "distance_type", "with_position", "base_tokenizer", "language", "max_token_length", "lower_case", "stem", "remove_stop_words", "ascii_folding"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -112,7 +96,8 @@ class CreateTableIndexRequest(BaseModel):
             "id": obj.get("id"),
             "column": obj.get("column"),
             "index_type": obj.get("index_type"),
-            "metric_type": obj.get("metric_type"),
+            "name": obj.get("name"),
+            "distance_type": obj.get("distance_type"),
             "with_position": obj.get("with_position"),
             "base_tokenizer": obj.get("base_tokenizer"),
             "language": obj.get("language"),

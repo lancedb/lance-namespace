@@ -83,7 +83,7 @@ pub enum UpdateTableTagError {
 
 
 /// Create a new tag for table `id` that points to a specific version. 
-pub async fn create_table_tag(configuration: &configuration::Configuration, id: &str, create_table_tag_request: models::CreateTableTagRequest, delimiter: Option<&str>) -> Result<(), Error<CreateTableTagError>> {
+pub async fn create_table_tag(configuration: &configuration::Configuration, id: &str, create_table_tag_request: models::CreateTableTagRequest, delimiter: Option<&str>) -> Result<models::CreateTableTagResponse, Error<CreateTableTagError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_create_table_tag_request = create_table_tag_request;
@@ -98,15 +98,40 @@ pub async fn create_table_tag(configuration: &configuration::Configuration, id: 
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_create_table_tag_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
 
     let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
 
     if !status.is_client_error() && !status.is_server_error() {
-        Ok(())
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::CreateTableTagResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::CreateTableTagResponse`")))),
+        }
     } else {
         let content = resp.text().await?;
         let entity: Option<CreateTableTagError> = serde_json::from_str(&content).ok();
@@ -115,7 +140,7 @@ pub async fn create_table_tag(configuration: &configuration::Configuration, id: 
 }
 
 /// Delete an existing tag from table `id`. 
-pub async fn delete_table_tag(configuration: &configuration::Configuration, id: &str, delete_table_tag_request: models::DeleteTableTagRequest, delimiter: Option<&str>) -> Result<(), Error<DeleteTableTagError>> {
+pub async fn delete_table_tag(configuration: &configuration::Configuration, id: &str, delete_table_tag_request: models::DeleteTableTagRequest, delimiter: Option<&str>) -> Result<models::DeleteTableTagResponse, Error<DeleteTableTagError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_delete_table_tag_request = delete_table_tag_request;
@@ -130,15 +155,40 @@ pub async fn delete_table_tag(configuration: &configuration::Configuration, id: 
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_delete_table_tag_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
 
     let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
 
     if !status.is_client_error() && !status.is_server_error() {
-        Ok(())
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::DeleteTableTagResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::DeleteTableTagResponse`")))),
+        }
     } else {
         let content = resp.text().await?;
         let entity: Option<DeleteTableTagError> = serde_json::from_str(&content).ok();
@@ -162,6 +212,20 @@ pub async fn get_table_tag_version(configuration: &configuration::Configuration,
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_get_table_tag_version_request);
 
     let req = req_builder.build()?;
@@ -189,7 +253,7 @@ pub async fn get_table_tag_version(configuration: &configuration::Configuration,
     }
 }
 
-/// List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTableTagsRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+/// List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableTagsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 pub async fn list_table_tags(configuration: &configuration::Configuration, id: &str, delimiter: Option<&str>, page_token: Option<&str>, limit: Option<i32>) -> Result<models::ListTableTagsResponse, Error<ListTableTagsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -198,7 +262,7 @@ pub async fn list_table_tags(configuration: &configuration::Configuration, id: &
     let p_limit = limit;
 
     let uri_str = format!("{}/v1/table/{id}/tags/list", configuration.base_path, id=crate::apis::urlencode(p_id));
-    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
     if let Some(ref param_value) = p_delimiter {
         req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
@@ -212,6 +276,20 @@ pub async fn list_table_tags(configuration: &configuration::Configuration, id: &
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
@@ -239,7 +317,7 @@ pub async fn list_table_tags(configuration: &configuration::Configuration, id: &
 }
 
 /// Update an existing tag for table `id` to point to a different version. 
-pub async fn update_table_tag(configuration: &configuration::Configuration, id: &str, update_table_tag_request: models::UpdateTableTagRequest, delimiter: Option<&str>) -> Result<(), Error<UpdateTableTagError>> {
+pub async fn update_table_tag(configuration: &configuration::Configuration, id: &str, update_table_tag_request: models::UpdateTableTagRequest, delimiter: Option<&str>) -> Result<models::UpdateTableTagResponse, Error<UpdateTableTagError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_update_table_tag_request = update_table_tag_request;
@@ -254,15 +332,40 @@ pub async fn update_table_tag(configuration: &configuration::Configuration, id: 
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_update_table_tag_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
 
     let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
 
     if !status.is_client_error() && !status.is_server_error() {
-        Ok(())
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::UpdateTableTagResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::UpdateTableTagResponse`")))),
+        }
     } else {
         let content = resp.text().await?;
         let entity: Option<UpdateTableTagError> = serde_json::from_str(&content).ok();

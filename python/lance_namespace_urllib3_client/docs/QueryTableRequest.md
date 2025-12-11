@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **List[str]** |  | [optional] 
 **bypass_vector_index** | **bool** | Whether to bypass vector index | [optional] 
-**columns** | **List[str]** | Optional list of columns to return | [optional] 
+**columns** | [**QueryTableRequestColumns**](QueryTableRequestColumns.md) |  | [optional] 
 **distance_type** | **str** | Distance metric to use | [optional] 
 **ef** | **int** | Search effort parameter for HNSW index | [optional] 
 **fast_search** | **bool** | Whether to use fast search | [optional] 

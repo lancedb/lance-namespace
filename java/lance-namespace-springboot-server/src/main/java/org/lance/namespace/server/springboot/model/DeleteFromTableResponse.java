@@ -27,15 +27,31 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DeleteFromTableResponse {
 
+  private String transactionId;
+
   private Long version;
 
-  public DeleteFromTableResponse() {
-    super();
+  public DeleteFromTableResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
+    return this;
   }
 
-  /** Constructor with only required parameters */
-  public DeleteFromTableResponse(Long version) {
-    this.version = version;
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @Schema(
+      name = "transaction_id",
+      description = "Optional transaction identifier",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
   }
 
   public DeleteFromTableResponse version(Long version) {
@@ -48,12 +64,11 @@ public class DeleteFromTableResponse {
    *
    * @return version
    */
-  @NotNull
   @Min(0L)
   @Schema(
       name = "version",
       description = "The commit version associated with the operation",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("version")
   public Long getVersion() {
     return version;
@@ -72,18 +87,20 @@ public class DeleteFromTableResponse {
       return false;
     }
     DeleteFromTableResponse deleteFromTableResponse = (DeleteFromTableResponse) o;
-    return Objects.equals(this.version, deleteFromTableResponse.version);
+    return Objects.equals(this.transactionId, deleteFromTableResponse.transactionId)
+        && Objects.equals(this.version, deleteFromTableResponse.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version);
+    return Objects.hash(transactionId, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeleteFromTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
     return sb.toString();

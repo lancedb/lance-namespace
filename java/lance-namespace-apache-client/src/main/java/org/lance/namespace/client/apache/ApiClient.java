@@ -13,7 +13,10 @@
  */
 package org.lance.namespace.client.apache;
 
+import org.lance.namespace.client.apache.auth.ApiKeyAuth;
 import org.lance.namespace.client.apache.auth.Authentication;
+import org.lance.namespace.client.apache.auth.HttpBearerAuth;
+import org.lance.namespace.client.apache.auth.OAuth;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -69,6 +72,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -161,6 +165,9 @@ public class ApiClient extends JavaTimeFormatter {
 
     // Setup authentications (key: authentication name, value: authentication).
     authentications = new HashMap<String, Authentication>();
+    authentications.put("OAuth2", new OAuth());
+    authentications.put("BearerAuth", new HttpBearerAuth("bearer"));
+    authentications.put("ApiKeyAuth", new ApiKeyAuth("header", "x-api-key"));
     // Prevent the authentications from being modified.
     authentications = Collections.unmodifiableMap(authentications);
 
@@ -321,6 +328,85 @@ public class ApiClient extends JavaTimeFormatter {
    */
   public String getTempFolderPath() {
     return tempFolderPath;
+  }
+
+  /**
+   * Helper method to set access token for the first Bearer authentication.
+   *
+   * @param bearerToken Bearer token
+   * @return API client
+   */
+  public ApiClient setBearerToken(String bearerToken) {
+    for (Authentication auth : authentications.values()) {
+      if (auth instanceof HttpBearerAuth) {
+        ((HttpBearerAuth) auth).setBearerToken(bearerToken);
+        return this;
+      }
+    }
+    throw new RuntimeException("No Bearer authentication configured!");
+  }
+
+  /**
+   * Helper method to set the supplier of access tokens for Bearer authentication.
+   *
+   * @param tokenSupplier the token supplier function
+   */
+  public void setBearerToken(Supplier<String> tokenSupplier) {
+    for (Authentication auth : authentications.values()) {
+      if (auth instanceof HttpBearerAuth) {
+        ((HttpBearerAuth) auth).setBearerToken(tokenSupplier);
+        return;
+      }
+    }
+    throw new RuntimeException("No Bearer authentication configured!");
+  }
+
+  /**
+   * Helper method to set API key value for the first API key authentication.
+   *
+   * @param apiKey the API key
+   * @return API client
+   */
+  public ApiClient setApiKey(String apiKey) {
+    for (Authentication auth : authentications.values()) {
+      if (auth instanceof ApiKeyAuth) {
+        ((ApiKeyAuth) auth).setApiKey(apiKey);
+        return this;
+      }
+    }
+    throw new RuntimeException("No API key authentication configured!");
+  }
+
+  /**
+   * Helper method to set API key prefix for the first API key authentication.
+   *
+   * @param apiKeyPrefix API key prefix
+   * @return API client
+   */
+  public ApiClient setApiKeyPrefix(String apiKeyPrefix) {
+    for (Authentication auth : authentications.values()) {
+      if (auth instanceof ApiKeyAuth) {
+        ((ApiKeyAuth) auth).setApiKeyPrefix(apiKeyPrefix);
+        return this;
+      }
+    }
+    throw new RuntimeException("No API key authentication configured!");
+  }
+
+  /**
+   * Helper method to set access token for the first OAuth2 authentication.
+   *
+   * @param accessToken Access token
+   * @return API client
+   */
+  public ApiClient setAccessToken(String accessToken) {
+    for (Authentication auth : authentications.values()) {
+      if (auth instanceof OAuth) {
+        ((OAuth) auth).setAccessToken(accessToken);
+        return this;
+      }
+    }
+    throw new RuntimeException("No OAuth2 authentication configured!");
   }
 
   /**

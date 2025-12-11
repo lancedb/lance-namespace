@@ -25,6 +25,9 @@ pub struct DescribeTableIndexStatsResponse {
     /// Number of unindexed rows
     #[serde(rename = "num_unindexed_rows", skip_serializing_if = "Option::is_none")]
     pub num_unindexed_rows: Option<i64>,
+    /// Number of indices
+    #[serde(rename = "num_indices", skip_serializing_if = "Option::is_none")]
+    pub num_indices: Option<i32>,
 }
 
 impl DescribeTableIndexStatsResponse {
@@ -34,6 +37,7 @@ impl DescribeTableIndexStatsResponse {
             index_type: None,
             num_indexed_rows: None,
             num_unindexed_rows: None,
+            num_indices: None,
         }
     }
 }

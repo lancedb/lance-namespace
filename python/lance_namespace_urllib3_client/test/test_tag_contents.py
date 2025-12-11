@@ -35,11 +35,14 @@ class TestTagContents(unittest.TestCase):
         model = TagContents()
         if include_optional:
             return TagContents(
-                version = 0
+                branch = '',
+                version = 0,
+                manifest_size = 0
             )
         else:
             return TagContents(
                 version = 0,
+                manifest_size = 0,
         )
         """
 

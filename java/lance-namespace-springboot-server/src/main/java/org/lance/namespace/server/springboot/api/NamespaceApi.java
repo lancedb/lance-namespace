@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
@@ -168,6 +169,11 @@ public interface NamespaceApi {
                   mediaType = "application/json",
                   schema = @Schema(implementation = ErrorResponse.class))
             })
+      },
+      security = {
+        @SecurityRequirement(name = "OAuth2"),
+        @SecurityRequirement(name = "ApiKeyAuth"),
+        @SecurityRequirement(name = "BearerAuth")
       })
   @RequestMapping(
       method = RequestMethod.POST,
@@ -200,7 +206,8 @@ public interface NamespaceApi {
             request -> {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                  String exampleString = "{ \"properties\" : { \"key\" : \"properties\" } }";
+                  String exampleString =
+                      "{ \"transaction_id\" : \"transaction_id\", \"properties\" : { \"key\" : \"properties\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -350,6 +357,11 @@ public interface NamespaceApi {
                   mediaType = "application/json",
                   schema = @Schema(implementation = ErrorResponse.class))
             })
+      },
+      security = {
+        @SecurityRequirement(name = "OAuth2"),
+        @SecurityRequirement(name = "ApiKeyAuth"),
+        @SecurityRequirement(name = "BearerAuth")
       })
   @RequestMapping(
       method = RequestMethod.POST,
@@ -383,7 +395,7 @@ public interface NamespaceApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"properties\" : { \"owner\" : \"Ralph\", \"created_at\" : \"1452120468\" } }";
+                      "{ \"id\" : [ \"id\", \"id\" ], \"properties\" : { \"owner\" : \"Ralph\", \"created_at\" : \"1452120468\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -528,6 +540,11 @@ public interface NamespaceApi {
                   mediaType = "application/json",
                   schema = @Schema(implementation = ErrorResponse.class))
             })
+      },
+      security = {
+        @SecurityRequirement(name = "OAuth2"),
+        @SecurityRequirement(name = "ApiKeyAuth"),
+        @SecurityRequirement(name = "BearerAuth")
       })
   @RequestMapping(
       method = RequestMethod.POST,
@@ -561,7 +578,7 @@ public interface NamespaceApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"properties\" : { \"key\" : \"properties\" }, \"transactionId\" : [ \"transactionId\", \"transactionId\" ] }";
+                      "{ \"transaction_id\" : [ \"transaction_id\", \"transaction_id\" ], \"properties\" : { \"key\" : \"properties\" } }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -627,8 +644,8 @@ public interface NamespaceApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @param pageToken (optional)
-   * @param limit (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
    * @return A list of namespaces (status code 200) or Indicates a bad request error. It could be
    *     caused by an unexpected request body format or other forms of request validation failure,
    *     such as invalid json. Usually serves application/json content, although in some cases
@@ -719,6 +736,11 @@ public interface NamespaceApi {
                   mediaType = "application/json",
                   schema = @Schema(implementation = ErrorResponse.class))
             })
+      },
+      security = {
+        @SecurityRequirement(name = "OAuth2"),
+        @SecurityRequirement(name = "ApiKeyAuth"),
+        @SecurityRequirement(name = "BearerAuth")
       })
   @RequestMapping(
       method = RequestMethod.GET,
@@ -741,11 +763,17 @@ public interface NamespaceApi {
           @Valid
           @RequestParam(value = "delimiter", required = false)
           Optional<String> delimiter,
-      @Parameter(name = "page_token", description = "", in = ParameterIn.QUERY)
+      @Parameter(
+              name = "page_token",
+              description = "Pagination token from a previous request",
+              in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "page_token", required = false)
           Optional<String> pageToken,
-      @Parameter(name = "limit", description = "", in = ParameterIn.QUERY)
+      @Parameter(
+              name = "limit",
+              description = "Maximum number of items to return",
+              in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "limit", required = false)
           Optional<Integer> limit) {
@@ -821,8 +849,8 @@ public interface NamespaceApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @param pageToken (optional)
-   * @param limit (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
    * @return A list of tables (status code 200) or Indicates a bad request error. It could be caused
    *     by an unexpected request body format or other forms of request validation failure, such as
    *     invalid json. Usually serves application/json content, although in some cases simple
@@ -913,6 +941,11 @@ public interface NamespaceApi {
                   mediaType = "application/json",
                   schema = @Schema(implementation = ErrorResponse.class))
             })
+      },
+      security = {
+        @SecurityRequirement(name = "OAuth2"),
+        @SecurityRequirement(name = "ApiKeyAuth"),
+        @SecurityRequirement(name = "BearerAuth")
       })
   @RequestMapping(
       method = RequestMethod.GET,
@@ -935,11 +968,17 @@ public interface NamespaceApi {
           @Valid
           @RequestParam(value = "delimiter", required = false)
           Optional<String> delimiter,
-      @Parameter(name = "page_token", description = "", in = ParameterIn.QUERY)
+      @Parameter(
+              name = "page_token",
+              description = "Pagination token from a previous request",
+              in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "page_token", required = false)
           Optional<String> pageToken,
-      @Parameter(name = "limit", description = "", in = ParameterIn.QUERY)
+      @Parameter(
+              name = "limit",
+              description = "Maximum number of items to return",
+              in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "limit", required = false)
           Optional<Integer> limit) {
@@ -1086,6 +1125,11 @@ public interface NamespaceApi {
                   mediaType = "application/json",
                   schema = @Schema(implementation = ErrorResponse.class))
             })
+      },
+      security = {
+        @SecurityRequirement(name = "OAuth2"),
+        @SecurityRequirement(name = "ApiKeyAuth"),
+        @SecurityRequirement(name = "BearerAuth")
       })
   @RequestMapping(
       method = RequestMethod.POST,

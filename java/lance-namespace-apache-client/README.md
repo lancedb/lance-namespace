@@ -94,6 +94,20 @@ public class DataApiExample {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
         
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
+
         DataApi apiInstance = new DataApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         AlterTableAddColumnsRequest alterTableAddColumnsRequest = new AlterTableAddColumnsRequest(); // AlterTableAddColumnsRequest | 
@@ -130,6 +144,7 @@ Class | Method | HTTP request | Description
 *DataApi* | [**queryTable**](docs/DataApi.md#queryTable) | **POST** /v1/table/{id}/query | Query a table
 *DataApi* | [**updateTable**](docs/DataApi.md#updateTable) | **POST** /v1/table/{id}/update | Update rows in a table
 *IndexApi* | [**createTableIndex**](docs/IndexApi.md#createTableIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
+*IndexApi* | [**createTableScalarIndex**](docs/IndexApi.md#createTableScalarIndex) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *IndexApi* | [**describeTableIndexStats**](docs/IndexApi.md#describeTableIndexStats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get table index statistics
 *IndexApi* | [**dropTableIndex**](docs/IndexApi.md#dropTableIndex) | **POST** /v1/table/{id}/index/{index_name}/drop | Drop a specific index
 *IndexApi* | [**listTableIndices**](docs/IndexApi.md#listTableIndices) | **POST** /v1/table/{id}/index/list | List indexes on a table
@@ -139,6 +154,7 @@ Class | Method | HTTP request | Description
 *MetadataApi* | [**createEmptyTable**](docs/MetadataApi.md#createEmptyTable) | **POST** /v1/table/{id}/create-empty | Create an empty table
 *MetadataApi* | [**createNamespace**](docs/MetadataApi.md#createNamespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
 *MetadataApi* | [**createTableIndex**](docs/MetadataApi.md#createTableIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
+*MetadataApi* | [**createTableScalarIndex**](docs/MetadataApi.md#createTableScalarIndex) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *MetadataApi* | [**createTableTag**](docs/MetadataApi.md#createTableTag) | **POST** /v1/table/{id}/tags/create | Create a new tag
 *MetadataApi* | [**deleteTableTag**](docs/MetadataApi.md#deleteTableTag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
 *MetadataApi* | [**deregisterTable**](docs/MetadataApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table
@@ -153,13 +169,15 @@ Class | Method | HTTP request | Description
 *MetadataApi* | [**getTableTagVersion**](docs/MetadataApi.md#getTableTagVersion) | **POST** /v1/table/{id}/tags/version | Get version for a specific tag
 *MetadataApi* | [**listNamespaces**](docs/MetadataApi.md#listNamespaces) | **GET** /v1/namespace/{id}/list | List namespaces
 *MetadataApi* | [**listTableIndices**](docs/MetadataApi.md#listTableIndices) | **POST** /v1/table/{id}/index/list | List indexes on a table
-*MetadataApi* | [**listTableTags**](docs/MetadataApi.md#listTableTags) | **GET** /v1/table/{id}/tags/list | List all tags for a table
+*MetadataApi* | [**listTableTags**](docs/MetadataApi.md#listTableTags) | **POST** /v1/table/{id}/tags/list | List all tags for a table
 *MetadataApi* | [**listTableVersions**](docs/MetadataApi.md#listTableVersions) | **POST** /v1/table/{id}/version/list | List all versions of a table
 *MetadataApi* | [**listTables**](docs/MetadataApi.md#listTables) | **GET** /v1/namespace/{id}/table/list | List tables in a namespace
 *MetadataApi* | [**namespaceExists**](docs/MetadataApi.md#namespaceExists) | **POST** /v1/namespace/{id}/exists | Check if a namespace exists
 *MetadataApi* | [**registerTable**](docs/MetadataApi.md#registerTable) | **POST** /v1/table/{id}/register | Register a table to a namespace
+*MetadataApi* | [**renameTable**](docs/MetadataApi.md#renameTable) | **POST** /v1/table/{id}/rename | Rename a table
 *MetadataApi* | [**restoreTable**](docs/MetadataApi.md#restoreTable) | **POST** /v1/table/{id}/restore | Restore table to a specific version
 *MetadataApi* | [**tableExists**](docs/MetadataApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists
+*MetadataApi* | [**updateTableSchemaMetadata**](docs/MetadataApi.md#updateTableSchemaMetadata) | **POST** /v1/table/{id}/schema_metadata/update | Update table schema metadata
 *MetadataApi* | [**updateTableTag**](docs/MetadataApi.md#updateTableTag) | **POST** /v1/table/{id}/tags/update | Update a tag to point to a different version
 *NamespaceApi* | [**createNamespace**](docs/NamespaceApi.md#createNamespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
 *NamespaceApi* | [**describeNamespace**](docs/NamespaceApi.md#describeNamespace) | **POST** /v1/namespace/{id}/describe | Describe a namespace
@@ -175,6 +193,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**createEmptyTable**](docs/TableApi.md#createEmptyTable) | **POST** /v1/table/{id}/create-empty | Create an empty table
 *TableApi* | [**createTable**](docs/TableApi.md#createTable) | **POST** /v1/table/{id}/create | Create a table with the given name
 *TableApi* | [**createTableIndex**](docs/TableApi.md#createTableIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
+*TableApi* | [**createTableScalarIndex**](docs/TableApi.md#createTableScalarIndex) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *TableApi* | [**createTableTag**](docs/TableApi.md#createTableTag) | **POST** /v1/table/{id}/tags/create | Create a new tag
 *TableApi* | [**deleteFromTable**](docs/TableApi.md#deleteFromTable) | **POST** /v1/table/{id}/delete | Delete rows from a table
 *TableApi* | [**deleteTableTag**](docs/TableApi.md#deleteTableTag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
@@ -187,21 +206,24 @@ Class | Method | HTTP request | Description
 *TableApi* | [**getTableStats**](docs/TableApi.md#getTableStats) | **POST** /v1/table/{id}/stats | Get table statistics
 *TableApi* | [**getTableTagVersion**](docs/TableApi.md#getTableTagVersion) | **POST** /v1/table/{id}/tags/version | Get version for a specific tag
 *TableApi* | [**insertIntoTable**](docs/TableApi.md#insertIntoTable) | **POST** /v1/table/{id}/insert | Insert records into a table
+*TableApi* | [**listAllTables**](docs/TableApi.md#listAllTables) | **GET** /v1/table | List all tables
 *TableApi* | [**listTableIndices**](docs/TableApi.md#listTableIndices) | **POST** /v1/table/{id}/index/list | List indexes on a table
-*TableApi* | [**listTableTags**](docs/TableApi.md#listTableTags) | **GET** /v1/table/{id}/tags/list | List all tags for a table
+*TableApi* | [**listTableTags**](docs/TableApi.md#listTableTags) | **POST** /v1/table/{id}/tags/list | List all tags for a table
 *TableApi* | [**listTableVersions**](docs/TableApi.md#listTableVersions) | **POST** /v1/table/{id}/version/list | List all versions of a table
 *TableApi* | [**listTables**](docs/TableApi.md#listTables) | **GET** /v1/namespace/{id}/table/list | List tables in a namespace
 *TableApi* | [**mergeInsertIntoTable**](docs/TableApi.md#mergeInsertIntoTable) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 *TableApi* | [**queryTable**](docs/TableApi.md#queryTable) | **POST** /v1/table/{id}/query | Query a table
 *TableApi* | [**registerTable**](docs/TableApi.md#registerTable) | **POST** /v1/table/{id}/register | Register a table to a namespace
+*TableApi* | [**renameTable**](docs/TableApi.md#renameTable) | **POST** /v1/table/{id}/rename | Rename a table
 *TableApi* | [**restoreTable**](docs/TableApi.md#restoreTable) | **POST** /v1/table/{id}/restore | Restore table to a specific version
 *TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists
 *TableApi* | [**updateTable**](docs/TableApi.md#updateTable) | **POST** /v1/table/{id}/update | Update rows in a table
+*TableApi* | [**updateTableSchemaMetadata**](docs/TableApi.md#updateTableSchemaMetadata) | **POST** /v1/table/{id}/schema_metadata/update | Update table schema metadata
 *TableApi* | [**updateTableTag**](docs/TableApi.md#updateTableTag) | **POST** /v1/table/{id}/tags/update | Update a tag to point to a different version
 *TagApi* | [**createTableTag**](docs/TagApi.md#createTableTag) | **POST** /v1/table/{id}/tags/create | Create a new tag
 *TagApi* | [**deleteTableTag**](docs/TagApi.md#deleteTableTag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
 *TagApi* | [**getTableTagVersion**](docs/TagApi.md#getTableTagVersion) | **POST** /v1/table/{id}/tags/version | Get version for a specific tag
-*TagApi* | [**listTableTags**](docs/TagApi.md#listTableTags) | **GET** /v1/table/{id}/tags/list | List all tags for a table
+*TagApi* | [**listTableTags**](docs/TagApi.md#listTableTags) | **POST** /v1/table/{id}/tags/list | List all tags for a table
 *TagApi* | [**updateTableTag**](docs/TagApi.md#updateTableTag) | **POST** /v1/table/{id}/tags/update | Update a tag to point to a different version
 *TransactionApi* | [**alterTransaction**](docs/TransactionApi.md#alterTransaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
 *TransactionApi* | [**describeTransaction**](docs/TransactionApi.md#describeTransaction) | **POST** /v1/transaction/{id}/describe | Describe information about a transaction
@@ -209,6 +231,8 @@ Class | Method | HTTP request | Description
 
 ## Documentation for Models
 
+ - [AddVirtualColumnEntry](docs/AddVirtualColumnEntry.md)
+ - [AlterColumnsEntry](docs/AlterColumnsEntry.md)
  - [AlterTableAddColumnsRequest](docs/AlterTableAddColumnsRequest.md)
  - [AlterTableAddColumnsResponse](docs/AlterTableAddColumnsResponse.md)
  - [AlterTableAlterColumnsRequest](docs/AlterTableAlterColumnsRequest.md)
@@ -221,11 +245,11 @@ Class | Method | HTTP request | Description
  - [AlterTransactionSetProperty](docs/AlterTransactionSetProperty.md)
  - [AlterTransactionSetStatus](docs/AlterTransactionSetStatus.md)
  - [AlterTransactionUnsetProperty](docs/AlterTransactionUnsetProperty.md)
+ - [AlterVirtualColumnEntry](docs/AlterVirtualColumnEntry.md)
  - [AnalyzeTableQueryPlanRequest](docs/AnalyzeTableQueryPlanRequest.md)
  - [AnalyzeTableQueryPlanResponse](docs/AnalyzeTableQueryPlanResponse.md)
  - [BooleanQuery](docs/BooleanQuery.md)
  - [BoostQuery](docs/BoostQuery.md)
- - [ColumnAlteration](docs/ColumnAlteration.md)
  - [CountTableRowsRequest](docs/CountTableRowsRequest.md)
  - [CreateEmptyTableRequest](docs/CreateEmptyTableRequest.md)
  - [CreateEmptyTableResponse](docs/CreateEmptyTableResponse.md)
@@ -235,10 +259,13 @@ Class | Method | HTTP request | Description
  - [CreateTableIndexResponse](docs/CreateTableIndexResponse.md)
  - [CreateTableRequest](docs/CreateTableRequest.md)
  - [CreateTableResponse](docs/CreateTableResponse.md)
+ - [CreateTableScalarIndexResponse](docs/CreateTableScalarIndexResponse.md)
  - [CreateTableTagRequest](docs/CreateTableTagRequest.md)
+ - [CreateTableTagResponse](docs/CreateTableTagResponse.md)
  - [DeleteFromTableRequest](docs/DeleteFromTableRequest.md)
  - [DeleteFromTableResponse](docs/DeleteFromTableResponse.md)
  - [DeleteTableTagRequest](docs/DeleteTableTagRequest.md)
+ - [DeleteTableTagResponse](docs/DeleteTableTagResponse.md)
  - [DeregisterTableRequest](docs/DeregisterTableRequest.md)
  - [DeregisterTableResponse](docs/DeregisterTableResponse.md)
  - [DescribeNamespaceRequest](docs/DescribeNamespaceRequest.md)
@@ -258,6 +285,8 @@ Class | Method | HTTP request | Description
  - [ErrorResponse](docs/ErrorResponse.md)
  - [ExplainTableQueryPlanRequest](docs/ExplainTableQueryPlanRequest.md)
  - [ExplainTableQueryPlanResponse](docs/ExplainTableQueryPlanResponse.md)
+ - [FragmentStats](docs/FragmentStats.md)
+ - [FragmentSummary](docs/FragmentSummary.md)
  - [FtsQuery](docs/FtsQuery.md)
  - [GetTableStatsRequest](docs/GetTableStatsRequest.md)
  - [GetTableStatsResponse](docs/GetTableStatsResponse.md)
@@ -273,6 +302,7 @@ Class | Method | HTTP request | Description
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
  - [ListTableIndicesRequest](docs/ListTableIndicesRequest.md)
  - [ListTableIndicesResponse](docs/ListTableIndicesResponse.md)
+ - [ListTableTagsRequest](docs/ListTableTagsRequest.md)
  - [ListTableTagsResponse](docs/ListTableTagsResponse.md)
  - [ListTableVersionsRequest](docs/ListTableVersionsRequest.md)
  - [ListTableVersionsResponse](docs/ListTableVersionsResponse.md)
@@ -287,15 +317,19 @@ Class | Method | HTTP request | Description
  - [Operator](docs/Operator.md)
  - [PhraseQuery](docs/PhraseQuery.md)
  - [QueryTableRequest](docs/QueryTableRequest.md)
+ - [QueryTableRequestColumns](docs/QueryTableRequestColumns.md)
  - [QueryTableRequestFullTextQuery](docs/QueryTableRequestFullTextQuery.md)
  - [QueryTableRequestVector](docs/QueryTableRequestVector.md)
  - [RegisterTableRequest](docs/RegisterTableRequest.md)
  - [RegisterTableResponse](docs/RegisterTableResponse.md)
+ - [RenameTableRequest](docs/RenameTableRequest.md)
+ - [RenameTableResponse](docs/RenameTableResponse.md)
  - [RestoreTableRequest](docs/RestoreTableRequest.md)
  - [RestoreTableResponse](docs/RestoreTableResponse.md)
  - [SetPropertyMode](docs/SetPropertyMode.md)
  - [StringFtsQuery](docs/StringFtsQuery.md)
  - [StructuredFtsQuery](docs/StructuredFtsQuery.md)
+ - [TableBasicStats](docs/TableBasicStats.md)
  - [TableExistsRequest](docs/TableExistsRequest.md)
  - [TableVersion](docs/TableVersion.md)
  - [TagContents](docs/TagContents.md)
@@ -303,13 +337,39 @@ Class | Method | HTTP request | Description
  - [UnsetPropertyMode](docs/UnsetPropertyMode.md)
  - [UpdateTableRequest](docs/UpdateTableRequest.md)
  - [UpdateTableResponse](docs/UpdateTableResponse.md)
+ - [UpdateTableSchemaMetadataRequest](docs/UpdateTableSchemaMetadataRequest.md)
+ - [UpdateTableSchemaMetadataResponse](docs/UpdateTableSchemaMetadataResponse.md)
  - [UpdateTableTagRequest](docs/UpdateTableTagRequest.md)
+ - [UpdateTableTagResponse](docs/UpdateTableTagResponse.md)
 
 
 <a id="documentation-for-authorization"></a>
 ## Documentation for Authorization
 
-Endpoints do not require authorization.
+
+Authentication schemes defined for the API:
+<a id="OAuth2"></a>
+### OAuth2
+
+
+- **Type**: OAuth
+- **Flow**: application
+- **Authorization URL**: 
+- **Scopes**: N/A
+
+<a id="BearerAuth"></a>
+### BearerAuth
+
+
+- **Type**: HTTP Bearer Token authentication
+
+<a id="ApiKeyAuth"></a>
+### ApiKeyAuth
+
+
+- **Type**: API key
+- **API key parameter name**: x-api-key
+- **Location**: HTTP header
 
 
 ## Recommendation

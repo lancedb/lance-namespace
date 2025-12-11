@@ -11,17 +11,19 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
+/// DropTableIndexResponse : Response for drop index operation
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DropTableIndexResponse {
-    /// Version of the table after dropping the index
-    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
-    pub version: Option<i64>,
+    /// Optional transaction identifier
+    #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
 }
 
 impl DropTableIndexResponse {
+    /// Response for drop index operation
     pub fn new() -> DropTableIndexResponse {
         DropTableIndexResponse {
-            version: None,
+            transaction_id: None,
         }
     }
 }

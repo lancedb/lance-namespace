@@ -14,6 +14,9 @@ use serde::{Deserialize, Serialize};
 /// CreateEmptyTableResponse : Response for creating an empty table. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateEmptyTableResponse {
+    /// Optional transaction identifier
+    #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
@@ -27,6 +30,7 @@ impl CreateEmptyTableResponse {
     /// Response for creating an empty table. 
     pub fn new() -> CreateEmptyTableResponse {
         CreateEmptyTableResponse {
+            transaction_id: None,
             location: None,
             properties: None,
             storage_options: None,

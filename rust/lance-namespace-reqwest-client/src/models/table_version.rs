@@ -19,13 +19,17 @@ pub struct TableVersion {
     /// Timestamp when the version was created
     #[serde(rename = "timestamp")]
     pub timestamp: String,
+    /// Key-value pairs of metadata
+    #[serde(rename = "metadata")]
+    pub metadata: std::collections::HashMap<String, String>,
 }
 
 impl TableVersion {
-    pub fn new(version: i64, timestamp: String) -> TableVersion {
+    pub fn new(version: i64, timestamp: String, metadata: std::collections::HashMap<String, String>) -> TableVersion {
         TableVersion {
             version,
             timestamp,
+            metadata,
         }
     }
 }

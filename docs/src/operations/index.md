@@ -47,6 +47,7 @@ See [REST Routes](../rest/catalog-spec.md#rest-routes) for more details.
 | DropNamespace            | 1               | ✓         |       |       | ✓        |      |             |
 | NamespaceExists          | 1               | ✓         |       |       | ✓        |      |             |
 | ListTables               | 1               | ✓         | ✓     |       | ✓        |      |             |
+| ListAllTables            | 1               |           | ✓     |       | ✓        |      |             |
 | RegisterTable            | 1               |           | ✓     |       | ✓        |      |             |
 | DescribeTable            | 1               |           | ✓     |       | ✓        |      |             |
 | TableExists              | 1               |           | ✓     |       | ✓        |      |             |
@@ -61,15 +62,18 @@ See [REST Routes](../rest/catalog-spec.md#rest-routes) for more details.
 | CreateTable              | 1               |           | ✓     |       |          | ✓    |             |
 | CreateEmptyTable         | 1               |           | ✓     |       | ✓        |      |             |
 | CreateTableIndex         | 1               |           | ✓     | ✓     | ✓        |      |             |
+| CreateTableScalarIndex   | 1               |           | ✓     | ✓     | ✓        |      |             |
 | ListTableIndices         | 1               |           | ✓     | ✓     | ✓        |      |             |
 | DescribeTableIndexStats  | 1               |           | ✓     | ✓     | ✓        |      |             |
 | RestoreTable             | 1               |           | ✓     |       | ✓        |      |             |
+| RenameTable              | 1               |           | ✓     |       | ✓        |      |             |
 | ListTableVersions        | 1               |           | ✓     |       | ✓        |      |             |
 | ExplainTableQueryPlan    | 1               |           | ✓     |       |          | ✓    |             |
 | AnalyzeTableQueryPlan    | 1               |           | ✓     |       |          | ✓    |             |
 | AlterTableAddColumns     | 1               |           | ✓     |       |          | ✓    |             |
 | AlterTableAlterColumns   | 1               |           | ✓     |       | ✓        |      |             |
 | AlterTableDropColumns    | 1               |           | ✓     |       | ✓        |      |             |
+| UpdateTableSchemaMetadata | 1               |           | ✓     |       | ✓        |      |             |
 | GetTableStats            | 1               |           | ✓     |       | ✓        |      |             |
 | ListTableTags            | 1               |           | ✓     |       | ✓        |      |             |
 | GetTableTagVersion       | 1               |           | ✓     |       | ✓        |      |             |

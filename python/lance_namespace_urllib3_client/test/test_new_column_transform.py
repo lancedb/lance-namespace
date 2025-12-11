@@ -36,12 +36,20 @@ class TestNewColumnTransform(unittest.TestCase):
         if include_optional:
             return NewColumnTransform(
                 name = '',
-                expression = ''
+                expression = '',
+                virtual_column = lance_namespace_urllib3_client.models.add_virtual_column_entry.AddVirtualColumnEntry(
+                    input_columns = [
+                        ''
+                        ], 
+                    data_type = lance_namespace_urllib3_client.models.data_type.data_type(), 
+                    image = '', 
+                    udf = '', 
+                    udf_name = '', 
+                    udf_version = '', )
             )
         else:
             return NewColumnTransform(
                 name = '',
-                expression = '',
         )
         """
 

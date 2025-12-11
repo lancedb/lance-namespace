@@ -22,13 +22,11 @@ from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.alter_table_add_columns_request import AlterTableAddColumnsRequest
 from lance_namespace_urllib3_client.models.alter_table_add_columns_response import AlterTableAddColumnsResponse
 from lance_namespace_urllib3_client.models.analyze_table_query_plan_request import AnalyzeTableQueryPlanRequest
-from lance_namespace_urllib3_client.models.analyze_table_query_plan_response import AnalyzeTableQueryPlanResponse
 from lance_namespace_urllib3_client.models.count_table_rows_request import CountTableRowsRequest
 from lance_namespace_urllib3_client.models.create_table_response import CreateTableResponse
 from lance_namespace_urllib3_client.models.delete_from_table_request import DeleteFromTableRequest
 from lance_namespace_urllib3_client.models.delete_from_table_response import DeleteFromTableResponse
 from lance_namespace_urllib3_client.models.explain_table_query_plan_request import ExplainTableQueryPlanRequest
-from lance_namespace_urllib3_client.models.explain_table_query_plan_response import ExplainTableQueryPlanResponse
 from lance_namespace_urllib3_client.models.insert_into_table_response import InsertIntoTableResponse
 from lance_namespace_urllib3_client.models.merge_insert_into_table_response import MergeInsertIntoTableResponse
 from lance_namespace_urllib3_client.models.query_table_request import QueryTableRequest
@@ -356,6 +354,9 @@ class DataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -394,10 +395,10 @@ class DataApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> AnalyzeTableQueryPlanResponse:
+    ) -> str:
         """Analyze query execution plan
 
-        Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan. 
+        Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the `AnalyzeTableQueryPlanResponse` JSON object. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -438,7 +439,7 @@ class DataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AnalyzeTableQueryPlanResponse",
+            '200': "str",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -475,10 +476,10 @@ class DataApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[AnalyzeTableQueryPlanResponse]:
+    ) -> ApiResponse[str]:
         """Analyze query execution plan
 
-        Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan. 
+        Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the `AnalyzeTableQueryPlanResponse` JSON object. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -519,7 +520,7 @@ class DataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AnalyzeTableQueryPlanResponse",
+            '200': "str",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -559,7 +560,7 @@ class DataApi:
     ) -> RESTResponseType:
         """Analyze query execution plan
 
-        Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan. 
+        Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the `AnalyzeTableQueryPlanResponse` JSON object. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -600,7 +601,7 @@ class DataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AnalyzeTableQueryPlanResponse",
+            '200': "str",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -679,6 +680,9 @@ class DataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -720,7 +724,7 @@ class DataApi:
     ) -> int:
         """Count rows in a table
 
-        Count the number of rows in table `id` 
+        Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -801,7 +805,7 @@ class DataApi:
     ) -> ApiResponse[int]:
         """Count rows in a table
 
-        Count the number of rows in table `id` 
+        Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -882,7 +886,7 @@ class DataApi:
     ) -> RESTResponseType:
         """Count rows in a table
 
-        Count the number of rows in table `id` 
+        Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1002,6 +1006,9 @@ class DataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -1029,8 +1036,6 @@ class DataApi:
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         mode: Optional[StrictStr] = None,
-        x_lance_table_location: Annotated[Optional[StrictStr], Field(description="URI pointing to root location to create the table at")] = None,
-        x_lance_table_properties: Annotated[Optional[StrictStr], Field(description="JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1046,7 +1051,7 @@ class DataApi:
     ) -> CreateTableResponse:
         """Create a table with the given name
 
-        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
+        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema. If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1056,10 +1061,6 @@ class DataApi:
         :type delimiter: str
         :param mode:
         :type mode: str
-        :param x_lance_table_location: URI pointing to root location to create the table at
-        :type x_lance_table_location: str
-        :param x_lance_table_properties: JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
-        :type x_lance_table_properties: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1087,8 +1088,6 @@ class DataApi:
             body=body,
             delimiter=delimiter,
             mode=mode,
-            x_lance_table_location=x_lance_table_location,
-            x_lance_table_properties=x_lance_table_properties,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1122,8 +1121,6 @@ class DataApi:
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         mode: Optional[StrictStr] = None,
-        x_lance_table_location: Annotated[Optional[StrictStr], Field(description="URI pointing to root location to create the table at")] = None,
-        x_lance_table_properties: Annotated[Optional[StrictStr], Field(description="JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1139,7 +1136,7 @@ class DataApi:
     ) -> ApiResponse[CreateTableResponse]:
         """Create a table with the given name
 
-        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
+        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema. If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1149,10 +1146,6 @@ class DataApi:
         :type delimiter: str
         :param mode:
         :type mode: str
-        :param x_lance_table_location: URI pointing to root location to create the table at
-        :type x_lance_table_location: str
-        :param x_lance_table_properties: JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
-        :type x_lance_table_properties: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1180,8 +1173,6 @@ class DataApi:
             body=body,
             delimiter=delimiter,
             mode=mode,
-            x_lance_table_location=x_lance_table_location,
-            x_lance_table_properties=x_lance_table_properties,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1215,8 +1206,6 @@ class DataApi:
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC data")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         mode: Optional[StrictStr] = None,
-        x_lance_table_location: Annotated[Optional[StrictStr], Field(description="URI pointing to root location to create the table at")] = None,
-        x_lance_table_properties: Annotated[Optional[StrictStr], Field(description="JSON-encoded string map (e.g. { \"owner\": \"jack\" }) ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1232,7 +1221,7 @@ class DataApi:
     ) -> RESTResponseType:
         """Create a table with the given name
 
-        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
+        Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema. If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1242,10 +1231,6 @@ class DataApi:
         :type delimiter: str
         :param mode:
         :type mode: str
-        :param x_lance_table_location: URI pointing to root location to create the table at
-        :type x_lance_table_location: str
-        :param x_lance_table_properties: JSON-encoded string map (e.g. { \"owner\": \"jack\" }) 
-        :type x_lance_table_properties: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1273,8 +1258,6 @@ class DataApi:
             body=body,
             delimiter=delimiter,
             mode=mode,
-            x_lance_table_location=x_lance_table_location,
-            x_lance_table_properties=x_lance_table_properties,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1303,8 +1286,6 @@ class DataApi:
         body,
         delimiter,
         mode,
-        x_lance_table_location,
-        x_lance_table_properties,
         _request_auth,
         _content_type,
         _headers,
@@ -1338,10 +1319,6 @@ class DataApi:
             _query_params.append(('mode', mode))
             
         # process the header parameters
-        if x_lance_table_location is not None:
-            _header_params['x-lance-table-location'] = x_lance_table_location
-        if x_lance_table_properties is not None:
-            _header_params['x-lance-table-properties'] = x_lance_table_properties
         # process the form parameters
         # process the body parameter
         if body is not None:
@@ -1380,6 +1357,9 @@ class DataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -1703,6 +1683,9 @@ class DataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -1741,10 +1724,10 @@ class DataApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ExplainTableQueryPlanResponse:
+    ) -> str:
         """Get query execution plan explanation
 
-        Get the query execution plan for a query against table `id`. Returns a human-readable explanation of how the query will be executed. 
+        Get the query execution plan for a query against table `id`. Returns a human-readable explanation of how the query will be executed.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the `ExplainTableQueryPlanResponse` JSON object. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1785,7 +1768,7 @@ class DataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ExplainTableQueryPlanResponse",
+            '200': "str",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -1822,10 +1805,10 @@ class DataApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ExplainTableQueryPlanResponse]:
+    ) -> ApiResponse[str]:
         """Get query execution plan explanation
 
-        Get the query execution plan for a query against table `id`. Returns a human-readable explanation of how the query will be executed. 
+        Get the query execution plan for a query against table `id`. Returns a human-readable explanation of how the query will be executed.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the `ExplainTableQueryPlanResponse` JSON object. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1866,7 +1849,7 @@ class DataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ExplainTableQueryPlanResponse",
+            '200': "str",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -1906,7 +1889,7 @@ class DataApi:
     ) -> RESTResponseType:
         """Get query execution plan explanation
 
-        Get the query execution plan for a query against table `id`. Returns a human-readable explanation of how the query will be executed. 
+        Get the query execution plan for a query against table `id`. Returns a human-readable explanation of how the query will be executed.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the `ExplainTableQueryPlanResponse` JSON object. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1947,7 +1930,7 @@ class DataApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ExplainTableQueryPlanResponse",
+            '200': "str",
             '400': "ErrorResponse",
             '401': "ErrorResponse",
             '403': "ErrorResponse",
@@ -2026,6 +2009,9 @@ class DataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -2374,6 +2360,9 @@ class DataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -2406,6 +2395,8 @@ class DataApi:
         when_not_matched_insert_all: Annotated[Optional[StrictBool], Field(description="Insert all columns when rows don't match")] = None,
         when_not_matched_by_source_delete: Annotated[Optional[StrictBool], Field(description="Delete all rows from target table that don't match a row in the source table")] = None,
         when_not_matched_by_source_delete_filt: Annotated[Optional[StrictStr], Field(description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true")] = None,
+        timeout: Annotated[Optional[StrictStr], Field(description="Timeout for the operation (e.g., \"30s\", \"5m\")")] = None,
+        use_index: Annotated[Optional[StrictBool], Field(description="Whether to use index for matching rows")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2441,6 +2432,10 @@ class DataApi:
         :type when_not_matched_by_source_delete: bool
         :param when_not_matched_by_source_delete_filt: Delete rows from the target table if there is no match AND the SQL expression evaluates to true
         :type when_not_matched_by_source_delete_filt: str
+        :param timeout: Timeout for the operation (e.g., \"30s\", \"5m\")
+        :type timeout: str
+        :param use_index: Whether to use index for matching rows
+        :type use_index: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2473,6 +2468,8 @@ class DataApi:
             when_not_matched_insert_all=when_not_matched_insert_all,
             when_not_matched_by_source_delete=when_not_matched_by_source_delete,
             when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt,
+            timeout=timeout,
+            use_index=use_index,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2511,6 +2508,8 @@ class DataApi:
         when_not_matched_insert_all: Annotated[Optional[StrictBool], Field(description="Insert all columns when rows don't match")] = None,
         when_not_matched_by_source_delete: Annotated[Optional[StrictBool], Field(description="Delete all rows from target table that don't match a row in the source table")] = None,
         when_not_matched_by_source_delete_filt: Annotated[Optional[StrictStr], Field(description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true")] = None,
+        timeout: Annotated[Optional[StrictStr], Field(description="Timeout for the operation (e.g., \"30s\", \"5m\")")] = None,
+        use_index: Annotated[Optional[StrictBool], Field(description="Whether to use index for matching rows")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2546,6 +2545,10 @@ class DataApi:
         :type when_not_matched_by_source_delete: bool
         :param when_not_matched_by_source_delete_filt: Delete rows from the target table if there is no match AND the SQL expression evaluates to true
         :type when_not_matched_by_source_delete_filt: str
+        :param timeout: Timeout for the operation (e.g., \"30s\", \"5m\")
+        :type timeout: str
+        :param use_index: Whether to use index for matching rows
+        :type use_index: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2578,6 +2581,8 @@ class DataApi:
             when_not_matched_insert_all=when_not_matched_insert_all,
             when_not_matched_by_source_delete=when_not_matched_by_source_delete,
             when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt,
+            timeout=timeout,
+            use_index=use_index,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2616,6 +2621,8 @@ class DataApi:
         when_not_matched_insert_all: Annotated[Optional[StrictBool], Field(description="Insert all columns when rows don't match")] = None,
         when_not_matched_by_source_delete: Annotated[Optional[StrictBool], Field(description="Delete all rows from target table that don't match a row in the source table")] = None,
         when_not_matched_by_source_delete_filt: Annotated[Optional[StrictStr], Field(description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true")] = None,
+        timeout: Annotated[Optional[StrictStr], Field(description="Timeout for the operation (e.g., \"30s\", \"5m\")")] = None,
+        use_index: Annotated[Optional[StrictBool], Field(description="Whether to use index for matching rows")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2651,6 +2658,10 @@ class DataApi:
         :type when_not_matched_by_source_delete: bool
         :param when_not_matched_by_source_delete_filt: Delete rows from the target table if there is no match AND the SQL expression evaluates to true
         :type when_not_matched_by_source_delete_filt: str
+        :param timeout: Timeout for the operation (e.g., \"30s\", \"5m\")
+        :type timeout: str
+        :param use_index: Whether to use index for matching rows
+        :type use_index: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2683,6 +2694,8 @@ class DataApi:
             when_not_matched_insert_all=when_not_matched_insert_all,
             when_not_matched_by_source_delete=when_not_matched_by_source_delete,
             when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt,
+            timeout=timeout,
+            use_index=use_index,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2716,6 +2729,8 @@ class DataApi:
         when_not_matched_insert_all,
         when_not_matched_by_source_delete,
         when_not_matched_by_source_delete_filt,
+        timeout,
+        use_index,
         _request_auth,
         _content_type,
         _headers,
@@ -2768,6 +2783,14 @@ class DataApi:
             
             _query_params.append(('when_not_matched_by_source_delete_filt', when_not_matched_by_source_delete_filt))
             
+        if timeout is not None:
+            
+            _query_params.append(('timeout', timeout))
+            
+        if use_index is not None:
+            
+            _query_params.append(('use_index', use_index))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -2807,6 +2830,9 @@ class DataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -2848,7 +2874,7 @@ class DataApi:
     ) -> bytearray:
         """Query a table
 
-        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
+        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -2929,7 +2955,7 @@ class DataApi:
     ) -> ApiResponse[bytearray]:
         """Query a table
 
-        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
+        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -3010,7 +3036,7 @@ class DataApi:
     ) -> RESTResponseType:
         """Query a table
 
-        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
+        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -3111,7 +3137,6 @@ class DataApi:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
                     'application/vnd.apache.arrow.file', 
-                    'application/vnd.apache.arrow.stream', 
                     'application/json'
                 ]
             )
@@ -3132,6 +3157,9 @@ class DataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -3455,6 +3483,9 @@ class DataApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'OAuth2', 
+            'ApiKeyAuth', 
+            'BearerAuth'
         ]
 
         return self.api_client.param_serialize(

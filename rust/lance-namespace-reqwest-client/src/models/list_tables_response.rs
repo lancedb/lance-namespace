@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ListTablesResponse {
-    /// The list of names of the tables relative to the parent namespace `id` in the request. 
+    /// The list of names of all the tables under the connected namespace implementation. This should recursively list all the tables in all child namespaces. Each string in the list is the full identifier in string form. 
     #[serde(rename = "tables")]
     pub tables: Vec<String>,
     /// An opaque token that allows pagination for list operations (e.g. ListNamespaces).  For an initial request of a list operation,  if the implementation cannot return all items in one response, or if there are more items than the page limit specified in the request, the implementation must return a page token in the response, indicating there are more results available.  After the initial request,  the value of the page token from each response must be used as the page token value for the next request.  Caller must interpret either `null`,  missing value or empty string value of the page token from the implementation's response as the end of the listing results. 

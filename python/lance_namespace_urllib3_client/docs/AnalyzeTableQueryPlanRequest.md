@@ -6,7 +6,24 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **List[str]** |  | [optional] 
-**query** | [**QueryTableRequest**](QueryTableRequest.md) |  | 
+**bypass_vector_index** | **bool** | Whether to bypass vector index | [optional] 
+**columns** | [**QueryTableRequestColumns**](QueryTableRequestColumns.md) |  | [optional] 
+**distance_type** | **str** | Distance metric to use | [optional] 
+**ef** | **int** | Search effort parameter for HNSW index | [optional] 
+**fast_search** | **bool** | Whether to use fast search | [optional] 
+**filter** | **str** | Optional SQL filter expression | [optional] 
+**full_text_query** | [**QueryTableRequestFullTextQuery**](QueryTableRequestFullTextQuery.md) |  | [optional] 
+**k** | **int** | Number of results to return | 
+**lower_bound** | **float** | Lower bound for search | [optional] 
+**nprobes** | **int** | Number of probes for IVF index | [optional] 
+**offset** | **int** | Number of results to skip | [optional] 
+**prefilter** | **bool** | Whether to apply filtering before vector search | [optional] 
+**refine_factor** | **int** | Refine factor for search | [optional] 
+**upper_bound** | **float** | Upper bound for search | [optional] 
+**vector** | [**QueryTableRequestVector**](QueryTableRequestVector.md) |  | 
+**vector_column** | **str** | Name of the vector column to search | [optional] 
+**version** | **int** | Table version to query | [optional] 
+**with_row_id** | **bool** | If true, return the row id as a column called &#x60;_rowid&#x60; | [optional] 
 
 ## Example
 

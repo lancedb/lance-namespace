@@ -6,8 +6,9 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | Option<**Vec<String>**> |  | [optional]
 **column** | **String** | Name of the column to create index on | 
-**index_type** | **String** | Type of index to create | 
-**metric_type** | Option<**String**> | Distance metric type for vector indexes | [optional]
+**index_type** | **String** | Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS) | 
+**name** | Option<**String**> | Optional name for the index. If not provided, a name will be auto-generated. | [optional]
+**distance_type** | Option<**String**> | Distance metric type for vector indexes (e.g., l2, cosine, dot) | [optional]
 **with_position** | Option<**bool**> | Optional FTS parameter for position tracking | [optional]
 **base_tokenizer** | Option<**String**> | Optional FTS parameter for base tokenizer | [optional]
 **language** | Option<**String**> | Optional FTS parameter for language | [optional]

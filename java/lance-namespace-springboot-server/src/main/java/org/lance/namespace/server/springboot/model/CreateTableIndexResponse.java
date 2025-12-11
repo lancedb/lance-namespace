@@ -16,118 +16,41 @@ package org.lance.namespace.server.springboot.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
-/** CreateTableIndexResponse */
+/** Response for create index operation */
+@Schema(name = "CreateTableIndexResponse", description = "Response for create index operation")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class CreateTableIndexResponse {
 
-  @Valid private List<String> id = new ArrayList<>();
+  private String transactionId;
 
-  private String location;
-
-  @Valid private Map<String, String> properties = new HashMap<>();
-
-  public CreateTableIndexResponse() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public CreateTableIndexResponse(String location) {
-    this.location = location;
-  }
-
-  public CreateTableIndexResponse id(List<String> id) {
-    this.id = id;
-    return this;
-  }
-
-  public CreateTableIndexResponse addIdItem(String idItem) {
-    if (this.id == null) {
-      this.id = new ArrayList<>();
-    }
-    this.id.add(idItem);
+  public CreateTableIndexResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
     return this;
   }
 
   /**
-   * Get id
+   * Optional transaction identifier
    *
-   * @return id
-   */
-  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("id")
-  public List<String> getId() {
-    return id;
-  }
-
-  public void setId(List<String> id) {
-    this.id = id;
-  }
-
-  public CreateTableIndexResponse location(String location) {
-    this.location = location;
-    return this;
-  }
-
-  /**
-   * Table location (usually empty)
-   *
-   * @return location
-   */
-  @NotNull
-  @Schema(
-      name = "location",
-      description = "Table location (usually empty)",
-      requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("location")
-  public String getLocation() {
-    return location;
-  }
-
-  public void setLocation(String location) {
-    this.location = location;
-  }
-
-  public CreateTableIndexResponse properties(Map<String, String> properties) {
-    this.properties = properties;
-    return this;
-  }
-
-  public CreateTableIndexResponse putPropertiesItem(String key, String propertiesItem) {
-    if (this.properties == null) {
-      this.properties = new HashMap<>();
-    }
-    this.properties.put(key, propertiesItem);
-    return this;
-  }
-
-  /**
-   * Additional properties (usually empty)
-   *
-   * @return properties
+   * @return transactionId
    */
   @Schema(
-      name = "properties",
-      description = "Additional properties (usually empty)",
+      name = "transaction_id",
+      description = "Optional transaction identifier",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("properties")
-  public Map<String, String> getProperties() {
-    return properties;
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
   }
 
-  public void setProperties(Map<String, String> properties) {
-    this.properties = properties;
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
   }
 
   @Override
@@ -139,23 +62,19 @@ public class CreateTableIndexResponse {
       return false;
     }
     CreateTableIndexResponse createTableIndexResponse = (CreateTableIndexResponse) o;
-    return Objects.equals(this.id, createTableIndexResponse.id)
-        && Objects.equals(this.location, createTableIndexResponse.location)
-        && Objects.equals(this.properties, createTableIndexResponse.properties);
+    return Objects.equals(this.transactionId, createTableIndexResponse.transactionId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location, properties);
+    return Objects.hash(transactionId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableIndexResponse {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    location: ").append(toIndentedString(location)).append("\n");
-    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

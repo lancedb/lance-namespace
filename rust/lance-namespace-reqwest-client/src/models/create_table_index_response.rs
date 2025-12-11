@@ -11,24 +11,19 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
+/// CreateTableIndexResponse : Response for create index operation
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateTableIndexResponse {
-    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
-    pub id: Option<Vec<String>>,
-    /// Table location (usually empty)
-    #[serde(rename = "location")]
-    pub location: String,
-    /// Additional properties (usually empty)
-    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
-    pub properties: Option<std::collections::HashMap<String, String>>,
+    /// Optional transaction identifier
+    #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
 }
 
 impl CreateTableIndexResponse {
-    pub fn new(location: String) -> CreateTableIndexResponse {
+    /// Response for create index operation
+    pub fn new() -> CreateTableIndexResponse {
         CreateTableIndexResponse {
-            id: None,
-            location,
-            properties: None,
+            transaction_id: None,
         }
     }
 }

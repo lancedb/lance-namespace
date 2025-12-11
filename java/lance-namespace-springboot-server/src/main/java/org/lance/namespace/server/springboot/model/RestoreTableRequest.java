@@ -34,6 +34,15 @@ public class RestoreTableRequest {
 
   private Long version;
 
+  public RestoreTableRequest() {
+    super();
+  }
+
+  /** Constructor with only required parameters */
+  public RestoreTableRequest(Long version) {
+    this.version = version;
+  }
+
   public RestoreTableRequest id(List<String> id) {
     this.id = id;
     return this;
@@ -68,15 +77,16 @@ public class RestoreTableRequest {
   }
 
   /**
-   * Version to restore to (if not specified, restores to current version) minimum: 0
+   * Version to restore to minimum: 0
    *
    * @return version
    */
+  @NotNull
   @Min(0L)
   @Schema(
       name = "version",
-      description = "Version to restore to (if not specified, restores to current version)",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+      description = "Version to restore to",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("version")
   public Long getVersion() {
     return version;

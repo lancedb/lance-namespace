@@ -39,8 +39,9 @@ class TestCreateTableIndexRequest(unittest.TestCase):
                     ''
                     ],
                 column = '',
-                index_type = 'BTREE',
-                metric_type = 'l2',
+                index_type = '',
+                name = '',
+                distance_type = '',
                 with_position = True,
                 base_tokenizer = '',
                 language = '',
@@ -53,7 +54,7 @@ class TestCreateTableIndexRequest(unittest.TestCase):
         else:
             return CreateTableIndexRequest(
                 column = '',
-                index_type = 'BTREE',
+                index_type = '',
         )
         """
 

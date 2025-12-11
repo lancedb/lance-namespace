@@ -6,7 +6,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **str** | Name of the new column | 
-**expression** | **str** | SQL expression to compute the column value | 
+**expression** | **str** | SQL expression to compute the column value (optional if virtual_column is specified) | [optional] 
+**virtual_column** | [**AddVirtualColumnEntry**](AddVirtualColumnEntry.md) | Virtual column definition (optional if expression is specified) | [optional] 
 
 ## Example
 

@@ -9,7 +9,7 @@
 |------------ | ------------- | ------------- | -------------|
 |**id** | **List&lt;String&gt;** |  |  [optional] |
 |**bypassVectorIndex** | **Boolean** | Whether to bypass vector index |  [optional] |
-|**columns** | **List&lt;String&gt;** | Optional list of columns to return |  [optional] |
+|**columns** | [**QueryTableRequestColumns**](QueryTableRequestColumns.md) |  |  [optional] |
 |**distanceType** | **String** | Distance metric to use |  [optional] |
 |**ef** | **Integer** | Search effort parameter for HNSW index |  [optional] |
 |**fastSearch** | **Boolean** | Whether to use fast search |  [optional] |

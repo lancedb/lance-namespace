@@ -13,6 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AlterTableDropColumnsResponse {
+    /// Optional transaction identifier
+    #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
     /// Version of the table after dropping columns
     #[serde(rename = "version")]
     pub version: i64,
@@ -21,6 +24,7 @@ pub struct AlterTableDropColumnsResponse {
 impl AlterTableDropColumnsResponse {
     pub fn new(version: i64) -> AlterTableDropColumnsResponse {
         AlterTableDropColumnsResponse {
+            transaction_id: None,
             version,
         }
     }

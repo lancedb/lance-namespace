@@ -113,6 +113,9 @@ HTTPSignatureAuthSetting = TypedDict(
 AuthSettings = TypedDict(
     "AuthSettings",
     {
+        "OAuth2": OAuth2AuthSetting,
+        "BearerAuth": BearerAuthSetting,
+        "ApiKeyAuth": APIKeyAuthSetting,
     },
     total=False,
 )
@@ -163,6 +166,26 @@ class Configuration:
     :param ca_cert_data: verify the peer using concatenated CA certificate data
       in PEM (str) or DER (bytes) format.
 
+    :Example:
+
+    API Key Authentication Example.
+    Given the following security scheme in the OpenAPI specification:
+      components:
+        securitySchemes:
+          cookieAuth:         # name for the security scheme
+            type: apiKey
+            in: cookie
+            name: JSESSIONID  # cookie name
+
+    You can programmatically set the cookie:
+
+conf = lance_namespace_urllib3_client.Configuration(
+    api_key={'cookieAuth': 'abc123'}
+    api_key_prefix={'cookieAuth': 'JSESSIONID'}
+)
+
+    The following cookie will be added to the HTTP request:
+       Cookie: JSESSIONID abc123
     """
 
     _default: ClassVar[Optional[Self]] = None
@@ -490,6 +513,29 @@ class Configuration:
         :return: The Auth Settings information dict.
         """
         auth: AuthSettings = {}
+        if self.access_token is not None:
+            auth['OAuth2'] = {
+                'type': 'oauth2',
+                'in': 'header',
+                'key': 'Authorization',
+                'value': 'Bearer ' + self.access_token
+            }
+        if self.access_token is not None:
+            auth['BearerAuth'] = {
+                'type': 'bearer',
+                'in': 'header',
+                'key': 'Authorization',
+                'value': 'Bearer ' + self.access_token
+            }
+        if 'ApiKeyAuth' in self.api_key:
+            auth['ApiKeyAuth'] = {
+                'type': 'api_key',
+                'in': 'header',
+                'key': 'x-api-key',
+                'value': self.get_api_key_with_prefix(
+                    'ApiKeyAuth',
+                ),
+            }
         return auth
 
     def to_debug_report(self) -> str:

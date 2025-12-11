@@ -30,7 +30,32 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CreateNamespaceResponse {
 
+  private String transactionId;
+
   @Valid private Map<String, String> properties = new HashMap<>();
+
+  public CreateNamespaceResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @Schema(
+      name = "transaction_id",
+      description = "Optional transaction identifier",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
 
   public CreateNamespaceResponse properties(Map<String, String> properties) {
     this.properties = properties;
@@ -75,18 +100,20 @@ public class CreateNamespaceResponse {
       return false;
     }
     CreateNamespaceResponse createNamespaceResponse = (CreateNamespaceResponse) o;
-    return Objects.equals(this.properties, createNamespaceResponse.properties);
+    return Objects.equals(this.transactionId, createNamespaceResponse.transactionId)
+        && Objects.equals(this.properties, createNamespaceResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(properties);
+    return Objects.hash(transactionId, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateNamespaceResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();

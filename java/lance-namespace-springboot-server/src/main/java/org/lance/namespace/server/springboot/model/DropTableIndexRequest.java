@@ -34,16 +34,6 @@ public class DropTableIndexRequest {
 
   private String indexName;
 
-  public DropTableIndexRequest() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public DropTableIndexRequest(List<String> id, String indexName) {
-    this.id = id;
-    this.indexName = indexName;
-  }
-
   public DropTableIndexRequest id(List<String> id) {
     this.id = id;
     return this;
@@ -62,8 +52,7 @@ public class DropTableIndexRequest {
    *
    * @return id
    */
-  @NotNull
-  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
     return id;
@@ -83,11 +72,10 @@ public class DropTableIndexRequest {
    *
    * @return indexName
    */
-  @NotNull
   @Schema(
       name = "index_name",
       description = "Name of the index to drop",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("index_name")
   public String getIndexName() {
     return indexName;

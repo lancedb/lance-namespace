@@ -18,7 +18,8 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
+from lance_namespace_urllib3_client.models.add_virtual_column_entry import AddVirtualColumnEntry
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,8 +28,9 @@ class NewColumnTransform(BaseModel):
     NewColumnTransform
     """ # noqa: E501
     name: StrictStr = Field(description="Name of the new column")
-    expression: StrictStr = Field(description="SQL expression to compute the column value")
-    __properties: ClassVar[List[str]] = ["name", "expression"]
+    expression: Optional[StrictStr] = Field(default=None, description="SQL expression to compute the column value (optional if virtual_column is specified)")
+    virtual_column: Optional[AddVirtualColumnEntry] = Field(default=None, description="Virtual column definition (optional if expression is specified)")
+    __properties: ClassVar[List[str]] = ["name", "expression", "virtual_column"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -69,6 +71,9 @@ class NewColumnTransform(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of virtual_column
+        if self.virtual_column:
+            _dict['virtual_column'] = self.virtual_column.to_dict()
         return _dict
 
     @classmethod
@@ -82,7 +87,8 @@ class NewColumnTransform(BaseModel):
 
         _obj = cls.model_validate({
             "name": obj.get("name"),
-            "expression": obj.get("expression")
+            "expression": obj.get("expression"),
+            "virtual_column": AddVirtualColumnEntry.from_dict(obj["virtual_column"]) if obj.get("virtual_column") is not None else None
         })
         return _obj
 

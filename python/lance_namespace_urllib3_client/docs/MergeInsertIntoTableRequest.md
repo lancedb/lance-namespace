@@ -13,6 +13,8 @@ Name | Type | Description | Notes
 **when_not_matched_insert_all** | **bool** | Insert all columns when rows don&#39;t match | [optional] [default to False]
 **when_not_matched_by_source_delete** | **bool** | Delete all rows from target table that don&#39;t match a row in the source table | [optional] [default to False]
 **when_not_matched_by_source_delete_filt** | **str** | Delete rows from the target table if there is no match AND the SQL expression evaluates to true | [optional] 
+**timeout** | **str** | Timeout for the operation (e.g., \&quot;30s\&quot;, \&quot;5m\&quot;) | [optional] 
+**use_index** | **bool** | Whether to use index for matching rows | [optional] [default to False]
 
 ## Example
 

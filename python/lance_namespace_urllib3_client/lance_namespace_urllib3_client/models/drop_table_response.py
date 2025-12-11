@@ -26,11 +26,11 @@ class DropTableResponse(BaseModel):
     """
     DropTableResponse
     """ # noqa: E501
+    transaction_id: Optional[StrictStr] = Field(default=None, description="Optional transaction identifier")
     id: Optional[List[StrictStr]] = None
     location: Optional[StrictStr] = None
     properties: Optional[Dict[str, StrictStr]] = None
-    transaction_id: Optional[List[StrictStr]] = Field(default=None, description="If present, indicating the operation is long running and should be tracked using GetTransaction ", alias="transactionId")
-    __properties: ClassVar[List[str]] = ["id", "location", "properties", "transactionId"]
+    __properties: ClassVar[List[str]] = ["transaction_id", "id", "location", "properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,10 +83,10 @@ class DropTableResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "transaction_id": obj.get("transaction_id"),
             "id": obj.get("id"),
             "location": obj.get("location"),
-            "properties": obj.get("properties"),
-            "transactionId": obj.get("transactionId")
+            "properties": obj.get("properties")
         })
         return _obj
 

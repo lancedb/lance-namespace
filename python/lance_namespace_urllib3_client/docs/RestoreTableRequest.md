@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **List[str]** |  | [optional] 
-**version** | **int** | Version to restore to (if not specified, restores to current version) | [optional] 
+**version** | **int** | Version to restore to | 
 
 ## Example
 

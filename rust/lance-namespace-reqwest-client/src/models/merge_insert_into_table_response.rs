@@ -14,6 +14,9 @@ use serde::{Deserialize, Serialize};
 /// MergeInsertIntoTableResponse : Response from merge insert operation
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MergeInsertIntoTableResponse {
+    /// Optional transaction identifier
+    #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
     /// Number of rows updated
     #[serde(rename = "num_updated_rows", skip_serializing_if = "Option::is_none")]
     pub num_updated_rows: Option<i64>,
@@ -32,6 +35,7 @@ impl MergeInsertIntoTableResponse {
     /// Response from merge insert operation
     pub fn new() -> MergeInsertIntoTableResponse {
         MergeInsertIntoTableResponse {
+            transaction_id: None,
             num_updated_rows: None,
             num_inserted_rows: None,
             num_deleted_rows: None,

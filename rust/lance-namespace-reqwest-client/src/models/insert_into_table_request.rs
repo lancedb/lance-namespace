@@ -32,6 +32,8 @@ impl InsertIntoTableRequest {
 /// 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum Mode {
+    #[serde(rename = "create")]
+    Create,
     #[serde(rename = "append")]
     Append,
     #[serde(rename = "overwrite")]
@@ -40,7 +42,7 @@ pub enum Mode {
 
 impl Default for Mode {
     fn default() -> Mode {
-        Self::Append
+        Self::Create
     }
 }
 

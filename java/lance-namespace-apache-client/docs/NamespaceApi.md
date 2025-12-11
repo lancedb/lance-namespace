@@ -28,6 +28,7 @@ Create new namespace &#x60;id&#x60;.  During the creation process, the implement
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.NamespaceApi;
 
@@ -35,6 +36,20 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
@@ -69,7 +84,7 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -106,6 +121,7 @@ Describe the detailed information for namespace &#x60;id&#x60;.
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.NamespaceApi;
 
@@ -113,6 +129,20 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
@@ -147,7 +177,7 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -182,6 +212,7 @@ Drop namespace &#x60;id&#x60; from its parent namespace.
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.NamespaceApi;
 
@@ -189,6 +220,20 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
@@ -223,7 +268,7 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -259,6 +304,7 @@ List all child namespace names of the parent namespace &#x60;id&#x60;.  REST NAM
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.NamespaceApi;
 
@@ -266,12 +312,26 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
-        String pageToken = "pageToken_example"; // String | 
-        Integer limit = 56; // Integer | 
+        String pageToken = "pageToken_example"; // String | Pagination token from a previous request
+        Integer limit = 56; // Integer | Maximum number of items to return
         try {
             ListNamespacesResponse result = apiInstance.listNamespaces(id, delimiter, pageToken, limit);
             System.out.println(result);
@@ -293,8 +353,8 @@ public class Example {
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] |
-| **pageToken** | **String**|  | [optional] |
-| **limit** | **Integer**|  | [optional] |
+| **pageToken** | **String**| Pagination token from a previous request | [optional] |
+| **limit** | **Integer**| Maximum number of items to return | [optional] |
 
 ### Return type
 
@@ -302,7 +362,7 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -338,6 +398,7 @@ List all child table names of the parent namespace &#x60;id&#x60;.  REST NAMESPA
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.NamespaceApi;
 
@@ -345,12 +406,26 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
-        String pageToken = "pageToken_example"; // String | 
-        Integer limit = 56; // Integer | 
+        String pageToken = "pageToken_example"; // String | Pagination token from a previous request
+        Integer limit = 56; // Integer | Maximum number of items to return
         try {
             ListTablesResponse result = apiInstance.listTables(id, delimiter, pageToken, limit);
             System.out.println(result);
@@ -372,8 +447,8 @@ public class Example {
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] |
-| **pageToken** | **String**|  | [optional] |
-| **limit** | **Integer**|  | [optional] |
+| **pageToken** | **String**| Pagination token from a previous request | [optional] |
+| **limit** | **Integer**| Maximum number of items to return | [optional] |
 
 ### Return type
 
@@ -381,7 +456,7 @@ public class Example {
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -417,6 +492,7 @@ Check if namespace &#x60;id&#x60; exists.  This operation must behave exactly li
 import org.lance.namespace.client.apache.ApiClient;
 import org.lance.namespace.client.apache.ApiException;
 import org.lance.namespace.client.apache.Configuration;
+import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.client.apache.models.*;
 import org.lance.namespace.client.apache.api.NamespaceApi;
 
@@ -424,6 +500,20 @@ public class Example {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("http://localhost:2333");
+        
+        // Configure OAuth2 access token for authorization: OAuth2
+        OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+        OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+        // Configure API key authorization: ApiKeyAuth
+        ApiKeyAuth ApiKeyAuth = (ApiKeyAuth) defaultClient.getAuthentication("ApiKeyAuth");
+        ApiKeyAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //ApiKeyAuth.setApiKeyPrefix("Token");
+
+        // Configure HTTP bearer authorization: BearerAuth
+        HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setBearerToken("BEARER TOKEN");
 
         NamespaceApi apiInstance = new NamespaceApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
@@ -457,7 +547,7 @@ null (empty response body)
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 

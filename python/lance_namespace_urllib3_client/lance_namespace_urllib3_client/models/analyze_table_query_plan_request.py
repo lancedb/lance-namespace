@@ -17,9 +17,12 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from lance_namespace_urllib3_client.models.query_table_request import QueryTableRequest
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
+from lance_namespace_urllib3_client.models.query_table_request_columns import QueryTableRequestColumns
+from lance_namespace_urllib3_client.models.query_table_request_full_text_query import QueryTableRequestFullTextQuery
+from lance_namespace_urllib3_client.models.query_table_request_vector import QueryTableRequestVector
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,8 +31,25 @@ class AnalyzeTableQueryPlanRequest(BaseModel):
     AnalyzeTableQueryPlanRequest
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
-    query: QueryTableRequest
-    __properties: ClassVar[List[str]] = ["id", "query"]
+    bypass_vector_index: Optional[StrictBool] = Field(default=None, description="Whether to bypass vector index")
+    columns: Optional[QueryTableRequestColumns] = None
+    distance_type: Optional[StrictStr] = Field(default=None, description="Distance metric to use")
+    ef: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Search effort parameter for HNSW index")
+    fast_search: Optional[StrictBool] = Field(default=None, description="Whether to use fast search")
+    filter: Optional[StrictStr] = Field(default=None, description="Optional SQL filter expression")
+    full_text_query: Optional[QueryTableRequestFullTextQuery] = None
+    k: Annotated[int, Field(strict=True, ge=0)] = Field(description="Number of results to return")
+    lower_bound: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Lower bound for search")
+    nprobes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of probes for IVF index")
+    offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of results to skip")
+    prefilter: Optional[StrictBool] = Field(default=None, description="Whether to apply filtering before vector search")
+    refine_factor: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Refine factor for search")
+    upper_bound: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Upper bound for search")
+    vector: QueryTableRequestVector
+    vector_column: Optional[StrictStr] = Field(default=None, description="Name of the vector column to search")
+    version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Table version to query")
+    with_row_id: Optional[StrictBool] = Field(default=None, description="If true, return the row id as a column called `_rowid`")
+    __properties: ClassVar[List[str]] = ["id", "bypass_vector_index", "columns", "distance_type", "ef", "fast_search", "filter", "full_text_query", "k", "lower_bound", "nprobes", "offset", "prefilter", "refine_factor", "upper_bound", "vector", "vector_column", "version", "with_row_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -70,9 +90,15 @@ class AnalyzeTableQueryPlanRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of query
-        if self.query:
-            _dict['query'] = self.query.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of columns
+        if self.columns:
+            _dict['columns'] = self.columns.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of full_text_query
+        if self.full_text_query:
+            _dict['full_text_query'] = self.full_text_query.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of vector
+        if self.vector:
+            _dict['vector'] = self.vector.to_dict()
         return _dict
 
     @classmethod
@@ -86,7 +112,24 @@ class AnalyzeTableQueryPlanRequest(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
-            "query": QueryTableRequest.from_dict(obj["query"]) if obj.get("query") is not None else None
+            "bypass_vector_index": obj.get("bypass_vector_index"),
+            "columns": QueryTableRequestColumns.from_dict(obj["columns"]) if obj.get("columns") is not None else None,
+            "distance_type": obj.get("distance_type"),
+            "ef": obj.get("ef"),
+            "fast_search": obj.get("fast_search"),
+            "filter": obj.get("filter"),
+            "full_text_query": QueryTableRequestFullTextQuery.from_dict(obj["full_text_query"]) if obj.get("full_text_query") is not None else None,
+            "k": obj.get("k"),
+            "lower_bound": obj.get("lower_bound"),
+            "nprobes": obj.get("nprobes"),
+            "offset": obj.get("offset"),
+            "prefilter": obj.get("prefilter"),
+            "refine_factor": obj.get("refine_factor"),
+            "upper_bound": obj.get("upper_bound"),
+            "vector": QueryTableRequestVector.from_dict(obj["vector"]) if obj.get("vector") is not None else None,
+            "vector_column": obj.get("vector_column"),
+            "version": obj.get("version"),
+            "with_row_id": obj.get("with_row_id")
         })
         return _obj
 

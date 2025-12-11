@@ -27,7 +27,8 @@ import java.util.StringJoiner;
   DescribeTableIndexStatsResponse.JSON_PROPERTY_DISTANCE_TYPE,
   DescribeTableIndexStatsResponse.JSON_PROPERTY_INDEX_TYPE,
   DescribeTableIndexStatsResponse.JSON_PROPERTY_NUM_INDEXED_ROWS,
-  DescribeTableIndexStatsResponse.JSON_PROPERTY_NUM_UNINDEXED_ROWS
+  DescribeTableIndexStatsResponse.JSON_PROPERTY_NUM_UNINDEXED_ROWS,
+  DescribeTableIndexStatsResponse.JSON_PROPERTY_NUM_INDICES
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -44,6 +45,9 @@ public class DescribeTableIndexStatsResponse {
 
   public static final String JSON_PROPERTY_NUM_UNINDEXED_ROWS = "num_unindexed_rows";
   @javax.annotation.Nullable private Long numUnindexedRows;
+
+  public static final String JSON_PROPERTY_NUM_INDICES = "num_indices";
+  @javax.annotation.Nullable private Integer numIndices;
 
   public DescribeTableIndexStatsResponse() {}
 
@@ -146,6 +150,30 @@ public class DescribeTableIndexStatsResponse {
     this.numUnindexedRows = numUnindexedRows;
   }
 
+  public DescribeTableIndexStatsResponse numIndices(@javax.annotation.Nullable Integer numIndices) {
+
+    this.numIndices = numIndices;
+    return this;
+  }
+
+  /**
+   * Number of indices minimum: 0
+   *
+   * @return numIndices
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_NUM_INDICES)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getNumIndices() {
+    return numIndices;
+  }
+
+  @JsonProperty(JSON_PROPERTY_NUM_INDICES)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNumIndices(@javax.annotation.Nullable Integer numIndices) {
+    this.numIndices = numIndices;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -159,12 +187,13 @@ public class DescribeTableIndexStatsResponse {
     return Objects.equals(this.distanceType, describeTableIndexStatsResponse.distanceType)
         && Objects.equals(this.indexType, describeTableIndexStatsResponse.indexType)
         && Objects.equals(this.numIndexedRows, describeTableIndexStatsResponse.numIndexedRows)
-        && Objects.equals(this.numUnindexedRows, describeTableIndexStatsResponse.numUnindexedRows);
+        && Objects.equals(this.numUnindexedRows, describeTableIndexStatsResponse.numUnindexedRows)
+        && Objects.equals(this.numIndices, describeTableIndexStatsResponse.numIndices);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(distanceType, indexType, numIndexedRows, numUnindexedRows);
+    return Objects.hash(distanceType, indexType, numIndexedRows, numUnindexedRows, numIndices);
   }
 
   @Override
@@ -175,6 +204,7 @@ public class DescribeTableIndexStatsResponse {
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
     sb.append("    numIndexedRows: ").append(toIndentedString(numIndexedRows)).append("\n");
     sb.append("    numUnindexedRows: ").append(toIndentedString(numUnindexedRows)).append("\n");
+    sb.append("    numIndices: ").append(toIndentedString(numIndices)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -278,6 +308,22 @@ public class DescribeTableIndexStatsResponse {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getNumUnindexedRows()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `num_indices` to the URL query string
+    if (getNumIndices() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%snum_indices%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getNumIndices()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported

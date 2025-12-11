@@ -32,15 +32,50 @@ public class AnalyzeTableQueryPlanRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
-  private QueryTableRequest query;
+  private Boolean bypassVectorIndex;
+
+  private QueryTableRequestColumns columns;
+
+  private String distanceType;
+
+  private Integer ef;
+
+  private Boolean fastSearch;
+
+  private String filter;
+
+  private QueryTableRequestFullTextQuery fullTextQuery;
+
+  private Integer k;
+
+  private Float lowerBound;
+
+  private Integer nprobes;
+
+  private Integer offset;
+
+  private Boolean prefilter;
+
+  private Integer refineFactor;
+
+  private Float upperBound;
+
+  private QueryTableRequestVector vector;
+
+  private String vectorColumn;
+
+  private Long version;
+
+  private Boolean withRowId;
 
   public AnalyzeTableQueryPlanRequest() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public AnalyzeTableQueryPlanRequest(QueryTableRequest query) {
-    this.query = query;
+  public AnalyzeTableQueryPlanRequest(Integer k, QueryTableRequestVector vector) {
+    this.k = k;
+    this.vector = vector;
   }
 
   public AnalyzeTableQueryPlanRequest id(List<String> id) {
@@ -71,26 +106,420 @@ public class AnalyzeTableQueryPlanRequest {
     this.id = id;
   }
 
-  public AnalyzeTableQueryPlanRequest query(QueryTableRequest query) {
-    this.query = query;
+  public AnalyzeTableQueryPlanRequest bypassVectorIndex(Boolean bypassVectorIndex) {
+    this.bypassVectorIndex = bypassVectorIndex;
     return this;
   }
 
   /**
-   * Get query
+   * Whether to bypass vector index
    *
-   * @return query
+   * @return bypassVectorIndex
+   */
+  @Schema(
+      name = "bypass_vector_index",
+      description = "Whether to bypass vector index",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("bypass_vector_index")
+  public Boolean getBypassVectorIndex() {
+    return bypassVectorIndex;
+  }
+
+  public void setBypassVectorIndex(Boolean bypassVectorIndex) {
+    this.bypassVectorIndex = bypassVectorIndex;
+  }
+
+  public AnalyzeTableQueryPlanRequest columns(QueryTableRequestColumns columns) {
+    this.columns = columns;
+    return this;
+  }
+
+  /**
+   * Get columns
+   *
+   * @return columns
+   */
+  @Valid
+  @Schema(name = "columns", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("columns")
+  public QueryTableRequestColumns getColumns() {
+    return columns;
+  }
+
+  public void setColumns(QueryTableRequestColumns columns) {
+    this.columns = columns;
+  }
+
+  public AnalyzeTableQueryPlanRequest distanceType(String distanceType) {
+    this.distanceType = distanceType;
+    return this;
+  }
+
+  /**
+   * Distance metric to use
+   *
+   * @return distanceType
+   */
+  @Schema(
+      name = "distance_type",
+      description = "Distance metric to use",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("distance_type")
+  public String getDistanceType() {
+    return distanceType;
+  }
+
+  public void setDistanceType(String distanceType) {
+    this.distanceType = distanceType;
+  }
+
+  public AnalyzeTableQueryPlanRequest ef(Integer ef) {
+    this.ef = ef;
+    return this;
+  }
+
+  /**
+   * Search effort parameter for HNSW index minimum: 0
+   *
+   * @return ef
+   */
+  @Min(0)
+  @Schema(
+      name = "ef",
+      description = "Search effort parameter for HNSW index",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("ef")
+  public Integer getEf() {
+    return ef;
+  }
+
+  public void setEf(Integer ef) {
+    this.ef = ef;
+  }
+
+  public AnalyzeTableQueryPlanRequest fastSearch(Boolean fastSearch) {
+    this.fastSearch = fastSearch;
+    return this;
+  }
+
+  /**
+   * Whether to use fast search
+   *
+   * @return fastSearch
+   */
+  @Schema(
+      name = "fast_search",
+      description = "Whether to use fast search",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("fast_search")
+  public Boolean getFastSearch() {
+    return fastSearch;
+  }
+
+  public void setFastSearch(Boolean fastSearch) {
+    this.fastSearch = fastSearch;
+  }
+
+  public AnalyzeTableQueryPlanRequest filter(String filter) {
+    this.filter = filter;
+    return this;
+  }
+
+  /**
+   * Optional SQL filter expression
+   *
+   * @return filter
+   */
+  @Schema(
+      name = "filter",
+      description = "Optional SQL filter expression",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("filter")
+  public String getFilter() {
+    return filter;
+  }
+
+  public void setFilter(String filter) {
+    this.filter = filter;
+  }
+
+  public AnalyzeTableQueryPlanRequest fullTextQuery(QueryTableRequestFullTextQuery fullTextQuery) {
+    this.fullTextQuery = fullTextQuery;
+    return this;
+  }
+
+  /**
+   * Get fullTextQuery
+   *
+   * @return fullTextQuery
+   */
+  @Valid
+  @Schema(name = "full_text_query", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("full_text_query")
+  public QueryTableRequestFullTextQuery getFullTextQuery() {
+    return fullTextQuery;
+  }
+
+  public void setFullTextQuery(QueryTableRequestFullTextQuery fullTextQuery) {
+    this.fullTextQuery = fullTextQuery;
+  }
+
+  public AnalyzeTableQueryPlanRequest k(Integer k) {
+    this.k = k;
+    return this;
+  }
+
+  /**
+   * Number of results to return minimum: 0
+   *
+   * @return k
+   */
+  @NotNull
+  @Min(0)
+  @Schema(
+      name = "k",
+      description = "Number of results to return",
+      requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("k")
+  public Integer getK() {
+    return k;
+  }
+
+  public void setK(Integer k) {
+    this.k = k;
+  }
+
+  public AnalyzeTableQueryPlanRequest lowerBound(Float lowerBound) {
+    this.lowerBound = lowerBound;
+    return this;
+  }
+
+  /**
+   * Lower bound for search
+   *
+   * @return lowerBound
+   */
+  @Schema(
+      name = "lower_bound",
+      description = "Lower bound for search",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("lower_bound")
+  public Float getLowerBound() {
+    return lowerBound;
+  }
+
+  public void setLowerBound(Float lowerBound) {
+    this.lowerBound = lowerBound;
+  }
+
+  public AnalyzeTableQueryPlanRequest nprobes(Integer nprobes) {
+    this.nprobes = nprobes;
+    return this;
+  }
+
+  /**
+   * Number of probes for IVF index minimum: 0
+   *
+   * @return nprobes
+   */
+  @Min(0)
+  @Schema(
+      name = "nprobes",
+      description = "Number of probes for IVF index",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("nprobes")
+  public Integer getNprobes() {
+    return nprobes;
+  }
+
+  public void setNprobes(Integer nprobes) {
+    this.nprobes = nprobes;
+  }
+
+  public AnalyzeTableQueryPlanRequest offset(Integer offset) {
+    this.offset = offset;
+    return this;
+  }
+
+  /**
+   * Number of results to skip minimum: 0
+   *
+   * @return offset
+   */
+  @Min(0)
+  @Schema(
+      name = "offset",
+      description = "Number of results to skip",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("offset")
+  public Integer getOffset() {
+    return offset;
+  }
+
+  public void setOffset(Integer offset) {
+    this.offset = offset;
+  }
+
+  public AnalyzeTableQueryPlanRequest prefilter(Boolean prefilter) {
+    this.prefilter = prefilter;
+    return this;
+  }
+
+  /**
+   * Whether to apply filtering before vector search
+   *
+   * @return prefilter
+   */
+  @Schema(
+      name = "prefilter",
+      description = "Whether to apply filtering before vector search",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("prefilter")
+  public Boolean getPrefilter() {
+    return prefilter;
+  }
+
+  public void setPrefilter(Boolean prefilter) {
+    this.prefilter = prefilter;
+  }
+
+  public AnalyzeTableQueryPlanRequest refineFactor(Integer refineFactor) {
+    this.refineFactor = refineFactor;
+    return this;
+  }
+
+  /**
+   * Refine factor for search minimum: 0
+   *
+   * @return refineFactor
+   */
+  @Min(0)
+  @Schema(
+      name = "refine_factor",
+      description = "Refine factor for search",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("refine_factor")
+  public Integer getRefineFactor() {
+    return refineFactor;
+  }
+
+  public void setRefineFactor(Integer refineFactor) {
+    this.refineFactor = refineFactor;
+  }
+
+  public AnalyzeTableQueryPlanRequest upperBound(Float upperBound) {
+    this.upperBound = upperBound;
+    return this;
+  }
+
+  /**
+   * Upper bound for search
+   *
+   * @return upperBound
+   */
+  @Schema(
+      name = "upper_bound",
+      description = "Upper bound for search",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("upper_bound")
+  public Float getUpperBound() {
+    return upperBound;
+  }
+
+  public void setUpperBound(Float upperBound) {
+    this.upperBound = upperBound;
+  }
+
+  public AnalyzeTableQueryPlanRequest vector(QueryTableRequestVector vector) {
+    this.vector = vector;
+    return this;
+  }
+
+  /**
+   * Get vector
+   *
+   * @return vector
    */
   @NotNull
   @Valid
-  @Schema(name = "query", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("query")
-  public QueryTableRequest getQuery() {
-    return query;
+  @Schema(name = "vector", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("vector")
+  public QueryTableRequestVector getVector() {
+    return vector;
   }
 
-  public void setQuery(QueryTableRequest query) {
-    this.query = query;
+  public void setVector(QueryTableRequestVector vector) {
+    this.vector = vector;
+  }
+
+  public AnalyzeTableQueryPlanRequest vectorColumn(String vectorColumn) {
+    this.vectorColumn = vectorColumn;
+    return this;
+  }
+
+  /**
+   * Name of the vector column to search
+   *
+   * @return vectorColumn
+   */
+  @Schema(
+      name = "vector_column",
+      description = "Name of the vector column to search",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("vector_column")
+  public String getVectorColumn() {
+    return vectorColumn;
+  }
+
+  public void setVectorColumn(String vectorColumn) {
+    this.vectorColumn = vectorColumn;
+  }
+
+  public AnalyzeTableQueryPlanRequest version(Long version) {
+    this.version = version;
+    return this;
+  }
+
+  /**
+   * Table version to query minimum: 0
+   *
+   * @return version
+   */
+  @Min(0L)
+  @Schema(
+      name = "version",
+      description = "Table version to query",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("version")
+  public Long getVersion() {
+    return version;
+  }
+
+  public void setVersion(Long version) {
+    this.version = version;
+  }
+
+  public AnalyzeTableQueryPlanRequest withRowId(Boolean withRowId) {
+    this.withRowId = withRowId;
+    return this;
+  }
+
+  /**
+   * If true, return the row id as a column called `_rowid`
+   *
+   * @return withRowId
+   */
+  @Schema(
+      name = "with_row_id",
+      description = "If true, return the row id as a column called `_rowid`",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("with_row_id")
+  public Boolean getWithRowId() {
+    return withRowId;
+  }
+
+  public void setWithRowId(Boolean withRowId) {
+    this.withRowId = withRowId;
   }
 
   @Override
@@ -103,12 +532,48 @@ public class AnalyzeTableQueryPlanRequest {
     }
     AnalyzeTableQueryPlanRequest analyzeTableQueryPlanRequest = (AnalyzeTableQueryPlanRequest) o;
     return Objects.equals(this.id, analyzeTableQueryPlanRequest.id)
-        && Objects.equals(this.query, analyzeTableQueryPlanRequest.query);
+        && Objects.equals(this.bypassVectorIndex, analyzeTableQueryPlanRequest.bypassVectorIndex)
+        && Objects.equals(this.columns, analyzeTableQueryPlanRequest.columns)
+        && Objects.equals(this.distanceType, analyzeTableQueryPlanRequest.distanceType)
+        && Objects.equals(this.ef, analyzeTableQueryPlanRequest.ef)
+        && Objects.equals(this.fastSearch, analyzeTableQueryPlanRequest.fastSearch)
+        && Objects.equals(this.filter, analyzeTableQueryPlanRequest.filter)
+        && Objects.equals(this.fullTextQuery, analyzeTableQueryPlanRequest.fullTextQuery)
+        && Objects.equals(this.k, analyzeTableQueryPlanRequest.k)
+        && Objects.equals(this.lowerBound, analyzeTableQueryPlanRequest.lowerBound)
+        && Objects.equals(this.nprobes, analyzeTableQueryPlanRequest.nprobes)
+        && Objects.equals(this.offset, analyzeTableQueryPlanRequest.offset)
+        && Objects.equals(this.prefilter, analyzeTableQueryPlanRequest.prefilter)
+        && Objects.equals(this.refineFactor, analyzeTableQueryPlanRequest.refineFactor)
+        && Objects.equals(this.upperBound, analyzeTableQueryPlanRequest.upperBound)
+        && Objects.equals(this.vector, analyzeTableQueryPlanRequest.vector)
+        && Objects.equals(this.vectorColumn, analyzeTableQueryPlanRequest.vectorColumn)
+        && Objects.equals(this.version, analyzeTableQueryPlanRequest.version)
+        && Objects.equals(this.withRowId, analyzeTableQueryPlanRequest.withRowId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, query);
+    return Objects.hash(
+        id,
+        bypassVectorIndex,
+        columns,
+        distanceType,
+        ef,
+        fastSearch,
+        filter,
+        fullTextQuery,
+        k,
+        lowerBound,
+        nprobes,
+        offset,
+        prefilter,
+        refineFactor,
+        upperBound,
+        vector,
+        vectorColumn,
+        version,
+        withRowId);
   }
 
   @Override
@@ -116,7 +581,24 @@ public class AnalyzeTableQueryPlanRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class AnalyzeTableQueryPlanRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    query: ").append(toIndentedString(query)).append("\n");
+    sb.append("    bypassVectorIndex: ").append(toIndentedString(bypassVectorIndex)).append("\n");
+    sb.append("    columns: ").append(toIndentedString(columns)).append("\n");
+    sb.append("    distanceType: ").append(toIndentedString(distanceType)).append("\n");
+    sb.append("    ef: ").append(toIndentedString(ef)).append("\n");
+    sb.append("    fastSearch: ").append(toIndentedString(fastSearch)).append("\n");
+    sb.append("    filter: ").append(toIndentedString(filter)).append("\n");
+    sb.append("    fullTextQuery: ").append(toIndentedString(fullTextQuery)).append("\n");
+    sb.append("    k: ").append(toIndentedString(k)).append("\n");
+    sb.append("    lowerBound: ").append(toIndentedString(lowerBound)).append("\n");
+    sb.append("    nprobes: ").append(toIndentedString(nprobes)).append("\n");
+    sb.append("    offset: ").append(toIndentedString(offset)).append("\n");
+    sb.append("    prefilter: ").append(toIndentedString(prefilter)).append("\n");
+    sb.append("    refineFactor: ").append(toIndentedString(refineFactor)).append("\n");
+    sb.append("    upperBound: ").append(toIndentedString(upperBound)).append("\n");
+    sb.append("    vector: ").append(toIndentedString(vector)).append("\n");
+    sb.append("    vectorColumn: ").append(toIndentedString(vectorColumn)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    withRowId: ").append(toIndentedString(withRowId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

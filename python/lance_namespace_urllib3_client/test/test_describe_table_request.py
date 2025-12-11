@@ -38,7 +38,8 @@ class TestDescribeTableRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
-                version = 0
+                version = 0,
+                with_table_uri = True
             )
         else:
             return DescribeTableRequest(

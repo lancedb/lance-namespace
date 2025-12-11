@@ -7,8 +7,9 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **List[str]** |  | [optional] 
 **column** | **str** | Name of the column to create index on | 
-**index_type** | **str** | Type of index to create | 
-**metric_type** | **str** | Distance metric type for vector indexes | [optional] 
+**index_type** | **str** | Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS) | 
+**name** | **str** | Optional name for the index. If not provided, a name will be auto-generated. | [optional] 
+**distance_type** | **str** | Distance metric type for vector indexes (e.g., l2, cosine, dot) | [optional] 
 **with_position** | **bool** | Optional FTS parameter for position tracking | [optional] 
 **base_tokenizer** | **str** | Optional FTS parameter for base tokenizer | [optional] 
 **language** | **str** | Optional FTS parameter for language | [optional] 

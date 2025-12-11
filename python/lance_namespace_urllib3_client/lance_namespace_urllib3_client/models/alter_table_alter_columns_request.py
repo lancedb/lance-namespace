@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from lance_namespace_urllib3_client.models.column_alteration import ColumnAlteration
+from lance_namespace_urllib3_client.models.alter_columns_entry import AlterColumnsEntry
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,7 @@ class AlterTableAlterColumnsRequest(BaseModel):
     AlterTableAlterColumnsRequest
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
-    alterations: List[ColumnAlteration] = Field(description="List of column alterations to perform")
+    alterations: List[AlterColumnsEntry] = Field(description="List of column alterations to perform")
     __properties: ClassVar[List[str]] = ["id", "alterations"]
 
     model_config = ConfigDict(
@@ -90,7 +90,7 @@ class AlterTableAlterColumnsRequest(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
-            "alterations": [ColumnAlteration.from_dict(_item) for _item in obj["alterations"]] if obj.get("alterations") is not None else None
+            "alterations": [AlterColumnsEntry.from_dict(_item) for _item in obj["alterations"]] if obj.get("alterations") is not None else None
         })
         return _obj
 

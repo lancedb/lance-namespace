@@ -25,29 +25,28 @@ import org.lance.namespace.model.AlterTableAlterColumnsResponse;
 import org.lance.namespace.model.AlterTableDropColumnsRequest;
 import org.lance.namespace.model.AlterTableDropColumnsResponse;
 import org.lance.namespace.model.AnalyzeTableQueryPlanRequest;
-import org.lance.namespace.model.AnalyzeTableQueryPlanResponse;
 import org.lance.namespace.model.CountTableRowsRequest;
 import org.lance.namespace.model.CreateEmptyTableRequest;
 import org.lance.namespace.model.CreateEmptyTableResponse;
 import org.lance.namespace.model.CreateTableIndexRequest;
 import org.lance.namespace.model.CreateTableIndexResponse;
 import org.lance.namespace.model.CreateTableResponse;
+import org.lance.namespace.model.CreateTableScalarIndexResponse;
 import org.lance.namespace.model.CreateTableTagRequest;
+import org.lance.namespace.model.CreateTableTagResponse;
 import org.lance.namespace.model.DeleteFromTableRequest;
 import org.lance.namespace.model.DeleteFromTableResponse;
 import org.lance.namespace.model.DeleteTableTagRequest;
+import org.lance.namespace.model.DeleteTableTagResponse;
 import org.lance.namespace.model.DeregisterTableRequest;
 import org.lance.namespace.model.DeregisterTableResponse;
 import org.lance.namespace.model.DescribeTableIndexStatsRequest;
 import org.lance.namespace.model.DescribeTableIndexStatsResponse;
 import org.lance.namespace.model.DescribeTableRequest;
 import org.lance.namespace.model.DescribeTableResponse;
-import org.lance.namespace.model.DropTableIndexRequest;
 import org.lance.namespace.model.DropTableIndexResponse;
-import org.lance.namespace.model.DropTableRequest;
 import org.lance.namespace.model.DropTableResponse;
 import org.lance.namespace.model.ExplainTableQueryPlanRequest;
-import org.lance.namespace.model.ExplainTableQueryPlanResponse;
 import org.lance.namespace.model.GetTableStatsRequest;
 import org.lance.namespace.model.GetTableStatsResponse;
 import org.lance.namespace.model.GetTableTagVersionRequest;
@@ -56,19 +55,21 @@ import org.lance.namespace.model.InsertIntoTableResponse;
 import org.lance.namespace.model.ListTableIndicesRequest;
 import org.lance.namespace.model.ListTableIndicesResponse;
 import org.lance.namespace.model.ListTableTagsResponse;
-import org.lance.namespace.model.ListTableVersionsRequest;
 import org.lance.namespace.model.ListTableVersionsResponse;
 import org.lance.namespace.model.ListTablesResponse;
 import org.lance.namespace.model.MergeInsertIntoTableResponse;
 import org.lance.namespace.model.QueryTableRequest;
 import org.lance.namespace.model.RegisterTableRequest;
 import org.lance.namespace.model.RegisterTableResponse;
+import org.lance.namespace.model.RenameTableRequest;
+import org.lance.namespace.model.RenameTableResponse;
 import org.lance.namespace.model.RestoreTableRequest;
 import org.lance.namespace.model.RestoreTableResponse;
 import org.lance.namespace.model.TableExistsRequest;
 import org.lance.namespace.model.UpdateTableRequest;
 import org.lance.namespace.model.UpdateTableResponse;
 import org.lance.namespace.model.UpdateTableTagRequest;
+import org.lance.namespace.model.UpdateTableTagResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -175,7 +176,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<AlterTableAddColumnsResponse> localVarReturnType =
         new TypeReference<AlterTableAddColumnsResponse>() {};
@@ -278,7 +279,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<AlterTableAlterColumnsResponse> localVarReturnType =
         new TypeReference<AlterTableAlterColumnsResponse>() {};
@@ -379,7 +380,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<AlterTableDropColumnsResponse> localVarReturnType =
         new TypeReference<AlterTableDropColumnsResponse>() {};
@@ -401,7 +402,9 @@ public class TableApi extends BaseApi {
 
   /**
    * Analyze query execution plan Analyze the query execution plan for a query against table
-   * &#x60;id&#x60;. Returns detailed statistics and analysis of the query execution plan.
+   * &#x60;id&#x60;. Returns detailed statistics and analysis of the query execution plan. REST
+   * NAMESPACE ONLY REST namespace returns the response as a plain string instead of the
+   * &#x60;AnalyzeTableQueryPlanResponse&#x60; JSON object.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -411,10 +414,10 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return AnalyzeTableQueryPlanResponse
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public AnalyzeTableQueryPlanResponse analyzeTableQueryPlan(
+  public String analyzeTableQueryPlan(
       String id, AnalyzeTableQueryPlanRequest analyzeTableQueryPlanRequest, String delimiter)
       throws ApiException {
     return this.analyzeTableQueryPlan(
@@ -423,7 +426,9 @@ public class TableApi extends BaseApi {
 
   /**
    * Analyze query execution plan Analyze the query execution plan for a query against table
-   * &#x60;id&#x60;. Returns detailed statistics and analysis of the query execution plan.
+   * &#x60;id&#x60;. Returns detailed statistics and analysis of the query execution plan. REST
+   * NAMESPACE ONLY REST namespace returns the response as a plain string instead of the
+   * &#x60;AnalyzeTableQueryPlanResponse&#x60; JSON object.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -434,10 +439,10 @@ public class TableApi extends BaseApi {
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
-   * @return AnalyzeTableQueryPlanResponse
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public AnalyzeTableQueryPlanResponse analyzeTableQueryPlan(
+  public String analyzeTableQueryPlan(
       String id,
       AnalyzeTableQueryPlanRequest analyzeTableQueryPlanRequest,
       String delimiter,
@@ -482,10 +487,9 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
-    TypeReference<AnalyzeTableQueryPlanResponse> localVarReturnType =
-        new TypeReference<AnalyzeTableQueryPlanResponse>() {};
+    TypeReference<String> localVarReturnType = new TypeReference<String>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",
@@ -503,7 +507,9 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Count rows in a table Count the number of rows in table &#x60;id&#x60;
+   * Count rows in a table Count the number of rows in table &#x60;id&#x60; REST NAMESPACE ONLY REST
+   * namespace returns the response as a plain integer instead of the
+   * &#x60;CountTableRowsResponse&#x60; JSON object.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -523,7 +529,9 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Count rows in a table Count the number of rows in table &#x60;id&#x60;
+   * Count rows in a table Count the number of rows in table &#x60;id&#x60; REST NAMESPACE ONLY REST
+   * namespace returns the response as a plain integer instead of the
+   * &#x60;CountTableRowsResponse&#x60; JSON object.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -582,7 +590,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<Long> localVarReturnType = new TypeReference<Long>() {};
     return apiClient.invokeAPI(
@@ -689,7 +697,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<CreateEmptyTableResponse> localVarReturnType =
         new TypeReference<CreateEmptyTableResponse>() {};
@@ -715,9 +723,7 @@ public class TableApi extends BaseApi {
    * the stream is empty, the API creates a new empty table. REST NAMESPACE ONLY REST namespace uses
    * Arrow IPC stream as the request body. It passes in the &#x60;CreateTableRequest&#x60;
    * information in the following way: - &#x60;id&#x60;: pass through path parameter of the same
-   * name - &#x60;mode&#x60;: pass through query parameter of the same name - &#x60;location&#x60;:
-   * pass through header &#x60;x-lance-table-location&#x60; - &#x60;properties&#x60;: pass through
-   * header &#x60;x-lance-table-properties&#x60;
+   * name - &#x60;mode&#x60;: pass through query parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -728,28 +734,12 @@ public class TableApi extends BaseApi {
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param mode (optional)
-   * @param xLanceTableLocation URI pointing to root location to create the table at (optional)
-   * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
-   *     \&quot;jack\&quot; }) (optional)
    * @return CreateTableResponse
    * @throws ApiException if fails to make API call
    */
-  public CreateTableResponse createTable(
-      String id,
-      byte[] body,
-      String delimiter,
-      String mode,
-      String xLanceTableLocation,
-      String xLanceTableProperties)
+  public CreateTableResponse createTable(String id, byte[] body, String delimiter, String mode)
       throws ApiException {
-    return this.createTable(
-        id,
-        body,
-        delimiter,
-        mode,
-        xLanceTableLocation,
-        xLanceTableProperties,
-        Collections.emptyMap());
+    return this.createTable(id, body, delimiter, mode, Collections.emptyMap());
   }
 
   /**
@@ -758,9 +748,7 @@ public class TableApi extends BaseApi {
    * the stream is empty, the API creates a new empty table. REST NAMESPACE ONLY REST namespace uses
    * Arrow IPC stream as the request body. It passes in the &#x60;CreateTableRequest&#x60;
    * information in the following way: - &#x60;id&#x60;: pass through path parameter of the same
-   * name - &#x60;mode&#x60;: pass through query parameter of the same name - &#x60;location&#x60;:
-   * pass through header &#x60;x-lance-table-location&#x60; - &#x60;properties&#x60;: pass through
-   * header &#x60;x-lance-table-properties&#x60;
+   * name - &#x60;mode&#x60;: pass through query parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -771,21 +759,12 @@ public class TableApi extends BaseApi {
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param mode (optional)
-   * @param xLanceTableLocation URI pointing to root location to create the table at (optional)
-   * @param xLanceTableProperties JSON-encoded string map (e.g. { \&quot;owner\&quot;:
-   *     \&quot;jack\&quot; }) (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return CreateTableResponse
    * @throws ApiException if fails to make API call
    */
   public CreateTableResponse createTable(
-      String id,
-      byte[] body,
-      String delimiter,
-      String mode,
-      String xLanceTableLocation,
-      String xLanceTableProperties,
-      Map<String, String> additionalHeaders)
+      String id, byte[] body, String delimiter, String mode, Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = body;
 
@@ -815,12 +794,6 @@ public class TableApi extends BaseApi {
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
     localVarQueryParams.addAll(apiClient.parameterToPair("mode", mode));
-    if (xLanceTableLocation != null)
-      localVarHeaderParams.put(
-          "x-lance-table-location", apiClient.parameterToString(xLanceTableLocation));
-    if (xLanceTableProperties != null)
-      localVarHeaderParams.put(
-          "x-lance-table-properties", apiClient.parameterToString(xLanceTableProperties));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -830,7 +803,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/vnd.apache.arrow.stream"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<CreateTableResponse> localVarReturnType =
         new TypeReference<CreateTableResponse>() {};
@@ -938,10 +911,119 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<CreateTableIndexResponse> localVarReturnType =
         new TypeReference<CreateTableIndexResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Create a scalar index on a table Create a scalar index on a table column for faster filtering
+   * operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias
+   * for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously.
+   * Use the &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to
+   * monitor index creation progress.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param createTableIndexRequest Scalar index creation request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return CreateTableScalarIndexResponse
+   * @throws ApiException if fails to make API call
+   */
+  public CreateTableScalarIndexResponse createTableScalarIndex(
+      String id, CreateTableIndexRequest createTableIndexRequest, String delimiter)
+      throws ApiException {
+    return this.createTableScalarIndex(
+        id, createTableIndexRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Create a scalar index on a table Create a scalar index on a table column for faster filtering
+   * operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias
+   * for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously.
+   * Use the &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to
+   * monitor index creation progress.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param createTableIndexRequest Scalar index creation request (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return CreateTableScalarIndexResponse
+   * @throws ApiException if fails to make API call
+   */
+  public CreateTableScalarIndexResponse createTableScalarIndex(
+      String id,
+      CreateTableIndexRequest createTableIndexRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = createTableIndexRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling createTableScalarIndex");
+    }
+
+    // verify the required parameter 'createTableIndexRequest' is set
+    if (createTableIndexRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'createTableIndexRequest' when calling createTableScalarIndex");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/create_scalar_index"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
+
+    TypeReference<CreateTableScalarIndexResponse> localVarReturnType =
+        new TypeReference<CreateTableScalarIndexResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",
@@ -969,12 +1051,13 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @return CreateTableTagResponse
    * @throws ApiException if fails to make API call
    */
-  public void createTableTag(
+  public CreateTableTagResponse createTableTag(
       String id, CreateTableTagRequest createTableTagRequest, String delimiter)
       throws ApiException {
-    this.createTableTag(id, createTableTagRequest, delimiter, Collections.emptyMap());
+    return this.createTableTag(id, createTableTagRequest, delimiter, Collections.emptyMap());
   }
 
   /**
@@ -989,9 +1072,10 @@ public class TableApi extends BaseApi {
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
+   * @return CreateTableTagResponse
    * @throws ApiException if fails to make API call
    */
-  public void createTableTag(
+  public CreateTableTagResponse createTableTag(
       String id,
       CreateTableTagRequest createTableTagRequest,
       String delimiter,
@@ -1036,9 +1120,11 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
-    apiClient.invokeAPI(
+    TypeReference<CreateTableTagResponse> localVarReturnType =
+        new TypeReference<CreateTableTagResponse>() {};
+    return apiClient.invokeAPI(
         localVarPath,
         "POST",
         localVarQueryParams,
@@ -1051,7 +1137,7 @@ public class TableApi extends BaseApi {
         localVarAccept,
         localVarContentType,
         localVarAuthNames,
-        null);
+        localVarReturnType);
   }
 
   /**
@@ -1134,7 +1220,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<DeleteFromTableResponse> localVarReturnType =
         new TypeReference<DeleteFromTableResponse>() {};
@@ -1165,12 +1251,13 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @return DeleteTableTagResponse
    * @throws ApiException if fails to make API call
    */
-  public void deleteTableTag(
+  public DeleteTableTagResponse deleteTableTag(
       String id, DeleteTableTagRequest deleteTableTagRequest, String delimiter)
       throws ApiException {
-    this.deleteTableTag(id, deleteTableTagRequest, delimiter, Collections.emptyMap());
+    return this.deleteTableTag(id, deleteTableTagRequest, delimiter, Collections.emptyMap());
   }
 
   /**
@@ -1185,9 +1272,10 @@ public class TableApi extends BaseApi {
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
+   * @return DeleteTableTagResponse
    * @throws ApiException if fails to make API call
    */
-  public void deleteTableTag(
+  public DeleteTableTagResponse deleteTableTag(
       String id,
       DeleteTableTagRequest deleteTableTagRequest,
       String delimiter,
@@ -1232,9 +1320,11 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
-    apiClient.invokeAPI(
+    TypeReference<DeleteTableTagResponse> localVarReturnType =
+        new TypeReference<DeleteTableTagResponse>() {};
+    return apiClient.invokeAPI(
         localVarPath,
         "POST",
         localVarQueryParams,
@@ -1247,7 +1337,7 @@ public class TableApi extends BaseApi {
         localVarAccept,
         localVarContentType,
         localVarAuthNames,
-        null);
+        localVarReturnType);
   }
 
   /**
@@ -1330,7 +1420,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<DeregisterTableResponse> localVarReturnType =
         new TypeReference<DeregisterTableResponse>() {};
@@ -1352,6 +1442,8 @@ public class TableApi extends BaseApi {
 
   /**
    * Describe information of a table Describe the detailed information for table &#x60;id&#x60;.
+   * REST NAMESPACE ONLY REST namespace passes &#x60;with_table_uri&#x60; as a query parameter
+   * instead of in the request body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1361,16 +1453,22 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param withTableUri Whether to include the table URI in the response (optional, default to
+   *     false)
    * @return DescribeTableResponse
    * @throws ApiException if fails to make API call
    */
   public DescribeTableResponse describeTable(
-      String id, DescribeTableRequest describeTableRequest, String delimiter) throws ApiException {
-    return this.describeTable(id, describeTableRequest, delimiter, Collections.emptyMap());
+      String id, DescribeTableRequest describeTableRequest, String delimiter, Boolean withTableUri)
+      throws ApiException {
+    return this.describeTable(
+        id, describeTableRequest, delimiter, withTableUri, Collections.emptyMap());
   }
 
   /**
    * Describe information of a table Describe the detailed information for table &#x60;id&#x60;.
+   * REST NAMESPACE ONLY REST namespace passes &#x60;with_table_uri&#x60; as a query parameter
+   * instead of in the request body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1380,6 +1478,8 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param withTableUri Whether to include the table URI in the response (optional, default to
+   *     false)
    * @param additionalHeaders additionalHeaders for this call
    * @return DescribeTableResponse
    * @throws ApiException if fails to make API call
@@ -1388,6 +1488,7 @@ public class TableApi extends BaseApi {
       String id,
       DescribeTableRequest describeTableRequest,
       String delimiter,
+      Boolean withTableUri,
       Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = describeTableRequest;
@@ -1418,6 +1519,7 @@ public class TableApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("with_table_uri", withTableUri));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -1427,7 +1529,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<DescribeTableResponse> localVarReturnType =
         new TypeReference<DescribeTableResponse>() {};
@@ -1545,7 +1647,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<DescribeTableIndexStatsResponse> localVarReturnType =
         new TypeReference<DescribeTableIndexStatsResponse>() {};
@@ -1566,32 +1668,33 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Drop a table Drop table &#x60;id&#x60; and delete its data.
+   * Drop a table Drop table &#x60;id&#x60; and delete its data. REST NAMESPACE ONLY REST namespace
+   * does not use a request body for this operation. The &#x60;DropTableRequest&#x60; information is
+   * passed in the following way: - &#x60;id&#x60;: pass through path parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param dropTableRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return DropTableResponse
    * @throws ApiException if fails to make API call
    */
-  public DropTableResponse dropTable(String id, DropTableRequest dropTableRequest, String delimiter)
-      throws ApiException {
-    return this.dropTable(id, dropTableRequest, delimiter, Collections.emptyMap());
+  public DropTableResponse dropTable(String id, String delimiter) throws ApiException {
+    return this.dropTable(id, delimiter, Collections.emptyMap());
   }
 
   /**
-   * Drop a table Drop table &#x60;id&#x60; and delete its data.
+   * Drop a table Drop table &#x60;id&#x60; and delete its data. REST NAMESPACE ONLY REST namespace
+   * does not use a request body for this operation. The &#x60;DropTableRequest&#x60; information is
+   * passed in the following way: - &#x60;id&#x60;: pass through path parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param dropTableRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
@@ -1600,22 +1703,12 @@ public class TableApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public DropTableResponse dropTable(
-      String id,
-      DropTableRequest dropTableRequest,
-      String delimiter,
-      Map<String, String> additionalHeaders)
-      throws ApiException {
-    Object localVarPostBody = dropTableRequest;
+      String id, String delimiter, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
 
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(400, "Missing the required parameter 'id' when calling dropTable");
-    }
-
-    // verify the required parameter 'dropTableRequest' is set
-    if (dropTableRequest == null) {
-      throw new ApiException(
-          400, "Missing the required parameter 'dropTableRequest' when calling dropTable");
     }
 
     // create path and map variables
@@ -1639,10 +1732,11 @@ public class TableApi extends BaseApi {
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {"application/json"};
+    final String[] localVarContentTypes = {};
+
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<DropTableResponse> localVarReturnType = new TypeReference<DropTableResponse>() {};
     return apiClient.invokeAPI(
@@ -1662,36 +1756,40 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Drop a specific index Drop the specified index from table &#x60;id&#x60;.
+   * Drop a specific index Drop the specified index from table &#x60;id&#x60;. REST NAMESPACE ONLY
+   * REST namespace does not use a request body for this operation. The
+   * &#x60;DropTableIndexRequest&#x60; information is passed in the following way: - &#x60;id&#x60;:
+   * pass through path parameter of the same name - &#x60;index_name&#x60;: pass through path
+   * parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param indexName Name of the index to drop (required)
-   * @param dropTableIndexRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @return DropTableIndexResponse
    * @throws ApiException if fails to make API call
    */
-  public DropTableIndexResponse dropTableIndex(
-      String id, String indexName, DropTableIndexRequest dropTableIndexRequest, String delimiter)
+  public DropTableIndexResponse dropTableIndex(String id, String indexName, String delimiter)
       throws ApiException {
-    return this.dropTableIndex(
-        id, indexName, dropTableIndexRequest, delimiter, Collections.emptyMap());
+    return this.dropTableIndex(id, indexName, delimiter, Collections.emptyMap());
   }
 
   /**
-   * Drop a specific index Drop the specified index from table &#x60;id&#x60;.
+   * Drop a specific index Drop the specified index from table &#x60;id&#x60;. REST NAMESPACE ONLY
+   * REST namespace does not use a request body for this operation. The
+   * &#x60;DropTableIndexRequest&#x60; information is passed in the following way: - &#x60;id&#x60;:
+   * pass through path parameter of the same name - &#x60;index_name&#x60;: pass through path
+   * parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
    * @param indexName Name of the index to drop (required)
-   * @param dropTableIndexRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
@@ -1700,13 +1798,9 @@ public class TableApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public DropTableIndexResponse dropTableIndex(
-      String id,
-      String indexName,
-      DropTableIndexRequest dropTableIndexRequest,
-      String delimiter,
-      Map<String, String> additionalHeaders)
+      String id, String indexName, String delimiter, Map<String, String> additionalHeaders)
       throws ApiException {
-    Object localVarPostBody = dropTableIndexRequest;
+    Object localVarPostBody = null;
 
     // verify the required parameter 'id' is set
     if (id == null) {
@@ -1718,13 +1812,6 @@ public class TableApi extends BaseApi {
     if (indexName == null) {
       throw new ApiException(
           400, "Missing the required parameter 'indexName' when calling dropTableIndex");
-    }
-
-    // verify the required parameter 'dropTableIndexRequest' is set
-    if (dropTableIndexRequest == null) {
-      throw new ApiException(
-          400,
-          "Missing the required parameter 'dropTableIndexRequest' when calling dropTableIndex");
     }
 
     // create path and map variables
@@ -1751,10 +1838,11 @@ public class TableApi extends BaseApi {
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {"application/json"};
+    final String[] localVarContentTypes = {};
+
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<DropTableIndexResponse> localVarReturnType =
         new TypeReference<DropTableIndexResponse>() {};
@@ -1776,7 +1864,9 @@ public class TableApi extends BaseApi {
 
   /**
    * Get query execution plan explanation Get the query execution plan for a query against table
-   * &#x60;id&#x60;. Returns a human-readable explanation of how the query will be executed.
+   * &#x60;id&#x60;. Returns a human-readable explanation of how the query will be executed. REST
+   * NAMESPACE ONLY REST namespace returns the response as a plain string instead of the
+   * &#x60;ExplainTableQueryPlanResponse&#x60; JSON object.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1786,10 +1876,10 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @return ExplainTableQueryPlanResponse
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public ExplainTableQueryPlanResponse explainTableQueryPlan(
+  public String explainTableQueryPlan(
       String id, ExplainTableQueryPlanRequest explainTableQueryPlanRequest, String delimiter)
       throws ApiException {
     return this.explainTableQueryPlan(
@@ -1798,7 +1888,9 @@ public class TableApi extends BaseApi {
 
   /**
    * Get query execution plan explanation Get the query execution plan for a query against table
-   * &#x60;id&#x60;. Returns a human-readable explanation of how the query will be executed.
+   * &#x60;id&#x60;. Returns a human-readable explanation of how the query will be executed. REST
+   * NAMESPACE ONLY REST namespace returns the response as a plain string instead of the
+   * &#x60;ExplainTableQueryPlanResponse&#x60; JSON object.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1809,10 +1901,10 @@ public class TableApi extends BaseApi {
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
-   * @return ExplainTableQueryPlanResponse
+   * @return String
    * @throws ApiException if fails to make API call
    */
-  public ExplainTableQueryPlanResponse explainTableQueryPlan(
+  public String explainTableQueryPlan(
       String id,
       ExplainTableQueryPlanRequest explainTableQueryPlanRequest,
       String delimiter,
@@ -1857,10 +1949,9 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
-    TypeReference<ExplainTableQueryPlanResponse> localVarReturnType =
-        new TypeReference<ExplainTableQueryPlanResponse>() {};
+    TypeReference<String> localVarReturnType = new TypeReference<String>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",
@@ -1956,7 +2047,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<GetTableStatsResponse> localVarReturnType =
         new TypeReference<GetTableStatsResponse>() {};
@@ -2059,7 +2150,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<GetTableTagVersionResponse> localVarReturnType =
         new TypeReference<GetTableTagVersionResponse>() {};
@@ -2169,13 +2260,98 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/vnd.apache.arrow.stream"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<InsertIntoTableResponse> localVarReturnType =
         new TypeReference<InsertIntoTableResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * List all tables List all tables across all namespaces. REST NAMESPACE ONLY REST namespace uses
+   * GET to perform this operation without a request body. It passes in the
+   * &#x60;ListAllTablesRequest&#x60; information in the following way: - &#x60;page_token&#x60;:
+   * pass through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter
+   * of the same name - &#x60;delimiter&#x60;: pass through query parameter of the same name
+   *
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
+   * @return ListTablesResponse
+   * @throws ApiException if fails to make API call
+   */
+  public ListTablesResponse listAllTables(String delimiter, String pageToken, Integer limit)
+      throws ApiException {
+    return this.listAllTables(delimiter, pageToken, limit, Collections.emptyMap());
+  }
+
+  /**
+   * List all tables List all tables across all namespaces. REST NAMESPACE ONLY REST namespace uses
+   * GET to perform this operation without a request body. It passes in the
+   * &#x60;ListAllTablesRequest&#x60; information in the following way: - &#x60;page_token&#x60;:
+   * pass through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter
+   * of the same name - &#x60;delimiter&#x60;: pass through query parameter of the same name
+   *
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return ListTablesResponse
+   * @throws ApiException if fails to make API call
+   */
+  public ListTablesResponse listAllTables(
+      String delimiter, String pageToken, Integer limit, Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = null;
+
+    // create path and map variables
+    String localVarPath = "/v1/table";
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("page_token", pageToken));
+    localVarQueryParams.addAll(apiClient.parameterToPair("limit", limit));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {};
+
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
+
+    TypeReference<ListTablesResponse> localVarReturnType =
+        new TypeReference<ListTablesResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
         localVarQueryParams,
         localVarCollectionQueryParams,
         localVarQueryStringJoiner.toString(),
@@ -2271,7 +2447,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<ListTableIndicesResponse> localVarReturnType =
         new TypeReference<ListTableIndicesResponse>() {};
@@ -2294,10 +2470,10 @@ public class TableApi extends BaseApi {
   /**
    * List all tags for a table List all tags that have been created for table &#x60;id&#x60;.
    * Returns a map of tag names to their corresponding version numbers and metadata. REST NAMESPACE
-   * ONLY REST namespace uses GET to perform this operation without a request body. It passes in the
-   * &#x60;ListTableTagsRequest&#x60; information in the following way: - &#x60;id&#x60;: pass
-   * through path parameter of the same name - &#x60;page_token&#x60;: pass through query parameter
-   * of the same name - &#x60;limit&#x60;: pass through query parameter of the same name
+   * ONLY REST namespace does not use a request body for this operation. The
+   * &#x60;ListTableTagsRequest&#x60; information is passed in the following way: - &#x60;id&#x60;:
+   * pass through path parameter of the same name - &#x60;page_token&#x60;: pass through query
+   * parameter of the same name - &#x60;limit&#x60;: pass through query parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -2306,8 +2482,8 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @param pageToken (optional)
-   * @param limit (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
    * @return ListTableTagsResponse
    * @throws ApiException if fails to make API call
    */
@@ -2319,10 +2495,10 @@ public class TableApi extends BaseApi {
   /**
    * List all tags for a table List all tags that have been created for table &#x60;id&#x60;.
    * Returns a map of tag names to their corresponding version numbers and metadata. REST NAMESPACE
-   * ONLY REST namespace uses GET to perform this operation without a request body. It passes in the
-   * &#x60;ListTableTagsRequest&#x60; information in the following way: - &#x60;id&#x60;: pass
-   * through path parameter of the same name - &#x60;page_token&#x60;: pass through query parameter
-   * of the same name - &#x60;limit&#x60;: pass through query parameter of the same name
+   * ONLY REST namespace does not use a request body for this operation. The
+   * &#x60;ListTableTagsRequest&#x60; information is passed in the following way: - &#x60;id&#x60;:
+   * pass through path parameter of the same name - &#x60;page_token&#x60;: pass through query
+   * parameter of the same name - &#x60;limit&#x60;: pass through query parameter of the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -2331,8 +2507,8 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @param pageToken (optional)
-   * @param limit (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return ListTableTagsResponse
    * @throws ApiException if fails to make API call
@@ -2378,13 +2554,13 @@ public class TableApi extends BaseApi {
 
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<ListTableTagsResponse> localVarReturnType =
         new TypeReference<ListTableTagsResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
-        "GET",
+        "POST",
         localVarQueryParams,
         localVarCollectionQueryParams,
         localVarQueryStringJoiner.toString(),
@@ -2400,60 +2576,63 @@ public class TableApi extends BaseApi {
 
   /**
    * List all versions of a table List all versions (commits) of table &#x60;id&#x60; with their
-   * metadata.
+   * metadata. REST NAMESPACE ONLY REST namespace does not use a request body for this operation.
+   * The &#x60;ListTableVersionsRequest&#x60; information is passed in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass
+   * through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of
+   * the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param listTableVersionsRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
    * @return ListTableVersionsResponse
    * @throws ApiException if fails to make API call
    */
   public ListTableVersionsResponse listTableVersions(
-      String id, ListTableVersionsRequest listTableVersionsRequest, String delimiter)
-      throws ApiException {
-    return this.listTableVersions(id, listTableVersionsRequest, delimiter, Collections.emptyMap());
+      String id, String delimiter, String pageToken, Integer limit) throws ApiException {
+    return this.listTableVersions(id, delimiter, pageToken, limit, Collections.emptyMap());
   }
 
   /**
    * List all versions of a table List all versions (commits) of table &#x60;id&#x60; with their
-   * metadata.
+   * metadata. REST NAMESPACE ONLY REST namespace does not use a request body for this operation.
+   * The &#x60;ListTableVersionsRequest&#x60; information is passed in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass
+   * through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of
+   * the same name
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param listTableVersionsRequest (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return ListTableVersionsResponse
    * @throws ApiException if fails to make API call
    */
   public ListTableVersionsResponse listTableVersions(
       String id,
-      ListTableVersionsRequest listTableVersionsRequest,
       String delimiter,
+      String pageToken,
+      Integer limit,
       Map<String, String> additionalHeaders)
       throws ApiException {
-    Object localVarPostBody = listTableVersionsRequest;
+    Object localVarPostBody = null;
 
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(
           400, "Missing the required parameter 'id' when calling listTableVersions");
-    }
-
-    // verify the required parameter 'listTableVersionsRequest' is set
-    if (listTableVersionsRequest == null) {
-      throw new ApiException(
-          400,
-          "Missing the required parameter 'listTableVersionsRequest' when calling listTableVersions");
     }
 
     // create path and map variables
@@ -2471,16 +2650,19 @@ public class TableApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("page_token", pageToken));
+    localVarQueryParams.addAll(apiClient.parameterToPair("limit", limit));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
     final String[] localVarAccepts = {"application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    final String[] localVarContentTypes = {"application/json"};
+    final String[] localVarContentTypes = {};
+
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<ListTableVersionsResponse> localVarReturnType =
         new TypeReference<ListTableVersionsResponse>() {};
@@ -2515,8 +2697,8 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @param pageToken (optional)
-   * @param limit (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
    * @return ListTablesResponse
    * @throws ApiException if fails to make API call
    */
@@ -2540,8 +2722,8 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @param pageToken (optional)
-   * @param limit (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return ListTablesResponse
    * @throws ApiException if fails to make API call
@@ -2587,7 +2769,7 @@ public class TableApi extends BaseApi {
 
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<ListTablesResponse> localVarReturnType =
         new TypeReference<ListTablesResponse>() {};
@@ -2639,6 +2821,8 @@ public class TableApi extends BaseApi {
    *     row in the source table (optional, default to false)
    * @param whenNotMatchedBySourceDeleteFilt Delete rows from the target table if there is no match
    *     AND the SQL expression evaluates to true (optional)
+   * @param timeout Timeout for the operation (e.g., \&quot;30s\&quot;, \&quot;5m\&quot;) (optional)
+   * @param useIndex Whether to use index for matching rows (optional, default to false)
    * @return MergeInsertIntoTableResponse
    * @throws ApiException if fails to make API call
    */
@@ -2651,7 +2835,9 @@ public class TableApi extends BaseApi {
       String whenMatchedUpdateAllFilt,
       Boolean whenNotMatchedInsertAll,
       Boolean whenNotMatchedBySourceDelete,
-      String whenNotMatchedBySourceDeleteFilt)
+      String whenNotMatchedBySourceDeleteFilt,
+      String timeout,
+      Boolean useIndex)
       throws ApiException {
     return this.mergeInsertIntoTable(
         id,
@@ -2663,6 +2849,8 @@ public class TableApi extends BaseApi {
         whenNotMatchedInsertAll,
         whenNotMatchedBySourceDelete,
         whenNotMatchedBySourceDeleteFilt,
+        timeout,
+        useIndex,
         Collections.emptyMap());
   }
 
@@ -2698,6 +2886,8 @@ public class TableApi extends BaseApi {
    *     row in the source table (optional, default to false)
    * @param whenNotMatchedBySourceDeleteFilt Delete rows from the target table if there is no match
    *     AND the SQL expression evaluates to true (optional)
+   * @param timeout Timeout for the operation (e.g., \&quot;30s\&quot;, \&quot;5m\&quot;) (optional)
+   * @param useIndex Whether to use index for matching rows (optional, default to false)
    * @param additionalHeaders additionalHeaders for this call
    * @return MergeInsertIntoTableResponse
    * @throws ApiException if fails to make API call
@@ -2712,6 +2902,8 @@ public class TableApi extends BaseApi {
       Boolean whenNotMatchedInsertAll,
       Boolean whenNotMatchedBySourceDelete,
       String whenNotMatchedBySourceDeleteFilt,
+      String timeout,
+      Boolean useIndex,
       Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = body;
@@ -2762,6 +2954,8 @@ public class TableApi extends BaseApi {
     localVarQueryParams.addAll(
         apiClient.parameterToPair(
             "when_not_matched_by_source_delete_filt", whenNotMatchedBySourceDeleteFilt));
+    localVarQueryParams.addAll(apiClient.parameterToPair("timeout", timeout));
+    localVarQueryParams.addAll(apiClient.parameterToPair("use_index", useIndex));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -2771,7 +2965,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/vnd.apache.arrow.stream"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<MergeInsertIntoTableResponse> localVarReturnType =
         new TypeReference<MergeInsertIntoTableResponse>() {};
@@ -2793,7 +2987,9 @@ public class TableApi extends BaseApi {
 
   /**
    * Query a table Query table &#x60;id&#x60; with vector search, full text search and optional SQL
-   * filtering. Returns results in Arrow IPC file or stream format.
+   * filtering. Returns results in Arrow IPC file or stream format. REST NAMESPACE ONLY REST
+   * namespace returns the response as Arrow IPC file binary data instead of the
+   * &#x60;QueryTableResponse&#x60; JSON object.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -2813,7 +3009,9 @@ public class TableApi extends BaseApi {
 
   /**
    * Query a table Query table &#x60;id&#x60; with vector search, full text search and optional SQL
-   * filtering. Returns results in Arrow IPC file or stream format.
+   * filtering. Returns results in Arrow IPC file or stream format. REST NAMESPACE ONLY REST
+   * namespace returns the response as Arrow IPC file binary data instead of the
+   * &#x60;QueryTableResponse&#x60; JSON object.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -2864,15 +3062,13 @@ public class TableApi extends BaseApi {
 
     localVarHeaderParams.putAll(additionalHeaders);
 
-    final String[] localVarAccepts = {
-      "application/vnd.apache.arrow.file", "application/vnd.apache.arrow.stream", "application/json"
-    };
+    final String[] localVarAccepts = {"application/vnd.apache.arrow.file", "application/json"};
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<byte[]> localVarReturnType = new TypeReference<byte[]>() {};
     return apiClient.invokeAPI(
@@ -2970,10 +3166,107 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<RegisterTableResponse> localVarReturnType =
         new TypeReference<RegisterTableResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Rename a table Rename table &#x60;id&#x60; to a new name.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param renameTableRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return RenameTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public RenameTableResponse renameTable(
+      String id, RenameTableRequest renameTableRequest, String delimiter) throws ApiException {
+    return this.renameTable(id, renameTableRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Rename a table Rename table &#x60;id&#x60; to a new name.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param renameTableRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return RenameTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public RenameTableResponse renameTable(
+      String id,
+      RenameTableRequest renameTableRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = renameTableRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling renameTable");
+    }
+
+    // verify the required parameter 'renameTableRequest' is set
+    if (renameTableRequest == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'renameTableRequest' when calling renameTable");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/rename"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
+
+    TypeReference<RenameTableResponse> localVarReturnType =
+        new TypeReference<RenameTableResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",
@@ -3067,7 +3360,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<RestoreTableResponse> localVarReturnType =
         new TypeReference<RestoreTableResponse>() {};
@@ -3170,7 +3463,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     apiClient.invokeAPI(
         localVarPath,
@@ -3265,10 +3558,115 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<UpdateTableResponse> localVarReturnType =
         new TypeReference<UpdateTableResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Update table schema metadata Replace the schema metadata for table &#x60;id&#x60; with the
+   * provided key-value pairs. REST NAMESPACE ONLY REST namespace uses a direct object (map of
+   * string to string) as both request and response body instead of the wrapped
+   * &#x60;UpdateTableSchemaMetadataRequest&#x60; and &#x60;UpdateTableSchemaMetadataResponse&#x60;.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param requestBody (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return Map&lt;String, String&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public Map<String, String> updateTableSchemaMetadata(
+      String id, Map<String, String> requestBody, String delimiter) throws ApiException {
+    return this.updateTableSchemaMetadata(id, requestBody, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Update table schema metadata Replace the schema metadata for table &#x60;id&#x60; with the
+   * provided key-value pairs. REST NAMESPACE ONLY REST namespace uses a direct object (map of
+   * string to string) as both request and response body instead of the wrapped
+   * &#x60;UpdateTableSchemaMetadataRequest&#x60; and &#x60;UpdateTableSchemaMetadataResponse&#x60;.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param requestBody (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return Map&lt;String, String&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public Map<String, String> updateTableSchemaMetadata(
+      String id,
+      Map<String, String> requestBody,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = requestBody;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling updateTableSchemaMetadata");
+    }
+
+    // verify the required parameter 'requestBody' is set
+    if (requestBody == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'requestBody' when calling updateTableSchemaMetadata");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/schema_metadata/update"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
+
+    TypeReference<Map<String, String>> localVarReturnType =
+        new TypeReference<Map<String, String>>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",
@@ -3297,12 +3695,13 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @return UpdateTableTagResponse
    * @throws ApiException if fails to make API call
    */
-  public void updateTableTag(
+  public UpdateTableTagResponse updateTableTag(
       String id, UpdateTableTagRequest updateTableTagRequest, String delimiter)
       throws ApiException {
-    this.updateTableTag(id, updateTableTagRequest, delimiter, Collections.emptyMap());
+    return this.updateTableTag(id, updateTableTagRequest, delimiter, Collections.emptyMap());
   }
 
   /**
@@ -3318,9 +3717,10 @@ public class TableApi extends BaseApi {
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
    * @param additionalHeaders additionalHeaders for this call
+   * @return UpdateTableTagResponse
    * @throws ApiException if fails to make API call
    */
-  public void updateTableTag(
+  public UpdateTableTagResponse updateTableTag(
       String id,
       UpdateTableTagRequest updateTableTagRequest,
       String delimiter,
@@ -3365,9 +3765,11 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
-    apiClient.invokeAPI(
+    TypeReference<UpdateTableTagResponse> localVarReturnType =
+        new TypeReference<UpdateTableTagResponse>() {};
+    return apiClient.invokeAPI(
         localVarPath,
         "POST",
         localVarQueryParams,
@@ -3380,7 +3782,7 @@ public class TableApi extends BaseApi {
         localVarAccept,
         localVarContentType,
         localVarAuthNames,
-        null);
+        localVarReturnType);
   }
 
   @Override
@@ -3407,7 +3809,7 @@ public class TableApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     return apiClient.invokeAPI(
         localVarPath,

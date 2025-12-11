@@ -30,6 +30,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class RegisterTableResponse {
 
+  private String transactionId;
+
   private String location;
 
   @Valid private Map<String, String> properties = new HashMap<>();
@@ -41,6 +43,29 @@ public class RegisterTableResponse {
   /** Constructor with only required parameters */
   public RegisterTableResponse(String location) {
     this.location = location;
+  }
+
+  public RegisterTableResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @Schema(
+      name = "transaction_id",
+      description = "Optional transaction identifier",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
   }
 
   public RegisterTableResponse location(String location) {
@@ -101,19 +126,21 @@ public class RegisterTableResponse {
       return false;
     }
     RegisterTableResponse registerTableResponse = (RegisterTableResponse) o;
-    return Objects.equals(this.location, registerTableResponse.location)
+    return Objects.equals(this.transactionId, registerTableResponse.transactionId)
+        && Objects.equals(this.location, registerTableResponse.location)
         && Objects.equals(this.properties, registerTableResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(location, properties);
+    return Objects.hash(transactionId, location, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class RegisterTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");

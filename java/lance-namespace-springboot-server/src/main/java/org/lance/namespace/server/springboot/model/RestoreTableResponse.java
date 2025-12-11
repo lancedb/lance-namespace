@@ -21,36 +21,36 @@ import jakarta.validation.constraints.*;
 import java.util.*;
 import java.util.Objects;
 
-/** RestoreTableResponse */
+/** Response for restore table operation */
+@Schema(name = "RestoreTableResponse", description = "Response for restore table operation")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class RestoreTableResponse {
 
-  private Long version;
+  private String transactionId;
 
-  public RestoreTableResponse version(Long version) {
-    this.version = version;
+  public RestoreTableResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
     return this;
   }
 
   /**
-   * Version of the table after restore operation minimum: 0
+   * Optional transaction identifier
    *
-   * @return version
+   * @return transactionId
    */
-  @Min(0L)
   @Schema(
-      name = "version",
-      description = "Version of the table after restore operation",
+      name = "transaction_id",
+      description = "Optional transaction identifier",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("version")
-  public Long getVersion() {
-    return version;
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
   }
 
-  public void setVersion(Long version) {
-    this.version = version;
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
   }
 
   @Override
@@ -62,19 +62,19 @@ public class RestoreTableResponse {
       return false;
     }
     RestoreTableResponse restoreTableResponse = (RestoreTableResponse) o;
-    return Objects.equals(this.version, restoreTableResponse.version);
+    return Objects.equals(this.transactionId, restoreTableResponse.transactionId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version);
+    return Objects.hash(transactionId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class RestoreTableResponse {\n");
-    sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

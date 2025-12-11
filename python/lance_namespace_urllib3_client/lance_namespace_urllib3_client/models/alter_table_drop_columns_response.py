@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,8 +27,9 @@ class AlterTableDropColumnsResponse(BaseModel):
     """
     AlterTableDropColumnsResponse
     """ # noqa: E501
+    transaction_id: Optional[StrictStr] = Field(default=None, description="Optional transaction identifier")
     version: Annotated[int, Field(strict=True, ge=0)] = Field(description="Version of the table after dropping columns")
-    __properties: ClassVar[List[str]] = ["version"]
+    __properties: ClassVar[List[str]] = ["transaction_id", "version"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,6 +82,7 @@ class AlterTableDropColumnsResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "transaction_id": obj.get("transaction_id"),
             "version": obj.get("version")
         })
         return _obj

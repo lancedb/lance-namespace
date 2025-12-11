@@ -5,6 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**transaction_id** | **str** | Optional transaction identifier | [optional] 
 **updated_rows** | **int** | Number of rows updated | 
 **version** | **int** | The commit version associated with the operation | 
 

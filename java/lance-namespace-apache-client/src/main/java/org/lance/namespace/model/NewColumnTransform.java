@@ -25,7 +25,8 @@ import java.util.StringJoiner;
 /** NewColumnTransform */
 @JsonPropertyOrder({
   NewColumnTransform.JSON_PROPERTY_NAME,
-  NewColumnTransform.JSON_PROPERTY_EXPRESSION
+  NewColumnTransform.JSON_PROPERTY_EXPRESSION,
+  NewColumnTransform.JSON_PROPERTY_VIRTUAL_COLUMN
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -35,7 +36,10 @@ public class NewColumnTransform {
   @javax.annotation.Nonnull private String name;
 
   public static final String JSON_PROPERTY_EXPRESSION = "expression";
-  @javax.annotation.Nonnull private String expression;
+  @javax.annotation.Nullable private String expression;
+
+  public static final String JSON_PROPERTY_VIRTUAL_COLUMN = "virtual_column";
+  @javax.annotation.Nullable private AddVirtualColumnEntry virtualColumn;
 
   public NewColumnTransform() {}
 
@@ -63,28 +67,53 @@ public class NewColumnTransform {
     this.name = name;
   }
 
-  public NewColumnTransform expression(@javax.annotation.Nonnull String expression) {
+  public NewColumnTransform expression(@javax.annotation.Nullable String expression) {
 
     this.expression = expression;
     return this;
   }
 
   /**
-   * SQL expression to compute the column value
+   * SQL expression to compute the column value (optional if virtual_column is specified)
    *
    * @return expression
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_EXPRESSION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public String getExpression() {
     return expression;
   }
 
   @JsonProperty(JSON_PROPERTY_EXPRESSION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setExpression(@javax.annotation.Nonnull String expression) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setExpression(@javax.annotation.Nullable String expression) {
     this.expression = expression;
+  }
+
+  public NewColumnTransform virtualColumn(
+      @javax.annotation.Nullable AddVirtualColumnEntry virtualColumn) {
+
+    this.virtualColumn = virtualColumn;
+    return this;
+  }
+
+  /**
+   * Virtual column definition (optional if expression is specified)
+   *
+   * @return virtualColumn
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_VIRTUAL_COLUMN)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public AddVirtualColumnEntry getVirtualColumn() {
+    return virtualColumn;
+  }
+
+  @JsonProperty(JSON_PROPERTY_VIRTUAL_COLUMN)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setVirtualColumn(@javax.annotation.Nullable AddVirtualColumnEntry virtualColumn) {
+    this.virtualColumn = virtualColumn;
   }
 
   @Override
@@ -97,12 +126,13 @@ public class NewColumnTransform {
     }
     NewColumnTransform newColumnTransform = (NewColumnTransform) o;
     return Objects.equals(this.name, newColumnTransform.name)
-        && Objects.equals(this.expression, newColumnTransform.expression);
+        && Objects.equals(this.expression, newColumnTransform.expression)
+        && Objects.equals(this.virtualColumn, newColumnTransform.virtualColumn);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, expression);
+    return Objects.hash(name, expression, virtualColumn);
   }
 
   @Override
@@ -111,6 +141,7 @@ public class NewColumnTransform {
     sb.append("class NewColumnTransform {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    expression: ").append(toIndentedString(expression)).append("\n");
+    sb.append("    virtualColumn: ").append(toIndentedString(virtualColumn)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -186,6 +217,11 @@ public class NewColumnTransform {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);
       }
+    }
+
+    // add `virtual_column` to the URL query string
+    if (getVirtualColumn() != null) {
+      joiner.add(getVirtualColumn().toUrlQueryString(prefix + "virtual_column" + suffix));
     }
 
     return joiner.toString();

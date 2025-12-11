@@ -7,14 +7,14 @@ Method | HTTP request | Description
 [**create_table_tag**](TagApi.md#create_table_tag) | **POST** /v1/table/{id}/tags/create | Create a new tag
 [**delete_table_tag**](TagApi.md#delete_table_tag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
 [**get_table_tag_version**](TagApi.md#get_table_tag_version) | **POST** /v1/table/{id}/tags/version | Get version for a specific tag
-[**list_table_tags**](TagApi.md#list_table_tags) | **GET** /v1/table/{id}/tags/list | List all tags for a table
+[**list_table_tags**](TagApi.md#list_table_tags) | **POST** /v1/table/{id}/tags/list | List all tags for a table
 [**update_table_tag**](TagApi.md#update_table_tag) | **POST** /v1/table/{id}/tags/update | Update a tag to point to a different version
 
 
 
 ## create_table_tag
 
-> create_table_tag(id, create_table_tag_request, delimiter)
+> models::CreateTableTagResponse create_table_tag(id, create_table_tag_request, delimiter)
 Create a new tag
 
 Create a new tag for table `id` that points to a specific version. 
@@ -30,11 +30,11 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
- (empty response body)
+[**models::CreateTableTagResponse**](CreateTableTagResponse.md)
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -46,7 +46,7 @@ No authorization required
 
 ## delete_table_tag
 
-> delete_table_tag(id, delete_table_tag_request, delimiter)
+> models::DeleteTableTagResponse delete_table_tag(id, delete_table_tag_request, delimiter)
 Delete a tag
 
 Delete an existing tag from table `id`. 
@@ -62,11 +62,11 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
- (empty response body)
+[**models::DeleteTableTagResponse**](DeleteTableTagResponse.md)
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -98,7 +98,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -113,7 +113,7 @@ No authorization required
 > models::ListTableTagsResponse list_table_tags(id, delimiter, page_token, limit)
 List all tags for a table
 
-List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTableTagsRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableTagsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 
 ### Parameters
 
@@ -122,8 +122,8 @@ Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
-**page_token** | Option<**String**> |  |  |
-**limit** | Option<**i32**> |  |  |
+**page_token** | Option<**String**> | Pagination token from a previous request |  |
+**limit** | Option<**i32**> | Maximum number of items to return |  |
 
 ### Return type
 
@@ -131,7 +131,7 @@ Name | Type | Description  | Required | Notes
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -143,7 +143,7 @@ No authorization required
 
 ## update_table_tag
 
-> update_table_tag(id, update_table_tag_request, delimiter)
+> models::UpdateTableTagResponse update_table_tag(id, update_table_tag_request, delimiter)
 Update a tag to point to a different version
 
 Update an existing tag for table `id` to point to a different version. 
@@ -159,11 +159,11 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
- (empty response body)
+[**models::UpdateTableTagResponse**](UpdateTableTagResponse.md)
 
 ### Authorization
 
-No authorization required
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 

@@ -136,7 +136,7 @@ public class NamespaceApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<CreateNamespaceResponse> localVarReturnType =
         new TypeReference<CreateNamespaceResponse>() {};
@@ -236,7 +236,7 @@ public class NamespaceApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<DescribeNamespaceResponse> localVarReturnType =
         new TypeReference<DescribeNamespaceResponse>() {};
@@ -333,7 +333,7 @@ public class NamespaceApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<DropNamespaceResponse> localVarReturnType =
         new TypeReference<DropNamespaceResponse>() {};
@@ -368,8 +368,8 @@ public class NamespaceApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @param pageToken (optional)
-   * @param limit (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
    * @return ListNamespacesResponse
    * @throws ApiException if fails to make API call
    */
@@ -393,8 +393,8 @@ public class NamespaceApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @param pageToken (optional)
-   * @param limit (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return ListNamespacesResponse
    * @throws ApiException if fails to make API call
@@ -441,7 +441,7 @@ public class NamespaceApi extends BaseApi {
 
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<ListNamespacesResponse> localVarReturnType =
         new TypeReference<ListNamespacesResponse>() {};
@@ -476,8 +476,8 @@ public class NamespaceApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @param pageToken (optional)
-   * @param limit (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
    * @return ListTablesResponse
    * @throws ApiException if fails to make API call
    */
@@ -501,8 +501,8 @@ public class NamespaceApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @param pageToken (optional)
-   * @param limit (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return ListTablesResponse
    * @throws ApiException if fails to make API call
@@ -548,7 +548,7 @@ public class NamespaceApi extends BaseApi {
 
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     TypeReference<ListTablesResponse> localVarReturnType =
         new TypeReference<ListTablesResponse>() {};
@@ -648,7 +648,7 @@ public class NamespaceApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     apiClient.invokeAPI(
         localVarPath,
@@ -690,7 +690,7 @@ public class NamespaceApi extends BaseApi {
     final String[] localVarContentTypes = {"application/json"};
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {};
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
 
     return apiClient.invokeAPI(
         localVarPath,

@@ -35,6 +35,7 @@ class TestRegisterTableResponse(unittest.TestCase):
         model = RegisterTableResponse()
         if include_optional:
             return RegisterTableResponse(
+                transaction_id = '',
                 location = '',
                 properties = {
                     'key' : ''

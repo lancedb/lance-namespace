@@ -26,28 +26,52 @@ import java.util.StringJoiner;
 
 /** CreateTableResponse */
 @JsonPropertyOrder({
+  CreateTableResponse.JSON_PROPERTY_TRANSACTION_ID,
   CreateTableResponse.JSON_PROPERTY_LOCATION,
   CreateTableResponse.JSON_PROPERTY_VERSION,
-  CreateTableResponse.JSON_PROPERTY_PROPERTIES,
   CreateTableResponse.JSON_PROPERTY_STORAGE_OPTIONS
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class CreateTableResponse {
+  public static final String JSON_PROPERTY_TRANSACTION_ID = "transaction_id";
+  @javax.annotation.Nullable private String transactionId;
+
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nullable private String location;
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nullable private Long version;
 
-  public static final String JSON_PROPERTY_PROPERTIES = "properties";
-  @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
-
   public static final String JSON_PROPERTY_STORAGE_OPTIONS = "storage_options";
   @javax.annotation.Nullable private Map<String, String> storageOptions = new HashMap<>();
 
   public CreateTableResponse() {}
+
+  public CreateTableResponse transactionId(@javax.annotation.Nullable String transactionId) {
+
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTransactionId(@javax.annotation.Nullable String transactionId) {
+    this.transactionId = transactionId;
+  }
 
   public CreateTableResponse location(@javax.annotation.Nullable String location) {
 
@@ -97,38 +121,6 @@ public class CreateTableResponse {
     this.version = version;
   }
 
-  public CreateTableResponse properties(@javax.annotation.Nullable Map<String, String> properties) {
-
-    this.properties = properties;
-    return this;
-  }
-
-  public CreateTableResponse putPropertiesItem(String key, String propertiesItem) {
-    if (this.properties == null) {
-      this.properties = new HashMap<>();
-    }
-    this.properties.put(key, propertiesItem);
-    return this;
-  }
-
-  /**
-   * Get properties
-   *
-   * @return properties
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_PROPERTIES)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public Map<String, String> getProperties() {
-    return properties;
-  }
-
-  @JsonProperty(JSON_PROPERTY_PROPERTIES)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setProperties(@javax.annotation.Nullable Map<String, String> properties) {
-    this.properties = properties;
-  }
-
   public CreateTableResponse storageOptions(
       @javax.annotation.Nullable Map<String, String> storageOptions) {
 
@@ -172,24 +164,24 @@ public class CreateTableResponse {
       return false;
     }
     CreateTableResponse createTableResponse = (CreateTableResponse) o;
-    return Objects.equals(this.location, createTableResponse.location)
+    return Objects.equals(this.transactionId, createTableResponse.transactionId)
+        && Objects.equals(this.location, createTableResponse.location)
         && Objects.equals(this.version, createTableResponse.version)
-        && Objects.equals(this.properties, createTableResponse.properties)
         && Objects.equals(this.storageOptions, createTableResponse.storageOptions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(location, version, properties, storageOptions);
+    return Objects.hash(transactionId, location, version, storageOptions);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
-    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -237,6 +229,22 @@ public class CreateTableResponse {
 
     StringJoiner joiner = new StringJoiner("&");
 
+    // add `transaction_id` to the URL query string
+    if (getTransactionId() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%stransaction_id%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getTransactionId()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
     // add `location` to the URL query string
     if (getLocation() != null) {
       try {
@@ -265,28 +273,6 @@ public class CreateTableResponse {
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);
-      }
-    }
-
-    // add `properties` to the URL query string
-    if (getProperties() != null) {
-      for (String _key : getProperties().keySet()) {
-        try {
-          joiner.add(
-              String.format(
-                  "%sproperties%s%s=%s",
-                  prefix,
-                  suffix,
-                  "".equals(suffix)
-                      ? ""
-                      : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
-                  getProperties().get(_key),
-                  URLEncoder.encode(String.valueOf(getProperties().get(_key)), "UTF-8")
-                      .replaceAll("\\+", "%20")));
-        } catch (UnsupportedEncodingException e) {
-          // Should never happen, UTF-8 is always supported
-          throw new RuntimeException(e);
-        }
       }
     }
 

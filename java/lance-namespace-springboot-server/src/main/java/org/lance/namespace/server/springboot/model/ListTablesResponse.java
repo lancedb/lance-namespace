@@ -58,7 +58,9 @@ public class ListTablesResponse {
   }
 
   /**
-   * The list of names of the tables relative to the parent namespace `id` in the request.
+   * The list of names of all the tables under the connected namespace implementation. This should
+   * recursively list all the tables in all child namespaces. Each string in the list is the full
+   * identifier in string form.
    *
    * @return tables
    */
@@ -66,7 +68,7 @@ public class ListTablesResponse {
   @Schema(
       name = "tables",
       description =
-          "The list of names of the tables relative to the parent namespace `id` in the request. ",
+          "The list of names of all the tables under the connected namespace implementation. This should recursively list all the tables in all child namespaces. Each string in the list is the full identifier in string form. ",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tables")
   public Set<String> getTables() {

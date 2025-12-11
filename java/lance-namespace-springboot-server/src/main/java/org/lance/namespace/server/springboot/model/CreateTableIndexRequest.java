@@ -13,9 +13,7 @@
  */
 package org.lance.namespace.server.springboot.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
@@ -36,87 +34,11 @@ public class CreateTableIndexRequest {
 
   private String column;
 
-  /** Type of index to create */
-  public enum IndexTypeEnum {
-    BTREE("BTREE"),
+  private String indexType;
 
-    BITMAP("BITMAP"),
+  private String name;
 
-    LABEL_LIST("LABEL_LIST"),
-
-    IVF_FLAT("IVF_FLAT"),
-
-    IVF_PQ("IVF_PQ"),
-
-    IVF_HNSW_SQ("IVF_HNSW_SQ"),
-
-    FTS("FTS");
-
-    private String value;
-
-    IndexTypeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static IndexTypeEnum fromValue(String value) {
-      for (IndexTypeEnum b : IndexTypeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private IndexTypeEnum indexType;
-
-  /** Distance metric type for vector indexes */
-  public enum MetricTypeEnum {
-    L2("l2"),
-
-    COSINE("cosine"),
-
-    DOT("dot");
-
-    private String value;
-
-    MetricTypeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static MetricTypeEnum fromValue(String value) {
-      for (MetricTypeEnum b : MetricTypeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private MetricTypeEnum metricType;
+  private String distanceType;
 
   private Boolean withPosition;
 
@@ -139,7 +61,7 @@ public class CreateTableIndexRequest {
   }
 
   /** Constructor with only required parameters */
-  public CreateTableIndexRequest(String column, IndexTypeEnum indexType) {
+  public CreateTableIndexRequest(String column, String indexType) {
     this.column = column;
     this.indexType = indexType;
   }
@@ -196,51 +118,75 @@ public class CreateTableIndexRequest {
     this.column = column;
   }
 
-  public CreateTableIndexRequest indexType(IndexTypeEnum indexType) {
+  public CreateTableIndexRequest indexType(String indexType) {
     this.indexType = indexType;
     return this;
   }
 
   /**
-   * Type of index to create
+   * Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS)
    *
    * @return indexType
    */
   @NotNull
   @Schema(
       name = "index_type",
-      description = "Type of index to create",
+      description =
+          "Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS)",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("index_type")
-  public IndexTypeEnum getIndexType() {
+  public String getIndexType() {
     return indexType;
   }
 
-  public void setIndexType(IndexTypeEnum indexType) {
+  public void setIndexType(String indexType) {
     this.indexType = indexType;
   }
 
-  public CreateTableIndexRequest metricType(MetricTypeEnum metricType) {
-    this.metricType = metricType;
+  public CreateTableIndexRequest name(String name) {
+    this.name = name;
     return this;
   }
 
   /**
-   * Distance metric type for vector indexes
+   * Optional name for the index. If not provided, a name will be auto-generated.
    *
-   * @return metricType
+   * @return name
    */
   @Schema(
-      name = "metric_type",
-      description = "Distance metric type for vector indexes",
+      name = "name",
+      description = "Optional name for the index. If not provided, a name will be auto-generated.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("metric_type")
-  public MetricTypeEnum getMetricType() {
-    return metricType;
+  @JsonProperty("name")
+  public String getName() {
+    return name;
   }
 
-  public void setMetricType(MetricTypeEnum metricType) {
-    this.metricType = metricType;
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public CreateTableIndexRequest distanceType(String distanceType) {
+    this.distanceType = distanceType;
+    return this;
+  }
+
+  /**
+   * Distance metric type for vector indexes (e.g., l2, cosine, dot)
+   *
+   * @return distanceType
+   */
+  @Schema(
+      name = "distance_type",
+      description = "Distance metric type for vector indexes (e.g., l2, cosine, dot)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("distance_type")
+  public String getDistanceType() {
+    return distanceType;
+  }
+
+  public void setDistanceType(String distanceType) {
+    this.distanceType = distanceType;
   }
 
   public CreateTableIndexRequest withPosition(Boolean withPosition) {
@@ -440,7 +386,8 @@ public class CreateTableIndexRequest {
     return Objects.equals(this.id, createTableIndexRequest.id)
         && Objects.equals(this.column, createTableIndexRequest.column)
         && Objects.equals(this.indexType, createTableIndexRequest.indexType)
-        && Objects.equals(this.metricType, createTableIndexRequest.metricType)
+        && Objects.equals(this.name, createTableIndexRequest.name)
+        && Objects.equals(this.distanceType, createTableIndexRequest.distanceType)
         && Objects.equals(this.withPosition, createTableIndexRequest.withPosition)
         && Objects.equals(this.baseTokenizer, createTableIndexRequest.baseTokenizer)
         && Objects.equals(this.language, createTableIndexRequest.language)
@@ -457,7 +404,8 @@ public class CreateTableIndexRequest {
         id,
         column,
         indexType,
-        metricType,
+        name,
+        distanceType,
         withPosition,
         baseTokenizer,
         language,
@@ -475,7 +423,8 @@ public class CreateTableIndexRequest {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
-    sb.append("    metricType: ").append(toIndentedString(metricType)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    distanceType: ").append(toIndentedString(distanceType)).append("\n");
     sb.append("    withPosition: ").append(toIndentedString(withPosition)).append("\n");
     sb.append("    baseTokenizer: ").append(toIndentedString(baseTokenizer)).append("\n");
     sb.append("    language: ").append(toIndentedString(language)).append("\n");

@@ -24,13 +24,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/** ListTableTagsResponse */
+/** Response containing table tags */
+@Schema(name = "ListTableTagsResponse", description = "Response containing table tags")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class ListTableTagsResponse {
 
   @Valid private Map<String, TagContents> tags = new HashMap<>();
+
+  private String pageToken;
 
   public ListTableTagsResponse() {
     super();
@@ -74,6 +77,37 @@ public class ListTableTagsResponse {
     this.tags = tags;
   }
 
+  public ListTableTagsResponse pageToken(String pageToken) {
+    this.pageToken = pageToken;
+    return this;
+  }
+
+  /**
+   * An opaque token that allows pagination for list operations (e.g. ListNamespaces). For an
+   * initial request of a list operation, if the implementation cannot return all items in one
+   * response, or if there are more items than the page limit specified in the request, the
+   * implementation must return a page token in the response, indicating there are more results
+   * available. After the initial request, the value of the page token from each response must be
+   * used as the page token value for the next request. Caller must interpret either `null`, missing
+   * value or empty string value of the page token from the implementation's response as the end of
+   * the listing results.
+   *
+   * @return pageToken
+   */
+  @Schema(
+      name = "page_token",
+      description =
+          "An opaque token that allows pagination for list operations (e.g. ListNamespaces).  For an initial request of a list operation,  if the implementation cannot return all items in one response, or if there are more items than the page limit specified in the request, the implementation must return a page token in the response, indicating there are more results available.  After the initial request,  the value of the page token from each response must be used as the page token value for the next request.  Caller must interpret either `null`,  missing value or empty string value of the page token from the implementation's response as the end of the listing results. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("page_token")
+  public String getPageToken() {
+    return pageToken;
+  }
+
+  public void setPageToken(String pageToken) {
+    this.pageToken = pageToken;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -83,12 +117,13 @@ public class ListTableTagsResponse {
       return false;
     }
     ListTableTagsResponse listTableTagsResponse = (ListTableTagsResponse) o;
-    return Objects.equals(this.tags, listTableTagsResponse.tags);
+    return Objects.equals(this.tags, listTableTagsResponse.tags)
+        && Objects.equals(this.pageToken, listTableTagsResponse.pageToken);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(tags);
+    return Objects.hash(tags, pageToken);
   }
 
   @Override
@@ -96,6 +131,7 @@ public class ListTableTagsResponse {
     StringBuilder sb = new StringBuilder();
     sb.append("class ListTableTagsResponse {\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
+    sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
     sb.append("}");
     return sb.toString();
   }

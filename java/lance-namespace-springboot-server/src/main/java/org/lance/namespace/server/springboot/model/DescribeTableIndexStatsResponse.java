@@ -35,6 +35,8 @@ public class DescribeTableIndexStatsResponse {
 
   private Long numUnindexedRows;
 
+  private Integer numIndices;
+
   public DescribeTableIndexStatsResponse distanceType(String distanceType) {
     this.distanceType = distanceType;
     return this;
@@ -129,6 +131,30 @@ public class DescribeTableIndexStatsResponse {
     this.numUnindexedRows = numUnindexedRows;
   }
 
+  public DescribeTableIndexStatsResponse numIndices(Integer numIndices) {
+    this.numIndices = numIndices;
+    return this;
+  }
+
+  /**
+   * Number of indices minimum: 0
+   *
+   * @return numIndices
+   */
+  @Min(0)
+  @Schema(
+      name = "num_indices",
+      description = "Number of indices",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("num_indices")
+  public Integer getNumIndices() {
+    return numIndices;
+  }
+
+  public void setNumIndices(Integer numIndices) {
+    this.numIndices = numIndices;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -142,12 +168,13 @@ public class DescribeTableIndexStatsResponse {
     return Objects.equals(this.distanceType, describeTableIndexStatsResponse.distanceType)
         && Objects.equals(this.indexType, describeTableIndexStatsResponse.indexType)
         && Objects.equals(this.numIndexedRows, describeTableIndexStatsResponse.numIndexedRows)
-        && Objects.equals(this.numUnindexedRows, describeTableIndexStatsResponse.numUnindexedRows);
+        && Objects.equals(this.numUnindexedRows, describeTableIndexStatsResponse.numUnindexedRows)
+        && Objects.equals(this.numIndices, describeTableIndexStatsResponse.numIndices);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(distanceType, indexType, numIndexedRows, numUnindexedRows);
+    return Objects.hash(distanceType, indexType, numIndexedRows, numUnindexedRows, numIndices);
   }
 
   @Override
@@ -158,6 +185,7 @@ public class DescribeTableIndexStatsResponse {
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
     sb.append("    numIndexedRows: ").append(toIndentedString(numIndexedRows)).append("\n");
     sb.append("    numUnindexedRows: ").append(toIndentedString(numUnindexedRows)).append("\n");
+    sb.append("    numIndices: ").append(toIndentedString(numIndices)).append("\n");
     sb.append("}");
     return sb.toString();
   }

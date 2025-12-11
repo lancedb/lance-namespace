@@ -5,6 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**transaction_id** | **str** | Optional transaction identifier | [optional] 
 **id** | **List[str]** |  | [optional] 
 **location** | **str** |  | [optional] 
 **properties** | **Dict[str, str]** |  | [optional] 

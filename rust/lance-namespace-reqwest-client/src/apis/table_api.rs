@@ -120,6 +120,19 @@ pub enum CreateTableIndexError {
     UnknownValue(serde_json::Value),
 }
 
+/// struct for typed errors of method [`create_table_scalar_index`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CreateTableScalarIndexError {
+    Status400(models::ErrorResponse),
+    Status401(models::ErrorResponse),
+    Status403(models::ErrorResponse),
+    Status404(models::ErrorResponse),
+    Status503(models::ErrorResponse),
+    Status5XX(models::ErrorResponse),
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`create_table_tag`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -277,6 +290,18 @@ pub enum InsertIntoTableError {
     UnknownValue(serde_json::Value),
 }
 
+/// struct for typed errors of method [`list_all_tables`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum ListAllTablesError {
+    Status400(models::ErrorResponse),
+    Status401(models::ErrorResponse),
+    Status403(models::ErrorResponse),
+    Status503(models::ErrorResponse),
+    Status5XX(models::ErrorResponse),
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`list_table_indices`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -371,6 +396,20 @@ pub enum RegisterTableError {
     UnknownValue(serde_json::Value),
 }
 
+/// struct for typed errors of method [`rename_table`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum RenameTableError {
+    Status400(models::ErrorResponse),
+    Status401(models::ErrorResponse),
+    Status403(models::ErrorResponse),
+    Status404(models::ErrorResponse),
+    Status409(models::ErrorResponse),
+    Status503(models::ErrorResponse),
+    Status5XX(models::ErrorResponse),
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`restore_table`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -410,6 +449,19 @@ pub enum UpdateTableError {
     UnknownValue(serde_json::Value),
 }
 
+/// struct for typed errors of method [`update_table_schema_metadata`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UpdateTableSchemaMetadataError {
+    Status400(models::ErrorResponse),
+    Status401(models::ErrorResponse),
+    Status403(models::ErrorResponse),
+    Status404(models::ErrorResponse),
+    Status503(models::ErrorResponse),
+    Status5XX(models::ErrorResponse),
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`update_table_tag`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -440,6 +492,20 @@ pub async fn alter_table_add_columns(configuration: &configuration::Configuratio
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_alter_table_add_columns_request);
 
     let req = req_builder.build()?;
@@ -483,6 +549,20 @@ pub async fn alter_table_alter_columns(configuration: &configuration::Configurat
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_alter_table_alter_columns_request);
 
     let req = req_builder.build()?;
@@ -526,6 +606,20 @@ pub async fn alter_table_drop_columns(configuration: &configuration::Configurati
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_alter_table_drop_columns_request);
 
     let req = req_builder.build()?;
@@ -553,8 +647,8 @@ pub async fn alter_table_drop_columns(configuration: &configuration::Configurati
     }
 }
 
-/// Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan. 
-pub async fn analyze_table_query_plan(configuration: &configuration::Configuration, id: &str, analyze_table_query_plan_request: models::AnalyzeTableQueryPlanRequest, delimiter: Option<&str>) -> Result<models::AnalyzeTableQueryPlanResponse, Error<AnalyzeTableQueryPlanError>> {
+/// Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the `AnalyzeTableQueryPlanResponse` JSON object. 
+pub async fn analyze_table_query_plan(configuration: &configuration::Configuration, id: &str, analyze_table_query_plan_request: models::AnalyzeTableQueryPlanRequest, delimiter: Option<&str>) -> Result<String, Error<AnalyzeTableQueryPlanError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_analyze_table_query_plan_request = analyze_table_query_plan_request;
@@ -569,6 +663,20 @@ pub async fn analyze_table_query_plan(configuration: &configuration::Configurati
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_analyze_table_query_plan_request);
 
     let req = req_builder.build()?;
@@ -586,8 +694,8 @@ pub async fn analyze_table_query_plan(configuration: &configuration::Configurati
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::AnalyzeTableQueryPlanResponse`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::AnalyzeTableQueryPlanResponse`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `String`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `String`")))),
         }
     } else {
         let content = resp.text().await?;
@@ -596,7 +704,7 @@ pub async fn analyze_table_query_plan(configuration: &configuration::Configurati
     }
 }
 
-/// Count the number of rows in table `id` 
+/// Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. 
 pub async fn count_table_rows(configuration: &configuration::Configuration, id: &str, count_table_rows_request: models::CountTableRowsRequest, delimiter: Option<&str>) -> Result<i64, Error<CountTableRowsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -612,6 +720,20 @@ pub async fn count_table_rows(configuration: &configuration::Configuration, id: 
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_count_table_rows_request);
 
     let req = req_builder.build()?;
@@ -655,6 +777,20 @@ pub async fn create_empty_table(configuration: &configuration::Configuration, id
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_create_empty_table_request);
 
     let req = req_builder.build()?;
@@ -682,15 +818,13 @@ pub async fn create_empty_table(configuration: &configuration::Configuration, id
     }
 }
 
-/// Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema.     If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name - `location`: pass through header `x-lance-table-location` - `properties`: pass through header `x-lance-table-properties` 
-pub async fn create_table(configuration: &configuration::Configuration, id: &str, body: Vec<u8>, delimiter: Option<&str>, mode: Option<&str>, x_lance_table_location: Option<&str>, x_lance_table_properties: Option<&str>) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
+/// Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema. If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
+pub async fn create_table(configuration: &configuration::Configuration, id: &str, body: Vec<u8>, delimiter: Option<&str>, mode: Option<&str>) -> Result<models::CreateTableResponse, Error<CreateTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_body = body;
     let p_delimiter = delimiter;
     let p_mode = mode;
-    let p_x_lance_table_location = x_lance_table_location;
-    let p_x_lance_table_properties = x_lance_table_properties;
 
     let uri_str = format!("{}/v1/table/{id}/create", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
@@ -704,12 +838,20 @@ pub async fn create_table(configuration: &configuration::Configuration, id: &str
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    if let Some(param_value) = p_x_lance_table_location {
-        req_builder = req_builder.header("x-lance-table-location", param_value.to_string());
-    }
-    if let Some(param_value) = p_x_lance_table_properties {
-        req_builder = req_builder.header("x-lance-table-properties", param_value.to_string());
-    }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.body(p_body);
 
     let req = req_builder.build()?;
@@ -753,6 +895,20 @@ pub async fn create_table_index(configuration: &configuration::Configuration, id
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_create_table_index_request);
 
     let req = req_builder.build()?;
@@ -780,8 +936,65 @@ pub async fn create_table_index(configuration: &configuration::Configuration, id
     }
 }
 
+/// Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+pub async fn create_table_scalar_index(configuration: &configuration::Configuration, id: &str, create_table_index_request: models::CreateTableIndexRequest, delimiter: Option<&str>) -> Result<models::CreateTableScalarIndexResponse, Error<CreateTableScalarIndexError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
+    let p_create_table_index_request = create_table_index_request;
+    let p_delimiter = delimiter;
+
+    let uri_str = format!("{}/v1/table/{id}/create_scalar_index", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    req_builder = req_builder.json(&p_create_table_index_request);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::CreateTableScalarIndexResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::CreateTableScalarIndexResponse`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<CreateTableScalarIndexError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
 /// Create a new tag for table `id` that points to a specific version. 
-pub async fn create_table_tag(configuration: &configuration::Configuration, id: &str, create_table_tag_request: models::CreateTableTagRequest, delimiter: Option<&str>) -> Result<(), Error<CreateTableTagError>> {
+pub async fn create_table_tag(configuration: &configuration::Configuration, id: &str, create_table_tag_request: models::CreateTableTagRequest, delimiter: Option<&str>) -> Result<models::CreateTableTagResponse, Error<CreateTableTagError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_create_table_tag_request = create_table_tag_request;
@@ -796,15 +1009,40 @@ pub async fn create_table_tag(configuration: &configuration::Configuration, id: 
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_create_table_tag_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
 
     let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
 
     if !status.is_client_error() && !status.is_server_error() {
-        Ok(())
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::CreateTableTagResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::CreateTableTagResponse`")))),
+        }
     } else {
         let content = resp.text().await?;
         let entity: Option<CreateTableTagError> = serde_json::from_str(&content).ok();
@@ -828,6 +1066,20 @@ pub async fn delete_from_table(configuration: &configuration::Configuration, id:
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_delete_from_table_request);
 
     let req = req_builder.build()?;
@@ -856,7 +1108,7 @@ pub async fn delete_from_table(configuration: &configuration::Configuration, id:
 }
 
 /// Delete an existing tag from table `id`. 
-pub async fn delete_table_tag(configuration: &configuration::Configuration, id: &str, delete_table_tag_request: models::DeleteTableTagRequest, delimiter: Option<&str>) -> Result<(), Error<DeleteTableTagError>> {
+pub async fn delete_table_tag(configuration: &configuration::Configuration, id: &str, delete_table_tag_request: models::DeleteTableTagRequest, delimiter: Option<&str>) -> Result<models::DeleteTableTagResponse, Error<DeleteTableTagError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_delete_table_tag_request = delete_table_tag_request;
@@ -871,15 +1123,40 @@ pub async fn delete_table_tag(configuration: &configuration::Configuration, id: 
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_delete_table_tag_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
 
     let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
 
     if !status.is_client_error() && !status.is_server_error() {
-        Ok(())
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::DeleteTableTagResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::DeleteTableTagResponse`")))),
+        }
     } else {
         let content = resp.text().await?;
         let entity: Option<DeleteTableTagError> = serde_json::from_str(&content).ok();
@@ -903,6 +1180,20 @@ pub async fn deregister_table(configuration: &configuration::Configuration, id: 
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_deregister_table_request);
 
     let req = req_builder.build()?;
@@ -930,12 +1221,13 @@ pub async fn deregister_table(configuration: &configuration::Configuration, id: 
     }
 }
 
-/// Describe the detailed information for table `id`. 
-pub async fn describe_table(configuration: &configuration::Configuration, id: &str, describe_table_request: models::DescribeTableRequest, delimiter: Option<&str>) -> Result<models::DescribeTableResponse, Error<DescribeTableError>> {
+/// Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` as a query parameter instead of in the request body. 
+pub async fn describe_table(configuration: &configuration::Configuration, id: &str, describe_table_request: models::DescribeTableRequest, delimiter: Option<&str>, with_table_uri: Option<bool>) -> Result<models::DescribeTableResponse, Error<DescribeTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_describe_table_request = describe_table_request;
     let p_delimiter = delimiter;
+    let p_with_table_uri = with_table_uri;
 
     let uri_str = format!("{}/v1/table/{id}/describe", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
@@ -943,9 +1235,26 @@ pub async fn describe_table(configuration: &configuration::Configuration, id: &s
     if let Some(ref param_value) = p_delimiter {
         req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
     }
+    if let Some(ref param_value) = p_with_table_uri {
+        req_builder = req_builder.query(&[("with_table_uri", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_describe_table_request);
 
     let req = req_builder.build()?;
@@ -990,6 +1299,20 @@ pub async fn describe_table_index_stats(configuration: &configuration::Configura
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_describe_table_index_stats_request);
 
     let req = req_builder.build()?;
@@ -1017,11 +1340,10 @@ pub async fn describe_table_index_stats(configuration: &configuration::Configura
     }
 }
 
-/// Drop table `id` and delete its data. 
-pub async fn drop_table(configuration: &configuration::Configuration, id: &str, drop_table_request: models::DropTableRequest, delimiter: Option<&str>) -> Result<models::DropTableResponse, Error<DropTableError>> {
+/// Drop table `id` and delete its data.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `DropTableRequest` information is passed in the following way: - `id`: pass through path parameter of the same name 
+pub async fn drop_table(configuration: &configuration::Configuration, id: &str, delimiter: Option<&str>) -> Result<models::DropTableResponse, Error<DropTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
-    let p_drop_table_request = drop_table_request;
     let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/drop", configuration.base_path, id=crate::apis::urlencode(p_id));
@@ -1033,7 +1355,20 @@ pub async fn drop_table(configuration: &configuration::Configuration, id: &str, 
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    req_builder = req_builder.json(&p_drop_table_request);
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
@@ -1060,12 +1395,11 @@ pub async fn drop_table(configuration: &configuration::Configuration, id: &str, 
     }
 }
 
-/// Drop the specified index from table `id`. 
-pub async fn drop_table_index(configuration: &configuration::Configuration, id: &str, index_name: &str, drop_table_index_request: models::DropTableIndexRequest, delimiter: Option<&str>) -> Result<models::DropTableIndexResponse, Error<DropTableIndexError>> {
+/// Drop the specified index from table `id`.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `DropTableIndexRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `index_name`: pass through path parameter of the same name 
+pub async fn drop_table_index(configuration: &configuration::Configuration, id: &str, index_name: &str, delimiter: Option<&str>) -> Result<models::DropTableIndexResponse, Error<DropTableIndexError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_index_name = index_name;
-    let p_drop_table_index_request = drop_table_index_request;
     let p_delimiter = delimiter;
 
     let uri_str = format!("{}/v1/table/{id}/index/{index_name}/drop", configuration.base_path, id=crate::apis::urlencode(p_id), index_name=crate::apis::urlencode(p_index_name));
@@ -1077,7 +1411,20 @@ pub async fn drop_table_index(configuration: &configuration::Configuration, id: 
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    req_builder = req_builder.json(&p_drop_table_index_request);
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
@@ -1104,8 +1451,8 @@ pub async fn drop_table_index(configuration: &configuration::Configuration, id: 
     }
 }
 
-/// Get the query execution plan for a query against table `id`. Returns a human-readable explanation of how the query will be executed. 
-pub async fn explain_table_query_plan(configuration: &configuration::Configuration, id: &str, explain_table_query_plan_request: models::ExplainTableQueryPlanRequest, delimiter: Option<&str>) -> Result<models::ExplainTableQueryPlanResponse, Error<ExplainTableQueryPlanError>> {
+/// Get the query execution plan for a query against table `id`. Returns a human-readable explanation of how the query will be executed.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the `ExplainTableQueryPlanResponse` JSON object. 
+pub async fn explain_table_query_plan(configuration: &configuration::Configuration, id: &str, explain_table_query_plan_request: models::ExplainTableQueryPlanRequest, delimiter: Option<&str>) -> Result<String, Error<ExplainTableQueryPlanError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_explain_table_query_plan_request = explain_table_query_plan_request;
@@ -1120,6 +1467,20 @@ pub async fn explain_table_query_plan(configuration: &configuration::Configurati
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_explain_table_query_plan_request);
 
     let req = req_builder.build()?;
@@ -1137,8 +1498,8 @@ pub async fn explain_table_query_plan(configuration: &configuration::Configurati
         let content = resp.text().await?;
         match content_type {
             ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
-            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::ExplainTableQueryPlanResponse`"))),
-            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::ExplainTableQueryPlanResponse`")))),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `String`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `String`")))),
         }
     } else {
         let content = resp.text().await?;
@@ -1163,6 +1524,20 @@ pub async fn get_table_stats(configuration: &configuration::Configuration, id: &
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_get_table_stats_request);
 
     let req = req_builder.build()?;
@@ -1206,6 +1581,20 @@ pub async fn get_table_tag_version(configuration: &configuration::Configuration,
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_get_table_tag_version_request);
 
     let req = req_builder.build()?;
@@ -1253,6 +1642,20 @@ pub async fn insert_into_table(configuration: &configuration::Configuration, id:
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.body(p_body);
 
     let req = req_builder.build()?;
@@ -1280,6 +1683,68 @@ pub async fn insert_into_table(configuration: &configuration::Configuration, id:
     }
 }
 
+/// List all tables across all namespaces.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListAllTablesRequest` information in the following way: - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name - `delimiter`: pass through query parameter of the same name 
+pub async fn list_all_tables(configuration: &configuration::Configuration, delimiter: Option<&str>, page_token: Option<&str>, limit: Option<i32>) -> Result<models::ListTablesResponse, Error<ListAllTablesError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_delimiter = delimiter;
+    let p_page_token = page_token;
+    let p_limit = limit;
+
+    let uri_str = format!("{}/v1/table", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_page_token {
+        req_builder = req_builder.query(&[("page_token", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_limit {
+        req_builder = req_builder.query(&[("limit", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::ListTablesResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::ListTablesResponse`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<ListAllTablesError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
 /// List all indices created on a table. Returns information about each index including name, columns, status, and UUID. 
 pub async fn list_table_indices(configuration: &configuration::Configuration, id: &str, list_table_indices_request: models::ListTableIndicesRequest, delimiter: Option<&str>) -> Result<models::ListTableIndicesResponse, Error<ListTableIndicesError>> {
     // add a prefix to parameters to efficiently prevent name collisions
@@ -1296,6 +1761,20 @@ pub async fn list_table_indices(configuration: &configuration::Configuration, id
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_list_table_indices_request);
 
     let req = req_builder.build()?;
@@ -1323,7 +1802,7 @@ pub async fn list_table_indices(configuration: &configuration::Configuration, id
     }
 }
 
-/// List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTableTagsRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+/// List all tags that have been created for table `id`. Returns a map of tag names to their corresponding version numbers and metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableTagsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
 pub async fn list_table_tags(configuration: &configuration::Configuration, id: &str, delimiter: Option<&str>, page_token: Option<&str>, limit: Option<i32>) -> Result<models::ListTableTagsResponse, Error<ListTableTagsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -1332,7 +1811,7 @@ pub async fn list_table_tags(configuration: &configuration::Configuration, id: &
     let p_limit = limit;
 
     let uri_str = format!("{}/v1/table/{id}/tags/list", configuration.base_path, id=crate::apis::urlencode(p_id));
-    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
     if let Some(ref param_value) = p_delimiter {
         req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
@@ -1346,6 +1825,20 @@ pub async fn list_table_tags(configuration: &configuration::Configuration, id: &
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
@@ -1372,12 +1865,13 @@ pub async fn list_table_tags(configuration: &configuration::Configuration, id: &
     }
 }
 
-/// List all versions (commits) of table `id` with their metadata. 
-pub async fn list_table_versions(configuration: &configuration::Configuration, id: &str, list_table_versions_request: models::ListTableVersionsRequest, delimiter: Option<&str>) -> Result<models::ListTableVersionsResponse, Error<ListTableVersionsError>> {
+/// List all versions (commits) of table `id` with their metadata.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableVersionsRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+pub async fn list_table_versions(configuration: &configuration::Configuration, id: &str, delimiter: Option<&str>, page_token: Option<&str>, limit: Option<i32>) -> Result<models::ListTableVersionsResponse, Error<ListTableVersionsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
-    let p_list_table_versions_request = list_table_versions_request;
     let p_delimiter = delimiter;
+    let p_page_token = page_token;
+    let p_limit = limit;
 
     let uri_str = format!("{}/v1/table/{id}/version/list", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
@@ -1385,10 +1879,29 @@ pub async fn list_table_versions(configuration: &configuration::Configuration, i
     if let Some(ref param_value) = p_delimiter {
         req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
     }
+    if let Some(ref param_value) = p_page_token {
+        req_builder = req_builder.query(&[("page_token", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_limit {
+        req_builder = req_builder.query(&[("limit", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    req_builder = req_builder.json(&p_list_table_versions_request);
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
@@ -1438,6 +1951,20 @@ pub async fn list_tables(configuration: &configuration::Configuration, id: &str,
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
@@ -1465,7 +1992,7 @@ pub async fn list_tables(configuration: &configuration::Configuration, id: &str,
 }
 
 /// Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don't match. It returns the number of rows inserted and updated.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
-pub async fn merge_insert_into_table(configuration: &configuration::Configuration, id: &str, on: &str, body: Vec<u8>, delimiter: Option<&str>, when_matched_update_all: Option<bool>, when_matched_update_all_filt: Option<&str>, when_not_matched_insert_all: Option<bool>, when_not_matched_by_source_delete: Option<bool>, when_not_matched_by_source_delete_filt: Option<&str>) -> Result<models::MergeInsertIntoTableResponse, Error<MergeInsertIntoTableError>> {
+pub async fn merge_insert_into_table(configuration: &configuration::Configuration, id: &str, on: &str, body: Vec<u8>, delimiter: Option<&str>, when_matched_update_all: Option<bool>, when_matched_update_all_filt: Option<&str>, when_not_matched_insert_all: Option<bool>, when_not_matched_by_source_delete: Option<bool>, when_not_matched_by_source_delete_filt: Option<&str>, timeout: Option<&str>, use_index: Option<bool>) -> Result<models::MergeInsertIntoTableResponse, Error<MergeInsertIntoTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_on = on;
@@ -1476,6 +2003,8 @@ pub async fn merge_insert_into_table(configuration: &configuration::Configuratio
     let p_when_not_matched_insert_all = when_not_matched_insert_all;
     let p_when_not_matched_by_source_delete = when_not_matched_by_source_delete;
     let p_when_not_matched_by_source_delete_filt = when_not_matched_by_source_delete_filt;
+    let p_timeout = timeout;
+    let p_use_index = use_index;
 
     let uri_str = format!("{}/v1/table/{id}/merge_insert", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
@@ -1499,9 +2028,29 @@ pub async fn merge_insert_into_table(configuration: &configuration::Configuratio
     if let Some(ref param_value) = p_when_not_matched_by_source_delete_filt {
         req_builder = req_builder.query(&[("when_not_matched_by_source_delete_filt", &param_value.to_string())]);
     }
+    if let Some(ref param_value) = p_timeout {
+        req_builder = req_builder.query(&[("timeout", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_use_index {
+        req_builder = req_builder.query(&[("use_index", &param_value.to_string())]);
+    }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.body(p_body);
 
     let req = req_builder.build()?;
@@ -1529,7 +2078,7 @@ pub async fn merge_insert_into_table(configuration: &configuration::Configuratio
     }
 }
 
-/// Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format. 
+/// Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. 
 pub async fn query_table(configuration: &configuration::Configuration, id: &str, query_table_request: models::QueryTableRequest, delimiter: Option<&str>) -> Result<reqwest::Response, Error<QueryTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
@@ -1545,6 +2094,20 @@ pub async fn query_table(configuration: &configuration::Configuration, id: &str,
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_query_table_request);
 
     let req = req_builder.build()?;
@@ -1577,6 +2140,20 @@ pub async fn register_table(configuration: &configuration::Configuration, id: &s
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_register_table_request);
 
     let req = req_builder.build()?;
@@ -1604,6 +2181,63 @@ pub async fn register_table(configuration: &configuration::Configuration, id: &s
     }
 }
 
+/// Rename table `id` to a new name. 
+pub async fn rename_table(configuration: &configuration::Configuration, id: &str, rename_table_request: models::RenameTableRequest, delimiter: Option<&str>) -> Result<models::RenameTableResponse, Error<RenameTableError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
+    let p_rename_table_request = rename_table_request;
+    let p_delimiter = delimiter;
+
+    let uri_str = format!("{}/v1/table/{id}/rename", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    req_builder = req_builder.json(&p_rename_table_request);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::RenameTableResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::RenameTableResponse`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<RenameTableError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
 /// Restore table `id` to a specific version. 
 pub async fn restore_table(configuration: &configuration::Configuration, id: &str, restore_table_request: models::RestoreTableRequest, delimiter: Option<&str>) -> Result<models::RestoreTableResponse, Error<RestoreTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
@@ -1620,6 +2254,20 @@ pub async fn restore_table(configuration: &configuration::Configuration, id: &st
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_restore_table_request);
 
     let req = req_builder.build()?;
@@ -1663,6 +2311,20 @@ pub async fn table_exists(configuration: &configuration::Configuration, id: &str
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_table_exists_request);
 
     let req = req_builder.build()?;
@@ -1695,6 +2357,20 @@ pub async fn update_table(configuration: &configuration::Configuration, id: &str
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_update_table_request);
 
     let req = req_builder.build()?;
@@ -1722,8 +2398,65 @@ pub async fn update_table(configuration: &configuration::Configuration, id: &str
     }
 }
 
+/// Replace the schema metadata for table `id` with the provided key-value pairs.  REST NAMESPACE ONLY REST namespace uses a direct object (map of string to string) as both request and response body instead of the wrapped `UpdateTableSchemaMetadataRequest` and `UpdateTableSchemaMetadataResponse`. 
+pub async fn update_table_schema_metadata(configuration: &configuration::Configuration, id: &str, request_body: std::collections::HashMap<String, String>, delimiter: Option<&str>) -> Result<std::collections::HashMap<String, String>, Error<UpdateTableSchemaMetadataError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_id = id;
+    let p_request_body = request_body;
+    let p_delimiter = delimiter;
+
+    let uri_str = format!("{}/v1/table/{id}/schema_metadata/update", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_delimiter {
+        req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    req_builder = req_builder.json(&p_request_body);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `std::collections::HashMap&lt;String, String&gt;`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `std::collections::HashMap&lt;String, String&gt;`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<UpdateTableSchemaMetadataError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
 /// Update an existing tag for table `id` to point to a different version. 
-pub async fn update_table_tag(configuration: &configuration::Configuration, id: &str, update_table_tag_request: models::UpdateTableTagRequest, delimiter: Option<&str>) -> Result<(), Error<UpdateTableTagError>> {
+pub async fn update_table_tag(configuration: &configuration::Configuration, id: &str, update_table_tag_request: models::UpdateTableTagRequest, delimiter: Option<&str>) -> Result<models::UpdateTableTagResponse, Error<UpdateTableTagError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_update_table_tag_request = update_table_tag_request;
@@ -1738,15 +2471,40 @@ pub async fn update_table_tag(configuration: &configuration::Configuration, id: 
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
+    if let Some(ref token) = configuration.oauth_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
+        };
+        req_builder = req_builder.header("x-api-key", value);
+    };
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
     req_builder = req_builder.json(&p_update_table_tag_request);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
 
     let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
 
     if !status.is_client_error() && !status.is_server_error() {
-        Ok(())
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::UpdateTableTagResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::UpdateTableTagResponse`")))),
+        }
     } else {
         let content = resp.text().await?;
         let entity: Option<UpdateTableTagError> = serde_json::from_str(&content).ok();

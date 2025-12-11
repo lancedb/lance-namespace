@@ -15,6 +15,8 @@ Request for merging or inserting records into a table, excluding the Arrow IPC s
 |**whenNotMatchedInsertAll** | **Boolean** | Insert all columns when rows don&#39;t match |  [optional] |
 |**whenNotMatchedBySourceDelete** | **Boolean** | Delete all rows from target table that don&#39;t match a row in the source table |  [optional] |
 |**whenNotMatchedBySourceDeleteFilt** | **String** | Delete rows from the target table if there is no match AND the SQL expression evaluates to true |  [optional] |
+|**timeout** | **String** | Timeout for the operation (e.g., \&quot;30s\&quot;, \&quot;5m\&quot;) |  [optional] |
+|**useIndex** | **Boolean** | Whether to use index for matching rows |  [optional] |
 
 
 

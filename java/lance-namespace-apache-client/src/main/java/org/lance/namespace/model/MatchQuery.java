@@ -40,7 +40,7 @@ public class MatchQuery {
   @javax.annotation.Nullable private Float boost;
 
   public static final String JSON_PROPERTY_COLUMN = "column";
-  @javax.annotation.Nonnull private String column;
+  @javax.annotation.Nullable private String column;
 
   public static final String JSON_PROPERTY_FUZZINESS = "fuzziness";
   @javax.annotation.Nullable private Integer fuzziness;
@@ -83,7 +83,7 @@ public class MatchQuery {
     this.boost = boost;
   }
 
-  public MatchQuery column(@javax.annotation.Nonnull String column) {
+  public MatchQuery column(@javax.annotation.Nullable String column) {
 
     this.column = column;
     return this;
@@ -94,16 +94,16 @@ public class MatchQuery {
    *
    * @return column
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_COLUMN)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public String getColumn() {
     return column;
   }
 
   @JsonProperty(JSON_PROPERTY_COLUMN)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setColumn(@javax.annotation.Nonnull String column) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setColumn(@javax.annotation.Nullable String column) {
     this.column = column;
   }
 

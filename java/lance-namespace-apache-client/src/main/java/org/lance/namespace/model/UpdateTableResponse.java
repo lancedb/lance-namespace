@@ -24,6 +24,7 @@ import java.util.StringJoiner;
 
 /** UpdateTableResponse */
 @JsonPropertyOrder({
+  UpdateTableResponse.JSON_PROPERTY_TRANSACTION_ID,
   UpdateTableResponse.JSON_PROPERTY_UPDATED_ROWS,
   UpdateTableResponse.JSON_PROPERTY_VERSION
 })
@@ -31,6 +32,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class UpdateTableResponse {
+  public static final String JSON_PROPERTY_TRANSACTION_ID = "transaction_id";
+  @javax.annotation.Nullable private String transactionId;
+
   public static final String JSON_PROPERTY_UPDATED_ROWS = "updated_rows";
   @javax.annotation.Nonnull private Long updatedRows;
 
@@ -38,6 +42,30 @@ public class UpdateTableResponse {
   @javax.annotation.Nonnull private Long version;
 
   public UpdateTableResponse() {}
+
+  public UpdateTableResponse transactionId(@javax.annotation.Nullable String transactionId) {
+
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTransactionId(@javax.annotation.Nullable String transactionId) {
+    this.transactionId = transactionId;
+  }
 
   public UpdateTableResponse updatedRows(@javax.annotation.Nonnull Long updatedRows) {
 
@@ -96,19 +124,21 @@ public class UpdateTableResponse {
       return false;
     }
     UpdateTableResponse updateTableResponse = (UpdateTableResponse) o;
-    return Objects.equals(this.updatedRows, updateTableResponse.updatedRows)
+    return Objects.equals(this.transactionId, updateTableResponse.transactionId)
+        && Objects.equals(this.updatedRows, updateTableResponse.updatedRows)
         && Objects.equals(this.version, updateTableResponse.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(updatedRows, version);
+    return Objects.hash(transactionId, updatedRows, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UpdateTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    updatedRows: ").append(toIndentedString(updatedRows)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
@@ -156,6 +186,22 @@ public class UpdateTableResponse {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `transaction_id` to the URL query string
+    if (getTransactionId() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%stransaction_id%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getTransactionId()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
 
     // add `updated_rows` to the URL query string
     if (getUpdatedRows() != null) {

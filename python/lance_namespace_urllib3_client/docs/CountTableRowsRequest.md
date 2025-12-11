@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **List[str]** |  | [optional] 
 **version** | **int** | Version of the table to describe. If not specified, server should resolve it to the latest version.  | [optional] 
-**filter** | **str** | SQL filter expression to be applied  | [optional] 
+**predicate** | **str** | Optional SQL predicate to filter rows for counting  | [optional] 
 
 ## Example
 

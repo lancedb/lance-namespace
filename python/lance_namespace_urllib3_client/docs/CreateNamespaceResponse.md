@@ -5,6 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**transaction_id** | **str** | Optional transaction identifier | [optional] 
 **properties** | **Dict[str, str]** | Properties after the namespace is created.  If the server does not support namespace properties, it should return null for this field. If namespace properties are supported, but none are set, it should return an empty object.  | [optional] 
 
 ## Example

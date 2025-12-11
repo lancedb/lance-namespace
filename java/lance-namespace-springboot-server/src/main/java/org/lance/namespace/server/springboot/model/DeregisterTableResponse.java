@@ -32,11 +32,36 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DeregisterTableResponse {
 
+  private String transactionId;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private String location;
 
   @Valid private Map<String, String> properties = new HashMap<>();
+
+  public DeregisterTableResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @Schema(
+      name = "transaction_id",
+      description = "Optional transaction identifier",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
 
   public DeregisterTableResponse id(List<String> id) {
     this.id = id;
@@ -123,20 +148,22 @@ public class DeregisterTableResponse {
       return false;
     }
     DeregisterTableResponse deregisterTableResponse = (DeregisterTableResponse) o;
-    return Objects.equals(this.id, deregisterTableResponse.id)
+    return Objects.equals(this.transactionId, deregisterTableResponse.transactionId)
+        && Objects.equals(this.id, deregisterTableResponse.id)
         && Objects.equals(this.location, deregisterTableResponse.location)
         && Objects.equals(this.properties, deregisterTableResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location, properties);
+    return Objects.hash(transactionId, id, location, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeregisterTableResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");

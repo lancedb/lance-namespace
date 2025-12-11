@@ -13,6 +13,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct UpdateTableResponse {
+    /// Optional transaction identifier
+    #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
     /// Number of rows updated
     #[serde(rename = "updated_rows")]
     pub updated_rows: i64,
@@ -24,6 +27,7 @@ pub struct UpdateTableResponse {
 impl UpdateTableResponse {
     pub fn new(updated_rows: i64, version: i64) -> UpdateTableResponse {
         UpdateTableResponse {
+            transaction_id: None,
             updated_rows,
             version,
         }

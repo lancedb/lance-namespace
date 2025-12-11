@@ -27,6 +27,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class AlterTableDropColumnsResponse {
 
+  private String transactionId;
+
   private Long version;
 
   public AlterTableDropColumnsResponse() {
@@ -36,6 +38,29 @@ public class AlterTableDropColumnsResponse {
   /** Constructor with only required parameters */
   public AlterTableDropColumnsResponse(Long version) {
     this.version = version;
+  }
+
+  public AlterTableDropColumnsResponse transactionId(String transactionId) {
+    this.transactionId = transactionId;
+    return this;
+  }
+
+  /**
+   * Optional transaction identifier
+   *
+   * @return transactionId
+   */
+  @Schema(
+      name = "transaction_id",
+      description = "Optional transaction identifier",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("transaction_id")
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
   }
 
   public AlterTableDropColumnsResponse version(Long version) {
@@ -72,18 +97,20 @@ public class AlterTableDropColumnsResponse {
       return false;
     }
     AlterTableDropColumnsResponse alterTableDropColumnsResponse = (AlterTableDropColumnsResponse) o;
-    return Objects.equals(this.version, alterTableDropColumnsResponse.version);
+    return Objects.equals(this.transactionId, alterTableDropColumnsResponse.transactionId)
+        && Objects.equals(this.version, alterTableDropColumnsResponse.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version);
+    return Objects.hash(transactionId, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTableDropColumnsResponse {\n");
+    sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -18,12 +18,15 @@ pub struct CreateTableIndexRequest {
     /// Name of the column to create index on
     #[serde(rename = "column")]
     pub column: String,
-    /// Type of index to create
+    /// Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS)
     #[serde(rename = "index_type")]
-    pub index_type: IndexType,
-    /// Distance metric type for vector indexes
-    #[serde(rename = "metric_type", skip_serializing_if = "Option::is_none")]
-    pub metric_type: Option<MetricType>,
+    pub index_type: String,
+    /// Optional name for the index. If not provided, a name will be auto-generated.
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    /// Distance metric type for vector indexes (e.g., l2, cosine, dot)
+    #[serde(rename = "distance_type", skip_serializing_if = "Option::is_none")]
+    pub distance_type: Option<String>,
     /// Optional FTS parameter for position tracking
     #[serde(rename = "with_position", skip_serializing_if = "Option::is_none")]
     pub with_position: Option<bool>,
@@ -51,12 +54,13 @@ pub struct CreateTableIndexRequest {
 }
 
 impl CreateTableIndexRequest {
-    pub fn new(column: String, index_type: IndexType) -> CreateTableIndexRequest {
+    pub fn new(column: String, index_type: String) -> CreateTableIndexRequest {
         CreateTableIndexRequest {
             id: None,
             column,
             index_type,
-            metric_type: None,
+            name: None,
+            distance_type: None,
             with_position: None,
             base_tokenizer: None,
             language: None,
@@ -66,46 +70,6 @@ impl CreateTableIndexRequest {
             remove_stop_words: None,
             ascii_folding: None,
         }
-    }
-}
-/// Type of index to create
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum IndexType {
-    #[serde(rename = "BTREE")]
-    Btree,
-    #[serde(rename = "BITMAP")]
-    Bitmap,
-    #[serde(rename = "LABEL_LIST")]
-    LabelList,
-    #[serde(rename = "IVF_FLAT")]
-    IvfFlat,
-    #[serde(rename = "IVF_PQ")]
-    IvfPq,
-    #[serde(rename = "IVF_HNSW_SQ")]
-    IvfHnswSq,
-    #[serde(rename = "FTS")]
-    Fts,
-}
-
-impl Default for IndexType {
-    fn default() -> IndexType {
-        Self::Btree
-    }
-}
-/// Distance metric type for vector indexes
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum MetricType {
-    #[serde(rename = "l2")]
-    L2,
-    #[serde(rename = "cosine")]
-    Cosine,
-    #[serde(rename = "dot")]
-    Dot,
-}
-
-impl Default for MetricType {
-    fn default() -> MetricType {
-        Self::L2
     }
 }
 
