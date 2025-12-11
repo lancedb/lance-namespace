@@ -27,7 +27,7 @@ class CreateTableRequest(BaseModel):
     Request for creating a table, excluding the Arrow IPC stream. 
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
-    mode: Optional[StrictStr] = Field(default=None, description="There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists. Case insensitive. Valid values are:   * Create: the operation fails with 409.   * ExistOk: the operation succeeds and the existing table is kept.   * Overwrite: the existing table is dropped and a new table with this name is created. ")
+    mode: Optional[StrictStr] = Field(default=None, description="There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are:   * Create: the operation fails with 409.   * ExistOk: the operation succeeds and the existing table is kept.   * Overwrite: the existing table is dropped and a new table with this name is created. ")
     __properties: ClassVar[List[str]] = ["id", "mode"]
 
     model_config = ConfigDict(

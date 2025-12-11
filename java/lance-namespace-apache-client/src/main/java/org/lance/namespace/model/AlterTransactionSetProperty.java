@@ -98,9 +98,10 @@ public class AlterTransactionSetProperty {
   }
 
   /**
-   * The behavior if the property key already exists. Case insensitive. Valid values are: -
-   * OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the
-   * entire operation - SKIP: keep the existing value and skip setting the provided value
+   * The behavior if the property key already exists. Case insensitive, supports both PascalCase and
+   * snake_case. Valid values are: - Overwrite (default): overwrite the existing value with the
+   * provided value - Fail: fail the entire operation - Skip: keep the existing value and skip
+   * setting the provided value
    *
    * @return mode
    */

@@ -2147,7 +2147,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
     body = None # bytearray | Arrow IPC stream containing the records to insert
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
-    mode = 'append' # str | How the insert should behave. Case insensitive. Valid values are: - create: create new table, fail if table already exists - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it  (optional) (default to 'append')
+    mode = 'append' # str | How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Create: create new table, fail if table already exists - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it  (optional) (default to 'append')
 
     try:
         # Insert records into a table
@@ -2168,7 +2168,7 @@ Name | Type | Description  | Notes
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **body** | **bytearray**| Arrow IPC stream containing the records to insert | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] 
- **mode** | **str**| How the insert should behave. Case insensitive. Valid values are: - create: create new table, fail if table already exists - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it  | [optional] [default to &#39;append&#39;]
+ **mode** | **str**| How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Create: create new table, fail if table already exists - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it  | [optional] [default to &#39;append&#39;]
 
 ### Return type
 

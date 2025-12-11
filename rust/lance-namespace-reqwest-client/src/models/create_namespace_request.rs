@@ -15,7 +15,7 @@ use serde::{Deserialize, Serialize};
 pub struct CreateNamespaceRequest {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
-    /// There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists. Case insensitive. Valid values are:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing namespace is kept.   * overwrite: the existing namespace is dropped and a new empty namespace with this name is created. 
+    /// There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are:   * Create: the operation fails with 409.   * ExistOk: the operation succeeds and the existing namespace is kept.   * Overwrite: the existing namespace is dropped and a new empty namespace with this name is created. 
     #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
     pub mode: Option<String>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]

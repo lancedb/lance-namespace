@@ -57,15 +57,16 @@ public class AlterTransactionUnsetProperty {
   }
 
   /**
-   * The behavior if the property key to unset does not exist. Case insensitive. Valid values are: -
-   * SKIP (default): skip the property to unset - FAIL: fail the entire operation
+   * The behavior if the property key to unset does not exist. Case insensitive, supports both
+   * PascalCase and snake_case. Valid values are: - Skip (default): skip the property to unset -
+   * Fail: fail the entire operation
    *
    * @return mode
    */
   @Schema(
       name = "mode",
       description =
-          "The behavior if the property key to unset does not exist. Case insensitive. Valid values are: - SKIP (default): skip the property to unset - FAIL: fail the entire operation ",
+          "The behavior if the property key to unset does not exist. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Skip (default): skip the property to unset - Fail: fail the entire operation ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
   public String getMode() {

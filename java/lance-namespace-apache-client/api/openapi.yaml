@@ -852,10 +852,10 @@ paths:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
     - description: |
-        How the insert should behave. Case insensitive. Valid values are:
-        - create: create new table, fail if table already exists
-        - append (default): insert data to the existing table
-        - overwrite: remove all data in the table and then insert data to it
+        How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are:
+        - Create: create new table, fail if table already exists
+        - Append (default): insert data to the existing table
+        - Overwrite: remove all data in the table and then insert data to it
       explode: true
       in: query
       name: mode
@@ -878,10 +878,10 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
       - description: |
-          How the insert should behave. Case insensitive. Valid values are:
-          - create: create new table, fail if table already exists
-          - append (default): insert data to the existing table
-          - overwrite: remove all data in the table and then insert data to it
+          How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are:
+          - Create: create new table, fail if table already exists
+          - Append (default): insert data to the existing table
+          - Overwrite: remove all data in the table and then insert data to it
         explode: true
         in: query
         name: mode
@@ -2521,10 +2521,10 @@ components:
           description: |
             There are three modes when trying to create a namespace,
             to differentiate the behavior when a namespace of the same name already exists.
-            Case insensitive. Valid values are:
-              * create: the operation fails with 409.
-              * exist_ok: the operation succeeds and the existing namespace is kept.
-              * overwrite: the existing namespace is dropped and a new empty namespace with this name is created.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+              * Create: the operation fails with 409.
+              * ExistOk: the operation succeeds and the existing namespace is kept.
+              * Overwrite: the existing namespace is dropped and a new empty namespace with this name is created.
           type: string
         properties:
           additionalProperties:
@@ -2642,17 +2642,17 @@ components:
         mode:
           description: |
             The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found.
-            Case insensitive. Valid values are:
-            - FAIL (default): the server must return 400 indicating the namespace to drop does not exist.
-            - SKIP: the server must return 204 indicating the drop operation has succeeded.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Fail (default): the server must return 400 indicating the namespace to drop does not exist.
+            - Skip: the server must return 204 indicating the drop operation has succeeded.
           type: string
         behavior:
           description: |
             The behavior for dropping a namespace.
-            Case insensitive. Valid values are:
-            - RESTRICT (default): the namespace should not contain any table or child namespace when drop is initiated.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Restrict (default): the namespace should not contain any table or child namespace when drop is initiated.
                 If tables are found, the server should return error and not drop the namespace.
-            - CASCADE: all tables and child namespaces in the namespace are dropped before the namespace is dropped.
+            - Cascade: all tables and child namespaces in the namespace are dropped before the namespace is dropped.
           type: string
     DropNamespaceResponse:
       example:
@@ -2719,9 +2719,9 @@ components:
           description: |
             There are two modes when trying to register a table,
             to differentiate the behavior when a table of the same name already exists.
-            Case insensitive. Valid values are:
-              * CREATE (default): the operation fails with 409.
-              * OVERWRITE: the existing table registration is replaced with the new registration.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+              * Create (default): the operation fails with 409.
+              * Overwrite: the existing table registration is replaced with the new registration.
           type: string
         properties:
           additionalProperties:
@@ -2948,10 +2948,10 @@ components:
         mode:
           default: append
           description: |
-            How the insert should behave. Case insensitive. Valid values are:
-            - create: create new table, fail if table already exists
-            - append (default): insert data to the existing table
-            - overwrite: remove all data in the table and then insert data to it
+            How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Create: create new table, fail if table already exists
+            - Append (default): insert data to the existing table
+            - Overwrite: remove all data in the table and then insert data to it
           type: string
     InsertIntoTableResponse:
       description: Response from inserting records into a table
@@ -3628,7 +3628,7 @@ components:
           description: |
             There are three modes when trying to create a table,
             to differentiate the behavior when a table of the same name already exists.
-            Case insensitive. Valid values are:
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
               * Create: the operation fails with 409.
               * ExistOk: the operation succeeds and the existing table is kept.
               * Overwrite: the existing table is dropped and a new table with this name is created.
@@ -3727,12 +3727,12 @@ components:
     TransactionStatus:
       description: |
         The status of a transaction.
-        Case insensitive. Valid values are:
-        - QUEUED: the transaction is queued and not yet started
-        - RUNNING: the transaction is currently running
-        - SUCCEEDED: the transaction has completed successfully
-        - FAILED: the transaction has failed
-        - CANCELED: the transaction was canceled
+        Case insensitive, supports both PascalCase and snake_case. Valid values are:
+        - Queued: the transaction is queued and not yet started
+        - Running: the transaction is currently running
+        - Succeeded: the transaction has completed successfully
+        - Failed: the transaction has failed
+        - Canceled: the transaction was canceled
       type: string
     DescribeTransactionRequest:
       example:
@@ -3753,12 +3753,12 @@ components:
         status:
           description: |
             The status of a transaction.
-            Case insensitive. Valid values are:
-            - QUEUED: the transaction is queued and not yet started
-            - RUNNING: the transaction is currently running
-            - SUCCEEDED: the transaction has completed successfully
-            - FAILED: the transaction has failed
-            - CANCELED: the transaction was canceled
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Queued: the transaction is queued and not yet started
+            - Running: the transaction is currently running
+            - Succeeded: the transaction has completed successfully
+            - Failed: the transaction has failed
+            - Canceled: the transaction was canceled
           type: string
         properties:
           additionalProperties:
@@ -3772,12 +3772,12 @@ components:
         status:
           description: |
             The status of a transaction.
-            Case insensitive. Valid values are:
-            - QUEUED: the transaction is queued and not yet started
-            - RUNNING: the transaction is currently running
-            - SUCCEEDED: the transaction has completed successfully
-            - FAILED: the transaction has failed
-            - CANCELED: the transaction was canceled
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Queued: the transaction is queued and not yet started
+            - Running: the transaction is currently running
+            - Succeeded: the transaction has completed successfully
+            - Failed: the transaction has failed
+            - Canceled: the transaction was canceled
           type: string
     AlterTransactionSetProperty:
       example:
@@ -3792,18 +3792,18 @@ components:
         mode:
           description: |
             The behavior if the property key already exists.
-            Case insensitive. Valid values are:
-            - OVERWRITE (default): overwrite the existing value with the provided value
-            - FAIL: fail the entire operation
-            - SKIP: keep the existing value and skip setting the provided value
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Overwrite (default): overwrite the existing value with the provided value
+            - Fail: fail the entire operation
+            - Skip: keep the existing value and skip setting the provided value
           type: string
     SetPropertyMode:
       description: |
         The behavior if the property key already exists.
-        Case insensitive. Valid values are:
-        - OVERWRITE (default): overwrite the existing value with the provided value
-        - FAIL: fail the entire operation
-        - SKIP: keep the existing value and skip setting the provided value
+        Case insensitive, supports both PascalCase and snake_case. Valid values are:
+        - Overwrite (default): overwrite the existing value with the provided value
+        - Fail: fail the entire operation
+        - Skip: keep the existing value and skip setting the provided value
       type: string
     AlterTransactionUnsetProperty:
       example:
@@ -3815,16 +3815,16 @@ components:
         mode:
           description: |
             The behavior if the property key to unset does not exist.
-            Case insensitive. Valid values are:
-            - SKIP (default): skip the property to unset
-            - FAIL: fail the entire operation
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Skip (default): skip the property to unset
+            - Fail: fail the entire operation
           type: string
     UnsetPropertyMode:
       description: |
         The behavior if the property key to unset does not exist.
-        Case insensitive. Valid values are:
-        - SKIP (default): skip the property to unset
-        - FAIL: fail the entire operation
+        Case insensitive, supports both PascalCase and snake_case. Valid values are:
+        - Skip (default): skip the property to unset
+        - Fail: fail the entire operation
       type: string
     AlterTransactionAction:
       description: |
@@ -3898,12 +3898,12 @@ components:
         status:
           description: |
             The status of a transaction.
-            Case insensitive. Valid values are:
-            - QUEUED: the transaction is queued and not yet started
-            - RUNNING: the transaction is currently running
-            - SUCCEEDED: the transaction has completed successfully
-            - FAILED: the transaction has failed
-            - CANCELED: the transaction was canceled
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Queued: the transaction is queued and not yet started
+            - Running: the transaction is currently running
+            - Succeeded: the transaction has completed successfully
+            - Failed: the transaction has failed
+            - Canceled: the transaction was canceled
           type: string
         properties:
           additionalProperties:
@@ -4127,7 +4127,7 @@ components:
         operator:
           description: |
             The operator to use for combining terms.
-            Case insensitive. Valid values are:
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
             - And: All terms must match.
             - Or: At least one term must match.
           type: string
@@ -4237,7 +4237,7 @@ components:
     Operator:
       description: |
         The operator to use for combining terms.
-        Case insensitive. Valid values are:
+        Case insensitive, supports both PascalCase and snake_case. Valid values are:
         - And: All terms must match.
         - Or: At least one term must match.
       type: string

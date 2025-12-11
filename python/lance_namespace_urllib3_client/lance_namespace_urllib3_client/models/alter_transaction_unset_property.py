@@ -27,7 +27,7 @@ class AlterTransactionUnsetProperty(BaseModel):
     AlterTransactionUnsetProperty
     """ # noqa: E501
     key: Optional[StrictStr] = None
-    mode: Optional[StrictStr] = Field(default=None, description="The behavior if the property key to unset does not exist. Case insensitive. Valid values are: - SKIP (default): skip the property to unset - FAIL: fail the entire operation ")
+    mode: Optional[StrictStr] = Field(default=None, description="The behavior if the property key to unset does not exist. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Skip (default): skip the property to unset - Fail: fail the entire operation ")
     __properties: ClassVar[List[str]] = ["key", "mode"]
 
     model_config = ConfigDict(

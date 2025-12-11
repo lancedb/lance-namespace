@@ -26,7 +26,7 @@ class AlterTransactionResponse(BaseModel):
     """
     AlterTransactionResponse
     """ # noqa: E501
-    status: StrictStr = Field(description="The status of a transaction. Case insensitive. Valid values are: - QUEUED: the transaction is queued and not yet started - RUNNING: the transaction is currently running - SUCCEEDED: the transaction has completed successfully - FAILED: the transaction has failed - CANCELED: the transaction was canceled ")
+    status: StrictStr = Field(description="The status of a transaction. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Queued: the transaction is queued and not yet started - Running: the transaction is currently running - Succeeded: the transaction has completed successfully - Failed: the transaction has failed - Canceled: the transaction was canceled ")
     properties: Optional[Dict[str, StrictStr]] = None
     __properties: ClassVar[List[str]] = ["status", "properties"]
 

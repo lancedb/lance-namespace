@@ -28,7 +28,7 @@ class AlterTransactionSetProperty(BaseModel):
     """ # noqa: E501
     key: Optional[StrictStr] = None
     value: Optional[StrictStr] = None
-    mode: Optional[StrictStr] = Field(default=None, description="The behavior if the property key already exists. Case insensitive. Valid values are: - OVERWRITE (default): overwrite the existing value with the provided value - FAIL: fail the entire operation - SKIP: keep the existing value and skip setting the provided value ")
+    mode: Optional[StrictStr] = Field(default=None, description="The behavior if the property key already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Overwrite (default): overwrite the existing value with the provided value - Fail: fail the entire operation - Skip: keep the existing value and skip setting the provided value ")
     __properties: ClassVar[List[str]] = ["key", "value", "mode"]
 
     model_config = ConfigDict(

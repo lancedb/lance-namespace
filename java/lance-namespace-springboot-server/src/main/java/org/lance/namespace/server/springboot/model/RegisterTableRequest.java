@@ -105,16 +105,16 @@ public class RegisterTableRequest {
 
   /**
    * There are two modes when trying to register a table, to differentiate the behavior when a table
-   * of the same name already exists. Case insensitive. Valid values are: * CREATE (default): the
-   * operation fails with 409. * OVERWRITE: the existing table registration is replaced with the new
-   * registration.
+   * of the same name already exists. Case insensitive, supports both PascalCase and snake_case.
+   * Valid values are: * Create (default): the operation fails with 409. * Overwrite: the existing
+   * table registration is replaced with the new registration.
    *
    * @return mode
    */
   @Schema(
       name = "mode",
       description =
-          "There are two modes when trying to register a table, to differentiate the behavior when a table of the same name already exists. Case insensitive. Valid values are:   * CREATE (default): the operation fails with 409.   * OVERWRITE: the existing table registration is replaced with the new registration. ",
+          "There are two modes when trying to register a table, to differentiate the behavior when a table of the same name already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are:   * Create (default): the operation fails with 409.   * Overwrite: the existing table registration is replaced with the new registration. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
   public String getMode() {

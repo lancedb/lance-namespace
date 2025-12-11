@@ -27,7 +27,7 @@ class InsertIntoTableRequest(BaseModel):
     Request for inserting records into a table, excluding the Arrow IPC stream. 
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
-    mode: Optional[StrictStr] = Field(default='append', description="How the insert should behave. Case insensitive. Valid values are: - create: create new table, fail if table already exists - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it ")
+    mode: Optional[StrictStr] = Field(default='append', description="How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Create: create new table, fail if table already exists - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it ")
     __properties: ClassVar[List[str]] = ["id", "mode"]
 
     model_config = ConfigDict(

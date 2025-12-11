@@ -7,7 +7,7 @@ Request for inserting records into a table, excluding the Arrow IPC stream.
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **List[str]** |  | [optional] 
-**mode** | **str** | How the insert should behave. Case insensitive. Valid values are: - create: create new table, fail if table already exists - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it  | [optional] [default to 'append']
+**mode** | **str** | How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Create: create new table, fail if table already exists - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it  | [optional] [default to 'append']
 
 ## Example
 

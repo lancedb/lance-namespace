@@ -162,8 +162,8 @@ public class MatchQuery {
   }
 
   /**
-   * The operator to use for combining terms. Case insensitive. Valid values are: - And: All terms
-   * must match. - Or: At least one term must match.
+   * The operator to use for combining terms. Case insensitive, supports both PascalCase and
+   * snake_case. Valid values are: - And: All terms must match. - Or: At least one term must match.
    *
    * @return operator
    */
