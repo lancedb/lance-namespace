@@ -1,6 +1,6 @@
 [project]
 name = "lance-namespace"
-version = "0.3.0"
+version = "0.3.1"
 description = "Lance Namespace interface and plugin registry"
 readme = "README.md"
 authors = [{ name = "LanceDB Devs", email = "dev@lancedb.com" }]
