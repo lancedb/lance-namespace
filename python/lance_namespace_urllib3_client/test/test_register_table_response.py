@@ -43,7 +43,6 @@ class TestRegisterTableResponse(unittest.TestCase):
             )
         else:
             return RegisterTableResponse(
-                location = '',
         )
         """
 

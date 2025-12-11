@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **properties** | **Dict[str, str]** |  | [optional] 
-**transaction_id** | **List[str]** | If present, indicating the operation is long running and should be tracked using GetTransaction  | [optional] 
+**transaction_id** | **List[str]** | If present, indicating the operation is long running and should be tracked using DescribeTransaction  | [optional] 
 
 ## Example
 

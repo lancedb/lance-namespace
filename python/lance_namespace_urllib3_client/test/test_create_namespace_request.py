@@ -38,7 +38,7 @@ class TestCreateNamespaceRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
-                mode = 'create',
+                mode = '',
                 properties = {
                     'key' : ''
                     }

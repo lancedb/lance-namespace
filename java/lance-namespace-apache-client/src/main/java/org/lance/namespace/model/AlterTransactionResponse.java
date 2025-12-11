@@ -34,34 +34,37 @@ import java.util.StringJoiner;
     comments = "Generator version: 7.12.0")
 public class AlterTransactionResponse {
   public static final String JSON_PROPERTY_STATUS = "status";
-  @javax.annotation.Nonnull private TransactionStatus status;
+  @javax.annotation.Nonnull private String status;
 
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public AlterTransactionResponse() {}
 
-  public AlterTransactionResponse status(@javax.annotation.Nonnull TransactionStatus status) {
+  public AlterTransactionResponse status(@javax.annotation.Nonnull String status) {
 
     this.status = status;
     return this;
   }
 
   /**
-   * Get status
+   * The status of a transaction. Case insensitive, supports both PascalCase and snake_case. Valid
+   * values are: - Queued: the transaction is queued and not yet started - Running: the transaction
+   * is currently running - Succeeded: the transaction has completed successfully - Failed: the
+   * transaction has failed - Canceled: the transaction was canceled
    *
    * @return status
    */
   @javax.annotation.Nonnull
   @JsonProperty(JSON_PROPERTY_STATUS)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public TransactionStatus getStatus() {
+  public String getStatus() {
     return status;
   }
 
   @JsonProperty(JSON_PROPERTY_STATUS)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setStatus(@javax.annotation.Nonnull TransactionStatus status) {
+  public void setStatus(@javax.annotation.Nonnull String status) {
     this.status = status;
   }
 

@@ -35,14 +35,14 @@ class TestDescribeTransactionResponse(unittest.TestCase):
         model = DescribeTransactionResponse()
         if include_optional:
             return DescribeTransactionResponse(
-                status = 'QUEUED',
+                status = '',
                 properties = {
                     'key' : ''
                     }
             )
         else:
             return DescribeTransactionResponse(
-                status = 'QUEUED',
+                status = '',
         )
         """
 

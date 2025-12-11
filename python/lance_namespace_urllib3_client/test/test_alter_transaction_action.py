@@ -36,14 +36,14 @@ class TestAlterTransactionAction(unittest.TestCase):
         if include_optional:
             return AlterTransactionAction(
                 set_status_action = lance_namespace_urllib3_client.models.alter_transaction_set_status.AlterTransactionSetStatus(
-                    status = 'QUEUED', ),
+                    status = '', ),
                 set_property_action = lance_namespace_urllib3_client.models.alter_transaction_set_property.AlterTransactionSetProperty(
                     key = '', 
                     value = '', 
-                    mode = 'OVERWRITE', ),
+                    mode = '', ),
                 unset_property_action = lance_namespace_urllib3_client.models.alter_transaction_unset_property.AlterTransactionUnsetProperty(
                     key = '', 
-                    mode = 'SKIP', )
+                    mode = '', )
             )
         else:
             return AlterTransactionAction(

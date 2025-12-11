@@ -699,7 +699,7 @@ Name | Type | Description  | Required | Notes
 **id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
 **body** | **Vec<u8>** | Arrow IPC stream containing the records to insert | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
-**mode** | Option<**String**> | How the insert should behave: - append (default): insert data to the existing table - overwrite: remove all data in the table and then insert data to it  |  |[default to append]
+**mode** | Option<**String**> | How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it  |  |[default to append]
 
 ### Return type
 

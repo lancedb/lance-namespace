@@ -37,7 +37,7 @@ class TestAlterTransactionSetProperty(unittest.TestCase):
             return AlterTransactionSetProperty(
                 key = '',
                 value = '',
-                mode = 'OVERWRITE'
+                mode = ''
             )
         else:
             return AlterTransactionSetProperty(

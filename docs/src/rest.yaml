@@ -795,16 +795,12 @@ paths:
       - name: mode
         in: query
         description: |
-          How the insert should behave:
-          - append (default): insert data to the existing table
-          - overwrite: remove all data in the table and then insert data to it
+          How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are:
+          - Append (default): insert data to the existing table
+          - Overwrite: remove all data in the table and then insert data to it
         required: false
         schema:
           type: string
-          enum:
-            - create
-            - append
-            - overwrite
           default: append
     post:
       tags:
@@ -1850,14 +1846,11 @@ components:
           type: string
           description: |
             There are three modes when trying to create a namespace,
-            to differentiate the behavior when a namespace of the same name already exists:
-              * create: the operation fails with 409.
-              * exist_ok: the operation succeeds and the existing namespace is kept.
-              * overwrite: the existing namespace is dropped and a new empty namespace with this name is created.
-          enum:
-            - create
-            - exist_ok
-            - overwrite
+            to differentiate the behavior when a namespace of the same name already exists.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+              * Create: the operation fails with 409.
+              * ExistOk: the operation succeeds and the existing namespace is kept.
+              * Overwrite: the existing namespace is dropped and a new empty namespace with this name is created.
         properties:
           type: object
           additionalProperties:
@@ -1916,14 +1909,7 @@ components:
 
     DescribeNamespaceResponse:
       type: object
-      required:
-        - id
       properties:
-        id:
-          type: array
-          items:
-            type: string
-          description: The namespace identifier as a list of parts
         properties:
           type: object
           description:
@@ -1947,21 +1933,17 @@ components:
           type: string
           description: |
             The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found.
-            - FAIL (default): the server must return 400 indicating the namespace to drop does not exist.
-            - SKIP: the server must return 204 indicating the drop operation has succeeded.
-          enum:
-            - SKIP
-            - FAIL
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Fail (default): the server must return 400 indicating the namespace to drop does not exist.
+            - Skip: the server must return 204 indicating the drop operation has succeeded.
         behavior:
           type: string
           description: |
             The behavior for dropping a namespace.
-            - RESTRICT (default): the namespace should not contain any table or child namespace when drop is initiated.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Restrict (default): the namespace should not contain any table or child namespace when drop is initiated.
                 If tables are found, the server should return error and not drop the namespace.
-            - CASCADE: all tables and child namespaces in the namespace are dropped before the namespace is dropped.
-          enum:
-            - RESTRICT
-            - CASCADE
+            - Cascade: all tables and child namespaces in the namespace are dropped before the namespace is dropped.
 
     DropNamespaceResponse:
       type: object
@@ -1972,7 +1954,7 @@ components:
             type: string
         transaction_id:
           description: |
-            If present, indicating the operation is long running and should be tracked using GetTransaction
+            If present, indicating the operation is long running and should be tracked using DescribeTransaction
           type: array
           items:
             type: string
@@ -2027,12 +2009,10 @@ components:
           type: string
           description: |
             There are two modes when trying to register a table,
-            to differentiate the behavior when a table of the same name already exists:
-              * CREATE (default): the operation fails with 409.
-              * OVERWRITE: the existing table registration is replaced with the new registration.
-          enum:
-            - CREATE
-            - OVERWRITE
+            to differentiate the behavior when a table of the same name already exists.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+              * Create (default): the operation fails with 409.
+              * Overwrite: the existing table registration is replaced with the new registration.
         properties:
           type: object
           additionalProperties:
@@ -2040,8 +2020,6 @@ components:
 
     RegisterTableResponse:
       type: object
-      required:
-        - location
       properties:
         transaction_id:
           type: string
@@ -2193,10 +2171,10 @@ components:
             type: string
         mode:
           type: string
-          enum:
-            - create
-            - append
-            - overwrite
+          description: |
+            How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Append (default): insert data to the existing table
+            - Overwrite: remove all data in the table and then insert data to it
           default: append
 
     InsertIntoTableResponse:
@@ -2710,14 +2688,11 @@ components:
           type: string
           description: |
             There are three modes when trying to create a table,
-            to differentiate the behavior when a table of the same name already exists:
+            to differentiate the behavior when a table of the same name already exists.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
               * Create: the operation fails with 409.
               * ExistOk: the operation succeeds and the existing table is kept.
               * Overwrite: the existing table is dropped and a new table with this name is created.
-          enum:
-            - Create
-            - ExistOk
-            - Overwrite
 
     CreateTableResponse:
       type: object
@@ -2799,12 +2774,14 @@ components:
 
     TransactionStatus:
       type: string
-      enum:
-        - QUEUED
-        - RUNNING
-        - SUCCEEDED
-        - FAILED
-        - CANCELED
+      description: |
+        The status of a transaction.
+        Case insensitive, supports both PascalCase and snake_case. Valid values are:
+        - Queued: the transaction is queued and not yet started
+        - Running: the transaction is currently running
+        - Succeeded: the transaction has completed successfully
+        - Failed: the transaction has failed
+        - Canceled: the transaction was canceled
 
     DescribeTransactionRequest:
       type: object
@@ -2846,13 +2823,10 @@ components:
       type: string
       description: |
         The behavior if the property key already exists.
-        - OVERWRITE (default): overwrite the existing value with the provided value
-        - FAIL: fail the entire operation
-        - SKIP: keep the existing value and skip setting the provided value
-      enum:
-        - OVERWRITE
-        - FAIL
-        - SKIP
+        Case insensitive, supports both PascalCase and snake_case. Valid values are:
+        - Overwrite (default): overwrite the existing value with the provided value
+        - Fail: fail the entire operation
+        - Skip: keep the existing value and skip setting the provided value
 
     AlterTransactionUnsetProperty:
       type: object
@@ -2866,11 +2840,9 @@ components:
       type: string
       description: |
         The behavior if the property key to unset does not exist.
-        - SKIP (default): skip the property to unset
-        - FAIL: fail the entire operation
-      enum:
-        - SKIP
-        - FAIL
+        Case insensitive, supports both PascalCase and snake_case. Valid values are:
+        - Skip (default): skip the property to unset
+        - Fail: fail the entire operation
 
     AlterTransactionAction:
       type: object
@@ -3115,9 +3087,11 @@ components:
 
     Operator:
       type: string
-      enum:
-      - And
-      - Or
+      description: |
+        The operator to use for combining terms.
+        Case insensitive, supports both PascalCase and snake_case. Valid values are:
+        - And: All terms must match.
+        - Or: At least one term must match.
 
     GetTableTagVersionRequest:
       type: object
@@ -3920,7 +3894,7 @@ components:
             $ref: '#/components/schemas/RegisterTableResponse'
 
     DescribeTransactionResponse:
-      description: Response of GetTransaction
+      description: Response of DescribeTransaction
       content:
         application/json:
           schema:

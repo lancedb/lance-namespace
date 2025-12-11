@@ -16,7 +16,6 @@ package org.lance.namespace.server.springboot.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.*;
@@ -28,26 +27,32 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class AlterTransactionSetStatus {
 
-  private TransactionStatus status;
+  private String status;
 
-  public AlterTransactionSetStatus status(TransactionStatus status) {
+  public AlterTransactionSetStatus status(String status) {
     this.status = status;
     return this;
   }
 
   /**
-   * Get status
+   * The status of a transaction. Case insensitive, supports both PascalCase and snake_case. Valid
+   * values are: - Queued: the transaction is queued and not yet started - Running: the transaction
+   * is currently running - Succeeded: the transaction has completed successfully - Failed: the
+   * transaction has failed - Canceled: the transaction was canceled
    *
    * @return status
    */
-  @Valid
-  @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "status",
+      description =
+          "The status of a transaction. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Queued: the transaction is queued and not yet started - Running: the transaction is currently running - Succeeded: the transaction has completed successfully - Failed: the transaction has failed - Canceled: the transaction was canceled ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("status")
-  public TransactionStatus getStatus() {
+  public String getStatus() {
     return status;
   }
 
-  public void setStatus(TransactionStatus status) {
+  public void setStatus(String status) {
     this.status = status;
   }
 

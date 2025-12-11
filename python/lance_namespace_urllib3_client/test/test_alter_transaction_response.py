@@ -35,14 +35,14 @@ class TestAlterTransactionResponse(unittest.TestCase):
         model = AlterTransactionResponse()
         if include_optional:
             return AlterTransactionResponse(
-                status = 'QUEUED',
+                status = '',
                 properties = {
                     'key' : ''
                     }
             )
         else:
             return AlterTransactionResponse(
-                status = 'QUEUED',
+                status = '',
         )
         """
 

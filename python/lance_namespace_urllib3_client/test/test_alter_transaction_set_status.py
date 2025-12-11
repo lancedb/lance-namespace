@@ -35,7 +35,7 @@ class TestAlterTransactionSetStatus(unittest.TestCase):
         model = AlterTransactionSetStatus()
         if include_optional:
             return AlterTransactionSetStatus(
-                status = 'QUEUED'
+                status = ''
             )
         else:
             return AlterTransactionSetStatus(

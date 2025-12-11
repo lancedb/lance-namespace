@@ -13,14 +13,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AlterTransactionResponse {
+    /// The status of a transaction. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Queued: the transaction is queued and not yet started - Running: the transaction is currently running - Succeeded: the transaction has completed successfully - Failed: the transaction has failed - Canceled: the transaction was canceled 
     #[serde(rename = "status")]
-    pub status: models::TransactionStatus,
+    pub status: String,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
 }
 
 impl AlterTransactionResponse {
-    pub fn new(status: models::TransactionStatus) -> AlterTransactionResponse {
+    pub fn new(status: String) -> AlterTransactionResponse {
         AlterTransactionResponse {
             status,
             properties: None,

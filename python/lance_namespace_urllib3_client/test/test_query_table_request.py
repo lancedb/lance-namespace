@@ -63,7 +63,7 @@ class TestQueryTableRequest(unittest.TestCase):
                                 column = '', 
                                 fuzziness = 0, 
                                 max_expansions = 0, 
-                                operator = 'And', 
+                                operator = '', 
                                 prefix_length = 0, 
                                 terms = '', ), 
                             phrase = lance_namespace_urllib3_client.models.phrase_query.PhraseQuery(

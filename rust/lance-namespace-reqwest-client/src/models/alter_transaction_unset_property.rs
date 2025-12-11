@@ -15,8 +15,9 @@ use serde::{Deserialize, Serialize};
 pub struct AlterTransactionUnsetProperty {
     #[serde(rename = "key", skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
+    /// The behavior if the property key to unset does not exist. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Skip (default): skip the property to unset - Fail: fail the entire operation 
     #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
-    pub mode: Option<models::UnsetPropertyMode>,
+    pub mode: Option<String>,
 }
 
 impl AlterTransactionUnsetProperty {

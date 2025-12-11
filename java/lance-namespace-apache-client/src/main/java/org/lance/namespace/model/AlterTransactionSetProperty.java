@@ -39,7 +39,7 @@ public class AlterTransactionSetProperty {
   @javax.annotation.Nullable private String value;
 
   public static final String JSON_PROPERTY_MODE = "mode";
-  @javax.annotation.Nullable private SetPropertyMode mode;
+  @javax.annotation.Nullable private String mode;
 
   public AlterTransactionSetProperty() {}
 
@@ -91,27 +91,30 @@ public class AlterTransactionSetProperty {
     this.value = value;
   }
 
-  public AlterTransactionSetProperty mode(@javax.annotation.Nullable SetPropertyMode mode) {
+  public AlterTransactionSetProperty mode(@javax.annotation.Nullable String mode) {
 
     this.mode = mode;
     return this;
   }
 
   /**
-   * Get mode
+   * The behavior if the property key already exists. Case insensitive, supports both PascalCase and
+   * snake_case. Valid values are: - Overwrite (default): overwrite the existing value with the
+   * provided value - Fail: fail the entire operation - Skip: keep the existing value and skip
+   * setting the provided value
    *
    * @return mode
    */
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public SetPropertyMode getMode() {
+  public String getMode() {
     return mode;
   }
 
   @JsonProperty(JSON_PROPERTY_MODE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMode(@javax.annotation.Nullable SetPropertyMode mode) {
+  public void setMode(@javax.annotation.Nullable String mode) {
     this.mode = mode;
   }
 

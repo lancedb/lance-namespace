@@ -693,8 +693,9 @@ public class DataApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @param mode How the insert should behave: - append (default): insert data to the existing table
-   *     - overwrite: remove all data in the table and then insert data to it (optional, default to
+   * @param mode How the insert should behave. Case insensitive, supports both PascalCase and
+   *     snake_case. Valid values are: - Append (default): insert data to the existing table -
+   *     Overwrite: remove all data in the table and then insert data to it (optional, default to
    *     append)
    * @return InsertIntoTableResponse
    * @throws ApiException if fails to make API call
@@ -719,8 +720,9 @@ public class DataApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
-   * @param mode How the insert should behave: - append (default): insert data to the existing table
-   *     - overwrite: remove all data in the table and then insert data to it (optional, default to
+   * @param mode How the insert should behave. Case insensitive, supports both PascalCase and
+   *     snake_case. Valid values are: - Append (default): insert data to the existing table -
+   *     Overwrite: remove all data in the table and then insert data to it (optional, default to
    *     append)
    * @param additionalHeaders additionalHeaders for this call
    * @return InsertIntoTableResponse

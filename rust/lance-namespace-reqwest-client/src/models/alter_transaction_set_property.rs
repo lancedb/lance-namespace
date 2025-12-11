@@ -17,8 +17,9 @@ pub struct AlterTransactionSetProperty {
     pub key: Option<String>,
     #[serde(rename = "value", skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
+    /// The behavior if the property key already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Overwrite (default): overwrite the existing value with the provided value - Fail: fail the entire operation - Skip: keep the existing value and skip setting the provided value 
     #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
-    pub mode: Option<models::SetPropertyMode>,
+    pub mode: Option<String>,
 }
 
 impl AlterTransactionSetProperty {

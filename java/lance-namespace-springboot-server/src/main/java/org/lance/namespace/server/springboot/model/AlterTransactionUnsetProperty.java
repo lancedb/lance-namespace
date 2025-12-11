@@ -16,7 +16,6 @@ package org.lance.namespace.server.springboot.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.*;
@@ -30,7 +29,7 @@ public class AlterTransactionUnsetProperty {
 
   private String key;
 
-  private UnsetPropertyMode mode;
+  private String mode;
 
   public AlterTransactionUnsetProperty key(String key) {
     this.key = key;
@@ -52,24 +51,29 @@ public class AlterTransactionUnsetProperty {
     this.key = key;
   }
 
-  public AlterTransactionUnsetProperty mode(UnsetPropertyMode mode) {
+  public AlterTransactionUnsetProperty mode(String mode) {
     this.mode = mode;
     return this;
   }
 
   /**
-   * Get mode
+   * The behavior if the property key to unset does not exist. Case insensitive, supports both
+   * PascalCase and snake_case. Valid values are: - Skip (default): skip the property to unset -
+   * Fail: fail the entire operation
    *
    * @return mode
    */
-  @Valid
-  @Schema(name = "mode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "mode",
+      description =
+          "The behavior if the property key to unset does not exist. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Skip (default): skip the property to unset - Fail: fail the entire operation ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
-  public UnsetPropertyMode getMode() {
+  public String getMode() {
     return mode;
   }
 
-  public void setMode(UnsetPropertyMode mode) {
+  public void setMode(String mode) {
     this.mode = mode;
   }
 

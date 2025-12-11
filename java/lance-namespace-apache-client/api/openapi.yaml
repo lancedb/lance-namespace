@@ -852,19 +852,15 @@ paths:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
     - description: |
-        How the insert should behave:
-        - append (default): insert data to the existing table
-        - overwrite: remove all data in the table and then insert data to it
+        How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are:
+        - Append (default): insert data to the existing table
+        - Overwrite: remove all data in the table and then insert data to it
       explode: true
       in: query
       name: mode
       required: false
       schema:
         default: append
-        enum:
-        - create
-        - append
-        - overwrite
         type: string
       style: form
     post:
@@ -881,19 +877,15 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
       - description: |
-          How the insert should behave:
-          - append (default): insert data to the existing table
-          - overwrite: remove all data in the table and then insert data to it
+          How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are:
+          - Append (default): insert data to the existing table
+          - Overwrite: remove all data in the table and then insert data to it
         explode: true
         in: query
         name: mode
         required: false
         schema:
           default: append
-          enum:
-          - create
-          - append
-          - overwrite
           type: string
         style: form
       requestBody:
@@ -2202,7 +2194,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/DescribeTransactionResponse'
-      description: Response of GetTransaction
+      description: Response of DescribeTransaction
     AlterTransactionResponse:
       content:
         application/json:
@@ -2512,7 +2504,7 @@ components:
           type: string
     CreateNamespaceRequest:
       example:
-        mode: create
+        mode: mode
         id:
         - id
         - id
@@ -2526,14 +2518,11 @@ components:
         mode:
           description: |
             There are three modes when trying to create a namespace,
-            to differentiate the behavior when a namespace of the same name already exists:
-              * create: the operation fails with 409.
-              * exist_ok: the operation succeeds and the existing namespace is kept.
-              * overwrite: the existing namespace is dropped and a new empty namespace with this name is created.
-          enum:
-          - create
-          - exist_ok
-          - overwrite
+            to differentiate the behavior when a namespace of the same name already exists.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+              * Create: the operation fails with 409.
+              * ExistOk: the operation succeeds and the existing namespace is kept.
+              * Overwrite: the existing namespace is dropped and a new empty namespace with this name is created.
           type: string
         properties:
           additionalProperties:
@@ -2620,18 +2609,10 @@ components:
           type: array
     DescribeNamespaceResponse:
       example:
-        id:
-        - id
-        - id
         properties:
           owner: Ralph
           created_at: "1452120468"
       properties:
-        id:
-          description: The namespace identifier as a list of parts
-          items:
-            type: string
-          type: array
         properties:
           additionalProperties:
             type: string
@@ -2644,15 +2625,13 @@ components:
             owner: Ralph
             created_at: "1452120468"
           nullable: true
-      required:
-      - id
     DropNamespaceRequest:
       example:
-        mode: SKIP
+        mode: mode
         id:
         - id
         - id
-        behavior: RESTRICT
+        behavior: behavior
       properties:
         id:
           items:
@@ -2661,21 +2640,17 @@ components:
         mode:
           description: |
             The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found.
-            - FAIL (default): the server must return 400 indicating the namespace to drop does not exist.
-            - SKIP: the server must return 204 indicating the drop operation has succeeded.
-          enum:
-          - SKIP
-          - FAIL
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Fail (default): the server must return 400 indicating the namespace to drop does not exist.
+            - Skip: the server must return 204 indicating the drop operation has succeeded.
           type: string
         behavior:
           description: |
             The behavior for dropping a namespace.
-            - RESTRICT (default): the namespace should not contain any table or child namespace when drop is initiated.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Restrict (default): the namespace should not contain any table or child namespace when drop is initiated.
                 If tables are found, the server should return error and not drop the namespace.
-            - CASCADE: all tables and child namespaces in the namespace are dropped before the namespace is dropped.
-          enum:
-          - RESTRICT
-          - CASCADE
+            - Cascade: all tables and child namespaces in the namespace are dropped before the namespace is dropped.
           type: string
     DropNamespaceResponse:
       example:
@@ -2690,7 +2665,7 @@ components:
             type: string
         transaction_id:
           description: |
-            If present, indicating the operation is long running and should be tracked using GetTransaction
+            If present, indicating the operation is long running and should be tracked using DescribeTransaction
           items:
             type: string
           type: array
@@ -2724,7 +2699,7 @@ components:
       nullable: true
     RegisterTableRequest:
       example:
-        mode: CREATE
+        mode: mode
         location: location
         id:
         - id
@@ -2741,12 +2716,10 @@ components:
         mode:
           description: |
             There are two modes when trying to register a table,
-            to differentiate the behavior when a table of the same name already exists:
-              * CREATE (default): the operation fails with 409.
-              * OVERWRITE: the existing table registration is replaced with the new registration.
-          enum:
-          - CREATE
-          - OVERWRITE
+            to differentiate the behavior when a table of the same name already exists.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+              * Create (default): the operation fails with 409.
+              * Overwrite: the existing table registration is replaced with the new registration.
           type: string
         properties:
           additionalProperties:
@@ -2768,8 +2741,6 @@ components:
         properties:
           additionalProperties:
             type: string
-      required:
-      - location
     ListTablesRequest:
       properties:
         id:
@@ -2974,10 +2945,10 @@ components:
           type: array
         mode:
           default: append
-          enum:
-          - create
-          - append
-          - overwrite
+          description: |
+            How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Append (default): insert data to the existing table
+            - Overwrite: remove all data in the table and then insert data to it
           type: string
     InsertIntoTableResponse:
       description: Response from inserting records into a table
@@ -3195,7 +3166,7 @@ components:
                 column: column
                 boost: 6.0274563
                 prefix_length: 0
-                operator: And
+                operator: operator
                 max_expansions: 0
               boost:
                 negative: null
@@ -3208,14 +3179,14 @@ components:
                   column: column
                   boost: 6.0274563
                   prefix_length: 0
-                  operator: And
+                  operator: operator
                   max_expansions: 0
                 - fuzziness: 0
                   terms: terms
                   column: column
                   boost: 6.0274563
                   prefix_length: 0
-                  operator: And
+                  operator: operator
                   max_expansions: 0
         distance_type: distance_type
         lower_bound: 3.6160767
@@ -3653,14 +3624,11 @@ components:
         mode:
           description: |
             There are three modes when trying to create a table,
-            to differentiate the behavior when a table of the same name already exists:
+            to differentiate the behavior when a table of the same name already exists.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
               * Create: the operation fails with 409.
               * ExistOk: the operation succeeds and the existing table is kept.
               * Overwrite: the existing table is dropped and a new table with this name is created.
-          enum:
-          - Create
-          - ExistOk
-          - Overwrite
           type: string
     CreateTableResponse:
       example:
@@ -3754,12 +3722,14 @@ components:
           minimum: 0
           type: integer
     TransactionStatus:
-      enum:
-      - QUEUED
-      - RUNNING
-      - SUCCEEDED
-      - FAILED
-      - CANCELED
+      description: |
+        The status of a transaction.
+        Case insensitive, supports both PascalCase and snake_case. Valid values are:
+        - Queued: the transaction is queued and not yet started
+        - Running: the transaction is currently running
+        - Succeeded: the transaction has completed successfully
+        - Failed: the transaction has failed
+        - Canceled: the transaction was canceled
       type: string
     DescribeTransactionRequest:
       example:
@@ -3775,10 +3745,18 @@ components:
       example:
         properties:
           key: properties
-        status: QUEUED
+        status: status
       properties:
         status:
-          $ref: '#/components/schemas/TransactionStatus'
+          description: |
+            The status of a transaction.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Queued: the transaction is queued and not yet started
+            - Running: the transaction is currently running
+            - Succeeded: the transaction has completed successfully
+            - Failed: the transaction has failed
+            - Canceled: the transaction was canceled
+          type: string
         properties:
           additionalProperties:
             type: string
@@ -3786,13 +3764,21 @@ components:
       - status
     AlterTransactionSetStatus:
       example:
-        status: QUEUED
+        status: status
       properties:
         status:
-          $ref: '#/components/schemas/TransactionStatus'
+          description: |
+            The status of a transaction.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Queued: the transaction is queued and not yet started
+            - Running: the transaction is currently running
+            - Succeeded: the transaction has completed successfully
+            - Failed: the transaction has failed
+            - Canceled: the transaction was canceled
+          type: string
     AlterTransactionSetProperty:
       example:
-        mode: OVERWRITE
+        mode: mode
         value: value
         key: key
       properties:
@@ -3801,35 +3787,41 @@ components:
         value:
           type: string
         mode:
-          $ref: '#/components/schemas/SetPropertyMode'
+          description: |
+            The behavior if the property key already exists.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Overwrite (default): overwrite the existing value with the provided value
+            - Fail: fail the entire operation
+            - Skip: keep the existing value and skip setting the provided value
+          type: string
     SetPropertyMode:
       description: |
         The behavior if the property key already exists.
-        - OVERWRITE (default): overwrite the existing value with the provided value
-        - FAIL: fail the entire operation
-        - SKIP: keep the existing value and skip setting the provided value
-      enum:
-      - OVERWRITE
-      - FAIL
-      - SKIP
+        Case insensitive, supports both PascalCase and snake_case. Valid values are:
+        - Overwrite (default): overwrite the existing value with the provided value
+        - Fail: fail the entire operation
+        - Skip: keep the existing value and skip setting the provided value
       type: string
     AlterTransactionUnsetProperty:
       example:
-        mode: SKIP
+        mode: mode
         key: key
       properties:
         key:
           type: string
         mode:
-          $ref: '#/components/schemas/UnsetPropertyMode'
+          description: |
+            The behavior if the property key to unset does not exist.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Skip (default): skip the property to unset
+            - Fail: fail the entire operation
+          type: string
     UnsetPropertyMode:
       description: |
         The behavior if the property key to unset does not exist.
-        - SKIP (default): skip the property to unset
-        - FAIL: fail the entire operation
-      enum:
-      - SKIP
-      - FAIL
+        Case insensitive, supports both PascalCase and snake_case. Valid values are:
+        - Skip (default): skip the property to unset
+        - Fail: fail the entire operation
       type: string
     AlterTransactionAction:
       description: |
@@ -3840,12 +3832,12 @@ components:
         If you would like to perform multiple actions, set a list of actions in the AlterTransactionRequest.
       example:
         setStatusAction:
-          status: QUEUED
+          status: status
         unsetPropertyAction:
-          mode: SKIP
+          mode: mode
           key: key
         setPropertyAction:
-          mode: OVERWRITE
+          mode: mode
           value: value
           key: key
       properties:
@@ -3865,21 +3857,21 @@ components:
         - id
         actions:
         - setStatusAction:
-            status: QUEUED
+            status: status
           unsetPropertyAction:
-            mode: SKIP
+            mode: mode
             key: key
           setPropertyAction:
-            mode: OVERWRITE
+            mode: mode
             value: value
             key: key
         - setStatusAction:
-            status: QUEUED
+            status: status
           unsetPropertyAction:
-            mode: SKIP
+            mode: mode
             key: key
           setPropertyAction:
-            mode: OVERWRITE
+            mode: mode
             value: value
             key: key
       properties:
@@ -3898,10 +3890,18 @@ components:
       example:
         properties:
           key: properties
-        status: QUEUED
+        status: status
       properties:
         status:
-          $ref: '#/components/schemas/TransactionStatus'
+          description: |
+            The status of a transaction.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - Queued: the transaction is queued and not yet started
+            - Running: the transaction is currently running
+            - Succeeded: the transaction has completed successfully
+            - Failed: the transaction has failed
+            - Canceled: the transaction was canceled
+          type: string
         properties:
           additionalProperties:
             type: string
@@ -4010,7 +4010,7 @@ components:
             column: column
             boost: 6.0274563
             prefix_length: 0
-            operator: And
+            operator: operator
             max_expansions: 0
           boost:
             negative: null
@@ -4023,14 +4023,14 @@ components:
               column: column
               boost: 6.0274563
               prefix_length: 0
-              operator: And
+              operator: operator
               max_expansions: 0
             - fuzziness: 0
               terms: terms
               column: column
               boost: 6.0274563
               prefix_length: 0
-              operator: And
+              operator: operator
               max_expansions: 0
       properties:
         query:
@@ -4063,7 +4063,7 @@ components:
           column: column
           boost: 6.0274563
           prefix_length: 0
-          operator: And
+          operator: operator
           max_expansions: 0
         boost:
           negative: null
@@ -4076,14 +4076,14 @@ components:
             column: column
             boost: 6.0274563
             prefix_length: 0
-            operator: And
+            operator: operator
             max_expansions: 0
           - fuzziness: 0
             terms: terms
             column: column
             boost: 6.0274563
             prefix_length: 0
-            operator: And
+            operator: operator
             max_expansions: 0
       properties:
         match:
@@ -4103,7 +4103,7 @@ components:
         column: column
         boost: 6.0274563
         prefix_length: 0
-        operator: And
+        operator: operator
         max_expansions: 0
       properties:
         boost:
@@ -4122,7 +4122,12 @@ components:
           minimum: 0
           type: integer
         operator:
-          $ref: '#/components/schemas/Operator'
+          description: |
+            The operator to use for combining terms.
+            Case insensitive, supports both PascalCase and snake_case. Valid values are:
+            - And: All terms must match.
+            - Or: At least one term must match.
+          type: string
         prefix_length:
           description: |-
             The number of beginning characters being unchanged for fuzzy matching.
@@ -4178,14 +4183,14 @@ components:
           column: column
           boost: 6.0274563
           prefix_length: 0
-          operator: And
+          operator: operator
           max_expansions: 0
         - fuzziness: 0
           terms: terms
           column: column
           boost: 6.0274563
           prefix_length: 0
-          operator: And
+          operator: operator
           max_expansions: 0
       properties:
         match_queries:
@@ -4227,9 +4232,11 @@ components:
       - must_not
       - should
     Operator:
-      enum:
-      - And
-      - Or
+      description: |
+        The operator to use for combining terms.
+        Case insensitive, supports both PascalCase and snake_case. Valid values are:
+        - And: All terms must match.
+        - Or: At least one term must match.
       type: string
     GetTableTagVersionRequest:
       example:
@@ -4628,7 +4635,7 @@ components:
                   column: column
                   boost: 6.0274563
                   prefix_length: 0
-                  operator: And
+                  operator: operator
                   max_expansions: 0
                 boost:
                   negative: null
@@ -4641,14 +4648,14 @@ components:
                     column: column
                     boost: 6.0274563
                     prefix_length: 0
-                    operator: And
+                    operator: operator
                     max_expansions: 0
                   - fuzziness: 0
                     terms: terms
                     column: column
                     boost: 6.0274563
                     prefix_length: 0
-                    operator: And
+                    operator: operator
                     max_expansions: 0
           distance_type: distance_type
           lower_bound: 3.6160767
@@ -4737,7 +4744,7 @@ components:
                 column: column
                 boost: 6.0274563
                 prefix_length: 0
-                operator: And
+                operator: operator
                 max_expansions: 0
               boost:
                 negative: null
@@ -4750,14 +4757,14 @@ components:
                   column: column
                   boost: 6.0274563
                   prefix_length: 0
-                  operator: And
+                  operator: operator
                   max_expansions: 0
                 - fuzziness: 0
                   terms: terms
                   column: column
                   boost: 6.0274563
                   prefix_length: 0
-                  operator: And
+                  operator: operator
                   max_expansions: 0
         distance_type: distance_type
         lower_bound: 3.6160767
@@ -5320,7 +5327,7 @@ components:
               column: column
               boost: 6.0274563
               prefix_length: 0
-              operator: And
+              operator: operator
               max_expansions: 0
             boost:
               negative: null
@@ -5333,14 +5340,14 @@ components:
                 column: column
                 boost: 6.0274563
                 prefix_length: 0
-                operator: And
+                operator: operator
                 max_expansions: 0
               - fuzziness: 0
                 terms: terms
                 column: column
                 boost: 6.0274563
                 prefix_length: 0
-                operator: And
+                operator: operator
                 max_expansions: 0
       properties:
         string_query:

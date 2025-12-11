@@ -17,9 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from lance_namespace_urllib3_client.models.set_property_mode import SetPropertyMode
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +28,7 @@ class AlterTransactionSetProperty(BaseModel):
     """ # noqa: E501
     key: Optional[StrictStr] = None
     value: Optional[StrictStr] = None
-    mode: Optional[SetPropertyMode] = None
+    mode: Optional[StrictStr] = Field(default=None, description="The behavior if the property key already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Overwrite (default): overwrite the existing value with the provided value - Fail: fail the entire operation - Skip: keep the existing value and skip setting the provided value ")
     __properties: ClassVar[List[str]] = ["key", "value", "mode"]
 
     model_config = ConfigDict(

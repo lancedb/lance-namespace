@@ -13,9 +13,7 @@
  */
 package org.lance.namespace.server.springboot.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
@@ -36,47 +34,7 @@ public class CreateNamespaceRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
-  /**
-   * There are three modes when trying to create a namespace, to differentiate the behavior when a
-   * namespace of the same name already exists: * create: the operation fails with 409. * exist_ok:
-   * the operation succeeds and the existing namespace is kept. * overwrite: the existing namespace
-   * is dropped and a new empty namespace with this name is created.
-   */
-  public enum ModeEnum {
-    CREATE("create"),
-
-    EXIST_OK("exist_ok"),
-
-    OVERWRITE("overwrite");
-
-    private String value;
-
-    ModeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static ModeEnum fromValue(String value) {
-      for (ModeEnum b : ModeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private ModeEnum mode;
+  private String mode;
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
@@ -108,30 +66,31 @@ public class CreateNamespaceRequest {
     this.id = id;
   }
 
-  public CreateNamespaceRequest mode(ModeEnum mode) {
+  public CreateNamespaceRequest mode(String mode) {
     this.mode = mode;
     return this;
   }
 
   /**
    * There are three modes when trying to create a namespace, to differentiate the behavior when a
-   * namespace of the same name already exists: * create: the operation fails with 409. * exist_ok:
-   * the operation succeeds and the existing namespace is kept. * overwrite: the existing namespace
-   * is dropped and a new empty namespace with this name is created.
+   * namespace of the same name already exists. Case insensitive, supports both PascalCase and
+   * snake_case. Valid values are: * Create: the operation fails with 409. * ExistOk: the operation
+   * succeeds and the existing namespace is kept. * Overwrite: the existing namespace is dropped and
+   * a new empty namespace with this name is created.
    *
    * @return mode
    */
   @Schema(
       name = "mode",
       description =
-          "There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists:   * create: the operation fails with 409.   * exist_ok: the operation succeeds and the existing namespace is kept.   * overwrite: the existing namespace is dropped and a new empty namespace with this name is created. ",
+          "There are three modes when trying to create a namespace, to differentiate the behavior when a namespace of the same name already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are:   * Create: the operation fails with 409.   * ExistOk: the operation succeeds and the existing namespace is kept.   * Overwrite: the existing namespace is dropped and a new empty namespace with this name is created. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
-  public ModeEnum getMode() {
+  public String getMode() {
     return mode;
   }
 
-  public void setMode(ModeEnum mode) {
+  public void setMode(String mode) {
     this.mode = mode;
   }
 

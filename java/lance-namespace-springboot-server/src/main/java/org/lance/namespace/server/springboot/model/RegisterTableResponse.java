@@ -36,15 +36,6 @@ public class RegisterTableResponse {
 
   @Valid private Map<String, String> properties = new HashMap<>();
 
-  public RegisterTableResponse() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public RegisterTableResponse(String location) {
-    this.location = location;
-  }
-
   public RegisterTableResponse transactionId(String transactionId) {
     this.transactionId = transactionId;
     return this;
@@ -78,8 +69,7 @@ public class RegisterTableResponse {
    *
    * @return location
    */
-  @NotNull
-  @Schema(name = "location", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "location", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("location")
   public String getLocation() {
     return location;

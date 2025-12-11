@@ -13,18 +13,14 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DescribeNamespaceResponse {
-    /// The namespace identifier as a list of parts
-    #[serde(rename = "id")]
-    pub id: Vec<String>,
     /// Properties stored on the namespace, if supported by the server. If the server does not support namespace properties, it should return null for this field. If namespace properties are supported, but none are set, it should return an empty object.
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
 }
 
 impl DescribeNamespaceResponse {
-    pub fn new(id: Vec<String>) -> DescribeNamespaceResponse {
+    pub fn new() -> DescribeNamespaceResponse {
         DescribeNamespaceResponse {
-            id,
             properties: None,
         }
     }

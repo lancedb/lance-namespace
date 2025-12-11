@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,18 +27,8 @@ class CreateTableRequest(BaseModel):
     Request for creating a table, excluding the Arrow IPC stream. 
     """ # noqa: E501
     id: Optional[List[StrictStr]] = None
-    mode: Optional[StrictStr] = Field(default=None, description="There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists:   * Create: the operation fails with 409.   * ExistOk: the operation succeeds and the existing table is kept.   * Overwrite: the existing table is dropped and a new table with this name is created. ")
+    mode: Optional[StrictStr] = Field(default=None, description="There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are:   * Create: the operation fails with 409.   * ExistOk: the operation succeeds and the existing table is kept.   * Overwrite: the existing table is dropped and a new table with this name is created. ")
     __properties: ClassVar[List[str]] = ["id", "mode"]
-
-    @field_validator('mode')
-    def mode_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['Create', 'ExistOk', 'Overwrite']):
-            raise ValueError("must be one of enum values ('Create', 'ExistOk', 'Overwrite')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

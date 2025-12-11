@@ -92,7 +92,8 @@ public class DropNamespaceResponse {
   }
 
   /**
-   * If present, indicating the operation is long running and should be tracked using GetTransaction
+   * If present, indicating the operation is long running and should be tracked using
+   * DescribeTransaction
    *
    * @return transactionId
    */

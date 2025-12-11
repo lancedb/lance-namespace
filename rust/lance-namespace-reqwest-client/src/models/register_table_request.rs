@@ -17,9 +17,9 @@ pub struct RegisterTableRequest {
     pub id: Option<Vec<String>>,
     #[serde(rename = "location")]
     pub location: String,
-    /// There are two modes when trying to register a table, to differentiate the behavior when a table of the same name already exists:   * CREATE (default): the operation fails with 409.   * OVERWRITE: the existing table registration is replaced with the new registration. 
+    /// There are two modes when trying to register a table, to differentiate the behavior when a table of the same name already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are:   * Create (default): the operation fails with 409.   * Overwrite: the existing table registration is replaced with the new registration. 
     #[serde(rename = "mode", skip_serializing_if = "Option::is_none")]
-    pub mode: Option<Mode>,
+    pub mode: Option<String>,
     #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<std::collections::HashMap<String, String>>,
 }
@@ -32,20 +32,6 @@ impl RegisterTableRequest {
             mode: None,
             properties: None,
         }
-    }
-}
-/// There are two modes when trying to register a table, to differentiate the behavior when a table of the same name already exists:   * CREATE (default): the operation fails with 409.   * OVERWRITE: the existing table registration is replaced with the new registration. 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Mode {
-    #[serde(rename = "CREATE")]
-    Create,
-    #[serde(rename = "OVERWRITE")]
-    Overwrite,
-}
-
-impl Default for Mode {
-    fn default() -> Mode {
-        Self::Create
     }
 }
 

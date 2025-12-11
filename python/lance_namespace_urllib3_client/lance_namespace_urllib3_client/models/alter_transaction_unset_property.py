@@ -17,9 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from lance_namespace_urllib3_client.models.unset_property_mode import UnsetPropertyMode
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +27,7 @@ class AlterTransactionUnsetProperty(BaseModel):
     AlterTransactionUnsetProperty
     """ # noqa: E501
     key: Optional[StrictStr] = None
-    mode: Optional[UnsetPropertyMode] = None
+    mode: Optional[StrictStr] = Field(default=None, description="The behavior if the property key to unset does not exist. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Skip (default): skip the property to unset - Fail: fail the entire operation ")
     __properties: ClassVar[List[str]] = ["key", "mode"]
 
     model_config = ConfigDict(

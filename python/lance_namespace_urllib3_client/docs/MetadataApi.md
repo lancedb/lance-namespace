@@ -1456,7 +1456,7 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Response of GetTransaction |  -  |
+**200** | Response of DescribeTransaction |  -  |
 **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |

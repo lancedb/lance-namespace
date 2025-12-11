@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **key** | **str** |  | [optional] 
-**mode** | [**UnsetPropertyMode**](UnsetPropertyMode.md) |  | [optional] 
+**mode** | **str** | The behavior if the property key to unset does not exist. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Skip (default): skip the property to unset - Fail: fail the entire operation  | [optional] 
 
 ## Example
 
