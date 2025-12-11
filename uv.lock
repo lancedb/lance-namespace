@@ -615,7 +615,7 @@ wheels = [
 
 [[package]]
 name = "lance-namespace"
-version = "0.2.1"
+version = "0.3.0"
 source = { editable = "python/lance_namespace" }
 dependencies = [
     { name = "lance-namespace-urllib3-client" },
@@ -638,7 +638,7 @@ dev = [
 
 [[package]]
 name = "lance-namespace-urllib3-client"
-version = "0.2.1"
+version = "0.3.0"
 source = { editable = "python/lance_namespace_urllib3_client" }
 dependencies = [
     { name = "pydantic" },
@@ -677,7 +677,7 @@ dev = [
 
 [[package]]
 name = "lance-namespace-workspace"
-version = "0.2.1"
+version = "0.3.0"
 source = { virtual = "." }
 
 [package.dev-dependencies]
