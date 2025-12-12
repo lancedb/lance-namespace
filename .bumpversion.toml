@@ -82,6 +82,13 @@ filename = "python/lance_namespace/pyproject.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
 
+# Also the lance-namespace-urllib3-client dependency in lance_namespace/pyproject.toml
+[[tool.bumpversion.files]]
+filename = "python/lance_namespace/pyproject.toml"
+search = 'lance-namespace-urllib3-client=={current_version}'
+replace = 'lance-namespace-urllib3-client=={new_version}'
+
+
 # Java lance-namespace-core module
 [[tool.bumpversion.files]]
 filename = "java/lance-namespace-core/pom.xml"
