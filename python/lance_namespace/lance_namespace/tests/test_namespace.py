@@ -23,6 +23,8 @@ from lance_namespace import (
     # Test model re-exports
     ListNamespacesRequest,
     ListNamespacesResponse,
+    # Error types
+    UnsupportedOperationError,
 )
 
 
@@ -46,14 +48,14 @@ class TestLanceNamespaceInterface:
         ns = MockNamespace(id="test")
         assert ns.namespace_id() == "MockNamespace { id: 'test' }"
 
-    def test_default_methods_raise_not_implemented(self):
-        """Test that default methods raise NotImplementedError."""
+    def test_default_methods_raise_unsupported(self):
+        """Test that default methods raise UnsupportedOperationError."""
         ns = MockNamespace()
 
-        with pytest.raises(NotImplementedError, match="list_namespaces"):
+        with pytest.raises(UnsupportedOperationError, match="list_namespaces"):
             ns.list_namespaces(ListNamespacesRequest(parent=[]))
 
-        with pytest.raises(NotImplementedError, match="list_tables"):
+        with pytest.raises(UnsupportedOperationError, match="list_tables"):
             from lance_namespace import ListTablesRequest
 
             ns.list_tables(ListTablesRequest(namespace=[]))

@@ -1,5 +1,5 @@
 nav:
   - index.md
-  - operations
+  - Client Spec: client
   - Directory Namespace: dir
   - REST Namespace: rest

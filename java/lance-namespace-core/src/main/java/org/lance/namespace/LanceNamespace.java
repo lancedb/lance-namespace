@@ -13,6 +13,7 @@
  */
 package org.lance.namespace;
 
+import org.lance.namespace.errors.UnsupportedOperationException;
 import org.lance.namespace.model.*;
 
 import org.apache.arrow.memory.BufferAllocator;
@@ -34,11 +35,28 @@ import java.util.concurrent.ConcurrentHashMap;
  * libraries can implement this interface to provide integration with catalog systems like AWS Glue,
  * Hive Metastore, or Databricks Unity Catalog.
  *
- * <p>Most methods have default implementations that throw {@link UnsupportedOperationException}.
- * Implementations should override the methods they support.
+ * <p>Most methods have default implementations that throw {@link
+ * org.lance.namespace.errors.UnsupportedOperationException}. Implementations should override the
+ * methods they support.
  *
  * <p>Use {@link #connect(String, Map, BufferAllocator)} to create namespace instances, and {@link
  * #registerNamespaceImpl(String, String)} to register external implementations.
+ *
+ * <h2>Error Handling</h2>
+ *
+ * <p>All operations may throw exceptions from the {@link org.lance.namespace.errors} package.
+ * Common errors that may be thrown by any operation include:
+ *
+ * <ul>
+ *   <li>{@link org.lance.namespace.errors.UnsupportedOperationException} - operation not supported
+ *   <li>{@link org.lance.namespace.errors.InvalidInputException} - invalid request parameters
+ *   <li>{@link org.lance.namespace.errors.PermissionDeniedException} - insufficient permissions
+ *   <li>{@link org.lance.namespace.errors.UnauthenticatedException} - invalid credentials
+ *   <li>{@link org.lance.namespace.errors.ServiceUnavailableException} - service unavailable
+ *   <li>{@link org.lance.namespace.errors.InternalException} - unexpected internal error
+ * </ul>
+ *
+ * <p>See individual method documentation for operation-specific errors.
  */
 public interface LanceNamespace {
 
@@ -171,6 +189,8 @@ public interface LanceNamespace {
    *
    * @param request The list namespaces request
    * @return The list namespaces response
+   * @throws org.lance.namespace.errors.NamespaceNotFoundException if the parent namespace does not
+   *     exist
    */
   default ListNamespacesResponse listNamespaces(ListNamespacesRequest request) {
     throw new UnsupportedOperationException("Not supported: listNamespaces");
@@ -181,6 +201,7 @@ public interface LanceNamespace {
    *
    * @param request The describe namespace request
    * @return The describe namespace response
+   * @throws org.lance.namespace.errors.NamespaceNotFoundException if the namespace does not exist
    */
   default DescribeNamespaceResponse describeNamespace(DescribeNamespaceRequest request) {
     throw new UnsupportedOperationException("Not supported: describeNamespace");
@@ -191,6 +212,8 @@ public interface LanceNamespace {
    *
    * @param request The create namespace request
    * @return The create namespace response
+   * @throws org.lance.namespace.errors.NamespaceAlreadyExistsException if a namespace with the same
+   *     name already exists
    */
   default CreateNamespaceResponse createNamespace(CreateNamespaceRequest request) {
     throw new UnsupportedOperationException("Not supported: createNamespace");
@@ -201,6 +224,9 @@ public interface LanceNamespace {
    *
    * @param request The drop namespace request
    * @return The drop namespace response
+   * @throws org.lance.namespace.errors.NamespaceNotFoundException if the namespace does not exist
+   * @throws org.lance.namespace.errors.NamespaceNotEmptyException if the namespace contains tables
+   *     or child namespaces
    */
   default DropNamespaceResponse dropNamespace(DropNamespaceRequest request) {
     throw new UnsupportedOperationException("Not supported: dropNamespace");
@@ -210,7 +236,7 @@ public interface LanceNamespace {
    * Check if a namespace exists.
    *
    * @param request The namespace exists request
-   * @throws RuntimeException if the namespace does not exist
+   * @throws org.lance.namespace.errors.NamespaceNotFoundException if the namespace does not exist
    */
   default void namespaceExists(NamespaceExistsRequest request) {
     throw new UnsupportedOperationException("Not supported: namespaceExists");

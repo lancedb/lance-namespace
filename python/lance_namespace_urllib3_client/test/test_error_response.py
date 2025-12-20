@@ -35,14 +35,14 @@ class TestErrorResponse(unittest.TestCase):
         model = ErrorResponse()
         if include_optional:
             return ErrorResponse(
-                error = 'Incorrect username or password',
-                code = 404,
-                type = '/errors/incorrect-user-pass',
-                detail = 'Authentication failed due to incorrect username or password',
-                instance = '/login/log/abc123'
+                error = 'Table 'users' not found in namespace 'production'',
+                code = 4,
+                detail = 'The table may have been dropped or renamed',
+                instance = '/v1/table/production$users/describe'
             )
         else:
             return ErrorResponse(
+                code = 4,
         )
         """
 

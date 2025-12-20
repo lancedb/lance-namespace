@@ -2,7 +2,7 @@
 
 In an enterprise environment, typically there is a requirement to store tables in a metadata service
 for more advanced governance features around access control, auditing, lineage tracking, etc.
-**Lance REST Namespace** is an OpenAPI protocol that enables reading, writing and managing Lance tables
+**Lance REST Namespace** is an OpenAPI catalog protocol that enables reading, writing and managing Lance tables
 by connecting those metadata services or building a custom metadata server in a standardized way.
 The REST server definition can be found in the [OpenAPI specification](https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/lance-format/lance-namespace/refs/heads/main/docs/src/rest.yaml).
 
@@ -77,11 +77,11 @@ query parameters and headers.
 
 Uses GET without a request body. Pagination parameters are passed as query parameters.
 
-| Request Field | REST Form | Location |
-|---------------|-----------|----------|
-| `id` | `{id}` | Path parameter |
-| `page_token` | `page_token` | Query parameter |
-| `limit` | `limit` | Query parameter |
+| Request Field | REST Form    | Location        |
+|---------------|--------------|-----------------|
+| `id`          | `{id}`       | Path parameter  |
+| `page_token`  | `page_token` | Query parameter |
+| `limit`       | `limit`      | Query parameter |
 
 ### ListTables
 
@@ -89,11 +89,11 @@ Uses GET without a request body. Pagination parameters are passed as query param
 
 Uses GET without a request body. Pagination parameters are passed as query parameters.
 
-| Request Field | REST Form | Location |
-|---------------|-----------|----------|
-| `id` | `{id}` | Path parameter |
-| `page_token` | `page_token` | Query parameter |
-| `limit` | `limit` | Query parameter |
+| Request Field | REST Form    | Location        |
+|---------------|--------------|-----------------|
+| `id`          | `{id}`       | Path parameter  |
+| `page_token`  | `page_token` | Query parameter |
+| `limit`       | `limit`      | Query parameter |
 
 ### ListAllTables
 
@@ -113,9 +113,9 @@ Uses GET without a request body. Pagination parameters are passed as query param
 
 The `with_table_uri` field is passed as a query parameter instead of in the request body.
 
-| Request Field | REST Form | Location |
-|---------------|-----------|----------|
-| `id` | `{id}` | Path parameter |
+| Request Field    | REST Form        | Location        |
+|------------------|------------------|-----------------|
+| `id`             | `{id}`           | Path parameter  |
 | `with_table_uri` | `with_table_uri` | Query parameter |
 
 ### CreateTable
@@ -127,13 +127,13 @@ The `with_table_uri` field is passed as a query parameter instead of in the requ
 The request body contains Arrow IPC stream data. The table schema is derived from the Arrow stream schema.
 If the stream is empty, an empty table is created.
 
-| Request Field | REST Form | Location |
-|---------------|-----------|----------|
-| `id` | `{id}` | Path parameter |
-| `mode` | `mode` | Query parameter |
-| `location` | `x-lance-table-location` | Header |
-| `properties` | `x-lance-table-properties` | Header (JSON-encoded string map) |
-| `data` | Request body | Body (Arrow IPC stream) |
+| Request Field | REST Form                  | Location                         |
+|---------------|----------------------------|----------------------------------|
+| `id`          | `{id}`                     | Path parameter                   |
+| `mode`        | `mode`                     | Query parameter                  |
+| `location`    | `x-lance-table-location`   | Header                           |
+| `properties`  | `x-lance-table-properties` | Header (JSON-encoded string map) |
+| `data`        | Request body               | Body (Arrow IPC stream)          |
 
 ### InsertIntoTable
 
@@ -143,11 +143,11 @@ If the stream is empty, an empty table is created.
 
 The request body contains Arrow IPC stream data with records to insert.
 
-| Request Field | REST Form | Location |
-|---------------|-----------|----------|
-| `id` | `{id}` | Path parameter |
-| `mode` | `mode` | Query parameter (`append` or `overwrite`, default: `append`) |
-| `data` | Request body | Body (Arrow IPC stream) |
+| Request Field | REST Form    | Location                                                     |
+|---------------|--------------|--------------------------------------------------------------|
+| `id`          | `{id}`       | Path parameter                                               |
+| `mode`        | `mode`       | Query parameter (`append` or `overwrite`, default: `append`) |
+| `data`        | Request body | Body (Arrow IPC stream)                                      |
 
 ### MergeInsertIntoTable
 
@@ -158,18 +158,18 @@ The request body contains Arrow IPC stream data with records to insert.
 The request body contains Arrow IPC stream data. Performs a merge insert (upsert) operation
 that updates existing rows based on a matching column and inserts new rows that don't match.
 
-| Request Field | REST Form | Location |
-|---------------|-----------|----------|
-| `id` | `{id}` | Path parameter |
-| `on` | `on` | Query parameter (required) |
-| `when_matched_update_all` | `when_matched_update_all` | Query parameter (boolean) |
-| `when_matched_update_all_filt` | `when_matched_update_all_filt` | Query parameter (SQL expression) |
-| `when_not_matched_insert_all` | `when_not_matched_insert_all` | Query parameter (boolean) |
-| `when_not_matched_by_source_delete` | `when_not_matched_by_source_delete` | Query parameter (boolean) |
-| `when_not_matched_by_source_delete_filt` | `when_not_matched_by_source_delete_filt` | Query parameter (SQL expression) |
-| `timeout` | `timeout` | Query parameter (duration string, e.g., "30s", "5m") |
-| `use_index` | `use_index` | Query parameter (boolean) |
-| `data` | Request body | Body (Arrow IPC stream) |
+| Request Field                            | REST Form                                | Location                                             |
+|------------------------------------------|------------------------------------------|------------------------------------------------------|
+| `id`                                     | `{id}`                                   | Path parameter                                       |
+| `on`                                     | `on`                                     | Query parameter (required)                           |
+| `when_matched_update_all`                | `when_matched_update_all`                | Query parameter (boolean)                            |
+| `when_matched_update_all_filt`           | `when_matched_update_all_filt`           | Query parameter (SQL expression)                     |
+| `when_not_matched_insert_all`            | `when_not_matched_insert_all`            | Query parameter (boolean)                            |
+| `when_not_matched_by_source_delete`      | `when_not_matched_by_source_delete`      | Query parameter (boolean)                            |
+| `when_not_matched_by_source_delete_filt` | `when_not_matched_by_source_delete_filt` | Query parameter (SQL expression)                     |
+| `timeout`                                | `timeout`                                | Query parameter (duration string, e.g., "30s", "5m") |
+| `use_index`                              | `use_index`                              | Query parameter (boolean)                            |
+| `data`                                   | Request body                             | Body (Arrow IPC stream)                              |
 
 ### QueryTable
 
@@ -179,9 +179,9 @@ that updates existing rows based on a matching column and inserts new rows that 
 
 The response body contains Arrow IPC file data instead of JSON.
 
-| Response Field | REST Form | Notes |
-|----------------|-----------|-------|
-| (results) | Response body | Arrow IPC file (binary, not JSON) |
+| Response Field | REST Form     | Notes                             |
+|----------------|---------------|-----------------------------------|
+| (results)      | Response body | Arrow IPC file (binary, not JSON) |
 
 ### CountTableRows
 
@@ -189,9 +189,9 @@ The response body contains Arrow IPC file data instead of JSON.
 
 The response is returned as a plain integer instead of a JSON object.
 
-| Response Field | REST Form | Notes |
-|----------------|-----------|-------|
-| (count) | Response body | Plain integer (not JSON wrapped) |
+| Response Field | REST Form     | Notes                            |
+|----------------|---------------|----------------------------------|
+| (count)        | Response body | Plain integer (not JSON wrapped) |
 
 ### DropTable
 
@@ -211,11 +211,11 @@ No request body. All parameters are in the path.
 
 No request body. Pagination parameters are passed as query parameters.
 
-| Request Field | REST Form | Location |
-|---------------|-----------|----------|
-| `id` | `{id}` | Path parameter |
-| `page_token` | `page_token` | Query parameter |
-| `limit` | `limit` | Query parameter |
+| Request Field | REST Form    | Location        |
+|---------------|--------------|-----------------|
+| `id`          | `{id}`       | Path parameter  |
+| `page_token`  | `page_token` | Query parameter |
+| `limit`       | `limit`      | Query parameter |
 
 ### ListTableTags
 
@@ -223,11 +223,11 @@ No request body. Pagination parameters are passed as query parameters.
 
 No request body. Pagination parameters are passed as query parameters.
 
-| Request Field | REST Form | Location |
-|---------------|-----------|----------|
-| `id` | `{id}` | Path parameter |
-| `page_token` | `page_token` | Query parameter |
-| `limit` | `limit` | Query parameter |
+| Request Field | REST Form    | Location        |
+|---------------|--------------|-----------------|
+| `id`          | `{id}`       | Path parameter  |
+| `page_token`  | `page_token` | Query parameter |
+| `limit`       | `limit`      | Query parameter |
 
 ### ExplainTableQueryPlan
 
@@ -235,15 +235,15 @@ No request body. Pagination parameters are passed as query parameters.
 
 The response is returned as a plain string instead of a JSON object.
 
-| Request Field | REST Form | Location |
-|---------------|-----------|----------|
-| `id` | `{id}` | Path parameter |
-| `query` | `query` | Request body field |
-| `verbose` | `verbose` | Request body field |
+| Request Field | REST Form | Location           |
+|---------------|-----------|--------------------|
+| `id`          | `{id}`    | Path parameter     |
+| `query`       | `query`   | Request body field |
+| `verbose`     | `verbose` | Request body field |
 
-| Response Field | REST Form | Notes |
-|----------------|-----------|-------|
-| `plan` | Response body | Plain string (not JSON wrapped) |
+| Response Field | REST Form     | Notes                           |
+|----------------|---------------|---------------------------------|
+| `plan`         | Response body | Plain string (not JSON wrapped) |
 
 ### AnalyzeTableQueryPlan
 
@@ -251,14 +251,14 @@ The response is returned as a plain string instead of a JSON object.
 
 The response is returned as a plain string instead of a JSON object.
 
-| Request Field | REST Form | Location |
-|---------------|-----------|----------|
-| `id` | `{id}` | Path parameter |
-| `query` | `query` | Request body field |
+| Request Field | REST Form | Location           |
+|---------------|-----------|--------------------|
+| `id`          | `{id}`    | Path parameter     |
+| `query`       | `query`   | Request body field |
 
-| Response Field | REST Form | Notes |
-|----------------|-----------|-------|
-| `analysis` | Response body | Plain string (not JSON wrapped) |
+| Response Field | REST Form     | Notes                           |
+|----------------|---------------|---------------------------------|
+| `analysis`     | Response body | Plain string (not JSON wrapped) |
 
 ### UpdateTableSchemaMetadata
 
@@ -266,14 +266,14 @@ The response is returned as a plain string instead of a JSON object.
 
 Both request and response bodies are direct objects (map of string to string) instead of being wrapped in a `metadata` field.
 
-| Request Field | REST Form | Location |
-|---------------|-----------|----------|
-| `id` | `{id}` | Path parameter |
-| `metadata` | Request body | Direct object `{"key": "value", ...}` (not `{"metadata": {...}}`) |
+| Request Field | REST Form    | Location                                                          |
+|---------------|--------------|-------------------------------------------------------------------|
+| `id`          | `{id}`       | Path parameter                                                    |
+| `metadata`    | Request body | Direct object `{"key": "value", ...}` (not `{"metadata": {...}}`) |
 
-| Response Field | REST Form | Notes |
-|----------------|-----------|-------|
-| `metadata` | Response body | Direct object `{"key": "value", ...}` (not `{"metadata": {...}}`) |
+| Response Field | REST Form     | Notes                                                             |
+|----------------|---------------|-------------------------------------------------------------------|
+| `metadata`     | Response body | Direct object `{"key": "value", ...}` (not `{"metadata": {...}}`) |
 
 ## Namespace Server and Adapter
 

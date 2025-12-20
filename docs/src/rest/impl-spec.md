@@ -128,13 +128,44 @@ Operation parameters are passed via query parameters and headers as documented i
 ## Error Handling
 
 All error responses follow the JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807).
-HTTP status codes are used to indicate the type of error:
 
-| Status Code | Meaning |
-|-------------|---------|
-| 400 | Bad Request - Invalid request parameters |
-| 401 | Unauthorized - Authentication required |
-| 403 | Forbidden - Insufficient permissions |
-| 404 | Not Found - Resource does not exist |
-| 409 | Conflict - Resource already exists or concurrent modification |
-| 500 | Internal Server Error - Server-side error |
+The response body contains an [ErrorResponse](../client/operations/models/ErrorResponse.md) with a `code` field containing the Lance Namespace error code. See [Error Handling](../client/operations/errors.md) for the complete list of error codes and per-operation error documentation.
+
+### Error Code to HTTP Status Mapping
+
+REST namespace implementations must map Lance error codes to HTTP status codes as follows:
+
+| Error Code | Name | HTTP Status |
+|------------|------|-------------|
+| 0 | Unsupported | 406 Not Acceptable |
+| 1 | NamespaceNotFound | 404 Not Found |
+| 2 | NamespaceAlreadyExists | 409 Conflict |
+| 3 | NamespaceNotEmpty | 409 Conflict |
+| 4 | TableNotFound | 404 Not Found |
+| 5 | TableAlreadyExists | 409 Conflict |
+| 6 | TableIndexNotFound | 404 Not Found |
+| 7 | TableIndexAlreadyExists | 409 Conflict |
+| 8 | TableTagNotFound | 404 Not Found |
+| 9 | TableTagAlreadyExists | 409 Conflict |
+| 10 | TransactionNotFound | 404 Not Found |
+| 11 | TableVersionNotFound | 404 Not Found |
+| 12 | TableColumnNotFound | 404 Not Found |
+| 13 | InvalidInput | 400 Bad Request |
+| 14 | ConcurrentModification | 409 Conflict |
+| 15 | PermissionDenied | 403 Forbidden |
+| 16 | Unauthenticated | 401 Unauthorized |
+| 17 | ServiceUnavailable | 503 Service Unavailable |
+| 18 | Internal | 500 Internal Server Error |
+| 19 | InvalidTableState | 409 Conflict |
+| 20 | TableSchemaValidationError | 400 Bad Request |
+
+### Example Error Response
+
+```json
+{
+  "error": "Table 'users' not found in namespace 'production'",
+  "code": 4,
+  "detail": "The table may have been dropped or renamed",
+  "instance": "/v1/table/production$users/describe"
+}
+```

@@ -1,4 +1,5 @@
 title: Operations
 nav:
   - Overview: index.md
+  - Errors: errors.md
   - models
