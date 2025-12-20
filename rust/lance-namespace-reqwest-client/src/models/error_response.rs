@@ -14,30 +14,26 @@ use serde::{Deserialize, Serialize};
 /// ErrorResponse : Common JSON error response model
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ErrorResponse {
-    /// a brief, human-readable message about the error
+    /// A brief, human-readable message about the error.
     #[serde(rename = "error", skip_serializing_if = "Option::is_none")]
     pub error: Option<String>,
-    /// HTTP style response code, where 4XX represents client side errors  and 5XX represents server side errors.  For implementations that uses HTTP (e.g. REST namespace), this field can be optional in favor of the HTTP response status code. In case both values exist and do not match, the HTTP response status code should be used. 
-    #[serde(rename = "code", skip_serializing_if = "Option::is_none")]
-    pub code: Option<i32>,
-    /// An optional type identifier string for the error. This allows the implementation to specify their internal error type, which could be more detailed than the HTTP standard status code. 
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
-    pub r#type: Option<String>,
-    /// an optional human-readable explanation of the error. This can be used to record information such as stack trace. 
+    /// Lance Namespace error code identifying the error type.  Error codes:   0 - Unsupported: Operation not supported by this backend   1 - NamespaceNotFound: The specified namespace does not exist   2 - NamespaceAlreadyExists: A namespace with this name already exists   3 - NamespaceNotEmpty: Namespace contains tables or child namespaces   4 - TableNotFound: The specified table does not exist   5 - TableAlreadyExists: A table with this name already exists   6 - TableIndexNotFound: The specified table index does not exist   7 - TableIndexAlreadyExists: A table index with this name already exists   8 - TableTagNotFound: The specified table tag does not exist   9 - TableTagAlreadyExists: A table tag with this name already exists   10 - TransactionNotFound: The specified transaction does not exist   11 - TableVersionNotFound: The specified table version does not exist   12 - TableColumnNotFound: The specified table column does not exist   13 - InvalidInput: Malformed request or invalid parameters   14 - ConcurrentModification: Optimistic concurrency conflict   15 - PermissionDenied: User lacks permission for this operation   16 - Unauthenticated: Authentication credentials are missing or invalid   17 - ServiceUnavailable: Service is temporarily unavailable   18 - Internal: Unexpected server/implementation error   19 - InvalidTableState: Table is in an invalid state for the operation   20 - TableSchemaValidationError: Table schema validation failed 
+    #[serde(rename = "code")]
+    pub code: i32,
+    /// An optional human-readable explanation of the error. This can be used to record additional information such as stack trace. 
     #[serde(rename = "detail", skip_serializing_if = "Option::is_none")]
     pub detail: Option<String>,
-    /// a string that identifies the specific occurrence of the error. This can be a URI, a request or response ID,  or anything that the implementation can recognize to trace specific occurrence of the error. 
+    /// A string that identifies the specific occurrence of the error. This can be a URI, a request or response ID, or anything that the implementation can recognize to trace specific occurrence of the error. 
     #[serde(rename = "instance", skip_serializing_if = "Option::is_none")]
     pub instance: Option<String>,
 }
 
 impl ErrorResponse {
     /// Common JSON error response model
-    pub fn new() -> ErrorResponse {
+    pub fn new(code: i32) -> ErrorResponse {
         ErrorResponse {
             error: None,
-            code: None,
-            r#type: None,
+            code,
             detail: None,
             instance: None,
         }

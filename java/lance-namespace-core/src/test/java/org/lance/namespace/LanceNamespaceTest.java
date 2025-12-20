@@ -136,11 +136,11 @@ public class LanceNamespaceTest {
     ns.initialize(new HashMap<>(), null);
 
     assertThrows(
-        UnsupportedOperationException.class,
+        org.lance.namespace.errors.UnsupportedOperationException.class,
         () -> ns.listNamespaces(new org.lance.namespace.model.ListNamespacesRequest()));
 
     assertThrows(
-        UnsupportedOperationException.class,
+        org.lance.namespace.errors.UnsupportedOperationException.class,
         () -> ns.listTables(new org.lance.namespace.model.ListTablesRequest()));
   }
 

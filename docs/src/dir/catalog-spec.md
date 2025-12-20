@@ -1,7 +1,7 @@
 # Lance Directory Namespace Spec
 
-**Lance directory namespace** is a Lance namespace implementation that stores tables in a directory structure
-on any local or remote storage system. It has gone through 2 major spec versions:
+**Lance directory namespace** is a catalog that stores tables in a directory structure
+on any local or remote storage system. It has gone through 2 major spec versions so far:
 
 - **V1 (Directory Listing)**: A lightweight, simple 1-level namespace that discovers tables by scanning the directory.
 - **V2 (Manifest)**: A more advanced implementation backed by a manifest table (a Lance table) that supports nested namespaces and better performance at scale.

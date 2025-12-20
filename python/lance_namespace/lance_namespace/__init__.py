@@ -17,6 +17,7 @@ This module provides:
 2. connect() factory function for creating namespace instances
 3. register_namespace_impl() for external implementation registration
 4. Re-exported model types from lance_namespace_urllib3_client
+5. Error types for Lance Namespace operations
 
 The actual implementations (DirectoryNamespace, RestNamespace) are provided
 by the lance package. This package only provides the abstract interface
@@ -26,6 +27,33 @@ and plugin registration mechanism.
 import importlib
 from abc import ABC, abstractmethod
 from typing import Dict
+
+from lance_namespace.errors import (
+    ErrorCode,
+    LanceNamespaceError,
+    UnsupportedOperationError,
+    NamespaceNotFoundError,
+    NamespaceAlreadyExistsError,
+    NamespaceNotEmptyError,
+    TableNotFoundError,
+    TableAlreadyExistsError,
+    TableIndexNotFoundError,
+    TableIndexAlreadyExistsError,
+    TableTagNotFoundError,
+    TableTagAlreadyExistsError,
+    TransactionNotFoundError,
+    TableVersionNotFoundError,
+    TableColumnNotFoundError,
+    InvalidInputError,
+    ConcurrentModificationError,
+    PermissionDeniedError,
+    UnauthenticatedError,
+    ServiceUnavailableError,
+    InternalError,
+    InvalidTableStateError,
+    TableSchemaValidationError,
+    from_error_code,
+)
 
 from lance_namespace_urllib3_client.models import (
     AlterTableAddColumnsRequest,
@@ -112,6 +140,31 @@ __all__ = [
     "register_namespace_impl",
     # Registry access
     "NATIVE_IMPLS",
+    # Error types
+    "ErrorCode",
+    "LanceNamespaceError",
+    "UnsupportedOperationError",
+    "NamespaceNotFoundError",
+    "NamespaceAlreadyExistsError",
+    "NamespaceNotEmptyError",
+    "TableNotFoundError",
+    "TableAlreadyExistsError",
+    "TableIndexNotFoundError",
+    "TableIndexAlreadyExistsError",
+    "TableTagNotFoundError",
+    "TableTagAlreadyExistsError",
+    "TransactionNotFoundError",
+    "TableVersionNotFoundError",
+    "TableColumnNotFoundError",
+    "InvalidInputError",
+    "ConcurrentModificationError",
+    "PermissionDeniedError",
+    "UnauthenticatedError",
+    "ServiceUnavailableError",
+    "InternalError",
+    "InvalidTableStateError",
+    "TableSchemaValidationError",
+    "from_error_code",
     # Request/Response types (re-exported from lance_namespace_urllib3_client)
     "AlterTableAddColumnsRequest",
     "AlterTableAddColumnsResponse",
@@ -200,11 +253,22 @@ class LanceNamespace(ABC):
 
     To create a custom namespace implementation, subclass this ABC and implement
     at least the `namespace_id()` method. Other methods have default implementations
-    that raise `NotImplementedError`.
+    that raise `UnsupportedOperationError`.
 
     Native implementations (DirectoryNamespace, RestNamespace) are provided by the
     lance package. External integrations (Glue, Hive, Unity) can be registered
     using `register_namespace_impl()`.
+
+    All operations may raise the following common errors:
+
+    - UnsupportedOperationError: The operation is not supported by this backend
+    - InvalidInputError: The request contains invalid parameters
+    - PermissionDeniedError: The user lacks permission for this operation
+    - UnauthenticatedError: Authentication credentials are missing or invalid
+    - ServiceUnavailableError: The service is temporarily unavailable
+    - InternalError: An unexpected internal error occurred
+
+    See the individual method docstrings for operation-specific errors.
     """
 
     @abstractmethod
@@ -228,220 +292,630 @@ class LanceNamespace(ABC):
         pass
 
     def list_namespaces(self, request: ListNamespacesRequest) -> ListNamespacesResponse:
-        """List namespaces."""
-        raise NotImplementedError("Not supported: list_namespaces")
+        """List namespaces.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the parent namespace does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: list_namespaces")
 
     def describe_namespace(
         self, request: DescribeNamespaceRequest
     ) -> DescribeNamespaceResponse:
-        """Describe a namespace."""
-        raise NotImplementedError("Not supported: describe_namespace")
+        """Describe a namespace.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: describe_namespace")
 
     def create_namespace(
         self, request: CreateNamespaceRequest
     ) -> CreateNamespaceResponse:
-        """Create a new namespace."""
-        raise NotImplementedError("Not supported: create_namespace")
+        """Create a new namespace.
+
+        Raises
+        ------
+        NamespaceAlreadyExistsError
+            If a namespace with the same name already exists.
+        """
+        raise UnsupportedOperationError("Not supported: create_namespace")
 
     def drop_namespace(self, request: DropNamespaceRequest) -> DropNamespaceResponse:
-        """Drop a namespace."""
-        raise NotImplementedError("Not supported: drop_namespace")
+        """Drop a namespace.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        NamespaceNotEmptyError
+            If the namespace contains tables or child namespaces.
+        """
+        raise UnsupportedOperationError("Not supported: drop_namespace")
 
     def namespace_exists(self, request: NamespaceExistsRequest) -> None:
-        """Check if a namespace exists."""
-        raise NotImplementedError("Not supported: namespace_exists")
+        """Check if a namespace exists.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: namespace_exists")
 
     def list_tables(self, request: ListTablesRequest) -> ListTablesResponse:
-        """List tables in a namespace."""
-        raise NotImplementedError("Not supported: list_tables")
+        """List tables in a namespace.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: list_tables")
 
     def describe_table(self, request: DescribeTableRequest) -> DescribeTableResponse:
-        """Describe a table."""
-        raise NotImplementedError("Not supported: describe_table")
+        """Describe a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableVersionNotFoundError
+            If the specified version does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: describe_table")
 
     def register_table(self, request: RegisterTableRequest) -> RegisterTableResponse:
-        """Register a table."""
-        raise NotImplementedError("Not supported: register_table")
+        """Register a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableAlreadyExistsError
+            If a table with the same name already exists.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: register_table")
 
     def table_exists(self, request: TableExistsRequest) -> None:
-        """Check if a table exists."""
-        raise NotImplementedError("Not supported: table_exists")
+        """Check if a table exists.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: table_exists")
 
     def drop_table(self, request: DropTableRequest) -> DropTableResponse:
-        """Drop a table."""
-        raise NotImplementedError("Not supported: drop_table")
+        """Drop a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: drop_table")
 
     def deregister_table(
         self, request: DeregisterTableRequest
     ) -> DeregisterTableResponse:
-        """Deregister a table."""
-        raise NotImplementedError("Not supported: deregister_table")
+        """Deregister a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: deregister_table")
 
     def count_table_rows(self, request: CountTableRowsRequest) -> int:
-        """Count rows in a table."""
-        raise NotImplementedError("Not supported: count_table_rows")
+        """Count rows in a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableVersionNotFoundError
+            If the specified version does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: count_table_rows")
 
     def create_table(
         self, request: CreateTableRequest, request_data: bytes
     ) -> CreateTableResponse:
-        """Create a new table with data from Arrow IPC stream."""
-        raise NotImplementedError("Not supported: create_table")
+        """Create a new table with data from Arrow IPC stream.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableAlreadyExistsError
+            If a table with the same name already exists.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        TableSchemaValidationError
+            If the schema validation fails.
+        """
+        raise UnsupportedOperationError("Not supported: create_table")
 
     def create_empty_table(
         self, request: CreateEmptyTableRequest
     ) -> CreateEmptyTableResponse:
-        """Create an empty table (metadata only operation)."""
-        raise NotImplementedError("Not supported: create_empty_table")
+        """Create an empty table (metadata only operation).
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableAlreadyExistsError
+            If a table with the same name already exists.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: create_empty_table")
 
     def insert_into_table(
         self, request: InsertIntoTableRequest, request_data: bytes
     ) -> InsertIntoTableResponse:
-        """Insert data into a table."""
-        raise NotImplementedError("Not supported: insert_into_table")
+        """Insert data into a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        InvalidTableStateError
+            If the table is in an invalid state for this operation.
+        TableSchemaValidationError
+            If the schema validation fails.
+        """
+        raise UnsupportedOperationError("Not supported: insert_into_table")
 
     def merge_insert_into_table(
         self, request: MergeInsertIntoTableRequest, request_data: bytes
     ) -> MergeInsertIntoTableResponse:
-        """Merge insert data into a table."""
-        raise NotImplementedError("Not supported: merge_insert_into_table")
+        """Merge insert data into a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableColumnNotFoundError
+            If a referenced column does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        InvalidTableStateError
+            If the table is in an invalid state for this operation.
+        """
+        raise UnsupportedOperationError("Not supported: merge_insert_into_table")
 
     def update_table(self, request: UpdateTableRequest) -> UpdateTableResponse:
-        """Update a table."""
-        raise NotImplementedError("Not supported: update_table")
+        """Update a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableColumnNotFoundError
+            If a referenced column does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        InvalidTableStateError
+            If the table is in an invalid state for this operation.
+        """
+        raise UnsupportedOperationError("Not supported: update_table")
 
     def delete_from_table(
         self, request: DeleteFromTableRequest
     ) -> DeleteFromTableResponse:
-        """Delete from a table."""
-        raise NotImplementedError("Not supported: delete_from_table")
+        """Delete from a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        InvalidTableStateError
+            If the table is in an invalid state for this operation.
+        """
+        raise UnsupportedOperationError("Not supported: delete_from_table")
 
     def query_table(self, request: QueryTableRequest) -> bytes:
-        """Query a table."""
-        raise NotImplementedError("Not supported: query_table")
+        """Query a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableVersionNotFoundError
+            If the specified version does not exist.
+        TableColumnNotFoundError
+            If a referenced column does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: query_table")
 
     def create_table_index(
         self, request: CreateTableIndexRequest
     ) -> CreateTableIndexResponse:
-        """Create a table index."""
-        raise NotImplementedError("Not supported: create_table_index")
+        """Create a table index.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableIndexAlreadyExistsError
+            If an index with the same name already exists.
+        TableColumnNotFoundError
+            If a referenced column does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: create_table_index")
 
     def create_table_scalar_index(
         self, request: CreateTableIndexRequest
     ) -> CreateTableScalarIndexResponse:
-        """Create a scalar index on a table."""
-        raise NotImplementedError("Not supported: create_table_scalar_index")
+        """Create a scalar index on a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableIndexAlreadyExistsError
+            If an index with the same name already exists.
+        TableColumnNotFoundError
+            If a referenced column does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: create_table_scalar_index")
 
     def list_table_indices(
         self, request: ListTableIndicesRequest
     ) -> ListTableIndicesResponse:
-        """List table indices."""
-        raise NotImplementedError("Not supported: list_table_indices")
+        """List table indices.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: list_table_indices")
 
     def describe_table_index_stats(
         self, request: DescribeTableIndexStatsRequest
     ) -> DescribeTableIndexStatsResponse:
-        """Describe table index statistics."""
-        raise NotImplementedError("Not supported: describe_table_index_stats")
+        """Describe table index statistics.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableIndexNotFoundError
+            If the index does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: describe_table_index_stats")
 
     def drop_table_index(
         self, request: DropTableIndexRequest
     ) -> DropTableIndexResponse:
-        """Drop a table index."""
-        raise NotImplementedError("Not supported: drop_table_index")
+        """Drop a table index.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableIndexNotFoundError
+            If the index does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: drop_table_index")
 
     def list_all_tables(self, request: ListTablesRequest) -> ListTablesResponse:
         """List all tables across all namespaces."""
-        raise NotImplementedError("Not supported: list_all_tables")
+        raise UnsupportedOperationError("Not supported: list_all_tables")
 
     def restore_table(self, request: RestoreTableRequest) -> RestoreTableResponse:
-        """Restore a table to a specific version."""
-        raise NotImplementedError("Not supported: restore_table")
+        """Restore a table to a specific version.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableVersionNotFoundError
+            If the specified version does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: restore_table")
 
     def rename_table(self, request: RenameTableRequest) -> RenameTableResponse:
-        """Rename a table."""
-        raise NotImplementedError("Not supported: rename_table")
+        """Rename a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableAlreadyExistsError
+            If a table with the new name already exists.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: rename_table")
 
     def list_table_versions(
         self, request: ListTableVersionsRequest
     ) -> ListTableVersionsResponse:
-        """List all versions of a table."""
-        raise NotImplementedError("Not supported: list_table_versions")
+        """List all versions of a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: list_table_versions")
 
     def update_table_schema_metadata(
         self, request: UpdateTableSchemaMetadataRequest
     ) -> UpdateTableSchemaMetadataResponse:
-        """Update table schema metadata."""
-        raise NotImplementedError("Not supported: update_table_schema_metadata")
+        """Update table schema metadata.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: update_table_schema_metadata")
 
     def get_table_stats(self, request: GetTableStatsRequest) -> GetTableStatsResponse:
-        """Get table statistics."""
-        raise NotImplementedError("Not supported: get_table_stats")
+        """Get table statistics.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: get_table_stats")
 
     def explain_table_query_plan(self, request: ExplainTableQueryPlanRequest) -> str:
-        """Explain a table query plan."""
-        raise NotImplementedError("Not supported: explain_table_query_plan")
+        """Explain a table query plan.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: explain_table_query_plan")
 
     def analyze_table_query_plan(self, request: AnalyzeTableQueryPlanRequest) -> str:
-        """Analyze a table query plan."""
-        raise NotImplementedError("Not supported: analyze_table_query_plan")
+        """Analyze a table query plan.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: analyze_table_query_plan")
 
     def alter_table_add_columns(
         self, request: AlterTableAddColumnsRequest
     ) -> AlterTableAddColumnsResponse:
-        """Add columns to a table."""
-        raise NotImplementedError("Not supported: alter_table_add_columns")
+        """Add columns to a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        TableSchemaValidationError
+            If the schema validation fails.
+        """
+        raise UnsupportedOperationError("Not supported: alter_table_add_columns")
 
     def alter_table_alter_columns(
         self, request: AlterTableAlterColumnsRequest
     ) -> AlterTableAlterColumnsResponse:
-        """Alter columns in a table."""
-        raise NotImplementedError("Not supported: alter_table_alter_columns")
+        """Alter columns in a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableColumnNotFoundError
+            If a referenced column does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        TableSchemaValidationError
+            If the schema validation fails.
+        """
+        raise UnsupportedOperationError("Not supported: alter_table_alter_columns")
 
     def alter_table_drop_columns(
         self, request: AlterTableDropColumnsRequest
     ) -> AlterTableDropColumnsResponse:
-        """Drop columns from a table."""
-        raise NotImplementedError("Not supported: alter_table_drop_columns")
+        """Drop columns from a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableColumnNotFoundError
+            If a referenced column does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: alter_table_drop_columns")
 
     def list_table_tags(self, request: ListTableTagsRequest) -> ListTableTagsResponse:
-        """List all tags for a table."""
-        raise NotImplementedError("Not supported: list_table_tags")
+        """List all tags for a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: list_table_tags")
 
     def get_table_tag_version(
         self, request: GetTableTagVersionRequest
     ) -> GetTableTagVersionResponse:
-        """Get the version for a specific tag."""
-        raise NotImplementedError("Not supported: get_table_tag_version")
+        """Get the version for a specific tag.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableTagNotFoundError
+            If the tag does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: get_table_tag_version")
 
     def create_table_tag(
         self, request: CreateTableTagRequest
     ) -> CreateTableTagResponse:
-        """Create a tag for a table."""
-        raise NotImplementedError("Not supported: create_table_tag")
+        """Create a tag for a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableTagAlreadyExistsError
+            If a tag with the same name already exists.
+        TableVersionNotFoundError
+            If the specified version does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: create_table_tag")
 
     def delete_table_tag(
         self, request: DeleteTableTagRequest
     ) -> DeleteTableTagResponse:
-        """Delete a tag from a table."""
-        raise NotImplementedError("Not supported: delete_table_tag")
+        """Delete a tag from a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableTagNotFoundError
+            If the tag does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: delete_table_tag")
 
     def update_table_tag(
         self, request: UpdateTableTagRequest
     ) -> UpdateTableTagResponse:
-        """Update a tag for a table."""
-        raise NotImplementedError("Not supported: update_table_tag")
+        """Update a tag for a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableTagNotFoundError
+            If the tag does not exist.
+        TableVersionNotFoundError
+            If the specified version does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: update_table_tag")
 
     def describe_transaction(
         self, request: DescribeTransactionRequest
     ) -> DescribeTransactionResponse:
-        """Describe a transaction."""
-        raise NotImplementedError("Not supported: describe_transaction")
+        """Describe a transaction.
+
+        Raises
+        ------
+        TransactionNotFoundError
+            If the transaction does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: describe_transaction")
 
     def alter_transaction(
         self, request: AlterTransactionRequest
     ) -> AlterTransactionResponse:
-        """Alter a transaction."""
-        raise NotImplementedError("Not supported: alter_transaction")
+        """Alter a transaction.
+
+        Raises
+        ------
+        TransactionNotFoundError
+            If the transaction does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: alter_transaction")
 
 
 # Native implementations (provided by lance package)

@@ -32,11 +32,18 @@ public class ErrorResponse {
 
   private Integer code;
 
-  private String type;
-
   private String detail;
 
   private String instance;
+
+  public ErrorResponse() {
+    super();
+  }
+
+  /** Constructor with only required parameters */
+  public ErrorResponse(Integer code) {
+    this.code = code;
+  }
 
   public ErrorResponse error(String error) {
     this.error = error;
@@ -44,14 +51,14 @@ public class ErrorResponse {
   }
 
   /**
-   * a brief, human-readable message about the error
+   * A brief, human-readable message about the error.
    *
    * @return error
    */
   @Schema(
       name = "error",
-      example = "Incorrect username or password",
-      description = "a brief, human-readable message about the error",
+      example = "Table 'users' not found in namespace 'production'",
+      description = "A brief, human-readable message about the error.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("error")
   public String getError() {
@@ -68,21 +75,33 @@ public class ErrorResponse {
   }
 
   /**
-   * HTTP style response code, where 4XX represents client side errors and 5XX represents server
-   * side errors. For implementations that uses HTTP (e.g. REST namespace), this field can be
-   * optional in favor of the HTTP response status code. In case both values exist and do not match,
-   * the HTTP response status code should be used. minimum: 400 maximum: 600
+   * Lance Namespace error code identifying the error type. Error codes: 0 - Unsupported: Operation
+   * not supported by this backend 1 - NamespaceNotFound: The specified namespace does not exist 2 -
+   * NamespaceAlreadyExists: A namespace with this name already exists 3 - NamespaceNotEmpty:
+   * Namespace contains tables or child namespaces 4 - TableNotFound: The specified table does not
+   * exist 5 - TableAlreadyExists: A table with this name already exists 6 - TableIndexNotFound: The
+   * specified table index does not exist 7 - TableIndexAlreadyExists: A table index with this name
+   * already exists 8 - TableTagNotFound: The specified table tag does not exist 9 -
+   * TableTagAlreadyExists: A table tag with this name already exists 10 - TransactionNotFound: The
+   * specified transaction does not exist 11 - TableVersionNotFound: The specified table version
+   * does not exist 12 - TableColumnNotFound: The specified table column does not exist 13 -
+   * InvalidInput: Malformed request or invalid parameters 14 - ConcurrentModification: Optimistic
+   * concurrency conflict 15 - PermissionDenied: User lacks permission for this operation 16 -
+   * Unauthenticated: Authentication credentials are missing or invalid 17 - ServiceUnavailable:
+   * Service is temporarily unavailable 18 - Internal: Unexpected server/implementation error 19 -
+   * InvalidTableState: Table is in an invalid state for the operation 20 -
+   * TableSchemaValidationError: Table schema validation failed minimum: 0
    *
    * @return code
    */
-  @Min(400)
-  @Max(600)
+  @NotNull
+  @Min(0)
   @Schema(
       name = "code",
-      example = "404",
+      example = "4",
       description =
-          "HTTP style response code, where 4XX represents client side errors  and 5XX represents server side errors.  For implementations that uses HTTP (e.g. REST namespace), this field can be optional in favor of the HTTP response status code. In case both values exist and do not match, the HTTP response status code should be used. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+          "Lance Namespace error code identifying the error type.  Error codes:   0 - Unsupported: Operation not supported by this backend   1 - NamespaceNotFound: The specified namespace does not exist   2 - NamespaceAlreadyExists: A namespace with this name already exists   3 - NamespaceNotEmpty: Namespace contains tables or child namespaces   4 - TableNotFound: The specified table does not exist   5 - TableAlreadyExists: A table with this name already exists   6 - TableIndexNotFound: The specified table index does not exist   7 - TableIndexAlreadyExists: A table index with this name already exists   8 - TableTagNotFound: The specified table tag does not exist   9 - TableTagAlreadyExists: A table tag with this name already exists   10 - TransactionNotFound: The specified transaction does not exist   11 - TableVersionNotFound: The specified table version does not exist   12 - TableColumnNotFound: The specified table column does not exist   13 - InvalidInput: Malformed request or invalid parameters   14 - ConcurrentModification: Optimistic concurrency conflict   15 - PermissionDenied: User lacks permission for this operation   16 - Unauthenticated: Authentication credentials are missing or invalid   17 - ServiceUnavailable: Service is temporarily unavailable   18 - Internal: Unexpected server/implementation error   19 - InvalidTableState: Table is in an invalid state for the operation   20 - TableSchemaValidationError: Table schema validation failed ",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("code")
   public Integer getCode() {
     return code;
@@ -92,48 +111,22 @@ public class ErrorResponse {
     this.code = code;
   }
 
-  public ErrorResponse type(String type) {
-    this.type = type;
-    return this;
-  }
-
-  /**
-   * An optional type identifier string for the error. This allows the implementation to specify
-   * their internal error type, which could be more detailed than the HTTP standard status code.
-   *
-   * @return type
-   */
-  @Schema(
-      name = "type",
-      example = "/errors/incorrect-user-pass",
-      description =
-          "An optional type identifier string for the error. This allows the implementation to specify their internal error type, which could be more detailed than the HTTP standard status code. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("type")
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
   public ErrorResponse detail(String detail) {
     this.detail = detail;
     return this;
   }
 
   /**
-   * an optional human-readable explanation of the error. This can be used to record information
-   * such as stack trace.
+   * An optional human-readable explanation of the error. This can be used to record additional
+   * information such as stack trace.
    *
    * @return detail
    */
   @Schema(
       name = "detail",
-      example = "Authentication failed due to incorrect username or password",
+      example = "The table may have been dropped or renamed",
       description =
-          "an optional human-readable explanation of the error. This can be used to record information such as stack trace. ",
+          "An optional human-readable explanation of the error. This can be used to record additional information such as stack trace. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("detail")
   public String getDetail() {
@@ -150,7 +143,7 @@ public class ErrorResponse {
   }
 
   /**
-   * a string that identifies the specific occurrence of the error. This can be a URI, a request or
+   * A string that identifies the specific occurrence of the error. This can be a URI, a request or
    * response ID, or anything that the implementation can recognize to trace specific occurrence of
    * the error.
    *
@@ -158,9 +151,9 @@ public class ErrorResponse {
    */
   @Schema(
       name = "instance",
-      example = "/login/log/abc123",
+      example = "/v1/table/production$users/describe",
       description =
-          "a string that identifies the specific occurrence of the error. This can be a URI, a request or response ID,  or anything that the implementation can recognize to trace specific occurrence of the error. ",
+          "A string that identifies the specific occurrence of the error. This can be a URI, a request or response ID, or anything that the implementation can recognize to trace specific occurrence of the error. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("instance")
   public String getInstance() {
@@ -182,14 +175,13 @@ public class ErrorResponse {
     ErrorResponse errorResponse = (ErrorResponse) o;
     return Objects.equals(this.error, errorResponse.error)
         && Objects.equals(this.code, errorResponse.code)
-        && Objects.equals(this.type, errorResponse.type)
         && Objects.equals(this.detail, errorResponse.detail)
         && Objects.equals(this.instance, errorResponse.instance);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(error, code, type, detail, instance);
+    return Objects.hash(error, code, detail, instance);
   }
 
   @Override
@@ -198,7 +190,6 @@ public class ErrorResponse {
     sb.append("class ErrorResponse {\n");
     sb.append("    error: ").append(toIndentedString(error)).append("\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    detail: ").append(toIndentedString(detail)).append("\n");
     sb.append("    instance: ").append(toIndentedString(instance)).append("\n");
     sb.append("}");
