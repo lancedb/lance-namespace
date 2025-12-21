@@ -1,4 +1,4 @@
-# CreateEmptyTableResponse
+# DeclareTableResponse
 
 ## Properties
 

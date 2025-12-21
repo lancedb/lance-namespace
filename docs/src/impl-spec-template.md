@@ -62,7 +62,7 @@ The 8 basic operations are:
 - DropNamespace
 
 **Table Operations:**
-- CreateEmptyTable
+- DeclareTable
 - ListTables
 - DescribeTable
 - DropTable
@@ -144,7 +144,7 @@ If {condition}, return error code `N` ({ErrorName}).
 
 {Same structure as above}
 
-### CreateEmptyTable
+### DeclareTable
 
 {Same structure as above}
 

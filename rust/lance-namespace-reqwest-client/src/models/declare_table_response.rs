@@ -11,22 +11,26 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// CreateEmptyTableRequest : Request for creating an empty table.  **Deprecated**: Use `DeclareTableRequest` instead. 
+/// DeclareTableResponse : Response for declaring a table. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateEmptyTableRequest {
-    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
-    pub id: Option<Vec<String>>,
-    /// Optional storage location for the table. If not provided, the namespace implementation should determine the table location. 
+pub struct DeclareTableResponse {
+    /// Optional transaction identifier
+    #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
+    pub transaction_id: Option<String>,
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
+    /// Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. 
+    #[serde(rename = "storage_options", skip_serializing_if = "Option::is_none")]
+    pub storage_options: Option<std::collections::HashMap<String, String>>,
 }
 
-impl CreateEmptyTableRequest {
-    /// Request for creating an empty table.  **Deprecated**: Use `DeclareTableRequest` instead. 
-    pub fn new() -> CreateEmptyTableRequest {
-        CreateEmptyTableRequest {
-            id: None,
+impl DeclareTableResponse {
+    /// Response for declaring a table. 
+    pub fn new() -> DeclareTableResponse {
+        DeclareTableResponse {
+            transaction_id: None,
             location: None,
+            storage_options: None,
         }
     }
 }

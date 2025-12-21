@@ -24,13 +24,12 @@ from typing_extensions import Self
 
 class CreateEmptyTableResponse(BaseModel):
     """
-    Response for creating an empty table. 
+    Response for creating an empty table.  **Deprecated**: Use `DeclareTableResponse` instead. 
     """ # noqa: E501
     transaction_id: Optional[StrictStr] = Field(default=None, description="Optional transaction identifier")
     location: Optional[StrictStr] = None
-    properties: Optional[Dict[str, StrictStr]] = None
     storage_options: Optional[Dict[str, StrictStr]] = Field(default=None, description="Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. ")
-    __properties: ClassVar[List[str]] = ["transaction_id", "location", "properties", "storage_options"]
+    __properties: ClassVar[List[str]] = ["transaction_id", "location", "storage_options"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -85,7 +84,6 @@ class CreateEmptyTableResponse(BaseModel):
         _obj = cls.model_validate({
             "transaction_id": obj.get("transaction_id"),
             "location": obj.get("location"),
-            "properties": obj.get("properties"),
             "storage_options": obj.get("storage_options")
         })
         return _obj

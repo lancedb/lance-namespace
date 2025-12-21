@@ -12,7 +12,7 @@
 
 # Java model docs source and destination
 JAVA_DOCS_SRC := ../java/lance-namespace-apache-client/docs
-MODELS_DEST := src/operations/models
+MODELS_DEST := src/client/operations/models
 
 # API files to exclude (Java-specific, not data models)
 API_FILES := DataApi.md IndexApi.md MetadataApi.md NamespaceApi.md TableApi.md TagApi.md TransactionApi.md

@@ -58,6 +58,7 @@ Class | Method | HTTP request | Description
 *MetadataApi* | [**create_table_index**](docs/MetadataApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
 *MetadataApi* | [**create_table_scalar_index**](docs/MetadataApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *MetadataApi* | [**create_table_tag**](docs/MetadataApi.md#create_table_tag) | **POST** /v1/table/{id}/tags/create | Create a new tag
+*MetadataApi* | [**declare_table**](docs/MetadataApi.md#declare_table) | **POST** /v1/table/{id}/declare | Declare a table
 *MetadataApi* | [**delete_table_tag**](docs/MetadataApi.md#delete_table_tag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
 *MetadataApi* | [**deregister_table**](docs/MetadataApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table
 *MetadataApi* | [**describe_namespace**](docs/MetadataApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe a namespace
@@ -97,6 +98,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**create_table_index**](docs/TableApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
 *TableApi* | [**create_table_scalar_index**](docs/TableApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *TableApi* | [**create_table_tag**](docs/TableApi.md#create_table_tag) | **POST** /v1/table/{id}/tags/create | Create a new tag
+*TableApi* | [**declare_table**](docs/TableApi.md#declare_table) | **POST** /v1/table/{id}/declare | Declare a table
 *TableApi* | [**delete_from_table**](docs/TableApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
 *TableApi* | [**delete_table_tag**](docs/TableApi.md#delete_table_tag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
 *TableApi* | [**deregister_table**](docs/TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table
@@ -164,6 +166,8 @@ Class | Method | HTTP request | Description
  - [CreateTableScalarIndexResponse](docs/CreateTableScalarIndexResponse.md)
  - [CreateTableTagRequest](docs/CreateTableTagRequest.md)
  - [CreateTableTagResponse](docs/CreateTableTagResponse.md)
+ - [DeclareTableRequest](docs/DeclareTableRequest.md)
+ - [DeclareTableResponse](docs/DeclareTableResponse.md)
  - [DeleteFromTableRequest](docs/DeleteFromTableRequest.md)
  - [DeleteFromTableResponse](docs/DeleteFromTableResponse.md)
  - [DeleteTableTagRequest](docs/DeleteTableTagRequest.md)

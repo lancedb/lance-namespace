@@ -22,13 +22,14 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateEmptyTableRequest(BaseModel):
+class DeclareTableResponse(BaseModel):
     """
-    Request for creating an empty table.  **Deprecated**: Use `DeclareTableRequest` instead. 
+    Response for declaring a table. 
     """ # noqa: E501
-    id: Optional[List[StrictStr]] = None
-    location: Optional[StrictStr] = Field(default=None, description="Optional storage location for the table. If not provided, the namespace implementation should determine the table location. ")
-    __properties: ClassVar[List[str]] = ["id", "location"]
+    transaction_id: Optional[StrictStr] = Field(default=None, description="Optional transaction identifier")
+    location: Optional[StrictStr] = None
+    storage_options: Optional[Dict[str, StrictStr]] = Field(default=None, description="Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. ")
+    __properties: ClassVar[List[str]] = ["transaction_id", "location", "storage_options"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +49,7 @@ class CreateEmptyTableRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateEmptyTableRequest from a JSON string"""
+        """Create an instance of DeclareTableResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +74,7 @@ class CreateEmptyTableRequest(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateEmptyTableRequest from a dict"""
+        """Create an instance of DeclareTableResponse from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +82,9 @@ class CreateEmptyTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "location": obj.get("location")
+            "transaction_id": obj.get("transaction_id"),
+            "location": obj.get("location"),
+            "storage_options": obj.get("storage_options")
         })
         return _obj
 

@@ -11,7 +11,7 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// CreateEmptyTableResponse : Response for creating an empty table. 
+/// CreateEmptyTableResponse : Response for creating an empty table.  **Deprecated**: Use `DeclareTableResponse` instead. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateEmptyTableResponse {
     /// Optional transaction identifier
@@ -19,20 +19,17 @@ pub struct CreateEmptyTableResponse {
     pub transaction_id: Option<String>,
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
-    #[serde(rename = "properties", skip_serializing_if = "Option::is_none")]
-    pub properties: Option<std::collections::HashMap<String, String>>,
     /// Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. 
     #[serde(rename = "storage_options", skip_serializing_if = "Option::is_none")]
     pub storage_options: Option<std::collections::HashMap<String, String>>,
 }
 
 impl CreateEmptyTableResponse {
-    /// Response for creating an empty table. 
+    /// Response for creating an empty table.  **Deprecated**: Use `DeclareTableResponse` instead. 
     pub fn new() -> CreateEmptyTableResponse {
         CreateEmptyTableResponse {
             transaction_id: None,
             location: None,
-            properties: None,
             storage_options: None,
         }
     }

@@ -128,9 +128,9 @@ If the namespace does not exist, return error code `1` (NamespaceNotFound).
 
 If the namespace contains tables or child namespaces, return error code `3` (NamespaceNotEmpty).
 
-### CreateEmptyTable
+### DeclareTable
 
-This operation creates a new empty Lance table with the specified schema.
+This operation declares a new Lance table, reserving the table name and location without creating actual data files.
 
 The implementation:
 
@@ -140,7 +140,7 @@ The implementation:
      - In V1: `<root>/<table_name>.lance`
      - In V2 with `dir_listing_enabled=true` at root level: `<root>/<table_name>.lance`
      - In V2 for child namespaces or with `dir_listing_enabled=false`: `<root>/<hash>_<object_id>/`
-4. Create an empty Lance table at the location using the Lance SDK with the provided schema
+4. Create a `.lance-reserved` file at the location to mark the table's existence
 5. In V2, insert a row into the manifest table with:
      - `object_id` set to the table identifier
      - `object_type` set to `"table"`
@@ -151,8 +151,6 @@ The implementation:
 If the parent namespace does not exist, return error code `1` (NamespaceNotFound).
 
 If a table with the same identifier already exists, return error code `5` (TableAlreadyExists).
-
-If the schema is invalid, return error code `13` (InvalidInput).
 
 If there is a concurrent creation attempt, return error code `14` (ConcurrentModification).
 

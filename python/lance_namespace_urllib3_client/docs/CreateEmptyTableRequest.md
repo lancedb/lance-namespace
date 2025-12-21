@@ -1,6 +1,6 @@
 # CreateEmptyTableRequest
 
-Request for creating an empty table. 
+Request for creating an empty table.  **Deprecated**: Use `DeclareTableRequest` instead. 
 
 ## Properties
 
@@ -8,7 +8,6 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **List[str]** |  | [optional] 
 **location** | **str** | Optional storage location for the table. If not provided, the namespace implementation should determine the table location.  | [optional] 
-**properties** | **Dict[str, str]** |  | [optional] 
 
 ## Example
 

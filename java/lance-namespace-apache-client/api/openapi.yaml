@@ -447,7 +447,7 @@ paths:
         \ like DescribeTable, \nexcept it does not contain a response body.\n\nFor\
         \ DirectoryNamespace implementation, a table exists if either:\n- The table\
         \ has Lance data versions (regular table created with CreateTable)\n- A `.lance-reserved`\
-        \ file exists in the table directory (empty table created with CreateEmptyTable)\n"
+        \ file exists in the table directory (declared table created with DeclareTable)\n"
       operationId: TableExists
       parameters:
       - $ref: '#/components/parameters/id'
@@ -1804,17 +1804,65 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/table/{id}/declare:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
+    post:
+      description: |
+        Declare a table with the given name without touching storage.
+        This is a metadata-only operation that records the table existence and sets up aspects like access control.
+
+        For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory
+        to mark the table's existence without creating actual Lance data files.
+      operationId: DeclareTable
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeclareTableRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/DeclareTableResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "409":
+          $ref: '#/components/responses/ConflictErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Declare a table
+      tags:
+      - Table
+      - Metadata
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/table/{id}/create-empty:
     parameters:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
     post:
+      deprecated: true
       description: |
         Create an empty table with the given name without touching storage.
         This is a metadata-only operation that records the table existence and sets up aspects like access control.
 
         For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory
         to mark the table's existence without creating actual Lance data files.
+
+        **Deprecated**: Use `DeclareTable` instead.
       operationId: CreateEmptyTable
       parameters:
       - $ref: '#/components/parameters/id'
@@ -2348,6 +2396,12 @@ components:
           schema:
             $ref: '#/components/schemas/DropTableIndexResponse'
       description: Index drop operation result
+    DeclareTableResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeclareTableResponse'
+      description: Table properties result when declaring a table
     CreateEmptyTableResponse:
       content:
         application/json:
@@ -3669,15 +3723,16 @@ components:
             options depend on the type of storage in use. These will be
             passed directly to Lance to initialize storage access.
     CreateEmptyTableRequest:
+      deprecated: true
       description: |
         Request for creating an empty table.
+
+        **Deprecated**: Use `DeclareTableRequest` instead.
       example:
         location: location
         id:
         - id
         - id
-        properties:
-          key: properties
       properties:
         id:
           items:
@@ -3688,17 +3743,15 @@ components:
             Optional storage location for the table.
             If not provided, the namespace implementation should determine the table location.
           type: string
-        properties:
-          additionalProperties:
-            type: string
     CreateEmptyTableResponse:
+      deprecated: true
       description: |
         Response for creating an empty table.
+
+        **Deprecated**: Use `DeclareTableResponse` instead.
       example:
         transaction_id: transaction_id
         location: location
-        properties:
-          key: properties
         storage_options:
           key: storage_options
       properties:
@@ -3707,9 +3760,45 @@ components:
           type: string
         location:
           type: string
-        properties:
+        storage_options:
           additionalProperties:
             type: string
+          description: |
+            Configuration options to be used to access storage. The available
+            options depend on the type of storage in use. These will be
+            passed directly to Lance to initialize storage access.
+    DeclareTableRequest:
+      description: |
+        Request for declaring a table.
+      example:
+        location: location
+        id:
+        - id
+        - id
+      properties:
+        id:
+          items:
+            type: string
+          type: array
+        location:
+          description: |
+            Optional storage location for the table.
+            If not provided, the namespace implementation should determine the table location.
+          type: string
+    DeclareTableResponse:
+      description: |
+        Response for declaring a table.
+      example:
+        transaction_id: transaction_id
+        location: location
+        storage_options:
+          key: storage_options
+      properties:
+        transaction_id:
+          description: Optional transaction identifier
+          type: string
+        location:
+          type: string
         storage_options:
           additionalProperties:
             type: string

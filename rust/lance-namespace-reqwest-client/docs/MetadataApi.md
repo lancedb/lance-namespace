@@ -12,6 +12,7 @@ Method | HTTP request | Description
 [**create_table_index**](MetadataApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
 [**create_table_scalar_index**](MetadataApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 [**create_table_tag**](MetadataApi.md#create_table_tag) | **POST** /v1/table/{id}/tags/create | Create a new tag
+[**declare_table**](MetadataApi.md#declare_table) | **POST** /v1/table/{id}/declare | Declare a table
 [**delete_table_tag**](MetadataApi.md#delete_table_tag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
 [**deregister_table**](MetadataApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table
 [**describe_namespace**](MetadataApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe a namespace
@@ -139,7 +140,7 @@ Name | Type | Description  | Required | Notes
 > models::CreateEmptyTableResponse create_empty_table(id, create_empty_table_request, delimiter)
 Create an empty table
 
-Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control.  For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory to mark the table's existence without creating actual Lance data files. 
+Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control.  For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory to mark the table's existence without creating actual Lance data files.  **Deprecated**: Use `DeclareTable` instead. 
 
 ### Parameters
 
@@ -281,6 +282,38 @@ Name | Type | Description  | Required | Notes
 ### Return type
 
 [**models::CreateTableTagResponse**](CreateTableTagResponse.md)
+
+### Authorization
+
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## declare_table
+
+> models::DeclareTableResponse declare_table(id, declare_table_request, delimiter)
+Declare a table
+
+Declare a table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control.  For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory to mark the table's existence without creating actual Lance data files. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
+**declare_table_request** | [**DeclareTableRequest**](DeclareTableRequest.md) |  | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
+
+### Return type
+
+[**models::DeclareTableResponse**](DeclareTableResponse.md)
 
 ### Authorization
 
@@ -944,7 +977,7 @@ Name | Type | Description  | Required | Notes
 > table_exists(id, table_exists_request, delimiter)
 Check if a table exists
 
-Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (empty table created with CreateEmptyTable) 
+Check if table `id` exists.  This operation should behave exactly like DescribeTable,  except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (declared table created with DeclareTable) 
 
 ### Parameters
 
