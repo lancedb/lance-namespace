@@ -22,13 +22,17 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "dry_run: build & test only, release: build & publish to PyPI"
+        description: 'Release mode'
         required: true
-        default: "dry_run"
         type: choice
+        default: dry_run
         options:
           - dry_run
           - release
+      ref:
+        description: 'The branch, tag or SHA to checkout'
+        required: false
+        type: string
 
 jobs:
   publish:
@@ -37,8 +41,12 @@ jobs:
       id-token: write  # Required for PyPI trusted publishing
       contents: read
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # When triggered by a release, use the release tag
+          # When triggered manually, use the provided ref
+          ref: ${{ github.event.release.tag_name || inputs.ref }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
