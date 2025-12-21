@@ -99,7 +99,7 @@ the following metadata operations are recommended as a minimum:
 
 **Table Metadata Operations:**
 
-- DeclareTable - Declare a table (metadata only)
+- DeclareTable - Declare a table as exist
 - ListTables - List tables in a namespace
 - DescribeTable - Get table details
 - DropTable - Remove a table
