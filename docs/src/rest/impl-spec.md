@@ -209,30 +209,22 @@ If the namespace does not exist, return HTTP `404 Not Found` with error code `1`
 
 If the namespace contains tables or child namespaces, return HTTP `409 Conflict` with error code `3` (NamespaceNotEmpty).
 
-### CreateEmptyTable
+### DeclareTable
 
-Creates a new empty Lance table with the specified schema.
+Declares a new Lance table, reserving the table name and location without creating actual data files.
 
 **HTTP Request:**
 
 ```
-POST /v1/table/{id}/create_empty
+POST /v1/table/{id}/declare
 Content-Type: application/json
 ```
 
-The request body contains the table schema and optional properties:
+The request body contains an optional location:
 
 ```json
 {
-  "schema": {
-    "fields": [
-      {"name": "id", "type": {"name": "int64"}, "nullable": false},
-      {"name": "name", "type": {"name": "utf8"}, "nullable": true}
-    ]
-  },
-  "properties": {
-    "description": "User profiles table"
-  }
+  "location": "s3://bucket/data/users.lance"
 }
 ```
 
@@ -242,29 +234,23 @@ The implementation:
 2. Extract the parent namespace from the identifier
 3. Validate the parent namespace exists
 4. Check if a table with this identifier already exists
-5. Validate the schema format
-6. Create an empty Lance table in the server's storage
+5. Determine the table location (use provided location or generate one)
+6. Reserve the table in the server's storage
 7. Register the table in the namespace
 
 **Response:**
 
 ```json
 {
-  "name": "users",
   "location": "s3://bucket/data/users.lance",
-  "schema": {
-    "fields": [
-      {"name": "id", "type": {"name": "int64"}, "nullable": false},
-      {"name": "name", "type": {"name": "utf8"}, "nullable": true}
-    ]
-  },
-  "version": 1
+  "storage_options": {
+    "aws_access_key_id": "...",
+    "aws_secret_access_key": "..."
+  }
 }
 ```
 
 **Error Handling:**
-
-If the schema format is invalid, return HTTP `400 Bad Request` with error code `13` (InvalidInput).
 
 If the parent namespace does not exist, return HTTP `404 Not Found` with error code `1` (NamespaceNotFound).
 
