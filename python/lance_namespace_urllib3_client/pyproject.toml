@@ -1,6 +1,6 @@
 [project]
 name = "lance-namespace-urllib3-client"
-version = "0.3.2"
+version = "0.4.0"
 description = "Lance Namespace Specification"
 readme = "README.md"
 authors = [{ name = "Lance Devs", email = "dev@lance.org" }]
