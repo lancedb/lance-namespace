@@ -108,34 +108,33 @@ These operations provide the foundational metadata management capabilities neede
 without requiring data or index operation support. With the namespace able to provide basic information about the table,
 the Lance SDK can be used to fulfill the other operations.
 
-### Why Not CreateTable and DropTable?
+### Why Not `CreateTable` and `DropTable`?
 
-`CreateTable` and `DropTable` are intentionally excluded from the recommended basic operations because they involve
+`CreateTable` and `DropTable` are common in most catalog systems,
+but are intentionally excluded from the recommended basic operations because they involve
 data operations that present challenges for catalog implementations:
 
-**Data Operation Complexity:**
-Both `CreateTable` and `DropTable` are considered data operations rather than pure metadata operations.
-They can be long-running, especially when dealing with large datasets or remote storage systems.
-This makes them difficult to implement reliably in catalog systems that are designed for fast metadata lookups.
+- **Data Operation Complexity:**
+  Both `CreateTable` and `DropTable` are data operations rather than pure metadata operations.
+  They can be long-running, especially when dealing with large datasets or remote storage systems.
+  This makes them difficult to implement reliably in catalog systems designed for fast metadata lookups.
 
-**Atomicity Guarantees:**
-Data operations require careful handling of atomicity. A failed `CreateTable` or `DropTable` operation
-can leave the system in an inconsistent state with partially created or deleted data files.
-Catalog implementations would need to implement complex cleanup and recovery mechanisms.
+- **Atomicity Guarantees:**
+  Data operations require careful handling of atomicity. A failed `CreateTable` or `DropTable` operation
+  can leave the system in an inconsistent state with partially created or deleted data files.
+  Catalog implementations would need to implement complex cleanup and recovery mechanisms.
 
-**CreateTable Challenges:**
-`CreateTable` is particularly difficult for catalogs to fully implement because features like
-CREATE TABLE AS SELECT (CTAS) require either complicated staging mechanisms or multi-table
-multi-statement transaction support. Most catalog systems are not designed to handle such complex workflows.
+- **CreateTable Challenges:**
+  `CreateTable` is particularly difficult for catalogs to fully implement because features like
+  CREATE TABLE AS SELECT (CTAS) require either complicated staging mechanisms or multi-statement
+  transaction support.
 
+While some catalog systems can handle these complex workflows,
+doing so typically requires deep, dedicated integration.
 Lance Namespace aims to enable as many catalogs as possible to adopt Lance format. By focusing on
 `DeclareTable` and `DeregisterTable` instead of `CreateTable` and `DropTable`, namespace implementations only
-need to handle metadata operations that are always fast and atomic across all catalog solutions.
-
-**Recommended Approach:**
-- Use **DeclareTable** to reserve a table name and location, then use the Lance SDK to write data
-- Use **DeregisterTable** to unregister a table while preserving its data for potential re-registration
-- Use the Lance SDK directly for data operations when full control over the data lifecycle is needed
+need to handle metadata operations that are simple, fast and atomic across all catalog solutions.
+`CreateTable` and `DropTable` can then be fulfilled by combining these metadata operations with the Lance SDK.
 
 ## Operation Versioning
 
