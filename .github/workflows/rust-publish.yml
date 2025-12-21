@@ -56,8 +56,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           # When triggered by a release, use the release tag
-          # When triggered manually, use the provided ref
-          ref: ${{ github.event.release.tag_name || inputs.ref }}
+          # When triggered manually with a ref, use the provided ref
+          # Otherwise (PR or manual without ref), use the default branch
+          ref: ${{ github.event.release.tag_name || inputs.ref || '' }}
       - name: Install dependencies
         run: |
           sudo apt update
