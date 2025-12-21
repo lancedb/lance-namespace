@@ -234,3 +234,38 @@ If the table does not exist, return error code `4` (TableNotFound).
 If there is a file system permission error, return error code `15` (PermissionDenied).
 
 If there is an unexpected I/O error, return error code `18` (Internal).
+
+### DeregisterTable
+
+This operation deregisters a table from the namespace while preserving its data on storage. The table files remain at their storage location and can be re-registered later using RegisterTable.
+
+In **V1**:
+
+1. Locate the table by checking for the `<table_name>.lance` directory
+2. Verify the table exists and is not already deregistered
+3. Create a `.lance-deregistered` marker file inside the table directory
+4. Return the table location for reference
+
+The marker file approach ensures that:
+- Table data remains intact at its original location
+- The table is excluded from `ListTables` results
+- The table returns `TableNotFound` for `DescribeTable` and `TableExists` operations
+- The table can be re-registered by removing the marker file and calling `RegisterTable`
+- `DropTable` still works on deregistered tables (removes both data and marker file)
+
+In **V2**:
+
+1. Locate the table by querying the manifest table for the table location
+2. Remove the table row from the manifest table
+3. Keep the table files at the storage location
+4. Return the table location and properties for reference
+
+When **both V1 and V2 are enabled** (the default [Compatibility Mode](catalog-spec.md#compatibility-mode)),
+first check the manifest table, then fall back to checking the `.lance` directory.
+If found in manifest, follow V2 behavior; otherwise follow V1 behavior.
+
+**Error Handling:**
+
+If the parent namespace does not exist, return error code `1` (NamespaceNotFound).
+
+If the table does not exist or is already deregistered, return error code `4` (TableNotFound).

@@ -65,7 +65,7 @@ The 8 basic operations are:
 - DeclareTable
 - ListTables
 - DescribeTable
-- DropTable
+- DeregisterTable
 
 ---
 
@@ -156,7 +156,7 @@ If {condition}, return error code `N` ({ErrorName}).
 
 {Same structure as above}
 
-### DropTable
+### DeregisterTable
 
 {Same structure as above}
 ```

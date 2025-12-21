@@ -32,17 +32,38 @@ Consider the following example namespace directory layout:
     │       └── 85814508-ed9a-41f2-b939-2050bb7a0ed5-fts/
     │           └── index.idx
     ├── table2.lance/
-    └── table3.lance/
+    ├── table3.lance/
+    │   └── .lance-deregistered      # Marker: table3 is deregistered
+    └── table4.lance/
+        └── .lance-reserved          # Marker: table4 is reserved but not created
 ```
 
 This describes a Lance directory namespace with the namespace directory at `/my/dir1/`.
-It contains tables `table1`, `table2`, `table3` sitting at table directories
-`/my/dir1/table1.lance`, `/my/dir1/table2.lance`, `/my/dir1/table3.lance` respectively.
+It contains active tables `table1` and `table2` at table directories
+`/my/dir1/table1.lance` and `/my/dir1/table2.lance`.
+Table `table3` exists on storage but is deregistered (excluded from table listings).
+Table `table4` is reserved but not yet created with data.
 
 ### Table Existence
 
-In V1, a table exists in a Lance directory namespace if a table directory of the specific name exists.
-In object store terms, this means the prefix `<table_name>.lance/` has at least one file in it.
+In V1, a table exists in a Lance directory namespace if a table directory of the specific name exists
+and the table is not marked as deregistered.
+In object store terms, this means the prefix `<table_name>.lance/` has at least one file in it
+and the file `<table_name>.lance/.lance-deregistered` does not exist.
+
+### Marker Files
+
+V1 uses marker files within table directories to track table state:
+
+| Marker File           | Purpose                                                                 |
+|-----------------------|-------------------------------------------------------------------------|
+| `.lance-reserved`     | Indicates a table name/location is reserved but not yet created         |
+| `.lance-deregistered` | Indicates a table has been deregistered but data is preserved           |
+
+When a table is deregistered via the `DeregisterTable` operation, the `.lance-deregistered` marker file
+is created inside the table directory. This causes the table to be excluded from `ListTables` results
+and to return "not found" for `DescribeTable` and `TableExists` operations, while preserving the table data
+for potential re-registration.
 
 ## V2: Manifest 
 

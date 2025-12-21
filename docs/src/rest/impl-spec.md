@@ -387,6 +387,49 @@ If there is a storage permission error, return HTTP `403 Forbidden` with error c
 
 If there is an unexpected server error, return HTTP `500 Internal Server Error` with error code `18` (Internal).
 
+### DeregisterTable
+
+Deregisters a table from the namespace while preserving its data on storage. The table metadata is removed from the namespace catalog but the table files remain at their storage location.
+
+**HTTP Request:**
+
+```
+POST /v1/table/{id}/deregister
+Content-Type: application/json
+```
+
+The request body is empty:
+
+```json
+{}
+```
+
+The implementation:
+
+1. Parse the table identifier from the route path `{id}`
+2. Extract the parent namespace from the identifier
+3. Validate the parent namespace exists
+4. Look up the table in the server's storage
+5. Remove the table registration from the namespace catalog
+6. Return the table location and properties for reference
+
+**Response:**
+
+```json
+{
+  "location": "s3://bucket/data/users.lance",
+  "properties": {
+    "created_at": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+**Error Handling:**
+
+If the parent namespace does not exist, return HTTP `404 Not Found` with error code `1` (NamespaceNotFound).
+
+If the table does not exist, return HTTP `404 Not Found` with error code `4` (TableNotFound).
+
 ## Error Response Format
 
 All error responses follow the JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807).
