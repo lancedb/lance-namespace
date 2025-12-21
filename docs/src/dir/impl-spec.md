@@ -1,113 +1,238 @@
 # Lance Directory Namespace Implementation Spec
 
-This document describes how the Lance Directory Namespace catalog spec implements the Lance Namespace client spec.
+This document describes how the Lance Directory Namespace implements the Lance Namespace client spec.
+
+## Background
+
+The Lance Directory Namespace is a catalog that stores tables in a directory structure on any local or remote storage system. For details on the catalog design including V1 (directory listing), V2 (manifest), and compatibility mode, see the [Directory Namespace Catalog Spec](catalog-spec.md).
+
+## Namespace Implementation Configuration Properties
+
+The Lance directory namespace implementation accepts the following configuration properties:
+
+The **root** property is required and specifies the root directory of the namespace where tables are stored. This can be a local path like `/my/dir` or a cloud storage URI like `s3://bucket/prefix`.
+
+The **manifest_enabled** property controls whether the manifest table is used for tracking tables and namespaces (V2). Defaults to `true`.
+
+The **dir_listing_enabled** property controls whether directory scanning is used for table discovery (V1). Defaults to `true`.
+
+By default, both properties are enabled, which means the implementation operates in [Compatibility Mode](catalog-spec.md#compatibility-mode).
+
+Properties with the **storage.** prefix are passed directly to the underlying Lance ObjectStore after removing the prefix. For example, `storage.region` becomes `region` when passed to the storage layer.
 
 ## Object Mapping
 
 ### Namespace
 
-| Client Spec Concept | Directory Namespace Mapping |
-|---------------------|----------------------------|
-| Root Namespace | The root directory specified by the `root` configuration property |
-| Child Namespace | A subdirectory within the parent namespace directory (V2 only) |
-| Namespace Identifier | The relative path from root, with `$` delimiter between levels |
-| Namespace Properties | Stored as JSON in the `metadata` column of the manifest table (V2 only) |
+The **root namespace** is the root directory specified by the `root` configuration property. This is the base path where all tables are stored.
+
+A **child namespace** is a logical container tracked in the manifest table. Child namespaces are only supported in V2; V1 treats the root directory as a flat namespace containing only tables. Child namespaces do not correspond to physical subdirectories.
+
+The **namespace identifier** is a list of strings representing the namespace path. For example, a namespace `["prod", "analytics"]` is serialized to `prod$analytics` when stored in the manifest table's `object_id` column.
+
+**Namespace properties** are stored as JSON in the `metadata` column of the manifest table. This is only available in V2.
 
 ### Table
 
-| Client Spec Concept | Directory Namespace Mapping |
-|---------------------|----------------------------|
-| Table | A subdirectory containing Lance table data |
-| Table Identifier | The relative path from root, with `$` delimiter between namespace levels and table name |
-| Table Location | V1: `<table_name>.lance` directory; V2: `<hash>_<object_id>` directory |
-| Table Properties | Stored in Lance table metadata |
+A **table** is a subdirectory containing Lance table data. The directory must contain valid Lance format files including the `_versions/` directory with version manifests.
 
-## Operation Implementation
+The **table identifier** is a list of strings representing the namespace path followed by the table name. For example, a table `["prod", "analytics", "users"]` represents a table named `users` in namespace `["prod", "analytics"]`. This is serialized to `prod$analytics$users` when stored in the manifest table's `object_id` column.
 
-### Namespace Operations
+The **table location** depends on the mode and namespace level:
 
-| Operation | Supported | Implementation |
-|-----------|-----------|----------------|
-| CreateNamespace | V2 only | Insert a new row with `object_type="namespace"` into the manifest table |
-| ListNamespaces | V2 only | Query manifest table for rows where `object_type="namespace"` and `object_id` starts with parent namespace prefix |
-| DescribeNamespace | V2 only | Query manifest table for the namespace row and return its metadata |
-| DropNamespace | V2 only | Delete the namespace row from manifest table; fails if namespace contains children |
-| NamespaceExists | V2 only | Check if a row with the namespace `object_id` exists in the manifest table |
+- In V1 (root namespace only), tables are stored as `<table_name>.lance` directories
+- In V2 with `dir_listing_enabled=true` and an empty namespace (root level), tables use the `<table_name>.lance` naming convention for backward compatibility
+- In V2 for child namespaces, or when `dir_listing_enabled=false`, tables are stored as `<hash>_<object_id>` directories where hash provides entropy for object store throughput
 
-### Table Metadata Operations
+**Table properties** are stored in Lance table metadata and can be accessed via the Lance SDK.
 
-| Operation | Supported | Implementation |
-|-----------|-----------|----------------|
-| CreateEmptyTable | Yes | Create a new Lance table directory and register in manifest (V2) |
-| RegisterTable | Yes | Add an existing table location to the manifest table |
-| ListTables | Yes | V1: List directories matching `*.lance`; V2: Query manifest for `object_type="table"`; Compatibility mode merges both |
-| DescribeTable | Yes | Open the Lance table and return its schema, version, and metadata |
-| TableExists | Yes | V1: Check if `<table_name>.lance` directory exists; V2: Query manifest; Compatibility mode checks both |
-| DropTable | Yes | Delete the table directory and remove from manifest (V2) |
-| DeregisterTable | V2 only | Remove the table entry from manifest without deleting the underlying data |
+## Lance Table Identification
 
-### Table Data Operations
+In a Directory Namespace, a Lance table is identified differently depending on the mode:
 
-| Operation | Supported | Implementation |
-|-----------|-----------|----------------|
-| CreateTable | Yes | Create Lance table with initial data using Lance SDK |
-| InsertIntoTable | Yes | Append or overwrite data using Lance SDK |
-| MergeInsertIntoTable | Yes | Perform merge insert using Lance SDK |
-| UpdateTable | Yes | Update rows matching filter using Lance SDK |
-| DeleteFromTable | Yes | Delete rows matching filter using Lance SDK |
-| QueryTable | Yes | Execute query using Lance SDK (vector search, full-text search, filtering) |
-| CountTableRows | Yes | Count rows using Lance SDK |
+In **V1**, a Lance table is any directory with the `.lance` suffix (e.g., `users.lance/`). The directory must contain valid Lance table data to be usable. Only single-level table identifiers (e.g., `["users"]`) are supported in this mode.
 
-### Table Index Operations
+In **V2**, a Lance table is identified by a row in the manifest table with `object_type="table"`. The row's `location` field points to the Lance table directory. Multi-level table identifiers (e.g., `["prod", "analytics", "users"]`) are supported.
 
-| Operation | Supported | Implementation |
-|-----------|-----------|----------------|
-| CreateTableIndex | Yes | Create index using Lance SDK |
-| ListTableIndices | Yes | List indices using Lance SDK |
-| DescribeTableIndexStats | Yes | Get index statistics using Lance SDK |
-| DropTableIndex | Yes | Drop index using Lance SDK |
+A valid Lance table directory must be non-empty.
 
-### Table Version Operations
+## Basic Operations
 
-| Operation | Supported | Implementation |
-|-----------|-----------|----------------|
-| ListTableVersions | Yes | List versions from Lance table `_versions/` directory |
-| RestoreTable | Yes | Restore to a previous version using Lance SDK |
+### CreateNamespace
 
-### Table Tag Operations
+This operation is only supported in V2. V1 does not support explicit namespace creation since it uses a flat directory structure.
 
-| Operation | Supported | Implementation |
-|-----------|-----------|----------------|
-| ListTableTags | Yes | List tags using Lance SDK |
-| GetTableTagVersion | Yes | Get version for a tag using Lance SDK |
-| CreateTableTag | Yes | Create tag using Lance SDK |
-| DeleteTableTag | Yes | Delete tag using Lance SDK |
-| UpdateTableTag | Yes | Update tag using Lance SDK |
+The implementation creates a new namespace by inserting a row into the manifest table:
 
-### Schema Operations
+1. Validate the parent namespace exists (if not creating at root level)
+2. Check that no namespace with the same identifier already exists
+3. Insert a new row into the manifest table with:
+     - `object_id` set to the namespace identifier (e.g., `prod$analytics`)
+     - `object_type` set to `"namespace"`
+     - `metadata` containing the namespace properties as JSON
+     - `created_at` set to the current timestamp
 
-| Operation | Supported | Implementation |
-|-----------|-----------|----------------|
-| AlterTableAddColumns | Yes | Add columns using Lance SDK |
-| AlterTableAlterColumns | Yes | Alter columns using Lance SDK |
-| AlterTableDropColumns | Yes | Drop columns using Lance SDK |
+**Error Handling:**
 
-### Statistics Operations
+If a namespace with the same identifier already exists, return error code `2` (NamespaceAlreadyExists).
 
-| Operation | Supported | Implementation |
-|-----------|-----------|----------------|
-| GetTableStats | Yes | Get statistics using Lance SDK |
+If the parent namespace does not exist (for nested namespaces), return error code `1` (NamespaceNotFound).
 
-### Query Plan Operations
+If the identifier format is invalid, return error code `13` (InvalidInput).
 
-| Operation | Supported | Implementation |
-|-----------|-----------|----------------|
-| ExplainTableQueryPlan | Yes | Explain query plan using Lance SDK |
-| AnalyzeTableQueryPlan | Yes | Analyze query plan using Lance SDK |
+### ListNamespaces
 
-### Transaction Operations
+This operation lists child namespaces within a parent namespace.
 
-| Operation | Supported | Implementation |
-|-----------|-----------|----------------|
-| DescribeTransaction | Yes | Describe transaction using Lance SDK |
-| AlterTransaction | Yes | Alter transaction using Lance SDK |
+In **V1**, this operation returns an empty list since namespaces are not supported.
+
+In **V2**, the implementation queries the manifest table:
+
+1. Query for rows where `object_type = "namespace"`
+2. Filter to rows where `object_id` starts with the parent namespace prefix
+3. Further filter to rows where `object_id` has exactly one more level than the parent
+4. Return the list of namespace names (the last component of each identifier)
+
+**Error Handling:**
+
+If the parent namespace does not exist (V2 only), return error code `1` (NamespaceNotFound).
+
+### DescribeNamespace
+
+This operation is only supported in V2 and returns namespace metadata.
+
+The implementation:
+
+1. Query the manifest table for the row with the matching `object_id`
+2. Parse the `metadata` column as JSON
+3. Return the namespace name and properties
+
+**Error Handling:**
+
+If the namespace does not exist, return error code `1` (NamespaceNotFound).
+
+### DropNamespace
+
+This operation is only supported in V2 and removes a namespace.
+
+The implementation:
+
+1. Check that the namespace exists in the manifest table
+2. Query for any child namespaces or tables with identifiers starting with this namespace's prefix
+3. If any children exist, the operation fails
+4. Delete the namespace row from the manifest table
+
+**Error Handling:**
+
+If the namespace does not exist, return error code `1` (NamespaceNotFound).
+
+If the namespace contains tables or child namespaces, return error code `3` (NamespaceNotEmpty).
+
+### CreateEmptyTable
+
+This operation creates a new empty Lance table with the specified schema.
+
+The implementation:
+
+1. Validate the parent namespace exists (in V2)
+2. Check that no table with the same identifier already exists
+3. Determine the table location:
+     - In V1: `<root>/<table_name>.lance`
+     - In V2 with `dir_listing_enabled=true` at root level: `<root>/<table_name>.lance`
+     - In V2 for child namespaces or with `dir_listing_enabled=false`: `<root>/<hash>_<object_id>/`
+4. Create an empty Lance table at the location using the Lance SDK with the provided schema
+5. In V2, insert a row into the manifest table with:
+     - `object_id` set to the table identifier
+     - `object_type` set to `"table"`
+     - `location` set to the table directory path
+
+**Error Handling:**
+
+If the parent namespace does not exist, return error code `1` (NamespaceNotFound).
+
+If a table with the same identifier already exists, return error code `5` (TableAlreadyExists).
+
+If the schema is invalid, return error code `13` (InvalidInput).
+
+If there is a concurrent creation attempt, return error code `14` (ConcurrentModification).
+
+### ListTables
+
+This operation lists tables within a namespace.
+
+In **V1**:
+
+1. List all entries in the root directory
+2. Filter to directories matching the `*.lance` pattern
+3. Return the table names (directory names without the `.lance` suffix)
+
+In **V2**:
+
+1. Query the manifest table for rows where `object_type = "table"`
+2. Filter to rows where `object_id` starts with the namespace prefix
+3. Further filter to rows where `object_id` has exactly one more level than the namespace
+4. Return the list of table names
+
+When **both V1 and V2 are enabled** (the default [Compatibility Mode](catalog-spec.md#compatibility-mode)), 
+the implementation performs both queries and merges results, with manifest entries taking precedence when duplicates exist.
+
+**Error Handling:**
+
+If the namespace does not exist (V2 only), return error code `1` (NamespaceNotFound).
+
+### DescribeTable
+
+This operation returns table metadata including schema, version, and properties.
+
+The implementation:
+
+1. Locate the table:
+     - In V1, check for the `<table_name>.lance` directory
+     - In V2, query the manifest table for the table location
+     - When both V1 and V2 are enabled (the default [Compatibility Mode](catalog-spec.md#compatibility-mode)), 
+       first check the manifest table, then fall back to checking the `.lance` directory
+2. Open the Lance table using the Lance SDK
+3. Read the table metadata and return:
+     - `name`: The table name
+     - `schema`: The Arrow schema of the table
+     - `version`: The current version number
+     - `location`: The table directory path
+
+**Error Handling:**
+
+If the parent namespace does not exist, return error code `1` (NamespaceNotFound).
+
+If the table does not exist, return error code `4` (TableNotFound).
+
+If a specific version is requested and does not exist, return error code `11` (TableVersionNotFound).
+
+### DropTable
+
+This operation removes a table and its data.
+
+In **V1**:
+
+1. Locate the table by checking for the `<table_name>.lance` directory
+2. Delete the table directory and all its contents from storage
+3. If deletion fails midway (directory is still non-empty), the drop has failed and should be retried
+
+In **V2**:
+
+1. Locate the table by querying the manifest table for the table location
+2. Remove the table row from the manifest table first
+3. Delete the table directory and all its contents from storage 
+   (failure here does not affect the success of the drop since the table is no longer reachable)
+
+When **both V1 and V2 are enabled** (the default [Compatibility Mode](catalog-spec.md#compatibility-mode)), 
+first check the manifest table, then fall back to checking the `.lance` directory. 
+If found in manifest, follow V2 behavior; otherwise follow V1 behavior.
+
+**Error Handling:**
+
+If the parent namespace does not exist, return error code `1` (NamespaceNotFound).
+
+If the table does not exist, return error code `4` (TableNotFound).
+
+If there is a file system permission error, return error code `15` (PermissionDenied).
+
+If there is an unexpected I/O error, return error code `18` (Internal).

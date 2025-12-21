@@ -1,4 +1,4 @@
-# Lance REST Namespace Spec
+# Lance REST Namespace Catalog Spec
 
 In an enterprise environment, typically there is a requirement to store tables in a metadata service
 for more advanced governance features around access control, auditing, lineage tracking, etc.
@@ -25,26 +25,6 @@ pagination tokens and limits may be passed as query parameters
 for easier URL construction and caching.
 
 These non-standard operations are documented in the [Non-Standard Operations](#non-standard-operations) section below.
-
-## Configuration
-
-The Lance REST namespace accepts the following configuration properties:
-
-| Property    | Required | Description                                                            | Default | Example                           |
-|-------------|----------|------------------------------------------------------------------------|---------|-----------------------------------|
-| `uri`       | Yes      | The URI endpoint for the REST API                                      |         | `https://api.example.com/lance`   |
-| `delimiter` | No       | The delimiter used to parse object string identifiers in REST routes   | `$`     | `::`, `__delim__`                 |
-| `headers.*` | No       | Additional headers to send with every request                          |         | `headers.Authorization=Bearer...` |
-
-### Headers
-
-Properties with the `headers.` prefix are passed as HTTP headers with every request to the REST server
-after removing the prefix. For example, `headers.Authorization` becomes the `Authorization` header.
-
-Common header configurations include:
-- `headers.Authorization`: Authentication tokens (Bearer, Basic, etc.)
-- `headers.X-API-Key`: API key authentication
-- `headers.X-Request-ID`: Request tracking
 
 ## REST Routes
 

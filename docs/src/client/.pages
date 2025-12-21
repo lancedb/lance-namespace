@@ -1,4 +1,5 @@
 title: Client Spec
 nav:
+  - Overview: index.md
   - Objects & Relationships: object-relationship.md
   - operations

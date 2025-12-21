@@ -1,4 +1,4 @@
-# Lance Directory Namespace Spec
+# Lance Directory Namespace Catalog Spec
 
 **Lance directory namespace** is a catalog that stores tables in a directory structure
 on any local or remote storage system. It has gone through 2 major spec versions so far:
@@ -50,9 +50,9 @@ V2 uses a special `__manifest` table (a Lance table) stored in the namespace dir
 and namespaces. This provides several advantages over V1:
 
 - **Nested namespaces**: Support for hierarchical namespace organization
-- **Better performance**: Table listing queries the manifest table instead of scanning the directory
+- **Better performance**: Table discovery queries the manifest table instead of scanning the directory and leverages Lance's random access capability.
 - **Metadata support**: All operations can be supported, e.g. namespaces can have associated properties/metadata, tables can be renamed.
-- **Consistent naming**: Hash-based directory naming prevents conflicts and enables features like table renaming
+- **Optimized directory path**: Hash-based directory naming prevents conflicts and maximizes throughput in object storage.
 
 ### Directory Layout
 
@@ -111,46 +111,18 @@ The `object_id` suffix ensures uniqueness and aids debugging.
 
 In [compatibility mode](#compatibility-mode), root namespace tables use `<table_name>.lance` naming to remain compatible with V1.
 
-## Configuration
+## Compatibility Mode
 
-The Lance directory namespace accepts the following configuration properties:
+By default, the directory namespace operates in compatibility mode, supporting both V1 and V2 tables simultaneously. This allows gradual migration from V1 to V2 without disrupting existing workflows.
 
-| Property              | Required | Description                                                  | Default | Example                         |
-|-----------------------|----------|--------------------------------------------------------------|---------|---------------------------------|
-| `root`                | Yes      | The root directory of the namespace where tables are stored  |         | `/my/dir`, `s3://bucket/prefix` |
-| `manifest_enabled`    | No       | Enable the manifest table for tracking tables and namespaces | `true`  | `true`, `false`                 |
-| `dir_listing_enabled` | No       | Enable directory scanning for table discovery (fallback)     | `true`  | `true`, `false`                 |
-| `storage.*`           | No       | Storage-specific configuration options                       |         | `storage.region=us-west-2`      |
+In compatibility mode:
 
-### Root Path
-
-There are 3 ways to specify a root path:
-
-1. **URI**: a URI that follows the [RFC 3986 specification](https://datatracker.ietf.org/doc/html/rfc3986), e.g. `s3://my-bucket/prefix`.
-2. **Absolute POSIX storage path**: an absolute file path in a POSIX standard storage, e.g. `/my/dir`.
-3. **Relative POSIX storage path**: a relative file path in a POSIX standard storage, e.g. `my/dir2`, `./my/dir3`.
-   The absolute path of the root should be derived from the current working directory.
-
-### Storage Options
-
-The directory namespace is backed by Lance ObjectStore.
-Properties with the `storage.` prefix are passed directly to the underlying Lance ObjectStore
-after removing the prefix. For example, `storage.region` becomes `region` when passed to the storage layer.
-Please visit [Lance ObjectStore Configurations](https://lance.org/guide/object_store/) for more details.
-
-### Compatibility Mode
-
-`manifest_enabled` and `dir_listing_enabled` are used to control using V1 or V2 spec.
-By default we enable both V1 and V2, this means:
-
-1. When checking if a table exists in root namespace, it first checks if the table exists in the manifest, then checks if the `<table_name>.lance` exists.
-2. When listing tables in root namespace, it merges tables from both manifest and directory listing, deduplicating by location and table names, manifest tables taking precedence.
-3. When creating tables in root namespaces, it registers them in the manifest and uses V1 `<table_name>.lance` naming for root namespace tables.
-4. If a table in root namespace is renamed, it will start to follow the V2 path definition. 
-5. For operations in child namespaces, only V2 spec is used.
+1. When checking if a table exists in the root namespace, the implementation first checks the manifest table, then falls back to checking if a `<table_name>.lance` directory exists.
+2. When listing tables in the root namespace, results from both the manifest table and directory listing are merged, with manifest entries taking precedence when duplicates exist.
+3. When creating tables in the root namespace, the table is registered in the manifest and uses the V1 `<table_name>.lance` naming convention for backward compatibility.
+4. If a table in the root namespace is renamed, it transitions to the V2 hash-based path naming.
+5. For operations in child namespaces, only V2 behavior is used since V1 does not support nested namespaces.
 
 ### Migration from V1 to V2
 
-A migration should add all the V1 table directory paths to the manifest. 
-Once the user is certain there is no table following v1 spec,
-`dir_listing_enabled` can be set to `false` to disable the compatibility mode.
+To fully migrate from V1 to V2, add all existing V1 table directory paths to the manifest table. Once all tables are registered in the manifest, compatibility mode can be disabled to use only V2 behavior.
