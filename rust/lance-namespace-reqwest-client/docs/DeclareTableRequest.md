@@ -1,4 +1,4 @@
-# CreateEmptyTableRequest
+# DeclareTableRequest
 
 ## Properties
 

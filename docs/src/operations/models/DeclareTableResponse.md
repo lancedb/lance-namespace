@@ -1,8 +1,8 @@
 
 
-# CreateEmptyTableResponse
+# DeclareTableResponse
 
-Response for creating an empty table.  **Deprecated**: Use `DeclareTableResponse` instead. 
+Response for declaring a table. 
 
 ## Properties
 

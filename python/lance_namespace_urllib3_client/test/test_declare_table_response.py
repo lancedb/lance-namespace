@@ -14,10 +14,10 @@
 
 import unittest
 
-from lance_namespace_urllib3_client.models.create_empty_table_response import CreateEmptyTableResponse
+from lance_namespace_urllib3_client.models.declare_table_response import DeclareTableResponse
 
-class TestCreateEmptyTableResponse(unittest.TestCase):
-    """CreateEmptyTableResponse unit test stubs"""
+class TestDeclareTableResponse(unittest.TestCase):
+    """DeclareTableResponse unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,16 +25,16 @@ class TestCreateEmptyTableResponse(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> CreateEmptyTableResponse:
-        """Test CreateEmptyTableResponse
+    def make_instance(self, include_optional) -> DeclareTableResponse:
+        """Test DeclareTableResponse
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `CreateEmptyTableResponse`
+        # uncomment below to create an instance of `DeclareTableResponse`
         """
-        model = CreateEmptyTableResponse()
+        model = DeclareTableResponse()
         if include_optional:
-            return CreateEmptyTableResponse(
+            return DeclareTableResponse(
                 transaction_id = '',
                 location = '',
                 storage_options = {
@@ -42,12 +42,12 @@ class TestCreateEmptyTableResponse(unittest.TestCase):
                     }
             )
         else:
-            return CreateEmptyTableResponse(
+            return DeclareTableResponse(
         )
         """
 
-    def testCreateEmptyTableResponse(self):
-        """Test CreateEmptyTableResponse"""
+    def testDeclareTableResponse(self):
+        """Test DeclareTableResponse"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 

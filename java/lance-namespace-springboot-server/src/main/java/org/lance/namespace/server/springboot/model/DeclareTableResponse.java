@@ -24,21 +24,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * Response for creating an empty table. **Deprecated**: Use &#x60;DeclareTableResponse&#x60;
- * instead.
- *
- * @deprecated
- */
-@Deprecated
-@Schema(
-    name = "CreateEmptyTableResponse",
-    description =
-        "Response for creating an empty table.  **Deprecated**: Use `DeclareTableResponse` instead. ")
+/** Response for declaring a table. */
+@Schema(name = "DeclareTableResponse", description = "Response for declaring a table. ")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
-public class CreateEmptyTableResponse {
+public class DeclareTableResponse {
 
   private String transactionId;
 
@@ -46,7 +37,7 @@ public class CreateEmptyTableResponse {
 
   @Valid private Map<String, String> storageOptions = new HashMap<>();
 
-  public CreateEmptyTableResponse transactionId(String transactionId) {
+  public DeclareTableResponse transactionId(String transactionId) {
     this.transactionId = transactionId;
     return this;
   }
@@ -69,7 +60,7 @@ public class CreateEmptyTableResponse {
     this.transactionId = transactionId;
   }
 
-  public CreateEmptyTableResponse location(String location) {
+  public DeclareTableResponse location(String location) {
     this.location = location;
     return this;
   }
@@ -89,12 +80,12 @@ public class CreateEmptyTableResponse {
     this.location = location;
   }
 
-  public CreateEmptyTableResponse storageOptions(Map<String, String> storageOptions) {
+  public DeclareTableResponse storageOptions(Map<String, String> storageOptions) {
     this.storageOptions = storageOptions;
     return this;
   }
 
-  public CreateEmptyTableResponse putStorageOptionsItem(String key, String storageOptionsItem) {
+  public DeclareTableResponse putStorageOptionsItem(String key, String storageOptionsItem) {
     if (this.storageOptions == null) {
       this.storageOptions = new HashMap<>();
     }
@@ -130,10 +121,10 @@ public class CreateEmptyTableResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateEmptyTableResponse createEmptyTableResponse = (CreateEmptyTableResponse) o;
-    return Objects.equals(this.transactionId, createEmptyTableResponse.transactionId)
-        && Objects.equals(this.location, createEmptyTableResponse.location)
-        && Objects.equals(this.storageOptions, createEmptyTableResponse.storageOptions);
+    DeclareTableResponse declareTableResponse = (DeclareTableResponse) o;
+    return Objects.equals(this.transactionId, declareTableResponse.transactionId)
+        && Objects.equals(this.location, declareTableResponse.location)
+        && Objects.equals(this.storageOptions, declareTableResponse.storageOptions);
   }
 
   @Override
@@ -144,7 +135,7 @@ public class CreateEmptyTableResponse {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateEmptyTableResponse {\n");
+    sb.append("class DeclareTableResponse {\n");
     sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");

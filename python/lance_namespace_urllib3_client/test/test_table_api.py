@@ -96,6 +96,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_declare_table(self) -> None:
+        """Test case for declare_table
+
+        Declare a table
+        """
+        pass
+
     def test_delete_from_table(self) -> None:
         """Test case for delete_from_table
 

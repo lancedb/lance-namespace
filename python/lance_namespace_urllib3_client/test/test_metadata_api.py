@@ -82,6 +82,13 @@ class TestMetadataApi(unittest.TestCase):
         """
         pass
 
+    def test_declare_table(self) -> None:
+        """Test case for declare_table
+
+        Declare a table
+        """
+        pass
+
     def test_delete_table_tag(self) -> None:
         """Test case for delete_table_tag
 

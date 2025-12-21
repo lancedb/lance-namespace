@@ -60,7 +60,8 @@ See [REST Routes](../../rest/catalog-spec.md#rest-routes) for more details.
 | QueryTable                | 1               |           | ✓     |       |          | ✓    |             |
 | CountTableRows            | 1               |           | ✓     |       |          | ✓    |             |
 | CreateTable               | 1               |           | ✓     |       |          | ✓    |             |
-| CreateEmptyTable          | 1               |           | ✓     |       | ✓        |      |             |
+| DeclareTable              | 1               |           | ✓     |       | ✓        |      |             |
+| CreateEmptyTable          | 1 (deprecated)  |           | ✓     |       | ✓        |      |             |
 | CreateTableIndex          | 1               |           | ✓     | ✓     | ✓        |      |             |
 | CreateTableScalarIndex    | 1               |           | ✓     | ✓     | ✓        |      |             |
 | ListTableIndices          | 1               |           | ✓     | ✓     | ✓        |      |             |
@@ -98,7 +99,7 @@ the following metadata operations are recommended as a minimum:
 
 **Table Metadata Operations:**
 
-- CreateEmptyTable - Create an empty table (metadata only)
+- DeclareTable - Declare a table (metadata only)
 - ListTables - List tables in a namespace
 - DescribeTable - Get table details
 - DropTable - Remove a table

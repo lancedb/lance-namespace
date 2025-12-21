@@ -24,35 +24,30 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/**
- * Request for creating an empty table. **Deprecated**: Use &#x60;DeclareTableRequest&#x60; instead.
- *
- * @deprecated
- */
-@Deprecated
+/** Request for declaring a table. */
 @JsonPropertyOrder({
-  CreateEmptyTableRequest.JSON_PROPERTY_ID,
-  CreateEmptyTableRequest.JSON_PROPERTY_LOCATION
+  DeclareTableRequest.JSON_PROPERTY_ID,
+  DeclareTableRequest.JSON_PROPERTY_LOCATION
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class CreateEmptyTableRequest {
+public class DeclareTableRequest {
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nullable private String location;
 
-  public CreateEmptyTableRequest() {}
+  public DeclareTableRequest() {}
 
-  public CreateEmptyTableRequest id(@javax.annotation.Nullable List<String> id) {
+  public DeclareTableRequest id(@javax.annotation.Nullable List<String> id) {
 
     this.id = id;
     return this;
   }
 
-  public CreateEmptyTableRequest addIdItem(String idItem) {
+  public DeclareTableRequest addIdItem(String idItem) {
     if (this.id == null) {
       this.id = new ArrayList<>();
     }
@@ -78,7 +73,7 @@ public class CreateEmptyTableRequest {
     this.id = id;
   }
 
-  public CreateEmptyTableRequest location(@javax.annotation.Nullable String location) {
+  public DeclareTableRequest location(@javax.annotation.Nullable String location) {
 
     this.location = location;
     return this;
@@ -111,9 +106,9 @@ public class CreateEmptyTableRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateEmptyTableRequest createEmptyTableRequest = (CreateEmptyTableRequest) o;
-    return Objects.equals(this.id, createEmptyTableRequest.id)
-        && Objects.equals(this.location, createEmptyTableRequest.location);
+    DeclareTableRequest declareTableRequest = (DeclareTableRequest) o;
+    return Objects.equals(this.id, declareTableRequest.id)
+        && Objects.equals(this.location, declareTableRequest.location);
   }
 
   @Override
@@ -124,7 +119,7 @@ public class CreateEmptyTableRequest {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateEmptyTableRequest {\n");
+    sb.append("class DeclareTableRequest {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("}");

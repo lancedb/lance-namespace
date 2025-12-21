@@ -1,8 +1,8 @@
 
 
-# CreateEmptyTableRequest
+# DeclareTableRequest
 
-Request for creating an empty table.  **Deprecated**: Use `DeclareTableRequest` instead. 
+Request for declaring a table. 
 
 ## Properties
 

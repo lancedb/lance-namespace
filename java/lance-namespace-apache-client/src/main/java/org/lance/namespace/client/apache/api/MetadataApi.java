@@ -33,6 +33,8 @@ import org.lance.namespace.model.CreateTableIndexResponse;
 import org.lance.namespace.model.CreateTableScalarIndexResponse;
 import org.lance.namespace.model.CreateTableTagRequest;
 import org.lance.namespace.model.CreateTableTagResponse;
+import org.lance.namespace.model.DeclareTableRequest;
+import org.lance.namespace.model.DeclareTableResponse;
 import org.lance.namespace.model.DeleteTableTagRequest;
 import org.lance.namespace.model.DeleteTableTagResponse;
 import org.lance.namespace.model.DeregisterTableRequest;
@@ -405,7 +407,7 @@ public class MetadataApi extends BaseApi {
    * is a metadata-only operation that records the table existence and sets up aspects like access
    * control. For DirectoryNamespace implementation, this creates a &#x60;.lance-reserved&#x60; file
    * in the table directory to mark the table&#39;s existence without creating actual Lance data
-   * files.
+   * files. **Deprecated**: Use &#x60;DeclareTable&#x60; instead.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -417,7 +419,9 @@ public class MetadataApi extends BaseApi {
    *     (optional)
    * @return CreateEmptyTableResponse
    * @throws ApiException if fails to make API call
+   * @deprecated
    */
+  @Deprecated
   public CreateEmptyTableResponse createEmptyTable(
       String id, CreateEmptyTableRequest createEmptyTableRequest, String delimiter)
       throws ApiException {
@@ -429,7 +433,7 @@ public class MetadataApi extends BaseApi {
    * is a metadata-only operation that records the table existence and sets up aspects like access
    * control. For DirectoryNamespace implementation, this creates a &#x60;.lance-reserved&#x60; file
    * in the table directory to mark the table&#39;s existence without creating actual Lance data
-   * files.
+   * files. **Deprecated**: Use &#x60;DeclareTable&#x60; instead.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -442,7 +446,9 @@ public class MetadataApi extends BaseApi {
    * @param additionalHeaders additionalHeaders for this call
    * @return CreateEmptyTableResponse
    * @throws ApiException if fails to make API call
+   * @deprecated
    */
+  @Deprecated
   public CreateEmptyTableResponse createEmptyTable(
       String id,
       CreateEmptyTableRequest createEmptyTableRequest,
@@ -915,6 +921,111 @@ public class MetadataApi extends BaseApi {
 
     TypeReference<CreateTableTagResponse> localVarReturnType =
         new TypeReference<CreateTableTagResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Declare a table Declare a table with the given name without touching storage. This is a
+   * metadata-only operation that records the table existence and sets up aspects like access
+   * control. For DirectoryNamespace implementation, this creates a &#x60;.lance-reserved&#x60; file
+   * in the table directory to mark the table&#39;s existence without creating actual Lance data
+   * files.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param declareTableRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return DeclareTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public DeclareTableResponse declareTable(
+      String id, DeclareTableRequest declareTableRequest, String delimiter) throws ApiException {
+    return this.declareTable(id, declareTableRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Declare a table Declare a table with the given name without touching storage. This is a
+   * metadata-only operation that records the table existence and sets up aspects like access
+   * control. For DirectoryNamespace implementation, this creates a &#x60;.lance-reserved&#x60; file
+   * in the table directory to mark the table&#39;s existence without creating actual Lance data
+   * files.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param declareTableRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return DeclareTableResponse
+   * @throws ApiException if fails to make API call
+   */
+  public DeclareTableResponse declareTable(
+      String id,
+      DeclareTableRequest declareTableRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = declareTableRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling declareTable");
+    }
+
+    // verify the required parameter 'declareTableRequest' is set
+    if (declareTableRequest == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'declareTableRequest' when calling declareTable");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/declare"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
+
+    TypeReference<DeclareTableResponse> localVarReturnType =
+        new TypeReference<DeclareTableResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",
@@ -2981,7 +3092,7 @@ public class MetadataApi extends BaseApi {
    * exactly like DescribeTable, except it does not contain a response body. For DirectoryNamespace
    * implementation, a table exists if either: - The table has Lance data versions (regular table
    * created with CreateTable) - A &#x60;.lance-reserved&#x60; file exists in the table directory
-   * (empty table created with CreateEmptyTable)
+   * (declared table created with DeclareTable)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -3003,7 +3114,7 @@ public class MetadataApi extends BaseApi {
    * exactly like DescribeTable, except it does not contain a response body. For DirectoryNamespace
    * implementation, a table exists if either: - The table has Lance data versions (regular table
    * created with CreateTable) - A &#x60;.lance-reserved&#x60; file exists in the table directory
-   * (empty table created with CreateEmptyTable)
+   * (declared table created with DeclareTable)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.

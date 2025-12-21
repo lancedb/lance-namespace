@@ -24,22 +24,16 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/**
- * Response for creating an empty table. **Deprecated**: Use &#x60;DeclareTableResponse&#x60;
- * instead.
- *
- * @deprecated
- */
-@Deprecated
+/** Response for declaring a table. */
 @JsonPropertyOrder({
-  CreateEmptyTableResponse.JSON_PROPERTY_TRANSACTION_ID,
-  CreateEmptyTableResponse.JSON_PROPERTY_LOCATION,
-  CreateEmptyTableResponse.JSON_PROPERTY_STORAGE_OPTIONS
+  DeclareTableResponse.JSON_PROPERTY_TRANSACTION_ID,
+  DeclareTableResponse.JSON_PROPERTY_LOCATION,
+  DeclareTableResponse.JSON_PROPERTY_STORAGE_OPTIONS
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
-public class CreateEmptyTableResponse {
+public class DeclareTableResponse {
   public static final String JSON_PROPERTY_TRANSACTION_ID = "transaction_id";
   @javax.annotation.Nullable private String transactionId;
 
@@ -49,9 +43,9 @@ public class CreateEmptyTableResponse {
   public static final String JSON_PROPERTY_STORAGE_OPTIONS = "storage_options";
   @javax.annotation.Nullable private Map<String, String> storageOptions = new HashMap<>();
 
-  public CreateEmptyTableResponse() {}
+  public DeclareTableResponse() {}
 
-  public CreateEmptyTableResponse transactionId(@javax.annotation.Nullable String transactionId) {
+  public DeclareTableResponse transactionId(@javax.annotation.Nullable String transactionId) {
 
     this.transactionId = transactionId;
     return this;
@@ -75,7 +69,7 @@ public class CreateEmptyTableResponse {
     this.transactionId = transactionId;
   }
 
-  public CreateEmptyTableResponse location(@javax.annotation.Nullable String location) {
+  public DeclareTableResponse location(@javax.annotation.Nullable String location) {
 
     this.location = location;
     return this;
@@ -99,14 +93,14 @@ public class CreateEmptyTableResponse {
     this.location = location;
   }
 
-  public CreateEmptyTableResponse storageOptions(
+  public DeclareTableResponse storageOptions(
       @javax.annotation.Nullable Map<String, String> storageOptions) {
 
     this.storageOptions = storageOptions;
     return this;
   }
 
-  public CreateEmptyTableResponse putStorageOptionsItem(String key, String storageOptionsItem) {
+  public DeclareTableResponse putStorageOptionsItem(String key, String storageOptionsItem) {
     if (this.storageOptions == null) {
       this.storageOptions = new HashMap<>();
     }
@@ -141,10 +135,10 @@ public class CreateEmptyTableResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateEmptyTableResponse createEmptyTableResponse = (CreateEmptyTableResponse) o;
-    return Objects.equals(this.transactionId, createEmptyTableResponse.transactionId)
-        && Objects.equals(this.location, createEmptyTableResponse.location)
-        && Objects.equals(this.storageOptions, createEmptyTableResponse.storageOptions);
+    DeclareTableResponse declareTableResponse = (DeclareTableResponse) o;
+    return Objects.equals(this.transactionId, declareTableResponse.transactionId)
+        && Objects.equals(this.location, declareTableResponse.location)
+        && Objects.equals(this.storageOptions, declareTableResponse.storageOptions);
   }
 
   @Override
@@ -155,7 +149,7 @@ public class CreateEmptyTableResponse {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateEmptyTableResponse {\n");
+    sb.append("class DeclareTableResponse {\n");
     sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");

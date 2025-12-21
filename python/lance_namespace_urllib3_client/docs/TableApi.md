@@ -14,6 +14,7 @@ Method | HTTP request | Description
 [**create_table_index**](TableApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
 [**create_table_scalar_index**](TableApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 [**create_table_tag**](TableApi.md#create_table_tag) | **POST** /v1/table/{id}/tags/create | Create a new tag
+[**declare_table**](TableApi.md#declare_table) | **POST** /v1/table/{id}/declare | Declare a table
 [**delete_from_table**](TableApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
 [**delete_table_tag**](TableApi.md#delete_table_tag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
 [**deregister_table**](TableApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table
@@ -559,6 +560,8 @@ This is a metadata-only operation that records the table existence and sets up a
 For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory
 to mark the table's existence without creating actual Lance data files.
 
+**Deprecated**: Use `DeclareTable` instead.
+
 
 ### Example
 
@@ -1061,6 +1064,111 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Create tag response |  -  |
+**400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+**401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
+**403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
+**404** | A server-side problem that means can not find the specified resource. |  -  |
+**409** | The request conflicts with the current state of the target resource. |  -  |
+**503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
+**5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **declare_table**
+> DeclareTableResponse declare_table(id, declare_table_request, delimiter=delimiter)
+
+Declare a table
+
+Declare a table with the given name without touching storage.
+This is a metadata-only operation that records the table existence and sets up aspects like access control.
+
+For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory
+to mark the table's existence without creating actual Lance data files.
+
+
+### Example
+
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
+
+```python
+import lance_namespace_urllib3_client
+from lance_namespace_urllib3_client.models.declare_table_request import DeclareTableRequest
+from lance_namespace_urllib3_client.models.declare_table_response import DeclareTableResponse
+from lance_namespace_urllib3_client.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to http://localhost:2333
+# See configuration.py for a list of all supported configuration parameters.
+configuration = lance_namespace_urllib3_client.Configuration(
+    host = "http://localhost:2333"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
+
+# Enter a context with an instance of the API client
+with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = lance_namespace_urllib3_client.TableApi(api_client)
+    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
+    declare_table_request = lance_namespace_urllib3_client.DeclareTableRequest() # DeclareTableRequest | 
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
+
+    try:
+        # Declare a table
+        api_response = api_instance.declare_table(id, declare_table_request, delimiter=delimiter)
+        print("The response of TableApi->declare_table:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling TableApi->declare_table: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
+ **declare_table_request** | [**DeclareTableRequest**](DeclareTableRequest.md)|  | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] 
+
+### Return type
+
+[**DeclareTableResponse**](DeclareTableResponse.md)
+
+### Authorization
+
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Table properties result when declaring a table |  -  |
 **400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
 **401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
 **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
@@ -3277,7 +3385,7 @@ except it does not contain a response body.
 
 For DirectoryNamespace implementation, a table exists if either:
 - The table has Lance data versions (regular table created with CreateTable)
-- A `.lance-reserved` file exists in the table directory (empty table created with CreateEmptyTable)
+- A `.lance-reserved` file exists in the table directory (declared table created with DeclareTable)
 
 
 ### Example

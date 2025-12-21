@@ -11,9 +11,9 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// CreateEmptyTableRequest : Request for creating an empty table.  **Deprecated**: Use `DeclareTableRequest` instead. 
+/// DeclareTableRequest : Request for declaring a table. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateEmptyTableRequest {
+pub struct DeclareTableRequest {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Optional storage location for the table. If not provided, the namespace implementation should determine the table location. 
@@ -21,10 +21,10 @@ pub struct CreateEmptyTableRequest {
     pub location: Option<String>,
 }
 
-impl CreateEmptyTableRequest {
-    /// Request for creating an empty table.  **Deprecated**: Use `DeclareTableRequest` instead. 
-    pub fn new() -> CreateEmptyTableRequest {
-        CreateEmptyTableRequest {
+impl DeclareTableRequest {
+    /// Request for declaring a table. 
+    pub fn new() -> DeclareTableRequest {
+        DeclareTableRequest {
             id: None,
             location: None,
         }

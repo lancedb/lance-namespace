@@ -14,10 +14,10 @@
 
 import unittest
 
-from lance_namespace_urllib3_client.models.create_empty_table_response import CreateEmptyTableResponse
+from lance_namespace_urllib3_client.models.declare_table_request import DeclareTableRequest
 
-class TestCreateEmptyTableResponse(unittest.TestCase):
-    """CreateEmptyTableResponse unit test stubs"""
+class TestDeclareTableRequest(unittest.TestCase):
+    """DeclareTableRequest unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,29 +25,28 @@ class TestCreateEmptyTableResponse(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> CreateEmptyTableResponse:
-        """Test CreateEmptyTableResponse
+    def make_instance(self, include_optional) -> DeclareTableRequest:
+        """Test DeclareTableRequest
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `CreateEmptyTableResponse`
+        # uncomment below to create an instance of `DeclareTableRequest`
         """
-        model = CreateEmptyTableResponse()
+        model = DeclareTableRequest()
         if include_optional:
-            return CreateEmptyTableResponse(
-                transaction_id = '',
-                location = '',
-                storage_options = {
-                    'key' : ''
-                    }
+            return DeclareTableRequest(
+                id = [
+                    ''
+                    ],
+                location = ''
             )
         else:
-            return CreateEmptyTableResponse(
+            return DeclareTableRequest(
         )
         """
 
-    def testCreateEmptyTableResponse(self):
-        """Test CreateEmptyTableResponse"""
+    def testDeclareTableRequest(self):
+        """Test DeclareTableRequest"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 

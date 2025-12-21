@@ -2,7 +2,7 @@
 
 # CreateEmptyTableResponse
 
-Response for creating an empty table. 
+Response for creating an empty table.  **Deprecated**: Use `DeclareTableResponse` instead. 
 
 ## Properties
 
@@ -10,7 +10,6 @@ Response for creating an empty table.
 |------------ | ------------- | ------------- | -------------|
 |**transactionId** | **String** | Optional transaction identifier |  [optional] |
 |**location** | **String** |  |  [optional] |
-|**properties** | **Map&lt;String, String&gt;** |  |  [optional] |
 |**storageOptions** | **Map&lt;String, String&gt;** | Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access.  |  [optional] |
 
 

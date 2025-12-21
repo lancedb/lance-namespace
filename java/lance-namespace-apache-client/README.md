@@ -156,6 +156,7 @@ Class | Method | HTTP request | Description
 *MetadataApi* | [**createTableIndex**](docs/MetadataApi.md#createTableIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
 *MetadataApi* | [**createTableScalarIndex**](docs/MetadataApi.md#createTableScalarIndex) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *MetadataApi* | [**createTableTag**](docs/MetadataApi.md#createTableTag) | **POST** /v1/table/{id}/tags/create | Create a new tag
+*MetadataApi* | [**declareTable**](docs/MetadataApi.md#declareTable) | **POST** /v1/table/{id}/declare | Declare a table
 *MetadataApi* | [**deleteTableTag**](docs/MetadataApi.md#deleteTableTag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
 *MetadataApi* | [**deregisterTable**](docs/MetadataApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table
 *MetadataApi* | [**describeNamespace**](docs/MetadataApi.md#describeNamespace) | **POST** /v1/namespace/{id}/describe | Describe a namespace
@@ -195,6 +196,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**createTableIndex**](docs/TableApi.md#createTableIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
 *TableApi* | [**createTableScalarIndex**](docs/TableApi.md#createTableScalarIndex) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *TableApi* | [**createTableTag**](docs/TableApi.md#createTableTag) | **POST** /v1/table/{id}/tags/create | Create a new tag
+*TableApi* | [**declareTable**](docs/TableApi.md#declareTable) | **POST** /v1/table/{id}/declare | Declare a table
 *TableApi* | [**deleteFromTable**](docs/TableApi.md#deleteFromTable) | **POST** /v1/table/{id}/delete | Delete rows from a table
 *TableApi* | [**deleteTableTag**](docs/TableApi.md#deleteTableTag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
 *TableApi* | [**deregisterTable**](docs/TableApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table
@@ -262,6 +264,8 @@ Class | Method | HTTP request | Description
  - [CreateTableScalarIndexResponse](docs/CreateTableScalarIndexResponse.md)
  - [CreateTableTagRequest](docs/CreateTableTagRequest.md)
  - [CreateTableTagResponse](docs/CreateTableTagResponse.md)
+ - [DeclareTableRequest](docs/DeclareTableRequest.md)
+ - [DeclareTableResponse](docs/DeclareTableResponse.md)
  - [DeleteFromTableRequest](docs/DeleteFromTableRequest.md)
  - [DeleteFromTableResponse](docs/DeleteFromTableResponse.md)
  - [DeleteTableTagRequest](docs/DeleteTableTagRequest.md)
