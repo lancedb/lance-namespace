@@ -3,4 +3,4 @@ nav:
   - Client Spec: client
   - Directory Namespace: dir
   - REST Namespace: rest
-  - Implementation Spec Template: impl-spec-template.md
+  - Catalog Integrations: integrations
