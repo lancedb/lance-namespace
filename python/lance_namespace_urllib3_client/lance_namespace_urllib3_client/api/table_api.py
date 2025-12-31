@@ -4700,6 +4700,7 @@ class TableApi:
         describe_table_request: DescribeTableRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         with_table_uri: Annotated[Optional[StrictBool], Field(description="Whether to include the table URI in the response")] = None,
+        load_detailed_metadata: Annotated[Optional[StrictBool], Field(description="Whether to load detailed metadata that requires opening the dataset. When false (default), only `location` is required in the response. When true, the response includes additional metadata such as `version`, `schema`, and `stats`. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4715,7 +4716,7 @@ class TableApi:
     ) -> DescribeTableResponse:
         """Describe information of a table
 
-        Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` as a query parameter instead of in the request body. 
+        Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` and `load_detailed_metadata` as query parameters instead of in the request body. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4725,6 +4726,8 @@ class TableApi:
         :type delimiter: str
         :param with_table_uri: Whether to include the table URI in the response
         :type with_table_uri: bool
+        :param load_detailed_metadata: Whether to load detailed metadata that requires opening the dataset. When false (default), only `location` is required in the response. When true, the response includes additional metadata such as `version`, `schema`, and `stats`. 
+        :type load_detailed_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4752,6 +4755,7 @@ class TableApi:
             describe_table_request=describe_table_request,
             delimiter=delimiter,
             with_table_uri=with_table_uri,
+            load_detailed_metadata=load_detailed_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4785,6 +4789,7 @@ class TableApi:
         describe_table_request: DescribeTableRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         with_table_uri: Annotated[Optional[StrictBool], Field(description="Whether to include the table URI in the response")] = None,
+        load_detailed_metadata: Annotated[Optional[StrictBool], Field(description="Whether to load detailed metadata that requires opening the dataset. When false (default), only `location` is required in the response. When true, the response includes additional metadata such as `version`, `schema`, and `stats`. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4800,7 +4805,7 @@ class TableApi:
     ) -> ApiResponse[DescribeTableResponse]:
         """Describe information of a table
 
-        Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` as a query parameter instead of in the request body. 
+        Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` and `load_detailed_metadata` as query parameters instead of in the request body. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4810,6 +4815,8 @@ class TableApi:
         :type delimiter: str
         :param with_table_uri: Whether to include the table URI in the response
         :type with_table_uri: bool
+        :param load_detailed_metadata: Whether to load detailed metadata that requires opening the dataset. When false (default), only `location` is required in the response. When true, the response includes additional metadata such as `version`, `schema`, and `stats`. 
+        :type load_detailed_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4837,6 +4844,7 @@ class TableApi:
             describe_table_request=describe_table_request,
             delimiter=delimiter,
             with_table_uri=with_table_uri,
+            load_detailed_metadata=load_detailed_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4870,6 +4878,7 @@ class TableApi:
         describe_table_request: DescribeTableRequest,
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         with_table_uri: Annotated[Optional[StrictBool], Field(description="Whether to include the table URI in the response")] = None,
+        load_detailed_metadata: Annotated[Optional[StrictBool], Field(description="Whether to load detailed metadata that requires opening the dataset. When false (default), only `location` is required in the response. When true, the response includes additional metadata such as `version`, `schema`, and `stats`. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4885,7 +4894,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Describe information of a table
 
-        Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` as a query parameter instead of in the request body. 
+        Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` and `load_detailed_metadata` as query parameters instead of in the request body. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4895,6 +4904,8 @@ class TableApi:
         :type delimiter: str
         :param with_table_uri: Whether to include the table URI in the response
         :type with_table_uri: bool
+        :param load_detailed_metadata: Whether to load detailed metadata that requires opening the dataset. When false (default), only `location` is required in the response. When true, the response includes additional metadata such as `version`, `schema`, and `stats`. 
+        :type load_detailed_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4922,6 +4933,7 @@ class TableApi:
             describe_table_request=describe_table_request,
             delimiter=delimiter,
             with_table_uri=with_table_uri,
+            load_detailed_metadata=load_detailed_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4950,6 +4962,7 @@ class TableApi:
         describe_table_request,
         delimiter,
         with_table_uri,
+        load_detailed_metadata,
         _request_auth,
         _content_type,
         _headers,
@@ -4981,6 +4994,10 @@ class TableApi:
         if with_table_uri is not None:
             
             _query_params.append(('with_table_uri', with_table_uri))
+            
+        if load_detailed_metadata is not None:
+            
+            _query_params.append(('load_detailed_metadata', load_detailed_metadata))
             
         # process the header parameters
         # process the form parameters

@@ -29,14 +29,14 @@ class DescribeTableResponse(BaseModel):
     """
     DescribeTableResponse
     """ # noqa: E501
-    table: Optional[StrictStr] = Field(default=None, description="Table name")
-    namespace: Optional[List[StrictStr]] = Field(default=None, description="The namespace identifier as a list of parts")
-    version: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
-    location: Optional[StrictStr] = Field(default=None, description="Table storage location (e.g., S3/GCS path)")
-    table_uri: Optional[StrictStr] = Field(default=None, description="Table URI. Unlike location, this field must be a complete and valid URI ")
-    var_schema: Optional[JsonArrowSchema] = Field(default=None, alias="schema")
+    table: Optional[StrictStr] = Field(default=None, description="Table name. Only populated when `load_detailed_metadata` is true. ")
+    namespace: Optional[List[StrictStr]] = Field(default=None, description="The namespace identifier as a list of parts. Only populated when `load_detailed_metadata` is true. ")
+    version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Table version number. Only populated when `load_detailed_metadata` is true. ")
+    location: StrictStr = Field(description="Table storage location (e.g., S3/GCS path). This is the only required field and is always returned. ")
+    table_uri: Optional[StrictStr] = Field(default=None, description="Table URI. Unlike location, this field must be a complete and valid URI. Only returned when `with_table_uri` is true. ")
+    var_schema: Optional[JsonArrowSchema] = Field(default=None, description="Table schema in JSON Arrow format. Only populated when `load_detailed_metadata` is true. ", alias="schema")
     storage_options: Optional[Dict[str, StrictStr]] = Field(default=None, description="Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. ")
-    stats: Optional[TableBasicStats] = Field(default=None, description="Table statistics")
+    stats: Optional[TableBasicStats] = Field(default=None, description="Table statistics. Only populated when `load_detailed_metadata` is true. ")
     __properties: ClassVar[List[str]] = ["table", "namespace", "version", "location", "table_uri", "schema", "storage_options", "stats"]
 
     model_config = ConfigDict(

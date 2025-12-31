@@ -48,19 +48,28 @@ public class DescribeTableResponse {
 
   private TableBasicStats stats;
 
+  public DescribeTableResponse() {
+    super();
+  }
+
+  /** Constructor with only required parameters */
+  public DescribeTableResponse(String location) {
+    this.location = location;
+  }
+
   public DescribeTableResponse table(String table) {
     this.table = table;
     return this;
   }
 
   /**
-   * Table name
+   * Table name. Only populated when `load_detailed_metadata` is true.
    *
    * @return table
    */
   @Schema(
       name = "table",
-      description = "Table name",
+      description = "Table name. Only populated when `load_detailed_metadata` is true. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("table")
   public String getTable() {
@@ -85,13 +94,15 @@ public class DescribeTableResponse {
   }
 
   /**
-   * The namespace identifier as a list of parts
+   * The namespace identifier as a list of parts. Only populated when `load_detailed_metadata` is
+   * true.
    *
    * @return namespace
    */
   @Schema(
       name = "namespace",
-      description = "The namespace identifier as a list of parts",
+      description =
+          "The namespace identifier as a list of parts. Only populated when `load_detailed_metadata` is true. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("namespace")
   public List<String> getNamespace() {
@@ -108,12 +119,15 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Get version minimum: 0
+   * Table version number. Only populated when `load_detailed_metadata` is true. minimum: 0
    *
    * @return version
    */
   @Min(0L)
-  @Schema(name = "version", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "version",
+      description = "Table version number. Only populated when `load_detailed_metadata` is true. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("version")
   public Long getVersion() {
     return version;
@@ -129,14 +143,17 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table storage location (e.g., S3/GCS path)
+   * Table storage location (e.g., S3/GCS path). This is the only required field and is always
+   * returned.
    *
    * @return location
    */
+  @NotNull
   @Schema(
       name = "location",
-      description = "Table storage location (e.g., S3/GCS path)",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+      description =
+          "Table storage location (e.g., S3/GCS path). This is the only required field and is always returned. ",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("location")
   public String getLocation() {
     return location;
@@ -152,13 +169,15 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table URI. Unlike location, this field must be a complete and valid URI
+   * Table URI. Unlike location, this field must be a complete and valid URI. Only returned when
+   * `with_table_uri` is true.
    *
    * @return tableUri
    */
   @Schema(
       name = "table_uri",
-      description = "Table URI. Unlike location, this field must be a complete and valid URI ",
+      description =
+          "Table URI. Unlike location, this field must be a complete and valid URI. Only returned when `with_table_uri` is true. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("table_uri")
   public String getTableUri() {
@@ -175,12 +194,16 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Get schema
+   * Table schema in JSON Arrow format. Only populated when `load_detailed_metadata` is true.
    *
    * @return schema
    */
   @Valid
-  @Schema(name = "schema", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "schema",
+      description =
+          "Table schema in JSON Arrow format. Only populated when `load_detailed_metadata` is true. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("schema")
   public JsonArrowSchema getSchema() {
     return schema;
@@ -229,14 +252,14 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table statistics
+   * Table statistics. Only populated when `load_detailed_metadata` is true.
    *
    * @return stats
    */
   @Valid
   @Schema(
       name = "stats",
-      description = "Table statistics",
+      description = "Table statistics. Only populated when `load_detailed_metadata` is true. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("stats")
   public TableBasicStats getStats() {

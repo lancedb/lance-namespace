@@ -36,6 +36,8 @@ public class DescribeTableRequest {
 
   private Boolean withTableUri = false;
 
+  private Boolean loadDetailedMetadata = false;
+
   public DescribeTableRequest id(List<String> id) {
     this.id = id;
     return this;
@@ -113,6 +115,32 @@ public class DescribeTableRequest {
     this.withTableUri = withTableUri;
   }
 
+  public DescribeTableRequest loadDetailedMetadata(Boolean loadDetailedMetadata) {
+    this.loadDetailedMetadata = loadDetailedMetadata;
+    return this;
+  }
+
+  /**
+   * Whether to load detailed metadata that requires opening the dataset. When false (default), only
+   * `location` is required in the response. When true, the response includes additional metadata
+   * such as `version`, `schema`, and `stats` which require reading the dataset.
+   *
+   * @return loadDetailedMetadata
+   */
+  @Schema(
+      name = "load_detailed_metadata",
+      description =
+          "Whether to load detailed metadata that requires opening the dataset. When false (default), only `location` is required in the response. When true, the response includes additional metadata such as `version`, `schema`, and `stats` which require reading the dataset. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("load_detailed_metadata")
+  public Boolean getLoadDetailedMetadata() {
+    return loadDetailedMetadata;
+  }
+
+  public void setLoadDetailedMetadata(Boolean loadDetailedMetadata) {
+    this.loadDetailedMetadata = loadDetailedMetadata;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -124,12 +152,13 @@ public class DescribeTableRequest {
     DescribeTableRequest describeTableRequest = (DescribeTableRequest) o;
     return Objects.equals(this.id, describeTableRequest.id)
         && Objects.equals(this.version, describeTableRequest.version)
-        && Objects.equals(this.withTableUri, describeTableRequest.withTableUri);
+        && Objects.equals(this.withTableUri, describeTableRequest.withTableUri)
+        && Objects.equals(this.loadDetailedMetadata, describeTableRequest.loadDetailedMetadata);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version, withTableUri);
+    return Objects.hash(id, version, withTableUri, loadDetailedMetadata);
   }
 
   @Override
@@ -139,6 +168,9 @@ public class DescribeTableRequest {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    withTableUri: ").append(toIndentedString(withTableUri)).append("\n");
+    sb.append("    loadDetailedMetadata: ")
+        .append(toIndentedString(loadDetailedMetadata))
+        .append("\n");
     sb.append("}");
     return sb.toString();
   }

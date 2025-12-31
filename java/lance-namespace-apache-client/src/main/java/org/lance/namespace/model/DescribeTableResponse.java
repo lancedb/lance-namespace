@@ -51,7 +51,7 @@ public class DescribeTableResponse {
   @javax.annotation.Nullable private Long version;
 
   public static final String JSON_PROPERTY_LOCATION = "location";
-  @javax.annotation.Nullable private String location;
+  @javax.annotation.Nonnull private String location;
 
   public static final String JSON_PROPERTY_TABLE_URI = "table_uri";
   @javax.annotation.Nullable private String tableUri;
@@ -74,7 +74,7 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table name
+   * Table name. Only populated when &#x60;load_detailed_metadata&#x60; is true.
    *
    * @return table
    */
@@ -106,7 +106,8 @@ public class DescribeTableResponse {
   }
 
   /**
-   * The namespace identifier as a list of parts
+   * The namespace identifier as a list of parts. Only populated when
+   * &#x60;load_detailed_metadata&#x60; is true.
    *
    * @return namespace
    */
@@ -130,7 +131,8 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Get version minimum: 0
+   * Table version number. Only populated when &#x60;load_detailed_metadata&#x60; is true. minimum:
+   * 0
    *
    * @return version
    */
@@ -147,27 +149,28 @@ public class DescribeTableResponse {
     this.version = version;
   }
 
-  public DescribeTableResponse location(@javax.annotation.Nullable String location) {
+  public DescribeTableResponse location(@javax.annotation.Nonnull String location) {
 
     this.location = location;
     return this;
   }
 
   /**
-   * Table storage location (e.g., S3/GCS path)
+   * Table storage location (e.g., S3/GCS path). This is the only required field and is always
+   * returned.
    *
    * @return location
    */
-  @javax.annotation.Nullable
+  @javax.annotation.Nonnull
   @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public String getLocation() {
     return location;
   }
 
   @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLocation(@javax.annotation.Nullable String location) {
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setLocation(@javax.annotation.Nonnull String location) {
     this.location = location;
   }
 
@@ -178,7 +181,8 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table URI. Unlike location, this field must be a complete and valid URI
+   * Table URI. Unlike location, this field must be a complete and valid URI. Only returned when
+   * &#x60;with_table_uri&#x60; is true.
    *
    * @return tableUri
    */
@@ -202,7 +206,8 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Get schema
+   * Table schema in JSON Arrow format. Only populated when &#x60;load_detailed_metadata&#x60; is
+   * true.
    *
    * @return schema
    */
@@ -260,7 +265,7 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table statistics
+   * Table statistics. Only populated when &#x60;load_detailed_metadata&#x60; is true.
    *
    * @return stats
    */

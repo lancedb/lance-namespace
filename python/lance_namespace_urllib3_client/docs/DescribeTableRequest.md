@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **id** | **List[str]** |  | [optional] 
 **version** | **int** | Version of the table to describe. If not specified, server should resolve it to the latest version.  | [optional] 
 **with_table_uri** | **bool** | Whether to include the table URI in the response. Default is false.  | [optional] [default to False]
+**load_detailed_metadata** | **bool** | Whether to load detailed metadata that requires opening the dataset. When false (default), only &#x60;location&#x60; is required in the response. When true, the response includes additional metadata such as &#x60;version&#x60;, &#x60;schema&#x60;, and &#x60;stats&#x60; which require reading the dataset.  | [optional] [default to False]
 
 ## Example
 

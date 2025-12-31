@@ -56,16 +56,22 @@ For each of the 8 recommended basic operations, provide a detailed subsection. E
 The 8 basic operations are:
 
 **Namespace Operations:**
+
 - CreateNamespace
 - ListNamespaces
 - DescribeNamespace
-- DropNamespace
+- DropNamespace (only `Restrict` behavior mode required)
 
 **Table Operations:**
+
 - DeclareTable
 - ListTables
-- DescribeTable
+- DescribeTable (only `load_detailed_metadata=false` required)
 - DeregisterTable
+
+**Note:** For basic implementations, DropNamespace only needs to support the `Restrict` behavior mode
+(namespace must be empty before dropping). DescribeTable only needs to support `load_detailed_metadata=false`
+(only return table `location` without opening the dataset).
 
 ---
 
@@ -144,6 +150,8 @@ If {condition}, return error code `N` ({ErrorName}).
 
 {Same structure as above}
 
+**Note:** Basic implementations only need to support `Restrict` behavior mode.
+
 ### DeclareTable
 
 {Same structure as above}
@@ -155,6 +163,8 @@ If {condition}, return error code `N` ({ErrorName}).
 ### DescribeTable
 
 {Same structure as above}
+
+**Note:** Basic implementations only need to support `load_detailed_metadata=false` (only return table `location`).
 
 ### DeregisterTable
 

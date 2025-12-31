@@ -1292,13 +1292,14 @@ pub async fn deregister_table(configuration: &configuration::Configuration, id: 
     }
 }
 
-/// Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` as a query parameter instead of in the request body. 
-pub async fn describe_table(configuration: &configuration::Configuration, id: &str, describe_table_request: models::DescribeTableRequest, delimiter: Option<&str>, with_table_uri: Option<bool>) -> Result<models::DescribeTableResponse, Error<DescribeTableError>> {
+/// Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` and `load_detailed_metadata` as query parameters instead of in the request body. 
+pub async fn describe_table(configuration: &configuration::Configuration, id: &str, describe_table_request: models::DescribeTableRequest, delimiter: Option<&str>, with_table_uri: Option<bool>, load_detailed_metadata: Option<bool>) -> Result<models::DescribeTableResponse, Error<DescribeTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_describe_table_request = describe_table_request;
     let p_delimiter = delimiter;
     let p_with_table_uri = with_table_uri;
+    let p_load_detailed_metadata = load_detailed_metadata;
 
     let uri_str = format!("{}/v1/table/{id}/describe", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
@@ -1308,6 +1309,9 @@ pub async fn describe_table(configuration: &configuration::Configuration, id: &s
     }
     if let Some(ref param_value) = p_with_table_uri {
         req_builder = req_builder.query(&[("with_table_uri", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_load_detailed_metadata {
+        req_builder = req_builder.query(&[("load_detailed_metadata", &param_value.to_string())]);
     }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());

@@ -1344,8 +1344,8 @@ public class MetadataApi extends BaseApi {
 
   /**
    * Describe information of a table Describe the detailed information for table &#x60;id&#x60;.
-   * REST NAMESPACE ONLY REST namespace passes &#x60;with_table_uri&#x60; as a query parameter
-   * instead of in the request body.
+   * REST NAMESPACE ONLY REST namespace passes &#x60;with_table_uri&#x60; and
+   * &#x60;load_detailed_metadata&#x60; as query parameters instead of in the request body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1357,20 +1357,33 @@ public class MetadataApi extends BaseApi {
    *     (optional)
    * @param withTableUri Whether to include the table URI in the response (optional, default to
    *     false)
+   * @param loadDetailedMetadata Whether to load detailed metadata that requires opening the
+   *     dataset. When false (default), only &#x60;location&#x60; is required in the response. When
+   *     true, the response includes additional metadata such as &#x60;version&#x60;,
+   *     &#x60;schema&#x60;, and &#x60;stats&#x60;. (optional, default to false)
    * @return DescribeTableResponse
    * @throws ApiException if fails to make API call
    */
   public DescribeTableResponse describeTable(
-      String id, DescribeTableRequest describeTableRequest, String delimiter, Boolean withTableUri)
+      String id,
+      DescribeTableRequest describeTableRequest,
+      String delimiter,
+      Boolean withTableUri,
+      Boolean loadDetailedMetadata)
       throws ApiException {
     return this.describeTable(
-        id, describeTableRequest, delimiter, withTableUri, Collections.emptyMap());
+        id,
+        describeTableRequest,
+        delimiter,
+        withTableUri,
+        loadDetailedMetadata,
+        Collections.emptyMap());
   }
 
   /**
    * Describe information of a table Describe the detailed information for table &#x60;id&#x60;.
-   * REST NAMESPACE ONLY REST namespace passes &#x60;with_table_uri&#x60; as a query parameter
-   * instead of in the request body.
+   * REST NAMESPACE ONLY REST namespace passes &#x60;with_table_uri&#x60; and
+   * &#x60;load_detailed_metadata&#x60; as query parameters instead of in the request body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1382,6 +1395,10 @@ public class MetadataApi extends BaseApi {
    *     (optional)
    * @param withTableUri Whether to include the table URI in the response (optional, default to
    *     false)
+   * @param loadDetailedMetadata Whether to load detailed metadata that requires opening the
+   *     dataset. When false (default), only &#x60;location&#x60; is required in the response. When
+   *     true, the response includes additional metadata such as &#x60;version&#x60;,
+   *     &#x60;schema&#x60;, and &#x60;stats&#x60;. (optional, default to false)
    * @param additionalHeaders additionalHeaders for this call
    * @return DescribeTableResponse
    * @throws ApiException if fails to make API call
@@ -1391,6 +1408,7 @@ public class MetadataApi extends BaseApi {
       DescribeTableRequest describeTableRequest,
       String delimiter,
       Boolean withTableUri,
+      Boolean loadDetailedMetadata,
       Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = describeTableRequest;
@@ -1422,6 +1440,8 @@ public class MetadataApi extends BaseApi {
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
     localVarQueryParams.addAll(apiClient.parameterToPair("with_table_uri", withTableUri));
+    localVarQueryParams.addAll(
+        apiClient.parameterToPair("load_detailed_metadata", loadDetailedMetadata));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
