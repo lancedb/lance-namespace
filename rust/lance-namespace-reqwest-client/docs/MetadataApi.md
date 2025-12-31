@@ -425,10 +425,10 @@ Name | Type | Description  | Required | Notes
 
 ## describe_table
 
-> models::DescribeTableResponse describe_table(id, describe_table_request, delimiter, with_table_uri)
+> models::DescribeTableResponse describe_table(id, describe_table_request, delimiter, with_table_uri, load_detailed_metadata)
 Describe information of a table
 
-Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` as a query parameter instead of in the request body. 
+Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` and `load_detailed_metadata` as query parameters instead of in the request body. 
 
 ### Parameters
 
@@ -439,6 +439,7 @@ Name | Type | Description  | Required | Notes
 **describe_table_request** | [**DescribeTableRequest**](DescribeTableRequest.md) |  | [required] |
 **delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
 **with_table_uri** | Option<**bool**> | Whether to include the table URI in the response |  |[default to false]
+**load_detailed_metadata** | Option<**bool**> | Whether to load detailed metadata that requires opening the dataset. When false (default), only `location` is required in the response. When true, the response includes additional metadata such as `version`, `schema`, and `stats`.  |  |[default to false]
 
 ### Return type
 

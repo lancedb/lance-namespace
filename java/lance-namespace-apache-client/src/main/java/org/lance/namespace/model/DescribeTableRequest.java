@@ -28,7 +28,8 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({
   DescribeTableRequest.JSON_PROPERTY_ID,
   DescribeTableRequest.JSON_PROPERTY_VERSION,
-  DescribeTableRequest.JSON_PROPERTY_WITH_TABLE_URI
+  DescribeTableRequest.JSON_PROPERTY_WITH_TABLE_URI,
+  DescribeTableRequest.JSON_PROPERTY_LOAD_DETAILED_METADATA
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -42,6 +43,9 @@ public class DescribeTableRequest {
 
   public static final String JSON_PROPERTY_WITH_TABLE_URI = "with_table_uri";
   @javax.annotation.Nullable private Boolean withTableUri = false;
+
+  public static final String JSON_PROPERTY_LOAD_DETAILED_METADATA = "load_detailed_metadata";
+  @javax.annotation.Nullable private Boolean loadDetailedMetadata = false;
 
   public DescribeTableRequest() {}
 
@@ -126,6 +130,34 @@ public class DescribeTableRequest {
     this.withTableUri = withTableUri;
   }
 
+  public DescribeTableRequest loadDetailedMetadata(
+      @javax.annotation.Nullable Boolean loadDetailedMetadata) {
+
+    this.loadDetailedMetadata = loadDetailedMetadata;
+    return this;
+  }
+
+  /**
+   * Whether to load detailed metadata that requires opening the dataset. When false (default), only
+   * &#x60;location&#x60; is required in the response. When true, the response includes additional
+   * metadata such as &#x60;version&#x60;, &#x60;schema&#x60;, and &#x60;stats&#x60; which require
+   * reading the dataset.
+   *
+   * @return loadDetailedMetadata
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_LOAD_DETAILED_METADATA)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getLoadDetailedMetadata() {
+    return loadDetailedMetadata;
+  }
+
+  @JsonProperty(JSON_PROPERTY_LOAD_DETAILED_METADATA)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setLoadDetailedMetadata(@javax.annotation.Nullable Boolean loadDetailedMetadata) {
+    this.loadDetailedMetadata = loadDetailedMetadata;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -137,12 +169,13 @@ public class DescribeTableRequest {
     DescribeTableRequest describeTableRequest = (DescribeTableRequest) o;
     return Objects.equals(this.id, describeTableRequest.id)
         && Objects.equals(this.version, describeTableRequest.version)
-        && Objects.equals(this.withTableUri, describeTableRequest.withTableUri);
+        && Objects.equals(this.withTableUri, describeTableRequest.withTableUri)
+        && Objects.equals(this.loadDetailedMetadata, describeTableRequest.loadDetailedMetadata);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version, withTableUri);
+    return Objects.hash(id, version, withTableUri, loadDetailedMetadata);
   }
 
   @Override
@@ -152,6 +185,9 @@ public class DescribeTableRequest {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    withTableUri: ").append(toIndentedString(withTableUri)).append("\n");
+    sb.append("    loadDetailedMetadata: ")
+        .append(toIndentedString(loadDetailedMetadata))
+        .append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -243,6 +279,22 @@ public class DescribeTableRequest {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getWithTableUri()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `load_detailed_metadata` to the URL query string
+    if (getLoadDetailedMetadata() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sload_detailed_metadata%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getLoadDetailedMetadata()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported

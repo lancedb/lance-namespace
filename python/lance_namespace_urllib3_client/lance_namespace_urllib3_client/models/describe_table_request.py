@@ -30,7 +30,8 @@ class DescribeTableRequest(BaseModel):
     id: Optional[List[StrictStr]] = None
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Version of the table to describe. If not specified, server should resolve it to the latest version. ")
     with_table_uri: Optional[StrictBool] = Field(default=False, description="Whether to include the table URI in the response. Default is false. ")
-    __properties: ClassVar[List[str]] = ["id", "version", "with_table_uri"]
+    load_detailed_metadata: Optional[StrictBool] = Field(default=False, description="Whether to load detailed metadata that requires opening the dataset. When false (default), only `location` is required in the response. When true, the response includes additional metadata such as `version`, `schema`, and `stats` which require reading the dataset. ")
+    __properties: ClassVar[List[str]] = ["id", "version", "with_table_uri", "load_detailed_metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -85,7 +86,8 @@ class DescribeTableRequest(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "version": obj.get("version"),
-            "with_table_uri": obj.get("with_table_uri") if obj.get("with_table_uri") is not None else False
+            "with_table_uri": obj.get("with_table_uri") if obj.get("with_table_uri") is not None else False,
+            "load_detailed_metadata": obj.get("load_detailed_metadata") if obj.get("load_detailed_metadata") is not None else False
         })
         return _obj
 

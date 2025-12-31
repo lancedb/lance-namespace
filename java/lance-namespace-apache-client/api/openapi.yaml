@@ -399,17 +399,19 @@ paths:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
     - $ref: '#/components/parameters/with_table_uri'
+    - $ref: '#/components/parameters/load_detailed_metadata'
     post:
       description: |
         Describe the detailed information for table `id`.
 
         REST NAMESPACE ONLY
-        REST namespace passes `with_table_uri` as a query parameter instead of in the request body.
+        REST namespace passes `with_table_uri` and `load_detailed_metadata` as query parameters instead of in the request body.
       operationId: DescribeTable
       parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
       - $ref: '#/components/parameters/with_table_uri'
+      - $ref: '#/components/parameters/load_detailed_metadata'
       requestBody:
         content:
           application/json:
@@ -2164,6 +2166,19 @@ components:
         default: false
         type: boolean
       style: form
+    load_detailed_metadata:
+      description: |
+        Whether to load detailed metadata that requires opening the dataset.
+        When false (default), only `location` is required in the response.
+        When true, the response includes additional metadata such as `version`, `schema`, and `stats`.
+      explode: true
+      in: query
+      name: load_detailed_metadata
+      required: false
+      schema:
+        default: false
+        type: boolean
+      style: form
   responses:
     ListNamespacesResponse:
       content:
@@ -2871,6 +2886,7 @@ components:
         - id
         version: 0
         with_table_uri: false
+        load_detailed_metadata: false
       properties:
         id:
           items:
@@ -2888,6 +2904,14 @@ components:
           description: |
             Whether to include the table URI in the response.
             Default is false.
+          type: boolean
+        load_detailed_metadata:
+          default: false
+          description: |
+            Whether to load detailed metadata that requires opening the dataset.
+            When false (default), only `location` is required in the response.
+            When true, the response includes additional metadata such as `version`, `schema`, and `stats`
+            which require reading the dataset.
           type: boolean
     DescribeTableResponse:
       example:
@@ -2929,23 +2953,33 @@ components:
           key: storage_options
       properties:
         table:
-          description: Table name
+          description: |
+            Table name.
+            Only populated when `load_detailed_metadata` is true.
           type: string
         namespace:
-          description: The namespace identifier as a list of parts
+          description: |
+            The namespace identifier as a list of parts.
+            Only populated when `load_detailed_metadata` is true.
           items:
             type: string
           type: array
         version:
+          description: |
+            Table version number.
+            Only populated when `load_detailed_metadata` is true.
           format: int64
           minimum: 0
           type: integer
         location:
-          description: "Table storage location (e.g., S3/GCS path)"
+          description: |
+            Table storage location (e.g., S3/GCS path).
+            This is the only required field and is always returned.
           type: string
         table_uri:
           description: |
-            Table URI. Unlike location, this field must be a complete and valid URI
+            Table URI. Unlike location, this field must be a complete and valid URI.
+            Only returned when `with_table_uri` is true.
           type: string
         schema:
           $ref: '#/components/schemas/JsonArrowSchema'
@@ -2958,6 +2992,8 @@ components:
             passed directly to Lance to initialize storage access.
         stats:
           $ref: '#/components/schemas/TableBasicStats'
+      required:
+      - location
     TableBasicStats:
       example:
         num_deleted_rows: 0

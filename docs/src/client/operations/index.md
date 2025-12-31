@@ -87,7 +87,7 @@ See [REST Routes](../../rest/catalog-spec.md#rest-routes) for more details.
 
 ## Recommended Basic Operations
 
-To have a functional basic namespace implementation, 
+To have a functional basic namespace implementation,
 the following metadata operations are recommended as a minimum:
 
 **Namespace Metadata Operations:**
@@ -107,6 +107,19 @@ the following metadata operations are recommended as a minimum:
 These operations provide the foundational metadata management capabilities needed for namespace and table administration
 without requiring data or index operation support. With the namespace able to provide basic information about the table,
 the Lance SDK can be used to fulfill the other operations.
+
+### Restrictions for Basic Operations
+
+The following restrictions apply to the recommended basic operations to minimize implementation complexity:
+
+**DropNamespace:** Only the `Restrict` behavior mode is required.
+This means the namespace must be empty (no tables or child namespaces) before it can be dropped.
+The `Cascade` behavior mode, which recursively drops all contents, is not required for basic implementations.
+
+**DescribeTable:** Only `load_detailed_metadata=false` (the default) is required.
+This means the implementation only needs to return the table `location` without opening the dataset.
+Returning detailed metadata such as `version`, `schema`, and `stats` (which require opening the dataset)
+is not required for basic implementations.
 
 ### Why Not `CreateTable` and `DropTable`?
 

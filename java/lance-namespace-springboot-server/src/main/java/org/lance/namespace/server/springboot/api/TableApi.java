@@ -2609,7 +2609,8 @@ public interface TableApi {
   /**
    * POST /v1/table/{id}/describe : Describe information of a table Describe the detailed
    * information for table &#x60;id&#x60;. REST NAMESPACE ONLY REST namespace passes
-   * &#x60;with_table_uri&#x60; as a query parameter instead of in the request body.
+   * &#x60;with_table_uri&#x60; and &#x60;load_detailed_metadata&#x60; as query parameters instead
+   * of in the request body.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -2621,6 +2622,10 @@ public interface TableApi {
    *     (optional)
    * @param withTableUri Whether to include the table URI in the response (optional, default to
    *     false)
+   * @param loadDetailedMetadata Whether to load detailed metadata that requires opening the
+   *     dataset. When false (default), only &#x60;location&#x60; is required in the response. When
+   *     true, the response includes additional metadata such as &#x60;version&#x60;,
+   *     &#x60;schema&#x60;, and &#x60;stats&#x60;. (optional, default to false)
    * @return Table properties result when loading a table (status code 200) or Indicates a bad
    *     request error. It could be caused by an unexpected request body format or other forms of
    *     request validation failure, such as invalid json. Usually serves application/json content,
@@ -2638,7 +2643,7 @@ public interface TableApi {
       operationId = "describeTable",
       summary = "Describe information of a table",
       description =
-          "Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` as a query parameter instead of in the request body. ",
+          "Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` and `load_detailed_metadata` as query parameters instead of in the request body. ",
       tags = {"Table", "Metadata"},
       responses = {
         @ApiResponse(
@@ -2739,7 +2744,15 @@ public interface TableApi {
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "with_table_uri", required = false, defaultValue = "false")
-          Optional<Boolean> withTableUri) {
+          Optional<Boolean> withTableUri,
+      @Parameter(
+              name = "load_detailed_metadata",
+              description =
+                  "Whether to load detailed metadata that requires opening the dataset. When false (default), only `location` is required in the response. When true, the response includes additional metadata such as `version`, `schema`, and `stats`. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "load_detailed_metadata", required = false, defaultValue = "false")
+          Optional<Boolean> loadDetailedMetadata) {
     getRequest()
         .ifPresent(
             request -> {

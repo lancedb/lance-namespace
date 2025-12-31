@@ -13,37 +13,39 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DescribeTableResponse {
-    /// Table name
+    /// Table name. Only populated when `load_detailed_metadata` is true. 
     #[serde(rename = "table", skip_serializing_if = "Option::is_none")]
     pub table: Option<String>,
-    /// The namespace identifier as a list of parts
+    /// The namespace identifier as a list of parts. Only populated when `load_detailed_metadata` is true. 
     #[serde(rename = "namespace", skip_serializing_if = "Option::is_none")]
     pub namespace: Option<Vec<String>>,
+    /// Table version number. Only populated when `load_detailed_metadata` is true. 
     #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
     pub version: Option<i64>,
-    /// Table storage location (e.g., S3/GCS path)
-    #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
-    pub location: Option<String>,
-    /// Table URI. Unlike location, this field must be a complete and valid URI 
+    /// Table storage location (e.g., S3/GCS path). This is the only required field and is always returned. 
+    #[serde(rename = "location")]
+    pub location: String,
+    /// Table URI. Unlike location, this field must be a complete and valid URI. Only returned when `with_table_uri` is true. 
     #[serde(rename = "table_uri", skip_serializing_if = "Option::is_none")]
     pub table_uri: Option<String>,
+    /// Table schema in JSON Arrow format. Only populated when `load_detailed_metadata` is true. 
     #[serde(rename = "schema", skip_serializing_if = "Option::is_none")]
     pub schema: Option<Box<models::JsonArrowSchema>>,
     /// Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. 
     #[serde(rename = "storage_options", skip_serializing_if = "Option::is_none")]
     pub storage_options: Option<std::collections::HashMap<String, String>>,
-    /// Table statistics
+    /// Table statistics. Only populated when `load_detailed_metadata` is true. 
     #[serde(rename = "stats", skip_serializing_if = "Option::is_none")]
     pub stats: Option<Box<models::TableBasicStats>>,
 }
 
 impl DescribeTableResponse {
-    pub fn new() -> DescribeTableResponse {
+    pub fn new(location: String) -> DescribeTableResponse {
         DescribeTableResponse {
             table: None,
             namespace: None,
             version: None,
-            location: None,
+            location,
             table_uri: None,
             schema: None,
             storage_options: None,

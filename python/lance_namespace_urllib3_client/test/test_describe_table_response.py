@@ -66,6 +66,7 @@ class TestDescribeTableResponse(unittest.TestCase):
             )
         else:
             return DescribeTableResponse(
+                location = '',
         )
         """
 

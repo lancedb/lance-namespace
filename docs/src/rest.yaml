@@ -388,6 +388,7 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
       - $ref: '#/components/parameters/with_table_uri'
+      - $ref: '#/components/parameters/load_detailed_metadata'
     post:
       tags:
         - Table
@@ -398,7 +399,7 @@ paths:
         Describe the detailed information for table `id`.
 
         REST NAMESPACE ONLY
-        REST namespace passes `with_table_uri` as a query parameter instead of in the request body.
+        REST namespace passes `with_table_uri` and `load_detailed_metadata` as query parameters instead of in the request body.
       requestBody:
         required: true
         content:
@@ -1835,6 +1836,17 @@ components:
       schema:
         type: boolean
         default: false
+    load_detailed_metadata:
+      name: load_detailed_metadata
+      description: |
+        Whether to load detailed metadata that requires opening the dataset.
+        When false (default), only `location` is required in the response.
+        When true, the response includes additional metadata such as `version`, `schema`, and `stats`.
+      in: query
+      required: false
+      schema:
+        type: boolean
+        default: false
 
   schemas:
     ErrorResponse:
@@ -2135,31 +2147,54 @@ components:
             Default is false.
           type: boolean
           default: false
+        load_detailed_metadata:
+          description: |
+            Whether to load detailed metadata that requires opening the dataset.
+            When false (default), only `location` is required in the response.
+            When true, the response includes additional metadata such as `version`, `schema`, and `stats`
+            which require reading the dataset.
+          type: boolean
+          default: false
 
     DescribeTableResponse:
       type: object
+      required:
+        - location
       properties:
         table:
           type: string
-          description: Table name
+          description: |
+            Table name.
+            Only populated when `load_detailed_metadata` is true.
         namespace:
           type: array
           items:
             type: string
-          description: The namespace identifier as a list of parts
+          description: |
+            The namespace identifier as a list of parts.
+            Only populated when `load_detailed_metadata` is true.
         version:
           type: integer
           format: int64
           minimum: 0
+          description: |
+            Table version number.
+            Only populated when `load_detailed_metadata` is true.
         location:
           type: string
-          description: Table storage location (e.g., S3/GCS path)
+          description: |
+            Table storage location (e.g., S3/GCS path).
+            This is the only required field and is always returned.
         table_uri:
           type: string
           description: |
-            Table URI. Unlike location, this field must be a complete and valid URI
+            Table URI. Unlike location, this field must be a complete and valid URI.
+            Only returned when `with_table_uri` is true.
         schema:
           $ref: '#/components/schemas/JsonArrowSchema'
+          description: |
+            Table schema in JSON Arrow format.
+            Only populated when `load_detailed_metadata` is true.
         storage_options:
           type: object
           description: |
@@ -2171,7 +2206,9 @@ components:
         stats:
           $ref: '#/components/schemas/TableBasicStats'
           nullable: true
-          description: Table statistics
+          description: |
+            Table statistics.
+            Only populated when `load_detailed_metadata` is true.
 
     TableBasicStats:
       type: object

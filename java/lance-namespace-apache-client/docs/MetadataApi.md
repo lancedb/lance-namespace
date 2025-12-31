@@ -1139,11 +1139,11 @@ public class Example {
 
 ## describeTable
 
-> DescribeTableResponse describeTable(id, describeTableRequest, delimiter, withTableUri)
+> DescribeTableResponse describeTable(id, describeTableRequest, delimiter, withTableUri, loadDetailedMetadata)
 
 Describe information of a table
 
-Describe the detailed information for table &#x60;id&#x60;.  REST NAMESPACE ONLY REST namespace passes &#x60;with_table_uri&#x60; as a query parameter instead of in the request body. 
+Describe the detailed information for table &#x60;id&#x60;.  REST NAMESPACE ONLY REST namespace passes &#x60;with_table_uri&#x60; and &#x60;load_detailed_metadata&#x60; as query parameters instead of in the request body. 
 
 ### Example
 
@@ -1180,8 +1180,9 @@ public class Example {
         DescribeTableRequest describeTableRequest = new DescribeTableRequest(); // DescribeTableRequest | 
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         Boolean withTableUri = false; // Boolean | Whether to include the table URI in the response
+        Boolean loadDetailedMetadata = false; // Boolean | Whether to load detailed metadata that requires opening the dataset. When false (default), only `location` is required in the response. When true, the response includes additional metadata such as `version`, `schema`, and `stats`. 
         try {
-            DescribeTableResponse result = apiInstance.describeTable(id, describeTableRequest, delimiter, withTableUri);
+            DescribeTableResponse result = apiInstance.describeTable(id, describeTableRequest, delimiter, withTableUri, loadDetailedMetadata);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling MetadataApi#describeTable");
@@ -1203,6 +1204,7 @@ public class Example {
 | **describeTableRequest** | [**DescribeTableRequest**](DescribeTableRequest.md)|  | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] |
 | **withTableUri** | **Boolean**| Whether to include the table URI in the response | [optional] [default to false] |
+| **loadDetailedMetadata** | **Boolean**| Whether to load detailed metadata that requires opening the dataset. When false (default), only &#x60;location&#x60; is required in the response. When true, the response includes additional metadata such as &#x60;version&#x60;, &#x60;schema&#x60;, and &#x60;stats&#x60;.  | [optional] [default to false] |
 
 ### Return type
 
