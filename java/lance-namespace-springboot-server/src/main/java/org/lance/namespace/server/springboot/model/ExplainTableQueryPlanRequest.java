@@ -30,6 +30,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class ExplainTableQueryPlanRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private QueryTableRequest query;
@@ -43,6 +45,27 @@ public class ExplainTableQueryPlanRequest {
   /** Constructor with only required parameters */
   public ExplainTableQueryPlanRequest(QueryTableRequest query) {
     this.query = query;
+  }
+
+  public ExplainTableQueryPlanRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
   }
 
   public ExplainTableQueryPlanRequest id(List<String> id) {
@@ -127,20 +150,22 @@ public class ExplainTableQueryPlanRequest {
       return false;
     }
     ExplainTableQueryPlanRequest explainTableQueryPlanRequest = (ExplainTableQueryPlanRequest) o;
-    return Objects.equals(this.id, explainTableQueryPlanRequest.id)
+    return Objects.equals(this.identity, explainTableQueryPlanRequest.identity)
+        && Objects.equals(this.id, explainTableQueryPlanRequest.id)
         && Objects.equals(this.query, explainTableQueryPlanRequest.query)
         && Objects.equals(this.verbose, explainTableQueryPlanRequest.verbose);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, query, verbose);
+    return Objects.hash(identity, id, query, verbose);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ExplainTableQueryPlanRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
     sb.append("    verbose: ").append(toIndentedString(verbose)).append("\n");

@@ -30,11 +30,34 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class ListTableTagsRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private String pageToken;
 
   private Integer limit;
+
+  public ListTableTagsRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
+  }
 
   public ListTableTagsRequest id(List<String> id) {
     this.id = id;
@@ -131,20 +154,22 @@ public class ListTableTagsRequest {
       return false;
     }
     ListTableTagsRequest listTableTagsRequest = (ListTableTagsRequest) o;
-    return Objects.equals(this.id, listTableTagsRequest.id)
+    return Objects.equals(this.identity, listTableTagsRequest.identity)
+        && Objects.equals(this.id, listTableTagsRequest.id)
         && Objects.equals(this.pageToken, listTableTagsRequest.pageToken)
         && Objects.equals(this.limit, listTableTagsRequest.limit);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, pageToken, limit);
+    return Objects.hash(identity, id, pageToken, limit);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ListTableTagsRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
     sb.append("    limit: ").append(toIndentedString(limit)).append("\n");

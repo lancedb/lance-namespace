@@ -35,10 +35,16 @@ class TestExplainTableQueryPlanRequest(unittest.TestCase):
         model = ExplainTableQueryPlanRequest()
         if include_optional:
             return ExplainTableQueryPlanRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],
                 query = lance_namespace_urllib3_client.models.query_table_request.QueryTableRequest(
+                    identity = lance_namespace_urllib3_client.models.identity.Identity(
+                        api_key = '', 
+                        auth_token = '', ), 
                     id = [
                         ''
                         ], 
@@ -133,6 +139,9 @@ class TestExplainTableQueryPlanRequest(unittest.TestCase):
         else:
             return ExplainTableQueryPlanRequest(
                 query = lance_namespace_urllib3_client.models.query_table_request.QueryTableRequest(
+                    identity = lance_namespace_urllib3_client.models.identity.Identity(
+                        api_key = '', 
+                        auth_token = '', ), 
                     id = [
                         ''
                         ], 

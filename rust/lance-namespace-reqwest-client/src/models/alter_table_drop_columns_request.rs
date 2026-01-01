@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AlterTableDropColumnsRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Names of columns to drop
@@ -23,6 +25,7 @@ pub struct AlterTableDropColumnsRequest {
 impl AlterTableDropColumnsRequest {
     pub fn new(columns: Vec<String>) -> AlterTableDropColumnsRequest {
         AlterTableDropColumnsRequest {
+            identity: None,
             id: None,
             columns,
         }

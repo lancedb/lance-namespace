@@ -30,9 +30,32 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DropTableIndexRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private String indexName;
+
+  public DropTableIndexRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
+  }
 
   public DropTableIndexRequest id(List<String> id) {
     this.id = id;
@@ -94,19 +117,21 @@ public class DropTableIndexRequest {
       return false;
     }
     DropTableIndexRequest dropTableIndexRequest = (DropTableIndexRequest) o;
-    return Objects.equals(this.id, dropTableIndexRequest.id)
+    return Objects.equals(this.identity, dropTableIndexRequest.identity)
+        && Objects.equals(this.id, dropTableIndexRequest.id)
         && Objects.equals(this.indexName, dropTableIndexRequest.indexName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, indexName);
+    return Objects.hash(identity, id, indexName);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DropTableIndexRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    indexName: ").append(toIndentedString(indexName)).append("\n");
     sb.append("}");

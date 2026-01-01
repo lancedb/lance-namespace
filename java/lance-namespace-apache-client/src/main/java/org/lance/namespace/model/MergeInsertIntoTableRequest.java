@@ -26,6 +26,7 @@ import java.util.StringJoiner;
 
 /** Request for merging or inserting records into a table, excluding the Arrow IPC stream. */
 @JsonPropertyOrder({
+  MergeInsertIntoTableRequest.JSON_PROPERTY_IDENTITY,
   MergeInsertIntoTableRequest.JSON_PROPERTY_ID,
   MergeInsertIntoTableRequest.JSON_PROPERTY_ON,
   MergeInsertIntoTableRequest.JSON_PROPERTY_WHEN_MATCHED_UPDATE_ALL,
@@ -40,6 +41,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class MergeInsertIntoTableRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -72,6 +76,30 @@ public class MergeInsertIntoTableRequest {
   @javax.annotation.Nullable private Boolean useIndex = false;
 
   public MergeInsertIntoTableRequest() {}
+
+  public MergeInsertIntoTableRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public MergeInsertIntoTableRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -316,7 +344,8 @@ public class MergeInsertIntoTableRequest {
       return false;
     }
     MergeInsertIntoTableRequest mergeInsertIntoTableRequest = (MergeInsertIntoTableRequest) o;
-    return Objects.equals(this.id, mergeInsertIntoTableRequest.id)
+    return Objects.equals(this.identity, mergeInsertIntoTableRequest.identity)
+        && Objects.equals(this.id, mergeInsertIntoTableRequest.id)
         && Objects.equals(this.on, mergeInsertIntoTableRequest.on)
         && Objects.equals(
             this.whenMatchedUpdateAll, mergeInsertIntoTableRequest.whenMatchedUpdateAll)
@@ -337,6 +366,7 @@ public class MergeInsertIntoTableRequest {
   @Override
   public int hashCode() {
     return Objects.hash(
+        identity,
         id,
         on,
         whenMatchedUpdateAll,
@@ -352,6 +382,7 @@ public class MergeInsertIntoTableRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class MergeInsertIntoTableRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    on: ").append(toIndentedString(on)).append("\n");
     sb.append("    whenMatchedUpdateAll: ")
@@ -416,6 +447,11 @@ public class MergeInsertIntoTableRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

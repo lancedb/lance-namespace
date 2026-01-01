@@ -5,6 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | [**Identity**](Identity.md) |  | [optional] 
 **id** | **List[str]** |  | [optional] 
 **version** | **int** | Optional table version to get stats for | [optional] 
 **index_name** | **str** | Name of the index | [optional] 

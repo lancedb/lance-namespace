@@ -28,6 +28,7 @@ import java.util.StringJoiner;
 
 /** UpdateTableSchemaMetadataRequest */
 @JsonPropertyOrder({
+  UpdateTableSchemaMetadataRequest.JSON_PROPERTY_IDENTITY,
   UpdateTableSchemaMetadataRequest.JSON_PROPERTY_ID,
   UpdateTableSchemaMetadataRequest.JSON_PROPERTY_METADATA
 })
@@ -35,6 +36,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class UpdateTableSchemaMetadataRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -42,6 +46,30 @@ public class UpdateTableSchemaMetadataRequest {
   @javax.annotation.Nullable private Map<String, String> metadata = new HashMap<>();
 
   public UpdateTableSchemaMetadataRequest() {}
+
+  public UpdateTableSchemaMetadataRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public UpdateTableSchemaMetadataRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -118,19 +146,21 @@ public class UpdateTableSchemaMetadataRequest {
     }
     UpdateTableSchemaMetadataRequest updateTableSchemaMetadataRequest =
         (UpdateTableSchemaMetadataRequest) o;
-    return Objects.equals(this.id, updateTableSchemaMetadataRequest.id)
+    return Objects.equals(this.identity, updateTableSchemaMetadataRequest.identity)
+        && Objects.equals(this.id, updateTableSchemaMetadataRequest.id)
         && Objects.equals(this.metadata, updateTableSchemaMetadataRequest.metadata);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, metadata);
+    return Objects.hash(identity, id, metadata);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UpdateTableSchemaMetadataRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("}");
@@ -178,6 +208,11 @@ public class UpdateTableSchemaMetadataRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

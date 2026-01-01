@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,10 +27,11 @@ class DropNamespaceRequest(BaseModel):
     """
     DropNamespaceRequest
     """ # noqa: E501
+    identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = None
     mode: Optional[StrictStr] = Field(default=None, description="The mode for dropping a namespace, deciding the server behavior when the namespace to drop is not found. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Fail (default): the server must return 400 indicating the namespace to drop does not exist. - Skip: the server must return 204 indicating the drop operation has succeeded. ")
     behavior: Optional[StrictStr] = Field(default=None, description="The behavior for dropping a namespace. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Restrict (default): the namespace should not contain any table or child namespace when drop is initiated.     If tables are found, the server should return error and not drop the namespace. - Cascade: all tables and child namespaces in the namespace are dropped before the namespace is dropped. ")
-    __properties: ClassVar[List[str]] = ["id", "mode", "behavior"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "mode", "behavior"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -70,6 +72,9 @@ class DropNamespaceRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of identity
+        if self.identity:
+            _dict['identity'] = self.identity.to_dict()
         return _dict
 
     @classmethod
@@ -82,6 +87,7 @@ class DropNamespaceRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
             "mode": obj.get("mode"),
             "behavior": obj.get("behavior")

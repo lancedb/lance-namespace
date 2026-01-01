@@ -35,6 +35,9 @@ class TestRestoreTableRequest(unittest.TestCase):
         model = RestoreTableRequest()
         if include_optional:
             return RestoreTableRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

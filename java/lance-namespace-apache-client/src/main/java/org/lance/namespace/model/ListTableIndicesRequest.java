@@ -26,6 +26,7 @@ import java.util.StringJoiner;
 
 /** ListTableIndicesRequest */
 @JsonPropertyOrder({
+  ListTableIndicesRequest.JSON_PROPERTY_IDENTITY,
   ListTableIndicesRequest.JSON_PROPERTY_ID,
   ListTableIndicesRequest.JSON_PROPERTY_VERSION,
   ListTableIndicesRequest.JSON_PROPERTY_PAGE_TOKEN,
@@ -35,6 +36,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class ListTableIndicesRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -48,6 +52,30 @@ public class ListTableIndicesRequest {
   @javax.annotation.Nullable private Integer limit;
 
   public ListTableIndicesRequest() {}
+
+  public ListTableIndicesRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public ListTableIndicesRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -169,7 +197,8 @@ public class ListTableIndicesRequest {
       return false;
     }
     ListTableIndicesRequest listTableIndicesRequest = (ListTableIndicesRequest) o;
-    return Objects.equals(this.id, listTableIndicesRequest.id)
+    return Objects.equals(this.identity, listTableIndicesRequest.identity)
+        && Objects.equals(this.id, listTableIndicesRequest.id)
         && Objects.equals(this.version, listTableIndicesRequest.version)
         && Objects.equals(this.pageToken, listTableIndicesRequest.pageToken)
         && Objects.equals(this.limit, listTableIndicesRequest.limit);
@@ -177,13 +206,14 @@ public class ListTableIndicesRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version, pageToken, limit);
+    return Objects.hash(identity, id, version, pageToken, limit);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ListTableIndicesRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
@@ -233,6 +263,11 @@ public class ListTableIndicesRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

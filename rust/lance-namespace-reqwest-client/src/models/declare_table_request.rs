@@ -14,6 +14,8 @@ use serde::{Deserialize, Serialize};
 /// DeclareTableRequest : Request for declaring a table. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DeclareTableRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Optional storage location for the table. If not provided, the namespace implementation should determine the table location. 
@@ -25,6 +27,7 @@ impl DeclareTableRequest {
     /// Request for declaring a table. 
     pub fn new() -> DeclareTableRequest {
         DeclareTableRequest {
+            identity: None,
             id: None,
             location: None,
         }

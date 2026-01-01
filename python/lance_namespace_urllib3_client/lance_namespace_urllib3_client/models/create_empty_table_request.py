@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,9 +27,10 @@ class CreateEmptyTableRequest(BaseModel):
     """
     Request for creating an empty table.  **Deprecated**: Use `DeclareTableRequest` instead. 
     """ # noqa: E501
+    identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = None
     location: Optional[StrictStr] = Field(default=None, description="Optional storage location for the table. If not provided, the namespace implementation should determine the table location. ")
-    __properties: ClassVar[List[str]] = ["id", "location"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "location"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -69,6 +71,9 @@ class CreateEmptyTableRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of identity
+        if self.identity:
+            _dict['identity'] = self.identity.to_dict()
         return _dict
 
     @classmethod
@@ -81,6 +86,7 @@ class CreateEmptyTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
             "location": obj.get("location")
         })

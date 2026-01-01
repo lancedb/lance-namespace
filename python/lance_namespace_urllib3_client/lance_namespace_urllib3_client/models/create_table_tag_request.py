@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,10 +28,11 @@ class CreateTableTagRequest(BaseModel):
     """
     CreateTableTagRequest
     """ # noqa: E501
+    identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = None
     tag: StrictStr = Field(description="Name of the tag to create")
     version: Annotated[int, Field(strict=True, ge=0)] = Field(description="Version number for the tag to point to")
-    __properties: ClassVar[List[str]] = ["id", "tag", "version"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "tag", "version"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -71,6 +73,9 @@ class CreateTableTagRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of identity
+        if self.identity:
+            _dict['identity'] = self.identity.to_dict()
         return _dict
 
     @classmethod
@@ -83,6 +88,7 @@ class CreateTableTagRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
             "tag": obj.get("tag"),
             "version": obj.get("version")

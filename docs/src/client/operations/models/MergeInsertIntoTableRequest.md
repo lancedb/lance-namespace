@@ -8,6 +8,7 @@ Request for merging or inserting records into a table, excluding the Arrow IPC s
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
+|**identity** | [**Identity**](Identity.md) |  |  [optional] |
 |**id** | **List&lt;String&gt;** |  |  [optional] |
 |**on** | **String** | Column name to use for matching rows (required) |  [optional] |
 |**whenMatchedUpdateAll** | **Boolean** | Update all columns when rows match |  [optional] |

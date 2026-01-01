@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | Option<[**models::Identity**](Identity.md)> |  | [optional]
 **id** | Option<**Vec<String>**> |  | [optional]
 **alterations** | [**Vec<models::AlterColumnsEntry>**](AlterColumnsEntry.md) | List of column alterations to perform | 
 

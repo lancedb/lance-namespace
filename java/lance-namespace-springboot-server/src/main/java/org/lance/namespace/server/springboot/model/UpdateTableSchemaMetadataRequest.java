@@ -32,9 +32,32 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class UpdateTableSchemaMetadataRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   @Valid private Map<String, String> metadata = new HashMap<>();
+
+  public UpdateTableSchemaMetadataRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
+  }
 
   public UpdateTableSchemaMetadataRequest id(List<String> id) {
     this.id = id;
@@ -108,19 +131,21 @@ public class UpdateTableSchemaMetadataRequest {
     }
     UpdateTableSchemaMetadataRequest updateTableSchemaMetadataRequest =
         (UpdateTableSchemaMetadataRequest) o;
-    return Objects.equals(this.id, updateTableSchemaMetadataRequest.id)
+    return Objects.equals(this.identity, updateTableSchemaMetadataRequest.identity)
+        && Objects.equals(this.id, updateTableSchemaMetadataRequest.id)
         && Objects.equals(this.metadata, updateTableSchemaMetadataRequest.metadata);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, metadata);
+    return Objects.hash(identity, id, metadata);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UpdateTableSchemaMetadataRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("}");

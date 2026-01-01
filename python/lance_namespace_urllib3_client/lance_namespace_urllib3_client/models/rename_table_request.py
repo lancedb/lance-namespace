@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,10 +27,11 @@ class RenameTableRequest(BaseModel):
     """
     RenameTableRequest
     """ # noqa: E501
+    identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = Field(default=None, description="The table identifier")
     new_table_name: StrictStr = Field(description="New name for the table")
     new_namespace_id: Optional[List[StrictStr]] = Field(default=None, description="New namespace identifier to move the table to (optional, if not specified the table stays in the same namespace)")
-    __properties: ClassVar[List[str]] = ["id", "new_table_name", "new_namespace_id"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "new_table_name", "new_namespace_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -70,6 +72,9 @@ class RenameTableRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of identity
+        if self.identity:
+            _dict['identity'] = self.identity.to_dict()
         return _dict
 
     @classmethod
@@ -82,6 +87,7 @@ class RenameTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
             "new_table_name": obj.get("new_table_name"),
             "new_namespace_id": obj.get("new_namespace_id")

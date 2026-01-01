@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RegisterTableRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     #[serde(rename = "location")]
@@ -27,6 +29,7 @@ pub struct RegisterTableRequest {
 impl RegisterTableRequest {
     pub fn new(location: String) -> RegisterTableRequest {
         RegisterTableRequest {
+            identity: None,
             id: None,
             location,
             mode: None,

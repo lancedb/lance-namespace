@@ -124,6 +124,8 @@ pub mod get_table_tag_version_request;
 pub use self::get_table_tag_version_request::GetTableTagVersionRequest;
 pub mod get_table_tag_version_response;
 pub use self::get_table_tag_version_response::GetTableTagVersionResponse;
+pub mod identity;
+pub use self::identity::Identity;
 pub mod index_content;
 pub use self::index_content::IndexContent;
 pub mod insert_into_table_request;

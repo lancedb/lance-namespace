@@ -30,6 +30,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class QueryTableRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private Boolean bypassVectorIndex;
@@ -76,6 +78,27 @@ public class QueryTableRequest {
   public QueryTableRequest(Integer k, QueryTableRequestVector vector) {
     this.k = k;
     this.vector = vector;
+  }
+
+  public QueryTableRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
   }
 
   public QueryTableRequest id(List<String> id) {
@@ -531,7 +554,8 @@ public class QueryTableRequest {
       return false;
     }
     QueryTableRequest queryTableRequest = (QueryTableRequest) o;
-    return Objects.equals(this.id, queryTableRequest.id)
+    return Objects.equals(this.identity, queryTableRequest.identity)
+        && Objects.equals(this.id, queryTableRequest.id)
         && Objects.equals(this.bypassVectorIndex, queryTableRequest.bypassVectorIndex)
         && Objects.equals(this.columns, queryTableRequest.columns)
         && Objects.equals(this.distanceType, queryTableRequest.distanceType)
@@ -555,6 +579,7 @@ public class QueryTableRequest {
   @Override
   public int hashCode() {
     return Objects.hash(
+        identity,
         id,
         bypassVectorIndex,
         columns,
@@ -580,6 +605,7 @@ public class QueryTableRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class QueryTableRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    bypassVectorIndex: ").append(toIndentedString(bypassVectorIndex)).append("\n");
     sb.append("    columns: ").append(toIndentedString(columns)).append("\n");

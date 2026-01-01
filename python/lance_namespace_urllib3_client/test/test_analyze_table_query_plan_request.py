@@ -35,6 +35,9 @@ class TestAnalyzeTableQueryPlanRequest(unittest.TestCase):
         model = AnalyzeTableQueryPlanRequest()
         if include_optional:
             return AnalyzeTableQueryPlanRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

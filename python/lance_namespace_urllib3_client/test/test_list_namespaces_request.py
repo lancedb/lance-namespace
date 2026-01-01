@@ -35,6 +35,9 @@ class TestListNamespacesRequest(unittest.TestCase):
         model = ListNamespacesRequest()
         if include_optional:
             return ListNamespacesRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

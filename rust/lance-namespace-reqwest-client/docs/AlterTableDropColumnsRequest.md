@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | Option<[**models::Identity**](Identity.md)> |  | [optional]
 **id** | Option<**Vec<String>**> |  | [optional]
 **columns** | **Vec<String>** | Names of columns to drop | 
 

@@ -7,6 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
+|**identity** | [**Identity**](Identity.md) |  |  [optional] |
 |**id** | **List&lt;String&gt;** |  |  [optional] |
 |**column** | **String** | Name of the column to create index on |  |
 |**indexType** | **String** | Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS) |  |

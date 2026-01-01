@@ -5,6 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | [**Identity**](Identity.md) |  | [optional] 
 **id** | **List[str]** |  | [optional] 
 **bypass_vector_index** | **bool** | Whether to bypass vector index | [optional] 
 **columns** | [**QueryTableRequestColumns**](QueryTableRequestColumns.md) |  | [optional] 

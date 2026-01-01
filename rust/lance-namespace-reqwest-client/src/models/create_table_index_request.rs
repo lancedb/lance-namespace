@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateTableIndexRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Name of the column to create index on
@@ -56,6 +58,7 @@ pub struct CreateTableIndexRequest {
 impl CreateTableIndexRequest {
     pub fn new(column: String, index_type: String) -> CreateTableIndexRequest {
         CreateTableIndexRequest {
+            identity: None,
             id: None,
             column,
             index_type,

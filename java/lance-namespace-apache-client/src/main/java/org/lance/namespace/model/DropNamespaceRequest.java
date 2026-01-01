@@ -26,6 +26,7 @@ import java.util.StringJoiner;
 
 /** DropNamespaceRequest */
 @JsonPropertyOrder({
+  DropNamespaceRequest.JSON_PROPERTY_IDENTITY,
   DropNamespaceRequest.JSON_PROPERTY_ID,
   DropNamespaceRequest.JSON_PROPERTY_MODE,
   DropNamespaceRequest.JSON_PROPERTY_BEHAVIOR
@@ -34,6 +35,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DropNamespaceRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -44,6 +48,30 @@ public class DropNamespaceRequest {
   @javax.annotation.Nullable private String behavior;
 
   public DropNamespaceRequest() {}
+
+  public DropNamespaceRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public DropNamespaceRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -141,20 +169,22 @@ public class DropNamespaceRequest {
       return false;
     }
     DropNamespaceRequest dropNamespaceRequest = (DropNamespaceRequest) o;
-    return Objects.equals(this.id, dropNamespaceRequest.id)
+    return Objects.equals(this.identity, dropNamespaceRequest.identity)
+        && Objects.equals(this.id, dropNamespaceRequest.id)
         && Objects.equals(this.mode, dropNamespaceRequest.mode)
         && Objects.equals(this.behavior, dropNamespaceRequest.behavior);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, mode, behavior);
+    return Objects.hash(identity, id, mode, behavior);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DropNamespaceRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    behavior: ").append(toIndentedString(behavior)).append("\n");
@@ -203,6 +233,11 @@ public class DropNamespaceRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

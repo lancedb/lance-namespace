@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct UpdateTableSchemaMetadataRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     /// The table identifier
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
@@ -24,6 +26,7 @@ pub struct UpdateTableSchemaMetadataRequest {
 impl UpdateTableSchemaMetadataRequest {
     pub fn new() -> UpdateTableSchemaMetadataRequest {
         UpdateTableSchemaMetadataRequest {
+            identity: None,
             id: None,
             metadata: None,
         }

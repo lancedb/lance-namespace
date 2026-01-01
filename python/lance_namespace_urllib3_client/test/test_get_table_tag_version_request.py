@@ -35,6 +35,9 @@ class TestGetTableTagVersionRequest(unittest.TestCase):
         model = GetTableTagVersionRequest()
         if include_optional:
             return GetTableTagVersionRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

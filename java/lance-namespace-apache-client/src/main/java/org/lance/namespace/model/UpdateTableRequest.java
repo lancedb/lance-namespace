@@ -29,6 +29,7 @@ import java.util.StringJoiner;
  * current row&#39;s value. Optionally, a predicate can be provided to filter which rows to update.
  */
 @JsonPropertyOrder({
+  UpdateTableRequest.JSON_PROPERTY_IDENTITY,
   UpdateTableRequest.JSON_PROPERTY_ID,
   UpdateTableRequest.JSON_PROPERTY_PREDICATE,
   UpdateTableRequest.JSON_PROPERTY_UPDATES
@@ -37,6 +38,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class UpdateTableRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -47,6 +51,30 @@ public class UpdateTableRequest {
   @javax.annotation.Nonnull private List<List<String>> updates = new ArrayList<>();
 
   public UpdateTableRequest() {}
+
+  public UpdateTableRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public UpdateTableRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -145,20 +173,22 @@ public class UpdateTableRequest {
       return false;
     }
     UpdateTableRequest updateTableRequest = (UpdateTableRequest) o;
-    return Objects.equals(this.id, updateTableRequest.id)
+    return Objects.equals(this.identity, updateTableRequest.identity)
+        && Objects.equals(this.id, updateTableRequest.id)
         && Objects.equals(this.predicate, updateTableRequest.predicate)
         && Objects.equals(this.updates, updateTableRequest.updates);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, predicate, updates);
+    return Objects.hash(identity, id, predicate, updates);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UpdateTableRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    predicate: ").append(toIndentedString(predicate)).append("\n");
     sb.append("    updates: ").append(toIndentedString(updates)).append("\n");
@@ -207,6 +237,11 @@ public class UpdateTableRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

@@ -26,6 +26,7 @@ import java.util.StringJoiner;
 
 /** DescribeTableIndexStatsRequest */
 @JsonPropertyOrder({
+  DescribeTableIndexStatsRequest.JSON_PROPERTY_IDENTITY,
   DescribeTableIndexStatsRequest.JSON_PROPERTY_ID,
   DescribeTableIndexStatsRequest.JSON_PROPERTY_VERSION,
   DescribeTableIndexStatsRequest.JSON_PROPERTY_INDEX_NAME
@@ -34,6 +35,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DescribeTableIndexStatsRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -44,6 +48,30 @@ public class DescribeTableIndexStatsRequest {
   @javax.annotation.Nullable private String indexName;
 
   public DescribeTableIndexStatsRequest() {}
+
+  public DescribeTableIndexStatsRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public DescribeTableIndexStatsRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -135,20 +163,22 @@ public class DescribeTableIndexStatsRequest {
     }
     DescribeTableIndexStatsRequest describeTableIndexStatsRequest =
         (DescribeTableIndexStatsRequest) o;
-    return Objects.equals(this.id, describeTableIndexStatsRequest.id)
+    return Objects.equals(this.identity, describeTableIndexStatsRequest.identity)
+        && Objects.equals(this.id, describeTableIndexStatsRequest.id)
         && Objects.equals(this.version, describeTableIndexStatsRequest.version)
         && Objects.equals(this.indexName, describeTableIndexStatsRequest.indexName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version, indexName);
+    return Objects.hash(identity, id, version, indexName);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeTableIndexStatsRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    indexName: ").append(toIndentedString(indexName)).append("\n");
@@ -197,6 +227,11 @@ public class DescribeTableIndexStatsRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

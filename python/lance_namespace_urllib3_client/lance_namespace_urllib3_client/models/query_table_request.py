@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
+from lance_namespace_urllib3_client.models.identity import Identity
 from lance_namespace_urllib3_client.models.query_table_request_columns import QueryTableRequestColumns
 from lance_namespace_urllib3_client.models.query_table_request_full_text_query import QueryTableRequestFullTextQuery
 from lance_namespace_urllib3_client.models.query_table_request_vector import QueryTableRequestVector
@@ -30,6 +31,7 @@ class QueryTableRequest(BaseModel):
     """
     QueryTableRequest
     """ # noqa: E501
+    identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = None
     bypass_vector_index: Optional[StrictBool] = Field(default=None, description="Whether to bypass vector index")
     columns: Optional[QueryTableRequestColumns] = None
@@ -49,7 +51,7 @@ class QueryTableRequest(BaseModel):
     vector_column: Optional[StrictStr] = Field(default=None, description="Name of the vector column to search")
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Table version to query")
     with_row_id: Optional[StrictBool] = Field(default=None, description="If true, return the row id as a column called `_rowid`")
-    __properties: ClassVar[List[str]] = ["id", "bypass_vector_index", "columns", "distance_type", "ef", "fast_search", "filter", "full_text_query", "k", "lower_bound", "nprobes", "offset", "prefilter", "refine_factor", "upper_bound", "vector", "vector_column", "version", "with_row_id"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "bypass_vector_index", "columns", "distance_type", "ef", "fast_search", "filter", "full_text_query", "k", "lower_bound", "nprobes", "offset", "prefilter", "refine_factor", "upper_bound", "vector", "vector_column", "version", "with_row_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -90,6 +92,9 @@ class QueryTableRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of identity
+        if self.identity:
+            _dict['identity'] = self.identity.to_dict()
         # override the default output from pydantic by calling `to_dict()` of columns
         if self.columns:
             _dict['columns'] = self.columns.to_dict()
@@ -111,6 +116,7 @@ class QueryTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
             "bypass_vector_index": obj.get("bypass_vector_index"),
             "columns": QueryTableRequestColumns.from_dict(obj["columns"]) if obj.get("columns") is not None else None,

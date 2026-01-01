@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | Option<[**models::Identity**](Identity.md)> |  | [optional]
 **id** | Option<**Vec<String>**> |  | [optional]
 **mode** | Option<**String**> | How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it  | [optional][default to append]
 

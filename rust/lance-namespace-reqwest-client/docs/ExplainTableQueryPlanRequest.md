@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | Option<[**models::Identity**](Identity.md)> |  | [optional]
 **id** | Option<**Vec<String>**> |  | [optional]
 **query** | [**models::QueryTableRequest**](QueryTableRequest.md) |  | 
 **verbose** | Option<**bool**> | Whether to return verbose explanation | [optional][default to false]

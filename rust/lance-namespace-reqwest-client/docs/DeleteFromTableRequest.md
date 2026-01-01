@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | Option<[**models::Identity**](Identity.md)> |  | [optional]
 **id** | Option<**Vec<String>**> | The namespace identifier | [optional]
 **predicate** | **String** | SQL predicate to filter rows for deletion | 
 

@@ -35,6 +35,9 @@ class TestQueryTableRequest(unittest.TestCase):
         model = QueryTableRequest()
         if include_optional:
             return QueryTableRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

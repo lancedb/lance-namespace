@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,12 +28,13 @@ class DescribeTableRequest(BaseModel):
     """
     DescribeTableRequest
     """ # noqa: E501
+    identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = None
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Version of the table to describe. If not specified, server should resolve it to the latest version. ")
     with_table_uri: Optional[StrictBool] = Field(default=False, description="Whether to include the table URI in the response. Default is false. ")
     load_detailed_metadata: Optional[StrictBool] = Field(default=None, description="Whether to load detailed metadata that requires opening the dataset. When true, the response must include all detailed metadata such as `version`, `schema`, and `stats` which require reading the dataset. When not set, the implementation can decide whether to return detailed metadata and which parts of detailed metadata to return. ")
     vend_credentials: Optional[StrictBool] = Field(default=None, description="Whether to include vended credentials in the response `storage_options`. When true, the implementation should provide vended credentials for accessing storage. When not set, the implementation can decide whether to return vended credentials. ")
-    __properties: ClassVar[List[str]] = ["id", "version", "with_table_uri", "load_detailed_metadata", "vend_credentials"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "version", "with_table_uri", "load_detailed_metadata", "vend_credentials"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -73,6 +75,9 @@ class DescribeTableRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of identity
+        if self.identity:
+            _dict['identity'] = self.identity.to_dict()
         return _dict
 
     @classmethod
@@ -85,6 +90,7 @@ class DescribeTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
             "version": obj.get("version"),
             "with_table_uri": obj.get("with_table_uri") if obj.get("with_table_uri") is not None else False,

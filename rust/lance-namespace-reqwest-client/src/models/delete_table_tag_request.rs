@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DeleteTableTagRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Name of the tag to delete
@@ -23,6 +25,7 @@ pub struct DeleteTableTagRequest {
 impl DeleteTableTagRequest {
     pub fn new(tag: String) -> DeleteTableTagRequest {
         DeleteTableTagRequest {
+            identity: None,
             id: None,
             tag,
         }

@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | Option<[**models::Identity**](Identity.md)> |  | [optional]
 **id** | Option<**Vec<String>**> |  | [optional]
 **on** | Option<**String**> | Column name to use for matching rows (required) | [optional]
 **when_matched_update_all** | Option<**bool**> | Update all columns when rows match | [optional][default to false]

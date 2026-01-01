@@ -6,6 +6,7 @@ Request for declaring a table.
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | [**Identity**](Identity.md) |  | [optional] 
 **id** | **List[str]** |  | [optional] 
 **location** | **str** | Optional storage location for the table. If not provided, the namespace implementation should determine the table location.  | [optional] 
 

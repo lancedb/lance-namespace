@@ -37,6 +37,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class AlterTransactionRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   @Valid private List<@Valid AlterTransactionAction> actions = new ArrayList<>();
@@ -48,6 +50,27 @@ public class AlterTransactionRequest {
   /** Constructor with only required parameters */
   public AlterTransactionRequest(List<@Valid AlterTransactionAction> actions) {
     this.actions = actions;
+  }
+
+  public AlterTransactionRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
   }
 
   public AlterTransactionRequest id(List<String> id) {
@@ -118,19 +141,21 @@ public class AlterTransactionRequest {
       return false;
     }
     AlterTransactionRequest alterTransactionRequest = (AlterTransactionRequest) o;
-    return Objects.equals(this.id, alterTransactionRequest.id)
+    return Objects.equals(this.identity, alterTransactionRequest.identity)
+        && Objects.equals(this.id, alterTransactionRequest.id)
         && Objects.equals(this.actions, alterTransactionRequest.actions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, actions);
+    return Objects.hash(identity, id, actions);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTransactionRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    actions: ").append(toIndentedString(actions)).append("\n");
     sb.append("}");

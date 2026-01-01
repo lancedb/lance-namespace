@@ -30,6 +30,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class AnalyzeTableQueryPlanRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private Boolean bypassVectorIndex;
@@ -76,6 +78,27 @@ public class AnalyzeTableQueryPlanRequest {
   public AnalyzeTableQueryPlanRequest(Integer k, QueryTableRequestVector vector) {
     this.k = k;
     this.vector = vector;
+  }
+
+  public AnalyzeTableQueryPlanRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
   }
 
   public AnalyzeTableQueryPlanRequest id(List<String> id) {
@@ -531,7 +554,8 @@ public class AnalyzeTableQueryPlanRequest {
       return false;
     }
     AnalyzeTableQueryPlanRequest analyzeTableQueryPlanRequest = (AnalyzeTableQueryPlanRequest) o;
-    return Objects.equals(this.id, analyzeTableQueryPlanRequest.id)
+    return Objects.equals(this.identity, analyzeTableQueryPlanRequest.identity)
+        && Objects.equals(this.id, analyzeTableQueryPlanRequest.id)
         && Objects.equals(this.bypassVectorIndex, analyzeTableQueryPlanRequest.bypassVectorIndex)
         && Objects.equals(this.columns, analyzeTableQueryPlanRequest.columns)
         && Objects.equals(this.distanceType, analyzeTableQueryPlanRequest.distanceType)
@@ -555,6 +579,7 @@ public class AnalyzeTableQueryPlanRequest {
   @Override
   public int hashCode() {
     return Objects.hash(
+        identity,
         id,
         bypassVectorIndex,
         columns,
@@ -580,6 +605,7 @@ public class AnalyzeTableQueryPlanRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AnalyzeTableQueryPlanRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    bypassVectorIndex: ").append(toIndentedString(bypassVectorIndex)).append("\n");
     sb.append("    columns: ").append(toIndentedString(columns)).append("\n");

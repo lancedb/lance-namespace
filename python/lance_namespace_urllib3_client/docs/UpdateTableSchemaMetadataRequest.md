@@ -5,6 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | [**Identity**](Identity.md) |  | [optional] 
 **id** | **List[str]** | The table identifier | [optional] 
 **metadata** | **Dict[str, str]** | Schema metadata key-value pairs to set | [optional] 
 

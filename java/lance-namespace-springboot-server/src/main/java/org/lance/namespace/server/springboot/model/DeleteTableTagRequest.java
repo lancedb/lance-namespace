@@ -30,6 +30,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DeleteTableTagRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private String tag;
@@ -41,6 +43,27 @@ public class DeleteTableTagRequest {
   /** Constructor with only required parameters */
   public DeleteTableTagRequest(String tag) {
     this.tag = tag;
+  }
+
+  public DeleteTableTagRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
   }
 
   public DeleteTableTagRequest id(List<String> id) {
@@ -104,19 +127,21 @@ public class DeleteTableTagRequest {
       return false;
     }
     DeleteTableTagRequest deleteTableTagRequest = (DeleteTableTagRequest) o;
-    return Objects.equals(this.id, deleteTableTagRequest.id)
+    return Objects.equals(this.identity, deleteTableTagRequest.identity)
+        && Objects.equals(this.id, deleteTableTagRequest.id)
         && Objects.equals(this.tag, deleteTableTagRequest.tag);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tag);
+    return Objects.hash(identity, id, tag);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeleteTableTagRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tag: ").append(toIndentedString(tag)).append("\n");
     sb.append("}");

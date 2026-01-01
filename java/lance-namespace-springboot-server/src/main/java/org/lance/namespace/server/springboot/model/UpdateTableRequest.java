@@ -37,6 +37,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class UpdateTableRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private String predicate;
@@ -50,6 +52,27 @@ public class UpdateTableRequest {
   /** Constructor with only required parameters */
   public UpdateTableRequest(List<List<String>> updates) {
     this.updates = updates;
+  }
+
+  public UpdateTableRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
   }
 
   public UpdateTableRequest id(List<String> id) {
@@ -145,20 +168,22 @@ public class UpdateTableRequest {
       return false;
     }
     UpdateTableRequest updateTableRequest = (UpdateTableRequest) o;
-    return Objects.equals(this.id, updateTableRequest.id)
+    return Objects.equals(this.identity, updateTableRequest.identity)
+        && Objects.equals(this.id, updateTableRequest.id)
         && Objects.equals(this.predicate, updateTableRequest.predicate)
         && Objects.equals(this.updates, updateTableRequest.updates);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, predicate, updates);
+    return Objects.hash(identity, id, predicate, updates);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UpdateTableRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    predicate: ").append(toIndentedString(predicate)).append("\n");
     sb.append("    updates: ").append(toIndentedString(updates)).append("\n");

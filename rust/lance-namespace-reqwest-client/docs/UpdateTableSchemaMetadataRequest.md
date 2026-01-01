@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | Option<[**models::Identity**](Identity.md)> |  | [optional]
 **id** | Option<**Vec<String>**> | The table identifier | [optional]
 **metadata** | Option<**std::collections::HashMap<String, String>**> | Schema metadata key-value pairs to set | [optional]
 

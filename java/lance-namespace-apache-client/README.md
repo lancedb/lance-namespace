@@ -296,6 +296,7 @@ Class | Method | HTTP request | Description
  - [GetTableStatsResponse](docs/GetTableStatsResponse.md)
  - [GetTableTagVersionRequest](docs/GetTableTagVersionRequest.md)
  - [GetTableTagVersionResponse](docs/GetTableTagVersionResponse.md)
+ - [Identity](docs/Identity.md)
  - [IndexContent](docs/IndexContent.md)
  - [InsertIntoTableRequest](docs/InsertIntoTableRequest.md)
  - [InsertIntoTableResponse](docs/InsertIntoTableResponse.md)

@@ -14,6 +14,8 @@ use serde::{Deserialize, Serialize};
 /// MergeInsertIntoTableRequest : Request for merging or inserting records into a table, excluding the Arrow IPC stream. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MergeInsertIntoTableRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Column name to use for matching rows (required)
@@ -46,6 +48,7 @@ impl MergeInsertIntoTableRequest {
     /// Request for merging or inserting records into a table, excluding the Arrow IPC stream. 
     pub fn new() -> MergeInsertIntoTableRequest {
         MergeInsertIntoTableRequest {
+            identity: None,
             id: None,
             on: None,
             when_matched_update_all: None,

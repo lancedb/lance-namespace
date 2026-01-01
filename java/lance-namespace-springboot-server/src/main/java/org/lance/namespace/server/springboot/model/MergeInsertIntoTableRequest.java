@@ -34,6 +34,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class MergeInsertIntoTableRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private String on;
@@ -51,6 +53,27 @@ public class MergeInsertIntoTableRequest {
   private String timeout;
 
   private Boolean useIndex = false;
+
+  public MergeInsertIntoTableRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
+  }
 
   public MergeInsertIntoTableRequest id(List<String> id) {
     this.id = id;
@@ -278,7 +301,8 @@ public class MergeInsertIntoTableRequest {
       return false;
     }
     MergeInsertIntoTableRequest mergeInsertIntoTableRequest = (MergeInsertIntoTableRequest) o;
-    return Objects.equals(this.id, mergeInsertIntoTableRequest.id)
+    return Objects.equals(this.identity, mergeInsertIntoTableRequest.identity)
+        && Objects.equals(this.id, mergeInsertIntoTableRequest.id)
         && Objects.equals(this.on, mergeInsertIntoTableRequest.on)
         && Objects.equals(
             this.whenMatchedUpdateAll, mergeInsertIntoTableRequest.whenMatchedUpdateAll)
@@ -299,6 +323,7 @@ public class MergeInsertIntoTableRequest {
   @Override
   public int hashCode() {
     return Objects.hash(
+        identity,
         id,
         on,
         whenMatchedUpdateAll,
@@ -314,6 +339,7 @@ public class MergeInsertIntoTableRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class MergeInsertIntoTableRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    on: ").append(toIndentedString(on)).append("\n");
     sb.append("    whenMatchedUpdateAll: ")

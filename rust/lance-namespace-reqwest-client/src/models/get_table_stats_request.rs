@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetTableStatsRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
 }
@@ -20,6 +22,7 @@ pub struct GetTableStatsRequest {
 impl GetTableStatsRequest {
     pub fn new() -> GetTableStatsRequest {
         GetTableStatsRequest {
+            identity: None,
             id: None,
         }
     }

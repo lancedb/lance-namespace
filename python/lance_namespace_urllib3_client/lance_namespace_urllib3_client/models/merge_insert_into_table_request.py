@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,6 +27,7 @@ class MergeInsertIntoTableRequest(BaseModel):
     """
     Request for merging or inserting records into a table, excluding the Arrow IPC stream. 
     """ # noqa: E501
+    identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = None
     on: Optional[StrictStr] = Field(default=None, description="Column name to use for matching rows (required)")
     when_matched_update_all: Optional[StrictBool] = Field(default=False, description="Update all columns when rows match")
@@ -35,7 +37,7 @@ class MergeInsertIntoTableRequest(BaseModel):
     when_not_matched_by_source_delete_filt: Optional[StrictStr] = Field(default=None, description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true")
     timeout: Optional[StrictStr] = Field(default=None, description="Timeout for the operation (e.g., \"30s\", \"5m\")")
     use_index: Optional[StrictBool] = Field(default=False, description="Whether to use index for matching rows")
-    __properties: ClassVar[List[str]] = ["id", "on", "when_matched_update_all", "when_matched_update_all_filt", "when_not_matched_insert_all", "when_not_matched_by_source_delete", "when_not_matched_by_source_delete_filt", "timeout", "use_index"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "on", "when_matched_update_all", "when_matched_update_all_filt", "when_not_matched_insert_all", "when_not_matched_by_source_delete", "when_not_matched_by_source_delete_filt", "timeout", "use_index"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -76,6 +78,9 @@ class MergeInsertIntoTableRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of identity
+        if self.identity:
+            _dict['identity'] = self.identity.to_dict()
         return _dict
 
     @classmethod
@@ -88,6 +93,7 @@ class MergeInsertIntoTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
             "on": obj.get("on"),
             "when_matched_update_all": obj.get("when_matched_update_all") if obj.get("when_matched_update_all") is not None else False,

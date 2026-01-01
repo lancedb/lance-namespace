@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from lance_namespace_urllib3_client.models.alter_columns_entry import AlterColumnsEntry
+from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,9 +28,10 @@ class AlterTableAlterColumnsRequest(BaseModel):
     """
     AlterTableAlterColumnsRequest
     """ # noqa: E501
+    identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = None
     alterations: List[AlterColumnsEntry] = Field(description="List of column alterations to perform")
-    __properties: ClassVar[List[str]] = ["id", "alterations"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "alterations"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -70,6 +72,9 @@ class AlterTableAlterColumnsRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of identity
+        if self.identity:
+            _dict['identity'] = self.identity.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in alterations (list)
         _items = []
         if self.alterations:
@@ -89,6 +94,7 @@ class AlterTableAlterColumnsRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
             "alterations": [AlterColumnsEntry.from_dict(_item) for _item in obj["alterations"]] if obj.get("alterations") is not None else None
         })

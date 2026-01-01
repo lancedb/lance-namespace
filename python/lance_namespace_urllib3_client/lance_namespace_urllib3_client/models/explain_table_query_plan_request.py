@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from lance_namespace_urllib3_client.models.identity import Identity
 from lance_namespace_urllib3_client.models.query_table_request import QueryTableRequest
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,10 +28,11 @@ class ExplainTableQueryPlanRequest(BaseModel):
     """
     ExplainTableQueryPlanRequest
     """ # noqa: E501
+    identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = None
     query: QueryTableRequest
     verbose: Optional[StrictBool] = Field(default=False, description="Whether to return verbose explanation")
-    __properties: ClassVar[List[str]] = ["id", "query", "verbose"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "query", "verbose"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -71,6 +73,9 @@ class ExplainTableQueryPlanRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of identity
+        if self.identity:
+            _dict['identity'] = self.identity.to_dict()
         # override the default output from pydantic by calling `to_dict()` of query
         if self.query:
             _dict['query'] = self.query.to_dict()
@@ -86,6 +91,7 @@ class ExplainTableQueryPlanRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
             "query": QueryTableRequest.from_dict(obj["query"]) if obj.get("query") is not None else None,
             "verbose": obj.get("verbose") if obj.get("verbose") is not None else False

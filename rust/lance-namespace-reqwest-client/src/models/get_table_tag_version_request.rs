@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetTableTagVersionRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Name of the tag to get version for
@@ -23,6 +25,7 @@ pub struct GetTableTagVersionRequest {
 impl GetTableTagVersionRequest {
     pub fn new(tag: String) -> GetTableTagVersionRequest {
         GetTableTagVersionRequest {
+            identity: None,
             id: None,
             tag,
         }

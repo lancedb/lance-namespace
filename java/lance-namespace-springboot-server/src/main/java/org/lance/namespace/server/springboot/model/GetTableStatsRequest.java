@@ -30,7 +30,30 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class GetTableStatsRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
+
+  public GetTableStatsRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
+  }
 
   public GetTableStatsRequest id(List<String> id) {
     this.id = id;
@@ -69,18 +92,20 @@ public class GetTableStatsRequest {
       return false;
     }
     GetTableStatsRequest getTableStatsRequest = (GetTableStatsRequest) o;
-    return Objects.equals(this.id, getTableStatsRequest.id);
+    return Objects.equals(this.identity, getTableStatsRequest.identity)
+        && Objects.equals(this.id, getTableStatsRequest.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id);
+    return Objects.hash(identity, id);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class GetTableStatsRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("}");
     return sb.toString();

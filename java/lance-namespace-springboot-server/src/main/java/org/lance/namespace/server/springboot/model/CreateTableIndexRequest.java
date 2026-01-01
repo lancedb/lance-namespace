@@ -30,6 +30,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CreateTableIndexRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private String column;
@@ -64,6 +66,27 @@ public class CreateTableIndexRequest {
   public CreateTableIndexRequest(String column, String indexType) {
     this.column = column;
     this.indexType = indexType;
+  }
+
+  public CreateTableIndexRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
   }
 
   public CreateTableIndexRequest id(List<String> id) {
@@ -383,7 +406,8 @@ public class CreateTableIndexRequest {
       return false;
     }
     CreateTableIndexRequest createTableIndexRequest = (CreateTableIndexRequest) o;
-    return Objects.equals(this.id, createTableIndexRequest.id)
+    return Objects.equals(this.identity, createTableIndexRequest.identity)
+        && Objects.equals(this.id, createTableIndexRequest.id)
         && Objects.equals(this.column, createTableIndexRequest.column)
         && Objects.equals(this.indexType, createTableIndexRequest.indexType)
         && Objects.equals(this.name, createTableIndexRequest.name)
@@ -401,6 +425,7 @@ public class CreateTableIndexRequest {
   @Override
   public int hashCode() {
     return Objects.hash(
+        identity,
         id,
         column,
         indexType,
@@ -420,6 +445,7 @@ public class CreateTableIndexRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableIndexRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");

@@ -6,6 +6,7 @@ Request for merging or inserting records into a table, excluding the Arrow IPC s
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | [**Identity**](Identity.md) |  | [optional] 
 **id** | **List[str]** |  | [optional] 
 **on** | **str** | Column name to use for matching rows (required) | [optional] 
 **when_matched_update_all** | **bool** | Update all columns when rows match | [optional] [default to False]

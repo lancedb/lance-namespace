@@ -30,6 +30,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class AlterTableDropColumnsRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   @Valid private List<String> columns = new ArrayList<>();
@@ -41,6 +43,27 @@ public class AlterTableDropColumnsRequest {
   /** Constructor with only required parameters */
   public AlterTableDropColumnsRequest(List<String> columns) {
     this.columns = columns;
+  }
+
+  public AlterTableDropColumnsRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
   }
 
   public AlterTableDropColumnsRequest id(List<String> id) {
@@ -112,19 +135,21 @@ public class AlterTableDropColumnsRequest {
       return false;
     }
     AlterTableDropColumnsRequest alterTableDropColumnsRequest = (AlterTableDropColumnsRequest) o;
-    return Objects.equals(this.id, alterTableDropColumnsRequest.id)
+    return Objects.equals(this.identity, alterTableDropColumnsRequest.identity)
+        && Objects.equals(this.id, alterTableDropColumnsRequest.id)
         && Objects.equals(this.columns, alterTableDropColumnsRequest.columns);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, columns);
+    return Objects.hash(identity, id, columns);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTableDropColumnsRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    columns: ").append(toIndentedString(columns)).append("\n");
     sb.append("}");
