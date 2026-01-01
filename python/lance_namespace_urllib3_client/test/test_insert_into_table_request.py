@@ -35,6 +35,9 @@ class TestInsertIntoTableRequest(unittest.TestCase):
         model = InsertIntoTableRequest()
         if include_optional:
             return InsertIntoTableRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

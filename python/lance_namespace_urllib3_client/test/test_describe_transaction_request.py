@@ -35,6 +35,9 @@ class TestDescribeTransactionRequest(unittest.TestCase):
         model = DescribeTransactionRequest()
         if include_optional:
             return DescribeTransactionRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ]

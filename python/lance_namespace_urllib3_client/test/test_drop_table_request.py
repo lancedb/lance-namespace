@@ -35,6 +35,9 @@ class TestDropTableRequest(unittest.TestCase):
         model = DropTableRequest()
         if include_optional:
             return DropTableRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ]

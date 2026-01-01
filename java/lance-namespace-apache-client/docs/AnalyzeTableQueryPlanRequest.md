@@ -7,6 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
+|**identity** | [**Identity**](Identity.md) |  |  [optional] |
 |**id** | **List&lt;String&gt;** |  |  [optional] |
 |**bypassVectorIndex** | **Boolean** | Whether to bypass vector index |  [optional] |
 |**columns** | [**QueryTableRequestColumns**](QueryTableRequestColumns.md) |  |  [optional] |

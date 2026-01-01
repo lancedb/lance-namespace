@@ -30,9 +30,32 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class TableExistsRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private Long version;
+
+  public TableExistsRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
+  }
 
   public TableExistsRequest id(List<String> id) {
     this.id = id;
@@ -97,19 +120,21 @@ public class TableExistsRequest {
       return false;
     }
     TableExistsRequest tableExistsRequest = (TableExistsRequest) o;
-    return Objects.equals(this.id, tableExistsRequest.id)
+    return Objects.equals(this.identity, tableExistsRequest.identity)
+        && Objects.equals(this.id, tableExistsRequest.id)
         && Objects.equals(this.version, tableExistsRequest.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version);
+    return Objects.hash(identity, id, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class TableExistsRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");

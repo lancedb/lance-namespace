@@ -35,6 +35,9 @@ class TestDeleteFromTableRequest(unittest.TestCase):
         model = DeleteFromTableRequest()
         if include_optional:
             return DeleteFromTableRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

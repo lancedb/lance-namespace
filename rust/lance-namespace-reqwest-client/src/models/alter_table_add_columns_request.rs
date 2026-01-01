@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AlterTableAddColumnsRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// List of new columns to add
@@ -23,6 +25,7 @@ pub struct AlterTableAddColumnsRequest {
 impl AlterTableAddColumnsRequest {
     pub fn new(new_columns: Vec<models::NewColumnTransform>) -> AlterTableAddColumnsRequest {
         AlterTableAddColumnsRequest {
+            identity: None,
             id: None,
             new_columns,
         }

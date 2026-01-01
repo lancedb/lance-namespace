@@ -25,11 +25,18 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /** TableExistsRequest */
-@JsonPropertyOrder({TableExistsRequest.JSON_PROPERTY_ID, TableExistsRequest.JSON_PROPERTY_VERSION})
+@JsonPropertyOrder({
+  TableExistsRequest.JSON_PROPERTY_IDENTITY,
+  TableExistsRequest.JSON_PROPERTY_ID,
+  TableExistsRequest.JSON_PROPERTY_VERSION
+})
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class TableExistsRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -37,6 +44,30 @@ public class TableExistsRequest {
   @javax.annotation.Nullable private Long version;
 
   public TableExistsRequest() {}
+
+  public TableExistsRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public TableExistsRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -104,19 +135,21 @@ public class TableExistsRequest {
       return false;
     }
     TableExistsRequest tableExistsRequest = (TableExistsRequest) o;
-    return Objects.equals(this.id, tableExistsRequest.id)
+    return Objects.equals(this.identity, tableExistsRequest.identity)
+        && Objects.equals(this.id, tableExistsRequest.id)
         && Objects.equals(this.version, tableExistsRequest.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version);
+    return Objects.hash(identity, id, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class TableExistsRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
@@ -164,6 +197,11 @@ public class TableExistsRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

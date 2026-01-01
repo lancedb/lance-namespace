@@ -14,6 +14,8 @@ use serde::{Deserialize, Serialize};
 /// DeleteFromTableRequest : Delete data from table based on a SQL predicate. Returns the number of rows that were deleted. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DeleteFromTableRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     /// The namespace identifier
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
@@ -26,6 +28,7 @@ impl DeleteFromTableRequest {
     /// Delete data from table based on a SQL predicate. Returns the number of rows that were deleted. 
     pub fn new(predicate: String) -> DeleteFromTableRequest {
         DeleteFromTableRequest {
+            identity: None,
             id: None,
             predicate,
         }

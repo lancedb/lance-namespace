@@ -35,6 +35,9 @@ class TestRenameTableRequest(unittest.TestCase):
         model = RenameTableRequest()
         if include_optional:
             return RenameTableRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

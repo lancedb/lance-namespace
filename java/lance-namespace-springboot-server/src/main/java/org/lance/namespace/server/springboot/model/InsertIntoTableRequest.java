@@ -33,9 +33,32 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class InsertIntoTableRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private String mode = "append";
+
+  public InsertIntoTableRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
+  }
 
   public InsertIntoTableRequest id(List<String> id) {
     this.id = id;
@@ -100,19 +123,21 @@ public class InsertIntoTableRequest {
       return false;
     }
     InsertIntoTableRequest insertIntoTableRequest = (InsertIntoTableRequest) o;
-    return Objects.equals(this.id, insertIntoTableRequest.id)
+    return Objects.equals(this.identity, insertIntoTableRequest.identity)
+        && Objects.equals(this.id, insertIntoTableRequest.id)
         && Objects.equals(this.mode, insertIntoTableRequest.mode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, mode);
+    return Objects.hash(identity, id, mode);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class InsertIntoTableRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("}");

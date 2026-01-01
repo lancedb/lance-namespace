@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ListTableIndicesRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     /// The namespace identifier
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
@@ -30,6 +32,7 @@ pub struct ListTableIndicesRequest {
 impl ListTableIndicesRequest {
     pub fn new() -> ListTableIndicesRequest {
         ListTableIndicesRequest {
+            identity: None,
             id: None,
             version: None,
             page_token: None,

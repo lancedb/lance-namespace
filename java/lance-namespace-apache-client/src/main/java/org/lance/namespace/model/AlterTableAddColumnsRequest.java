@@ -26,6 +26,7 @@ import java.util.StringJoiner;
 
 /** AlterTableAddColumnsRequest */
 @JsonPropertyOrder({
+  AlterTableAddColumnsRequest.JSON_PROPERTY_IDENTITY,
   AlterTableAddColumnsRequest.JSON_PROPERTY_ID,
   AlterTableAddColumnsRequest.JSON_PROPERTY_NEW_COLUMNS
 })
@@ -33,6 +34,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class AlterTableAddColumnsRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -40,6 +44,30 @@ public class AlterTableAddColumnsRequest {
   @javax.annotation.Nonnull private List<NewColumnTransform> newColumns = new ArrayList<>();
 
   public AlterTableAddColumnsRequest() {}
+
+  public AlterTableAddColumnsRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public AlterTableAddColumnsRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -115,19 +143,21 @@ public class AlterTableAddColumnsRequest {
       return false;
     }
     AlterTableAddColumnsRequest alterTableAddColumnsRequest = (AlterTableAddColumnsRequest) o;
-    return Objects.equals(this.id, alterTableAddColumnsRequest.id)
+    return Objects.equals(this.identity, alterTableAddColumnsRequest.identity)
+        && Objects.equals(this.id, alterTableAddColumnsRequest.id)
         && Objects.equals(this.newColumns, alterTableAddColumnsRequest.newColumns);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, newColumns);
+    return Objects.hash(identity, id, newColumns);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTableAddColumnsRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    newColumns: ").append(toIndentedString(newColumns)).append("\n");
     sb.append("}");
@@ -175,6 +205,11 @@ public class AlterTableAddColumnsRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | Option<[**models::Identity**](Identity.md)> |  | [optional]
 **id** | Option<**Vec<String>**> |  | [optional]
 **version** | Option<**i64**> | Optional table version to get stats for | [optional]
 **index_name** | Option<**String**> | Name of the index | [optional]

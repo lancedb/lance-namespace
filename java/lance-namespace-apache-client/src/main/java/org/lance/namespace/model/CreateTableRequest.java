@@ -25,11 +25,18 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /** Request for creating a table, excluding the Arrow IPC stream. */
-@JsonPropertyOrder({CreateTableRequest.JSON_PROPERTY_ID, CreateTableRequest.JSON_PROPERTY_MODE})
+@JsonPropertyOrder({
+  CreateTableRequest.JSON_PROPERTY_IDENTITY,
+  CreateTableRequest.JSON_PROPERTY_ID,
+  CreateTableRequest.JSON_PROPERTY_MODE
+})
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class CreateTableRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -37,6 +44,30 @@ public class CreateTableRequest {
   @javax.annotation.Nullable private String mode;
 
   public CreateTableRequest() {}
+
+  public CreateTableRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public CreateTableRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -107,19 +138,21 @@ public class CreateTableRequest {
       return false;
     }
     CreateTableRequest createTableRequest = (CreateTableRequest) o;
-    return Objects.equals(this.id, createTableRequest.id)
+    return Objects.equals(this.identity, createTableRequest.identity)
+        && Objects.equals(this.id, createTableRequest.id)
         && Objects.equals(this.mode, createTableRequest.mode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, mode);
+    return Objects.hash(identity, id, mode);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("}");
@@ -167,6 +200,11 @@ public class CreateTableRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

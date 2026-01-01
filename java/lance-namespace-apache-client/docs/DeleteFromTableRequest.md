@@ -8,6 +8,7 @@ Delete data from table based on a SQL predicate. Returns the number of rows that
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
+|**identity** | [**Identity**](Identity.md) |  |  [optional] |
 |**id** | **List&lt;String&gt;** | The namespace identifier |  [optional] |
 |**predicate** | **String** | SQL predicate to filter rows for deletion |  |
 

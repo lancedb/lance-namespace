@@ -6,6 +6,7 @@ If the table and its data can be immediately deleted, return information of the 
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | [**Identity**](Identity.md) |  | [optional] 
 **id** | **List[str]** |  | [optional] 
 
 ## Example

@@ -14,6 +14,8 @@ use serde::{Deserialize, Serialize};
 /// DeregisterTableRequest : The table content remains available in the storage. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DeregisterTableRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
 }
@@ -22,6 +24,7 @@ impl DeregisterTableRequest {
     /// The table content remains available in the storage. 
     pub fn new() -> DeregisterTableRequest {
         DeregisterTableRequest {
+            identity: None,
             id: None,
         }
     }

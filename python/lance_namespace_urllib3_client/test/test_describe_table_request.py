@@ -35,6 +35,9 @@ class TestDescribeTableRequest(unittest.TestCase):
         model = DescribeTableRequest()
         if include_optional:
             return DescribeTableRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

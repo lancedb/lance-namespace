@@ -35,6 +35,9 @@ class TestUpdateTableSchemaMetadataRequest(unittest.TestCase):
         model = UpdateTableSchemaMetadataRequest()
         if include_optional:
             return UpdateTableSchemaMetadataRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

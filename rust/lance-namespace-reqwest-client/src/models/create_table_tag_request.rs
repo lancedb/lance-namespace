@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateTableTagRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Name of the tag to create
@@ -26,6 +28,7 @@ pub struct CreateTableTagRequest {
 impl CreateTableTagRequest {
     pub fn new(tag: String, version: i64) -> CreateTableTagRequest {
         CreateTableTagRequest {
+            identity: None,
             id: None,
             tag,
             version,

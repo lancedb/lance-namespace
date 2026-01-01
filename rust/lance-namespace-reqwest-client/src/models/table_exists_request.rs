@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct TableExistsRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Version of the table to check existence. If not specified, server should resolve it to the latest version. 
@@ -23,6 +25,7 @@ pub struct TableExistsRequest {
 impl TableExistsRequest {
     pub fn new() -> TableExistsRequest {
         TableExistsRequest {
+            identity: None,
             id: None,
             version: None,
         }

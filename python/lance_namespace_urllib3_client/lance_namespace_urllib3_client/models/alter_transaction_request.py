@@ -21,6 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.alter_transaction_action import AlterTransactionAction
+from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,9 +29,10 @@ class AlterTransactionRequest(BaseModel):
     """
     Alter a transaction with a list of actions. The server should either succeed and apply all actions, or fail and apply no action. 
     """ # noqa: E501
+    identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = None
     actions: Annotated[List[AlterTransactionAction], Field(min_length=1)]
-    __properties: ClassVar[List[str]] = ["id", "actions"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "actions"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -71,6 +73,9 @@ class AlterTransactionRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of identity
+        if self.identity:
+            _dict['identity'] = self.identity.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in actions (list)
         _items = []
         if self.actions:
@@ -90,6 +95,7 @@ class AlterTransactionRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
             "actions": [AlterTransactionAction.from_dict(_item) for _item in obj["actions"]] if obj.get("actions") is not None else None
         })

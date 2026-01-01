@@ -5,6 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | [**Identity**](Identity.md) |  | [optional] 
 **id** | **List[str]** |  | [optional] 
 **query** | [**QueryTableRequest**](QueryTableRequest.md) |  | 
 **verbose** | **bool** | Whether to return verbose explanation | [optional] [default to False]

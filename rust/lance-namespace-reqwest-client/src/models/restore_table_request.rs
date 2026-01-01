@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RestoreTableRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Version to restore to
@@ -23,6 +25,7 @@ pub struct RestoreTableRequest {
 impl RestoreTableRequest {
     pub fn new(version: i64) -> RestoreTableRequest {
         RestoreTableRequest {
+            identity: None,
             id: None,
             version,
         }

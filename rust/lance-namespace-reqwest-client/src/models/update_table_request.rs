@@ -14,6 +14,8 @@ use serde::{Deserialize, Serialize};
 /// UpdateTableRequest : Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct UpdateTableRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Optional SQL predicate to filter rows for update
@@ -28,6 +30,7 @@ impl UpdateTableRequest {
     /// Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
     pub fn new(updates: Vec<Vec<String>>) -> UpdateTableRequest {
         UpdateTableRequest {
+            identity: None,
             id: None,
             predicate: None,
             updates,

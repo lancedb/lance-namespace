@@ -35,6 +35,9 @@ class TestUpdateTableTagRequest(unittest.TestCase):
         model = UpdateTableTagRequest()
         if include_optional:
             return UpdateTableTagRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

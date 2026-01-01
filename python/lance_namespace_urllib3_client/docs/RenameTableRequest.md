@@ -5,6 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | [**Identity**](Identity.md) |  | [optional] 
 **id** | **List[str]** | The table identifier | [optional] 
 **new_table_name** | **str** | New name for the table | 
 **new_namespace_id** | **List[str]** | New namespace identifier to move the table to (optional, if not specified the table stays in the same namespace) | [optional] 

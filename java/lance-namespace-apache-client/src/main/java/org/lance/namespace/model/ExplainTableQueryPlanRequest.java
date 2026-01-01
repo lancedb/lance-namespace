@@ -26,6 +26,7 @@ import java.util.StringJoiner;
 
 /** ExplainTableQueryPlanRequest */
 @JsonPropertyOrder({
+  ExplainTableQueryPlanRequest.JSON_PROPERTY_IDENTITY,
   ExplainTableQueryPlanRequest.JSON_PROPERTY_ID,
   ExplainTableQueryPlanRequest.JSON_PROPERTY_QUERY,
   ExplainTableQueryPlanRequest.JSON_PROPERTY_VERBOSE
@@ -34,6 +35,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class ExplainTableQueryPlanRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -44,6 +48,30 @@ public class ExplainTableQueryPlanRequest {
   @javax.annotation.Nullable private Boolean verbose = false;
 
   public ExplainTableQueryPlanRequest() {}
+
+  public ExplainTableQueryPlanRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public ExplainTableQueryPlanRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -134,20 +162,22 @@ public class ExplainTableQueryPlanRequest {
       return false;
     }
     ExplainTableQueryPlanRequest explainTableQueryPlanRequest = (ExplainTableQueryPlanRequest) o;
-    return Objects.equals(this.id, explainTableQueryPlanRequest.id)
+    return Objects.equals(this.identity, explainTableQueryPlanRequest.identity)
+        && Objects.equals(this.id, explainTableQueryPlanRequest.id)
         && Objects.equals(this.query, explainTableQueryPlanRequest.query)
         && Objects.equals(this.verbose, explainTableQueryPlanRequest.verbose);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, query, verbose);
+    return Objects.hash(identity, id, query, verbose);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ExplainTableQueryPlanRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
     sb.append("    verbose: ").append(toIndentedString(verbose)).append("\n");
@@ -196,6 +226,11 @@ public class ExplainTableQueryPlanRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

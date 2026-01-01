@@ -32,11 +32,34 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CreateNamespaceRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private String mode;
 
   @Valid private Map<String, String> properties = new HashMap<>();
+
+  public CreateNamespaceRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
+  }
 
   public CreateNamespaceRequest id(List<String> id) {
     this.id = id;
@@ -131,20 +154,22 @@ public class CreateNamespaceRequest {
       return false;
     }
     CreateNamespaceRequest createNamespaceRequest = (CreateNamespaceRequest) o;
-    return Objects.equals(this.id, createNamespaceRequest.id)
+    return Objects.equals(this.identity, createNamespaceRequest.identity)
+        && Objects.equals(this.id, createNamespaceRequest.id)
         && Objects.equals(this.mode, createNamespaceRequest.mode)
         && Objects.equals(this.properties, createNamespaceRequest.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, mode, properties);
+    return Objects.hash(identity, id, mode, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateNamespaceRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");

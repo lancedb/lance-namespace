@@ -2585,15 +2585,42 @@ components:
           type: string
       required:
       - code
+    Identity:
+      description: |
+        Identity information of a request.
+      example:
+        api_key: api_key
+        auth_token: auth_token
+      properties:
+        api_key:
+          description: |
+            API key for authentication.
+
+            REST NAMESPACE ONLY
+            This is passed via the `x-api-key` header.
+          type: string
+        auth_token:
+          description: |
+            Bearer token for authentication.
+
+            REST NAMESPACE ONLY
+            This is passed via the `Authorization` header
+            with the Bearer scheme (e.g., `Bearer <token>`).
+          type: string
     CreateNamespaceRequest:
       example:
         mode: mode
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
         properties:
           key: properties
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -2629,6 +2656,8 @@ components:
             If namespace properties are supported, but none are set, it should return an empty object.
     ListNamespacesRequest:
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -2682,10 +2711,15 @@ components:
       - namespaces
     DescribeNamespaceRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -2711,11 +2745,16 @@ components:
     DropNamespaceRequest:
       example:
         mode: mode
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
         behavior: behavior
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -2754,10 +2793,15 @@ components:
           type: array
     NamespaceExistsRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -2783,6 +2827,9 @@ components:
     RegisterTableRequest:
       example:
         mode: mode
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         location: location
         id:
         - id
@@ -2790,6 +2837,8 @@ components:
         properties:
           key: properties
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -2826,6 +2875,8 @@ components:
             type: string
     ListTablesRequest:
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -2881,6 +2932,9 @@ components:
       - tables
     DescribeTableRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
@@ -2889,6 +2943,8 @@ components:
         load_detailed_metadata: true
         vend_credentials: true
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -3027,11 +3083,16 @@ components:
     CountTableRowsRequest:
       example:
         predicate: predicate
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
         version: 0
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -3057,6 +3118,8 @@ components:
       description: |
         Request for inserting records into a table, excluding the Arrow IPC stream.
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -3080,6 +3143,8 @@ components:
       description: |
         Request for merging or inserting records into a table, excluding the Arrow IPC stream.
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -3154,6 +3219,9 @@ components:
         provided to filter which rows to update.
       example:
         predicate: predicate
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
@@ -3163,6 +3231,8 @@ components:
         - - updates
           - updates
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -3210,10 +3280,15 @@ components:
         Returns the number of rows that were deleted.
       example:
         predicate: predicate
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           description: The namespace identifier
           items:
@@ -3308,6 +3383,9 @@ components:
                   max_expansions: 0
         distance_type: distance_type
         lower_bound: 3.6160767
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         bypass_vector_index: true
         nprobes: 0
         vector:
@@ -3323,6 +3401,8 @@ components:
         - id
         - id
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -3401,6 +3481,9 @@ components:
         with_position: true
         lower_case: true
         distance_type: distance_type
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         name: name
         ascii_folding: true
         id:
@@ -3409,6 +3492,8 @@ components:
         remove_stop_words: true
         stem: true
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -3483,6 +3568,9 @@ components:
           type: string
     ListTableIndicesRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         page_token: page_token
         limit: 6
         id:
@@ -3490,6 +3578,8 @@ components:
         - id
         version: 0
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           description: The namespace identifier
           items:
@@ -3586,12 +3676,17 @@ components:
       - status
     DescribeTableIndexStatsRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
         version: 0
         index_name: index_name
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -3735,6 +3830,8 @@ components:
       description: |
         Request for creating a table, excluding the Arrow IPC stream.
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -3779,11 +3876,16 @@ components:
 
         **Deprecated**: Use `DeclareTableRequest` instead.
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         location: location
         id:
         - id
         - id
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -3821,11 +3923,16 @@ components:
       description: |
         Request for declaring a table.
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         location: location
         id:
         - id
         - id
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -3858,11 +3965,16 @@ components:
             passed directly to Lance to initialize storage access.
     TableExistsRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
         version: 0
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -3886,10 +3998,15 @@ components:
       type: string
     DescribeTransactionRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -4005,6 +4122,9 @@ components:
         Alter a transaction with a list of actions.
         The server should either succeed and apply all actions, or fail and apply no action.
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
@@ -4028,6 +4148,8 @@ components:
             value: value
             key: key
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -4065,6 +4187,8 @@ components:
         If the table and its data can be immediately deleted, return information of the deleted table.
         Otherwise, return a transaction ID that client can use to track deletion progress.
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -4095,10 +4219,15 @@ components:
       description: |
         The table content remains available in the storage.
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -4393,11 +4522,16 @@ components:
       type: string
     GetTableTagVersionRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
         tag: tag
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -4420,12 +4554,17 @@ components:
       - version
     CreateTableTagRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
         tag: tag
         version: 0
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -4451,11 +4590,16 @@ components:
           type: string
     DeleteTableTagRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
         tag: tag
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -4475,12 +4619,17 @@ components:
           type: string
     UpdateTableTagRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
         tag: tag
         version: 0
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -4506,6 +4655,8 @@ components:
           type: string
     ListTableTagsRequest:
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           description: The table identifier
           items:
@@ -4582,11 +4733,16 @@ components:
       - version
     RestoreTableRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
         version: 0
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -4608,6 +4764,9 @@ components:
           type: string
     RenameTableRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         new_table_name: new_table_name
         id:
         - id
@@ -4616,6 +4775,8 @@ components:
         - new_namespace_id
         - new_namespace_id
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           description: The table identifier
           items:
@@ -4641,6 +4802,8 @@ components:
           type: string
     UpdateTableSchemaMetadataRequest:
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           description: The table identifier
           items:
@@ -4661,6 +4824,8 @@ components:
           type: string
     ListTableVersionsRequest:
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -4742,6 +4907,9 @@ components:
       - version
     ExplainTableQueryPlanRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         query:
           ef: 0
           offset: 0
@@ -4812,6 +4980,9 @@ components:
                     max_expansions: 0
           distance_type: distance_type
           lower_bound: 3.6160767
+          identity:
+            api_key: api_key
+            auth_token: auth_token
           bypass_vector_index: true
           nprobes: 0
           vector:
@@ -4831,6 +5002,8 @@ components:
         - id
         verbose: false
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -4921,6 +5094,9 @@ components:
                   max_expansions: 0
         distance_type: distance_type
         lower_bound: 3.6160767
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         bypass_vector_index: true
         nprobes: 0
         vector:
@@ -4936,6 +5112,8 @@ components:
         - id
         - id
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -5013,6 +5191,9 @@ components:
       - analysis
     AlterTableAddColumnsRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         new_columns:
         - expression: expression
           name: name
@@ -5040,6 +5221,8 @@ components:
         - id
         - id
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -5132,6 +5315,9 @@ components:
       - version
     AlterTableAlterColumnsRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         alterations:
         - path: path
           nullable: true
@@ -5161,6 +5347,8 @@ components:
         - id
         - id
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -5255,6 +5443,9 @@ components:
       - version
     AlterTableDropColumnsRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         columns:
         - columns
         - columns
@@ -5262,6 +5453,8 @@ components:
         - id
         - id
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -5290,10 +5483,15 @@ components:
       - version
     GetTableStatsRequest:
       example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
         id:
         - id
         - id
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string
@@ -5414,6 +5612,8 @@ components:
       - p99
     DropTableIndexRequest:
       properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
         id:
           items:
             type: string

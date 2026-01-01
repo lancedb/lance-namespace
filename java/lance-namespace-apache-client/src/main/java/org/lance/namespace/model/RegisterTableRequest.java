@@ -28,6 +28,7 @@ import java.util.StringJoiner;
 
 /** RegisterTableRequest */
 @JsonPropertyOrder({
+  RegisterTableRequest.JSON_PROPERTY_IDENTITY,
   RegisterTableRequest.JSON_PROPERTY_ID,
   RegisterTableRequest.JSON_PROPERTY_LOCATION,
   RegisterTableRequest.JSON_PROPERTY_MODE,
@@ -37,6 +38,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class RegisterTableRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -50,6 +54,30 @@ public class RegisterTableRequest {
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public RegisterTableRequest() {}
+
+  public RegisterTableRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public RegisterTableRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -176,7 +204,8 @@ public class RegisterTableRequest {
       return false;
     }
     RegisterTableRequest registerTableRequest = (RegisterTableRequest) o;
-    return Objects.equals(this.id, registerTableRequest.id)
+    return Objects.equals(this.identity, registerTableRequest.identity)
+        && Objects.equals(this.id, registerTableRequest.id)
         && Objects.equals(this.location, registerTableRequest.location)
         && Objects.equals(this.mode, registerTableRequest.mode)
         && Objects.equals(this.properties, registerTableRequest.properties);
@@ -184,13 +213,14 @@ public class RegisterTableRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location, mode, properties);
+    return Objects.hash(identity, id, location, mode, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class RegisterTableRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
@@ -240,6 +270,11 @@ public class RegisterTableRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

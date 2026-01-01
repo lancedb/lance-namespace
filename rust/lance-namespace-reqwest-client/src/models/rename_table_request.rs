@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RenameTableRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     /// The table identifier
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
@@ -27,6 +29,7 @@ pub struct RenameTableRequest {
 impl RenameTableRequest {
     pub fn new(new_table_name: String) -> RenameTableRequest {
         RenameTableRequest {
+            identity: None,
             id: None,
             new_table_name,
             new_namespace_id: None,

@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,6 +28,7 @@ class CreateTableIndexRequest(BaseModel):
     """
     CreateTableIndexRequest
     """ # noqa: E501
+    identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = None
     column: StrictStr = Field(description="Name of the column to create index on")
     index_type: StrictStr = Field(description="Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS)")
@@ -40,7 +42,7 @@ class CreateTableIndexRequest(BaseModel):
     stem: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for stemming")
     remove_stop_words: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for stop word removal")
     ascii_folding: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for ASCII folding")
-    __properties: ClassVar[List[str]] = ["id", "column", "index_type", "name", "distance_type", "with_position", "base_tokenizer", "language", "max_token_length", "lower_case", "stem", "remove_stop_words", "ascii_folding"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "column", "index_type", "name", "distance_type", "with_position", "base_tokenizer", "language", "max_token_length", "lower_case", "stem", "remove_stop_words", "ascii_folding"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,6 +83,9 @@ class CreateTableIndexRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of identity
+        if self.identity:
+            _dict['identity'] = self.identity.to_dict()
         return _dict
 
     @classmethod
@@ -93,6 +98,7 @@ class CreateTableIndexRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
             "column": obj.get("column"),
             "index_type": obj.get("index_type"),

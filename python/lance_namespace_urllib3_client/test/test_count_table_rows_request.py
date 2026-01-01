@@ -35,6 +35,9 @@ class TestCountTableRowsRequest(unittest.TestCase):
         model = CountTableRowsRequest()
         if include_optional:
             return CountTableRowsRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

@@ -35,6 +35,9 @@ class TestListTablesRequest(unittest.TestCase):
         model = ListTablesRequest()
         if include_optional:
             return ListTablesRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

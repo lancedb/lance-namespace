@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | Option<[**models::Identity**](Identity.md)> |  | [optional]
 **id** | Option<**Vec<String>**> |  | [optional]
 **bypass_vector_index** | Option<**bool**> | Whether to bypass vector index | [optional]
 **columns** | Option<[**models::QueryTableRequestColumns**](QueryTableRequest_columns.md)> |  | [optional]

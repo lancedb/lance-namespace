@@ -14,6 +14,8 @@ use serde::{Deserialize, Serialize};
 /// DropTableRequest : If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DropTableRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
 }
@@ -22,6 +24,7 @@ impl DropTableRequest {
     /// If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. 
     pub fn new() -> DropTableRequest {
         DropTableRequest {
+            identity: None,
             id: None,
         }
     }

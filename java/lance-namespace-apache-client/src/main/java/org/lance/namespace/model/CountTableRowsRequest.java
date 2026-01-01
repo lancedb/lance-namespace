@@ -26,6 +26,7 @@ import java.util.StringJoiner;
 
 /** CountTableRowsRequest */
 @JsonPropertyOrder({
+  CountTableRowsRequest.JSON_PROPERTY_IDENTITY,
   CountTableRowsRequest.JSON_PROPERTY_ID,
   CountTableRowsRequest.JSON_PROPERTY_VERSION,
   CountTableRowsRequest.JSON_PROPERTY_PREDICATE
@@ -34,6 +35,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class CountTableRowsRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -44,6 +48,30 @@ public class CountTableRowsRequest {
   @javax.annotation.Nullable private String predicate;
 
   public CountTableRowsRequest() {}
+
+  public CountTableRowsRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public CountTableRowsRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -135,20 +163,22 @@ public class CountTableRowsRequest {
       return false;
     }
     CountTableRowsRequest countTableRowsRequest = (CountTableRowsRequest) o;
-    return Objects.equals(this.id, countTableRowsRequest.id)
+    return Objects.equals(this.identity, countTableRowsRequest.identity)
+        && Objects.equals(this.id, countTableRowsRequest.id)
         && Objects.equals(this.version, countTableRowsRequest.version)
         && Objects.equals(this.predicate, countTableRowsRequest.predicate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version, predicate);
+    return Objects.hash(identity, id, version, predicate);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CountTableRowsRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    predicate: ").append(toIndentedString(predicate)).append("\n");
@@ -197,6 +227,11 @@ public class CountTableRowsRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

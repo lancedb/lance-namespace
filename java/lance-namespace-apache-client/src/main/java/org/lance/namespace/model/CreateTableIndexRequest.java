@@ -26,6 +26,7 @@ import java.util.StringJoiner;
 
 /** CreateTableIndexRequest */
 @JsonPropertyOrder({
+  CreateTableIndexRequest.JSON_PROPERTY_IDENTITY,
   CreateTableIndexRequest.JSON_PROPERTY_ID,
   CreateTableIndexRequest.JSON_PROPERTY_COLUMN,
   CreateTableIndexRequest.JSON_PROPERTY_INDEX_TYPE,
@@ -44,6 +45,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class CreateTableIndexRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -84,6 +88,30 @@ public class CreateTableIndexRequest {
   @javax.annotation.Nullable private Boolean asciiFolding;
 
   public CreateTableIndexRequest() {}
+
+  public CreateTableIndexRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public CreateTableIndexRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -415,7 +443,8 @@ public class CreateTableIndexRequest {
       return false;
     }
     CreateTableIndexRequest createTableIndexRequest = (CreateTableIndexRequest) o;
-    return Objects.equals(this.id, createTableIndexRequest.id)
+    return Objects.equals(this.identity, createTableIndexRequest.identity)
+        && Objects.equals(this.id, createTableIndexRequest.id)
         && Objects.equals(this.column, createTableIndexRequest.column)
         && Objects.equals(this.indexType, createTableIndexRequest.indexType)
         && Objects.equals(this.name, createTableIndexRequest.name)
@@ -433,6 +462,7 @@ public class CreateTableIndexRequest {
   @Override
   public int hashCode() {
     return Objects.hash(
+        identity,
         id,
         column,
         indexType,
@@ -452,6 +482,7 @@ public class CreateTableIndexRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableIndexRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
@@ -510,6 +541,11 @@ public class CreateTableIndexRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

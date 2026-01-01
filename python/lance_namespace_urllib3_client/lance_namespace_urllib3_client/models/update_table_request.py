@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,10 +28,11 @@ class UpdateTableRequest(BaseModel):
     """
     Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
     """ # noqa: E501
+    identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = None
     predicate: Optional[StrictStr] = Field(default=None, description="Optional SQL predicate to filter rows for update")
     updates: List[Annotated[List[StrictStr], Field(min_length=2, max_length=2)]] = Field(description="List of column updates as [column_name, expression] pairs")
-    __properties: ClassVar[List[str]] = ["id", "predicate", "updates"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "predicate", "updates"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -71,6 +73,9 @@ class UpdateTableRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of identity
+        if self.identity:
+            _dict['identity'] = self.identity.to_dict()
         return _dict
 
     @classmethod
@@ -83,6 +88,7 @@ class UpdateTableRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
             "predicate": obj.get("predicate"),
             "updates": obj.get("updates")

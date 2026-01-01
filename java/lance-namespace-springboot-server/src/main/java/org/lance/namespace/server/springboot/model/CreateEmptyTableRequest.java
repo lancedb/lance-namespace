@@ -39,9 +39,32 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CreateEmptyTableRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private String location;
+
+  public CreateEmptyTableRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
+  }
 
   public CreateEmptyTableRequest id(List<String> id) {
     this.id = id;
@@ -105,19 +128,21 @@ public class CreateEmptyTableRequest {
       return false;
     }
     CreateEmptyTableRequest createEmptyTableRequest = (CreateEmptyTableRequest) o;
-    return Objects.equals(this.id, createEmptyTableRequest.id)
+    return Objects.equals(this.identity, createEmptyTableRequest.identity)
+        && Objects.equals(this.id, createEmptyTableRequest.id)
         && Objects.equals(this.location, createEmptyTableRequest.location);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location);
+    return Objects.hash(identity, id, location);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateEmptyTableRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("}");

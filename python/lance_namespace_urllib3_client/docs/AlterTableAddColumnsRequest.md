@@ -5,6 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | [**Identity**](Identity.md) |  | [optional] 
 **id** | **List[str]** |  | [optional] 
 **new_columns** | [**List[NewColumnTransform]**](NewColumnTransform.md) | List of new columns to add | 
 

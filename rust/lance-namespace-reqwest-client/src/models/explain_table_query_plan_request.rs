@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExplainTableQueryPlanRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     #[serde(rename = "query")]
@@ -25,6 +27,7 @@ pub struct ExplainTableQueryPlanRequest {
 impl ExplainTableQueryPlanRequest {
     pub fn new(query: models::QueryTableRequest) -> ExplainTableQueryPlanRequest {
         ExplainTableQueryPlanRequest {
+            identity: None,
             id: None,
             query: Box::new(query),
             verbose: None,

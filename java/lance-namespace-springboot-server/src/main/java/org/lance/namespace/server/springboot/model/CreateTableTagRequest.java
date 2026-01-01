@@ -30,6 +30,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CreateTableTagRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private String tag;
@@ -44,6 +46,27 @@ public class CreateTableTagRequest {
   public CreateTableTagRequest(String tag, Long version) {
     this.tag = tag;
     this.version = version;
+  }
+
+  public CreateTableTagRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
   }
 
   public CreateTableTagRequest id(List<String> id) {
@@ -132,20 +155,22 @@ public class CreateTableTagRequest {
       return false;
     }
     CreateTableTagRequest createTableTagRequest = (CreateTableTagRequest) o;
-    return Objects.equals(this.id, createTableTagRequest.id)
+    return Objects.equals(this.identity, createTableTagRequest.identity)
+        && Objects.equals(this.id, createTableTagRequest.id)
         && Objects.equals(this.tag, createTableTagRequest.tag)
         && Objects.equals(this.version, createTableTagRequest.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tag, version);
+    return Objects.hash(identity, id, tag, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableTagRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tag: ").append(toIndentedString(tag)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");

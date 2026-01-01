@@ -35,6 +35,9 @@ class TestListTableIndicesRequest(unittest.TestCase):
         model = ListTableIndicesRequest()
         if include_optional:
             return ListTableIndicesRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CountTableRowsRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Version of the table to describe. If not specified, server should resolve it to the latest version. 
@@ -26,6 +28,7 @@ pub struct CountTableRowsRequest {
 impl CountTableRowsRequest {
     pub fn new() -> CountTableRowsRequest {
         CountTableRowsRequest {
+            identity: None,
             id: None,
             version: None,
             predicate: None,

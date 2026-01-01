@@ -30,6 +30,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class ListTableIndicesRequest {
 
+  private Identity identity;
+
   @Valid private List<String> id = new ArrayList<>();
 
   private Long version;
@@ -37,6 +39,27 @@ public class ListTableIndicesRequest {
   private String pageToken;
 
   private Integer limit;
+
+  public ListTableIndicesRequest identity(Identity identity) {
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @Valid
+  @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("identity")
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Identity identity) {
+    this.identity = identity;
+  }
 
   public ListTableIndicesRequest id(List<String> id) {
     this.id = id;
@@ -157,7 +180,8 @@ public class ListTableIndicesRequest {
       return false;
     }
     ListTableIndicesRequest listTableIndicesRequest = (ListTableIndicesRequest) o;
-    return Objects.equals(this.id, listTableIndicesRequest.id)
+    return Objects.equals(this.identity, listTableIndicesRequest.identity)
+        && Objects.equals(this.id, listTableIndicesRequest.id)
         && Objects.equals(this.version, listTableIndicesRequest.version)
         && Objects.equals(this.pageToken, listTableIndicesRequest.pageToken)
         && Objects.equals(this.limit, listTableIndicesRequest.limit);
@@ -165,13 +189,14 @@ public class ListTableIndicesRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version, pageToken, limit);
+    return Objects.hash(identity, id, version, pageToken, limit);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ListTableIndicesRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");

@@ -45,6 +45,20 @@ The information in the route could also present in the request body.
 When the information in the route and request body both present but do not match, the server must throw a 400 Bad Request error.
 When the information in the request body is missing, the server must use the information in the route instead.
 
+## Identity Header Mapping
+
+All request schemas include an optional `identity` field for authentication.
+For REST Namespace, the identity fields are mapped to HTTP headers:
+
+| Identity Field | REST Form       | Location |
+|----------------|-----------------|----------|
+| `api_key`      | `x-api-key`     | Header   |
+| `auth_token`   | `Authorization` | Header   |
+
+The `auth_token` is sent using the Bearer scheme (e.g., `Authorization: Bearer <token>`).
+
+When identity information is provided in both the request body and headers, the header values take precedence.
+
 ## Non-Standard Operations
 
 For request and response that cannot be simply described as a JSON object

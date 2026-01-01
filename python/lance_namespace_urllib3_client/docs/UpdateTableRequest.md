@@ -6,6 +6,7 @@ Each update consists of a column name and an SQL expression that will be evaluat
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**identity** | [**Identity**](Identity.md) |  | [optional] 
 **id** | **List[str]** |  | [optional] 
 **predicate** | **str** | Optional SQL predicate to filter rows for update | [optional] 
 **updates** | **List[List[str]]** | List of column updates as [column_name, expression] pairs | 

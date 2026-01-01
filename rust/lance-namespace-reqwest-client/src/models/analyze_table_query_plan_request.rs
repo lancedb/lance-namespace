@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AnalyzeTableQueryPlanRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Whether to bypass vector index
@@ -71,6 +73,7 @@ pub struct AnalyzeTableQueryPlanRequest {
 impl AnalyzeTableQueryPlanRequest {
     pub fn new(k: i32, vector: models::QueryTableRequestVector) -> AnalyzeTableQueryPlanRequest {
         AnalyzeTableQueryPlanRequest {
+            identity: None,
             id: None,
             bypass_vector_index: None,
             columns: None,

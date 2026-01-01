@@ -26,6 +26,7 @@ import java.util.StringJoiner;
 
 /** RenameTableRequest */
 @JsonPropertyOrder({
+  RenameTableRequest.JSON_PROPERTY_IDENTITY,
   RenameTableRequest.JSON_PROPERTY_ID,
   RenameTableRequest.JSON_PROPERTY_NEW_TABLE_NAME,
   RenameTableRequest.JSON_PROPERTY_NEW_NAMESPACE_ID
@@ -34,6 +35,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class RenameTableRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
@@ -44,6 +48,30 @@ public class RenameTableRequest {
   @javax.annotation.Nullable private List<String> newNamespaceId = new ArrayList<>();
 
   public RenameTableRequest() {}
+
+  public RenameTableRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public RenameTableRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -143,20 +171,22 @@ public class RenameTableRequest {
       return false;
     }
     RenameTableRequest renameTableRequest = (RenameTableRequest) o;
-    return Objects.equals(this.id, renameTableRequest.id)
+    return Objects.equals(this.identity, renameTableRequest.identity)
+        && Objects.equals(this.id, renameTableRequest.id)
         && Objects.equals(this.newTableName, renameTableRequest.newTableName)
         && Objects.equals(this.newNamespaceId, renameTableRequest.newNamespaceId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, newTableName, newNamespaceId);
+    return Objects.hash(identity, id, newTableName, newNamespaceId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class RenameTableRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    newTableName: ").append(toIndentedString(newTableName)).append("\n");
     sb.append("    newNamespaceId: ").append(toIndentedString(newNamespaceId)).append("\n");
@@ -205,6 +235,11 @@ public class RenameTableRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

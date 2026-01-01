@@ -25,15 +25,45 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /** GetTableStatsRequest */
-@JsonPropertyOrder({GetTableStatsRequest.JSON_PROPERTY_ID})
+@JsonPropertyOrder({
+  GetTableStatsRequest.JSON_PROPERTY_IDENTITY,
+  GetTableStatsRequest.JSON_PROPERTY_ID
+})
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class GetTableStatsRequest {
+  public static final String JSON_PROPERTY_IDENTITY = "identity";
+  @javax.annotation.Nullable private Identity identity;
+
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
 
   public GetTableStatsRequest() {}
+
+  public GetTableStatsRequest identity(@javax.annotation.Nullable Identity identity) {
+
+    this.identity = identity;
+    return this;
+  }
+
+  /**
+   * Get identity
+   *
+   * @return identity
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Identity getIdentity() {
+    return identity;
+  }
+
+  @JsonProperty(JSON_PROPERTY_IDENTITY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIdentity(@javax.annotation.Nullable Identity identity) {
+    this.identity = identity;
+  }
 
   public GetTableStatsRequest id(@javax.annotation.Nullable List<String> id) {
 
@@ -76,18 +106,20 @@ public class GetTableStatsRequest {
       return false;
     }
     GetTableStatsRequest getTableStatsRequest = (GetTableStatsRequest) o;
-    return Objects.equals(this.id, getTableStatsRequest.id);
+    return Objects.equals(this.identity, getTableStatsRequest.identity)
+        && Objects.equals(this.id, getTableStatsRequest.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id);
+    return Objects.hash(identity, id);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class GetTableStatsRequest {\n");
+    sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -134,6 +166,11 @@ public class GetTableStatsRequest {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `identity` to the URL query string
+    if (getIdentity() != null) {
+      joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
 
     // add `id` to the URL query string
     if (getId() != null) {

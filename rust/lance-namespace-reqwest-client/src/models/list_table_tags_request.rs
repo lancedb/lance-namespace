@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ListTableTagsRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     /// The table identifier
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
@@ -27,6 +29,7 @@ pub struct ListTableTagsRequest {
 impl ListTableTagsRequest {
     pub fn new() -> ListTableTagsRequest {
         ListTableTagsRequest {
+            identity: None,
             id: None,
             page_token: None,
             limit: None,

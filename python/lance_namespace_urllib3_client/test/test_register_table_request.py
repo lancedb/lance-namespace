@@ -35,6 +35,9 @@ class TestRegisterTableRequest(unittest.TestCase):
         model = RegisterTableRequest()
         if include_optional:
             return RegisterTableRequest(
+                identity = lance_namespace_urllib3_client.models.identity.Identity(
+                    api_key = '', 
+                    auth_token = '', ),
                 id = [
                     ''
                     ],

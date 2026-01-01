@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DescribeTableIndexStatsRequest {
+    #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
+    pub identity: Option<Box<models::Identity>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Optional table version to get stats for
@@ -26,6 +28,7 @@ pub struct DescribeTableIndexStatsRequest {
 impl DescribeTableIndexStatsRequest {
     pub fn new() -> DescribeTableIndexStatsRequest {
         DescribeTableIndexStatsRequest {
+            identity: None,
             id: None,
             version: None,
             index_name: None,
