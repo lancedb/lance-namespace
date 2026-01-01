@@ -48,14 +48,7 @@ public class DescribeTableResponse {
 
   private TableBasicStats stats;
 
-  public DescribeTableResponse() {
-    super();
-  }
-
-  /** Constructor with only required parameters */
-  public DescribeTableResponse(String location) {
-    this.location = location;
-  }
+  @Valid private Map<String, String> metadata = new HashMap<>();
 
   public DescribeTableResponse table(String table) {
     this.table = table;
@@ -143,17 +136,14 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table storage location (e.g., S3/GCS path). This is the only required field and is always
-   * returned.
+   * Table storage location (e.g., S3/GCS path).
    *
    * @return location
    */
-  @NotNull
   @Schema(
       name = "location",
-      description =
-          "Table storage location (e.g., S3/GCS path). This is the only required field and is always returned. ",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+      description = "Table storage location (e.g., S3/GCS path). ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("location")
   public String getLocation() {
     return location;
@@ -228,14 +218,17 @@ public class DescribeTableResponse {
 
   /**
    * Configuration options to be used to access storage. The available options depend on the type of
-   * storage in use. These will be passed directly to Lance to initialize storage access.
+   * storage in use. These will be passed directly to Lance to initialize storage access. When
+   * `vend_credentials` is true, this field may include vended credentials. If the vended
+   * credentials are temporary, the `expires_at_millis` key should be included to indicate the
+   * millisecond timestamp when the credentials expire.
    *
    * @return storageOptions
    */
   @Schema(
       name = "storage_options",
       description =
-          "Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. ",
+          "Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. When `vend_credentials` is true, this field may include vended credentials. If the vended credentials are temporary, the `expires_at_millis` key should be included to indicate the millisecond timestamp when the credentials expire. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("storage_options")
   public Map<String, String> getStorageOptions() {
@@ -270,6 +263,37 @@ public class DescribeTableResponse {
     this.stats = stats;
   }
 
+  public DescribeTableResponse metadata(Map<String, String> metadata) {
+    this.metadata = metadata;
+    return this;
+  }
+
+  public DescribeTableResponse putMetadataItem(String key, String metadataItem) {
+    if (this.metadata == null) {
+      this.metadata = new HashMap<>();
+    }
+    this.metadata.put(key, metadataItem);
+    return this;
+  }
+
+  /**
+   * Optional table metadata as key-value pairs.
+   *
+   * @return metadata
+   */
+  @Schema(
+      name = "metadata",
+      description = "Optional table metadata as key-value pairs. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("metadata")
+  public Map<String, String> getMetadata() {
+    return metadata;
+  }
+
+  public void setMetadata(Map<String, String> metadata) {
+    this.metadata = metadata;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -286,13 +310,14 @@ public class DescribeTableResponse {
         && Objects.equals(this.tableUri, describeTableResponse.tableUri)
         && Objects.equals(this.schema, describeTableResponse.schema)
         && Objects.equals(this.storageOptions, describeTableResponse.storageOptions)
-        && Objects.equals(this.stats, describeTableResponse.stats);
+        && Objects.equals(this.stats, describeTableResponse.stats)
+        && Objects.equals(this.metadata, describeTableResponse.metadata);
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(
-        table, namespace, version, location, tableUri, schema, storageOptions, stats);
+        table, namespace, version, location, tableUri, schema, storageOptions, stats, metadata);
   }
 
   @Override
@@ -307,6 +332,7 @@ public class DescribeTableResponse {
     sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
     sb.append("    stats: ").append(toIndentedString(stats)).append("\n");
+    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("}");
     return sb.toString();
   }

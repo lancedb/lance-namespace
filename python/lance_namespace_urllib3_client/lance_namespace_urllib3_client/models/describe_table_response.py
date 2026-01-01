@@ -32,12 +32,13 @@ class DescribeTableResponse(BaseModel):
     table: Optional[StrictStr] = Field(default=None, description="Table name. Only populated when `load_detailed_metadata` is true. ")
     namespace: Optional[List[StrictStr]] = Field(default=None, description="The namespace identifier as a list of parts. Only populated when `load_detailed_metadata` is true. ")
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Table version number. Only populated when `load_detailed_metadata` is true. ")
-    location: StrictStr = Field(description="Table storage location (e.g., S3/GCS path). This is the only required field and is always returned. ")
+    location: Optional[StrictStr] = Field(default=None, description="Table storage location (e.g., S3/GCS path). ")
     table_uri: Optional[StrictStr] = Field(default=None, description="Table URI. Unlike location, this field must be a complete and valid URI. Only returned when `with_table_uri` is true. ")
     var_schema: Optional[JsonArrowSchema] = Field(default=None, description="Table schema in JSON Arrow format. Only populated when `load_detailed_metadata` is true. ", alias="schema")
-    storage_options: Optional[Dict[str, StrictStr]] = Field(default=None, description="Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. ")
+    storage_options: Optional[Dict[str, StrictStr]] = Field(default=None, description="Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. When `vend_credentials` is true, this field may include vended credentials. If the vended credentials are temporary, the `expires_at_millis` key should be included to indicate the millisecond timestamp when the credentials expire. ")
     stats: Optional[TableBasicStats] = Field(default=None, description="Table statistics. Only populated when `load_detailed_metadata` is true. ")
-    __properties: ClassVar[List[str]] = ["table", "namespace", "version", "location", "table_uri", "schema", "storage_options", "stats"]
+    metadata: Optional[Dict[str, StrictStr]] = Field(default=None, description="Optional table metadata as key-value pairs. ")
+    __properties: ClassVar[List[str]] = ["table", "namespace", "version", "location", "table_uri", "schema", "storage_options", "stats", "metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -103,7 +104,8 @@ class DescribeTableResponse(BaseModel):
             "table_uri": obj.get("table_uri"),
             "schema": JsonArrowSchema.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
             "storage_options": obj.get("storage_options"),
-            "stats": TableBasicStats.from_dict(obj["stats"]) if obj.get("stats") is not None else None
+            "stats": TableBasicStats.from_dict(obj["stats"]) if obj.get("stats") is not None else None,
+            "metadata": obj.get("metadata")
         })
         return _obj
 

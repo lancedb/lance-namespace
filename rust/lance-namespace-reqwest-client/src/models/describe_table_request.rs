@@ -21,9 +21,12 @@ pub struct DescribeTableRequest {
     /// Whether to include the table URI in the response. Default is false. 
     #[serde(rename = "with_table_uri", skip_serializing_if = "Option::is_none")]
     pub with_table_uri: Option<bool>,
-    /// Whether to load detailed metadata that requires opening the dataset. When false (default), only `location` is required in the response. When true, the response includes additional metadata such as `version`, `schema`, and `stats` which require reading the dataset. 
+    /// Whether to load detailed metadata that requires opening the dataset. When true, the response must include all detailed metadata such as `version`, `schema`, and `stats` which require reading the dataset. When not set, the implementation can decide whether to return detailed metadata and which parts of detailed metadata to return. 
     #[serde(rename = "load_detailed_metadata", skip_serializing_if = "Option::is_none")]
     pub load_detailed_metadata: Option<bool>,
+    /// Whether to include vended credentials in the response `storage_options`. When true, the implementation should provide vended credentials for accessing storage. When not set, the implementation can decide whether to return vended credentials. 
+    #[serde(rename = "vend_credentials", skip_serializing_if = "Option::is_none")]
+    pub vend_credentials: Option<bool>,
 }
 
 impl DescribeTableRequest {
@@ -33,6 +36,7 @@ impl DescribeTableRequest {
             version: None,
             with_table_uri: None,
             load_detailed_metadata: None,
+            vend_credentials: None,
         }
     }
 }
