@@ -29,7 +29,8 @@ import java.util.StringJoiner;
   DescribeTableRequest.JSON_PROPERTY_ID,
   DescribeTableRequest.JSON_PROPERTY_VERSION,
   DescribeTableRequest.JSON_PROPERTY_WITH_TABLE_URI,
-  DescribeTableRequest.JSON_PROPERTY_LOAD_DETAILED_METADATA
+  DescribeTableRequest.JSON_PROPERTY_LOAD_DETAILED_METADATA,
+  DescribeTableRequest.JSON_PROPERTY_VEND_CREDENTIALS
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -45,7 +46,10 @@ public class DescribeTableRequest {
   @javax.annotation.Nullable private Boolean withTableUri = false;
 
   public static final String JSON_PROPERTY_LOAD_DETAILED_METADATA = "load_detailed_metadata";
-  @javax.annotation.Nullable private Boolean loadDetailedMetadata = false;
+  @javax.annotation.Nullable private Boolean loadDetailedMetadata;
+
+  public static final String JSON_PROPERTY_VEND_CREDENTIALS = "vend_credentials";
+  @javax.annotation.Nullable private Boolean vendCredentials;
 
   public DescribeTableRequest() {}
 
@@ -138,10 +142,10 @@ public class DescribeTableRequest {
   }
 
   /**
-   * Whether to load detailed metadata that requires opening the dataset. When false (default), only
-   * &#x60;location&#x60; is required in the response. When true, the response includes additional
-   * metadata such as &#x60;version&#x60;, &#x60;schema&#x60;, and &#x60;stats&#x60; which require
-   * reading the dataset.
+   * Whether to load detailed metadata that requires opening the dataset. When true, the response
+   * must include all detailed metadata such as &#x60;version&#x60;, &#x60;schema&#x60;, and
+   * &#x60;stats&#x60; which require reading the dataset. When not set, the implementation can
+   * decide whether to return detailed metadata and which parts of detailed metadata to return.
    *
    * @return loadDetailedMetadata
    */
@@ -158,6 +162,32 @@ public class DescribeTableRequest {
     this.loadDetailedMetadata = loadDetailedMetadata;
   }
 
+  public DescribeTableRequest vendCredentials(@javax.annotation.Nullable Boolean vendCredentials) {
+
+    this.vendCredentials = vendCredentials;
+    return this;
+  }
+
+  /**
+   * Whether to include vended credentials in the response &#x60;storage_options&#x60;. When true,
+   * the implementation should provide vended credentials for accessing storage. When not set, the
+   * implementation can decide whether to return vended credentials.
+   *
+   * @return vendCredentials
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_VEND_CREDENTIALS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getVendCredentials() {
+    return vendCredentials;
+  }
+
+  @JsonProperty(JSON_PROPERTY_VEND_CREDENTIALS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setVendCredentials(@javax.annotation.Nullable Boolean vendCredentials) {
+    this.vendCredentials = vendCredentials;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -170,12 +200,13 @@ public class DescribeTableRequest {
     return Objects.equals(this.id, describeTableRequest.id)
         && Objects.equals(this.version, describeTableRequest.version)
         && Objects.equals(this.withTableUri, describeTableRequest.withTableUri)
-        && Objects.equals(this.loadDetailedMetadata, describeTableRequest.loadDetailedMetadata);
+        && Objects.equals(this.loadDetailedMetadata, describeTableRequest.loadDetailedMetadata)
+        && Objects.equals(this.vendCredentials, describeTableRequest.vendCredentials);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version, withTableUri, loadDetailedMetadata);
+    return Objects.hash(id, version, withTableUri, loadDetailedMetadata, vendCredentials);
   }
 
   @Override
@@ -188,6 +219,7 @@ public class DescribeTableRequest {
     sb.append("    loadDetailedMetadata: ")
         .append(toIndentedString(loadDetailedMetadata))
         .append("\n");
+    sb.append("    vendCredentials: ").append(toIndentedString(vendCredentials)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -295,6 +327,22 @@ public class DescribeTableRequest {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getLoadDetailedMetadata()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `vend_credentials` to the URL query string
+    if (getVendCredentials() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%svend_credentials%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getVendCredentials()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported

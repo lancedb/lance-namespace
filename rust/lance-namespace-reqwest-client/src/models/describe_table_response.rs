@@ -22,34 +22,38 @@ pub struct DescribeTableResponse {
     /// Table version number. Only populated when `load_detailed_metadata` is true. 
     #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
     pub version: Option<i64>,
-    /// Table storage location (e.g., S3/GCS path). This is the only required field and is always returned. 
-    #[serde(rename = "location")]
-    pub location: String,
+    /// Table storage location (e.g., S3/GCS path). 
+    #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
+    pub location: Option<String>,
     /// Table URI. Unlike location, this field must be a complete and valid URI. Only returned when `with_table_uri` is true. 
     #[serde(rename = "table_uri", skip_serializing_if = "Option::is_none")]
     pub table_uri: Option<String>,
     /// Table schema in JSON Arrow format. Only populated when `load_detailed_metadata` is true. 
     #[serde(rename = "schema", skip_serializing_if = "Option::is_none")]
     pub schema: Option<Box<models::JsonArrowSchema>>,
-    /// Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. 
+    /// Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. When `vend_credentials` is true, this field may include vended credentials. If the vended credentials are temporary, the `expires_at_millis` key should be included to indicate the millisecond timestamp when the credentials expire. 
     #[serde(rename = "storage_options", skip_serializing_if = "Option::is_none")]
     pub storage_options: Option<std::collections::HashMap<String, String>>,
     /// Table statistics. Only populated when `load_detailed_metadata` is true. 
     #[serde(rename = "stats", skip_serializing_if = "Option::is_none")]
     pub stats: Option<Box<models::TableBasicStats>>,
+    /// Optional table metadata as key-value pairs. 
+    #[serde(rename = "metadata", skip_serializing_if = "Option::is_none")]
+    pub metadata: Option<std::collections::HashMap<String, String>>,
 }
 
 impl DescribeTableResponse {
-    pub fn new(location: String) -> DescribeTableResponse {
+    pub fn new() -> DescribeTableResponse {
         DescribeTableResponse {
             table: None,
             namespace: None,
             version: None,
-            location,
+            location: None,
             table_uri: None,
             schema: None,
             storage_options: None,
             stats: None,
+            metadata: None,
         }
     }
 }

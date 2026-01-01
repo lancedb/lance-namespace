@@ -35,7 +35,8 @@ import java.util.StringJoiner;
   DescribeTableResponse.JSON_PROPERTY_TABLE_URI,
   DescribeTableResponse.JSON_PROPERTY_SCHEMA,
   DescribeTableResponse.JSON_PROPERTY_STORAGE_OPTIONS,
-  DescribeTableResponse.JSON_PROPERTY_STATS
+  DescribeTableResponse.JSON_PROPERTY_STATS,
+  DescribeTableResponse.JSON_PROPERTY_METADATA
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -51,7 +52,7 @@ public class DescribeTableResponse {
   @javax.annotation.Nullable private Long version;
 
   public static final String JSON_PROPERTY_LOCATION = "location";
-  @javax.annotation.Nonnull private String location;
+  @javax.annotation.Nullable private String location;
 
   public static final String JSON_PROPERTY_TABLE_URI = "table_uri";
   @javax.annotation.Nullable private String tableUri;
@@ -64,6 +65,9 @@ public class DescribeTableResponse {
 
   public static final String JSON_PROPERTY_STATS = "stats";
   @javax.annotation.Nullable private TableBasicStats stats;
+
+  public static final String JSON_PROPERTY_METADATA = "metadata";
+  @javax.annotation.Nullable private Map<String, String> metadata = new HashMap<>();
 
   public DescribeTableResponse() {}
 
@@ -149,28 +153,27 @@ public class DescribeTableResponse {
     this.version = version;
   }
 
-  public DescribeTableResponse location(@javax.annotation.Nonnull String location) {
+  public DescribeTableResponse location(@javax.annotation.Nullable String location) {
 
     this.location = location;
     return this;
   }
 
   /**
-   * Table storage location (e.g., S3/GCS path). This is the only required field and is always
-   * returned.
+   * Table storage location (e.g., S3/GCS path).
    *
    * @return location
    */
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public String getLocation() {
     return location;
   }
 
   @JsonProperty(JSON_PROPERTY_LOCATION)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setLocation(@javax.annotation.Nonnull String location) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setLocation(@javax.annotation.Nullable String location) {
     this.location = location;
   }
 
@@ -241,7 +244,10 @@ public class DescribeTableResponse {
 
   /**
    * Configuration options to be used to access storage. The available options depend on the type of
-   * storage in use. These will be passed directly to Lance to initialize storage access.
+   * storage in use. These will be passed directly to Lance to initialize storage access. When
+   * &#x60;vend_credentials&#x60; is true, this field may include vended credentials. If the vended
+   * credentials are temporary, the &#x60;expires_at_millis&#x60; key should be included to indicate
+   * the millisecond timestamp when the credentials expire.
    *
    * @return storageOptions
    */
@@ -282,6 +288,38 @@ public class DescribeTableResponse {
     this.stats = stats;
   }
 
+  public DescribeTableResponse metadata(@javax.annotation.Nullable Map<String, String> metadata) {
+
+    this.metadata = metadata;
+    return this;
+  }
+
+  public DescribeTableResponse putMetadataItem(String key, String metadataItem) {
+    if (this.metadata == null) {
+      this.metadata = new HashMap<>();
+    }
+    this.metadata.put(key, metadataItem);
+    return this;
+  }
+
+  /**
+   * Optional table metadata as key-value pairs.
+   *
+   * @return metadata
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_METADATA)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Map<String, String> getMetadata() {
+    return metadata;
+  }
+
+  @JsonProperty(JSON_PROPERTY_METADATA)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setMetadata(@javax.annotation.Nullable Map<String, String> metadata) {
+    this.metadata = metadata;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -298,13 +336,14 @@ public class DescribeTableResponse {
         && Objects.equals(this.tableUri, describeTableResponse.tableUri)
         && Objects.equals(this.schema, describeTableResponse.schema)
         && Objects.equals(this.storageOptions, describeTableResponse.storageOptions)
-        && Objects.equals(this.stats, describeTableResponse.stats);
+        && Objects.equals(this.stats, describeTableResponse.stats)
+        && Objects.equals(this.metadata, describeTableResponse.metadata);
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(
-        table, namespace, version, location, tableUri, schema, storageOptions, stats);
+        table, namespace, version, location, tableUri, schema, storageOptions, stats, metadata);
   }
 
   @Override
@@ -319,6 +358,7 @@ public class DescribeTableResponse {
     sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
     sb.append("    stats: ").append(toIndentedString(stats)).append("\n");
+    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -478,6 +518,28 @@ public class DescribeTableResponse {
     // add `stats` to the URL query string
     if (getStats() != null) {
       joiner.add(getStats().toUrlQueryString(prefix + "stats" + suffix));
+    }
+
+    // add `metadata` to the URL query string
+    if (getMetadata() != null) {
+      for (String _key : getMetadata().keySet()) {
+        try {
+          joiner.add(
+              String.format(
+                  "%smetadata%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
+                  getMetadata().get(_key),
+                  URLEncoder.encode(String.valueOf(getMetadata().get(_key)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
+      }
     }
 
     return joiner.toString();

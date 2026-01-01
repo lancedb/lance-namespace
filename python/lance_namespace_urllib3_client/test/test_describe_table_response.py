@@ -62,11 +62,13 @@ class TestDescribeTableResponse(unittest.TestCase):
                     },
                 stats = lance_namespace_urllib3_client.models.table_basic_stats.TableBasicStats(
                     num_deleted_rows = 0, 
-                    num_fragments = 0, )
+                    num_fragments = 0, ),
+                metadata = {
+                    'key' : ''
+                    }
             )
         else:
             return DescribeTableResponse(
-                location = '',
         )
         """
 

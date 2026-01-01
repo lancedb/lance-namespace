@@ -40,7 +40,8 @@ class TestDescribeTableRequest(unittest.TestCase):
                     ],
                 version = 0,
                 with_table_uri = True,
-                load_detailed_metadata = True
+                load_detailed_metadata = True,
+                vend_credentials = True
             )
         else:
             return DescribeTableRequest(

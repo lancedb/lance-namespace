@@ -36,7 +36,9 @@ public class DescribeTableRequest {
 
   private Boolean withTableUri = false;
 
-  private Boolean loadDetailedMetadata = false;
+  private Boolean loadDetailedMetadata;
+
+  private Boolean vendCredentials;
 
   public DescribeTableRequest id(List<String> id) {
     this.id = id;
@@ -121,16 +123,17 @@ public class DescribeTableRequest {
   }
 
   /**
-   * Whether to load detailed metadata that requires opening the dataset. When false (default), only
-   * `location` is required in the response. When true, the response includes additional metadata
-   * such as `version`, `schema`, and `stats` which require reading the dataset.
+   * Whether to load detailed metadata that requires opening the dataset. When true, the response
+   * must include all detailed metadata such as `version`, `schema`, and `stats` which require
+   * reading the dataset. When not set, the implementation can decide whether to return detailed
+   * metadata and which parts of detailed metadata to return.
    *
    * @return loadDetailedMetadata
    */
   @Schema(
       name = "load_detailed_metadata",
       description =
-          "Whether to load detailed metadata that requires opening the dataset. When false (default), only `location` is required in the response. When true, the response includes additional metadata such as `version`, `schema`, and `stats` which require reading the dataset. ",
+          "Whether to load detailed metadata that requires opening the dataset. When true, the response must include all detailed metadata such as `version`, `schema`, and `stats` which require reading the dataset. When not set, the implementation can decide whether to return detailed metadata and which parts of detailed metadata to return. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("load_detailed_metadata")
   public Boolean getLoadDetailedMetadata() {
@@ -139,6 +142,32 @@ public class DescribeTableRequest {
 
   public void setLoadDetailedMetadata(Boolean loadDetailedMetadata) {
     this.loadDetailedMetadata = loadDetailedMetadata;
+  }
+
+  public DescribeTableRequest vendCredentials(Boolean vendCredentials) {
+    this.vendCredentials = vendCredentials;
+    return this;
+  }
+
+  /**
+   * Whether to include vended credentials in the response `storage_options`. When true, the
+   * implementation should provide vended credentials for accessing storage. When not set, the
+   * implementation can decide whether to return vended credentials.
+   *
+   * @return vendCredentials
+   */
+  @Schema(
+      name = "vend_credentials",
+      description =
+          "Whether to include vended credentials in the response `storage_options`. When true, the implementation should provide vended credentials for accessing storage. When not set, the implementation can decide whether to return vended credentials. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("vend_credentials")
+  public Boolean getVendCredentials() {
+    return vendCredentials;
+  }
+
+  public void setVendCredentials(Boolean vendCredentials) {
+    this.vendCredentials = vendCredentials;
   }
 
   @Override
@@ -153,12 +182,13 @@ public class DescribeTableRequest {
     return Objects.equals(this.id, describeTableRequest.id)
         && Objects.equals(this.version, describeTableRequest.version)
         && Objects.equals(this.withTableUri, describeTableRequest.withTableUri)
-        && Objects.equals(this.loadDetailedMetadata, describeTableRequest.loadDetailedMetadata);
+        && Objects.equals(this.loadDetailedMetadata, describeTableRequest.loadDetailedMetadata)
+        && Objects.equals(this.vendCredentials, describeTableRequest.vendCredentials);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version, withTableUri, loadDetailedMetadata);
+    return Objects.hash(id, version, withTableUri, loadDetailedMetadata, vendCredentials);
   }
 
   @Override
@@ -171,6 +201,7 @@ public class DescribeTableRequest {
     sb.append("    loadDetailedMetadata: ")
         .append(toIndentedString(loadDetailedMetadata))
         .append("\n");
+    sb.append("    vendCredentials: ").append(toIndentedString(vendCredentials)).append("\n");
     sb.append("}");
     return sb.toString();
   }
