@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
@@ -31,7 +31,8 @@ class CreateEmptyTableRequest(BaseModel):
     context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
     location: Optional[StrictStr] = Field(default=None, description="Optional storage location for the table. If not provided, the namespace implementation should determine the table location. ")
-    __properties: ClassVar[List[str]] = ["identity", "context", "id", "location"]
+    vend_credentials: Optional[StrictBool] = Field(default=None, description="Whether to include vended credentials in the response `storage_options`. When true, the implementation should provide vended credentials for accessing storage. When not set, the implementation can decide whether to return vended credentials. ")
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "location", "vend_credentials"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -90,7 +91,8 @@ class CreateEmptyTableRequest(BaseModel):
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "context": obj.get("context"),
             "id": obj.get("id"),
-            "location": obj.get("location")
+            "location": obj.get("location"),
+            "vend_credentials": obj.get("vend_credentials")
         })
         return _obj
 

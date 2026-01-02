@@ -24,6 +24,9 @@ pub struct DeclareTableRequest {
     /// Optional storage location for the table. If not provided, the namespace implementation should determine the table location. 
     #[serde(rename = "location", skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
+    /// Whether to include vended credentials in the response `storage_options`. When true, the implementation should provide vended credentials for accessing storage. When not set, the implementation can decide whether to return vended credentials. 
+    #[serde(rename = "vend_credentials", skip_serializing_if = "Option::is_none")]
+    pub vend_credentials: Option<bool>,
 }
 
 impl DeclareTableRequest {
@@ -34,6 +37,7 @@ impl DeclareTableRequest {
             context: None,
             id: None,
             location: None,
+            vend_credentials: None,
         }
     }
 }

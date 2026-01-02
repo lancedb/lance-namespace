@@ -31,7 +31,8 @@ import java.util.StringJoiner;
   DeclareTableRequest.JSON_PROPERTY_IDENTITY,
   DeclareTableRequest.JSON_PROPERTY_CONTEXT,
   DeclareTableRequest.JSON_PROPERTY_ID,
-  DeclareTableRequest.JSON_PROPERTY_LOCATION
+  DeclareTableRequest.JSON_PROPERTY_LOCATION,
+  DeclareTableRequest.JSON_PROPERTY_VEND_CREDENTIALS
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -48,6 +49,9 @@ public class DeclareTableRequest {
 
   public static final String JSON_PROPERTY_LOCATION = "location";
   @javax.annotation.Nullable private String location;
+
+  public static final String JSON_PROPERTY_VEND_CREDENTIALS = "vend_credentials";
+  @javax.annotation.Nullable private Boolean vendCredentials;
 
   public DeclareTableRequest() {}
 
@@ -168,6 +172,32 @@ public class DeclareTableRequest {
     this.location = location;
   }
 
+  public DeclareTableRequest vendCredentials(@javax.annotation.Nullable Boolean vendCredentials) {
+
+    this.vendCredentials = vendCredentials;
+    return this;
+  }
+
+  /**
+   * Whether to include vended credentials in the response &#x60;storage_options&#x60;. When true,
+   * the implementation should provide vended credentials for accessing storage. When not set, the
+   * implementation can decide whether to return vended credentials.
+   *
+   * @return vendCredentials
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_VEND_CREDENTIALS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Boolean getVendCredentials() {
+    return vendCredentials;
+  }
+
+  @JsonProperty(JSON_PROPERTY_VEND_CREDENTIALS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setVendCredentials(@javax.annotation.Nullable Boolean vendCredentials) {
+    this.vendCredentials = vendCredentials;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -180,12 +210,13 @@ public class DeclareTableRequest {
     return Objects.equals(this.identity, declareTableRequest.identity)
         && Objects.equals(this.context, declareTableRequest.context)
         && Objects.equals(this.id, declareTableRequest.id)
-        && Objects.equals(this.location, declareTableRequest.location);
+        && Objects.equals(this.location, declareTableRequest.location)
+        && Objects.equals(this.vendCredentials, declareTableRequest.vendCredentials);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, location);
+    return Objects.hash(identity, context, id, location, vendCredentials);
   }
 
   @Override
@@ -196,6 +227,7 @@ public class DeclareTableRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    vendCredentials: ").append(toIndentedString(vendCredentials)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -299,6 +331,22 @@ public class DeclareTableRequest {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getLocation()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `vend_credentials` to the URL query string
+    if (getVendCredentials() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%svend_credentials%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getVendCredentials()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported

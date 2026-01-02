@@ -4120,6 +4120,7 @@ components:
         id:
         - id
         - id
+        vend_credentials: true
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -4143,6 +4144,12 @@ components:
             Optional storage location for the table.
             If not provided, the namespace implementation should determine the table location.
           type: string
+        vend_credentials:
+          description: |
+            Whether to include vended credentials in the response `storage_options`.
+            When true, the implementation should provide vended credentials for accessing storage.
+            When not set, the implementation can decide whether to return vended credentials.
+          type: boolean
     CreateEmptyTableResponse:
       deprecated: true
       description: |
@@ -4180,6 +4187,7 @@ components:
         id:
         - id
         - id
+        vend_credentials: true
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -4203,6 +4211,12 @@ components:
             Optional storage location for the table.
             If not provided, the namespace implementation should determine the table location.
           type: string
+        vend_credentials:
+          description: |
+            Whether to include vended credentials in the response `storage_options`.
+            When true, the implementation should provide vended credentials for accessing storage.
+            When not set, the implementation can decide whether to return vended credentials.
+          type: boolean
     DeclareTableResponse:
       description: |
         Response for declaring a table.

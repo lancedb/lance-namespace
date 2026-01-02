@@ -44,7 +44,8 @@ class TestCreateEmptyTableRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
-                location = ''
+                location = '',
+                vend_credentials = True
             )
         else:
             return CreateEmptyTableRequest(
