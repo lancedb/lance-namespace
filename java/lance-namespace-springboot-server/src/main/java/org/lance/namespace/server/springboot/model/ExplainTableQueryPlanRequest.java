@@ -21,7 +21,9 @@ import jakarta.validation.constraints.*;
 
 import java.util.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /** ExplainTableQueryPlanRequest */
@@ -31,6 +33,8 @@ import java.util.Objects;
 public class ExplainTableQueryPlanRequest {
 
   private Identity identity;
+
+  @Valid private Map<String, String> context = new HashMap<>();
 
   @Valid private List<String> id = new ArrayList<>();
 
@@ -66,6 +70,41 @@ public class ExplainTableQueryPlanRequest {
 
   public void setIdentity(Identity identity) {
     this.identity = identity;
+  }
+
+  public ExplainTableQueryPlanRequest context(Map<String, String> context) {
+    this.context = context;
+    return this;
+  }
+
+  public ExplainTableQueryPlanRequest putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
+   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
+   * the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry
+   * `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+   *
+   * @return context
+   */
+  @Schema(
+      name = "context",
+      description =
+          "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("context")
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  public void setContext(Map<String, String> context) {
+    this.context = context;
   }
 
   public ExplainTableQueryPlanRequest id(List<String> id) {
@@ -151,6 +190,7 @@ public class ExplainTableQueryPlanRequest {
     }
     ExplainTableQueryPlanRequest explainTableQueryPlanRequest = (ExplainTableQueryPlanRequest) o;
     return Objects.equals(this.identity, explainTableQueryPlanRequest.identity)
+        && Objects.equals(this.context, explainTableQueryPlanRequest.context)
         && Objects.equals(this.id, explainTableQueryPlanRequest.id)
         && Objects.equals(this.query, explainTableQueryPlanRequest.query)
         && Objects.equals(this.verbose, explainTableQueryPlanRequest.verbose);
@@ -158,7 +198,7 @@ public class ExplainTableQueryPlanRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, query, verbose);
+    return Objects.hash(identity, context, id, query, verbose);
   }
 
   @Override
@@ -166,6 +206,7 @@ public class ExplainTableQueryPlanRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class ExplainTableQueryPlanRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
     sb.append("    verbose: ").append(toIndentedString(verbose)).append("\n");

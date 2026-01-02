@@ -32,6 +32,7 @@ class QueryTableRequest(BaseModel):
     QueryTableRequest
     """ # noqa: E501
     identity: Optional[Identity] = None
+    context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
     bypass_vector_index: Optional[StrictBool] = Field(default=None, description="Whether to bypass vector index")
     columns: Optional[QueryTableRequestColumns] = None
@@ -51,7 +52,7 @@ class QueryTableRequest(BaseModel):
     vector_column: Optional[StrictStr] = Field(default=None, description="Name of the vector column to search")
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Table version to query")
     with_row_id: Optional[StrictBool] = Field(default=None, description="If true, return the row id as a column called `_rowid`")
-    __properties: ClassVar[List[str]] = ["identity", "id", "bypass_vector_index", "columns", "distance_type", "ef", "fast_search", "filter", "full_text_query", "k", "lower_bound", "nprobes", "offset", "prefilter", "refine_factor", "upper_bound", "vector", "vector_column", "version", "with_row_id"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "bypass_vector_index", "columns", "distance_type", "ef", "fast_search", "filter", "full_text_query", "k", "lower_bound", "nprobes", "offset", "prefilter", "refine_factor", "upper_bound", "vector", "vector_column", "version", "with_row_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -117,6 +118,7 @@ class QueryTableRequest(BaseModel):
 
         _obj = cls.model_validate({
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
+            "context": obj.get("context"),
             "id": obj.get("id"),
             "bypass_vector_index": obj.get("bypass_vector_index"),
             "columns": QueryTableRequestColumns.from_dict(obj["columns"]) if obj.get("columns") is not None else None,

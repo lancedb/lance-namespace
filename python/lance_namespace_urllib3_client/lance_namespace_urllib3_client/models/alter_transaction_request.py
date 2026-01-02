@@ -30,9 +30,10 @@ class AlterTransactionRequest(BaseModel):
     Alter a transaction with a list of actions. The server should either succeed and apply all actions, or fail and apply no action. 
     """ # noqa: E501
     identity: Optional[Identity] = None
+    context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
     actions: Annotated[List[AlterTransactionAction], Field(min_length=1)]
-    __properties: ClassVar[List[str]] = ["identity", "id", "actions"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "actions"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -96,6 +97,7 @@ class AlterTransactionRequest(BaseModel):
 
         _obj = cls.model_validate({
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
+            "context": obj.get("context"),
             "id": obj.get("id"),
             "actions": [AlterTransactionAction.from_dict(_item) for _item in obj["actions"]] if obj.get("actions") is not None else None
         })

@@ -28,11 +28,12 @@ class RegisterTableRequest(BaseModel):
     RegisterTableRequest
     """ # noqa: E501
     identity: Optional[Identity] = None
+    context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
     location: StrictStr
     mode: Optional[StrictStr] = Field(default=None, description="There are two modes when trying to register a table, to differentiate the behavior when a table of the same name already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are:   * Create (default): the operation fails with 409.   * Overwrite: the existing table registration is replaced with the new registration. ")
     properties: Optional[Dict[str, StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["identity", "id", "location", "mode", "properties"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "location", "mode", "properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,6 +90,7 @@ class RegisterTableRequest(BaseModel):
 
         _obj = cls.model_validate({
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
+            "context": obj.get("context"),
             "id": obj.get("id"),
             "location": obj.get("location"),
             "mode": obj.get("mode"),

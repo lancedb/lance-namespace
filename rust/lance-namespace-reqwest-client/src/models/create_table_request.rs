@@ -16,6 +16,9 @@ use serde::{Deserialize, Serialize};
 pub struct CreateTableRequest {
     #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
     pub identity: Option<Box<models::Identity>>,
+    /// Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. 
+    #[serde(rename = "context", skip_serializing_if = "Option::is_none")]
+    pub context: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are:   * Create: the operation fails with 409.   * ExistOk: the operation succeeds and the existing table is kept.   * Overwrite: the existing table is dropped and a new table with this name is created. 
@@ -28,6 +31,7 @@ impl CreateTableRequest {
     pub fn new() -> CreateTableRequest {
         CreateTableRequest {
             identity: None,
+            context: None,
             id: None,
             mode: None,
         }

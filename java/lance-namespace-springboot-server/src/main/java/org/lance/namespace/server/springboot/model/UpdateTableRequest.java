@@ -21,7 +21,9 @@ import jakarta.validation.constraints.*;
 
 import java.util.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -38,6 +40,8 @@ import java.util.Objects;
 public class UpdateTableRequest {
 
   private Identity identity;
+
+  @Valid private Map<String, String> context = new HashMap<>();
 
   @Valid private List<String> id = new ArrayList<>();
 
@@ -73,6 +77,41 @@ public class UpdateTableRequest {
 
   public void setIdentity(Identity identity) {
     this.identity = identity;
+  }
+
+  public UpdateTableRequest context(Map<String, String> context) {
+    this.context = context;
+    return this;
+  }
+
+  public UpdateTableRequest putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
+   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
+   * the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry
+   * `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+   *
+   * @return context
+   */
+  @Schema(
+      name = "context",
+      description =
+          "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("context")
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  public void setContext(Map<String, String> context) {
+    this.context = context;
   }
 
   public UpdateTableRequest id(List<String> id) {
@@ -169,6 +208,7 @@ public class UpdateTableRequest {
     }
     UpdateTableRequest updateTableRequest = (UpdateTableRequest) o;
     return Objects.equals(this.identity, updateTableRequest.identity)
+        && Objects.equals(this.context, updateTableRequest.context)
         && Objects.equals(this.id, updateTableRequest.id)
         && Objects.equals(this.predicate, updateTableRequest.predicate)
         && Objects.equals(this.updates, updateTableRequest.updates);
@@ -176,7 +216,7 @@ public class UpdateTableRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, predicate, updates);
+    return Objects.hash(identity, context, id, predicate, updates);
   }
 
   @Override
@@ -184,6 +224,7 @@ public class UpdateTableRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class UpdateTableRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    predicate: ").append(toIndentedString(predicate)).append("\n");
     sb.append("    updates: ").append(toIndentedString(updates)).append("\n");

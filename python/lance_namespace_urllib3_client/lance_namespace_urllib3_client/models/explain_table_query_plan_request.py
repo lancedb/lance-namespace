@@ -29,10 +29,11 @@ class ExplainTableQueryPlanRequest(BaseModel):
     ExplainTableQueryPlanRequest
     """ # noqa: E501
     identity: Optional[Identity] = None
+    context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
     query: QueryTableRequest
     verbose: Optional[StrictBool] = Field(default=False, description="Whether to return verbose explanation")
-    __properties: ClassVar[List[str]] = ["identity", "id", "query", "verbose"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "query", "verbose"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -92,6 +93,7 @@ class ExplainTableQueryPlanRequest(BaseModel):
 
         _obj = cls.model_validate({
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
+            "context": obj.get("context"),
             "id": obj.get("id"),
             "query": QueryTableRequest.from_dict(obj["query"]) if obj.get("query") is not None else None,
             "verbose": obj.get("verbose") if obj.get("verbose") is not None else False

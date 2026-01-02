@@ -29,9 +29,10 @@ class RestoreTableRequest(BaseModel):
     RestoreTableRequest
     """ # noqa: E501
     identity: Optional[Identity] = None
+    context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
     version: Annotated[int, Field(strict=True, ge=0)] = Field(description="Version to restore to")
-    __properties: ClassVar[List[str]] = ["identity", "id", "version"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "version"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,6 +89,7 @@ class RestoreTableRequest(BaseModel):
 
         _obj = cls.model_validate({
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
+            "context": obj.get("context"),
             "id": obj.get("id"),
             "version": obj.get("version")
         })

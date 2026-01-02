@@ -16,6 +16,9 @@ use serde::{Deserialize, Serialize};
 pub struct UpdateTableRequest {
     #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
     pub identity: Option<Box<models::Identity>>,
+    /// Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. 
+    #[serde(rename = "context", skip_serializing_if = "Option::is_none")]
+    pub context: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// Optional SQL predicate to filter rows for update
@@ -31,6 +34,7 @@ impl UpdateTableRequest {
     pub fn new(updates: Vec<Vec<String>>) -> UpdateTableRequest {
         UpdateTableRequest {
             identity: None,
+            context: None,
             id: None,
             predicate: None,
             updates,

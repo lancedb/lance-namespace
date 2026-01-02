@@ -1911,23 +1911,38 @@ components:
           type: string
           description: |
             API key for authentication.
-            
+
             REST NAMESPACE ONLY
             This is passed via the `x-api-key` header.
         auth_token:
           type: string
           description: |
             Bearer token for authentication.
-            
+
             REST NAMESPACE ONLY
             This is passed via the `Authorization` header
             with the Bearer scheme (e.g., `Bearer <token>`).
+
+    Context:
+      type: object
+      description: |
+        Arbitrary context for a request as key-value pairs.
+        How to use the context is custom to the specific implementation.
+
+        REST NAMESPACE ONLY
+        Context entries are passed via HTTP headers using the naming convention
+        `x-lance-ctx-<key>: <value>`. For example, a context entry
+        `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+      additionalProperties:
+        type: string
 
     CreateNamespaceRequest:
       type: object
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -1967,6 +1982,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -1996,6 +2013,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2021,6 +2040,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2060,6 +2081,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2099,6 +2122,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2136,6 +2161,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2167,6 +2194,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2279,6 +2308,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2310,6 +2341,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2337,6 +2370,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2409,6 +2444,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2457,6 +2494,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2486,6 +2525,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2598,6 +2639,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2670,6 +2713,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2727,6 +2772,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2841,6 +2888,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2886,6 +2935,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2925,6 +2976,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2959,6 +3012,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -2987,6 +3042,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3071,6 +3128,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3101,6 +3160,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3130,6 +3191,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3307,6 +3370,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3334,6 +3399,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3362,6 +3429,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3386,6 +3455,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3412,6 +3483,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3463,6 +3536,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3488,6 +3563,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3514,6 +3591,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3542,6 +3621,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3593,6 +3674,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3621,6 +3704,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3741,6 +3826,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3820,6 +3907,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3902,6 +3991,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -3931,6 +4022,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:
@@ -4029,6 +4122,8 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          $ref: '#/components/schemas/Context'
         id:
           type: array
           items:

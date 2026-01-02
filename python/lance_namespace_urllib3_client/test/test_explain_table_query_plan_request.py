@@ -38,6 +38,9 @@ class TestExplainTableQueryPlanRequest(unittest.TestCase):
                 identity = lance_namespace_urllib3_client.models.identity.Identity(
                     api_key = '', 
                     auth_token = '', ),
+                context = {
+                    'key' : ''
+                    },
                 id = [
                     ''
                     ],
@@ -45,6 +48,9 @@ class TestExplainTableQueryPlanRequest(unittest.TestCase):
                     identity = lance_namespace_urllib3_client.models.identity.Identity(
                         api_key = '', 
                         auth_token = '', ), 
+                    context = {
+                        'key' : ''
+                        }, 
                     id = [
                         ''
                         ], 
@@ -142,6 +148,9 @@ class TestExplainTableQueryPlanRequest(unittest.TestCase):
                     identity = lance_namespace_urllib3_client.models.identity.Identity(
                         api_key = '', 
                         auth_token = '', ), 
+                    context = {
+                        'key' : ''
+                        }, 
                     id = [
                         ''
                         ], 

@@ -21,7 +21,9 @@ import jakarta.validation.constraints.*;
 
 import java.util.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /** CreateTableIndexRequest */
@@ -31,6 +33,8 @@ import java.util.Objects;
 public class CreateTableIndexRequest {
 
   private Identity identity;
+
+  @Valid private Map<String, String> context = new HashMap<>();
 
   @Valid private List<String> id = new ArrayList<>();
 
@@ -87,6 +91,41 @@ public class CreateTableIndexRequest {
 
   public void setIdentity(Identity identity) {
     this.identity = identity;
+  }
+
+  public CreateTableIndexRequest context(Map<String, String> context) {
+    this.context = context;
+    return this;
+  }
+
+  public CreateTableIndexRequest putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
+   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
+   * the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry
+   * `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+   *
+   * @return context
+   */
+  @Schema(
+      name = "context",
+      description =
+          "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("context")
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  public void setContext(Map<String, String> context) {
+    this.context = context;
   }
 
   public CreateTableIndexRequest id(List<String> id) {
@@ -407,6 +446,7 @@ public class CreateTableIndexRequest {
     }
     CreateTableIndexRequest createTableIndexRequest = (CreateTableIndexRequest) o;
     return Objects.equals(this.identity, createTableIndexRequest.identity)
+        && Objects.equals(this.context, createTableIndexRequest.context)
         && Objects.equals(this.id, createTableIndexRequest.id)
         && Objects.equals(this.column, createTableIndexRequest.column)
         && Objects.equals(this.indexType, createTableIndexRequest.indexType)
@@ -426,6 +466,7 @@ public class CreateTableIndexRequest {
   public int hashCode() {
     return Objects.hash(
         identity,
+        context,
         id,
         column,
         indexType,
@@ -446,6 +487,7 @@ public class CreateTableIndexRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableIndexRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");

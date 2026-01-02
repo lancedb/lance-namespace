@@ -28,9 +28,10 @@ class CreateTableRequest(BaseModel):
     Request for creating a table, excluding the Arrow IPC stream. 
     """ # noqa: E501
     identity: Optional[Identity] = None
+    context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
     mode: Optional[StrictStr] = Field(default=None, description="There are three modes when trying to create a table, to differentiate the behavior when a table of the same name already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are:   * Create: the operation fails with 409.   * ExistOk: the operation succeeds and the existing table is kept.   * Overwrite: the existing table is dropped and a new table with this name is created. ")
-    __properties: ClassVar[List[str]] = ["identity", "id", "mode"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "mode"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -87,6 +88,7 @@ class CreateTableRequest(BaseModel):
 
         _obj = cls.model_validate({
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
+            "context": obj.get("context"),
             "id": obj.get("id"),
             "mode": obj.get("mode")
         })

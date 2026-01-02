@@ -29,6 +29,7 @@ import java.util.StringJoiner;
 /** RegisterTableRequest */
 @JsonPropertyOrder({
   RegisterTableRequest.JSON_PROPERTY_IDENTITY,
+  RegisterTableRequest.JSON_PROPERTY_CONTEXT,
   RegisterTableRequest.JSON_PROPERTY_ID,
   RegisterTableRequest.JSON_PROPERTY_LOCATION,
   RegisterTableRequest.JSON_PROPERTY_MODE,
@@ -40,6 +41,9 @@ import java.util.StringJoiner;
 public class RegisterTableRequest {
   public static final String JSON_PROPERTY_IDENTITY = "identity";
   @javax.annotation.Nullable private Identity identity;
+
+  public static final String JSON_PROPERTY_CONTEXT = "context";
+  @javax.annotation.Nullable private Map<String, String> context = new HashMap<>();
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
@@ -77,6 +81,42 @@ public class RegisterTableRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setIdentity(@javax.annotation.Nullable Identity identity) {
     this.identity = identity;
+  }
+
+  public RegisterTableRequest context(@javax.annotation.Nullable Map<String, String> context) {
+
+    this.context = context;
+    return this;
+  }
+
+  public RegisterTableRequest putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
+   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
+   * the naming convention &#x60;x-lance-ctx-&lt;key&gt;: &lt;value&gt;&#x60;. For example, a
+   * context entry &#x60;{\&quot;trace_id\&quot;: \&quot;abc123\&quot;}&#x60; would be sent as the
+   * header &#x60;x-lance-ctx-trace_id: abc123&#x60;.
+   *
+   * @return context
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_CONTEXT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  @JsonProperty(JSON_PROPERTY_CONTEXT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContext(@javax.annotation.Nullable Map<String, String> context) {
+    this.context = context;
   }
 
   public RegisterTableRequest id(@javax.annotation.Nullable List<String> id) {
@@ -205,6 +245,7 @@ public class RegisterTableRequest {
     }
     RegisterTableRequest registerTableRequest = (RegisterTableRequest) o;
     return Objects.equals(this.identity, registerTableRequest.identity)
+        && Objects.equals(this.context, registerTableRequest.context)
         && Objects.equals(this.id, registerTableRequest.id)
         && Objects.equals(this.location, registerTableRequest.location)
         && Objects.equals(this.mode, registerTableRequest.mode)
@@ -213,7 +254,7 @@ public class RegisterTableRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, location, mode, properties);
+    return Objects.hash(identity, context, id, location, mode, properties);
   }
 
   @Override
@@ -221,6 +262,7 @@ public class RegisterTableRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class RegisterTableRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
@@ -274,6 +316,28 @@ public class RegisterTableRequest {
     // add `identity` to the URL query string
     if (getIdentity() != null) {
       joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
+
+    // add `context` to the URL query string
+    if (getContext() != null) {
+      for (String _key : getContext().keySet()) {
+        try {
+          joiner.add(
+              String.format(
+                  "%scontext%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
+                  getContext().get(_key),
+                  URLEncoder.encode(String.valueOf(getContext().get(_key)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
+      }
     }
 
     // add `id` to the URL query string

@@ -16,6 +16,9 @@ use serde::{Deserialize, Serialize};
 pub struct InsertIntoTableRequest {
     #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
     pub identity: Option<Box<models::Identity>>,
+    /// Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. 
+    #[serde(rename = "context", skip_serializing_if = "Option::is_none")]
+    pub context: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
     /// How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it 
@@ -28,6 +31,7 @@ impl InsertIntoTableRequest {
     pub fn new() -> InsertIntoTableRequest {
         InsertIntoTableRequest {
             identity: None,
+            context: None,
             id: None,
             mode: None,
         }
