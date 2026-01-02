@@ -2607,12 +2607,25 @@ components:
             This is passed via the `Authorization` header
             with the Bearer scheme (e.g., `Bearer <token>`).
           type: string
+    Context:
+      additionalProperties:
+        type: string
+      description: |
+        Arbitrary context for a request as key-value pairs.
+        How to use the context is custom to the specific implementation.
+
+        REST NAMESPACE ONLY
+        Context entries are passed via HTTP headers using the naming convention
+        `x-lance-ctx-<key>: <value>`. For example, a context entry
+        `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
     CreateNamespaceRequest:
       example:
         mode: mode
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
@@ -2621,6 +2634,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -2658,6 +2682,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -2714,12 +2749,25 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -2748,6 +2796,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
@@ -2755,6 +2805,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -2796,12 +2857,25 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -2830,6 +2904,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         location: location
         id:
         - id
@@ -2839,6 +2915,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -2877,6 +2964,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -2935,6 +3033,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
@@ -2945,6 +3045,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -3086,6 +3197,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
@@ -3093,6 +3206,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -3120,6 +3244,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -3145,6 +3280,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -3222,6 +3368,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
@@ -3233,6 +3381,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -3283,12 +3442,25 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           description: The namespace identifier
           items:
@@ -3388,6 +3560,8 @@ components:
           auth_token: auth_token
         bypass_vector_index: true
         nprobes: 0
+        context:
+          key: context
         vector:
           single_vector:
           - 1.0246457
@@ -3403,6 +3577,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -3484,6 +3669,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         name: name
         ascii_folding: true
         id:
@@ -3494,6 +3681,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -3571,6 +3769,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         page_token: page_token
         limit: 6
         id:
@@ -3580,6 +3780,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           description: The namespace identifier
           items:
@@ -3679,6 +3890,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
@@ -3687,6 +3900,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -3832,6 +4056,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -3879,6 +4114,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         location: location
         id:
         - id
@@ -3886,6 +4123,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -3926,6 +4174,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         location: location
         id:
         - id
@@ -3933,6 +4183,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -3968,6 +4229,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
@@ -3975,6 +4238,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -4001,12 +4275,25 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -4125,6 +4412,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
@@ -4150,6 +4439,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -4189,6 +4489,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -4222,12 +4533,25 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -4525,6 +4849,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
@@ -4532,6 +4858,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -4557,6 +4894,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
@@ -4565,6 +4904,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -4593,6 +4943,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
@@ -4600,6 +4952,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -4622,6 +4985,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
@@ -4630,6 +4995,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -4657,6 +5033,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           description: The table identifier
           items:
@@ -4736,6 +5123,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
@@ -4743,6 +5132,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -4767,6 +5167,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         new_table_name: new_table_name
         id:
         - id
@@ -4777,6 +5179,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           description: The table identifier
           items:
@@ -4804,6 +5217,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           description: The table identifier
           items:
@@ -4826,6 +5250,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -4985,6 +5420,8 @@ components:
             auth_token: auth_token
           bypass_vector_index: true
           nprobes: 0
+          context:
+            key: context
           vector:
             single_vector:
             - 1.0246457
@@ -4997,6 +5434,8 @@ components:
           id:
           - id
           - id
+        context:
+          key: context
         id:
         - id
         - id
@@ -5004,6 +5443,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -5099,6 +5549,8 @@ components:
           auth_token: auth_token
         bypass_vector_index: true
         nprobes: 0
+        context:
+          key: context
         vector:
           single_vector:
           - 1.0246457
@@ -5114,6 +5566,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -5217,12 +5680,25 @@ components:
             - input_columns
             data_type: "{}"
             udf_version: udf_version
+        context:
+          key: context
         id:
         - id
         - id
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -5318,6 +5794,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         alterations:
         - path: path
           nullable: true
@@ -5349,6 +5827,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -5449,12 +5938,25 @@ components:
         columns:
         - columns
         - columns
+        context:
+          key: context
         id:
         - id
         - id
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -5486,12 +5988,25 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string
@@ -5614,6 +6129,17 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
         id:
           items:
             type: string

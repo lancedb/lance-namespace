@@ -21,7 +21,9 @@ import jakarta.validation.constraints.*;
 
 import java.util.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /** ListTableIndicesRequest */
@@ -31,6 +33,8 @@ import java.util.Objects;
 public class ListTableIndicesRequest {
 
   private Identity identity;
+
+  @Valid private Map<String, String> context = new HashMap<>();
 
   @Valid private List<String> id = new ArrayList<>();
 
@@ -59,6 +63,41 @@ public class ListTableIndicesRequest {
 
   public void setIdentity(Identity identity) {
     this.identity = identity;
+  }
+
+  public ListTableIndicesRequest context(Map<String, String> context) {
+    this.context = context;
+    return this;
+  }
+
+  public ListTableIndicesRequest putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
+   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
+   * the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry
+   * `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+   *
+   * @return context
+   */
+  @Schema(
+      name = "context",
+      description =
+          "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("context")
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  public void setContext(Map<String, String> context) {
+    this.context = context;
   }
 
   public ListTableIndicesRequest id(List<String> id) {
@@ -181,6 +220,7 @@ public class ListTableIndicesRequest {
     }
     ListTableIndicesRequest listTableIndicesRequest = (ListTableIndicesRequest) o;
     return Objects.equals(this.identity, listTableIndicesRequest.identity)
+        && Objects.equals(this.context, listTableIndicesRequest.context)
         && Objects.equals(this.id, listTableIndicesRequest.id)
         && Objects.equals(this.version, listTableIndicesRequest.version)
         && Objects.equals(this.pageToken, listTableIndicesRequest.pageToken)
@@ -189,7 +229,7 @@ public class ListTableIndicesRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, version, pageToken, limit);
+    return Objects.hash(identity, context, id, version, pageToken, limit);
   }
 
   @Override
@@ -197,6 +237,7 @@ public class ListTableIndicesRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class ListTableIndicesRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");

@@ -21,7 +21,9 @@ import jakarta.validation.constraints.*;
 
 import java.util.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /** Request for inserting records into a table, excluding the Arrow IPC stream. */
@@ -34,6 +36,8 @@ import java.util.Objects;
 public class InsertIntoTableRequest {
 
   private Identity identity;
+
+  @Valid private Map<String, String> context = new HashMap<>();
 
   @Valid private List<String> id = new ArrayList<>();
 
@@ -58,6 +62,41 @@ public class InsertIntoTableRequest {
 
   public void setIdentity(Identity identity) {
     this.identity = identity;
+  }
+
+  public InsertIntoTableRequest context(Map<String, String> context) {
+    this.context = context;
+    return this;
+  }
+
+  public InsertIntoTableRequest putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
+   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
+   * the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry
+   * `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+   *
+   * @return context
+   */
+  @Schema(
+      name = "context",
+      description =
+          "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("context")
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  public void setContext(Map<String, String> context) {
+    this.context = context;
   }
 
   public InsertIntoTableRequest id(List<String> id) {
@@ -124,13 +163,14 @@ public class InsertIntoTableRequest {
     }
     InsertIntoTableRequest insertIntoTableRequest = (InsertIntoTableRequest) o;
     return Objects.equals(this.identity, insertIntoTableRequest.identity)
+        && Objects.equals(this.context, insertIntoTableRequest.context)
         && Objects.equals(this.id, insertIntoTableRequest.id)
         && Objects.equals(this.mode, insertIntoTableRequest.mode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, mode);
+    return Objects.hash(identity, context, id, mode);
   }
 
   @Override
@@ -138,6 +178,7 @@ public class InsertIntoTableRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class InsertIntoTableRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("}");

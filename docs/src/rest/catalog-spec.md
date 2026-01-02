@@ -59,6 +59,34 @@ The `auth_token` is sent using the Bearer scheme (e.g., `Authorization: Bearer <
 
 When identity information is provided in both the request body and headers, the header values take precedence.
 
+## Context Header Mapping
+
+All request schemas include an optional `context` field for passing arbitrary key-value pairs.
+This allows clients to send implementation-specific context that can be used by the server
+or forwarded to downstream services.
+
+For REST Namespace, context entries are mapped to HTTP headers using the naming convention:
+
+| Context Entry              | REST Form                     | Location |
+|----------------------------|-------------------------------|----------|
+| `{"<key>": "<value>"}`     | `x-lance-ctx-<key>`           | Header   |
+
+For example, a context entry `{"trace_id": "abc123", "user_region": "us-west"}` would be sent as:
+
+```
+x-lance-ctx-trace_id: abc123
+x-lance-ctx-user_region: us-west
+```
+
+How to use the context is custom to the specific implementation.
+Common use cases include:
+
+- Passing trace IDs for distributed tracing
+- Forwarding user context to downstream services
+- Providing hints to the implementation for optimization
+
+When context is provided in both the request body and headers, the header values take precedence.
+
 ## Non-Standard Operations
 
 For request and response that cannot be simply described as a JSON object

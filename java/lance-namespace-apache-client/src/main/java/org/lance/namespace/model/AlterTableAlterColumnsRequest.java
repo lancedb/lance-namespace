@@ -20,13 +20,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 /** AlterTableAlterColumnsRequest */
 @JsonPropertyOrder({
   AlterTableAlterColumnsRequest.JSON_PROPERTY_IDENTITY,
+  AlterTableAlterColumnsRequest.JSON_PROPERTY_CONTEXT,
   AlterTableAlterColumnsRequest.JSON_PROPERTY_ID,
   AlterTableAlterColumnsRequest.JSON_PROPERTY_ALTERATIONS
 })
@@ -36,6 +39,9 @@ import java.util.StringJoiner;
 public class AlterTableAlterColumnsRequest {
   public static final String JSON_PROPERTY_IDENTITY = "identity";
   @javax.annotation.Nullable private Identity identity;
+
+  public static final String JSON_PROPERTY_CONTEXT = "context";
+  @javax.annotation.Nullable private Map<String, String> context = new HashMap<>();
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
@@ -67,6 +73,43 @@ public class AlterTableAlterColumnsRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setIdentity(@javax.annotation.Nullable Identity identity) {
     this.identity = identity;
+  }
+
+  public AlterTableAlterColumnsRequest context(
+      @javax.annotation.Nullable Map<String, String> context) {
+
+    this.context = context;
+    return this;
+  }
+
+  public AlterTableAlterColumnsRequest putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
+   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
+   * the naming convention &#x60;x-lance-ctx-&lt;key&gt;: &lt;value&gt;&#x60;. For example, a
+   * context entry &#x60;{\&quot;trace_id\&quot;: \&quot;abc123\&quot;}&#x60; would be sent as the
+   * header &#x60;x-lance-ctx-trace_id: abc123&#x60;.
+   *
+   * @return context
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_CONTEXT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  @JsonProperty(JSON_PROPERTY_CONTEXT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContext(@javax.annotation.Nullable Map<String, String> context) {
+    this.context = context;
   }
 
   public AlterTableAlterColumnsRequest id(@javax.annotation.Nullable List<String> id) {
@@ -144,13 +187,14 @@ public class AlterTableAlterColumnsRequest {
     }
     AlterTableAlterColumnsRequest alterTableAlterColumnsRequest = (AlterTableAlterColumnsRequest) o;
     return Objects.equals(this.identity, alterTableAlterColumnsRequest.identity)
+        && Objects.equals(this.context, alterTableAlterColumnsRequest.context)
         && Objects.equals(this.id, alterTableAlterColumnsRequest.id)
         && Objects.equals(this.alterations, alterTableAlterColumnsRequest.alterations);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, alterations);
+    return Objects.hash(identity, context, id, alterations);
   }
 
   @Override
@@ -158,6 +202,7 @@ public class AlterTableAlterColumnsRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTableAlterColumnsRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    alterations: ").append(toIndentedString(alterations)).append("\n");
     sb.append("}");
@@ -209,6 +254,28 @@ public class AlterTableAlterColumnsRequest {
     // add `identity` to the URL query string
     if (getIdentity() != null) {
       joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
+
+    // add `context` to the URL query string
+    if (getContext() != null) {
+      for (String _key : getContext().keySet()) {
+        try {
+          joiner.add(
+              String.format(
+                  "%scontext%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
+                  getContext().get(_key),
+                  URLEncoder.encode(String.valueOf(getContext().get(_key)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
+      }
     }
 
     // add `id` to the URL query string

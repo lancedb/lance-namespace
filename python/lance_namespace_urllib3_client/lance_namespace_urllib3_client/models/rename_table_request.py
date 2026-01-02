@@ -28,10 +28,11 @@ class RenameTableRequest(BaseModel):
     RenameTableRequest
     """ # noqa: E501
     identity: Optional[Identity] = None
+    context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = Field(default=None, description="The table identifier")
     new_table_name: StrictStr = Field(description="New name for the table")
     new_namespace_id: Optional[List[StrictStr]] = Field(default=None, description="New namespace identifier to move the table to (optional, if not specified the table stays in the same namespace)")
-    __properties: ClassVar[List[str]] = ["identity", "id", "new_table_name", "new_namespace_id"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "new_table_name", "new_namespace_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,6 +89,7 @@ class RenameTableRequest(BaseModel):
 
         _obj = cls.model_validate({
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
+            "context": obj.get("context"),
             "id": obj.get("id"),
             "new_table_name": obj.get("new_table_name"),
             "new_namespace_id": obj.get("new_namespace_id")
