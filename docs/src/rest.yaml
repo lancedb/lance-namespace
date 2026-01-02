@@ -2946,6 +2946,12 @@ components:
           description: |
             Optional storage location for the table.
             If not provided, the namespace implementation should determine the table location.
+        vend_credentials:
+          description: |
+            Whether to include vended credentials in the response `storage_options`.
+            When true, the implementation should provide vended credentials for accessing storage.
+            When not set, the implementation can decide whether to return vended credentials.
+          type: boolean
 
     CreateEmptyTableResponse:
       type: object
@@ -2987,6 +2993,12 @@ components:
           description: |
             Optional storage location for the table.
             If not provided, the namespace implementation should determine the table location.
+        vend_credentials:
+          description: |
+            Whether to include vended credentials in the response `storage_options`.
+            When true, the implementation should provide vended credentials for accessing storage.
+            When not set, the implementation can decide whether to return vended credentials.
+          type: boolean
 
     DeclareTableResponse:
       type: object

@@ -44,7 +44,8 @@ class TestDeclareTableRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
-                location = ''
+                location = '',
+                vend_credentials = True
             )
         else:
             return DeclareTableRequest(

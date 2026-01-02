@@ -41,6 +41,8 @@ public class DeclareTableRequest {
 
   private String location;
 
+  private Boolean vendCredentials;
+
   public DeclareTableRequest identity(Identity identity) {
     this.identity = identity;
     return this;
@@ -150,6 +152,32 @@ public class DeclareTableRequest {
     this.location = location;
   }
 
+  public DeclareTableRequest vendCredentials(Boolean vendCredentials) {
+    this.vendCredentials = vendCredentials;
+    return this;
+  }
+
+  /**
+   * Whether to include vended credentials in the response `storage_options`. When true, the
+   * implementation should provide vended credentials for accessing storage. When not set, the
+   * implementation can decide whether to return vended credentials.
+   *
+   * @return vendCredentials
+   */
+  @Schema(
+      name = "vend_credentials",
+      description =
+          "Whether to include vended credentials in the response `storage_options`. When true, the implementation should provide vended credentials for accessing storage. When not set, the implementation can decide whether to return vended credentials. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("vend_credentials")
+  public Boolean getVendCredentials() {
+    return vendCredentials;
+  }
+
+  public void setVendCredentials(Boolean vendCredentials) {
+    this.vendCredentials = vendCredentials;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -162,12 +190,13 @@ public class DeclareTableRequest {
     return Objects.equals(this.identity, declareTableRequest.identity)
         && Objects.equals(this.context, declareTableRequest.context)
         && Objects.equals(this.id, declareTableRequest.id)
-        && Objects.equals(this.location, declareTableRequest.location);
+        && Objects.equals(this.location, declareTableRequest.location)
+        && Objects.equals(this.vendCredentials, declareTableRequest.vendCredentials);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, location);
+    return Objects.hash(identity, context, id, location, vendCredentials);
   }
 
   @Override
@@ -178,6 +207,7 @@ public class DeclareTableRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
+    sb.append("    vendCredentials: ").append(toIndentedString(vendCredentials)).append("\n");
     sb.append("}");
     return sb.toString();
   }
