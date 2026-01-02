@@ -3,4 +3,4 @@ resolver = "2"
 members = ["lance-namespace-reqwest-client"]
 
 [workspace.dependencies]
-lance-namespace-reqwest-client = { path = "lance-namespace-reqwest-client", version = "0.4.3" }
+lance-namespace-reqwest-client = { path = "lance-namespace-reqwest-client", version = "0.4.4" }
