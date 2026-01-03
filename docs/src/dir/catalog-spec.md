@@ -105,6 +105,14 @@ The `__manifest` table has the following schema:
 | `metadata`     | String (nullable)       | JSON-encoded metadata/properties (only for namespaces)                                                                                                                          |
 | `base_objects` | List<String> (nullable) | Reserved for future use (e.g., view dependencies)                                                                                                                               |
 
+**Schema Extensibility**: The `__manifest` table schema may include additional columns beyond those listed above. Extensions like [partitioned namespaces](partition-spec.md) add columns for efficient filtering. Implementations should preserve unrecognized columns during updates.
+
+### Root Namespace Properties
+
+In V2, the root namespace is implicit and does not have a row in the `__manifest` table. Instead, root namespace properties are stored in the `__manifest` Lance table's metadata map. Properties are stored as key-value pairs where the key is the property name and the value is a UTF-8 encoded byte array.
+
+For example, a partitioned namespace stores its `partition_spec_v1`, `partition_spec_v2`, and `schema` properties in the `__manifest` table's metadata.
+
 ### Manifest Table Indexes
 
 The following indexes are created on the manifest table for query performance:
