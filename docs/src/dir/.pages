@@ -1,3 +1,4 @@
 nav:
   - Catalog Spec: catalog-spec.md
   - Implementation Spec: impl-spec.md
+  - Partitioned Namespace Spec: partition-spec.md
