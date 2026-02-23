@@ -38,6 +38,7 @@ that compute engines can integrate against:
 | Python   | `lance-namespace` | Core interface and connect functionality |
 | Java     | `org.lance:lance-namespace-core` | Core interface for Spark, Flink, Kafka, Trino, Presto |
 | Rust     | `lance-namespace` | Core interface (in [lance-format/lance](https://github.com/lance-format/lance)) |
+| TypeScript | `@lance/lance-namespace` | Core interface and connect functionality for TypeScript |
 
 ## Resources
 

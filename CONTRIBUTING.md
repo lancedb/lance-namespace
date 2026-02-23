@@ -107,6 +107,9 @@ This repository currently contains the following components:
 | Java Apache Client    | Java     | java/lance-namespace-apache-client     | Generated Java Apache HTTP client for Lance REST Namespace |
 | Java SpringBoot Server| Java     | java/lance-namespace-springboot-server | Generated Java SpringBoot server for Lance REST Namespace  |
 | Rust Reqwest Client   | Rust     | rust/lance-namespace-reqwest-client    | Generated Rust reqwest client for Lance REST Namespace     |
+| TypeScript Core       | TypeScript | typescript/lance-namespace            | Core LanceNamespace interface and connect functionality    |
+| TypeScript REST Impl  | TypeScript | typescript/lance-namespace-rest       | REST namespace implementation for TypeScript core interface |
+| TypeScript Fetch Client | TypeScript | typescript/lance-namespace-fetch-client | Generated TypeScript fetch client for Lance REST Namespace |
 
 
 ## Install uv
@@ -138,11 +141,15 @@ You can also run `make <command>-<language>` to only run the command in the spec
 
 - `make gen-python`: codegen and lint all Python modules
 - `make build-rust`: build all Rust modules
+- `make gen-typescript`: codegen TypeScript fetch client module
+- `make build-typescript`: build all TypeScript modules
 
 You can also run `make <command>-<language>-<module>` inside a language folder to run the command against a specific module, for example:
 
 - `make gen-rust-reqwest-client`: codegen and lint the Rust reqwest client module
 - `make build-java-springboot-server`: build the Java Spring Boot server module
+- `make gen-fetch-client` (inside `typescript`): codegen TypeScript fetch client module
+- `make build` (inside `typescript`): build TypeScript fetch client and core module
 
 ## Documentation
 
@@ -200,5 +207,5 @@ This section describes the CI/CD workflows for automated version management, rel
    - Go to the [Releases page](../../releases) to review the draft
    - Edit release notes if needed
    - Click "Publish release" to:
-     - For stable releases: Trigger automatic publishing for Java, Python, Rust
-     - For preview releases: Create a beta release (not published)
+     - For stable releases: Trigger automatic publishing for Java, Python, Rust, and TypeScript (npm)
+     - For preview releases: Create a beta release and trigger preview package publishing

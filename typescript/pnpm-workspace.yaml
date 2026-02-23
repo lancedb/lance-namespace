@@ -1,0 +1,4 @@
+packages:
+  - lance-namespace-fetch-client
+  - lance-namespace
+  - lance-namespace-rest

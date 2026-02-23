@@ -1,0 +1,24 @@
+{
+  "name": "@lance/namespace-fetch-client",
+  "version": "0.5.2",
+  "description": "OpenAPI client for @lance/namespace-fetch-client",
+  "author": "OpenAPI-Generator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lance-format/lance-namespace"
+  },
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "module": "./dist/esm/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc && tsc -p tsconfig.esm.json",
+    "lint": "tsc --noEmit && tsc -p tsconfig.esm.json --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vitest": "^2.1.9"
+  },
+  "license": "Apache-2.0"
+}

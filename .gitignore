@@ -57,6 +57,7 @@ dist/
 cmake-build-*
 .vscode
 .DS_Store
+node_modules/
 
 python/lance/_*.cpp
 

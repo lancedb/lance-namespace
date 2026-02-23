@@ -53,8 +53,16 @@ jobs:
         java-version: 17
         cache: "maven"
 
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+
     - name: Install uv
       uses: astral-sh/setup-uv@v4
+
+    - name: Enable corepack
+      run: corepack enable
 
     - name: Install dependencies
       run: uv sync --all-packages
@@ -217,9 +225,9 @@ jobs:
           echo "3. Publish the release to:" >> $GITHUB_STEP_SUMMARY
           if [ "${{ inputs.release_channel }}" == "stable" ]; then
             echo "   - Create the official release" >> $GITHUB_STEP_SUMMARY
-            echo "   - Trigger automatic publishing to Maven Central, PyPI, and crates.io" >> $GITHUB_STEP_SUMMARY
+            echo "   - Trigger automatic publishing to Maven Central, PyPI, crates.io, and npm" >> $GITHUB_STEP_SUMMARY
           else
             echo "   - Create a preview/beta release" >> $GITHUB_STEP_SUMMARY
-            echo "   - Trigger automatic publishing to Maven Central, PyPI, and crates.io (as pre-release version)" >> $GITHUB_STEP_SUMMARY
+            echo "   - Trigger automatic publishing to Maven Central, PyPI, crates.io, and npm (as pre-release version)" >> $GITHUB_STEP_SUMMARY
           fi
         fi

@@ -1,0 +1,69 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: TypeScript
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+      - reopened
+    paths:
+      - docs/src/rest.yaml
+      - typescript/**
+      - Makefile
+      - .github/workflows/typescript.yml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  linux-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout lance-namespace repo
+        uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: typescript/pnpm-lock.yaml
+      - name: Enable corepack
+        run: corepack enable
+      - name: Regenerate TypeScript code
+        run: make gen-typescript
+      - name: Check no difference in TypeScript codegen
+        run: |
+          output=$(git diff)
+          if [ -z "$output" ]; then
+            echo "There is no difference in TypeScript codegen"
+          else
+            echo "Detected difference in TypeScript codegen"
+            echo "$output"
+            exit 1
+          fi
+      - name: Lint TypeScript modules
+        run: make -C typescript lint
+      - name: Test TypeScript modules
+        run: make -C typescript test
+      - name: Build TypeScript modules
+        run: make build-typescript
