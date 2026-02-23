@@ -62,6 +62,8 @@ test:
 .PHONY: lint
 lint:
 	pnpm install --frozen-lockfile=false
+	pnpm --filter @lance/namespace-fetch-client run build
+	pnpm --filter @lance/lance-namespace run build
 	pnpm --filter @lance/namespace-fetch-client run lint
 	pnpm --filter @lance/lance-namespace run lint
 	pnpm --filter @lance/lance-namespace-rest run lint
