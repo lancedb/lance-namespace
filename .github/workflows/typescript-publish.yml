@@ -46,6 +46,12 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -53,9 +59,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
           cache: pnpm
           cache-dependency-path: typescript/pnpm-lock.yaml
-
-      - name: Enable corepack
-        run: corepack enable
 
       - name: Build TypeScript modules
         working-directory: typescript
