@@ -1,0 +1,44 @@
+[project]
+name = "lance-namespace-pact-tests"
+version = "0.7.6"
+description = "Hand-written Pact consumer contract tests for Lance Namespace (Python urllib3 client). Lives outside the code-generated lance_namespace_urllib3_client/ package so that `make clean` can never wipe these tests."
+readme = "README.md"
+authors = [{ name = "Lance Devs", email = "dev@lance.org" }]
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+# This package is test-only; it is never published to PyPI.
+# It depends on the urllib3 client for the consumer-side HTTP plumbing.
+dependencies = [
+    "lance-namespace-urllib3-client",
+    "urllib3>=1.25.3,<3.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.2.1",
+    "pytest-cov>=2.8.1",
+    # pact-python v3 (matches the API used in tests/pact_tests/*).
+    "pact-python>=3.0.0",
+]
+
+[tool.uv.sources]
+# Pull the freshly-built urllib3 client from the sibling directory.
+lance-namespace-urllib3-client = { path = "../lance_namespace_urllib3_client" }
+
+[tool.pytest.ini_options]
+# Tests live under tests/pact_tests/ and import each other via
+# `from tests.pact_tests.<module>`. Setting rootdir at the package root
+# makes that import path resolve naturally.
+testpaths = ["tests/pact_tests"]
+addopts = "-ra"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+# This is a tests-only package — produce an empty wheel just to satisfy
+# the build backend if someone runs `uv build`. The actual tests are not
+# packaged.
+packages = []
+bypass-selection = true

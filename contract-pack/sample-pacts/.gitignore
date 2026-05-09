@@ -1,0 +1,3 @@
+# Pact JSON files in this directory are build artifacts.
+# They are regenerated on every CI run; only .gitkeep + README.md are tracked.
+*.json

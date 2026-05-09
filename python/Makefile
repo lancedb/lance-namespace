@@ -52,6 +52,20 @@ publish-ns:
 	cd lance_namespace; \
 		uv build
 
+# lance_namespace_pact_tests package (hand-written contract tests, no codegen).
+# Lives outside lance_namespace_urllib3_client/ so `make clean-urllib3-client`
+# cannot wipe these tests. Depends on the urllib3 client for HTTP plumbing.
+.PHONY: test-pact-tests
+test-pact-tests: build-urllib3-client
+	cd lance_namespace_pact_tests; \
+		uv sync --group dev; \
+		uv run pytest tests/pact_tests -v
+
+.PHONY: build-pact-tests
+build-pact-tests: build-urllib3-client
+	cd lance_namespace_pact_tests; \
+		uv sync --group dev
+
 .PHONY: clean
 clean: clean-urllib3-client
 
@@ -59,7 +73,7 @@ clean: clean-urllib3-client
 gen: gen-urllib3-client
 
 .PHONY: build
-build: build-urllib3-client build-ns
+build: build-urllib3-client build-ns build-pact-tests
 
 .PHONY: publish
 publish: publish-urllib3-client publish-ns

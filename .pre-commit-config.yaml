@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: pact-state-guard
+        name: Guard against unauthorized Pact provider states
+        language: script
+        entry: ci/pact_state_guard.sh
+        files: '\.java$'
+        pass_filenames: true

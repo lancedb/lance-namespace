@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.lance</groupId>
+        <artifactId>lance-namespace-root</artifactId>
+        <version>0.7.6</version>
+    </parent>
+
+    <artifactId>lance-namespace-pact-tests</artifactId>
+    <packaging>jar</packaging>
+    <name>${project.artifactId}</name>
+    <description>
+        Hand-written Pact contract tests for Lance Namespace.
+        Houses both consumer (Java Apache HTTP client) tests and provider
+        (Spring Boot server) verification tests. This module is intentionally
+        kept outside any code-generated module so that running clean+gen
+        cannot wipe these tests.
+    </description>
+
+    <properties>
+        <maven.compiler.release>17</maven.compiler.release>
+        <!-- pact-jvm 4.6.14 requires JUnit Platform 1.12+ (ReflectionUtils.returnsVoid),
+             which in turn requires junit-jupiter 5.12+. Override the parent's 5.8.2. -->
+        <junit-version>5.12.2</junit-version>
+        <pact-jvm-version>4.6.14</pact-jvm-version>
+        <assertj.version>3.25.3</assertj.version>
+        <maven-surefire-plugin.pact.version>3.5.5</maven-surefire-plugin.pact.version>
+        <!-- This is a test-only module: nothing to publish to Maven Central. -->
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Re-import junit-bom at 5.12.2 so transitive junit-platform-* is aligned with
+                 pact-jvm 4.6.14 instead of inheriting the parent's 5.8.2. -->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit-version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- ─────────────── Consumer side: Java Apache HTTP client ─────────────── -->
+        <dependency>
+            <groupId>org.lance</groupId>
+            <artifactId>lance-namespace-apache-client</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- ─────────────── Provider side: Spring Boot generated API + models ──── -->
+        <dependency>
+            <groupId>org.lance</groupId>
+            <artifactId>lance-namespace-springboot-server</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Spring Boot runtime needed by PactTestApplication / PactProviderTest -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- ─────────────── Pact: consumer DSL + JUnit5 extension ──────────────── -->
+        <dependency>
+            <groupId>au.com.dius.pact.consumer</groupId>
+            <artifactId>junit5</artifactId>
+            <version>${pact-jvm-version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- ─────────────── Pact: provider verification with Spring MockMvc ────── -->
+        <dependency>
+            <groupId>au.com.dius.pact.provider</groupId>
+            <artifactId>junit5spring</artifactId>
+            <version>${pact-jvm-version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- ─────────────── Test support ───────────────────────────────────────── -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <!-- 3.5.5 supports JUnit Platform 1.12 (required by pact-jvm 4.6.14) -->
+                <version>${maven-surefire-plugin.pact.version}</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <!-- Overwrite pact files on each test run to avoid stale interaction merging -->
+                        <pact.writer.overwrite>true</pact.writer.overwrite>
+                        <!-- Consumer tests write generated pacts into target/pacts; the
+                             pact-publish profile and CI's upload-artifact step both pick them up
+                             from there. -->
+                        <pact.rootDir>${project.build.directory}/pacts</pact.rootDir>
+                    </systemPropertyVariables>
+                </configuration>
+                <dependencies>
+                    <!-- Align platform launcher/commons with junit 5.12.2.
+                         pact-jvm 4.6.14 requires platform 1.12+ APIs. -->
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-launcher</artifactId>
+                        <version>1.12.2</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-commons</artifactId>
+                        <version>1.12.2</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- ── pact-publish: upload pact files to a Pact Broker (CI only) ───── -->
+        <profile>
+            <id>pact-publish</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>au.com.dius.pact.provider</groupId>
+                        <artifactId>maven</artifactId>
+                        <version>${pact-jvm-version}</version>
+                        <configuration>
+                            <pactDirectory>${project.build.directory}/pacts</pactDirectory>
+                            <pactBrokerUrl>${env.PACT_BROKER_URL}</pactBrokerUrl>
+                            <pactBrokerToken>${env.PACT_BROKER_TOKEN}</pactBrokerToken>
+                            <projectVersion>${project.version}+${env.GIT_SHORT_SHA}</projectVersion>
+                            <tags>
+                                <tag>${env.PACT_CONSUMER_BRANCH}</tag>
+                                <tag>${env.GIT_SHORT_SHA}</tag>
+                            </tags>
+                            <trimSnapshot>true</trimSnapshot>
+                            <skipPactPublish>false</skipPactPublish>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

@@ -119,6 +119,31 @@ build-core-async: build-async-client lint-core-async
 check-core-async:
 	./mvnw checkstyle:check spotless:check -pl lance-namespace-core-async -am
 
+# lance-namespace-pact-tests module (hand-written contract tests, no codegen).
+# Depends on apache-client (consumer side) + springboot-server (provider side).
+.PHONY: lint-pact-tests
+lint-pact-tests: gen-apache-client gen-springboot-server
+	./mvnw spotless:apply -pl lance-namespace-pact-tests -am
+
+.PHONY: build-pact-tests
+build-pact-tests: build-apache-client build-springboot-server lint-pact-tests
+	./mvnw install -pl lance-namespace-pact-tests -am -DskipTests
+
+.PHONY: test-pact-consumer
+test-pact-consumer: lint-pact-tests
+	./mvnw -pl lance-namespace-pact-tests -am -Dspotless.skip=true \
+		-Dtest='org.lance.namespace.pact.consumer.*' test
+
+.PHONY: test-pact-provider
+test-pact-provider: lint-pact-tests
+	./mvnw -pl lance-namespace-pact-tests -am -Dspotless.skip=true \
+		-Dtest='org.lance.namespace.pact.provider.PactProviderTest' \
+		-Dspring.profiles.active=pact test
+
+.PHONY: check-pact-tests
+check-pact-tests:
+	./mvnw checkstyle:check spotless:check -pl lance-namespace-pact-tests -am
+
 .PHONY: clean
 clean: clean-apache-client clean-async-client clean-springboot-server
 
@@ -134,10 +159,10 @@ check-springboot-server:
 	./mvnw checkstyle:check spotless:check -pl lance-namespace-springboot-server -am
 
 .PHONY: check
-check: check-apache-client check-async-client check-springboot-server check-core check-core-async
+check: check-apache-client check-async-client check-springboot-server check-core check-core-async check-pact-tests
 
 .PHONY: lint
-lint: lint-apache-client lint-async-client lint-springboot-server lint-core lint-core-async
+lint: lint-apache-client lint-async-client lint-springboot-server lint-core lint-core-async lint-pact-tests
 
 .PHONY: build
-build: build-apache-client build-async-client build-springboot-server build-core build-core-async
+build: build-apache-client build-async-client build-springboot-server build-core build-core-async build-pact-tests

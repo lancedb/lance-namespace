@@ -33,7 +33,18 @@ gen-reqwest-client: clean-reqwest-client
 
 .PHONY: build-reqwest-client
 build-reqwest-client: gen-reqwest-client
-	cargo test --all-features
+	cargo test --all-features -p lance-namespace-reqwest-client
+
+# lance-namespace-pact-tests crate (hand-written, no codegen).
+# Test-only crate that hosts the consumer Pact integration tests.
+# Independent of `make clean-reqwest-client`, which only nukes the reqwest crate.
+.PHONY: test-pact-tests
+test-pact-tests:
+	cargo test -p lance-namespace-pact-tests --tests
+
+.PHONY: build-pact-tests
+build-pact-tests:
+	cargo build -p lance-namespace-pact-tests --tests
 
 .PHONY: clean
 clean: clean-reqwest-client
@@ -42,4 +53,4 @@ clean: clean-reqwest-client
 gen: gen-reqwest-client
 
 .PHONY: build
-build: build-reqwest-client
+build: build-reqwest-client build-pact-tests

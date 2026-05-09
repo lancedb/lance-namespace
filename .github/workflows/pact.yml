@@ -1,0 +1,307 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Pact Contract Tests
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/**'
+  pull_request:
+    branches:
+      - main
+
+env:
+  JAVA_VERSION: '17'
+  PACT_JVM_VERSION: '4.6.14'
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────────────
+  # Consumer tests run in 3-way parallel.
+  #
+  # Phase 4 layout: hand-written pact tests now live in dedicated modules
+  # *outside* the code-generated client packages, so `make clean` / codegen
+  # can never wipe them:
+  #   • Java   → java/lance-namespace-pact-tests/
+  #   • Python → python/lance_namespace_pact_tests/
+  #   • Rust   → rust/lance-namespace-pact-tests/
+  # ─────────────────────────────────────────────────────────────────────────
+
+  consumer-java:
+    name: Consumer Contract Tests (Java Apache Client)
+    runs-on: ubuntu-latest
+    env:
+      # Project secrets onto plain env vars so we can reference them inside
+      # `if:` expressions (GitHub Actions disallows `secrets.*` directly there).
+      PACT_BROKER_URL: ${{ secrets.PACT_BROKER_URL }}
+      PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run Consumer Pact Tests
+        # -am builds the apache-client + springboot-server reactor deps the
+        # pact-tests module pulls in. We also pass
+        # -Dsurefire.failIfNoSpecifiedTests=false so that surefire does NOT
+        # fail the build when -Dtest=NamespaceApiPactTest matches no test in
+        # the upstream apache-client / springboot-server modules (those
+        # generated modules contain no Pact tests by design — the tests live
+        # only in lance-namespace-pact-tests).
+        working-directory: java
+        run: mvn -pl lance-namespace-pact-tests -am -Dspotless.skip=true -Dsurefire.failIfNoSpecifiedTests=false -Dtest=NamespaceApiPactTest test
+
+      - name: Publish Pacts to Broker
+        # Phase 4 guard: only publish when PACT_BROKER_URL secret is configured.
+        # Reading `env.*` (instead of `secrets.*`) inside `if:` is required by
+        # the workflow validator.
+        if: ${{ env.PACT_BROKER_URL != '' }}
+        working-directory: java
+        run: mvn -pl lance-namespace-pact-tests -Ppact-publish -Dspotless.skip=true pact:publish
+        env:
+          GIT_BRANCH: ${{ github.head_ref || github.ref_name }}
+          GIT_SHORT_SHA: ${{ github.sha }}
+          PACT_CONSUMER_BRANCH: ${{ github.head_ref || github.ref_name }}
+
+      - name: Upload Pact Files
+        uses: actions/upload-artifact@v4
+        with:
+          name: pact-files-java
+          path: java/lance-namespace-pact-tests/target/pacts/
+
+  consumer-python:
+    name: Consumer Contract Tests (Python urllib3 Client)
+    runs-on: ubuntu-latest
+    env:
+      PACT_BROKER_URL: ${{ secrets.PACT_BROKER_URL }}
+      PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          # pact-python>=3.0 requires Python ≥ 3.10
+          python-version: '3.11'
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies (including pact-python)
+        working-directory: python/lance_namespace_pact_tests
+        # uv "groups" replaced the legacy "extras" mechanism; the pact-tests
+        # package declares `[dependency-groups].dev`.
+        run: uv sync --group dev
+
+      - name: Run Consumer Pact Tests
+        working-directory: python/lance_namespace_pact_tests
+        run: uv run pytest tests/pact_tests -v --tb=short
+        env:
+          PYTHONPATH: .
+
+      - name: Publish Pacts to Broker
+        if: ${{ env.PACT_BROKER_URL != '' }}
+        working-directory: python/lance_namespace_pact_tests
+        run: |
+           uv run pact-broker publish \
+             tests/pact_tests/pacts/lance-namespace-python-urllib3-lance-namespace-server.json \
+             --consumer-app-version="${{ github.sha }}" \
+             --branch="${{ github.head_ref || github.ref_name }}" \
+             --broker-base-url="${{ env.PACT_BROKER_URL }}" \
+             --broker-token="${{ env.PACT_BROKER_TOKEN }}"
+
+      - name: Upload Pact Files
+        uses: actions/upload-artifact@v4
+        with:
+          name: pact-files-python
+          path: python/lance_namespace_pact_tests/tests/pact_tests/pacts/
+
+  consumer-rust:
+    name: Consumer Contract Tests (Rust reqwest Client)
+    runs-on: ubuntu-latest
+    env:
+      PACT_BROKER_URL: ${{ secrets.PACT_BROKER_URL }}
+      PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            rust/target/
+            rust/lance-namespace-pact-tests/target/
+          # The pact-tests crate is part of the rust/ workspace; key off the
+          # workspace-level Cargo.lock for stable hits across both crates.
+          key: ${{ runner.os }}-cargo-pact-${{ hashFiles('rust/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-pact-
+            ${{ runner.os }}-cargo-
+
+      - name: Run Consumer Pact Tests
+        working-directory: rust
+        run: cargo test -p lance-namespace-pact-tests --tests
+        env:
+          RUST_LOG: pact_consumer=debug
+
+      - name: Publish Pacts to Broker
+        if: ${{ env.PACT_BROKER_URL != '' }}
+        working-directory: rust/lance-namespace-pact-tests
+        run: |
+           # Install pact CLI if not cached
+           if ! command -v pact-broker &> /dev/null; then
+             curl -L https://github.com/pact-foundation/pact-ruby-standalone/releases/download/v2.4.3/pact-2.4.3-linux-x86_64.tar.gz | tar xz
+             export PATH="$PWD/pact/bin:$PATH"
+           fi
+           # pact_consumer 1.x writes to crate-local target/pacts/, not the
+           # workspace-level rust/target/.
+           pact-broker publish \
+             target/pacts/ \
+             --consumer-app-version="${{ github.sha }}" \
+             --branch="${{ github.head_ref || github.ref_name }}" \
+             --broker-base-url="${{ env.PACT_BROKER_URL }}" \
+             --broker-token="${{ env.PACT_BROKER_TOKEN }}"
+
+      - name: Upload Pact Files
+        uses: actions/upload-artifact@v4
+        with:
+          name: pact-files-rust
+          path: rust/lance-namespace-pact-tests/target/pacts/
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # Provider verification: depends on all 3 consumers.
+  #
+  # The provider test is annotated with
+  #   @PactFolder("../../contract-pack/sample-pacts")
+  # (relative to java/lance-namespace-pact-tests/), so we stage every
+  # consumer artifact into contract-pack/sample-pacts/ before running mvn.
+  # ─────────────────────────────────────────────────────────────────────────
+
+  provider-verify:
+    name: Provider Verification Tests (Spring Boot Server)
+    runs-on: ubuntu-latest
+    needs: [consumer-java, consumer-python, consumer-rust]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      # Stage all 3 consumer pacts into the @PactFolder location.
+      - name: Download Java Pact Files
+        uses: actions/download-artifact@v4
+        with:
+          name: pact-files-java
+          path: contract-pack/sample-pacts/
+
+      - name: Download Python Pact Files
+        uses: actions/download-artifact@v4
+        with:
+          name: pact-files-python
+          path: contract-pack/sample-pacts/
+
+      - name: Download Rust Pact Files
+        uses: actions/download-artifact@v4
+        with:
+          name: pact-files-rust
+          path: contract-pack/sample-pacts/
+
+      - name: Show staged pacts
+        run: ls -la contract-pack/sample-pacts/
+
+      - name: Run Provider Pact Verification
+        # -am pulls in apache-client + springboot-server, both required by
+        # the pact-tests module's test classpath (PactTestApplication, fixtures).
+        # See consumer-java for why -Dsurefire.failIfNoSpecifiedTests=false is
+        # required (apache-client / springboot-server contain no PactProviderTest).
+        working-directory: java
+        run: mvn -pl lance-namespace-pact-tests -am -Dspotless.skip=true -Dsurefire.failIfNoSpecifiedTests=false -Dtest=PactProviderTest -Dspring.profiles.active=pact test
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # Can-I-Deploy: only on main with Pact Broker configured
+  # ─────────────────────────────────────────────────────────────────────────
+
+  can-i-deploy:
+    name: Can I Deploy Check
+    runs-on: ubuntu-latest
+    needs: [consumer-java, consumer-python, consumer-rust, provider-verify]
+    env:
+      PACT_BROKER_URL: ${{ secrets.PACT_BROKER_URL }}
+      PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
+    # Phase 4 guard: at job level we can ONLY use github.* / needs.* / vars.* /
+    # inputs.* — the workflow validator rejects both `secrets.*` AND `env.*`
+    # inside job-level `if:` (env context is not available at job scheduling
+    # time). The "broker configured" check is therefore moved down to the
+    # step level (`if: env.PACT_BROKER_URL != ''`), which IS allowed.
+    if: ${{ github.ref == 'refs/heads/main' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Pact CLI
+        if: ${{ env.PACT_BROKER_URL != '' }}
+        run: |
+           curl -L https://github.com/pact-foundation/pact-ruby-standalone/releases/download/v2.4.3/pact-2.4.3-linux-x86_64.tar.gz | tar xz
+           echo "$PWD/pact/bin" >> $GITHUB_PATH
+
+      - name: Can I Deploy - Consumer (lance-namespace-java-apache)
+        if: ${{ env.PACT_BROKER_URL != '' }}
+        run: |
+           pact-broker can-i-deploy \
+             --broker-base-url=${{ env.PACT_BROKER_URL }} \
+             --broker-token=${{ env.PACT_BROKER_TOKEN }} \
+             --pacticipant=lance-namespace-java-apache \
+             --version=${{ github.sha }} \
+             --to-environment=production
+
+      - name: Can I Deploy - Consumer (lance-namespace-python-urllib3)
+        if: ${{ env.PACT_BROKER_URL != '' }}
+        run: |
+           pact-broker can-i-deploy \
+             --broker-base-url=${{ env.PACT_BROKER_URL }} \
+             --broker-token=${{ env.PACT_BROKER_TOKEN }} \
+             --pacticipant=lance-namespace-python-urllib3 \
+             --version=${{ github.sha }} \
+             --to-environment=production
+
+      - name: Can I Deploy - Consumer (lance-namespace-rust-reqwest)
+        if: ${{ env.PACT_BROKER_URL != '' }}
+        run: |
+           pact-broker can-i-deploy \
+             --broker-base-url=${{ env.PACT_BROKER_URL }} \
+             --broker-token=${{ env.PACT_BROKER_TOKEN }} \
+             --pacticipant=lance-namespace-rust-reqwest \
+             --version=${{ github.sha }} \
+             --to-environment=production
+
+      - name: Can I Deploy - Provider (lance-namespace-server)
+        if: ${{ env.PACT_BROKER_URL != '' }}
+        run: |
+           pact-broker can-i-deploy \
+             --broker-base-url=${{ env.PACT_BROKER_URL }} \
+             --broker-token=${{ env.PACT_BROKER_TOKEN }} \
+             --pacticipant=lance-namespace-server \
+             --version=${{ github.sha }} \
+             --to-environment=production
+
+      - name: No Pact Broker configured — skipping can-i-deploy
+        if: ${{ env.PACT_BROKER_URL == '' }}
+        run: echo "PACT_BROKER_URL is empty (likely a fork without secrets); skipping can-i-deploy."
