@@ -23,7 +23,7 @@ on:
       - ready_for_review
       - reopened
     paths:
-      - docs/src/rest.yaml
+      - docs/src/spec.yaml
       - java/**
       - .github/workflows/java.yml
 

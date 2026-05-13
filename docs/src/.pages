@@ -1,7 +1,4 @@
 nav:
   - index.md
-  - Client Spec: client
-  - Directory Namespace: dir
-  - REST Namespace: rest
-  - Catalog Integrations: integrations
-  - Partitioning Spec: partitioning-spec.md
+  - Catalog Specs: catalog
+  - Namespace Client Spec: namespace

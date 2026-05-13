@@ -1,0 +1,6 @@
+title: Supported Catalogs
+nav:
+  - Overview: index.md
+  - Lance Directory Catalog: lance-dir.md
+  - Lance REST Catalog: lance-rest.md
+  - Template: template.md

@@ -1,5 +1,5 @@
-site_name: Lance Namespace
-site_description: open specification on top of the storage-based Lance data format to standardize access to a collection of Lance tables
+site_name: Lance Catalog & Namespace
+site_description: Open specification for managing collections of Lance tables through catalog specs (Directory and REST) and a unified Namespace SDK
 site_url: https://lance.org/format/namespace/
 docs_dir: src
 
@@ -68,4 +68,3 @@ extra:
 
 extra_javascript:
   - https://unpkg.com/mermaid@10/dist/mermaid.min.js
-

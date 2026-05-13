@@ -1,22 +1,26 @@
-# Lance REST Namespace Catalog Spec
+# Lance REST Catalog
 
-In an enterprise environment, typically there is a requirement to store tables in a metadata service
-for more advanced governance features around access control, auditing, lineage tracking, etc.
-**Lance REST Namespace** is an OpenAPI catalog protocol that enables reading, writing and managing Lance tables
-by connecting those metadata services or building a custom metadata server in a standardized way.
-The REST server definition can be found in the [OpenAPI specification](https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/lance-format/lance-namespace/refs/heads/main/docs/src/rest.yaml).
+In enterprise environments, ML teams often must integrate with existing catalog systems to satisfy governance, access control, and compliance requirements. The **Lance REST Catalog** is an OpenAPI protocol that enables reading, writing, and managing Lance tables by connecting to metadata services or building a custom metadata server in a standardized way.
 
-## Duality with Client-Side Access Spec
+The REST Catalog specification, defined as an OpenAPI document, describes the data models and metadata operations needed to discover and manage Lance tables. It also defines data operations such as `QueryTable` and `InsertIntoTable` which exchange Arrow record batches via Apache Arrow IPC streams for efficient data transfer and interoperability with Arrow-native compute engines.
 
-The Lance Namespace client-side access spec defines request and response models using OpenAPI.
-The REST namespace spec leverages this fact — the REST API is largely identical to the client-side access spec,
+The REST server definition can be found in the [OpenAPI specification](https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/lance-format/lance-namespace/refs/heads/main/docs/src/spec.yaml).
+
+## External Manifest Store
+
+The REST Catalog also exposes table version management APIs that can act as an external manifest store. When used, table commits are coordinated through the catalog before the resulting table metadata is written to storage. This enables organizations to enforce governance policies such as auditing, access control, and commit validation while still preserving the Lance table format as the authoritative source of table state.
+
+## Duality with Namespace Client Spec
+
+The Lance Namespace Client spec defines request and response models using OpenAPI.
+The REST Catalog spec leverages this fact — the REST API is largely identical to the Namespace Client spec,
 with the request and response schemas directly used as HTTP request and response bodies.
 
 This duality minimizes data conversion between client and server:
 a client can serialize its request model directly to JSON for the HTTP body,
 and deserialize the HTTP response body directly into the response model.
 
-There are a few exceptions where the REST spec diverges from the client-side access spec.
+There are a few exceptions where the REST spec diverges from the Namespace Client spec.
 For example, for some operations like `InsertIntoTable`, `CreateTable`, `MergeInsertIntoTable`,
 the HTTP request body is used for transmitting Arrow IPC binary data,
 and the operation request fields are transmitted through query parameters instead.
@@ -48,7 +52,7 @@ When the information in the request body is missing, the server must use the inf
 ## Identity Header Mapping
 
 All request schemas include an optional `identity` field for authentication.
-For REST Namespace, the identity fields are mapped to HTTP headers:
+For REST Catalog, the identity fields are mapped to HTTP headers:
 
 | Identity Field | REST Form       | Location |
 |----------------|-----------------|----------|
@@ -65,7 +69,7 @@ All request schemas include an optional `context` field for passing arbitrary ke
 This allows clients to send implementation-specific context that can be used by the server
 or forwarded to downstream services.
 
-For REST Namespace, context entries are mapped to HTTP headers using the naming convention:
+For REST Catalog, context entries are mapped to HTTP headers using the naming convention:
 
 | Context Entry              | REST Form                     | Location |
 |----------------------------|-------------------------------|----------|
@@ -299,33 +303,33 @@ Both request and response bodies are direct objects (map of string to string) in
 |----------------|---------------|-------------------------------------------------------------------|
 | `metadata`     | Response body | Direct object `{"key": "value", ...}` (not `{"metadata": {...}}`) |
 
-## Namespace Server and Adapter
+## REST Catalog Server and Adapter
 
-Any REST HTTP server that implements this OpenAPI protocol is called a **Lance Namespace server**.
-If you are a metadata service provider that is building a custom implementation of Lance namespace,
+Any REST HTTP server that implements this OpenAPI protocol is called a **Lance REST Catalog server**.
+If you are a metadata service provider that is building a custom implementation of Lance catalog,
 building a REST server gives you standardized integration to Lance
 without the need to worry about tool support and
 continuously distribute newer library versions compared to using an implementation.
 
 If the main purpose of this server is to be a proxy on top of an existing metadata service,
 converting back and forth between Lance REST API models and native API models of the metadata service,
-then this Lance namespace server is called a **Lance Namespace adapter**.
+then this Lance REST Catalog server is called a **Lance Catalog adapter**.
 
 ## Choosing between an Adapter vs an Implementation
 
-Any adapter can always be directly a Lance namespace implementation bypassing the REST server,
+Any adapter can always be directly a Lance catalog implementation bypassing the REST server,
 and vise versa. In fact, an implementation is basically the backend of an adapter.
-For example, we natively support a Lance HMS Namespace implementation,
-as well as a Lance namespace adapter for HMS by using the HMS Namespace implementation to fulfill requests in the Lance REST server.
+For example, we natively support a Lance HMS Catalog implementation,
+as well as a Lance catalog adapter for HMS by using the HMS Catalog implementation to fulfill requests in the Lance REST server.
 
-If you are considering between a Lance namespace adapter vs implementation to build or use in your environment,
+If you are considering between a Lance catalog adapter vs implementation to build or use in your environment,
 here are some criteria to consider:
 
 1. **Multi-Language Feasibility & Maintenance Cost**: If you want a single strategy that works across all Lance language bindings, an adapter is preferred.
    Sometimes it is not even possible for an integration to go with the implementation approach since it cannot support all the languages.
    Sometimes an integration is popular or important enough that it is viable to build an implementation and maintain one library per language.
-2. **Tooling Support**: each tool needs to declare the Lance namespace implementations it supports.
-   That means there will be a preference for tools to always support a REST namespace,
+2. **Tooling Support**: each tool needs to declare the Lance catalog implementations it supports.
+   That means there will be a preference for tools to always support a REST catalog,
    but it might not always support a specific implementation. This favors the adapter approach.
 3. **Security**: if you have security concerns about the adapter being a man-in-the-middle, you should choose an implementation
 4. **Performance**: after all, adapter adds one layer of indirection and is thus not the most performant solution.

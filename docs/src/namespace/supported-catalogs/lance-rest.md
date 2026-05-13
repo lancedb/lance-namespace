@@ -1,14 +1,14 @@
-# Lance REST Namespace Implementation Spec
+# Lance REST Catalog
 
-This document describes how the Lance REST Namespace implements the Lance Namespace client spec.
+This document describes how the Lance REST Catalog implements the Lance Namespace Client operations.
 
 ## Background
 
-The Lance REST Namespace is a catalog that provides access to Lance tables via a REST API. For details on the API design, endpoints, and data models, see the [REST Namespace Catalog Spec](catalog-spec.md).
+The Lance REST Catalog provides access to Lance tables via a REST API. For details on the API design, endpoints, and data models, see the [Lance REST Catalog](../../catalog/rest/index.md) specification.
 
-## Namespace Implementation Configuration Properties
+## Implementation Configuration Properties
 
-The Lance REST namespace implementation accepts the following configuration properties:
+The Lance REST Catalog implementation accepts the following configuration properties:
 
 The **uri** property is required and specifies the URI endpoint for the REST API, for example `https://api.example.com/lance`.
 
@@ -40,7 +40,7 @@ The **table location** is managed by the REST server and returned in the Describ
 
 ## Lance Table Identification
 
-In a REST Namespace, the server is responsible for managing Lance tables. The client identifies tables by their string identifier and delegates all table operations to the server.
+In a REST Catalog, the server is responsible for managing Lance tables. The client identifies tables by their string identifier and delegates all table operations to the server.
 
 The server implementation must ensure that:
 
@@ -347,7 +347,7 @@ If the specified version does not exist, return HTTP `404 Not Found` with error 
 
 ### DeregisterTable
 
-Deregisters a table from the namespace while preserving its data on storage. The table metadata is removed from the namespace catalog but the table files remain at their storage location.
+Deregisters a table from the catalog while preserving its data on storage. The table metadata is removed from the catalog but the table files remain at their storage location.
 
 **HTTP Request:**
 
@@ -368,7 +368,7 @@ The implementation:
 2. Extract the parent namespace from the identifier
 3. Validate the parent namespace exists
 4. Look up the table in the server's storage
-5. Remove the table registration from the namespace catalog
+5. Remove the table registration from the catalog
 6. Return the table location and properties for reference
 
 **Response:**
@@ -390,7 +390,7 @@ If the table does not exist, return HTTP `404 Not Found` with error code `4` (Ta
 
 ## Additional Operations
 
-The REST namespace supports all operations defined in the [Lance Namespace client spec](../client/operations/index.md). Each operation follows the same HTTP request/response pattern as the basic operations above.
+The REST Catalog supports all operations defined in the [Lance Namespace Client spec](../operations/index.md). Each operation follows the same HTTP request/response pattern as the basic operations above.
 
 ### DropTable
 
@@ -416,7 +416,7 @@ The implementation:
 3. Validate the parent namespace exists
 4. Look up the table in the server's storage
 5. Delete the table data from storage
-6. Remove the table registration from the namespace
+6. Remove the table registration from the catalog
 
 **Response:**
 
@@ -980,7 +980,7 @@ Content-Type: application/json
 
 All error responses follow the JSON error response model based on [RFC-7807](https://datatracker.ietf.org/doc/html/rfc7807).
 
-The response body contains an [ErrorResponse](../client/operations/models/ErrorResponse.md) with a `code` field containing the Lance Namespace error code. See [Error Handling](../client/operations/errors.md) for the complete list of error codes.
+The response body contains an [ErrorResponse](../operations/models/ErrorResponse.md) with a `code` field containing the Lance Namespace error code. See [Error Handling](../operations/errors.md) for the complete list of error codes.
 
 **Example error response:**
 
@@ -997,7 +997,7 @@ The `detail` field contains detailed error information such as stack traces for 
 
 ## Error Code to HTTP Status Mapping
 
-REST namespace implementations must map Lance error codes to HTTP status codes as follows:
+REST Catalog implementations must map Lance error codes to HTTP status codes as follows:
 
 - Error code `0` (Unsupported) maps to HTTP `406 Not Acceptable`
 - Error codes `1`, `4`, `6`, `8`, `10`, `11`, `12` (not found errors) map to HTTP `404 Not Found`

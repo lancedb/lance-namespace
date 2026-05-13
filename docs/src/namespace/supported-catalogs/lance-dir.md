@@ -1,22 +1,22 @@
-# Lance Directory Namespace Implementation Spec
+# Lance Directory Catalog
 
-This document describes how the Lance Directory Namespace implements the Lance Namespace client spec.
+This document describes how the Lance Directory Catalog implements the Lance Namespace Client operations.
 
 ## Background
 
-The Lance Directory Namespace is a catalog that stores tables in a directory structure on any local or remote storage system. For details on the catalog design including V1 (directory listing), V2 (manifest), and compatibility mode, see the [Directory Namespace Catalog Spec](catalog-spec.md).
+The Lance Directory Catalog is a storage-native catalog that stores tables in a directory structure on any local or remote storage system. For details on the catalog design including V1 (directory listing), V2 (manifest), and compatibility mode, see the [Lance Directory Catalog](../../catalog/dir/index.md) specification.
 
-## Namespace Implementation Configuration Properties
+## Implementation Configuration Properties
 
-The Lance directory namespace implementation accepts the following configuration properties:
+The Lance Directory Catalog implementation accepts the following configuration properties:
 
-The **root** property is required and specifies the root directory of the namespace where tables are stored. This can be a local path like `/my/dir` or a cloud storage URI like `s3://bucket/prefix`.
+The **root** property is required and specifies the root directory of the catalog where tables are stored. This can be a local path like `/my/dir` or a cloud storage URI like `s3://bucket/prefix`.
 
 The **manifest_enabled** property controls whether the manifest table is used for tracking tables and namespaces (V2). Defaults to `true`.
 
 The **dir_listing_enabled** property controls whether directory scanning is used for table discovery (V1). Defaults to `true`.
 
-By default, both properties are enabled, which means the implementation operates in [Compatibility Mode](catalog-spec.md#compatibility-mode).
+By default, both properties are enabled, which means the implementation operates in [Compatibility Mode](../../catalog/dir/index.md#compatibility-mode).
 
 Properties with the **storage.** prefix are passed directly to the underlying Lance ObjectStore after removing the prefix. For example, `storage.region` becomes `region` when passed to the storage layer.
 
@@ -48,7 +48,7 @@ The **table location** depends on the mode and namespace level:
 
 ## Lance Table Identification
 
-In a Directory Namespace, a Lance table is identified differently depending on the mode:
+In a Directory Catalog, a Lance table is identified differently depending on the mode:
 
 In **V1**, a Lance table is any directory with the `.lance` suffix (e.g., `users.lance/`). The directory must contain valid Lance table data to be usable. Only single-level table identifiers (e.g., `["users"]`) are supported in this mode.
 
@@ -173,7 +173,7 @@ In **V2**:
 3. Further filter to rows where `object_id` has exactly one more level than the namespace
 4. Return the list of table names
 
-When **both V1 and V2 are enabled** (the default [Compatibility Mode](catalog-spec.md#compatibility-mode)), 
+When **both V1 and V2 are enabled** (the default [Compatibility Mode](../../catalog/dir/index.md#compatibility-mode)),
 the implementation performs both queries and merges results, with manifest entries taking precedence when duplicates exist.
 
 **Error Handling:**
@@ -189,7 +189,7 @@ The implementation:
 1. Locate the table:
      - In V1, check for the `<table_name>.lance` directory
      - In V2, query the manifest table for the table location
-     - When both V1 and V2 are enabled (the default [Compatibility Mode](catalog-spec.md#compatibility-mode)), 
+     - When both V1 and V2 are enabled (the default [Compatibility Mode](../../catalog/dir/index.md#compatibility-mode)),
        first check the manifest table, then fall back to checking the `.lance` directory
 2. Open the Lance table using the Lance SDK
 3. Read the table metadata and return:
@@ -208,7 +208,7 @@ If a specific version is requested and does not exist, return error code `11` (T
 
 ### DeregisterTable
 
-This operation deregisters a table from the namespace while preserving its data on storage. The table files remain at their storage location and can be re-registered later using RegisterTable.
+This operation deregisters a table from the catalog while preserving its data on storage. The table files remain at their storage location and can be re-registered later using RegisterTable.
 
 In **V1**:
 
@@ -231,7 +231,7 @@ In **V2**:
 3. Keep the table files at the storage location
 4. Return the table location and properties for reference
 
-When **both V1 and V2 are enabled** (the default [Compatibility Mode](catalog-spec.md#compatibility-mode)),
+When **both V1 and V2 are enabled** (the default [Compatibility Mode](../../catalog/dir/index.md#compatibility-mode)),
 first check the manifest table, then fall back to checking the `.lance` directory.
 If found in manifest, follow V2 behavior; otherwise follow V1 behavior.
 
@@ -260,8 +260,8 @@ In **V2**:
 3. Delete the table directory and all its contents from storage
    (failure here does not affect the success of the drop since the table is no longer reachable)
 
-When **both V1 and V2 are enabled** (the default [Compatibility Mode](catalog-spec.md#compatibility-mode)), 
-first check the manifest table, then fall back to checking the `.lance` directory. 
+When **both V1 and V2 are enabled** (the default [Compatibility Mode](../../catalog/dir/index.md#compatibility-mode)),
+first check the manifest table, then fall back to checking the `.lance` directory.
 If found in manifest, follow V2 behavior; otherwise follow V1 behavior.
 
 **Error Handling:**
@@ -287,7 +287,7 @@ When **table version management is not enabled**:
 5. Delete the staging manifest file
 6. Return the created version info including the final manifest path
 
-When **table version management is enabled** (V2 with `table_version_management=true` in `__manifest` metadata), the directory namespace acts as an external manifest store. The commit process follows these steps:
+When **table version management is enabled** (V2 with `table_version_management=true` in `__manifest` metadata), the directory catalog acts as an external manifest store. The commit process follows these steps:
 
 1. **Stage manifest in object storage**: The caller writes the new manifest to a staging path (e.g., `{table_location}/_versions/{version}.manifest-{uuid}`). This staged manifest is not yet visible to readers.
 2. **Atomically commit to manifest table**: Merge-insert a new row into the `__manifest` table with:

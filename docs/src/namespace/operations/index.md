@@ -6,7 +6,7 @@ The Lance Namespace Specification defines a list of operations that can be perfo
 
 The spec uses [OpenAPI](https://www.openapis.org/) to define the request and response models for each operation.
 This standardization allows clients in any language to generate a client library from the
-[OpenAPI specification](https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/lance-format/lance-namespace/refs/heads/main/docs/src/rest.yaml)
+[OpenAPI specification](https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/lance-format/lance-namespace/refs/heads/main/docs/src/spec.yaml)
 and use it to invoke operations with the corresponding request model, receiving responses in the expected response model.
 
 The actual execution of an operation can be:
@@ -18,24 +18,24 @@ The actual execution of an operation can be:
 This flexibility allows the same client interface to work across different namespace implementations
 while maintaining consistent request/response contracts.
 
-## Duality with REST Namespace Spec
+## Duality with REST Catalog Spec
 
 The request and response models defined here are designed to work seamlessly with the
-[REST Namespace](../../rest/catalog-spec.md) spec. The REST namespace uses these same schemas directly as
+[REST Catalog](../../catalog/rest/index.md) spec. The REST Catalog uses these same schemas directly as
 HTTP request and response bodies, minimizing data conversion between client and server.
 
 This duality explains why certain fields like `id` are marked as optional in the request models:
 
-- **In REST Namespace Spec**: The object identifier is already present in the REST route path
+- **In REST Catalog Spec**: The object identifier is already present in the REST route path
   (e.g., `/v1/table/{id}/describe`), so the `id` field in the request body is optional and
   can be omitted to avoid redundancy.
-- **In Client-Side Access Spec**: When invoking operations directly through a client library
-  (e.g., for directory namespace), the `id` field **must be specified** in the request since
+- **In Namespace Client Spec**: When invoking operations directly through a client library
+  (e.g., for directory catalog), the `id` field **must be specified** in the request since
   there is no REST route to carry this information.
 
 When both the route path and request body contain the `id`, the REST server must validate
-that they match and return a 400 Bad Request error if they differ. 
-See [REST Routes](../../rest/catalog-spec.md#rest-routes) for more details.
+that they match and return a 400 Bad Request error if they differ.
+See [REST Routes](../../catalog/rest/index.md#rest-routes) for more details.
 
 ## Operation List
 

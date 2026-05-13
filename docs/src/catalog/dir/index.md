@@ -1,7 +1,10 @@
-# Lance Directory Namespace Catalog Spec
+# Lance Directory Catalog
 
-**Lance directory namespace** is a catalog that stores tables in a directory structure
-on any local or remote storage system. It has gone through 2 major spec versions so far:
+The **Lance Directory Catalog** is a storage-native catalog format that stores tables in a directory structure on any local or remote storage system. It requires no external metadata service — only a filesystem or object store.
+
+Machine learning workloads frequently operate on datasets stored in object storage and favor minimal operational dependencies, even in production environments. However, existing lakehouse formats typically require an external catalog service, while storage-only approaches lack the transactional guarantees required for reliable production use. The Directory Catalog addresses this gap by providing a catalog built directly on top of the Lance table format.
+
+The Directory Catalog has gone through 2 major spec versions:
 
 - **V1 (Directory Listing)**: A lightweight, simple 1-level namespace that discovers tables by scanning the directory.
 - **V2 (Manifest)**: A more advanced implementation backed by a manifest table (a Lance table) that supports nested namespaces and better performance at scale.
@@ -13,11 +16,11 @@ This mode is ideal for getting started quickly with Lance tables.
 
 ### Directory Layout
 
-A directory namespace maps to a directory on storage, called the **namespace directory**.
-A Lance table corresponds to a subdirectory in the namespace directory that has the format `<table_name>.lance`,
+A directory catalog maps to a directory on storage, called the **catalog directory**.
+A Lance table corresponds to a subdirectory in the catalog directory that has the format `<table_name>.lance`,
 called a **table directory**.
 
-Consider the following example namespace directory layout:
+Consider the following example catalog directory layout:
 
 ```
 .
@@ -38,7 +41,7 @@ Consider the following example namespace directory layout:
         └── .lance-reserved          # Marker: table4 is reserved but not created
 ```
 
-This describes a Lance directory namespace with the namespace directory at `/my/dir1/`.
+This describes a Lance Directory Catalog with the catalog directory at `/my/dir1/`.
 It contains active tables `table1` and `table2` at table directories
 `/my/dir1/table1.lance` and `/my/dir1/table2.lance`.
 Table `table3` exists on storage but is deregistered (excluded from table listings).
@@ -46,7 +49,7 @@ Table `table4` is reserved but not yet created with data.
 
 ### Table Existence
 
-In V1, a table exists in a Lance directory namespace if a table directory of the specific name exists
+In V1, a table exists in a Lance Directory Catalog if a table directory of the specific name exists
 and the table is not marked as deregistered.
 In object store terms, this means the prefix `<table_name>.lance/` has at least one file in it
 and the file `<table_name>.lance/.lance-deregistered` does not exist.
@@ -65,15 +68,17 @@ is created inside the table directory. This causes the table to be excluded from
 and to return "not found" for `DescribeTable` and `TableExists` operations, while preserving the table data
 for potential re-registration.
 
-## V2: Manifest 
+## V2: Manifest
 
-V2 uses a special `__manifest` table (a Lance table) stored in the namespace directory to track all tables
+V2 uses a special `__manifest` table (a Lance table) stored in the catalog directory to track all tables
 and namespaces. This provides several advantages over V1:
 
 - **Nested namespaces**: Support for hierarchical namespace organization
 - **Better performance**: Table discovery queries the manifest table instead of scanning the directory and leverages Lance's random access capability.
 - **Metadata support**: All operations can be supported, e.g. namespaces can have associated properties/metadata, tables can be renamed.
 - **Optimized directory path**: Hash-based directory naming prevents conflicts and maximizes throughput in object storage.
+
+Because the catalog metadata is itself stored as a Lance table, the catalog inherits the transactional semantics, snapshot isolation, and schema evolution guarantees of the table format, while also benefiting from Lance's random-access-friendly file layout and table-level indexing capabilities.
 
 ### Directory Layout
 
@@ -107,13 +112,13 @@ The `__manifest` table has the following schema:
 
 **Primary Key**: The `object_id` column is the [unenforced primary key](https://lance.org/format/table/#unenforced-primary-key) for the manifest table. Implementation of this spec must always enforce the primary key uniqueness using features like Lance merge insert with primary key deduplication.
 
-**Schema Extensibility**: The `__manifest` table schema may include additional columns beyond those listed above. Extensions like [partitioned namespaces](../partitioning-spec.md) add columns for efficient filtering. Implementations should preserve unrecognized columns during updates.
+**Schema Extensibility**: The `__manifest` table schema may include additional columns beyond those listed above. Implementations should preserve unrecognized columns during updates, since extensions may add columns for filtering or other metadata-driven behaviors.
 
 ### Root Namespace Properties
 
 In V2, the root namespace is implicit and does not have a row in the `__manifest` table. Instead, root namespace properties are stored in the `__manifest` Lance table's metadata map. Properties are stored as key-value pairs where the key is the property name and the value is a UTF-8 encoded byte array.
 
-For example, a partitioned namespace stores its `partition_spec_v1`, `partition_spec_v2`, and `schema` properties in the `__manifest` table's metadata.
+For example, implementations may store catalog-level properties in the `__manifest` table's metadata.
 
 ### Manifest Table Indexes
 
@@ -145,7 +150,7 @@ In [compatibility mode](#compatibility-mode), root namespace tables use `<table_
 
 ### Table Version Management
 
-V2 optionally supports managed table versioning, where table versions are tracked in the `__manifest` table instead of relying on Lance's native version management. When enabled, the directory namespace acts as an [external manifest store](https://lance.org/format/table/transaction/#external-manifest-store). This feature must be enabled for the entire namespace.
+V2 optionally supports managed table versioning, where table versions are tracked in the `__manifest` table instead of relying on Lance's native version management. When enabled, the directory catalog acts as an [external manifest store](https://lance.org/format/table/transaction/#external-manifest-store). This feature must be enabled for the entire catalog.
 
 #### Enabling Table Version Management
 
@@ -186,7 +191,7 @@ Example metadata JSON:
 
 ## Compatibility Mode
 
-By default, the directory namespace operates in compatibility mode, supporting both V1 and V2 tables simultaneously. This allows gradual migration from V1 to V2 without disrupting existing workflows.
+By default, the directory catalog operates in compatibility mode, supporting both V1 and V2 tables simultaneously. This allows gradual migration from V1 to V2 without disrupting existing workflows.
 
 In compatibility mode:
 

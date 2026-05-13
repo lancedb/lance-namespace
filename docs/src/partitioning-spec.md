@@ -10,11 +10,11 @@ Most of the time, queries like vector search are only against a specific partiti
 it would be convenient to query across all business units as a unified dataset.
 
 A **Partitioned Namespace** is designed for these use cases.
-It is a [Directory Namespace](dir/catalog-spec.md) containing a collection of tables that share a common schema.
+It is a [Directory Catalog](catalog/dir/index.md) containing a collection of tables that share a common schema.
 These tables are physically separated and independent, but logically related through partition fields definition.
 
 This document defines the storage format for Partitioned Namespace.
-Similar to Lance being a storage-only format, the storage-only [Directory Namespace](dir/catalog-spec.md) spec serves as the foundation for this Partitioned Namespace format.
+Similar to Lance being a storage-only format, the storage-only [Directory Catalog](catalog/dir/index.md) spec serves as the foundation for this Partitioned Namespace format.
 
 The following example illustrates the logical layout of a partitioned namespace:
 
@@ -48,13 +48,13 @@ Root Namespace (__manifest Lance table)
 
 ## Metadata Definition
 
-A directory namespace is identified as a partitioned namespace if the `__manifest` table's
-[metadata](dir/catalog-spec.md#root-namespace-properties) contains at least one partition spec version key.
+A directory catalog is identified as a partitioned namespace if the `__manifest` table's
+[metadata](catalog/dir/index.md#root-namespace-properties) contains at least one partition spec version key.
 
 The following properties are stored in the `__manifest` table's metadata map:
 
 - `partition_spec_v<N>` (String): A JSON string representing a partition spec object for version N. The object contains the spec ID and an array of partition field definitions. See [Partition Spec](#partition-spec) for details.
-- `schema` (String): A json string describing the Schema of the entire partitioned namespace, based on the [JsonArrowSchema](client/operations/models/JsonArrowSchema.md) schema in client spec. See [Namespace Schema](#schema) for more details.
+- `schema` (String): A json string describing the Schema of the entire partitioned namespace, based on the [JsonArrowSchema](namespace/operations/models/JsonArrowSchema.md) schema in the Namespace Client spec. See [Namespace Schema](#schema) for more details.
 
 See [Appendix A: Metadata Example](#appendix-a-metadata-example) for a complete example.
 
@@ -91,7 +91,7 @@ Each element in the `fields` array is a partition field object with the followin
 | **`source_ids`**  | `JSON int array`    | `[1]`                       | Field IDs of the source columns in the schema                                                                                                   |
 | **`transform`**   | `JSON object`       | `{ "type": "year" }`        | Well-known partition transform (see [Partition Transform](#partition-transform)). Exactly one of `transform` or `expression` must be specified. |
 | **`expression`**  | `JSON string`       | `"date_part('year', col0)"` | DataFusion SQL expression using `col0`, `col1`, ... as column references. Exactly one of `transform` or `expression` must be specified.         |
-| **`result_type`** | `JSON object`       | `{ "type": "int32" }`       | The output type of the partition value ([JsonArrowDataType](client/operations/models/JsonArrowDataType.md) format)                              |
+| **`result_type`** | `JSON object`       | `{ "type": "int32" }`       | The output type of the partition value ([JsonArrowDataType](namespace/operations/models/JsonArrowDataType.md) format)                              |
 
 **Transform vs Expression**: Exactly one of `transform` or `expression` must be specified. When `transform` is specified, the expression is derived from the transform type. Custom partition logic that doesn't fit a well-known transform must use `expression` directly.
 
@@ -400,7 +400,7 @@ In this example:
 - `v1` partitions by `event_date` using the identity transform with `result_type: date32`
 - `v2` partitions first by year of `event_date` using the year transform with `result_type: int32`, then by `country` using the identity transform with `result_type: utf8`
 - The `__manifest` table will have three partition columns: `partition_field_event_date` (date32), `partition_field_event_year` (int32), `partition_field_country` (utf8)
-- The schema follows [JsonArrowSchema](client/operations/models/JsonArrowSchema.md) format
+- The schema follows [JsonArrowSchema](namespace/operations/models/JsonArrowSchema.md) format
 
 ### Appendix B: Physical Layout Example
 

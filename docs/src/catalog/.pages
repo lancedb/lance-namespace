@@ -1,0 +1,5 @@
+title: Catalog Specs
+nav:
+  - Overview: index.md
+  - Directory Catalog: dir
+  - REST Catalog: rest
