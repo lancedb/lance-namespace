@@ -60,6 +60,7 @@ public class JavaTimeFormatter {
       throw new RuntimeException(e);
     }
   }
+
   /**
    * Format the given {@code OffsetDateTime} object into string.
    *

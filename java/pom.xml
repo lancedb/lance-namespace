@@ -58,11 +58,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <arrow.version>15.0.0</arrow.version>
         <springboot.version>3.5.5</springboot.version>
-        <junit-version>5.8.2</junit-version>
+        <junit-version>5.10.2</junit-version>
 
         <spotless.skip>false</spotless.skip>
-        <spotless.version>2.30.0</spotless.version>
-        <spotless.java.googlejavaformat.version>1.15.0</spotless.java.googlejavaformat.version>
+        <spotless.version>2.43.0</spotless.version>
+        <spotless.java.googlejavaformat.version>1.22.0</spotless.java.googlejavaformat.version>
         <!-- Please also update .scalafmt.conf when you change it here -->
         <spotless.scala.scalafmt.version>3.7.5</spotless.scala.scalafmt.version>
         <spotless.delimiter>package</spotless.delimiter>
@@ -119,16 +119,16 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${springboot.version}</version>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.10.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>5.8.2</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

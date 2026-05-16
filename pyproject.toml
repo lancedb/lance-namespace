@@ -12,7 +12,11 @@ dev = [
     "mkdocs-material",
     "mkdocs-linkcheck",
     "mkdocs-macros-plugin",
-    "mkdocs-awesome-pages-plugin"
+    "mkdocs-awesome-pages-plugin",
+    "jsf>=0.7.0",
+    "prance>=23.0.0",
+    "jsonpath-ng>=1.6.0",
+    "schemathesis>=3.30.0"
 ]
 
 [tool.uv.workspace]

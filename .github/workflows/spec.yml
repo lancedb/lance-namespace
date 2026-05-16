@@ -52,6 +52,12 @@ jobs:
         run: | 
           make clean
           make gen
+          # Contract tests (CTS) live alongside generated client code and are
+          # wiped by `make clean` (which uses `rm -rf <module>/**`).  Re-run the
+          # CTS test generator so the working tree matches the committed sources.
+          # Use gen-client-tests (not gen-cts) to avoid downloading the WireMock
+          # jar, which is only needed for actually running the contract tests.
+          make gen-client-tests
       - name: Check no difference in codegen
         run: |
           output=$(git diff)
