@@ -104,726 +104,433 @@ def test_wiremock_reachable(wiremock_base_url: str, wiremock_port: int) -> None:
 # ---------------------------------------------------------------------------
 
 def test_alter_table_add_columns(api_client: ApiClient) -> None:
-    """AlterTableAddColumns returns a non-None result or a stub 4xx (both are valid)."""
+    """AlterTableAddColumns returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.alter_table_add_columns_request import AlterTableAddColumnsRequest
     api = TableApi(api_client)
-    try:
-        result = api.alter_table_add_columns(id="test_ns.test_table", alter_table_add_columns_request=AlterTableAddColumnsRequest(new_columns=[]))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.alter_table_add_columns(id="test_ns.test_table", alter_table_add_columns_request=AlterTableAddColumnsRequest(new_columns=[]))
+    del result
 
 
 def test_alter_table_alter_columns(api_client: ApiClient) -> None:
-    """AlterTableAlterColumns returns a non-None result or a stub 4xx (both are valid)."""
+    """AlterTableAlterColumns returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.alter_table_alter_columns_request import AlterTableAlterColumnsRequest
     api = TableApi(api_client)
-    try:
-        result = api.alter_table_alter_columns(id="test_ns.test_table", alter_table_alter_columns_request=AlterTableAlterColumnsRequest(alterations=[]))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.alter_table_alter_columns(id="test_ns.test_table", alter_table_alter_columns_request=AlterTableAlterColumnsRequest(alterations=[]))
+    del result
 
 
 def test_alter_table_backfill_columns(api_client: ApiClient) -> None:
-    """AlterTableBackfillColumns returns a non-None result or a stub 4xx (both are valid)."""
+    """AlterTableBackfillColumns returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.alter_table_backfill_columns_request import AlterTableBackfillColumnsRequest
     api = TableApi(api_client)
-    try:
-        result = api.alter_table_backfill_columns(id="test_ns.test_table", alter_table_backfill_columns_request=AlterTableBackfillColumnsRequest(column="col"))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.alter_table_backfill_columns(id="test_ns.test_table", alter_table_backfill_columns_request=AlterTableBackfillColumnsRequest(column="col"))
+    del result
 
 
 def test_alter_table_drop_columns(api_client: ApiClient) -> None:
-    """AlterTableDropColumns returns a non-None result or a stub 4xx (both are valid)."""
+    """AlterTableDropColumns returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.alter_table_drop_columns_request import AlterTableDropColumnsRequest
     api = TableApi(api_client)
-    try:
-        result = api.alter_table_drop_columns(id="test_ns.test_table", alter_table_drop_columns_request=AlterTableDropColumnsRequest(columns=[]))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.alter_table_drop_columns(id="test_ns.test_table", alter_table_drop_columns_request=AlterTableDropColumnsRequest(columns=[]))
+    del result
 
 
 def test_alter_transaction(api_client: ApiClient) -> None:
-    """AlterTransaction returns a non-None result or a stub 4xx (both are valid)."""
+    """AlterTransaction returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.transaction_api import TransactionApi
+    from lance_namespace_urllib3_client.models.alter_transaction_action import AlterTransactionAction
     from lance_namespace_urllib3_client.models.alter_transaction_request import AlterTransactionRequest
     api = TransactionApi(api_client)
-    try:
-        result = api.alter_transaction(id="test_txn", alter_transaction_request=AlterTransactionRequest(actions=[]))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.alter_transaction(id="test_txn", alter_transaction_request=AlterTransactionRequest(actions=[AlterTransactionAction()]))
+    del result
 
 
 def test_analyze_table_query_plan(api_client: ApiClient) -> None:
-    """AnalyzeTableQueryPlan returns a non-None result or a stub 4xx (both are valid)."""
+    """AnalyzeTableQueryPlan returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.analyze_table_query_plan_request import AnalyzeTableQueryPlanRequest
     from lance_namespace_urllib3_client.models.query_table_request_vector import QueryTableRequestVector
     api = TableApi(api_client)
-    try:
-        result = api.analyze_table_query_plan(id="test_ns.test_table", analyze_table_query_plan_request=AnalyzeTableQueryPlanRequest(k=1, vector=QueryTableRequestVector(single_vector=[0.1])))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.analyze_table_query_plan(id="test_ns.test_table", analyze_table_query_plan_request=AnalyzeTableQueryPlanRequest(k=1, vector=QueryTableRequestVector(single_vector=[0.1])))
+    del result
 
 
 def test_batch_commit_tables(api_client: ApiClient) -> None:
-    """BatchCommitTables returns a non-None result or a stub 4xx (both are valid)."""
+    """BatchCommitTables returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.transaction_api import TransactionApi
     from lance_namespace_urllib3_client.models.batch_commit_tables_request import BatchCommitTablesRequest
     api = TransactionApi(api_client)
-    try:
-        result = api.batch_commit_tables(batch_commit_tables_request=BatchCommitTablesRequest(operations=[]))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.batch_commit_tables(batch_commit_tables_request=BatchCommitTablesRequest(operations=[]))
+    del result
 
 
 def test_batch_create_table_versions(api_client: ApiClient) -> None:
-    """BatchCreateTableVersions returns a non-None result or a stub 4xx (both are valid)."""
+    """BatchCreateTableVersions returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.batch_create_table_versions_request import BatchCreateTableVersionsRequest
     api = TableApi(api_client)
-    try:
-        result = api.batch_create_table_versions(batch_create_table_versions_request=BatchCreateTableVersionsRequest(entries=[]))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.batch_create_table_versions(batch_create_table_versions_request=BatchCreateTableVersionsRequest(entries=[]))
+    del result
 
 
 def test_batch_delete_table_versions(api_client: ApiClient) -> None:
-    """BatchDeleteTableVersions returns a non-None result or a stub 4xx (both are valid)."""
+    """BatchDeleteTableVersions returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.batch_delete_table_versions_request import BatchDeleteTableVersionsRequest
     api = TableApi(api_client)
-    try:
-        result = api.batch_delete_table_versions(id="test_ns.test_table", batch_delete_table_versions_request=BatchDeleteTableVersionsRequest(ranges=[]))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.batch_delete_table_versions(id="test_ns.test_table", batch_delete_table_versions_request=BatchDeleteTableVersionsRequest(ranges=[]))
+    del result
 
 
 def test_count_table_rows(api_client: ApiClient) -> None:
-    """CountTableRows returns a non-None result or a stub 4xx (both are valid)."""
+    """CountTableRows returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.count_table_rows_request import CountTableRowsRequest
     api = TableApi(api_client)
-    try:
-        result = api.count_table_rows(id="test_ns.test_table", count_table_rows_request=CountTableRowsRequest())
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.count_table_rows(id="test_ns.test_table", count_table_rows_request=CountTableRowsRequest())
+    del result
 
 
 def test_create_namespace(api_client: ApiClient) -> None:
-    """CreateNamespace returns a non-None result or a stub 4xx (both are valid)."""
+    """CreateNamespace returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.namespace_api import NamespaceApi
     from lance_namespace_urllib3_client.models.create_namespace_request import CreateNamespaceRequest
     api = NamespaceApi(api_client)
-    try:
-        result = api.create_namespace(id="test_ns", create_namespace_request=CreateNamespaceRequest())
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.create_namespace(id="test_ns", create_namespace_request=CreateNamespaceRequest())
+    del result
 
 
 def test_create_table(api_client: ApiClient) -> None:
-    """CreateTable returns a non-None result or a stub 4xx (both are valid)."""
+    """CreateTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     api = TableApi(api_client)
-    try:
-        result = api.create_table(id="test_ns.test_table", body=b'')
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.create_table(id="test_ns.test_table", body=b'')
+    del result
 
 
 def test_create_table_index(api_client: ApiClient) -> None:
-    """CreateTableIndex returns a non-None result or a stub 4xx (both are valid)."""
+    """CreateTableIndex returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.index_api import IndexApi
     from lance_namespace_urllib3_client.models.create_table_index_request import CreateTableIndexRequest
     api = IndexApi(api_client)
-    try:
-        result = api.create_table_index(id="test_ns.test_table", create_table_index_request=CreateTableIndexRequest(column="col", index_type="IVF_PQ"))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.create_table_index(id="test_ns.test_table", create_table_index_request=CreateTableIndexRequest(column="col", index_type="IVF_PQ"))
+    del result
 
 
 def test_create_table_scalar_index(api_client: ApiClient) -> None:
-    """CreateTableScalarIndex returns a non-None result or a stub 4xx (both are valid)."""
+    """CreateTableScalarIndex returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.index_api import IndexApi
     from lance_namespace_urllib3_client.models.create_table_index_request import CreateTableIndexRequest
     api = IndexApi(api_client)
-    try:
-        result = api.create_table_scalar_index(id="test_ns.test_table", create_table_index_request=CreateTableIndexRequest(column="col", index_type="BTREE"))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.create_table_scalar_index(id="test_ns.test_table", create_table_index_request=CreateTableIndexRequest(column="col", index_type="BTREE"))
+    del result
 
 
 def test_create_table_tag(api_client: ApiClient) -> None:
-    """CreateTableTag returns a non-None result or a stub 4xx (both are valid)."""
+    """CreateTableTag returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.tag_api import TagApi
     from lance_namespace_urllib3_client.models.create_table_tag_request import CreateTableTagRequest
     api = TagApi(api_client)
-    try:
-        result = api.create_table_tag(id="test_ns.test_table", create_table_tag_request=CreateTableTagRequest(tag="v1", version=1))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.create_table_tag(id="test_ns.test_table", create_table_tag_request=CreateTableTagRequest(tag="v1", version=1))
+    del result
 
 
 def test_create_table_version(api_client: ApiClient) -> None:
-    """CreateTableVersion returns a non-None result or a stub 4xx (both are valid)."""
+    """CreateTableVersion returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.create_table_version_request import CreateTableVersionRequest
     api = TableApi(api_client)
-    try:
-        result = api.create_table_version(id="test_ns.test_table", create_table_version_request=CreateTableVersionRequest(version=1, manifest_path="manifest_path"))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.create_table_version(id="test_ns.test_table", create_table_version_request=CreateTableVersionRequest(version=1, manifest_path="manifest_path"))
+    del result
 
 
 def test_declare_table(api_client: ApiClient) -> None:
-    """DeclareTable returns a non-None result or a stub 4xx (both are valid)."""
+    """DeclareTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.declare_table_request import DeclareTableRequest
     api = TableApi(api_client)
-    try:
-        result = api.declare_table(id="test_ns.test_table", declare_table_request=DeclareTableRequest())
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.declare_table(id="test_ns.test_table", declare_table_request=DeclareTableRequest())
+    del result
 
 
 def test_delete_from_table(api_client: ApiClient) -> None:
-    """DeleteFromTable returns a non-None result or a stub 4xx (both are valid)."""
+    """DeleteFromTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.delete_from_table_request import DeleteFromTableRequest
     api = TableApi(api_client)
-    try:
-        result = api.delete_from_table(id="test_ns.test_table", delete_from_table_request=DeleteFromTableRequest(predicate="id = 1"))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.delete_from_table(id="test_ns.test_table", delete_from_table_request=DeleteFromTableRequest(predicate="id = 1"))
+    del result
 
 
 def test_delete_table_tag(api_client: ApiClient) -> None:
-    """DeleteTableTag returns a non-None result or a stub 4xx (both are valid)."""
+    """DeleteTableTag returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.tag_api import TagApi
     from lance_namespace_urllib3_client.models.delete_table_tag_request import DeleteTableTagRequest
     api = TagApi(api_client)
-    try:
-        result = api.delete_table_tag(id="test_ns.test_table", delete_table_tag_request=DeleteTableTagRequest(tag="v1"))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.delete_table_tag(id="test_ns.test_table", delete_table_tag_request=DeleteTableTagRequest(tag="v1"))
+    del result
 
 
 def test_deregister_table(api_client: ApiClient) -> None:
-    """DeregisterTable returns a non-None result or a stub 4xx (both are valid)."""
+    """DeregisterTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.deregister_table_request import DeregisterTableRequest
     api = TableApi(api_client)
-    try:
-        result = api.deregister_table(id="test_ns.test_table", deregister_table_request=DeregisterTableRequest())
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.deregister_table(id="test_ns.test_table", deregister_table_request=DeregisterTableRequest())
+    del result
 
 
 def test_describe_namespace(api_client: ApiClient) -> None:
-    """DescribeNamespace returns a non-None result or a stub 4xx (both are valid)."""
+    """DescribeNamespace returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.namespace_api import NamespaceApi
     from lance_namespace_urllib3_client.models.describe_namespace_request import DescribeNamespaceRequest
     api = NamespaceApi(api_client)
-    try:
-        result = api.describe_namespace(id="ns_existing", describe_namespace_request=DescribeNamespaceRequest())
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.describe_namespace(id="ns_existing", describe_namespace_request=DescribeNamespaceRequest())
+    del result
 
 
 def test_describe_table(api_client: ApiClient) -> None:
-    """DescribeTable returns a non-None result or a stub 4xx (both are valid)."""
+    """DescribeTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.describe_table_request import DescribeTableRequest
     api = TableApi(api_client)
-    try:
-        result = api.describe_table(id="ns_with_tables.table_alpha", describe_table_request=DescribeTableRequest())
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.describe_table(id="ns_with_tables.table_alpha", describe_table_request=DescribeTableRequest())
+    del result
 
 
 def test_describe_table_index_stats(api_client: ApiClient) -> None:
-    """DescribeTableIndexStats returns a non-None result or a stub 4xx (both are valid)."""
+    """DescribeTableIndexStats returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.index_api import IndexApi
     from lance_namespace_urllib3_client.models.describe_table_index_stats_request import DescribeTableIndexStatsRequest
     api = IndexApi(api_client)
-    try:
-        result = api.describe_table_index_stats(id="test_ns.test_table", index_name="idx", describe_table_index_stats_request=DescribeTableIndexStatsRequest())
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.describe_table_index_stats(id="test_ns.test_table", index_name="idx", describe_table_index_stats_request=DescribeTableIndexStatsRequest())
+    del result
 
 
 def test_describe_table_version(api_client: ApiClient) -> None:
-    """DescribeTableVersion returns a non-None result or a stub 4xx (both are valid)."""
+    """DescribeTableVersion returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.describe_table_version_request import DescribeTableVersionRequest
     api = TableApi(api_client)
-    try:
-        result = api.describe_table_version(id="test_ns.test_table", describe_table_version_request=DescribeTableVersionRequest())
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.describe_table_version(id="test_ns.test_table", describe_table_version_request=DescribeTableVersionRequest())
+    del result
 
 
 def test_describe_transaction(api_client: ApiClient) -> None:
-    """DescribeTransaction returns a non-None result or a stub 4xx (both are valid)."""
+    """DescribeTransaction returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.transaction_api import TransactionApi
     from lance_namespace_urllib3_client.models.describe_transaction_request import DescribeTransactionRequest
     api = TransactionApi(api_client)
-    try:
-        result = api.describe_transaction(id="test_txn", describe_transaction_request=DescribeTransactionRequest())
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.describe_transaction(id="test_txn", describe_transaction_request=DescribeTransactionRequest())
+    del result
 
 
 def test_drop_namespace(api_client: ApiClient) -> None:
-    """DropNamespace returns a non-None result or a stub 4xx (both are valid)."""
+    """DropNamespace returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.namespace_api import NamespaceApi
     from lance_namespace_urllib3_client.models.drop_namespace_request import DropNamespaceRequest
     api = NamespaceApi(api_client)
-    try:
-        result = api.drop_namespace(id="ns_existing", drop_namespace_request=DropNamespaceRequest())
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.drop_namespace(id="ns_existing", drop_namespace_request=DropNamespaceRequest())
+    del result
 
 
 def test_drop_table(api_client: ApiClient) -> None:
-    """DropTable returns a non-None result or a stub 4xx (both are valid)."""
+    """DropTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     api = TableApi(api_client)
-    try:
-        result = api.drop_table(id="test_ns.test_table")
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.drop_table(id="test_ns.test_table")
+    del result
 
 
 def test_drop_table_index(api_client: ApiClient) -> None:
-    """DropTableIndex returns a non-None result or a stub 4xx (both are valid)."""
+    """DropTableIndex returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.index_api import IndexApi
     api = IndexApi(api_client)
-    try:
-        result = api.drop_table_index(id="test_ns.test_table", index_name="idx")
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.drop_table_index(id="test_ns.test_table", index_name="idx")
+    del result
 
 
 def test_explain_table_query_plan(api_client: ApiClient) -> None:
-    """ExplainTableQueryPlan returns a non-None result or a stub 4xx (both are valid)."""
+    """ExplainTableQueryPlan returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.explain_table_query_plan_request import ExplainTableQueryPlanRequest
     from lance_namespace_urllib3_client.models.query_table_request import QueryTableRequest
     from lance_namespace_urllib3_client.models.query_table_request_vector import QueryTableRequestVector
     api = TableApi(api_client)
-    try:
-        result = api.explain_table_query_plan(id="test_ns.test_table", explain_table_query_plan_request=ExplainTableQueryPlanRequest(query=QueryTableRequest(k=1, vector=QueryTableRequestVector(single_vector=[0.1]))))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.explain_table_query_plan(id="test_ns.test_table", explain_table_query_plan_request=ExplainTableQueryPlanRequest(query=QueryTableRequest(k=1, vector=QueryTableRequestVector(single_vector=[0.1]))))
+    del result
 
 
 def test_get_table_stats(api_client: ApiClient) -> None:
-    """GetTableStats returns a non-None result or a stub 4xx (both are valid)."""
+    """GetTableStats returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.get_table_stats_request import GetTableStatsRequest
     api = TableApi(api_client)
-    try:
-        result = api.get_table_stats(id="test_ns.test_table", get_table_stats_request=GetTableStatsRequest())
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.get_table_stats(id="test_ns.test_table", get_table_stats_request=GetTableStatsRequest())
+    del result
 
 
 def test_get_table_tag_version(api_client: ApiClient) -> None:
-    """GetTableTagVersion returns a non-None result or a stub 4xx (both are valid)."""
+    """GetTableTagVersion returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.tag_api import TagApi
     from lance_namespace_urllib3_client.models.get_table_tag_version_request import GetTableTagVersionRequest
     api = TagApi(api_client)
-    try:
-        result = api.get_table_tag_version(id="test_ns.test_table", get_table_tag_version_request=GetTableTagVersionRequest(tag="v1"))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.get_table_tag_version(id="test_ns.test_table", get_table_tag_version_request=GetTableTagVersionRequest(tag="v1"))
+    del result
 
 
 def test_insert_into_table(api_client: ApiClient) -> None:
-    """InsertIntoTable returns a non-None result or a stub 4xx (both are valid)."""
+    """InsertIntoTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     api = TableApi(api_client)
-    try:
-        result = api.insert_into_table(id="test_ns.test_table", body=b'')
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.insert_into_table(id="test_ns.test_table", body=b'')
+    del result
 
 
 def test_list_all_tables(api_client: ApiClient) -> None:
-    """ListAllTables returns a non-None result or a stub 4xx (both are valid)."""
+    """ListAllTables returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     api = TableApi(api_client)
-    try:
-        result = api.list_all_tables()
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.list_all_tables()
+    del result
 
 
 def test_list_namespaces(api_client: ApiClient) -> None:
-    """ListNamespaces returns a non-None result or a stub 4xx (both are valid)."""
+    """ListNamespaces returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.namespace_api import NamespaceApi
     api = NamespaceApi(api_client)
-    try:
-        result = api.list_namespaces(id="$")
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.list_namespaces(id="$")
+    del result
 
 
 def test_list_table_indices(api_client: ApiClient) -> None:
-    """ListTableIndices returns a non-None result or a stub 4xx (both are valid)."""
+    """ListTableIndices returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.index_api import IndexApi
     from lance_namespace_urllib3_client.models.list_table_indices_request import ListTableIndicesRequest
     api = IndexApi(api_client)
-    try:
-        result = api.list_table_indices(id="test_ns.test_table", list_table_indices_request=ListTableIndicesRequest())
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.list_table_indices(id="test_ns.test_table", list_table_indices_request=ListTableIndicesRequest())
+    del result
 
 
 def test_list_table_tags(api_client: ApiClient) -> None:
-    """ListTableTags returns a non-None result or a stub 4xx (both are valid)."""
+    """ListTableTags returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.tag_api import TagApi
     api = TagApi(api_client)
-    try:
-        result = api.list_table_tags(id="test_ns.test_table")
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.list_table_tags(id="test_ns.test_table")
+    del result
 
 
 def test_list_table_versions(api_client: ApiClient) -> None:
-    """ListTableVersions returns a non-None result or a stub 4xx (both are valid)."""
+    """ListTableVersions returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     api = TableApi(api_client)
-    try:
-        result = api.list_table_versions(id="test_ns.test_table")
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.list_table_versions(id="test_ns.test_table")
+    del result
 
 
 def test_list_tables(api_client: ApiClient) -> None:
-    """ListTables returns a non-None result or a stub 4xx (both are valid)."""
+    """ListTables returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.namespace_api import NamespaceApi
     api = NamespaceApi(api_client)
-    try:
-        result = api.list_tables(id="ns_with_tables")
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.list_tables(id="ns_with_tables")
+    del result
 
 
 def test_merge_insert_into_table(api_client: ApiClient) -> None:
-    """MergeInsertIntoTable returns a non-None result or a stub 4xx (both are valid)."""
+    """MergeInsertIntoTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     api = TableApi(api_client)
-    try:
-        result = api.merge_insert_into_table(id="test_ns.test_table", on="id", body=b'')
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.merge_insert_into_table(id="test_ns.test_table", on="id", body=b'')
+    del result
 
 
 def test_namespace_exists(api_client: ApiClient) -> None:
-    """NamespaceExists completes without connection error."""
+    """NamespaceExists completes without error against the WireMock stub."""
     from lance_namespace_urllib3_client.api.namespace_api import NamespaceApi
     from lance_namespace_urllib3_client.models.namespace_exists_request import NamespaceExistsRequest
     api = NamespaceApi(api_client)
-    try:
-        api.namespace_exists(id="ns_existing", namespace_exists_request=NamespaceExistsRequest())
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    api.namespace_exists(id="ns_existing", namespace_exists_request=NamespaceExistsRequest())
 
 
 def test_query_table(api_client: ApiClient) -> None:
-    """QueryTable returns a non-None result or a stub 4xx (both are valid)."""
+    """QueryTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.query_table_request import QueryTableRequest
     from lance_namespace_urllib3_client.models.query_table_request_vector import QueryTableRequestVector
     api = TableApi(api_client)
-    try:
-        result = api.query_table(id="test_ns.test_table", query_table_request=QueryTableRequest(k=1, vector=QueryTableRequestVector(single_vector=[0.1])))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.query_table(id="test_ns.test_table", query_table_request=QueryTableRequest(k=1, vector=QueryTableRequestVector(single_vector=[0.1])))
+    del result
 
 
 def test_refresh_materialized_view(api_client: ApiClient) -> None:
-    """RefreshMaterializedView returns a non-None result or a stub 4xx (both are valid)."""
+    """RefreshMaterializedView returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.refresh_materialized_view_request import RefreshMaterializedViewRequest
     api = TableApi(api_client)
-    try:
-        result = api.refresh_materialized_view(id="test_ns.test_table", refresh_materialized_view_request=RefreshMaterializedViewRequest())
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.refresh_materialized_view(id="test_ns.test_table", refresh_materialized_view_request=RefreshMaterializedViewRequest())
+    del result
 
 
 def test_register_table(api_client: ApiClient) -> None:
-    """RegisterTable returns a non-None result or a stub 4xx (both are valid)."""
+    """RegisterTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.register_table_request import RegisterTableRequest
     api = TableApi(api_client)
-    try:
-        result = api.register_table(id="test_ns.test_table", register_table_request=RegisterTableRequest(location="s3://bucket/path"))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.register_table(id="test_ns.test_table", register_table_request=RegisterTableRequest(location="s3://bucket/path"))
+    del result
 
 
 def test_rename_table(api_client: ApiClient) -> None:
-    """RenameTable returns a non-None result or a stub 4xx (both are valid)."""
+    """RenameTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.rename_table_request import RenameTableRequest
     api = TableApi(api_client)
-    try:
-        result = api.rename_table(id="test_ns.test_table", rename_table_request=RenameTableRequest(new_table_name="new_name"))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.rename_table(id="test_ns.test_table", rename_table_request=RenameTableRequest(new_table_name="new_name"))
+    del result
 
 
 def test_restore_table(api_client: ApiClient) -> None:
-    """RestoreTable returns a non-None result or a stub 4xx (both are valid)."""
+    """RestoreTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.restore_table_request import RestoreTableRequest
     api = TableApi(api_client)
-    try:
-        result = api.restore_table(id="test_ns.test_table", restore_table_request=RestoreTableRequest(version=1))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.restore_table(id="test_ns.test_table", restore_table_request=RestoreTableRequest(version=1))
+    del result
 
 
 def test_table_exists(api_client: ApiClient) -> None:
-    """TableExists completes without connection error."""
+    """TableExists completes without error against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.table_exists_request import TableExistsRequest
     api = TableApi(api_client)
-    try:
-        api.table_exists(id="ns_with_tables.table_alpha", table_exists_request=TableExistsRequest())
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    api.table_exists(id="ns_with_tables.table_alpha", table_exists_request=TableExistsRequest())
 
 
 def test_update_table(api_client: ApiClient) -> None:
-    """UpdateTable returns a non-None result or a stub 4xx (both are valid)."""
+    """UpdateTable returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     from lance_namespace_urllib3_client.models.update_table_request import UpdateTableRequest
     api = TableApi(api_client)
-    try:
-        result = api.update_table(id="test_ns.test_table", update_table_request=UpdateTableRequest(updates=[]))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.update_table(id="test_ns.test_table", update_table_request=UpdateTableRequest(updates=[]))
+    del result
 
 
 def test_update_table_schema_metadata(api_client: ApiClient) -> None:
-    """UpdateTableSchemaMetadata returns a non-None result or a stub 4xx (both are valid)."""
+    """UpdateTableSchemaMetadata returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.table_api import TableApi
     api = TableApi(api_client)
-    try:
-        result = api.update_table_schema_metadata(id="test_ns.test_table", request_body={})
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.update_table_schema_metadata(id="test_ns.test_table", request_body={})
+    del result
 
 
 def test_update_table_tag(api_client: ApiClient) -> None:
-    """UpdateTableTag returns a non-None result or a stub 4xx (both are valid)."""
+    """UpdateTableTag returns a deserializable response against the WireMock stub."""
     from lance_namespace_urllib3_client.api.tag_api import TagApi
     from lance_namespace_urllib3_client.models.update_table_tag_request import UpdateTableTagRequest
     api = TagApi(api_client)
-    try:
-        result = api.update_table_tag(id="test_ns.test_table", update_table_tag_request=UpdateTableTagRequest(tag="v1", version=2))
-        assert result is not None
-    except Exception as exc:
-        msg = str(exc)
-        assert "connection refused" not in msg.lower(), (
-            f"Connection refused — WireMock not running? Error: {msg}"
-        )
+    result = api.update_table_tag(id="test_ns.test_table", update_table_tag_request=UpdateTableTagRequest(tag="v1", version=2))
+    del result

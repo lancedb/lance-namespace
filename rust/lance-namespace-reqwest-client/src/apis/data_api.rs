@@ -443,7 +443,12 @@ pub async fn create_table(configuration: &configuration::Configuration, id: &str
     if let Some(ref token) = configuration.bearer_access_token {
         req_builder = req_builder.bearer_auth(token.to_owned());
     };
-    req_builder = req_builder.body(p_body);
+    req_builder = req_builder
+        .header(
+            reqwest::header::CONTENT_TYPE,
+            "application/vnd.apache.arrow.stream",
+        )
+        .body(p_body);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
@@ -618,7 +623,12 @@ pub async fn insert_into_table(configuration: &configuration::Configuration, id:
     if let Some(ref token) = configuration.bearer_access_token {
         req_builder = req_builder.bearer_auth(token.to_owned());
     };
-    req_builder = req_builder.body(p_body);
+    req_builder = req_builder
+        .header(
+            reqwest::header::CONTENT_TYPE,
+            "application/vnd.apache.arrow.stream",
+        )
+        .body(p_body);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;
@@ -705,7 +715,12 @@ pub async fn merge_insert_into_table(configuration: &configuration::Configuratio
     if let Some(ref token) = configuration.bearer_access_token {
         req_builder = req_builder.bearer_auth(token.to_owned());
     };
-    req_builder = req_builder.body(p_body);
+    req_builder = req_builder
+        .header(
+            reqwest::header::CONTENT_TYPE,
+            "application/vnd.apache.arrow.stream",
+        )
+        .body(p_body);
 
     let req = req_builder.build()?;
     let resp = configuration.client.execute(req).await?;

@@ -104,94 +104,78 @@ fn make_config() -> Configuration {
 }
 
 // ---------------------------------------------------------------------------
-// Helper: treat WireMock stub errors (4xx JSON) as valid contract responses.
-// Only a connection-refused / transport failure means the infra is broken.
-// ---------------------------------------------------------------------------
-fn assert_contract_ok<T, E: std::fmt::Debug>(result: Result<T, E>) {
-    if let Err(e) = result {
-        let msg = format!("{e:?}");
-        assert!(
-            !msg.contains("connection refused"),
-            "Connection refused — WireMock not running? Error: {msg}"
-        );
-        // 4xx from WireMock is a valid contract response; log and continue.
-        println!("stub returned error (contract match): {msg}");
-    }
-}
-
-// ---------------------------------------------------------------------------
 // Contract tests — one per operation
 // ---------------------------------------------------------------------------
 
 #[tokio::test]
 async fn contract_alter_table_add_columns() {
     let config = make_config();
-    let result = data_api::alter_table_add_columns(
+    data_api::alter_table_add_columns(
         &config,
         "test_ns.test_table",
         models::AlterTableAddColumnsRequest::new(vec![]),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_alter_table_alter_columns() {
     let config = make_config();
-    let result = metadata_api::alter_table_alter_columns(
+    metadata_api::alter_table_alter_columns(
         &config,
         "test_ns.test_table",
         models::AlterTableAlterColumnsRequest::new(vec![]),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_alter_table_backfill_columns() {
     let config = make_config();
-    let result = data_api::alter_table_backfill_columns(
+    data_api::alter_table_backfill_columns(
         &config,
         "test_ns.test_table",
         models::AlterTableBackfillColumnsRequest::new("col".to_string()),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_alter_table_drop_columns() {
     let config = make_config();
-    let result = metadata_api::alter_table_drop_columns(
+    metadata_api::alter_table_drop_columns(
         &config,
         "test_ns.test_table",
         models::AlterTableDropColumnsRequest::new(vec![]),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_alter_transaction() {
     let config = make_config();
-    let result = metadata_api::alter_transaction(
+    metadata_api::alter_transaction(
         &config,
         "test_txn",
-        models::AlterTransactionRequest::new(vec![]),
+        models::AlterTransactionRequest::new(vec![models::AlterTransactionAction::new()]),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_analyze_table_query_plan() {
     let config = make_config();
-    let result = data_api::analyze_table_query_plan(
+    data_api::analyze_table_query_plan(
         &config,
         "test_ns.test_table",
         models::AnalyzeTableQueryPlanRequest::new(
@@ -203,77 +187,73 @@ async fn contract_analyze_table_query_plan() {
         ),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_batch_commit_tables() {
     let config = make_config();
-    let result = metadata_api::batch_commit_tables(
-        &config,
-        models::BatchCommitTablesRequest::new(vec![]),
-        None,
-    )
-    .await;
-    assert_contract_ok(result);
+    metadata_api::batch_commit_tables(&config, models::BatchCommitTablesRequest::new(vec![]), None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_batch_create_table_versions() {
     let config = make_config();
-    let result = metadata_api::batch_create_table_versions(
+    metadata_api::batch_create_table_versions(
         &config,
         models::BatchCreateTableVersionsRequest::new(vec![]),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_batch_delete_table_versions() {
     let config = make_config();
-    let result = metadata_api::batch_delete_table_versions(
+    metadata_api::batch_delete_table_versions(
         &config,
         "test_ns.test_table",
         models::BatchDeleteTableVersionsRequest::new(vec![]),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_count_table_rows() {
     let config = make_config();
-    let result = data_api::count_table_rows(
+    data_api::count_table_rows(
         &config,
         "test_ns.test_table",
         models::CountTableRowsRequest::new(),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_create_namespace() {
     let config = make_config();
-    let result = metadata_api::create_namespace(
+    metadata_api::create_namespace(
         &config,
         "test_ns",
         models::CreateNamespaceRequest::new(),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_create_table() {
     let config = make_config();
-    let result = data_api::create_table(
+    data_api::create_table(
         &config,
         "test_ns.test_table",
         vec![],
@@ -282,131 +262,131 @@ async fn contract_create_table() {
         None,
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_create_table_index() {
     let config = make_config();
-    let result = index_api::create_table_index(
+    index_api::create_table_index(
         &config,
         "test_ns.test_table",
         models::CreateTableIndexRequest::new("col".to_string(), "IVF_PQ".to_string()),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_create_table_scalar_index() {
     let config = make_config();
-    let result = index_api::create_table_scalar_index(
+    index_api::create_table_scalar_index(
         &config,
         "test_ns.test_table",
         models::CreateTableIndexRequest::new("col".to_string(), "BTREE".to_string()),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_create_table_tag() {
     let config = make_config();
-    let result = metadata_api::create_table_tag(
+    metadata_api::create_table_tag(
         &config,
         "test_ns.test_table",
         models::CreateTableTagRequest::new("v1".to_string(), 1i64),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_create_table_version() {
     let config = make_config();
-    let result = metadata_api::create_table_version(
+    metadata_api::create_table_version(
         &config,
         "test_ns.test_table",
         models::CreateTableVersionRequest::new(1i64, "manifest_path".to_string()),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_declare_table() {
     let config = make_config();
-    let result = metadata_api::declare_table(
+    metadata_api::declare_table(
         &config,
         "test_ns.test_table",
         models::DeclareTableRequest::new(),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_delete_from_table() {
     let config = make_config();
-    let result = data_api::delete_from_table(
+    data_api::delete_from_table(
         &config,
         "test_ns.test_table",
         models::DeleteFromTableRequest::new("id = 1".to_string()),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_delete_table_tag() {
     let config = make_config();
-    let result = metadata_api::delete_table_tag(
+    metadata_api::delete_table_tag(
         &config,
         "test_ns.test_table",
         models::DeleteTableTagRequest::new("v1".to_string()),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_deregister_table() {
     let config = make_config();
-    let result = metadata_api::deregister_table(
+    metadata_api::deregister_table(
         &config,
         "test_ns.test_table",
         models::DeregisterTableRequest::new(),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_describe_namespace() {
     let config = make_config();
-    let result = metadata_api::describe_namespace(
+    metadata_api::describe_namespace(
         &config,
         "ns_existing",
         models::DescribeNamespaceRequest::new(),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_describe_table() {
     let config = make_config();
-    let result = metadata_api::describe_table(
+    metadata_api::describe_table(
         &config,
         "ns_with_tables.table_alpha",
         models::DescribeTableRequest::new(),
@@ -415,81 +395,83 @@ async fn contract_describe_table() {
         None,
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_describe_table_index_stats() {
     let config = make_config();
-    let result = index_api::describe_table_index_stats(
+    index_api::describe_table_index_stats(
         &config,
         "test_ns.test_table",
         "idx",
         models::DescribeTableIndexStatsRequest::new(),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_describe_table_version() {
     let config = make_config();
-    let result = metadata_api::describe_table_version(
+    metadata_api::describe_table_version(
         &config,
         "test_ns.test_table",
         models::DescribeTableVersionRequest::new(),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_describe_transaction() {
     let config = make_config();
-    let result = metadata_api::describe_transaction(
+    metadata_api::describe_transaction(
         &config,
         "test_txn",
         models::DescribeTransactionRequest::new(),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_drop_namespace() {
     let config = make_config();
-    let result = metadata_api::drop_namespace(
+    metadata_api::drop_namespace(
         &config,
         "ns_existing",
         models::DropNamespaceRequest::new(),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_drop_table() {
     let config = make_config();
-    let result = metadata_api::drop_table(&config, "test_ns.test_table", None).await;
-    assert_contract_ok(result);
+    metadata_api::drop_table(&config, "test_ns.test_table", None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_drop_table_index() {
     let config = make_config();
-    let result = index_api::drop_table_index(&config, "test_ns.test_table", "idx", None).await;
-    assert_contract_ok(result);
+    index_api::drop_table_index(&config, "test_ns.test_table", "idx", None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_explain_table_query_plan() {
     let config = make_config();
-    let result = data_api::explain_table_query_plan(
+    data_api::explain_table_query_plan(
         &config,
         "test_ns.test_table",
         models::ExplainTableQueryPlanRequest::new(models::QueryTableRequest::new(
@@ -501,99 +483,101 @@ async fn contract_explain_table_query_plan() {
         )),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_get_table_stats() {
     let config = make_config();
-    let result = metadata_api::get_table_stats(
+    metadata_api::get_table_stats(
         &config,
         "test_ns.test_table",
         models::GetTableStatsRequest::new(),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_get_table_tag_version() {
     let config = make_config();
-    let result = metadata_api::get_table_tag_version(
+    metadata_api::get_table_tag_version(
         &config,
         "test_ns.test_table",
         models::GetTableTagVersionRequest::new("v1".to_string()),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_insert_into_table() {
     let config = make_config();
-    let result =
-        data_api::insert_into_table(&config, "test_ns.test_table", vec![], None, None).await;
-    assert_contract_ok(result);
+    data_api::insert_into_table(&config, "test_ns.test_table", vec![], None, None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_list_all_tables() {
     let config = make_config();
-    let result = table_api::list_all_tables(&config, None, None, None, None).await;
-    assert_contract_ok(result);
+    table_api::list_all_tables(&config, None, None, None, None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_list_namespaces() {
     let config = make_config();
-    let result = metadata_api::list_namespaces(&config, "$", None, None, None).await;
-    assert_contract_ok(result);
+    metadata_api::list_namespaces(&config, "$", None, None, None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_list_table_indices() {
     let config = make_config();
-    let result = index_api::list_table_indices(
+    index_api::list_table_indices(
         &config,
         "test_ns.test_table",
         models::ListTableIndicesRequest::new(),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_list_table_tags() {
     let config = make_config();
-    let result =
-        metadata_api::list_table_tags(&config, "test_ns.test_table", None, None, None).await;
-    assert_contract_ok(result);
+    metadata_api::list_table_tags(&config, "test_ns.test_table", None, None, None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_list_table_versions() {
     let config = make_config();
-    let result =
-        metadata_api::list_table_versions(&config, "test_ns.test_table", None, None, None, None)
-            .await;
-    assert_contract_ok(result);
+    metadata_api::list_table_versions(&config, "test_ns.test_table", None, None, None, None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_list_tables() {
     let config = make_config();
-    let result = metadata_api::list_tables(&config, "ns_with_tables", None, None, None, None).await;
-    assert_contract_ok(result);
+    metadata_api::list_tables(&config, "ns_with_tables", None, None, None, None)
+        .await
+        .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_merge_insert_into_table() {
     let config = make_config();
-    let result = data_api::merge_insert_into_table(
+    data_api::merge_insert_into_table(
         &config,
         "test_ns.test_table",
         "id",
@@ -607,35 +591,27 @@ async fn contract_merge_insert_into_table() {
         None,
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_namespace_exists() {
     let config = make_config();
-    let result = metadata_api::namespace_exists(
+    metadata_api::namespace_exists(
         &config,
         "ns_existing",
         models::NamespaceExistsRequest::new(),
         None,
     )
-    .await;
-    // Returns () on success; any non-connection error is a valid contract response
-    if let Err(ref e) = result {
-        let msg = format!("{e:?}");
-        assert!(
-            !msg.contains("connection refused"),
-            "Connection refused — WireMock not running? Error: {msg}"
-        );
-        println!("stub returned error (contract match): {msg}");
-    }
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_query_table() {
     let config = make_config();
-    let result = data_api::query_table(
+    let resp = data_api::query_table(
         &config,
         "test_ns.test_table",
         models::QueryTableRequest::new(
@@ -647,126 +623,115 @@ async fn contract_query_table() {
         ),
         None,
     )
-    .await;
-    // Returns raw response; connection error is the only failure mode
-    if let Err(ref e) = result {
-        let msg = format!("{e:?}");
-        assert!(
-            !msg.contains("connection refused"),
-            "Connection refused — WireMock not running? Error: {msg}"
-        );
-        println!("stub returned error (contract match): {msg}");
-    }
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
+    assert!(
+        resp.status().is_success(),
+        "contract violation: status = {}",
+        resp.status()
+    );
 }
 
 #[tokio::test]
 async fn contract_refresh_materialized_view() {
     let config = make_config();
-    let result = data_api::refresh_materialized_view(
+    data_api::refresh_materialized_view(
         &config,
         "test_ns.test_table",
         None,
         Some(models::RefreshMaterializedViewRequest::new()),
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_register_table() {
     let config = make_config();
-    let result = metadata_api::register_table(
+    metadata_api::register_table(
         &config,
         "test_ns.test_table",
         models::RegisterTableRequest::new("s3://bucket/path".to_string()),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_rename_table() {
     let config = make_config();
-    let result = metadata_api::rename_table(
+    metadata_api::rename_table(
         &config,
         "test_ns.test_table",
         models::RenameTableRequest::new("new_name".to_string()),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_restore_table() {
     let config = make_config();
-    let result = metadata_api::restore_table(
+    metadata_api::restore_table(
         &config,
         "test_ns.test_table",
         models::RestoreTableRequest::new(1i64),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_table_exists() {
     let config = make_config();
-    let result = metadata_api::table_exists(
+    metadata_api::table_exists(
         &config,
         "ns_with_tables.table_alpha",
         models::TableExistsRequest::new(),
         None,
     )
-    .await;
-    // Returns () on success; any non-connection error is a valid contract response
-    if let Err(ref e) = result {
-        let msg = format!("{e:?}");
-        assert!(
-            !msg.contains("connection refused"),
-            "Connection refused — WireMock not running? Error: {msg}"
-        );
-        println!("stub returned error (contract match): {msg}");
-    }
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_update_table() {
     let config = make_config();
-    let result = data_api::update_table(
+    data_api::update_table(
         &config,
         "test_ns.test_table",
         models::UpdateTableRequest::new(vec![]),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_update_table_schema_metadata() {
     let config = make_config();
-    let result = metadata_api::update_table_schema_metadata(
+    metadata_api::update_table_schema_metadata(
         &config,
         "test_ns.test_table",
         std::collections::HashMap::new(),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }
 
 #[tokio::test]
 async fn contract_update_table_tag() {
     let config = make_config();
-    let result = metadata_api::update_table_tag(
+    metadata_api::update_table_tag(
         &config,
         "test_ns.test_table",
         models::UpdateTableTagRequest::new("v1".to_string(), 2i64),
         None,
     )
-    .await;
-    assert_contract_ok(result);
+    .await
+    .expect("contract violation: stub returned non-2xx or transport error");
 }

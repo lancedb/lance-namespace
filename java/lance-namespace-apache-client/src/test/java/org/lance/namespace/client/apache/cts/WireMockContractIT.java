@@ -24,6 +24,7 @@ import org.lance.namespace.model.AlterTableAddColumnsRequest;
 import org.lance.namespace.model.AlterTableAlterColumnsRequest;
 import org.lance.namespace.model.AlterTableBackfillColumnsRequest;
 import org.lance.namespace.model.AlterTableDropColumnsRequest;
+import org.lance.namespace.model.AlterTransactionAction;
 import org.lance.namespace.model.AlterTransactionRequest;
 import org.lance.namespace.model.AnalyzeTableQueryPlanRequest;
 import org.lance.namespace.model.BatchCommitTablesRequest;
@@ -101,784 +102,439 @@ public class WireMockContractIT {
   @Test
   void alterTableAddColumnsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.alterTableAddColumns(
-          "test_ns.test_table",
-          new AlterTableAddColumnsRequest().newColumns(new java.util.ArrayList<>()),
-          null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.alterTableAddColumns(
+        "test_ns.test_table",
+        new AlterTableAddColumnsRequest().newColumns(new java.util.ArrayList<>()),
+        null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void alterTableAlterColumnsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.alterTableAlterColumns(
-          "test_ns.test_table",
-          new AlterTableAlterColumnsRequest().alterations(new java.util.ArrayList<>()),
-          null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.alterTableAlterColumns(
+        "test_ns.test_table",
+        new AlterTableAlterColumnsRequest().alterations(new java.util.ArrayList<>()),
+        null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void alterTableBackfillColumnsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.alterTableBackfillColumns(
-          "test_ns.test_table", new AlterTableBackfillColumnsRequest().column("col"), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.alterTableBackfillColumns(
+        "test_ns.test_table", new AlterTableBackfillColumnsRequest().column("col"), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void alterTableDropColumnsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.alterTableDropColumns(
-          "test_ns.test_table",
-          new AlterTableDropColumnsRequest().columns(new java.util.ArrayList<>()),
-          null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.alterTableDropColumns(
+        "test_ns.test_table",
+        new AlterTableDropColumnsRequest().columns(new java.util.ArrayList<>()),
+        null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void alterTransactionReturnsValidResponse() throws ApiException {
     TransactionApi api = new TransactionApi(apiClient);
-    try {
-      api.alterTransaction(
-          "test_txn", new AlterTransactionRequest().actions(new java.util.ArrayList<>()), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.alterTransaction(
+        "test_txn",
+        new AlterTransactionRequest()
+            .actions(java.util.Arrays.asList(new AlterTransactionAction())),
+        null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void analyzeTableQueryPlanReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.analyzeTableQueryPlan(
-          "test_ns.test_table",
-          new AnalyzeTableQueryPlanRequest()
-              .k(1)
-              .vector(new QueryTableRequestVector().singleVector(java.util.Arrays.asList(0.1f))),
-          null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.analyzeTableQueryPlan(
+        "test_ns.test_table",
+        new AnalyzeTableQueryPlanRequest()
+            .k(1)
+            .vector(new QueryTableRequestVector().singleVector(java.util.Arrays.asList(0.1f))),
+        null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void batchCommitTablesReturnsValidResponse() throws ApiException {
     TransactionApi api = new TransactionApi(apiClient);
-    try {
-      api.batchCommitTables(
-          new BatchCommitTablesRequest().operations(new java.util.ArrayList<>()), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.batchCommitTables(
+        new BatchCommitTablesRequest().operations(new java.util.ArrayList<>()), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void batchCreateTableVersionsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.batchCreateTableVersions(
-          new BatchCreateTableVersionsRequest().entries(new java.util.ArrayList<>()), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.batchCreateTableVersions(
+        new BatchCreateTableVersionsRequest().entries(new java.util.ArrayList<>()), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void batchDeleteTableVersionsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.batchDeleteTableVersions(
-          "test_ns.test_table",
-          new BatchDeleteTableVersionsRequest().ranges(new java.util.ArrayList<>()),
-          null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.batchDeleteTableVersions(
+        "test_ns.test_table",
+        new BatchDeleteTableVersionsRequest().ranges(new java.util.ArrayList<>()),
+        null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void countTableRowsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.countTableRows("test_ns.test_table", new CountTableRowsRequest(), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.countTableRows("test_ns.test_table", new CountTableRowsRequest(), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void createNamespaceReturnsValidResponse() throws ApiException {
     NamespaceApi api = new NamespaceApi(apiClient);
-    try {
-      api.createNamespace("test_ns", new CreateNamespaceRequest(), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.createNamespace("test_ns", new CreateNamespaceRequest(), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void createTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.createTable("test_ns.test_table", new byte[0], null, null, null, null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.createTable("test_ns.test_table", new byte[0], null, null, null, null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void createTableIndexReturnsValidResponse() throws ApiException {
     IndexApi api = new IndexApi(apiClient);
-    try {
-      api.createTableIndex(
-          "test_ns.test_table",
-          new CreateTableIndexRequest().column("col").indexType("IVF_PQ"),
-          null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.createTableIndex(
+        "test_ns.test_table",
+        new CreateTableIndexRequest().column("col").indexType("IVF_PQ"),
+        null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void createTableScalarIndexReturnsValidResponse() throws ApiException {
     IndexApi api = new IndexApi(apiClient);
-    try {
-      api.createTableScalarIndex(
-          "test_ns.test_table",
-          new CreateTableIndexRequest().column("col").indexType("BTREE"),
-          null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.createTableScalarIndex(
+        "test_ns.test_table", new CreateTableIndexRequest().column("col").indexType("BTREE"), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void createTableTagReturnsValidResponse() throws ApiException {
     TagApi api = new TagApi(apiClient);
-    try {
-      api.createTableTag(
-          "test_ns.test_table", new CreateTableTagRequest().tag("v1").version(1L), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.createTableTag(
+        "test_ns.test_table", new CreateTableTagRequest().tag("v1").version(1L), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void createTableVersionReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.createTableVersion(
-          "test_ns.test_table",
-          new CreateTableVersionRequest().version(1L).manifestPath("manifest_path"),
-          null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.createTableVersion(
+        "test_ns.test_table",
+        new CreateTableVersionRequest().version(1L).manifestPath("manifest_path"),
+        null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void declareTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.declareTable("test_ns.test_table", new DeclareTableRequest(), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.declareTable("test_ns.test_table", new DeclareTableRequest(), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void deleteFromTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.deleteFromTable(
-          "test_ns.test_table", new DeleteFromTableRequest().predicate("id = 1"), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.deleteFromTable(
+        "test_ns.test_table", new DeleteFromTableRequest().predicate("id = 1"), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void deleteTableTagReturnsValidResponse() throws ApiException {
     TagApi api = new TagApi(apiClient);
-    try {
-      api.deleteTableTag("test_ns.test_table", new DeleteTableTagRequest().tag("v1"), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.deleteTableTag("test_ns.test_table", new DeleteTableTagRequest().tag("v1"), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void deregisterTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.deregisterTable("test_ns.test_table", new DeregisterTableRequest(), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.deregisterTable("test_ns.test_table", new DeregisterTableRequest(), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void describeNamespaceReturnsValidResponse() throws ApiException {
     NamespaceApi api = new NamespaceApi(apiClient);
-    try {
-      api.describeNamespace("ns_existing", new DescribeNamespaceRequest(), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.describeNamespace("ns_existing", new DescribeNamespaceRequest(), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void describeTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.describeTable(
-          "ns_with_tables.table_alpha", new DescribeTableRequest(), null, null, null, null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.describeTable(
+        "ns_with_tables.table_alpha", new DescribeTableRequest(), null, null, null, null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void describeTableIndexStatsReturnsValidResponse() throws ApiException {
     IndexApi api = new IndexApi(apiClient);
-    try {
-      api.describeTableIndexStats(
-          "test_ns.test_table", "idx", new DescribeTableIndexStatsRequest(), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.describeTableIndexStats(
+        "test_ns.test_table", "idx", new DescribeTableIndexStatsRequest(), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void describeTableVersionReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.describeTableVersion("test_ns.test_table", new DescribeTableVersionRequest(), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.describeTableVersion("test_ns.test_table", new DescribeTableVersionRequest(), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void describeTransactionReturnsValidResponse() throws ApiException {
     TransactionApi api = new TransactionApi(apiClient);
-    try {
-      api.describeTransaction("test_txn", new DescribeTransactionRequest(), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.describeTransaction("test_txn", new DescribeTransactionRequest(), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void dropNamespaceReturnsValidResponse() throws ApiException {
     NamespaceApi api = new NamespaceApi(apiClient);
-    try {
-      api.dropNamespace("ns_existing", new DropNamespaceRequest(), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.dropNamespace("ns_existing", new DropNamespaceRequest(), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void dropTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.dropTable("test_ns.test_table", null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.dropTable("test_ns.test_table", null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void dropTableIndexReturnsValidResponse() throws ApiException {
     IndexApi api = new IndexApi(apiClient);
-    try {
-      api.dropTableIndex("test_ns.test_table", "idx", null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.dropTableIndex("test_ns.test_table", "idx", null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void explainTableQueryPlanReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.explainTableQueryPlan(
-          "test_ns.test_table",
-          new ExplainTableQueryPlanRequest()
-              .query(
-                  new QueryTableRequest()
-                      .k(1)
-                      .vector(
-                          new QueryTableRequestVector()
-                              .singleVector(java.util.Arrays.asList(0.1f)))),
-          null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.explainTableQueryPlan(
+        "test_ns.test_table",
+        new ExplainTableQueryPlanRequest()
+            .query(
+                new QueryTableRequest()
+                    .k(1)
+                    .vector(
+                        new QueryTableRequestVector().singleVector(java.util.Arrays.asList(0.1f)))),
+        null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void getTableStatsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.getTableStats("test_ns.test_table", new GetTableStatsRequest(), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.getTableStats("test_ns.test_table", new GetTableStatsRequest(), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void getTableTagVersionReturnsValidResponse() throws ApiException {
     TagApi api = new TagApi(apiClient);
-    try {
-      api.getTableTagVersion("test_ns.test_table", new GetTableTagVersionRequest().tag("v1"), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.getTableTagVersion("test_ns.test_table", new GetTableTagVersionRequest().tag("v1"), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void insertIntoTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.insertIntoTable("test_ns.test_table", new byte[0], null, null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.insertIntoTable("test_ns.test_table", new byte[0], null, null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void listAllTablesReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.listAllTables(null, null, null, null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.listAllTables(null, null, null, null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void listNamespacesReturnsValidResponse() throws ApiException {
     NamespaceApi api = new NamespaceApi(apiClient);
-    try {
-      api.listNamespaces("$", null, null, null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.listNamespaces("$", null, null, null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void listTableIndicesReturnsValidResponse() throws ApiException {
     IndexApi api = new IndexApi(apiClient);
-    try {
-      api.listTableIndices("test_ns.test_table", new ListTableIndicesRequest(), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.listTableIndices("test_ns.test_table", new ListTableIndicesRequest(), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void listTableTagsReturnsValidResponse() throws ApiException {
     TagApi api = new TagApi(apiClient);
-    try {
-      api.listTableTags("test_ns.test_table", null, null, null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.listTableTags("test_ns.test_table", null, null, null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void listTableVersionsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.listTableVersions("test_ns.test_table", null, null, null, null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.listTableVersions("test_ns.test_table", null, null, null, null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void listTablesReturnsValidResponse() throws ApiException {
     NamespaceApi api = new NamespaceApi(apiClient);
-    try {
-      api.listTables("ns_with_tables", null, null, null, null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.listTables("ns_with_tables", null, null, null, null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void mergeInsertIntoTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.mergeInsertIntoTable(
-          "test_ns.test_table", "id", new byte[0], null, null, null, null, null, null, null, null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.mergeInsertIntoTable(
+        "test_ns.test_table", "id", new byte[0], null, null, null, null, null, null, null, null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void namespaceExistsReturnsValidResponse() throws ApiException {
     NamespaceApi api = new NamespaceApi(apiClient);
-    try {
-      api.namespaceExists("ns_existing", new NamespaceExistsRequest(), null);
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.namespaceExists("ns_existing", new NamespaceExistsRequest(), null);
   }
 
   @Test
   void queryTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.queryTable(
-          "test_ns.test_table",
-          new QueryTableRequest()
-              .k(1)
-              .vector(new QueryTableRequestVector().singleVector(java.util.Arrays.asList(0.1f))),
-          null);
-      // Binary response — just verify no connection error
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-    }
+    api.queryTable(
+        "test_ns.test_table",
+        new QueryTableRequest()
+            .k(1)
+            .vector(new QueryTableRequestVector().singleVector(java.util.Arrays.asList(0.1f))),
+        null);
+    // Binary response — successful return is the contract assertion.
   }
 
   @Test
   void refreshMaterializedViewReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.refreshMaterializedView("test_ns.test_table", null, new RefreshMaterializedViewRequest());
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.refreshMaterializedView("test_ns.test_table", null, new RefreshMaterializedViewRequest());
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void registerTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.registerTable(
-          "test_ns.test_table", new RegisterTableRequest().location("s3://bucket/path"), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.registerTable(
+        "test_ns.test_table", new RegisterTableRequest().location("s3://bucket/path"), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void renameTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.renameTable(
-          "test_ns.test_table", new RenameTableRequest().newTableName("new_name"), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.renameTable("test_ns.test_table", new RenameTableRequest().newTableName("new_name"), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void restoreTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.restoreTable("test_ns.test_table", new RestoreTableRequest().version(1L), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.restoreTable("test_ns.test_table", new RestoreTableRequest().version(1L), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void tableExistsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.tableExists("ns_with_tables.table_alpha", new TableExistsRequest(), null);
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.tableExists("ns_with_tables.table_alpha", new TableExistsRequest(), null);
   }
 
   @Test
   void updateTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.updateTable(
-          "test_ns.test_table",
-          new UpdateTableRequest().updates(new java.util.ArrayList<>()),
-          null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.updateTable(
+        "test_ns.test_table", new UpdateTableRequest().updates(new java.util.ArrayList<>()), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void updateTableSchemaMetadataReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    try {
-      api.updateTableSchemaMetadata("test_ns.test_table", new java.util.HashMap<>(), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.updateTableSchemaMetadata("test_ns.test_table", new java.util.HashMap<>(), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 
   @Test
   void updateTableTagReturnsValidResponse() throws ApiException {
     TagApi api = new TagApi(apiClient);
-    try {
-      api.updateTableTag(
-          "test_ns.test_table", new UpdateTableTagRequest().tag("v1").version(2L), null);
-      // Non-null assertion omitted: some ops legitimately return null
-      // when the response schema is typeless Object / empty body.
-    } catch (ApiException e) {
-      if (e.getCode() == 0) {
-        throw e;
-      }
-      // Non-zero code = WireMock returned a stub error (valid contract response)
-    }
+    api.updateTableTag(
+        "test_ns.test_table", new UpdateTableTagRequest().tag("v1").version(2L), null);
+    // Non-null assertion omitted: some ops legitimately return null
+    // when the response schema is typeless Object / empty body.
   }
 }
