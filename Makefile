@@ -214,7 +214,7 @@ test-clients: test-client-java test-client-python test-client-rust
 .PHONY: test-clients
 
 # All CTS tests (client-side; add test-schemathesis when a server is running)
-test-cts: test-spec-lint test-clients
+test-cts: test-spec-lint build-cts test-clients
 .PHONY: test-cts
 
 # Verify spec was not modified

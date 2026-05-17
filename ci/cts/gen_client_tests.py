@@ -527,7 +527,13 @@ FIXTURES: dict[str, dict[str, object]] = {
     },
     "AlterTransaction": {
         "id": _ID_TXN,
-        "alter_transaction_request": ModelValue("AlterTransactionRequest", actions=[]),
+        "alter_transaction_request": ModelValue(
+            "AlterTransactionRequest",
+            # Spec requires minItems=1 on actions; supply a single empty
+            # AlterTransactionAction (all fields optional) so the request
+            # validates without committing to any specific action variant.
+            actions=[ModelValue("AlterTransactionAction")],
+        ),
     },
     "BatchCommitTables": {
         "batch_commit_tables_request": ModelValue(
@@ -1486,37 +1492,31 @@ def _rust_test_fn(op: str) -> str:
     is_unit = _is_rust_unit(op)
     is_raw = _is_rust_raw(op)
 
+    # Stubs always return 200 with a schema-shaped body, so any Err is a
+    # contract failure (transport error, 4xx/5xx surfaced as Err, or
+    # deserialization failure).  We unwrap unconditionally and let the
+    # panic-style failure surface in the test report.
     if is_unit:
         body = textwrap.dedent(f"""\
             let config = make_config();
-            let result = {call}.await;
-            // Returns () on success; any non-connection error is a valid contract response
-            if let Err(ref e) = result {{
-                let msg = format!("{{e:?}}");
-                assert!(
-                    !msg.contains("connection refused"),
-                    "Connection refused — WireMock not running? Error: {{msg}}"
-                );
-                println!("stub returned error (contract match): {{msg}}");
-            }}""")
+            {call}.await.expect("contract violation: stub returned non-2xx or transport error");""")
     elif is_raw:
         body = textwrap.dedent(f"""\
             let config = make_config();
-            let result = {call}.await;
-            // Returns raw response; connection error is the only failure mode
-            if let Err(ref e) = result {{
-                let msg = format!("{{e:?}}");
-                assert!(
-                    !msg.contains("connection refused"),
-                    "Connection refused — WireMock not running? Error: {{msg}}"
-                );
-                println!("stub returned error (contract match): {{msg}}");
-            }}""")
+            let resp = {call}
+                .await
+                .expect("contract violation: stub returned non-2xx or transport error");
+            assert!(
+                resp.status().is_success(),
+                "contract violation: status = {{}}",
+                resp.status()
+            );""")
     else:
         body = textwrap.dedent(f"""\
             let config = make_config();
-            let result = {call}.await;
-            assert_contract_ok(result);""")
+            {call}
+                .await
+                .expect("contract violation: stub returned non-2xx or transport error");""")
 
     return (
         f"#[tokio::test]\n"
@@ -1637,22 +1637,6 @@ def generate_rust(ops: list[str]) -> str:
         }}
 
         // ---------------------------------------------------------------------------
-        // Helper: treat WireMock stub errors (4xx JSON) as valid contract responses.
-        // Only a connection-refused / transport failure means the infra is broken.
-        // ---------------------------------------------------------------------------
-        fn assert_contract_ok<T, E: std::fmt::Debug>(result: Result<T, E>) {{
-            if let Err(e) = result {{
-                let msg = format!("{{e:?}}");
-                assert!(
-                    !msg.contains("connection refused"),
-                    "Connection refused — WireMock not running? Error: {{msg}}"
-                );
-                // 4xx from WireMock is a valid contract response; log and continue.
-                println!("stub returned error (contract match): {{msg}}");
-            }}
-        }}
-
-        // ---------------------------------------------------------------------------
         // Contract tests — one per operation
         // ---------------------------------------------------------------------------
 
@@ -1712,34 +1696,28 @@ def _python_test_fn(op: str) -> str:
 
     imports_block = ("\n".join(import_lines) + "\n") if import_lines else ""
 
+    # Stubs always return 200 with a schema-shaped body, so any raised
+    # exception (transport error, deserialization failure, 4xx/5xx) is a
+    # contract violation.  We let it propagate so pytest reports a real
+    # failure with the original traceback.
     if is_none:
         body = (
             f"def {fn_name}(api_client: ApiClient) -> None:\n"
-            f'    """{op} completes without connection error."""\n'
+            f'    """{op} completes without error against the WireMock stub."""\n'
             + imports_block
             + f"    api = {api_cls}(api_client)\n"
-            f"    try:\n"
-            f"        {call}\n"
-            f"    except Exception as exc:\n"
-            f"        msg = str(exc)\n"
-            f'        assert "connection refused" not in msg.lower(), (\n'
-            f'            f"Connection refused — WireMock not running? Error: {{msg}}"\n'
-            f"        )\n"
+            f"    {call}\n"
         )
     else:
         body = (
             f"def {fn_name}(api_client: ApiClient) -> None:\n"
-            f'    """{op} returns a non-None result or a stub 4xx (both are valid)."""\n'
+            f'    """{op} returns a deserializable response against the WireMock stub."""\n'
             + imports_block
             + f"    api = {api_cls}(api_client)\n"
-            f"    try:\n"
-            f"        result = {call}\n"
-            f"        assert result is not None\n"
-            f"    except Exception as exc:\n"
-            f"        msg = str(exc)\n"
-            f'        assert "connection refused" not in msg.lower(), (\n'
-            f'            f"Connection refused — WireMock not running? Error: {{msg}}"\n'
-            f"        )\n"
+            f"    result = {call}\n"
+            # Some ops legitimately return ``None`` (typeless Object schema /
+            # empty body), so we only assert that the call did not raise.
+            f"    del result\n"
         )
     return body
 
@@ -1940,49 +1918,33 @@ def _java_apache_test_method(op: str) -> str:
 
     api_inst = f"{api_cls} api = new {api_cls}(apiClient);"
 
+    # Stubs always return 200 with a schema-shaped body.  Any thrown
+    # ApiException — including ``code == 0`` (transport / connection) and
+    # 4xx/5xx — therefore indicates a contract violation.  We surface them
+    # all by re-throwing.
     if is_void:
         inner = textwrap.dedent(f"""\
             @Test
             void {method_name}() throws ApiException {{
               {api_inst}
-              try {{
-                {call};
-              }} catch (ApiException e) {{
-                if (e.getCode() == 0) {{
-                  throw e;
-                }}
-                // Non-zero code = WireMock returned a stub error (valid contract response)
-              }}
+              {call};
             }}""")
     elif _is_java_bytes(op):
         inner = textwrap.dedent(f"""\
             @Test
             void {method_name}() throws ApiException {{
               {api_inst}
-              try {{
-                {call};
-                // Binary response — just verify no connection error
-              }} catch (ApiException e) {{
-                if (e.getCode() == 0) {{
-                  throw e;
-                }}
-              }}
+              {call};
+              // Binary response — successful return is the contract assertion.
             }}""")
     else:
         inner = textwrap.dedent(f"""\
             @Test
             void {method_name}() throws ApiException {{
               {api_inst}
-              try {{
-                {call};
-                // Non-null assertion omitted: some ops legitimately return null
-                // when the response schema is typeless Object / empty body.
-              }} catch (ApiException e) {{
-                if (e.getCode() == 0) {{
-                  throw e;
-                }}
-                // Non-zero code = WireMock returned a stub error (valid contract response)
-              }}
+              {call};
+              // Non-null assertion omitted: some ops legitimately return null
+              // when the response schema is typeless Object / empty body.
             }}""")
 
     return textwrap.indent(inner, "  ")
@@ -2085,50 +2047,32 @@ def _java_async_test_method(op: str) -> str:
     # signature is identical except for the CompletableFuture wrapper.
     call = f"{render_java_call(op)}.get(10, TimeUnit.SECONDS)"
 
-    exec_catch = textwrap.dedent("""\
-        } catch (java.util.concurrent.ExecutionException e) {
-          Throwable cause = e.getCause();
-          if (cause instanceof ApiException) {
-            if (((ApiException) cause).getCode() == 0) {
-              throw e;
-            }
-            // Non-zero code = WireMock returned a stub error (valid contract response)
-          } else {
-            throw e;
-          }""")
-
+    # Stubs always return 200; any thrown exception (transport, 4xx/5xx
+    # surfaced as ExecutionException(ApiException), or otherwise) indicates
+    # a contract violation and is propagated directly.
     if is_void:
         inner = textwrap.dedent(f"""\
             @Test
             void {method_name}() throws Exception {{
               {api_inst}
-              try {{
-                {call};
-              {exec_catch}
-              }}
+              {call};
             }}""")
     elif _is_java_bytes(op):
         inner = textwrap.dedent(f"""\
             @Test
             void {method_name}() throws Exception {{
               {api_inst}
-              try {{
-                {call};
-                // Binary response — just verify no connection error
-              {exec_catch}
-              }}
+              {call};
+              // Binary response — successful return is the contract assertion.
             }}""")
     else:
         inner = textwrap.dedent(f"""\
             @Test
             void {method_name}() throws Exception {{
               {api_inst}
-              try {{
-                {call};
-                // Non-null assertion omitted: some ops legitimately return null
-                // when the response schema is typeless Object / empty body.
-              {exec_catch}
-              }}
+              {call};
+              // Non-null assertion omitted: some ops legitimately return null
+              // when the response schema is typeless Object / empty body.
             }}""")
 
     return textwrap.indent(inner, "  ")
