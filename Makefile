@@ -176,10 +176,10 @@ test-spec-lint: verify-spec-untouched
 .PHONY: test-spec-lint
 
 # Schemathesis server conformance test
-# Requires: BASE_URL env var pointing to a running server, and ci/schemathesis.toml
+# Requires: BASE_URL env var pointing to a running server, and ci/cts/schemathesis.toml
 test-schemathesis: $(SPEC_MERGED)
 	@mkdir -p build/reports
-	uv run schemathesis --config-file ci/schemathesis.toml run $(SPEC_MERGED) \
+	uv run schemathesis --config-file ci/cts/schemathesis.toml run $(SPEC_MERGED) \
 		--url $${BASE_URL:-http://localhost:8080} \
 		--report-junit-path build/reports/schemathesis.xml
 

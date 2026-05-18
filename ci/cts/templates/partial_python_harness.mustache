@@ -1,0 +1,92 @@
+import socket
+import subprocess
+import time
+import urllib.error
+import urllib.request
+from pathlib import Path
+from typing import Generator
+
+import pytest
+
+from lance_namespace_urllib3_client.api_client import ApiClient
+from lance_namespace_urllib3_client.configuration import Configuration
+
+# Anchor paths relative to the repo root (4 levels up from this file:
+#   tests/ -> lance_namespace_urllib3_client/ -> python/ -> repo-root)
+_REPO_ROOT = Path(__file__).parent.parent.parent.parent
+WIREMOCK_JAR = _REPO_ROOT / "build/cts/wiremock-standalone.jar"
+WIREMOCK_ROOT = _REPO_ROOT / "build/cts/wiremock/src/main/resources"
+
+
+def _free_port() -> int:
+    """Return a free TCP port on localhost."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.bind(("localhost", 0))
+        return sock.getsockname()[1]
+
+
+def _wait_for_port(host: str, port: int, timeout: float = 30.0) -> None:
+    """Poll until the port is open or timeout."""
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        try:
+            with socket.create_connection((host, port), timeout=1.0):
+                return
+        except OSError:
+            time.sleep(0.3)
+    raise TimeoutError(f"Port {port} did not open within {timeout}s")
+
+
+@pytest.fixture(scope="session")
+def wiremock_port() -> int:
+    """Allocate a free port for WireMock."""
+    return _free_port()
+
+
+@pytest.fixture(scope="session")
+def wiremock_base_url(wiremock_port: int) -> Generator[str, None, None]:
+    """Start WireMock standalone jar and yield base URL."""
+    if not WIREMOCK_JAR.exists():
+        pytest.skip(
+            f"WireMock jar not found: {WIREMOCK_JAR}. Run 'make gen-cts' first."
+        )
+
+    cmd = [
+        "java", "-jar", str(WIREMOCK_JAR.resolve()),
+        "--root-dir", str(WIREMOCK_ROOT.resolve()),
+        "--port", str(wiremock_port),
+        "--no-request-journal",
+    ]
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    try:
+        _wait_for_port("localhost", wiremock_port)
+        yield f"http://localhost:{wiremock_port}"
+    finally:
+        proc.terminate()
+        try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+
+
+@pytest.fixture(scope="session")
+def api_client(wiremock_base_url: str) -> Generator[ApiClient, None, None]:
+    """Create configured ApiClient pointing at WireMock."""
+    config = Configuration(host=wiremock_base_url)
+    client = ApiClient(configuration=config)
+    yield client
+    # urllib3 ApiClient does not expose a close() method; __exit__ is a no-op
+    # so there is nothing to release here. Keep the fixture explicit for clarity.
+
+
+def test_wiremock_reachable(wiremock_base_url: str, wiremock_port: int) -> None:
+    """Verify WireMock is running and reachable via admin endpoint."""
+    try:
+        with urllib.request.urlopen(
+            f"{wiremock_base_url}/__admin/health", timeout=5
+        ) as resp:
+            assert resp.status == 200
+    except urllib.error.URLError:
+        # Fall back: just confirm port is open
+        with socket.create_connection(("localhost", wiremock_port), timeout=5):
+            pass

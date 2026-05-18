@@ -4,7 +4,7 @@
 #   https://schemathesis.readthedocs.io/en/stable/reference/configuration/
 #
 # Run via:
-#   schemathesis --config-file ci/schemathesis.toml run build/spec.merged.yaml \
+#   schemathesis --config-file ci/cts/schemathesis.toml run build/spec.merged.yaml \
 #       --url http://localhost:8080
 #
 # Or via the Makefile target:

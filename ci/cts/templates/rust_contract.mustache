@@ -1,0 +1,28 @@
+{{>partial_header}}
+//!
+//! Thin contract runner for lance-namespace Rust reqwest client.
+//!
+//! Starts a single WireMock standalone jar with pre-generated mappings (shared
+//! across all tests via OnceLock), then exercises every API method to verify HTTP
+//! contract compliance and response deserialization.
+//!
+//! No hand-written fixtures — mappings come from build/cts/wiremock/.
+//!
+//! Run:   cargo test --test contract -- --nocapture
+//! Needs: make gen-cts  (downloads wiremock jar + generates mappings)
+
+use std::net::TcpStream;
+use std::path::Path;
+use std::process::{Child, Command, Stdio};
+use std::sync::OnceLock;
+use std::time::{Duration, Instant};
+
+{{{uses}}}
+
+{{>partial_rust_harness}}
+
+// ---------------------------------------------------------------------------
+// Contract tests — one per operation
+// ---------------------------------------------------------------------------
+
+{{{tests}}}

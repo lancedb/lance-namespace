@@ -16,7 +16,11 @@ dev = [
     "jsf>=0.7.0",
     "prance>=23.0.0",
     "jsonpath-ng>=1.6.0",
-    "schemathesis>=3.30.0"
+    "schemathesis>=3.30.0",
+    # CTS contract-test generator templates (ci/cts/gen_client_tests.py).
+    # chevron is a pure-Python Mustache renderer used to mirror the
+    # openapi-generator template-driven codegen pattern.
+    "chevron>=0.14.0"
 ]
 
 [tool.uv.workspace]
