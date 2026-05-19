@@ -1589,10 +1589,7 @@ paths:
       description: |
         Create a materialized view at table identifier `id`. The view may be
         query-backed, UDTF-backed, or chunker-backed, controlled by the
-        `kind` discriminator. Manifest defaults are resolved server-side and
-        snapshotted into the view's metadata so the view is fully
-        self-contained at creation time. When `with_no_data` is false the
-        server also kicks off an initial refresh and returns its job ID.
+        `kind` discriminator.
       requestBody:
         required: true
         content:
@@ -4988,14 +4985,13 @@ components:
             The materialized view kind.
             - `query` — plain query-backed view (no UDTF), 1:1 rows.
             - `udtf` — batch UDTF-backed view (N:M rows, full refresh).
-            - `chunker` — chunker view (1:N row expansion, incremental refresh).
-            The legacy value `scalar_udtf` is still accepted on read for
-            views created before the chunker rename.
+            - `chunker`, aka 'scalar_udtf' — chunker view (1:N row expansion, incremental refresh).
         source_query:
           type: string
           description: |
-            JSON-serialized GenevaQueryBuilder representation of the source
-            query that defines the view's input.
+            Opaque serialized representation of the source query that
+            defines the view's input. The format is defined by the client;
+            the namespace server stores it without interpreting it.
         output_schema:
           type: string
           description: Base64-encoded Arrow schema of the view output
