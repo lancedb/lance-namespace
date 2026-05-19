@@ -127,6 +127,8 @@ Class | Method | HTTP request | Description
 *DataApi* | [**analyzeTableQueryPlanWithHttpInfo**](docs/DataApi.md#analyzeTableQueryPlanWithHttpInfo) | **POST** /v1/table/{id}/analyze_plan | Analyze query execution plan
 *DataApi* | [**countTableRows**](docs/DataApi.md#countTableRows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
 *DataApi* | [**countTableRowsWithHttpInfo**](docs/DataApi.md#countTableRowsWithHttpInfo) | **POST** /v1/table/{id}/count_rows | Count rows in a table
+*DataApi* | [**createMaterializedView**](docs/DataApi.md#createMaterializedView) | **POST** /v1/table/{id}/create_materialized_view | Create a materialized view
+*DataApi* | [**createMaterializedViewWithHttpInfo**](docs/DataApi.md#createMaterializedViewWithHttpInfo) | **POST** /v1/table/{id}/create_materialized_view | Create a materialized view
 *DataApi* | [**createTable**](docs/DataApi.md#createTable) | **POST** /v1/table/{id}/create | Create a table with the given name
 *DataApi* | [**createTableWithHttpInfo**](docs/DataApi.md#createTableWithHttpInfo) | **POST** /v1/table/{id}/create | Create a table with the given name
 *DataApi* | [**deleteFromTable**](docs/DataApi.md#deleteFromTable) | **POST** /v1/table/{id}/delete | Delete rows from a table
@@ -255,6 +257,8 @@ Class | Method | HTTP request | Description
 *TableApi* | [**batchDeleteTableVersionsWithHttpInfo**](docs/TableApi.md#batchDeleteTableVersionsWithHttpInfo) | **POST** /v1/table/{id}/version/delete | Delete table version records
 *TableApi* | [**countTableRows**](docs/TableApi.md#countTableRows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
 *TableApi* | [**countTableRowsWithHttpInfo**](docs/TableApi.md#countTableRowsWithHttpInfo) | **POST** /v1/table/{id}/count_rows | Count rows in a table
+*TableApi* | [**createMaterializedView**](docs/TableApi.md#createMaterializedView) | **POST** /v1/table/{id}/create_materialized_view | Create a materialized view
+*TableApi* | [**createMaterializedViewWithHttpInfo**](docs/TableApi.md#createMaterializedViewWithHttpInfo) | **POST** /v1/table/{id}/create_materialized_view | Create a materialized view
 *TableApi* | [**createTable**](docs/TableApi.md#createTable) | **POST** /v1/table/{id}/create | Create a table with the given name
 *TableApi* | [**createTableWithHttpInfo**](docs/TableApi.md#createTableWithHttpInfo) | **POST** /v1/table/{id}/create | Create a table with the given name
 *TableApi* | [**createTableIndex**](docs/TableApi.md#createTableIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
@@ -372,6 +376,8 @@ Class | Method | HTTP request | Description
  - [CommitTableOperation](docs/CommitTableOperation.md)
  - [CommitTableResult](docs/CommitTableResult.md)
  - [CountTableRowsRequest](docs/CountTableRowsRequest.md)
+ - [CreateMaterializedViewRequest](docs/CreateMaterializedViewRequest.md)
+ - [CreateMaterializedViewResponse](docs/CreateMaterializedViewResponse.md)
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
  - [CreateTableIndexRequest](docs/CreateTableIndexRequest.md)
@@ -436,6 +442,7 @@ Class | Method | HTTP request | Description
  - [ListTablesRequest](docs/ListTablesRequest.md)
  - [ListTablesResponse](docs/ListTablesResponse.md)
  - [MatchQuery](docs/MatchQuery.md)
+ - [MaterializedViewUdtfEntry](docs/MaterializedViewUdtfEntry.md)
  - [MergeInsertIntoTableRequest](docs/MergeInsertIntoTableRequest.md)
  - [MergeInsertIntoTableResponse](docs/MergeInsertIntoTableResponse.md)
  - [MultiMatchQuery](docs/MultiMatchQuery.md)

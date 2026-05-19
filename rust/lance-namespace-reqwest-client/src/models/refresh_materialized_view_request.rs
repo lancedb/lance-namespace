@@ -30,10 +30,13 @@ pub struct RefreshMaterializedViewRequest {
     /// Optional intra-applier concurrency override
     #[serde(rename = "intra_applier_concurrency", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub intra_applier_concurrency: Option<Option<i32>>,
-    /// Optional cluster name
+    /// Optional cluster name (operational override)
     #[serde(rename = "cluster", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub cluster: Option<Option<String>>,
-    /// Optional manifest name
+    /// Post-trim cap on view row count after expansion. Valid only for chunker materialized views; returns 400 if set on other kinds. 
+    #[serde(rename = "output_limit", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub output_limit: Option<Option<i32>>,
+    /// Optional inline JSON-serialized GenevaManifest. Operational override for this refresh only; does not mutate the view's snapshotted manifest. When omitted, the manifest stored in the view's metadata is used. 
     #[serde(rename = "manifest", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub manifest: Option<Option<String>>,
 }
@@ -48,6 +51,7 @@ impl RefreshMaterializedViewRequest {
             concurrency: None,
             intra_applier_concurrency: None,
             cluster: None,
+            output_limit: None,
             manifest: None,
         }
     }

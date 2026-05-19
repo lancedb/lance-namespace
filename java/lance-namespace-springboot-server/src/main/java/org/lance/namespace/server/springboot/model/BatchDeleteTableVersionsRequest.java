@@ -1,57 +1,52 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import org.lance.namespace.server.springboot.model.Identity;
+import org.lance.namespace.server.springboot.model.VersionRange;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import java.util.*;
+import jakarta.annotation.Generated;
 
 /**
- * Request to delete table version records. Supports deleting ranges of versions for efficient bulk
- * cleanup.
+ * Request to delete table version records. Supports deleting ranges of versions for efficient bulk cleanup. 
  */
-@Schema(
-    name = "BatchDeleteTableVersionsRequest",
-    description =
-        "Request to delete table version records. Supports deleting ranges of versions for efficient bulk cleanup. ")
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+
+@Schema(name = "BatchDeleteTableVersionsRequest", description = "Request to delete table version records. Supports deleting ranges of versions for efficient bulk cleanup. ")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class BatchDeleteTableVersionsRequest {
 
   private Identity identity;
 
-  @Valid private Map<String, String> context = new HashMap<>();
+  @Valid
+  private Map<String, String> context = new HashMap<>();
 
-  @Valid private List<String> id = new ArrayList<>();
+  @Valid
+  private List<String> id = new ArrayList<>();
 
-  @Valid private List<@Valid VersionRange> ranges = new ArrayList<>();
+  @Valid
+  private List<@Valid VersionRange> ranges = new ArrayList<>();
 
   public BatchDeleteTableVersionsRequest() {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public BatchDeleteTableVersionsRequest(List<@Valid VersionRange> ranges) {
     this.ranges = ranges;
   }
@@ -63,10 +58,9 @@ public class BatchDeleteTableVersionsRequest {
 
   /**
    * Get identity
-   *
    * @return identity
    */
-  @Valid
+  @Valid 
   @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("identity")
   public Identity getIdentity() {
@@ -91,18 +85,11 @@ public class BatchDeleteTableVersionsRequest {
   }
 
   /**
-   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
-   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
-   * the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry
-   * `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
-   *
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. 
    * @return context
    */
-  @Schema(
-      name = "context",
-      description =
-          "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "context", description = "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("context")
   public Map<String, String> getContext() {
     return context;
@@ -127,13 +114,10 @@ public class BatchDeleteTableVersionsRequest {
 
   /**
    * The table identifier
-   *
    * @return id
    */
-  @Schema(
-      name = "id",
-      description = "The table identifier",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "id", description = "The table identifier", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
     return id;
@@ -157,18 +141,11 @@ public class BatchDeleteTableVersionsRequest {
   }
 
   /**
-   * List of version ranges to delete. Each range specifies start (inclusive) and end (exclusive)
-   * versions.
-   *
+   * List of version ranges to delete. Each range specifies start (inclusive) and end (exclusive) versions. 
    * @return ranges
    */
-  @NotNull
-  @Valid
-  @Schema(
-      name = "ranges",
-      description =
-          "List of version ranges to delete. Each range specifies start (inclusive) and end (exclusive) versions. ",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Valid 
+  @Schema(name = "ranges", description = "List of version ranges to delete. Each range specifies start (inclusive) and end (exclusive) versions. ", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("ranges")
   public List<@Valid VersionRange> getRanges() {
     return ranges;
@@ -186,12 +163,11 @@ public class BatchDeleteTableVersionsRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    BatchDeleteTableVersionsRequest batchDeleteTableVersionsRequest =
-        (BatchDeleteTableVersionsRequest) o;
-    return Objects.equals(this.identity, batchDeleteTableVersionsRequest.identity)
-        && Objects.equals(this.context, batchDeleteTableVersionsRequest.context)
-        && Objects.equals(this.id, batchDeleteTableVersionsRequest.id)
-        && Objects.equals(this.ranges, batchDeleteTableVersionsRequest.ranges);
+    BatchDeleteTableVersionsRequest batchDeleteTableVersionsRequest = (BatchDeleteTableVersionsRequest) o;
+    return Objects.equals(this.identity, batchDeleteTableVersionsRequest.identity) &&
+        Objects.equals(this.context, batchDeleteTableVersionsRequest.context) &&
+        Objects.equals(this.id, batchDeleteTableVersionsRequest.id) &&
+        Objects.equals(this.ranges, batchDeleteTableVersionsRequest.ranges);
   }
 
   @Override
@@ -212,7 +188,8 @@ public class BatchDeleteTableVersionsRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -221,3 +198,4 @@ public class BatchDeleteTableVersionsRequest {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

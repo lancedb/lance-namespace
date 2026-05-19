@@ -1,40 +1,37 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import org.lance.namespace.server.springboot.model.JsonArrowSchema;
+import org.lance.namespace.server.springboot.model.TableBasicStats;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** DescribeTableResponse */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * DescribeTableResponse
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class DescribeTableResponse {
 
   private String table;
 
-  @Valid private List<String> namespace = new ArrayList<>();
+  @Valid
+  private List<String> namespace = new ArrayList<>();
 
   private Long version;
 
@@ -44,13 +41,16 @@ public class DescribeTableResponse {
 
   private JsonArrowSchema schema;
 
-  @Valid private Map<String, String> storageOptions = new HashMap<>();
+  @Valid
+  private Map<String, String> storageOptions = new HashMap<>();
 
   private TableBasicStats stats;
 
-  @Valid private Map<String, String> metadata = new HashMap<>();
+  @Valid
+  private Map<String, String> metadata = new HashMap<>();
 
-  @Valid private Map<String, String> properties = new HashMap<>();
+  @Valid
+  private Map<String, String> properties = new HashMap<>();
 
   private Boolean managedVersioning;
 
@@ -62,14 +62,11 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table name. Only populated when `load_detailed_metadata` is true.
-   *
+   * Table name. Only populated when `load_detailed_metadata` is true. 
    * @return table
    */
-  @Schema(
-      name = "table",
-      description = "Table name. Only populated when `load_detailed_metadata` is true. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "table", description = "Table name. Only populated when `load_detailed_metadata` is true. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("table")
   public String getTable() {
     return table;
@@ -93,16 +90,11 @@ public class DescribeTableResponse {
   }
 
   /**
-   * The namespace identifier as a list of parts. Only populated when `load_detailed_metadata` is
-   * true.
-   *
+   * The namespace identifier as a list of parts. Only populated when `load_detailed_metadata` is true. 
    * @return namespace
    */
-  @Schema(
-      name = "namespace",
-      description =
-          "The namespace identifier as a list of parts. Only populated when `load_detailed_metadata` is true. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "namespace", description = "The namespace identifier as a list of parts. Only populated when `load_detailed_metadata` is true. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("namespace")
   public List<String> getNamespace() {
     return namespace;
@@ -118,15 +110,12 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table version number. Only populated when `load_detailed_metadata` is true. minimum: 0
-   *
+   * Table version number. Only populated when `load_detailed_metadata` is true. 
+   * minimum: 0
    * @return version
    */
-  @Min(0L)
-  @Schema(
-      name = "version",
-      description = "Table version number. Only populated when `load_detailed_metadata` is true. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0L) 
+  @Schema(name = "version", description = "Table version number. Only populated when `load_detailed_metadata` is true. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("version")
   public Long getVersion() {
     return version;
@@ -142,14 +131,11 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table storage location (e.g., S3/GCS path).
-   *
+   * Table storage location (e.g., S3/GCS path). 
    * @return location
    */
-  @Schema(
-      name = "location",
-      description = "Table storage location (e.g., S3/GCS path). ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "location", description = "Table storage location (e.g., S3/GCS path). ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("location")
   public String getLocation() {
     return location;
@@ -165,16 +151,11 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table URI. Unlike location, this field must be a complete and valid URI. Only returned when
-   * `with_table_uri` is true.
-   *
+   * Table URI. Unlike location, this field must be a complete and valid URI. Only returned when `with_table_uri` is true. 
    * @return tableUri
    */
-  @Schema(
-      name = "table_uri",
-      description =
-          "Table URI. Unlike location, this field must be a complete and valid URI. Only returned when `with_table_uri` is true. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "table_uri", description = "Table URI. Unlike location, this field must be a complete and valid URI. Only returned when `with_table_uri` is true. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("table_uri")
   public String getTableUri() {
     return tableUri;
@@ -190,16 +171,11 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table schema in JSON Arrow format. Only populated when `load_detailed_metadata` is true.
-   *
+   * Table schema in JSON Arrow format. Only populated when `load_detailed_metadata` is true. 
    * @return schema
    */
-  @Valid
-  @Schema(
-      name = "schema",
-      description =
-          "Table schema in JSON Arrow format. Only populated when `load_detailed_metadata` is true. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Valid 
+  @Schema(name = "schema", description = "Table schema in JSON Arrow format. Only populated when `load_detailed_metadata` is true. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("schema")
   public JsonArrowSchema getSchema() {
     return schema;
@@ -223,19 +199,11 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Configuration options to be used to access storage. The available options depend on the type of
-   * storage in use. These will be passed directly to Lance to initialize storage access. When
-   * `vend_credentials` is true, this field may include vended credentials. If the vended
-   * credentials are temporary, the `expires_at_millis` key should be included to indicate the
-   * millisecond timestamp when the credentials expire.
-   *
+   * Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. When `vend_credentials` is true, this field may include vended credentials. If the vended credentials are temporary, the `expires_at_millis` key should be included to indicate the millisecond timestamp when the credentials expire. 
    * @return storageOptions
    */
-  @Schema(
-      name = "storage_options",
-      description =
-          "Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. When `vend_credentials` is true, this field may include vended credentials. If the vended credentials are temporary, the `expires_at_millis` key should be included to indicate the millisecond timestamp when the credentials expire. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "storage_options", description = "Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. When `vend_credentials` is true, this field may include vended credentials. If the vended credentials are temporary, the `expires_at_millis` key should be included to indicate the millisecond timestamp when the credentials expire. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("storage_options")
   public Map<String, String> getStorageOptions() {
     return storageOptions;
@@ -251,15 +219,11 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Table statistics. Only populated when `load_detailed_metadata` is true.
-   *
+   * Table statistics. Only populated when `load_detailed_metadata` is true. 
    * @return stats
    */
-  @Valid
-  @Schema(
-      name = "stats",
-      description = "Table statistics. Only populated when `load_detailed_metadata` is true. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Valid 
+  @Schema(name = "stats", description = "Table statistics. Only populated when `load_detailed_metadata` is true. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("stats")
   public TableBasicStats getStats() {
     return stats;
@@ -283,16 +247,11 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Optional table metadata as key-value pairs. This records the information of the table and
-   * requires loading the table. It is only populated when `load_detailed_metadata` is true.
-   *
+   * Optional table metadata as key-value pairs. This records the information of the table and requires loading the table. It is only populated when `load_detailed_metadata` is true. 
    * @return metadata
    */
-  @Schema(
-      name = "metadata",
-      description =
-          "Optional table metadata as key-value pairs. This records the information of the table and requires loading the table. It is only populated when `load_detailed_metadata` is true. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "metadata", description = "Optional table metadata as key-value pairs. This records the information of the table and requires loading the table. It is only populated when `load_detailed_metadata` is true. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("metadata")
   public Map<String, String> getMetadata() {
     return metadata;
@@ -316,19 +275,11 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Properties stored on the table, if supported by the server. This records the information
-   * managed by the namespace. If the server does not support table properties, it should return
-   * null for this field. If table properties are supported, but none are set, it should return an
-   * empty object.
-   *
+   * Properties stored on the table, if supported by the server. This records the information managed by the namespace. If the server does not support table properties, it should return null for this field. If table properties are supported, but none are set, it should return an empty object.
    * @return properties
    */
-  @Schema(
-      name = "properties",
-      example = "{owner=Ralph, created_at=1452120468}",
-      description =
-          "Properties stored on the table, if supported by the server. This records the information managed by the namespace. If the server does not support table properties, it should return null for this field. If table properties are supported, but none are set, it should return an empty object.",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "properties", example = "{owner=Ralph, created_at=1452120468}", description = "Properties stored on the table, if supported by the server. This records the information managed by the namespace. If the server does not support table properties, it should return null for this field. If table properties are supported, but none are set, it should return an empty object.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("properties")
   public Map<String, String> getProperties() {
     return properties;
@@ -344,17 +295,11 @@ public class DescribeTableResponse {
   }
 
   /**
-   * When true, the caller should use namespace table version operations (CreateTableVersion,
-   * BatchCreateTableVersions, DescribeTableVersion, ListTableVersions, BatchDeleteTableVersions) to
-   * manage table versions instead of relying on Lance's native version management.
-   *
+   * When true, the caller should use namespace table version operations (CreateTableVersion, BatchCreateTableVersions, DescribeTableVersion, ListTableVersions, BatchDeleteTableVersions) to manage table versions instead of relying on Lance's native version management. 
    * @return managedVersioning
    */
-  @Schema(
-      name = "managed_versioning",
-      description =
-          "When true, the caller should use namespace table version operations (CreateTableVersion, BatchCreateTableVersions, DescribeTableVersion, ListTableVersions, BatchDeleteTableVersions) to manage table versions instead of relying on Lance's native version management. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "managed_versioning", description = "When true, the caller should use namespace table version operations (CreateTableVersion, BatchCreateTableVersions, DescribeTableVersion, ListTableVersions, BatchDeleteTableVersions) to manage table versions instead of relying on Lance's native version management. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("managed_versioning")
   public Boolean getManagedVersioning() {
     return managedVersioning;
@@ -370,22 +315,11 @@ public class DescribeTableResponse {
   }
 
   /**
-   * When true, indicates that the table has been declared in the namespace but not yet created on
-   * storage. This means the table exists in the namespace but has no data files on the underlying
-   * storage. When false, the table has storage components (data and metadata files). When null, the
-   * implementation did not check whether the table is only declared. Clients should treat an
-   * omitted value as null. Implementations should populate this field when `check_declared` is true
-   * or another option such as `load_detailed_metadata` requires checking declared-only table state.
-   * Operations like describe_table with load_detailed_metadata=true may fail for declared-only
-   * tables.
-   *
+   * When true, indicates that the table has been declared in the namespace but not yet created on storage. This means the table exists in the namespace but has no data files on the underlying storage. When false, the table has storage components (data and metadata files). When null, the implementation did not check whether the table is only declared. Clients should treat an omitted value as null. Implementations should populate this field when `check_declared` is true or another option such as `load_detailed_metadata` requires checking declared-only table state. Operations like describe_table with load_detailed_metadata=true may fail for declared-only tables. 
    * @return isOnlyDeclared
    */
-  @Schema(
-      name = "is_only_declared",
-      description =
-          "When true, indicates that the table has been declared in the namespace but not yet created on storage. This means the table exists in the namespace but has no data files on the underlying storage. When false, the table has storage components (data and metadata files). When null, the implementation did not check whether the table is only declared. Clients should treat an omitted value as null. Implementations should populate this field when `check_declared` is true or another option such as `load_detailed_metadata` requires checking declared-only table state. Operations like describe_table with load_detailed_metadata=true may fail for declared-only tables. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "is_only_declared", description = "When true, indicates that the table has been declared in the namespace but not yet created on storage. This means the table exists in the namespace but has no data files on the underlying storage. When false, the table has storage components (data and metadata files). When null, the implementation did not check whether the table is only declared. Clients should treat an omitted value as null. Implementations should populate this field when `check_declared` is true or another option such as `load_detailed_metadata` requires checking declared-only table state. Operations like describe_table with load_detailed_metadata=true may fail for declared-only tables. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("is_only_declared")
   public Boolean getIsOnlyDeclared() {
     return isOnlyDeclared;
@@ -404,35 +338,23 @@ public class DescribeTableResponse {
       return false;
     }
     DescribeTableResponse describeTableResponse = (DescribeTableResponse) o;
-    return Objects.equals(this.table, describeTableResponse.table)
-        && Objects.equals(this.namespace, describeTableResponse.namespace)
-        && Objects.equals(this.version, describeTableResponse.version)
-        && Objects.equals(this.location, describeTableResponse.location)
-        && Objects.equals(this.tableUri, describeTableResponse.tableUri)
-        && Objects.equals(this.schema, describeTableResponse.schema)
-        && Objects.equals(this.storageOptions, describeTableResponse.storageOptions)
-        && Objects.equals(this.stats, describeTableResponse.stats)
-        && Objects.equals(this.metadata, describeTableResponse.metadata)
-        && Objects.equals(this.properties, describeTableResponse.properties)
-        && Objects.equals(this.managedVersioning, describeTableResponse.managedVersioning)
-        && Objects.equals(this.isOnlyDeclared, describeTableResponse.isOnlyDeclared);
+    return Objects.equals(this.table, describeTableResponse.table) &&
+        Objects.equals(this.namespace, describeTableResponse.namespace) &&
+        Objects.equals(this.version, describeTableResponse.version) &&
+        Objects.equals(this.location, describeTableResponse.location) &&
+        Objects.equals(this.tableUri, describeTableResponse.tableUri) &&
+        Objects.equals(this.schema, describeTableResponse.schema) &&
+        Objects.equals(this.storageOptions, describeTableResponse.storageOptions) &&
+        Objects.equals(this.stats, describeTableResponse.stats) &&
+        Objects.equals(this.metadata, describeTableResponse.metadata) &&
+        Objects.equals(this.properties, describeTableResponse.properties) &&
+        Objects.equals(this.managedVersioning, describeTableResponse.managedVersioning) &&
+        Objects.equals(this.isOnlyDeclared, describeTableResponse.isOnlyDeclared);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        table,
-        namespace,
-        version,
-        location,
-        tableUri,
-        schema,
-        storageOptions,
-        stats,
-        metadata,
-        properties,
-        managedVersioning,
-        isOnlyDeclared);
+    return Objects.hash(table, namespace, version, location, tableUri, schema, storageOptions, stats, metadata, properties, managedVersioning, isOnlyDeclared);
   }
 
   @Override
@@ -456,7 +378,8 @@ public class DescribeTableResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -465,3 +388,4 @@ public class DescribeTableResponse {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

@@ -11,8 +11,9 @@ Name | Type | Description | Notes
 **max_rows_per_fragment** | **int** | Optional maximum rows per fragment | [optional] 
 **concurrency** | **int** | Optional concurrency override | [optional] 
 **intra_applier_concurrency** | **int** | Optional intra-applier concurrency override | [optional] 
-**cluster** | **str** | Optional cluster name | [optional] 
-**manifest** | **str** | Optional manifest name | [optional] 
+**cluster** | **str** | Optional cluster name (operational override) | [optional] 
+**output_limit** | **int** | Post-trim cap on view row count after expansion. Valid only for chunker materialized views; returns 400 if set on other kinds.  | [optional] 
+**manifest** | **str** | Optional inline JSON-serialized GenevaManifest. Operational override for this refresh only; does not mutate the view&#39;s snapshotted manifest. When omitted, the manifest stored in the view&#39;s metadata is used.  | [optional] 
 
 ## Example
 

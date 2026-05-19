@@ -1,44 +1,40 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** DeregisterTableResponse */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * DeregisterTableResponse
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class DeregisterTableResponse {
 
   private String transactionId;
 
-  @Valid private List<String> id = new ArrayList<>();
+  @Valid
+  private List<String> id = new ArrayList<>();
 
   private String location;
 
-  @Valid private Map<String, String> properties = new HashMap<>();
+  @Valid
+  private Map<String, String> properties = new HashMap<>();
 
   public DeregisterTableResponse transactionId(String transactionId) {
     this.transactionId = transactionId;
@@ -47,13 +43,10 @@ public class DeregisterTableResponse {
 
   /**
    * Optional transaction identifier
-   *
    * @return transactionId
    */
-  @Schema(
-      name = "transaction_id",
-      description = "Optional transaction identifier",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "transaction_id", description = "Optional transaction identifier", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("transaction_id")
   public String getTransactionId() {
     return transactionId;
@@ -78,9 +71,9 @@ public class DeregisterTableResponse {
 
   /**
    * Get id
-   *
    * @return id
    */
+  
   @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
@@ -98,9 +91,9 @@ public class DeregisterTableResponse {
 
   /**
    * Get location
-   *
    * @return location
    */
+  
   @Schema(name = "location", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("location")
   public String getLocation() {
@@ -125,17 +118,11 @@ public class DeregisterTableResponse {
   }
 
   /**
-   * If the implementation does not support table properties, it should return null for this field.
-   * Otherwise it should return the properties.
-   *
+   * If the implementation does not support table properties, it should return null for this field. Otherwise it should return the properties. 
    * @return properties
    */
-  @Schema(
-      name = "properties",
-      example = "{owner=Ralph, created_at=1452120468}",
-      description =
-          "If the implementation does not support table properties, it should return null for this field. Otherwise it should return the properties. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "properties", example = "{owner=Ralph, created_at=1452120468}", description = "If the implementation does not support table properties, it should return null for this field. Otherwise it should return the properties. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("properties")
   public Map<String, String> getProperties() {
     return properties;
@@ -154,10 +141,10 @@ public class DeregisterTableResponse {
       return false;
     }
     DeregisterTableResponse deregisterTableResponse = (DeregisterTableResponse) o;
-    return Objects.equals(this.transactionId, deregisterTableResponse.transactionId)
-        && Objects.equals(this.id, deregisterTableResponse.id)
-        && Objects.equals(this.location, deregisterTableResponse.location)
-        && Objects.equals(this.properties, deregisterTableResponse.properties);
+    return Objects.equals(this.transactionId, deregisterTableResponse.transactionId) &&
+        Objects.equals(this.id, deregisterTableResponse.id) &&
+        Objects.equals(this.location, deregisterTableResponse.location) &&
+        Objects.equals(this.properties, deregisterTableResponse.properties);
   }
 
   @Override
@@ -178,7 +165,8 @@ public class DeregisterTableResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -187,3 +175,4 @@ public class DeregisterTableResponse {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

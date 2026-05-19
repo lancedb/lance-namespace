@@ -46,6 +46,7 @@ class TestRefreshMaterializedViewRequest(unittest.TestCase):
                 concurrency = 56,
                 intra_applier_concurrency = 56,
                 cluster = '',
+                output_limit = 56,
                 manifest = ''
             )
         else:

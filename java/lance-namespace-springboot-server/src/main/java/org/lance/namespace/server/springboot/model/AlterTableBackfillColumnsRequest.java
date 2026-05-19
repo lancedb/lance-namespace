@@ -1,39 +1,35 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.lance.namespace.server.springboot.model.Identity;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.math.BigDecimal;
+
 import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import jakarta.annotation.Generated;
 
-/** AlterTableBackfillColumnsRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+/**
+ * AlterTableBackfillColumnsRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class AlterTableBackfillColumnsRequest {
 
   private Identity identity;
 
-  @Valid private List<String> id = new ArrayList<>();
+  @Valid
+  private List<String> id = new ArrayList<>();
 
   private String column;
 
@@ -67,7 +63,9 @@ public class AlterTableBackfillColumnsRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public AlterTableBackfillColumnsRequest(String column) {
     this.column = column;
   }
@@ -79,10 +77,9 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Get identity
-   *
    * @return identity
    */
-  @Valid
+  @Valid 
   @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("identity")
   public Identity getIdentity() {
@@ -108,13 +105,10 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Table identifier path (namespace + table name)
-   *
    * @return id
    */
-  @Schema(
-      name = "id",
-      description = "Table identifier path (namespace + table name)",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "id", description = "Table identifier path (namespace + table name)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
     return id;
@@ -131,14 +125,10 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Column name to backfill
-   *
    * @return column
    */
-  @NotNull
-  @Schema(
-      name = "column",
-      description = "Column name to backfill",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "column", description = "Column name to backfill", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("column")
   public String getColumn() {
     return column;
@@ -155,13 +145,10 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Optional WHERE clause filter
-   *
    * @return where
    */
-  @Schema(
-      name = "where",
-      description = "Optional WHERE clause filter",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "where", description = "Optional WHERE clause filter", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("where")
   public String getWhere() {
     return where;
@@ -178,13 +165,10 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Optional concurrency override
-   *
    * @return concurrency
    */
-  @Schema(
-      name = "concurrency",
-      description = "Optional concurrency override",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "concurrency", description = "Optional concurrency override", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("concurrency")
   public Integer getConcurrency() {
     return concurrency;
@@ -201,13 +185,10 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Optional intra-applier concurrency override
-   *
    * @return intraApplierConcurrency
    */
-  @Schema(
-      name = "intra_applier_concurrency",
-      description = "Optional intra-applier concurrency override",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "intra_applier_concurrency", description = "Optional intra-applier concurrency override", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("intra_applier_concurrency")
   public Integer getIntraApplierConcurrency() {
     return intraApplierConcurrency;
@@ -224,13 +205,10 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Optional minimum checkpoint size
-   *
    * @return minCheckpointSize
    */
-  @Schema(
-      name = "min_checkpoint_size",
-      description = "Optional minimum checkpoint size",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "min_checkpoint_size", description = "Optional minimum checkpoint size", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("min_checkpoint_size")
   public Integer getMinCheckpointSize() {
     return minCheckpointSize;
@@ -247,13 +225,10 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Optional maximum checkpoint size
-   *
    * @return maxCheckpointSize
    */
-  @Schema(
-      name = "max_checkpoint_size",
-      description = "Optional maximum checkpoint size",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "max_checkpoint_size", description = "Optional maximum checkpoint size", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("max_checkpoint_size")
   public Integer getMaxCheckpointSize() {
     return maxCheckpointSize;
@@ -263,29 +238,23 @@ public class AlterTableBackfillColumnsRequest {
     this.maxCheckpointSize = maxCheckpointSize;
   }
 
-  public AlterTableBackfillColumnsRequest batchCheckpointFlushIntervalSeconds(
-      BigDecimal batchCheckpointFlushIntervalSeconds) {
+  public AlterTableBackfillColumnsRequest batchCheckpointFlushIntervalSeconds(BigDecimal batchCheckpointFlushIntervalSeconds) {
     this.batchCheckpointFlushIntervalSeconds = batchCheckpointFlushIntervalSeconds;
     return this;
   }
 
   /**
    * Optional batch checkpoint flush interval in seconds
-   *
    * @return batchCheckpointFlushIntervalSeconds
    */
-  @Valid
-  @Schema(
-      name = "batch_checkpoint_flush_interval_seconds",
-      description = "Optional batch checkpoint flush interval in seconds",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Valid 
+  @Schema(name = "batch_checkpoint_flush_interval_seconds", description = "Optional batch checkpoint flush interval in seconds", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("batch_checkpoint_flush_interval_seconds")
   public BigDecimal getBatchCheckpointFlushIntervalSeconds() {
     return batchCheckpointFlushIntervalSeconds;
   }
 
-  public void setBatchCheckpointFlushIntervalSeconds(
-      BigDecimal batchCheckpointFlushIntervalSeconds) {
+  public void setBatchCheckpointFlushIntervalSeconds(BigDecimal batchCheckpointFlushIntervalSeconds) {
     this.batchCheckpointFlushIntervalSeconds = batchCheckpointFlushIntervalSeconds;
   }
 
@@ -296,13 +265,10 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Optional table version to read from
-   *
    * @return readVersion
    */
-  @Schema(
-      name = "read_version",
-      description = "Optional table version to read from",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "read_version", description = "Optional table version to read from", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("read_version")
   public Integer getReadVersion() {
     return readVersion;
@@ -319,13 +285,10 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Optional task size
-   *
    * @return taskSize
    */
-  @Schema(
-      name = "task_size",
-      description = "Optional task size",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "task_size", description = "Optional task size", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("task_size")
   public Integer getTaskSize() {
     return taskSize;
@@ -342,13 +305,10 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Optional number of fragments
-   *
    * @return numFrags
    */
-  @Schema(
-      name = "num_frags",
-      description = "Optional number of fragments",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "num_frags", description = "Optional number of fragments", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("num_frags")
   public Integer getNumFrags() {
     return numFrags;
@@ -365,13 +325,10 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Optional checkpoint size
-   *
    * @return checkpointSize
    */
-  @Schema(
-      name = "checkpoint_size",
-      description = "Optional checkpoint size",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "checkpoint_size", description = "Optional checkpoint size", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("checkpoint_size")
   public Integer getCheckpointSize() {
     return checkpointSize;
@@ -388,13 +345,10 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Optional commit granularity
-   *
    * @return commitGranularity
    */
-  @Schema(
-      name = "commit_granularity",
-      description = "Optional commit granularity",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "commit_granularity", description = "Optional commit granularity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("commit_granularity")
   public Integer getCommitGranularity() {
     return commitGranularity;
@@ -411,13 +365,10 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Optional cluster name
-   *
    * @return cluster
    */
-  @Schema(
-      name = "cluster",
-      description = "Optional cluster name",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "cluster", description = "Optional cluster name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("cluster")
   public String getCluster() {
     return cluster;
@@ -434,13 +385,10 @@ public class AlterTableBackfillColumnsRequest {
 
   /**
    * Optional manifest name
-   *
    * @return manifest
    */
-  @Schema(
-      name = "manifest",
-      description = "Optional manifest name",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "manifest", description = "Optional manifest name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("manifest")
   public String getManifest() {
     return manifest;
@@ -458,51 +406,28 @@ public class AlterTableBackfillColumnsRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AlterTableBackfillColumnsRequest alterTableBackfillColumnsRequest =
-        (AlterTableBackfillColumnsRequest) o;
-    return Objects.equals(this.identity, alterTableBackfillColumnsRequest.identity)
-        && Objects.equals(this.id, alterTableBackfillColumnsRequest.id)
-        && Objects.equals(this.column, alterTableBackfillColumnsRequest.column)
-        && Objects.equals(this.where, alterTableBackfillColumnsRequest.where)
-        && Objects.equals(this.concurrency, alterTableBackfillColumnsRequest.concurrency)
-        && Objects.equals(
-            this.intraApplierConcurrency, alterTableBackfillColumnsRequest.intraApplierConcurrency)
-        && Objects.equals(
-            this.minCheckpointSize, alterTableBackfillColumnsRequest.minCheckpointSize)
-        && Objects.equals(
-            this.maxCheckpointSize, alterTableBackfillColumnsRequest.maxCheckpointSize)
-        && Objects.equals(
-            this.batchCheckpointFlushIntervalSeconds,
-            alterTableBackfillColumnsRequest.batchCheckpointFlushIntervalSeconds)
-        && Objects.equals(this.readVersion, alterTableBackfillColumnsRequest.readVersion)
-        && Objects.equals(this.taskSize, alterTableBackfillColumnsRequest.taskSize)
-        && Objects.equals(this.numFrags, alterTableBackfillColumnsRequest.numFrags)
-        && Objects.equals(this.checkpointSize, alterTableBackfillColumnsRequest.checkpointSize)
-        && Objects.equals(
-            this.commitGranularity, alterTableBackfillColumnsRequest.commitGranularity)
-        && Objects.equals(this.cluster, alterTableBackfillColumnsRequest.cluster)
-        && Objects.equals(this.manifest, alterTableBackfillColumnsRequest.manifest);
+    AlterTableBackfillColumnsRequest alterTableBackfillColumnsRequest = (AlterTableBackfillColumnsRequest) o;
+    return Objects.equals(this.identity, alterTableBackfillColumnsRequest.identity) &&
+        Objects.equals(this.id, alterTableBackfillColumnsRequest.id) &&
+        Objects.equals(this.column, alterTableBackfillColumnsRequest.column) &&
+        Objects.equals(this.where, alterTableBackfillColumnsRequest.where) &&
+        Objects.equals(this.concurrency, alterTableBackfillColumnsRequest.concurrency) &&
+        Objects.equals(this.intraApplierConcurrency, alterTableBackfillColumnsRequest.intraApplierConcurrency) &&
+        Objects.equals(this.minCheckpointSize, alterTableBackfillColumnsRequest.minCheckpointSize) &&
+        Objects.equals(this.maxCheckpointSize, alterTableBackfillColumnsRequest.maxCheckpointSize) &&
+        Objects.equals(this.batchCheckpointFlushIntervalSeconds, alterTableBackfillColumnsRequest.batchCheckpointFlushIntervalSeconds) &&
+        Objects.equals(this.readVersion, alterTableBackfillColumnsRequest.readVersion) &&
+        Objects.equals(this.taskSize, alterTableBackfillColumnsRequest.taskSize) &&
+        Objects.equals(this.numFrags, alterTableBackfillColumnsRequest.numFrags) &&
+        Objects.equals(this.checkpointSize, alterTableBackfillColumnsRequest.checkpointSize) &&
+        Objects.equals(this.commitGranularity, alterTableBackfillColumnsRequest.commitGranularity) &&
+        Objects.equals(this.cluster, alterTableBackfillColumnsRequest.cluster) &&
+        Objects.equals(this.manifest, alterTableBackfillColumnsRequest.manifest);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        identity,
-        id,
-        column,
-        where,
-        concurrency,
-        intraApplierConcurrency,
-        minCheckpointSize,
-        maxCheckpointSize,
-        batchCheckpointFlushIntervalSeconds,
-        readVersion,
-        taskSize,
-        numFrags,
-        checkpointSize,
-        commitGranularity,
-        cluster,
-        manifest);
+    return Objects.hash(identity, id, column, where, concurrency, intraApplierConcurrency, minCheckpointSize, maxCheckpointSize, batchCheckpointFlushIntervalSeconds, readVersion, taskSize, numFrags, checkpointSize, commitGranularity, cluster, manifest);
   }
 
   @Override
@@ -514,14 +439,10 @@ public class AlterTableBackfillColumnsRequest {
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    where: ").append(toIndentedString(where)).append("\n");
     sb.append("    concurrency: ").append(toIndentedString(concurrency)).append("\n");
-    sb.append("    intraApplierConcurrency: ")
-        .append(toIndentedString(intraApplierConcurrency))
-        .append("\n");
+    sb.append("    intraApplierConcurrency: ").append(toIndentedString(intraApplierConcurrency)).append("\n");
     sb.append("    minCheckpointSize: ").append(toIndentedString(minCheckpointSize)).append("\n");
     sb.append("    maxCheckpointSize: ").append(toIndentedString(maxCheckpointSize)).append("\n");
-    sb.append("    batchCheckpointFlushIntervalSeconds: ")
-        .append(toIndentedString(batchCheckpointFlushIntervalSeconds))
-        .append("\n");
+    sb.append("    batchCheckpointFlushIntervalSeconds: ").append(toIndentedString(batchCheckpointFlushIntervalSeconds)).append("\n");
     sb.append("    readVersion: ").append(toIndentedString(readVersion)).append("\n");
     sb.append("    taskSize: ").append(toIndentedString(taskSize)).append("\n");
     sb.append("    numFrags: ").append(toIndentedString(numFrags)).append("\n");
@@ -534,7 +455,8 @@ public class AlterTableBackfillColumnsRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -543,3 +465,4 @@ public class AlterTableBackfillColumnsRequest {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

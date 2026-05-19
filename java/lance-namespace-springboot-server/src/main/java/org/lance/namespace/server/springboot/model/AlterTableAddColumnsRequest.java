@@ -1,46 +1,46 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.lance.namespace.server.springboot.model.AddColumnsEntry;
+import org.lance.namespace.server.springboot.model.Identity;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import jakarta.annotation.Generated;
 
-/** AlterTableAddColumnsRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+/**
+ * AlterTableAddColumnsRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class AlterTableAddColumnsRequest {
 
   private Identity identity;
 
-  @Valid private List<String> id = new ArrayList<>();
+  @Valid
+  private List<String> id = new ArrayList<>();
 
-  @Valid private List<@Valid AddColumnsEntry> newColumns = new ArrayList<>();
+  @Valid
+  private List<@Valid AddColumnsEntry> newColumns = new ArrayList<>();
 
   public AlterTableAddColumnsRequest() {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public AlterTableAddColumnsRequest(List<@Valid AddColumnsEntry> newColumns) {
     this.newColumns = newColumns;
   }
@@ -52,10 +52,9 @@ public class AlterTableAddColumnsRequest {
 
   /**
    * Get identity
-   *
    * @return identity
    */
-  @Valid
+  @Valid 
   @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("identity")
   public Identity getIdentity() {
@@ -81,13 +80,10 @@ public class AlterTableAddColumnsRequest {
 
   /**
    * Table identifier path (namespace + table name)
-   *
    * @return id
    */
-  @Schema(
-      name = "id",
-      description = "Table identifier path (namespace + table name)",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "id", description = "Table identifier path (namespace + table name)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
     return id;
@@ -112,15 +108,10 @@ public class AlterTableAddColumnsRequest {
 
   /**
    * List of new columns to add to the table
-   *
    * @return newColumns
    */
-  @NotNull
-  @Valid
-  @Schema(
-      name = "new_columns",
-      description = "List of new columns to add to the table",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Valid 
+  @Schema(name = "new_columns", description = "List of new columns to add to the table", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("new_columns")
   public List<@Valid AddColumnsEntry> getNewColumns() {
     return newColumns;
@@ -139,9 +130,9 @@ public class AlterTableAddColumnsRequest {
       return false;
     }
     AlterTableAddColumnsRequest alterTableAddColumnsRequest = (AlterTableAddColumnsRequest) o;
-    return Objects.equals(this.identity, alterTableAddColumnsRequest.identity)
-        && Objects.equals(this.id, alterTableAddColumnsRequest.id)
-        && Objects.equals(this.newColumns, alterTableAddColumnsRequest.newColumns);
+    return Objects.equals(this.identity, alterTableAddColumnsRequest.identity) &&
+        Objects.equals(this.id, alterTableAddColumnsRequest.id) &&
+        Objects.equals(this.newColumns, alterTableAddColumnsRequest.newColumns);
   }
 
   @Override
@@ -161,7 +152,8 @@ public class AlterTableAddColumnsRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -170,3 +162,4 @@ public class AlterTableAddColumnsRequest {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

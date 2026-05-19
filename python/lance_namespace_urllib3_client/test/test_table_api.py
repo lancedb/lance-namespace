@@ -89,6 +89,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_create_materialized_view(self) -> None:
+        """Test case for create_materialized_view
+
+        Create a materialized view
+        """
+        pass
+
     def test_create_table(self) -> None:
         """Test case for create_table
 

@@ -1,35 +1,26 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.lance.namespace.server.springboot.model.FtsQuery;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import java.util.*;
-import java.util.Objects;
+import jakarta.annotation.Generated;
 
-/** Boost query that scores documents matching positive query higher and negative query lower */
-@Schema(
-    name = "BoostQuery",
-    description =
-        "Boost query that scores documents matching positive query higher and negative query lower")
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+/**
+ * Boost query that scores documents matching positive query higher and negative query lower
+ */
+
+@Schema(name = "BoostQuery", description = "Boost query that scores documents matching positive query higher and negative query lower")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class BoostQuery {
 
   private FtsQuery positive;
@@ -42,7 +33,9 @@ public class BoostQuery {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public BoostQuery(FtsQuery positive, FtsQuery negative) {
     this.positive = positive;
     this.negative = negative;
@@ -55,11 +48,9 @@ public class BoostQuery {
 
   /**
    * Get positive
-   *
    * @return positive
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "positive", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("positive")
   public FtsQuery getPositive() {
@@ -77,11 +68,9 @@ public class BoostQuery {
 
   /**
    * Get negative
-   *
    * @return negative
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "negative", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("negative")
   public FtsQuery getNegative() {
@@ -99,13 +88,10 @@ public class BoostQuery {
 
   /**
    * Boost factor for negative query (default: 0.5)
-   *
    * @return negativeBoost
    */
-  @Schema(
-      name = "negative_boost",
-      description = "Boost factor for negative query (default: 0.5)",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "negative_boost", description = "Boost factor for negative query (default: 0.5)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("negative_boost")
   public Float getNegativeBoost() {
     return negativeBoost;
@@ -124,9 +110,9 @@ public class BoostQuery {
       return false;
     }
     BoostQuery boostQuery = (BoostQuery) o;
-    return Objects.equals(this.positive, boostQuery.positive)
-        && Objects.equals(this.negative, boostQuery.negative)
-        && Objects.equals(this.negativeBoost, boostQuery.negativeBoost);
+    return Objects.equals(this.positive, boostQuery.positive) &&
+        Objects.equals(this.negative, boostQuery.negative) &&
+        Objects.equals(this.negativeBoost, boostQuery.negativeBoost);
   }
 
   @Override
@@ -146,7 +132,8 @@ public class BoostQuery {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -155,3 +142,4 @@ public class BoostQuery {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

@@ -1,30 +1,24 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import java.util.*;
-import java.util.Objects;
+import jakarta.annotation.Generated;
 
-/** FragmentSummary */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+/**
+ * FragmentSummary
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class FragmentSummary {
 
   private Long min;
@@ -45,7 +39,9 @@ public class FragmentSummary {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public FragmentSummary(Long min, Long max, Long mean, Long p25, Long p50, Long p75, Long p99) {
     this.min = min;
     this.max = max;
@@ -62,12 +58,11 @@ public class FragmentSummary {
   }
 
   /**
-   * Get min minimum: 0
-   *
+   * Get min
+   * minimum: 0
    * @return min
    */
-  @NotNull
-  @Min(0L)
+  @NotNull @Min(0L) 
   @Schema(name = "min", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("min")
   public Long getMin() {
@@ -84,12 +79,11 @@ public class FragmentSummary {
   }
 
   /**
-   * Get max minimum: 0
-   *
+   * Get max
+   * minimum: 0
    * @return max
    */
-  @NotNull
-  @Min(0L)
+  @NotNull @Min(0L) 
   @Schema(name = "max", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("max")
   public Long getMax() {
@@ -106,12 +100,11 @@ public class FragmentSummary {
   }
 
   /**
-   * Get mean minimum: 0
-   *
+   * Get mean
+   * minimum: 0
    * @return mean
    */
-  @NotNull
-  @Min(0L)
+  @NotNull @Min(0L) 
   @Schema(name = "mean", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("mean")
   public Long getMean() {
@@ -128,12 +121,11 @@ public class FragmentSummary {
   }
 
   /**
-   * Get p25 minimum: 0
-   *
+   * Get p25
+   * minimum: 0
    * @return p25
    */
-  @NotNull
-  @Min(0L)
+  @NotNull @Min(0L) 
   @Schema(name = "p25", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("p25")
   public Long getP25() {
@@ -150,12 +142,11 @@ public class FragmentSummary {
   }
 
   /**
-   * Get p50 minimum: 0
-   *
+   * Get p50
+   * minimum: 0
    * @return p50
    */
-  @NotNull
-  @Min(0L)
+  @NotNull @Min(0L) 
   @Schema(name = "p50", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("p50")
   public Long getP50() {
@@ -172,12 +163,11 @@ public class FragmentSummary {
   }
 
   /**
-   * Get p75 minimum: 0
-   *
+   * Get p75
+   * minimum: 0
    * @return p75
    */
-  @NotNull
-  @Min(0L)
+  @NotNull @Min(0L) 
   @Schema(name = "p75", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("p75")
   public Long getP75() {
@@ -194,12 +184,11 @@ public class FragmentSummary {
   }
 
   /**
-   * Get p99 minimum: 0
-   *
+   * Get p99
+   * minimum: 0
    * @return p99
    */
-  @NotNull
-  @Min(0L)
+  @NotNull @Min(0L) 
   @Schema(name = "p99", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("p99")
   public Long getP99() {
@@ -219,13 +208,13 @@ public class FragmentSummary {
       return false;
     }
     FragmentSummary fragmentSummary = (FragmentSummary) o;
-    return Objects.equals(this.min, fragmentSummary.min)
-        && Objects.equals(this.max, fragmentSummary.max)
-        && Objects.equals(this.mean, fragmentSummary.mean)
-        && Objects.equals(this.p25, fragmentSummary.p25)
-        && Objects.equals(this.p50, fragmentSummary.p50)
-        && Objects.equals(this.p75, fragmentSummary.p75)
-        && Objects.equals(this.p99, fragmentSummary.p99);
+    return Objects.equals(this.min, fragmentSummary.min) &&
+        Objects.equals(this.max, fragmentSummary.max) &&
+        Objects.equals(this.mean, fragmentSummary.mean) &&
+        Objects.equals(this.p25, fragmentSummary.p25) &&
+        Objects.equals(this.p50, fragmentSummary.p50) &&
+        Objects.equals(this.p75, fragmentSummary.p75) &&
+        Objects.equals(this.p99, fragmentSummary.p99);
   }
 
   @Override
@@ -249,7 +238,8 @@ public class FragmentSummary {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -258,3 +248,4 @@ public class FragmentSummary {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

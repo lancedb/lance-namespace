@@ -1,38 +1,33 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** AddVirtualColumnEntry */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * AddVirtualColumnEntry
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class AddVirtualColumnEntry {
 
-  @Valid private List<String> inputColumns = new ArrayList<>();
+  @Valid
+  private List<String> inputColumns = new ArrayList<>();
 
   private Object dataType;
 
@@ -52,20 +47,17 @@ public class AddVirtualColumnEntry {
 
   private String manifestChecksum = null;
 
-  @Valid private Map<String, String> fieldMetadata = new HashMap<>();
+  @Valid
+  private Map<String, String> fieldMetadata = new HashMap<>();
 
   public AddVirtualColumnEntry() {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public AddVirtualColumnEntry(
-      List<String> inputColumns,
-      Object dataType,
-      String image,
-      String udf,
-      String udfName,
-      String udfVersion) {
+  /**
+   * Constructor with only required parameters
+   */
+  public AddVirtualColumnEntry(List<String> inputColumns, Object dataType, String image, String udf, String udfName, String udfVersion) {
     this.inputColumns = inputColumns;
     this.dataType = dataType;
     this.image = image;
@@ -89,14 +81,10 @@ public class AddVirtualColumnEntry {
 
   /**
    * List of input column names for the virtual column
-   *
    * @return inputColumns
    */
-  @NotNull
-  @Schema(
-      name = "input_columns",
-      description = "List of input column names for the virtual column",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "input_columns", description = "List of input column names for the virtual column", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("input_columns")
   public List<String> getInputColumns() {
     return inputColumns;
@@ -113,14 +101,10 @@ public class AddVirtualColumnEntry {
 
   /**
    * Data type of the virtual column using JSON representation
-   *
    * @return dataType
    */
-  @NotNull
-  @Schema(
-      name = "data_type",
-      description = "Data type of the virtual column using JSON representation",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "data_type", description = "Data type of the virtual column using JSON representation", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("data_type")
   public Object getDataType() {
     return dataType;
@@ -137,14 +121,10 @@ public class AddVirtualColumnEntry {
 
   /**
    * Docker image to use for the UDF
-   *
    * @return image
    */
-  @NotNull
-  @Schema(
-      name = "image",
-      description = "Docker image to use for the UDF",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "image", description = "Docker image to use for the UDF", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("image")
   public String getImage() {
     return image;
@@ -161,14 +141,10 @@ public class AddVirtualColumnEntry {
 
   /**
    * Base64 encoded pickled UDF
-   *
    * @return udf
    */
-  @NotNull
-  @Schema(
-      name = "udf",
-      description = "Base64 encoded pickled UDF",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "udf", description = "Base64 encoded pickled UDF", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("udf")
   public String getUdf() {
     return udf;
@@ -185,14 +161,10 @@ public class AddVirtualColumnEntry {
 
   /**
    * Name of the UDF
-   *
    * @return udfName
    */
-  @NotNull
-  @Schema(
-      name = "udf_name",
-      description = "Name of the UDF",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "udf_name", description = "Name of the UDF", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("udf_name")
   public String getUdfName() {
     return udfName;
@@ -209,14 +181,10 @@ public class AddVirtualColumnEntry {
 
   /**
    * Version of the UDF
-   *
    * @return udfVersion
    */
-  @NotNull
-  @Schema(
-      name = "udf_version",
-      description = "Version of the UDF",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "udf_version", description = "Version of the UDF", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("udf_version")
   public String getUdfVersion() {
     return udfVersion;
@@ -233,13 +201,10 @@ public class AddVirtualColumnEntry {
 
   /**
    * UDF backend type (e.g. DockerUDFSpecV1)
-   *
    * @return udfBackend
    */
-  @Schema(
-      name = "udf_backend",
-      description = "UDF backend type (e.g. DockerUDFSpecV1)",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "udf_backend", description = "UDF backend type (e.g. DockerUDFSpecV1)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("udf_backend")
   public String getUdfBackend() {
     return udfBackend;
@@ -256,13 +221,10 @@ public class AddVirtualColumnEntry {
 
   /**
    * Whether to automatically backfill the column after creation
-   *
    * @return autoBackfill
    */
-  @Schema(
-      name = "auto_backfill",
-      description = "Whether to automatically backfill the column after creation",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "auto_backfill", description = "Whether to automatically backfill the column after creation", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("auto_backfill")
   public Boolean getAutoBackfill() {
     return autoBackfill;
@@ -279,13 +241,10 @@ public class AddVirtualColumnEntry {
 
   /**
    * JSON-serialized manifest for the UDF environment
-   *
    * @return manifest
    */
-  @Schema(
-      name = "manifest",
-      description = "JSON-serialized manifest for the UDF environment",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "manifest", description = "JSON-serialized manifest for the UDF environment", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("manifest")
   public String getManifest() {
     return manifest;
@@ -302,13 +261,10 @@ public class AddVirtualColumnEntry {
 
   /**
    * SHA-256 checksum of the manifest content
-   *
    * @return manifestChecksum
    */
-  @Schema(
-      name = "manifest_checksum",
-      description = "SHA-256 checksum of the manifest content",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "manifest_checksum", description = "SHA-256 checksum of the manifest content", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("manifest_checksum")
   public String getManifestChecksum() {
     return manifestChecksum;
@@ -333,13 +289,10 @@ public class AddVirtualColumnEntry {
 
   /**
    * User-supplied field metadata (string key-value pairs)
-   *
    * @return fieldMetadata
    */
-  @Schema(
-      name = "field_metadata",
-      description = "User-supplied field metadata (string key-value pairs)",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "field_metadata", description = "User-supplied field metadata (string key-value pairs)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("field_metadata")
   public Map<String, String> getFieldMetadata() {
     return fieldMetadata;
@@ -358,33 +311,22 @@ public class AddVirtualColumnEntry {
       return false;
     }
     AddVirtualColumnEntry addVirtualColumnEntry = (AddVirtualColumnEntry) o;
-    return Objects.equals(this.inputColumns, addVirtualColumnEntry.inputColumns)
-        && Objects.equals(this.dataType, addVirtualColumnEntry.dataType)
-        && Objects.equals(this.image, addVirtualColumnEntry.image)
-        && Objects.equals(this.udf, addVirtualColumnEntry.udf)
-        && Objects.equals(this.udfName, addVirtualColumnEntry.udfName)
-        && Objects.equals(this.udfVersion, addVirtualColumnEntry.udfVersion)
-        && Objects.equals(this.udfBackend, addVirtualColumnEntry.udfBackend)
-        && Objects.equals(this.autoBackfill, addVirtualColumnEntry.autoBackfill)
-        && Objects.equals(this.manifest, addVirtualColumnEntry.manifest)
-        && Objects.equals(this.manifestChecksum, addVirtualColumnEntry.manifestChecksum)
-        && Objects.equals(this.fieldMetadata, addVirtualColumnEntry.fieldMetadata);
+    return Objects.equals(this.inputColumns, addVirtualColumnEntry.inputColumns) &&
+        Objects.equals(this.dataType, addVirtualColumnEntry.dataType) &&
+        Objects.equals(this.image, addVirtualColumnEntry.image) &&
+        Objects.equals(this.udf, addVirtualColumnEntry.udf) &&
+        Objects.equals(this.udfName, addVirtualColumnEntry.udfName) &&
+        Objects.equals(this.udfVersion, addVirtualColumnEntry.udfVersion) &&
+        Objects.equals(this.udfBackend, addVirtualColumnEntry.udfBackend) &&
+        Objects.equals(this.autoBackfill, addVirtualColumnEntry.autoBackfill) &&
+        Objects.equals(this.manifest, addVirtualColumnEntry.manifest) &&
+        Objects.equals(this.manifestChecksum, addVirtualColumnEntry.manifestChecksum) &&
+        Objects.equals(this.fieldMetadata, addVirtualColumnEntry.fieldMetadata);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        inputColumns,
-        dataType,
-        image,
-        udf,
-        udfName,
-        udfVersion,
-        udfBackend,
-        autoBackfill,
-        manifest,
-        manifestChecksum,
-        fieldMetadata);
+    return Objects.hash(inputColumns, dataType, image, udf, udfName, udfVersion, udfBackend, autoBackfill, manifest, manifestChecksum, fieldMetadata);
   }
 
   @Override
@@ -407,7 +349,8 @@ public class AddVirtualColumnEntry {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -416,3 +359,4 @@ public class AddVirtualColumnEntry {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

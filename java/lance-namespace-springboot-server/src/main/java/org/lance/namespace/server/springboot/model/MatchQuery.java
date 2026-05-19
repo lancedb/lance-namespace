@@ -1,30 +1,24 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import java.util.*;
-import java.util.Objects;
+import jakarta.annotation.Generated;
 
-/** MatchQuery */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+/**
+ * MatchQuery
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class MatchQuery {
 
   private Float boost;
@@ -45,7 +39,9 @@ public class MatchQuery {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public MatchQuery(String terms) {
     this.terms = terms;
   }
@@ -57,9 +53,9 @@ public class MatchQuery {
 
   /**
    * Get boost
-   *
    * @return boost
    */
+  
   @Schema(name = "boost", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("boost")
   public Float getBoost() {
@@ -77,9 +73,9 @@ public class MatchQuery {
 
   /**
    * Get column
-   *
    * @return column
    */
+  
   @Schema(name = "column", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("column")
   public String getColumn() {
@@ -96,11 +92,11 @@ public class MatchQuery {
   }
 
   /**
-   * Get fuzziness minimum: 0
-   *
+   * Get fuzziness
+   * minimum: 0
    * @return fuzziness
    */
-  @Min(0)
+  @Min(0) 
   @Schema(name = "fuzziness", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("fuzziness")
   public Integer getFuzziness() {
@@ -117,15 +113,12 @@ public class MatchQuery {
   }
 
   /**
-   * The maximum number of terms to expand for fuzzy matching. Default to 50. minimum: 0
-   *
+   * The maximum number of terms to expand for fuzzy matching. Default to 50.
+   * minimum: 0
    * @return maxExpansions
    */
-  @Min(0)
-  @Schema(
-      name = "max_expansions",
-      description = "The maximum number of terms to expand for fuzzy matching. Default to 50.",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0) 
+  @Schema(name = "max_expansions", description = "The maximum number of terms to expand for fuzzy matching. Default to 50.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("max_expansions")
   public Integer getMaxExpansions() {
     return maxExpansions;
@@ -141,16 +134,11 @@ public class MatchQuery {
   }
 
   /**
-   * The operator to use for combining terms. Case insensitive, supports both PascalCase and
-   * snake_case. Valid values are: - And: All terms must match. - Or: At least one term must match.
-   *
+   * The operator to use for combining terms. Case insensitive, supports both PascalCase and snake_case. Valid values are: - And: All terms must match. - Or: At least one term must match. 
    * @return operator
    */
-  @Schema(
-      name = "operator",
-      description =
-          "The operator to use for combining terms. Case insensitive, supports both PascalCase and snake_case. Valid values are: - And: All terms must match. - Or: At least one term must match. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "operator", description = "The operator to use for combining terms. Case insensitive, supports both PascalCase and snake_case. Valid values are: - And: All terms must match. - Or: At least one term must match. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("operator")
   public String getOperator() {
     return operator;
@@ -166,16 +154,12 @@ public class MatchQuery {
   }
 
   /**
-   * The number of beginning characters being unchanged for fuzzy matching. Default to 0. minimum: 0
-   *
+   * The number of beginning characters being unchanged for fuzzy matching. Default to 0.
+   * minimum: 0
    * @return prefixLength
    */
-  @Min(0)
-  @Schema(
-      name = "prefix_length",
-      description =
-          "The number of beginning characters being unchanged for fuzzy matching. Default to 0.",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0) 
+  @Schema(name = "prefix_length", description = "The number of beginning characters being unchanged for fuzzy matching. Default to 0.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("prefix_length")
   public Integer getPrefixLength() {
     return prefixLength;
@@ -192,10 +176,9 @@ public class MatchQuery {
 
   /**
    * Get terms
-   *
    * @return terms
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "terms", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("terms")
   public String getTerms() {
@@ -215,13 +198,13 @@ public class MatchQuery {
       return false;
     }
     MatchQuery matchQuery = (MatchQuery) o;
-    return Objects.equals(this.boost, matchQuery.boost)
-        && Objects.equals(this.column, matchQuery.column)
-        && Objects.equals(this.fuzziness, matchQuery.fuzziness)
-        && Objects.equals(this.maxExpansions, matchQuery.maxExpansions)
-        && Objects.equals(this.operator, matchQuery.operator)
-        && Objects.equals(this.prefixLength, matchQuery.prefixLength)
-        && Objects.equals(this.terms, matchQuery.terms);
+    return Objects.equals(this.boost, matchQuery.boost) &&
+        Objects.equals(this.column, matchQuery.column) &&
+        Objects.equals(this.fuzziness, matchQuery.fuzziness) &&
+        Objects.equals(this.maxExpansions, matchQuery.maxExpansions) &&
+        Objects.equals(this.operator, matchQuery.operator) &&
+        Objects.equals(this.prefixLength, matchQuery.prefixLength) &&
+        Objects.equals(this.terms, matchQuery.terms);
   }
 
   @Override
@@ -245,7 +228,8 @@ public class MatchQuery {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -254,3 +238,4 @@ public class MatchQuery {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

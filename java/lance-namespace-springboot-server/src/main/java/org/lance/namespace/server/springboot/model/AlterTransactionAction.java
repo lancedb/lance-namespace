@@ -1,41 +1,28 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.lance.namespace.server.springboot.model.AlterTransactionSetProperty;
+import org.lance.namespace.server.springboot.model.AlterTransactionSetStatus;
+import org.lance.namespace.server.springboot.model.AlterTransactionUnsetProperty;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import java.util.*;
-import java.util.Objects;
+import jakarta.annotation.Generated;
 
 /**
- * A single action that could be performed to alter a transaction. This action holds the model
- * definition for all types of specific actions models, this is to minimize difference and
- * compatibility issue across codegen in different languages. When used, only one of the actions
- * should be non-null for each action. If you would like to perform multiple actions, set a list of
- * actions in the AlterTransactionRequest.
+ * A single action that could be performed to alter a transaction. This action holds the model definition for all types of specific actions models, this is to minimize difference and compatibility issue across codegen in different languages. When used, only one of the actions should be non-null for each action. If you would like to perform multiple actions, set a list of actions in the AlterTransactionRequest. 
  */
-@Schema(
-    name = "AlterTransactionAction",
-    description =
-        "A single action that could be performed to alter a transaction. This action holds the model definition for all types of specific actions models, this is to minimize difference and compatibility issue across codegen in different languages. When used, only one of the actions should be non-null for each action. If you would like to perform multiple actions, set a list of actions in the AlterTransactionRequest. ")
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+
+@Schema(name = "AlterTransactionAction", description = "A single action that could be performed to alter a transaction. This action holds the model definition for all types of specific actions models, this is to minimize difference and compatibility issue across codegen in different languages. When used, only one of the actions should be non-null for each action. If you would like to perform multiple actions, set a list of actions in the AlterTransactionRequest. ")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class AlterTransactionAction {
 
   private AlterTransactionSetStatus setStatusAction;
@@ -51,10 +38,9 @@ public class AlterTransactionAction {
 
   /**
    * Get setStatusAction
-   *
    * @return setStatusAction
    */
-  @Valid
+  @Valid 
   @Schema(name = "setStatusAction", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("setStatusAction")
   public AlterTransactionSetStatus getSetStatusAction() {
@@ -72,10 +58,9 @@ public class AlterTransactionAction {
 
   /**
    * Get setPropertyAction
-   *
    * @return setPropertyAction
    */
-  @Valid
+  @Valid 
   @Schema(name = "setPropertyAction", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("setPropertyAction")
   public AlterTransactionSetProperty getSetPropertyAction() {
@@ -86,18 +71,16 @@ public class AlterTransactionAction {
     this.setPropertyAction = setPropertyAction;
   }
 
-  public AlterTransactionAction unsetPropertyAction(
-      AlterTransactionUnsetProperty unsetPropertyAction) {
+  public AlterTransactionAction unsetPropertyAction(AlterTransactionUnsetProperty unsetPropertyAction) {
     this.unsetPropertyAction = unsetPropertyAction;
     return this;
   }
 
   /**
    * Get unsetPropertyAction
-   *
    * @return unsetPropertyAction
    */
-  @Valid
+  @Valid 
   @Schema(name = "unsetPropertyAction", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("unsetPropertyAction")
   public AlterTransactionUnsetProperty getUnsetPropertyAction() {
@@ -117,9 +100,9 @@ public class AlterTransactionAction {
       return false;
     }
     AlterTransactionAction alterTransactionAction = (AlterTransactionAction) o;
-    return Objects.equals(this.setStatusAction, alterTransactionAction.setStatusAction)
-        && Objects.equals(this.setPropertyAction, alterTransactionAction.setPropertyAction)
-        && Objects.equals(this.unsetPropertyAction, alterTransactionAction.unsetPropertyAction);
+    return Objects.equals(this.setStatusAction, alterTransactionAction.setStatusAction) &&
+        Objects.equals(this.setPropertyAction, alterTransactionAction.setPropertyAction) &&
+        Objects.equals(this.unsetPropertyAction, alterTransactionAction.unsetPropertyAction);
   }
 
   @Override
@@ -133,15 +116,14 @@ public class AlterTransactionAction {
     sb.append("class AlterTransactionAction {\n");
     sb.append("    setStatusAction: ").append(toIndentedString(setStatusAction)).append("\n");
     sb.append("    setPropertyAction: ").append(toIndentedString(setPropertyAction)).append("\n");
-    sb.append("    unsetPropertyAction: ")
-        .append(toIndentedString(unsetPropertyAction))
-        .append("\n");
+    sb.append("    unsetPropertyAction: ").append(toIndentedString(unsetPropertyAction)).append("\n");
     sb.append("}");
     return sb.toString();
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -150,3 +132,4 @@ public class AlterTransactionAction {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

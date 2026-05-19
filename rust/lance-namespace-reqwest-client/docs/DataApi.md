@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**alter_table_backfill_columns**](DataApi.md#alter_table_backfill_columns) | **POST** /v1/table/{id}/backfill_column | Trigger an async column backfill job
 [**analyze_table_query_plan**](DataApi.md#analyze_table_query_plan) | **POST** /v1/table/{id}/analyze_plan | Analyze query execution plan
 [**count_table_rows**](DataApi.md#count_table_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
+[**create_materialized_view**](DataApi.md#create_materialized_view) | **POST** /v1/table/{id}/create_materialized_view | Create a materialized view
 [**create_table**](DataApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 [**delete_from_table**](DataApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
 [**explain_table_query_plan**](DataApi.md#explain_table_query_plan) | **POST** /v1/table/{id}/explain_plan | Get query execution plan explanation
@@ -134,6 +135,38 @@ Name | Type | Description  | Required | Notes
 ### Return type
 
 **i64**
+
+### Authorization
+
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## create_materialized_view
+
+> models::CreateMaterializedViewResponse create_materialized_view(id, create_materialized_view_request, delimiter)
+Create a materialized view
+
+Create a materialized view at table identifier `id`. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the `kind` discriminator. Manifest defaults are resolved server-side and snapshotted into the view's metadata so the view is fully self-contained at creation time. When `with_no_data` is false the server also kicks off an initial refresh and returns its job ID. 
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
+**create_materialized_view_request** | [**CreateMaterializedViewRequest**](CreateMaterializedViewRequest.md) |  | [required] |
+**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
+
+### Return type
+
+[**models::CreateMaterializedViewResponse**](CreateMaterializedViewResponse.md)
 
 ### Authorization
 

@@ -1,46 +1,40 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import org.lance.namespace.server.springboot.model.Identity;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** Request for merging or inserting records into a table, excluding the Arrow IPC stream. */
-@Schema(
-    name = "MergeInsertIntoTableRequest",
-    description =
-        "Request for merging or inserting records into a table, excluding the Arrow IPC stream. ")
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * Request for merging or inserting records into a table, excluding the Arrow IPC stream. 
+ */
+
+@Schema(name = "MergeInsertIntoTableRequest", description = "Request for merging or inserting records into a table, excluding the Arrow IPC stream. ")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class MergeInsertIntoTableRequest {
 
   private Identity identity;
 
-  @Valid private Map<String, String> context = new HashMap<>();
+  @Valid
+  private Map<String, String> context = new HashMap<>();
 
-  @Valid private List<String> id = new ArrayList<>();
+  @Valid
+  private List<String> id = new ArrayList<>();
 
   private String on;
 
@@ -65,10 +59,9 @@ public class MergeInsertIntoTableRequest {
 
   /**
    * Get identity
-   *
    * @return identity
    */
-  @Valid
+  @Valid 
   @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("identity")
   public Identity getIdentity() {
@@ -93,18 +86,11 @@ public class MergeInsertIntoTableRequest {
   }
 
   /**
-   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
-   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
-   * the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry
-   * `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
-   *
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. 
    * @return context
    */
-  @Schema(
-      name = "context",
-      description =
-          "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "context", description = "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("context")
   public Map<String, String> getContext() {
     return context;
@@ -129,9 +115,9 @@ public class MergeInsertIntoTableRequest {
 
   /**
    * Get id
-   *
    * @return id
    */
+  
   @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
@@ -149,13 +135,10 @@ public class MergeInsertIntoTableRequest {
 
   /**
    * Column name to use for matching rows (required)
-   *
    * @return on
    */
-  @Schema(
-      name = "on",
-      description = "Column name to use for matching rows (required)",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "on", description = "Column name to use for matching rows (required)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("on")
   public String getOn() {
     return on;
@@ -172,13 +155,10 @@ public class MergeInsertIntoTableRequest {
 
   /**
    * Update all columns when rows match
-   *
    * @return whenMatchedUpdateAll
    */
-  @Schema(
-      name = "when_matched_update_all",
-      description = "Update all columns when rows match",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "when_matched_update_all", description = "Update all columns when rows match", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("when_matched_update_all")
   public Boolean getWhenMatchedUpdateAll() {
     return whenMatchedUpdateAll;
@@ -194,16 +174,11 @@ public class MergeInsertIntoTableRequest {
   }
 
   /**
-   * The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to
-   * true
-   *
+   * The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
    * @return whenMatchedUpdateAllFilt
    */
-  @Schema(
-      name = "when_matched_update_all_filt",
-      description =
-          "The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "when_matched_update_all_filt", description = "The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("when_matched_update_all_filt")
   public String getWhenMatchedUpdateAllFilt() {
     return whenMatchedUpdateAllFilt;
@@ -220,13 +195,10 @@ public class MergeInsertIntoTableRequest {
 
   /**
    * Insert all columns when rows don't match
-   *
    * @return whenNotMatchedInsertAll
    */
-  @Schema(
-      name = "when_not_matched_insert_all",
-      description = "Insert all columns when rows don't match",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "when_not_matched_insert_all", description = "Insert all columns when rows don't match", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("when_not_matched_insert_all")
   public Boolean getWhenNotMatchedInsertAll() {
     return whenNotMatchedInsertAll;
@@ -236,21 +208,17 @@ public class MergeInsertIntoTableRequest {
     this.whenNotMatchedInsertAll = whenNotMatchedInsertAll;
   }
 
-  public MergeInsertIntoTableRequest whenNotMatchedBySourceDelete(
-      Boolean whenNotMatchedBySourceDelete) {
+  public MergeInsertIntoTableRequest whenNotMatchedBySourceDelete(Boolean whenNotMatchedBySourceDelete) {
     this.whenNotMatchedBySourceDelete = whenNotMatchedBySourceDelete;
     return this;
   }
 
   /**
    * Delete all rows from target table that don't match a row in the source table
-   *
    * @return whenNotMatchedBySourceDelete
    */
-  @Schema(
-      name = "when_not_matched_by_source_delete",
-      description = "Delete all rows from target table that don't match a row in the source table",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "when_not_matched_by_source_delete", description = "Delete all rows from target table that don't match a row in the source table", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("when_not_matched_by_source_delete")
   public Boolean getWhenNotMatchedBySourceDelete() {
     return whenNotMatchedBySourceDelete;
@@ -260,22 +228,17 @@ public class MergeInsertIntoTableRequest {
     this.whenNotMatchedBySourceDelete = whenNotMatchedBySourceDelete;
   }
 
-  public MergeInsertIntoTableRequest whenNotMatchedBySourceDeleteFilt(
-      String whenNotMatchedBySourceDeleteFilt) {
+  public MergeInsertIntoTableRequest whenNotMatchedBySourceDeleteFilt(String whenNotMatchedBySourceDeleteFilt) {
     this.whenNotMatchedBySourceDeleteFilt = whenNotMatchedBySourceDeleteFilt;
     return this;
   }
 
   /**
    * Delete rows from the target table if there is no match AND the SQL expression evaluates to true
-   *
    * @return whenNotMatchedBySourceDeleteFilt
    */
-  @Schema(
-      name = "when_not_matched_by_source_delete_filt",
-      description =
-          "Delete rows from the target table if there is no match AND the SQL expression evaluates to true",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "when_not_matched_by_source_delete_filt", description = "Delete rows from the target table if there is no match AND the SQL expression evaluates to true", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("when_not_matched_by_source_delete_filt")
   public String getWhenNotMatchedBySourceDeleteFilt() {
     return whenNotMatchedBySourceDeleteFilt;
@@ -292,13 +255,10 @@ public class MergeInsertIntoTableRequest {
 
   /**
    * Timeout for the operation (e.g., \"30s\", \"5m\")
-   *
    * @return timeout
    */
-  @Schema(
-      name = "timeout",
-      description = "Timeout for the operation (e.g., \"30s\", \"5m\")",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "timeout", description = "Timeout for the operation (e.g., \"30s\", \"5m\")", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("timeout")
   public String getTimeout() {
     return timeout;
@@ -315,13 +275,10 @@ public class MergeInsertIntoTableRequest {
 
   /**
    * Whether to use index for matching rows
-   *
    * @return useIndex
    */
-  @Schema(
-      name = "use_index",
-      description = "Whether to use index for matching rows",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "use_index", description = "Whether to use index for matching rows", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("use_index")
   public Boolean getUseIndex() {
     return useIndex;
@@ -340,40 +297,22 @@ public class MergeInsertIntoTableRequest {
       return false;
     }
     MergeInsertIntoTableRequest mergeInsertIntoTableRequest = (MergeInsertIntoTableRequest) o;
-    return Objects.equals(this.identity, mergeInsertIntoTableRequest.identity)
-        && Objects.equals(this.context, mergeInsertIntoTableRequest.context)
-        && Objects.equals(this.id, mergeInsertIntoTableRequest.id)
-        && Objects.equals(this.on, mergeInsertIntoTableRequest.on)
-        && Objects.equals(
-            this.whenMatchedUpdateAll, mergeInsertIntoTableRequest.whenMatchedUpdateAll)
-        && Objects.equals(
-            this.whenMatchedUpdateAllFilt, mergeInsertIntoTableRequest.whenMatchedUpdateAllFilt)
-        && Objects.equals(
-            this.whenNotMatchedInsertAll, mergeInsertIntoTableRequest.whenNotMatchedInsertAll)
-        && Objects.equals(
-            this.whenNotMatchedBySourceDelete,
-            mergeInsertIntoTableRequest.whenNotMatchedBySourceDelete)
-        && Objects.equals(
-            this.whenNotMatchedBySourceDeleteFilt,
-            mergeInsertIntoTableRequest.whenNotMatchedBySourceDeleteFilt)
-        && Objects.equals(this.timeout, mergeInsertIntoTableRequest.timeout)
-        && Objects.equals(this.useIndex, mergeInsertIntoTableRequest.useIndex);
+    return Objects.equals(this.identity, mergeInsertIntoTableRequest.identity) &&
+        Objects.equals(this.context, mergeInsertIntoTableRequest.context) &&
+        Objects.equals(this.id, mergeInsertIntoTableRequest.id) &&
+        Objects.equals(this.on, mergeInsertIntoTableRequest.on) &&
+        Objects.equals(this.whenMatchedUpdateAll, mergeInsertIntoTableRequest.whenMatchedUpdateAll) &&
+        Objects.equals(this.whenMatchedUpdateAllFilt, mergeInsertIntoTableRequest.whenMatchedUpdateAllFilt) &&
+        Objects.equals(this.whenNotMatchedInsertAll, mergeInsertIntoTableRequest.whenNotMatchedInsertAll) &&
+        Objects.equals(this.whenNotMatchedBySourceDelete, mergeInsertIntoTableRequest.whenNotMatchedBySourceDelete) &&
+        Objects.equals(this.whenNotMatchedBySourceDeleteFilt, mergeInsertIntoTableRequest.whenNotMatchedBySourceDeleteFilt) &&
+        Objects.equals(this.timeout, mergeInsertIntoTableRequest.timeout) &&
+        Objects.equals(this.useIndex, mergeInsertIntoTableRequest.useIndex);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        identity,
-        context,
-        id,
-        on,
-        whenMatchedUpdateAll,
-        whenMatchedUpdateAllFilt,
-        whenNotMatchedInsertAll,
-        whenNotMatchedBySourceDelete,
-        whenNotMatchedBySourceDeleteFilt,
-        timeout,
-        useIndex);
+    return Objects.hash(identity, context, id, on, whenMatchedUpdateAll, whenMatchedUpdateAllFilt, whenNotMatchedInsertAll, whenNotMatchedBySourceDelete, whenNotMatchedBySourceDeleteFilt, timeout, useIndex);
   }
 
   @Override
@@ -384,21 +323,11 @@ public class MergeInsertIntoTableRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    on: ").append(toIndentedString(on)).append("\n");
-    sb.append("    whenMatchedUpdateAll: ")
-        .append(toIndentedString(whenMatchedUpdateAll))
-        .append("\n");
-    sb.append("    whenMatchedUpdateAllFilt: ")
-        .append(toIndentedString(whenMatchedUpdateAllFilt))
-        .append("\n");
-    sb.append("    whenNotMatchedInsertAll: ")
-        .append(toIndentedString(whenNotMatchedInsertAll))
-        .append("\n");
-    sb.append("    whenNotMatchedBySourceDelete: ")
-        .append(toIndentedString(whenNotMatchedBySourceDelete))
-        .append("\n");
-    sb.append("    whenNotMatchedBySourceDeleteFilt: ")
-        .append(toIndentedString(whenNotMatchedBySourceDeleteFilt))
-        .append("\n");
+    sb.append("    whenMatchedUpdateAll: ").append(toIndentedString(whenMatchedUpdateAll)).append("\n");
+    sb.append("    whenMatchedUpdateAllFilt: ").append(toIndentedString(whenMatchedUpdateAllFilt)).append("\n");
+    sb.append("    whenNotMatchedInsertAll: ").append(toIndentedString(whenNotMatchedInsertAll)).append("\n");
+    sb.append("    whenNotMatchedBySourceDelete: ").append(toIndentedString(whenNotMatchedBySourceDelete)).append("\n");
+    sb.append("    whenNotMatchedBySourceDeleteFilt: ").append(toIndentedString(whenNotMatchedBySourceDeleteFilt)).append("\n");
     sb.append("    timeout: ").append(toIndentedString(timeout)).append("\n");
     sb.append("    useIndex: ").append(toIndentedString(useIndex)).append("\n");
     sb.append("}");
@@ -406,7 +335,8 @@ public class MergeInsertIntoTableRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -415,3 +345,4 @@ public class MergeInsertIntoTableRequest {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

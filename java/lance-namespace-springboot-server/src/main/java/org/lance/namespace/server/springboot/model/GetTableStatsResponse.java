@@ -1,31 +1,25 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.lance.namespace.server.springboot.model.FragmentStats;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import java.util.*;
-import java.util.Objects;
+import jakarta.annotation.Generated;
 
-/** GetTableStatsResponse */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+/**
+ * GetTableStatsResponse
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class GetTableStatsResponse {
 
   private Long totalBytes;
@@ -40,9 +34,10 @@ public class GetTableStatsResponse {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public GetTableStatsResponse(
-      Long totalBytes, Long numRows, Long numIndices, FragmentStats fragmentStats) {
+  /**
+   * Constructor with only required parameters
+   */
+  public GetTableStatsResponse(Long totalBytes, Long numRows, Long numIndices, FragmentStats fragmentStats) {
     this.totalBytes = totalBytes;
     this.numRows = numRows;
     this.numIndices = numIndices;
@@ -55,16 +50,12 @@ public class GetTableStatsResponse {
   }
 
   /**
-   * The total number of bytes in the table minimum: 0
-   *
+   * The total number of bytes in the table
+   * minimum: 0
    * @return totalBytes
    */
-  @NotNull
-  @Min(0L)
-  @Schema(
-      name = "total_bytes",
-      description = "The total number of bytes in the table",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Min(0L) 
+  @Schema(name = "total_bytes", description = "The total number of bytes in the table", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("total_bytes")
   public Long getTotalBytes() {
     return totalBytes;
@@ -80,16 +71,12 @@ public class GetTableStatsResponse {
   }
 
   /**
-   * The number of rows in the table minimum: 0
-   *
+   * The number of rows in the table
+   * minimum: 0
    * @return numRows
    */
-  @NotNull
-  @Min(0L)
-  @Schema(
-      name = "num_rows",
-      description = "The number of rows in the table",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Min(0L) 
+  @Schema(name = "num_rows", description = "The number of rows in the table", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("num_rows")
   public Long getNumRows() {
     return numRows;
@@ -105,16 +92,12 @@ public class GetTableStatsResponse {
   }
 
   /**
-   * The number of indices in the table minimum: 0
-   *
+   * The number of indices in the table
+   * minimum: 0
    * @return numIndices
    */
-  @NotNull
-  @Min(0L)
-  @Schema(
-      name = "num_indices",
-      description = "The number of indices in the table",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Min(0L) 
+  @Schema(name = "num_indices", description = "The number of indices in the table", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("num_indices")
   public Long getNumIndices() {
     return numIndices;
@@ -131,15 +114,10 @@ public class GetTableStatsResponse {
 
   /**
    * Statistics on table fragments
-   *
    * @return fragmentStats
    */
-  @NotNull
-  @Valid
-  @Schema(
-      name = "fragment_stats",
-      description = "Statistics on table fragments",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Valid 
+  @Schema(name = "fragment_stats", description = "Statistics on table fragments", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("fragment_stats")
   public FragmentStats getFragmentStats() {
     return fragmentStats;
@@ -158,10 +136,10 @@ public class GetTableStatsResponse {
       return false;
     }
     GetTableStatsResponse getTableStatsResponse = (GetTableStatsResponse) o;
-    return Objects.equals(this.totalBytes, getTableStatsResponse.totalBytes)
-        && Objects.equals(this.numRows, getTableStatsResponse.numRows)
-        && Objects.equals(this.numIndices, getTableStatsResponse.numIndices)
-        && Objects.equals(this.fragmentStats, getTableStatsResponse.fragmentStats);
+    return Objects.equals(this.totalBytes, getTableStatsResponse.totalBytes) &&
+        Objects.equals(this.numRows, getTableStatsResponse.numRows) &&
+        Objects.equals(this.numIndices, getTableStatsResponse.numIndices) &&
+        Objects.equals(this.fragmentStats, getTableStatsResponse.fragmentStats);
   }
 
   @Override
@@ -182,7 +160,8 @@ public class GetTableStatsResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -191,3 +170,4 @@ public class GetTableStatsResponse {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

@@ -1,42 +1,39 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import org.lance.namespace.server.springboot.model.Identity;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** CreateTableIndexRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * CreateTableIndexRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class CreateTableIndexRequest {
 
   private Identity identity;
 
-  @Valid private Map<String, String> context = new HashMap<>();
+  @Valid
+  private Map<String, String> context = new HashMap<>();
 
-  @Valid private List<String> id = new ArrayList<>();
+  @Valid
+  private List<String> id = new ArrayList<>();
 
   private String column;
 
@@ -66,7 +63,9 @@ public class CreateTableIndexRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public CreateTableIndexRequest(String column, String indexType) {
     this.column = column;
     this.indexType = indexType;
@@ -79,10 +78,9 @@ public class CreateTableIndexRequest {
 
   /**
    * Get identity
-   *
    * @return identity
    */
-  @Valid
+  @Valid 
   @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("identity")
   public Identity getIdentity() {
@@ -107,18 +105,11 @@ public class CreateTableIndexRequest {
   }
 
   /**
-   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
-   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
-   * the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry
-   * `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
-   *
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. 
    * @return context
    */
-  @Schema(
-      name = "context",
-      description =
-          "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "context", description = "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("context")
   public Map<String, String> getContext() {
     return context;
@@ -143,9 +134,9 @@ public class CreateTableIndexRequest {
 
   /**
    * Get id
-   *
    * @return id
    */
+  
   @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
@@ -163,14 +154,10 @@ public class CreateTableIndexRequest {
 
   /**
    * Name of the column to create index on
-   *
    * @return column
    */
-  @NotNull
-  @Schema(
-      name = "column",
-      description = "Name of the column to create index on",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "column", description = "Name of the column to create index on", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("column")
   public String getColumn() {
     return column;
@@ -187,15 +174,10 @@ public class CreateTableIndexRequest {
 
   /**
    * Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS)
-   *
    * @return indexType
    */
-  @NotNull
-  @Schema(
-      name = "index_type",
-      description =
-          "Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS)",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "index_type", description = "Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS)", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("index_type")
   public String getIndexType() {
     return indexType;
@@ -212,13 +194,10 @@ public class CreateTableIndexRequest {
 
   /**
    * Optional name for the index. If not provided, a name will be auto-generated.
-   *
    * @return name
    */
-  @Schema(
-      name = "name",
-      description = "Optional name for the index. If not provided, a name will be auto-generated.",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "name", description = "Optional name for the index. If not provided, a name will be auto-generated.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("name")
   public String getName() {
     return name;
@@ -235,13 +214,10 @@ public class CreateTableIndexRequest {
 
   /**
    * Distance metric type for vector indexes (e.g., l2, cosine, dot)
-   *
    * @return distanceType
    */
-  @Schema(
-      name = "distance_type",
-      description = "Distance metric type for vector indexes (e.g., l2, cosine, dot)",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "distance_type", description = "Distance metric type for vector indexes (e.g., l2, cosine, dot)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("distance_type")
   public String getDistanceType() {
     return distanceType;
@@ -258,13 +234,10 @@ public class CreateTableIndexRequest {
 
   /**
    * Optional FTS parameter for position tracking
-   *
    * @return withPosition
    */
-  @Schema(
-      name = "with_position",
-      description = "Optional FTS parameter for position tracking",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "with_position", description = "Optional FTS parameter for position tracking", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("with_position")
   public Boolean getWithPosition() {
     return withPosition;
@@ -281,13 +254,10 @@ public class CreateTableIndexRequest {
 
   /**
    * Optional FTS parameter for base tokenizer
-   *
    * @return baseTokenizer
    */
-  @Schema(
-      name = "base_tokenizer",
-      description = "Optional FTS parameter for base tokenizer",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "base_tokenizer", description = "Optional FTS parameter for base tokenizer", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("base_tokenizer")
   public String getBaseTokenizer() {
     return baseTokenizer;
@@ -304,13 +274,10 @@ public class CreateTableIndexRequest {
 
   /**
    * Optional FTS parameter for language
-   *
    * @return language
    */
-  @Schema(
-      name = "language",
-      description = "Optional FTS parameter for language",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "language", description = "Optional FTS parameter for language", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("language")
   public String getLanguage() {
     return language;
@@ -326,15 +293,12 @@ public class CreateTableIndexRequest {
   }
 
   /**
-   * Optional FTS parameter for maximum token length minimum: 0
-   *
+   * Optional FTS parameter for maximum token length
+   * minimum: 0
    * @return maxTokenLength
    */
-  @Min(0)
-  @Schema(
-      name = "max_token_length",
-      description = "Optional FTS parameter for maximum token length",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0) 
+  @Schema(name = "max_token_length", description = "Optional FTS parameter for maximum token length", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("max_token_length")
   public Integer getMaxTokenLength() {
     return maxTokenLength;
@@ -351,13 +315,10 @@ public class CreateTableIndexRequest {
 
   /**
    * Optional FTS parameter for lowercase conversion
-   *
    * @return lowerCase
    */
-  @Schema(
-      name = "lower_case",
-      description = "Optional FTS parameter for lowercase conversion",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "lower_case", description = "Optional FTS parameter for lowercase conversion", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("lower_case")
   public Boolean getLowerCase() {
     return lowerCase;
@@ -374,13 +335,10 @@ public class CreateTableIndexRequest {
 
   /**
    * Optional FTS parameter for stemming
-   *
    * @return stem
    */
-  @Schema(
-      name = "stem",
-      description = "Optional FTS parameter for stemming",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "stem", description = "Optional FTS parameter for stemming", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("stem")
   public Boolean getStem() {
     return stem;
@@ -397,13 +355,10 @@ public class CreateTableIndexRequest {
 
   /**
    * Optional FTS parameter for stop word removal
-   *
    * @return removeStopWords
    */
-  @Schema(
-      name = "remove_stop_words",
-      description = "Optional FTS parameter for stop word removal",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "remove_stop_words", description = "Optional FTS parameter for stop word removal", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("remove_stop_words")
   public Boolean getRemoveStopWords() {
     return removeStopWords;
@@ -420,13 +375,10 @@ public class CreateTableIndexRequest {
 
   /**
    * Optional FTS parameter for ASCII folding
-   *
    * @return asciiFolding
    */
-  @Schema(
-      name = "ascii_folding",
-      description = "Optional FTS parameter for ASCII folding",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "ascii_folding", description = "Optional FTS parameter for ASCII folding", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("ascii_folding")
   public Boolean getAsciiFolding() {
     return asciiFolding;
@@ -445,41 +397,26 @@ public class CreateTableIndexRequest {
       return false;
     }
     CreateTableIndexRequest createTableIndexRequest = (CreateTableIndexRequest) o;
-    return Objects.equals(this.identity, createTableIndexRequest.identity)
-        && Objects.equals(this.context, createTableIndexRequest.context)
-        && Objects.equals(this.id, createTableIndexRequest.id)
-        && Objects.equals(this.column, createTableIndexRequest.column)
-        && Objects.equals(this.indexType, createTableIndexRequest.indexType)
-        && Objects.equals(this.name, createTableIndexRequest.name)
-        && Objects.equals(this.distanceType, createTableIndexRequest.distanceType)
-        && Objects.equals(this.withPosition, createTableIndexRequest.withPosition)
-        && Objects.equals(this.baseTokenizer, createTableIndexRequest.baseTokenizer)
-        && Objects.equals(this.language, createTableIndexRequest.language)
-        && Objects.equals(this.maxTokenLength, createTableIndexRequest.maxTokenLength)
-        && Objects.equals(this.lowerCase, createTableIndexRequest.lowerCase)
-        && Objects.equals(this.stem, createTableIndexRequest.stem)
-        && Objects.equals(this.removeStopWords, createTableIndexRequest.removeStopWords)
-        && Objects.equals(this.asciiFolding, createTableIndexRequest.asciiFolding);
+    return Objects.equals(this.identity, createTableIndexRequest.identity) &&
+        Objects.equals(this.context, createTableIndexRequest.context) &&
+        Objects.equals(this.id, createTableIndexRequest.id) &&
+        Objects.equals(this.column, createTableIndexRequest.column) &&
+        Objects.equals(this.indexType, createTableIndexRequest.indexType) &&
+        Objects.equals(this.name, createTableIndexRequest.name) &&
+        Objects.equals(this.distanceType, createTableIndexRequest.distanceType) &&
+        Objects.equals(this.withPosition, createTableIndexRequest.withPosition) &&
+        Objects.equals(this.baseTokenizer, createTableIndexRequest.baseTokenizer) &&
+        Objects.equals(this.language, createTableIndexRequest.language) &&
+        Objects.equals(this.maxTokenLength, createTableIndexRequest.maxTokenLength) &&
+        Objects.equals(this.lowerCase, createTableIndexRequest.lowerCase) &&
+        Objects.equals(this.stem, createTableIndexRequest.stem) &&
+        Objects.equals(this.removeStopWords, createTableIndexRequest.removeStopWords) &&
+        Objects.equals(this.asciiFolding, createTableIndexRequest.asciiFolding);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        identity,
-        context,
-        id,
-        column,
-        indexType,
-        name,
-        distanceType,
-        withPosition,
-        baseTokenizer,
-        language,
-        maxTokenLength,
-        lowerCase,
-        stem,
-        removeStopWords,
-        asciiFolding);
+    return Objects.hash(identity, context, id, column, indexType, name, distanceType, withPosition, baseTokenizer, language, maxTokenLength, lowerCase, stem, removeStopWords, asciiFolding);
   }
 
   @Override
@@ -506,7 +443,8 @@ public class CreateTableIndexRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -515,3 +453,4 @@ public class CreateTableIndexRequest {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

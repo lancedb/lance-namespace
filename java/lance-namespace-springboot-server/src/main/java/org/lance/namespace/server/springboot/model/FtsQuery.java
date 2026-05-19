@@ -1,39 +1,30 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.lance.namespace.server.springboot.model.BooleanQuery;
+import org.lance.namespace.server.springboot.model.BoostQuery;
+import org.lance.namespace.server.springboot.model.MatchQuery;
+import org.lance.namespace.server.springboot.model.MultiMatchQuery;
+import org.lance.namespace.server.springboot.model.PhraseQuery;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import java.util.*;
-import java.util.Objects;
+import jakarta.annotation.Generated;
 
 /**
- * Full-text search query. Exactly one query type field must be provided. This structure follows the
- * same pattern as AlterTransactionAction to minimize differences and compatibility issues across
- * codegen in different languages.
+ * Full-text search query. Exactly one query type field must be provided. This structure follows the same pattern as AlterTransactionAction to minimize differences and compatibility issues across codegen in different languages. 
  */
-@Schema(
-    name = "FtsQuery",
-    description =
-        "Full-text search query. Exactly one query type field must be provided. This structure follows the same pattern as AlterTransactionAction to minimize differences and compatibility issues across codegen in different languages. ")
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+
+@Schema(name = "FtsQuery", description = "Full-text search query. Exactly one query type field must be provided. This structure follows the same pattern as AlterTransactionAction to minimize differences and compatibility issues across codegen in different languages. ")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class FtsQuery {
 
   private MatchQuery match;
@@ -53,10 +44,9 @@ public class FtsQuery {
 
   /**
    * Get match
-   *
    * @return match
    */
-  @Valid
+  @Valid 
   @Schema(name = "match", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("match")
   public MatchQuery getMatch() {
@@ -74,10 +64,9 @@ public class FtsQuery {
 
   /**
    * Get phrase
-   *
    * @return phrase
    */
-  @Valid
+  @Valid 
   @Schema(name = "phrase", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("phrase")
   public PhraseQuery getPhrase() {
@@ -95,10 +84,9 @@ public class FtsQuery {
 
   /**
    * Get boost
-   *
    * @return boost
    */
-  @Valid
+  @Valid 
   @Schema(name = "boost", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("boost")
   public BoostQuery getBoost() {
@@ -116,10 +104,9 @@ public class FtsQuery {
 
   /**
    * Get multiMatch
-   *
    * @return multiMatch
    */
-  @Valid
+  @Valid 
   @Schema(name = "multi_match", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("multi_match")
   public MultiMatchQuery getMultiMatch() {
@@ -137,10 +124,9 @@ public class FtsQuery {
 
   /**
    * Get _boolean
-   *
    * @return _boolean
    */
-  @Valid
+  @Valid 
   @Schema(name = "boolean", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("boolean")
   public BooleanQuery getBoolean() {
@@ -160,11 +146,11 @@ public class FtsQuery {
       return false;
     }
     FtsQuery ftsQuery = (FtsQuery) o;
-    return Objects.equals(this.match, ftsQuery.match)
-        && Objects.equals(this.phrase, ftsQuery.phrase)
-        && Objects.equals(this.boost, ftsQuery.boost)
-        && Objects.equals(this.multiMatch, ftsQuery.multiMatch)
-        && Objects.equals(this._boolean, ftsQuery._boolean);
+    return Objects.equals(this.match, ftsQuery.match) &&
+        Objects.equals(this.phrase, ftsQuery.phrase) &&
+        Objects.equals(this.boost, ftsQuery.boost) &&
+        Objects.equals(this.multiMatch, ftsQuery.multiMatch) &&
+        Objects.equals(this._boolean, ftsQuery._boolean);
   }
 
   @Override
@@ -186,7 +172,8 @@ public class FtsQuery {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -195,3 +182,4 @@ public class FtsQuery {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

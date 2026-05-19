@@ -1,42 +1,42 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import org.lance.namespace.server.springboot.model.Identity;
+import org.lance.namespace.server.springboot.model.QueryTableRequestColumns;
+import org.lance.namespace.server.springboot.model.QueryTableRequestFullTextQuery;
+import org.lance.namespace.server.springboot.model.QueryTableRequestVector;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** AnalyzeTableQueryPlanRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * AnalyzeTableQueryPlanRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class AnalyzeTableQueryPlanRequest {
 
   private Identity identity;
 
-  @Valid private Map<String, String> context = new HashMap<>();
+  @Valid
+  private Map<String, String> context = new HashMap<>();
 
-  @Valid private List<String> id = new ArrayList<>();
+  @Valid
+  private List<String> id = new ArrayList<>();
 
   private Boolean bypassVectorIndex;
 
@@ -78,7 +78,9 @@ public class AnalyzeTableQueryPlanRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public AnalyzeTableQueryPlanRequest(Integer k, QueryTableRequestVector vector) {
     this.k = k;
     this.vector = vector;
@@ -91,10 +93,9 @@ public class AnalyzeTableQueryPlanRequest {
 
   /**
    * Get identity
-   *
    * @return identity
    */
-  @Valid
+  @Valid 
   @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("identity")
   public Identity getIdentity() {
@@ -119,18 +120,11 @@ public class AnalyzeTableQueryPlanRequest {
   }
 
   /**
-   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
-   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
-   * the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry
-   * `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
-   *
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. 
    * @return context
    */
-  @Schema(
-      name = "context",
-      description =
-          "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "context", description = "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("context")
   public Map<String, String> getContext() {
     return context;
@@ -155,9 +149,9 @@ public class AnalyzeTableQueryPlanRequest {
 
   /**
    * Get id
-   *
    * @return id
    */
+  
   @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
@@ -175,13 +169,10 @@ public class AnalyzeTableQueryPlanRequest {
 
   /**
    * Whether to bypass vector index
-   *
    * @return bypassVectorIndex
    */
-  @Schema(
-      name = "bypass_vector_index",
-      description = "Whether to bypass vector index",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "bypass_vector_index", description = "Whether to bypass vector index", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("bypass_vector_index")
   public Boolean getBypassVectorIndex() {
     return bypassVectorIndex;
@@ -198,10 +189,9 @@ public class AnalyzeTableQueryPlanRequest {
 
   /**
    * Get columns
-   *
    * @return columns
    */
-  @Valid
+  @Valid 
   @Schema(name = "columns", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("columns")
   public QueryTableRequestColumns getColumns() {
@@ -219,13 +209,10 @@ public class AnalyzeTableQueryPlanRequest {
 
   /**
    * Distance metric to use
-   *
    * @return distanceType
    */
-  @Schema(
-      name = "distance_type",
-      description = "Distance metric to use",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "distance_type", description = "Distance metric to use", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("distance_type")
   public String getDistanceType() {
     return distanceType;
@@ -241,15 +228,12 @@ public class AnalyzeTableQueryPlanRequest {
   }
 
   /**
-   * Search effort parameter for HNSW index minimum: 0
-   *
+   * Search effort parameter for HNSW index
+   * minimum: 0
    * @return ef
    */
-  @Min(0)
-  @Schema(
-      name = "ef",
-      description = "Search effort parameter for HNSW index",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0) 
+  @Schema(name = "ef", description = "Search effort parameter for HNSW index", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("ef")
   public Integer getEf() {
     return ef;
@@ -266,13 +250,10 @@ public class AnalyzeTableQueryPlanRequest {
 
   /**
    * Whether to use fast search
-   *
    * @return fastSearch
    */
-  @Schema(
-      name = "fast_search",
-      description = "Whether to use fast search",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "fast_search", description = "Whether to use fast search", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("fast_search")
   public Boolean getFastSearch() {
     return fastSearch;
@@ -289,13 +270,10 @@ public class AnalyzeTableQueryPlanRequest {
 
   /**
    * Optional SQL filter expression
-   *
    * @return filter
    */
-  @Schema(
-      name = "filter",
-      description = "Optional SQL filter expression",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "filter", description = "Optional SQL filter expression", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("filter")
   public String getFilter() {
     return filter;
@@ -312,10 +290,9 @@ public class AnalyzeTableQueryPlanRequest {
 
   /**
    * Get fullTextQuery
-   *
    * @return fullTextQuery
    */
-  @Valid
+  @Valid 
   @Schema(name = "full_text_query", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("full_text_query")
   public QueryTableRequestFullTextQuery getFullTextQuery() {
@@ -332,16 +309,12 @@ public class AnalyzeTableQueryPlanRequest {
   }
 
   /**
-   * Number of results to return minimum: 0
-   *
+   * Number of results to return
+   * minimum: 0
    * @return k
    */
-  @NotNull
-  @Min(0)
-  @Schema(
-      name = "k",
-      description = "Number of results to return",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Min(0) 
+  @Schema(name = "k", description = "Number of results to return", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("k")
   public Integer getK() {
     return k;
@@ -358,13 +331,10 @@ public class AnalyzeTableQueryPlanRequest {
 
   /**
    * Lower bound for search
-   *
    * @return lowerBound
    */
-  @Schema(
-      name = "lower_bound",
-      description = "Lower bound for search",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "lower_bound", description = "Lower bound for search", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("lower_bound")
   public Float getLowerBound() {
     return lowerBound;
@@ -380,15 +350,12 @@ public class AnalyzeTableQueryPlanRequest {
   }
 
   /**
-   * Number of probes for IVF index minimum: 0
-   *
+   * Number of probes for IVF index
+   * minimum: 0
    * @return nprobes
    */
-  @Min(0)
-  @Schema(
-      name = "nprobes",
-      description = "Number of probes for IVF index",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0) 
+  @Schema(name = "nprobes", description = "Number of probes for IVF index", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("nprobes")
   public Integer getNprobes() {
     return nprobes;
@@ -404,15 +371,12 @@ public class AnalyzeTableQueryPlanRequest {
   }
 
   /**
-   * Number of results to skip minimum: 0
-   *
+   * Number of results to skip
+   * minimum: 0
    * @return offset
    */
-  @Min(0)
-  @Schema(
-      name = "offset",
-      description = "Number of results to skip",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0) 
+  @Schema(name = "offset", description = "Number of results to skip", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("offset")
   public Integer getOffset() {
     return offset;
@@ -429,13 +393,10 @@ public class AnalyzeTableQueryPlanRequest {
 
   /**
    * Whether to apply filtering before vector search
-   *
    * @return prefilter
    */
-  @Schema(
-      name = "prefilter",
-      description = "Whether to apply filtering before vector search",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "prefilter", description = "Whether to apply filtering before vector search", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("prefilter")
   public Boolean getPrefilter() {
     return prefilter;
@@ -451,15 +412,12 @@ public class AnalyzeTableQueryPlanRequest {
   }
 
   /**
-   * Refine factor for search minimum: 0
-   *
+   * Refine factor for search
+   * minimum: 0
    * @return refineFactor
    */
-  @Min(0)
-  @Schema(
-      name = "refine_factor",
-      description = "Refine factor for search",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0) 
+  @Schema(name = "refine_factor", description = "Refine factor for search", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("refine_factor")
   public Integer getRefineFactor() {
     return refineFactor;
@@ -476,13 +434,10 @@ public class AnalyzeTableQueryPlanRequest {
 
   /**
    * Upper bound for search
-   *
    * @return upperBound
    */
-  @Schema(
-      name = "upper_bound",
-      description = "Upper bound for search",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "upper_bound", description = "Upper bound for search", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("upper_bound")
   public Float getUpperBound() {
     return upperBound;
@@ -499,11 +454,9 @@ public class AnalyzeTableQueryPlanRequest {
 
   /**
    * Get vector
-   *
    * @return vector
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "vector", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("vector")
   public QueryTableRequestVector getVector() {
@@ -521,13 +474,10 @@ public class AnalyzeTableQueryPlanRequest {
 
   /**
    * Name of the vector column to search
-   *
    * @return vectorColumn
    */
-  @Schema(
-      name = "vector_column",
-      description = "Name of the vector column to search",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "vector_column", description = "Name of the vector column to search", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("vector_column")
   public String getVectorColumn() {
     return vectorColumn;
@@ -543,15 +493,12 @@ public class AnalyzeTableQueryPlanRequest {
   }
 
   /**
-   * Table version to query minimum: 0
-   *
+   * Table version to query
+   * minimum: 0
    * @return version
    */
-  @Min(0L)
-  @Schema(
-      name = "version",
-      description = "Table version to query",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0L) 
+  @Schema(name = "version", description = "Table version to query", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("version")
   public Long getVersion() {
     return version;
@@ -568,13 +515,10 @@ public class AnalyzeTableQueryPlanRequest {
 
   /**
    * If true, return the row id as a column called `_rowid`
-   *
    * @return withRowId
    */
-  @Schema(
-      name = "with_row_id",
-      description = "If true, return the row id as a column called `_rowid`",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "with_row_id", description = "If true, return the row id as a column called `_rowid`", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("with_row_id")
   public Boolean getWithRowId() {
     return withRowId;
@@ -593,53 +537,32 @@ public class AnalyzeTableQueryPlanRequest {
       return false;
     }
     AnalyzeTableQueryPlanRequest analyzeTableQueryPlanRequest = (AnalyzeTableQueryPlanRequest) o;
-    return Objects.equals(this.identity, analyzeTableQueryPlanRequest.identity)
-        && Objects.equals(this.context, analyzeTableQueryPlanRequest.context)
-        && Objects.equals(this.id, analyzeTableQueryPlanRequest.id)
-        && Objects.equals(this.bypassVectorIndex, analyzeTableQueryPlanRequest.bypassVectorIndex)
-        && Objects.equals(this.columns, analyzeTableQueryPlanRequest.columns)
-        && Objects.equals(this.distanceType, analyzeTableQueryPlanRequest.distanceType)
-        && Objects.equals(this.ef, analyzeTableQueryPlanRequest.ef)
-        && Objects.equals(this.fastSearch, analyzeTableQueryPlanRequest.fastSearch)
-        && Objects.equals(this.filter, analyzeTableQueryPlanRequest.filter)
-        && Objects.equals(this.fullTextQuery, analyzeTableQueryPlanRequest.fullTextQuery)
-        && Objects.equals(this.k, analyzeTableQueryPlanRequest.k)
-        && Objects.equals(this.lowerBound, analyzeTableQueryPlanRequest.lowerBound)
-        && Objects.equals(this.nprobes, analyzeTableQueryPlanRequest.nprobes)
-        && Objects.equals(this.offset, analyzeTableQueryPlanRequest.offset)
-        && Objects.equals(this.prefilter, analyzeTableQueryPlanRequest.prefilter)
-        && Objects.equals(this.refineFactor, analyzeTableQueryPlanRequest.refineFactor)
-        && Objects.equals(this.upperBound, analyzeTableQueryPlanRequest.upperBound)
-        && Objects.equals(this.vector, analyzeTableQueryPlanRequest.vector)
-        && Objects.equals(this.vectorColumn, analyzeTableQueryPlanRequest.vectorColumn)
-        && Objects.equals(this.version, analyzeTableQueryPlanRequest.version)
-        && Objects.equals(this.withRowId, analyzeTableQueryPlanRequest.withRowId);
+    return Objects.equals(this.identity, analyzeTableQueryPlanRequest.identity) &&
+        Objects.equals(this.context, analyzeTableQueryPlanRequest.context) &&
+        Objects.equals(this.id, analyzeTableQueryPlanRequest.id) &&
+        Objects.equals(this.bypassVectorIndex, analyzeTableQueryPlanRequest.bypassVectorIndex) &&
+        Objects.equals(this.columns, analyzeTableQueryPlanRequest.columns) &&
+        Objects.equals(this.distanceType, analyzeTableQueryPlanRequest.distanceType) &&
+        Objects.equals(this.ef, analyzeTableQueryPlanRequest.ef) &&
+        Objects.equals(this.fastSearch, analyzeTableQueryPlanRequest.fastSearch) &&
+        Objects.equals(this.filter, analyzeTableQueryPlanRequest.filter) &&
+        Objects.equals(this.fullTextQuery, analyzeTableQueryPlanRequest.fullTextQuery) &&
+        Objects.equals(this.k, analyzeTableQueryPlanRequest.k) &&
+        Objects.equals(this.lowerBound, analyzeTableQueryPlanRequest.lowerBound) &&
+        Objects.equals(this.nprobes, analyzeTableQueryPlanRequest.nprobes) &&
+        Objects.equals(this.offset, analyzeTableQueryPlanRequest.offset) &&
+        Objects.equals(this.prefilter, analyzeTableQueryPlanRequest.prefilter) &&
+        Objects.equals(this.refineFactor, analyzeTableQueryPlanRequest.refineFactor) &&
+        Objects.equals(this.upperBound, analyzeTableQueryPlanRequest.upperBound) &&
+        Objects.equals(this.vector, analyzeTableQueryPlanRequest.vector) &&
+        Objects.equals(this.vectorColumn, analyzeTableQueryPlanRequest.vectorColumn) &&
+        Objects.equals(this.version, analyzeTableQueryPlanRequest.version) &&
+        Objects.equals(this.withRowId, analyzeTableQueryPlanRequest.withRowId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        identity,
-        context,
-        id,
-        bypassVectorIndex,
-        columns,
-        distanceType,
-        ef,
-        fastSearch,
-        filter,
-        fullTextQuery,
-        k,
-        lowerBound,
-        nprobes,
-        offset,
-        prefilter,
-        refineFactor,
-        upperBound,
-        vector,
-        vectorColumn,
-        version,
-        withRowId);
+    return Objects.hash(identity, context, id, bypassVectorIndex, columns, distanceType, ef, fastSearch, filter, fullTextQuery, k, lowerBound, nprobes, offset, prefilter, refineFactor, upperBound, vector, vectorColumn, version, withRowId);
   }
 
   @Override
@@ -672,7 +595,8 @@ public class AnalyzeTableQueryPlanRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -681,3 +605,4 @@ public class AnalyzeTableQueryPlanRequest {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

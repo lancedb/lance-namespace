@@ -1,49 +1,40 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import org.lance.namespace.server.springboot.model.Identity;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import java.util.*;
+import jakarta.annotation.Generated;
 
 /**
- * Request to create a new table version entry. This supports &#x60;put_if_not_exists&#x60;
- * semantics, where the operation fails if the version already exists.
+ * Request to create a new table version entry. This supports &#x60;put_if_not_exists&#x60; semantics, where the operation fails if the version already exists. 
  */
-@Schema(
-    name = "CreateTableVersionRequest",
-    description =
-        "Request to create a new table version entry. This supports `put_if_not_exists` semantics, where the operation fails if the version already exists. ")
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+
+@Schema(name = "CreateTableVersionRequest", description = "Request to create a new table version entry. This supports `put_if_not_exists` semantics, where the operation fails if the version already exists. ")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class CreateTableVersionRequest {
 
   private Identity identity;
 
-  @Valid private Map<String, String> context = new HashMap<>();
+  @Valid
+  private Map<String, String> context = new HashMap<>();
 
-  @Valid private List<String> id = new ArrayList<>();
+  @Valid
+  private List<String> id = new ArrayList<>();
 
   private Long version;
 
@@ -53,7 +44,8 @@ public class CreateTableVersionRequest {
 
   private String eTag;
 
-  @Valid private Map<String, String> metadata = new HashMap<>();
+  @Valid
+  private Map<String, String> metadata = new HashMap<>();
 
   private String namingScheme;
 
@@ -61,7 +53,9 @@ public class CreateTableVersionRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public CreateTableVersionRequest(Long version, String manifestPath) {
     this.version = version;
     this.manifestPath = manifestPath;
@@ -74,10 +68,9 @@ public class CreateTableVersionRequest {
 
   /**
    * Get identity
-   *
    * @return identity
    */
-  @Valid
+  @Valid 
   @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("identity")
   public Identity getIdentity() {
@@ -102,18 +95,11 @@ public class CreateTableVersionRequest {
   }
 
   /**
-   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
-   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
-   * the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry
-   * `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
-   *
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. 
    * @return context
    */
-  @Schema(
-      name = "context",
-      description =
-          "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "context", description = "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("context")
   public Map<String, String> getContext() {
     return context;
@@ -138,13 +124,10 @@ public class CreateTableVersionRequest {
 
   /**
    * The table identifier
-   *
    * @return id
    */
-  @Schema(
-      name = "id",
-      description = "The table identifier",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "id", description = "The table identifier", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
     return id;
@@ -160,16 +143,12 @@ public class CreateTableVersionRequest {
   }
 
   /**
-   * Version number to create minimum: 0
-   *
+   * Version number to create
+   * minimum: 0
    * @return version
    */
-  @NotNull
-  @Min(0L)
-  @Schema(
-      name = "version",
-      description = "Version number to create",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Min(0L) 
+  @Schema(name = "version", description = "Version number to create", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("version")
   public Long getVersion() {
     return version;
@@ -186,14 +165,10 @@ public class CreateTableVersionRequest {
 
   /**
    * Path to the manifest file for this version
-   *
    * @return manifestPath
    */
-  @NotNull
-  @Schema(
-      name = "manifest_path",
-      description = "Path to the manifest file for this version",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "manifest_path", description = "Path to the manifest file for this version", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("manifest_path")
   public String getManifestPath() {
     return manifestPath;
@@ -209,15 +184,12 @@ public class CreateTableVersionRequest {
   }
 
   /**
-   * Size of the manifest file in bytes minimum: 0
-   *
+   * Size of the manifest file in bytes
+   * minimum: 0
    * @return manifestSize
    */
-  @Min(0L)
-  @Schema(
-      name = "manifest_size",
-      description = "Size of the manifest file in bytes",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0L) 
+  @Schema(name = "manifest_size", description = "Size of the manifest file in bytes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("manifest_size")
   public Long getManifestSize() {
     return manifestSize;
@@ -234,13 +206,10 @@ public class CreateTableVersionRequest {
 
   /**
    * Optional ETag for the manifest file
-   *
    * @return eTag
    */
-  @Schema(
-      name = "e_tag",
-      description = "Optional ETag for the manifest file",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "e_tag", description = "Optional ETag for the manifest file", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("e_tag")
   public String geteTag() {
     return eTag;
@@ -265,13 +234,10 @@ public class CreateTableVersionRequest {
 
   /**
    * Optional metadata for the version
-   *
    * @return metadata
    */
-  @Schema(
-      name = "metadata",
-      description = "Optional metadata for the version",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "metadata", description = "Optional metadata for the version", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("metadata")
   public Map<String, String> getMetadata() {
     return metadata;
@@ -287,20 +253,11 @@ public class CreateTableVersionRequest {
   }
 
   /**
-   * The naming scheme used for manifest files in the `_versions/` directory. Known values: - `V1`:
-   * `_versions/{version}.manifest` - Simple version-based naming - `V2`:
-   * `_versions/{inverted_version}.manifest` - Zero-padded, reversed version number (uses `u64::MAX
-   * - version`) for O(1) lookup of latest version on object stores V2 is preferred for new tables
-   * as it enables efficient latest-version discovery without needing to list all versions.
-   *
+   * The naming scheme used for manifest files in the `_versions/` directory.  Known values: - `V1`: `_versions/{version}.manifest` - Simple version-based naming - `V2`: `_versions/{inverted_version}.manifest` - Zero-padded, reversed version number   (uses `u64::MAX - version`) for O(1) lookup of latest version on object stores  V2 is preferred for new tables as it enables efficient latest-version discovery without needing to list all versions. 
    * @return namingScheme
    */
-  @Schema(
-      name = "naming_scheme",
-      example = "V2",
-      description =
-          "The naming scheme used for manifest files in the `_versions/` directory.  Known values: - `V1`: `_versions/{version}.manifest` - Simple version-based naming - `V2`: `_versions/{inverted_version}.manifest` - Zero-padded, reversed version number   (uses `u64::MAX - version`) for O(1) lookup of latest version on object stores  V2 is preferred for new tables as it enables efficient latest-version discovery without needing to list all versions. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "naming_scheme", example = "V2", description = "The naming scheme used for manifest files in the `_versions/` directory.  Known values: - `V1`: `_versions/{version}.manifest` - Simple version-based naming - `V2`: `_versions/{inverted_version}.manifest` - Zero-padded, reversed version number   (uses `u64::MAX - version`) for O(1) lookup of latest version on object stores  V2 is preferred for new tables as it enables efficient latest-version discovery without needing to list all versions. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("naming_scheme")
   public String getNamingScheme() {
     return namingScheme;
@@ -319,21 +276,20 @@ public class CreateTableVersionRequest {
       return false;
     }
     CreateTableVersionRequest createTableVersionRequest = (CreateTableVersionRequest) o;
-    return Objects.equals(this.identity, createTableVersionRequest.identity)
-        && Objects.equals(this.context, createTableVersionRequest.context)
-        && Objects.equals(this.id, createTableVersionRequest.id)
-        && Objects.equals(this.version, createTableVersionRequest.version)
-        && Objects.equals(this.manifestPath, createTableVersionRequest.manifestPath)
-        && Objects.equals(this.manifestSize, createTableVersionRequest.manifestSize)
-        && Objects.equals(this.eTag, createTableVersionRequest.eTag)
-        && Objects.equals(this.metadata, createTableVersionRequest.metadata)
-        && Objects.equals(this.namingScheme, createTableVersionRequest.namingScheme);
+    return Objects.equals(this.identity, createTableVersionRequest.identity) &&
+        Objects.equals(this.context, createTableVersionRequest.context) &&
+        Objects.equals(this.id, createTableVersionRequest.id) &&
+        Objects.equals(this.version, createTableVersionRequest.version) &&
+        Objects.equals(this.manifestPath, createTableVersionRequest.manifestPath) &&
+        Objects.equals(this.manifestSize, createTableVersionRequest.manifestSize) &&
+        Objects.equals(this.eTag, createTableVersionRequest.eTag) &&
+        Objects.equals(this.metadata, createTableVersionRequest.metadata) &&
+        Objects.equals(this.namingScheme, createTableVersionRequest.namingScheme);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        identity, context, id, version, manifestPath, manifestSize, eTag, metadata, namingScheme);
+    return Objects.hash(identity, context, id, version, manifestPath, manifestSize, eTag, metadata, namingScheme);
   }
 
   @Override
@@ -354,7 +310,8 @@ public class CreateTableVersionRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -363,3 +320,4 @@ public class CreateTableVersionRequest {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

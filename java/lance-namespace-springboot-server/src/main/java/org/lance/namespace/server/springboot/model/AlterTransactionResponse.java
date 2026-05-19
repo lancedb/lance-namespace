@@ -1,44 +1,40 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** AlterTransactionResponse */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * AlterTransactionResponse
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class AlterTransactionResponse {
 
   private String status;
 
-  @Valid private Map<String, String> properties = new HashMap<>();
+  @Valid
+  private Map<String, String> properties = new HashMap<>();
 
   public AlterTransactionResponse() {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public AlterTransactionResponse(String status) {
     this.status = status;
   }
@@ -49,19 +45,11 @@ public class AlterTransactionResponse {
   }
 
   /**
-   * The status of a transaction. Case insensitive, supports both PascalCase and snake_case. Valid
-   * values are: - Queued: the transaction is queued and not yet started - Running: the transaction
-   * is currently running - Succeeded: the transaction has completed successfully - Failed: the
-   * transaction has failed - Canceled: the transaction was canceled
-   *
+   * The status of a transaction. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Queued: the transaction is queued and not yet started - Running: the transaction is currently running - Succeeded: the transaction has completed successfully - Failed: the transaction has failed - Canceled: the transaction was canceled 
    * @return status
    */
-  @NotNull
-  @Schema(
-      name = "status",
-      description =
-          "The status of a transaction. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Queued: the transaction is queued and not yet started - Running: the transaction is currently running - Succeeded: the transaction has completed successfully - Failed: the transaction has failed - Canceled: the transaction was canceled ",
-      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "status", description = "The status of a transaction. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Queued: the transaction is queued and not yet started - Running: the transaction is currently running - Succeeded: the transaction has completed successfully - Failed: the transaction has failed - Canceled: the transaction was canceled ", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public String getStatus() {
     return status;
@@ -86,9 +74,9 @@ public class AlterTransactionResponse {
 
   /**
    * Get properties
-   *
    * @return properties
    */
+  
   @Schema(name = "properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("properties")
   public Map<String, String> getProperties() {
@@ -108,8 +96,8 @@ public class AlterTransactionResponse {
       return false;
     }
     AlterTransactionResponse alterTransactionResponse = (AlterTransactionResponse) o;
-    return Objects.equals(this.status, alterTransactionResponse.status)
-        && Objects.equals(this.properties, alterTransactionResponse.properties);
+    return Objects.equals(this.status, alterTransactionResponse.status) &&
+        Objects.equals(this.properties, alterTransactionResponse.properties);
   }
 
   @Override
@@ -128,7 +116,8 @@ public class AlterTransactionResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -137,3 +126,4 @@ public class AlterTransactionResponse {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

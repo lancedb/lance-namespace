@@ -39,6 +39,7 @@ Class | Method | HTTP request | Description
 *DataApi* | [**alter_table_backfill_columns**](docs/DataApi.md#alter_table_backfill_columns) | **POST** /v1/table/{id}/backfill_column | Trigger an async column backfill job
 *DataApi* | [**analyze_table_query_plan**](docs/DataApi.md#analyze_table_query_plan) | **POST** /v1/table/{id}/analyze_plan | Analyze query execution plan
 *DataApi* | [**count_table_rows**](docs/DataApi.md#count_table_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
+*DataApi* | [**create_materialized_view**](docs/DataApi.md#create_materialized_view) | **POST** /v1/table/{id}/create_materialized_view | Create a materialized view
 *DataApi* | [**create_table**](docs/DataApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 *DataApi* | [**delete_from_table**](docs/DataApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
 *DataApi* | [**explain_table_query_plan**](docs/DataApi.md#explain_table_query_plan) | **POST** /v1/table/{id}/explain_plan | Get query execution plan explanation
@@ -103,6 +104,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**batch_create_table_versions**](docs/TableApi.md#batch_create_table_versions) | **POST** /v1/table/version/batch-create | Atomically create versions for multiple tables
 *TableApi* | [**batch_delete_table_versions**](docs/TableApi.md#batch_delete_table_versions) | **POST** /v1/table/{id}/version/delete | Delete table version records
 *TableApi* | [**count_table_rows**](docs/TableApi.md#count_table_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
+*TableApi* | [**create_materialized_view**](docs/TableApi.md#create_materialized_view) | **POST** /v1/table/{id}/create_materialized_view | Create a materialized view
 *TableApi* | [**create_table**](docs/TableApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 *TableApi* | [**create_table_index**](docs/TableApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
 *TableApi* | [**create_table_scalar_index**](docs/TableApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
@@ -179,6 +181,8 @@ Class | Method | HTTP request | Description
  - [CommitTableOperation](docs/CommitTableOperation.md)
  - [CommitTableResult](docs/CommitTableResult.md)
  - [CountTableRowsRequest](docs/CountTableRowsRequest.md)
+ - [CreateMaterializedViewRequest](docs/CreateMaterializedViewRequest.md)
+ - [CreateMaterializedViewResponse](docs/CreateMaterializedViewResponse.md)
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
  - [CreateTableIndexRequest](docs/CreateTableIndexRequest.md)
@@ -243,6 +247,7 @@ Class | Method | HTTP request | Description
  - [ListTablesRequest](docs/ListTablesRequest.md)
  - [ListTablesResponse](docs/ListTablesResponse.md)
  - [MatchQuery](docs/MatchQuery.md)
+ - [MaterializedViewUdtfEntry](docs/MaterializedViewUdtfEntry.md)
  - [MergeInsertIntoTableRequest](docs/MergeInsertIntoTableRequest.md)
  - [MergeInsertIntoTableResponse](docs/MergeInsertIntoTableResponse.md)
  - [MultiMatchQuery](docs/MultiMatchQuery.md)

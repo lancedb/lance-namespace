@@ -1,31 +1,25 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.lance.namespace.server.springboot.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import java.util.*;
-import java.util.Objects;
+import jakarta.annotation.Generated;
 
-/** Identity information of a request. */
+/**
+ * Identity information of a request. 
+ */
+
 @Schema(name = "Identity", description = "Identity information of a request. ")
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    comments = "Generator version: 7.12.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
 public class Identity {
 
   private String apiKey;
@@ -38,15 +32,11 @@ public class Identity {
   }
 
   /**
-   * API key for authentication. REST NAMESPACE ONLY This is passed via the `x-api-key` header.
-   *
+   * API key for authentication.  REST NAMESPACE ONLY This is passed via the `x-api-key` header. 
    * @return apiKey
    */
-  @Schema(
-      name = "api_key",
-      description =
-          "API key for authentication.  REST NAMESPACE ONLY This is passed via the `x-api-key` header. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "api_key", description = "API key for authentication.  REST NAMESPACE ONLY This is passed via the `x-api-key` header. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("api_key")
   public String getApiKey() {
     return apiKey;
@@ -62,16 +52,11 @@ public class Identity {
   }
 
   /**
-   * Bearer token for authentication. REST NAMESPACE ONLY This is passed via the `Authorization`
-   * header with the Bearer scheme (e.g., `Bearer <token>`).
-   *
+   * Bearer token for authentication.  REST NAMESPACE ONLY This is passed via the `Authorization` header with the Bearer scheme (e.g., `Bearer <token>`). 
    * @return authToken
    */
-  @Schema(
-      name = "auth_token",
-      description =
-          "Bearer token for authentication.  REST NAMESPACE ONLY This is passed via the `Authorization` header with the Bearer scheme (e.g., `Bearer <token>`). ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "auth_token", description = "Bearer token for authentication.  REST NAMESPACE ONLY This is passed via the `Authorization` header with the Bearer scheme (e.g., `Bearer <token>`). ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("auth_token")
   public String getAuthToken() {
     return authToken;
@@ -90,8 +75,8 @@ public class Identity {
       return false;
     }
     Identity identity = (Identity) o;
-    return Objects.equals(this.apiKey, identity.apiKey)
-        && Objects.equals(this.authToken, identity.authToken);
+    return Objects.equals(this.apiKey, identity.apiKey) &&
+        Objects.equals(this.authToken, identity.authToken);
   }
 
   @Override
@@ -110,7 +95,8 @@ public class Identity {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -119,3 +105,4 @@ public class Identity {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

@@ -1576,6 +1576,47 @@ paths:
         5XX:
           $ref: "#/components/responses/ServerErrorResponse"
 
+  /v1/table/{id}/create_materialized_view:
+    parameters:
+      - $ref: "#/components/parameters/id"
+      - $ref: "#/components/parameters/delimiter"
+    post:
+      tags:
+        - Table
+        - Data
+      summary: Create a materialized view
+      operationId: CreateMaterializedView
+      description: |
+        Create a materialized view at table identifier `id`. The view may be
+        query-backed, UDTF-backed, or chunker-backed, controlled by the
+        `kind` discriminator. Manifest defaults are resolved server-side and
+        snapshotted into the view's metadata so the view is fully
+        self-contained at creation time. When `with_no_data` is false the
+        server also kicks off an initial refresh and returns its job ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMaterializedViewRequest"
+      responses:
+        201:
+          $ref: "#/components/responses/CreateMaterializedViewResponse"
+        400:
+          $ref: "#/components/responses/BadRequestErrorResponse"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/ForbiddenErrorResponse"
+        404:
+          $ref: "#/components/responses/NotFoundErrorResponse"
+        409:
+          $ref: "#/components/responses/ConflictErrorResponse"
+        503:
+          $ref: "#/components/responses/ServiceUnavailableErrorResponse"
+        5XX:
+          $ref: "#/components/responses/ServerErrorResponse"
+
   # Table Index APIs
 
   /v1/table/{id}/create_index:
@@ -4896,12 +4937,23 @@ components:
           type:
             - string
             - "null"
-          description: Optional cluster name
+          description: Optional cluster name (operational override)
+        output_limit:
+          type:
+            - integer
+            - "null"
+          description: |
+            Post-trim cap on view row count after expansion. Valid only for
+            chunker materialized views; returns 400 if set on other kinds.
         manifest:
           type:
             - string
             - "null"
-          description: Optional manifest name
+          description: |
+            Optional inline JSON-serialized GenevaManifest. Operational
+            override for this refresh only; does not mutate the view's
+            snapshotted manifest. When omitted, the manifest stored in the
+            view's metadata is used.
 
     RefreshMaterializedViewResponse:
       type: object
@@ -4911,6 +4963,178 @@ components:
         job_id:
           type: string
           description: The job ID for tracking the refresh job
+
+    CreateMaterializedViewRequest:
+      type: object
+      required:
+        - kind
+        - source_query
+        - output_schema
+      properties:
+        identity:
+          $ref: "#/components/schemas/Identity"
+        id:
+          type: array
+          items:
+            type: string
+          description: View identifier path (namespace + view name)
+        kind:
+          type: string
+          enum:
+            - query
+            - udtf
+            - chunker
+          description: |
+            The materialized view kind.
+            - `query` — plain query-backed view (no UDTF), 1:1 rows.
+            - `udtf` — batch UDTF-backed view (N:M rows, full refresh).
+            - `chunker` — chunker view (1:N row expansion, incremental refresh).
+            The legacy value `scalar_udtf` is still accepted on read for
+            views created before the chunker rename.
+        source_query:
+          type: string
+          description: |
+            JSON-serialized GenevaQueryBuilder representation of the source
+            query that defines the view's input.
+        output_schema:
+          type: string
+          description: Base64-encoded Arrow schema of the view output
+        udtf_spec:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/MaterializedViewUdtfEntry"
+          description: |
+            UDTF descriptor. Required when kind is `udtf` or `chunker`;
+            must be null when kind is `query`.
+        with_no_data:
+          type: boolean
+          default: true
+          description: |
+            If false, the server kicks off an initial refresh immediately
+            after creating the view and the response includes a job ID.
+        auto_refresh:
+          type:
+            - boolean
+            - "null"
+          default: false
+          description: |
+            If true, the view is automatically refreshed when source-table
+            data changes past the deployment-level threshold. Boolean
+            opt-in only; the threshold and cooldown are configured on the
+            deployment, not per-view.
+
+    MaterializedViewUdtfEntry:
+      type: object
+      required:
+        - kind
+        - udtf
+        - udtf_sha
+        - udtf_name
+        - udtf_version
+      properties:
+        kind:
+          type: string
+          enum:
+            - udtf
+            - chunker
+          description: |
+            Discriminates a batch UDTF (`udtf`, full-overwrite refresh)
+            from a chunker (`chunker`, incremental 1:N refresh). Must match
+            the enclosing request's `kind`.
+        udtf:
+          type: string
+          description: |
+            Base64-encoded UDTFSpec / ChunkerSpec JSON envelope (per kind).
+        udtf_sha:
+          type: string
+          description: SHA-256 checksum of the envelope; server validates.
+        udtf_name:
+          type: string
+          description: Name of the UDTF
+        udtf_version:
+          type: string
+          description: Version of the UDTF
+        input_columns:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: |
+            Source columns the UDTF reads. Null means all columns (batch
+            UDTF only).
+        partition_by:
+          type:
+            - string
+            - "null"
+          description: |
+            Batch UDTF only. Column-value partition key for
+            partition-parallel execution. Mutually exclusive with
+            `partition_by_indexed_column`.
+        partition_by_indexed_column:
+          type:
+            - string
+            - "null"
+          description: |
+            Batch UDTF only. Source column with an IVF-family index used
+            for index-based partitioning. The server validates the index
+            exists at create time.
+        num_cpus:
+          type:
+            - number
+            - "null"
+          description: Ray actor CPU request.
+        num_gpus:
+          type:
+            - number
+            - "null"
+          description: Ray actor GPU request.
+        memory:
+          type:
+            - integer
+            - "null"
+          description: Ray actor memory request, in bytes.
+        error_handling:
+          type:
+            - object
+            - "null"
+          description: |
+            Batch UDTF only. Serialized ErrorHandlingConfig controlling
+            partition-grain fail/retry/skip behavior.
+        batch:
+          type:
+            - boolean
+            - "null"
+          description: |
+            Chunker only. True for a batched chunker; affects how the
+            worker dispatches input rows.
+        manifest:
+          type:
+            - string
+            - "null"
+          description: JSON-serialized GenevaManifest for the UDTF environment.
+        manifest_checksum:
+          type:
+            - string
+            - "null"
+          description: SHA-256 checksum of the manifest content.
+
+    CreateMaterializedViewResponse:
+      type: object
+      required:
+        - version
+      properties:
+        version:
+          type: integer
+          format: int64
+          description: The commit version that created the materialized view
+          minimum: 0
+        job_id:
+          type:
+            - string
+            - "null"
+          description: |
+            Refresh job ID, populated only when `with_no_data` was false.
 
     AlterTableDropColumnsRequest:
       type: object
@@ -5418,6 +5642,13 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/RefreshMaterializedViewResponse"
+
+    CreateMaterializedViewResponse:
+      description: Materialized view created
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CreateMaterializedViewResponse"
 
     AlterTableDropColumnsResponse:
       description: Drop columns operation result
