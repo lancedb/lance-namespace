@@ -61,7 +61,7 @@ public class CreateMaterializedViewRequest {
   private List<String> id = new ArrayList<>();
 
   /**
-   * The materialized view kind. - &#x60;query&#x60; — plain query-backed view (no UDTF), 1:1 rows. - &#x60;udtf&#x60; — batch UDTF-backed view (N:M rows, full refresh). - &#x60;chunker&#x60; — chunker view (1:N row expansion, incremental refresh). The legacy value &#x60;scalar_udtf&#x60; is still accepted on read for views created before the chunker rename. 
+   * The materialized view kind. - &#x60;query&#x60; — plain query-backed view (no UDTF), 1:1 rows. - &#x60;udtf&#x60; — batch UDTF-backed view (N:M rows, full refresh). - &#x60;chunker&#x60;, aka &#39;scalar_udtf&#39; — chunker view (1:N row expansion, incremental refresh). 
    */
   public enum KindEnum {
     QUERY(String.valueOf("query")),
@@ -184,7 +184,7 @@ public class CreateMaterializedViewRequest {
   }
 
   /**
-   * The materialized view kind. - &#x60;query&#x60; — plain query-backed view (no UDTF), 1:1 rows. - &#x60;udtf&#x60; — batch UDTF-backed view (N:M rows, full refresh). - &#x60;chunker&#x60; — chunker view (1:N row expansion, incremental refresh). The legacy value &#x60;scalar_udtf&#x60; is still accepted on read for views created before the chunker rename. 
+   * The materialized view kind. - &#x60;query&#x60; — plain query-backed view (no UDTF), 1:1 rows. - &#x60;udtf&#x60; — batch UDTF-backed view (N:M rows, full refresh). - &#x60;chunker&#x60;, aka &#39;scalar_udtf&#39; — chunker view (1:N row expansion, incremental refresh). 
    * @return kind
    */
   @javax.annotation.Nonnull
@@ -208,7 +208,7 @@ public class CreateMaterializedViewRequest {
   }
 
   /**
-   * JSON-serialized GenevaQueryBuilder representation of the source query that defines the view&#39;s input. 
+   * Opaque serialized representation of the source query that defines the view&#39;s input. The format is defined by the client; the namespace server stores it without interpreting it. 
    * @return sourceQuery
    */
   @javax.annotation.Nonnull

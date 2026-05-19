@@ -6,8 +6,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **identity** | Option<[**models::Identity**](Identity.md)> |  | [optional]
 **id** | Option<**Vec<String>**> | View identifier path (namespace + view name) | [optional]
-**kind** | **String** | The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker` — chunker view (1:N row expansion, incremental refresh). The legacy value `scalar_udtf` is still accepted on read for views created before the chunker rename.  | 
-**source_query** | **String** | JSON-serialized GenevaQueryBuilder representation of the source query that defines the view's input.  | 
+**kind** | **String** | The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker`, aka 'scalar_udtf' — chunker view (1:N row expansion, incremental refresh).  | 
+**source_query** | **String** | Opaque serialized representation of the source query that defines the view's input. The format is defined by the client; the namespace server stores it without interpreting it.  | 
 **output_schema** | **String** | Base64-encoded Arrow schema of the view output | 
 **udtf_spec** | Option<[**models::MaterializedViewUdtfEntry**](MaterializedViewUdtfEntry.md)> |  | [optional]
 **with_no_data** | Option<**bool**> | If false, the server kicks off an initial refresh immediately after creating the view and the response includes a job ID.  | [optional][default to true]

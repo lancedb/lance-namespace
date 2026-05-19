@@ -860,7 +860,7 @@ public class TableApi extends BaseApi {
 
   /**
    * Create a materialized view
-   * Create a materialized view at table identifier &#x60;id&#x60;. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60; discriminator. Manifest defaults are resolved server-side and snapshotted into the view&#39;s metadata so the view is fully self-contained at creation time. When &#x60;with_no_data&#x60; is false the server also kicks off an initial refresh and returns its job ID. 
+   * Create a materialized view at table identifier &#x60;id&#x60;. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60; discriminator. 
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  (required)
    * @param createMaterializedViewRequest  (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  (optional)
@@ -874,7 +874,7 @@ public class TableApi extends BaseApi {
 
   /**
    * Create a materialized view
-   * Create a materialized view at table identifier &#x60;id&#x60;. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60; discriminator. Manifest defaults are resolved server-side and snapshotted into the view&#39;s metadata so the view is fully self-contained at creation time. When &#x60;with_no_data&#x60; is false the server also kicks off an initial refresh and returns its job ID. 
+   * Create a materialized view at table identifier &#x60;id&#x60;. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60; discriminator. 
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  (required)
    * @param createMaterializedViewRequest  (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  (optional)

@@ -33,7 +33,7 @@ public class CreateMaterializedViewRequest {
   private List<String> id = new ArrayList<>();
 
   /**
-   * The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker` — chunker view (1:N row expansion, incremental refresh). The legacy value `scalar_udtf` is still accepted on read for views created before the chunker rename. 
+   * The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker`, aka 'scalar_udtf' — chunker view (1:N row expansion, incremental refresh). 
    */
   public enum KindEnum {
     QUERY("query"),
@@ -148,11 +148,11 @@ public class CreateMaterializedViewRequest {
   }
 
   /**
-   * The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker` — chunker view (1:N row expansion, incremental refresh). The legacy value `scalar_udtf` is still accepted on read for views created before the chunker rename. 
+   * The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker`, aka 'scalar_udtf' — chunker view (1:N row expansion, incremental refresh). 
    * @return kind
    */
   @NotNull 
-  @Schema(name = "kind", description = "The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker` — chunker view (1:N row expansion, incremental refresh). The legacy value `scalar_udtf` is still accepted on read for views created before the chunker rename. ", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "kind", description = "The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker`, aka 'scalar_udtf' — chunker view (1:N row expansion, incremental refresh). ", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("kind")
   public KindEnum getKind() {
     return kind;
@@ -168,11 +168,11 @@ public class CreateMaterializedViewRequest {
   }
 
   /**
-   * JSON-serialized GenevaQueryBuilder representation of the source query that defines the view's input. 
+   * Opaque serialized representation of the source query that defines the view's input. The format is defined by the client; the namespace server stores it without interpreting it. 
    * @return sourceQuery
    */
   @NotNull 
-  @Schema(name = "source_query", description = "JSON-serialized GenevaQueryBuilder representation of the source query that defines the view's input. ", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "source_query", description = "Opaque serialized representation of the source query that defines the view's input. The format is defined by the client; the namespace server stores it without interpreting it. ", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("source_query")
   public String getSourceQuery() {
     return sourceQuery;

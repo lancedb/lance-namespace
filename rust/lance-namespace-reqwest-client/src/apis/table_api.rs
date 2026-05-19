@@ -1096,7 +1096,7 @@ pub async fn count_table_rows(configuration: &configuration::Configuration, id: 
     }
 }
 
-/// Create a materialized view at table identifier `id`. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the `kind` discriminator. Manifest defaults are resolved server-side and snapshotted into the view's metadata so the view is fully self-contained at creation time. When `with_no_data` is false the server also kicks off an initial refresh and returns its job ID. 
+/// Create a materialized view at table identifier `id`. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the `kind` discriminator. 
 pub async fn create_materialized_view(configuration: &configuration::Configuration, id: &str, create_materialized_view_request: models::CreateMaterializedViewRequest, delimiter: Option<&str>) -> Result<models::CreateMaterializedViewResponse, Error<CreateMaterializedViewError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;

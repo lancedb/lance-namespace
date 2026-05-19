@@ -18,10 +18,10 @@ pub struct CreateMaterializedViewRequest {
     /// View identifier path (namespace + view name)
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
-    /// The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker` — chunker view (1:N row expansion, incremental refresh). The legacy value `scalar_udtf` is still accepted on read for views created before the chunker rename. 
+    /// The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker`, aka 'scalar_udtf' — chunker view (1:N row expansion, incremental refresh). 
     #[serde(rename = "kind")]
     pub kind: Kind,
-    /// JSON-serialized GenevaQueryBuilder representation of the source query that defines the view's input. 
+    /// Opaque serialized representation of the source query that defines the view's input. The format is defined by the client; the namespace server stores it without interpreting it. 
     #[serde(rename = "source_query")]
     pub source_query: String,
     /// Base64-encoded Arrow schema of the view output
@@ -51,7 +51,7 @@ impl CreateMaterializedViewRequest {
         }
     }
 }
-/// The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker` — chunker view (1:N row expansion, incremental refresh). The legacy value `scalar_udtf` is still accepted on read for views created before the chunker rename. 
+/// The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker`, aka 'scalar_udtf' — chunker view (1:N row expansion, incremental refresh). 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum Kind {
     #[serde(rename = "query")]

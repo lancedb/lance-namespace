@@ -811,7 +811,7 @@ CompletableFuture<ApiResponse<**Long**>>
 
 Create a materialized view
 
-Create a materialized view at table identifier &#x60;id&#x60;. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60; discriminator. Manifest defaults are resolved server-side and snapshotted into the view&#39;s metadata so the view is fully self-contained at creation time. When &#x60;with_no_data&#x60; is false the server also kicks off an initial refresh and returns its job ID. 
+Create a materialized view at table identifier &#x60;id&#x60;. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60; discriminator. 
 
 ### Example
 
@@ -903,7 +903,7 @@ CompletableFuture<[**CreateMaterializedViewResponse**](CreateMaterializedViewRes
 
 Create a materialized view
 
-Create a materialized view at table identifier &#x60;id&#x60;. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60; discriminator. Manifest defaults are resolved server-side and snapshotted into the view&#39;s metadata so the view is fully self-contained at creation time. When &#x60;with_no_data&#x60; is false the server also kicks off an initial refresh and returns its job ID. 
+Create a materialized view at table identifier &#x60;id&#x60;. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60; discriminator. 
 
 ### Example
 

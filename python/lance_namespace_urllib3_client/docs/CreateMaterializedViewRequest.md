@@ -7,8 +7,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **identity** | [**Identity**](Identity.md) |  | [optional] 
 **id** | **List[str]** | View identifier path (namespace + view name) | [optional] 
-**kind** | **str** | The materialized view kind. - &#x60;query&#x60; — plain query-backed view (no UDTF), 1:1 rows. - &#x60;udtf&#x60; — batch UDTF-backed view (N:M rows, full refresh). - &#x60;chunker&#x60; — chunker view (1:N row expansion, incremental refresh). The legacy value &#x60;scalar_udtf&#x60; is still accepted on read for views created before the chunker rename.  | 
-**source_query** | **str** | JSON-serialized GenevaQueryBuilder representation of the source query that defines the view&#39;s input.  | 
+**kind** | **str** | The materialized view kind. - &#x60;query&#x60; — plain query-backed view (no UDTF), 1:1 rows. - &#x60;udtf&#x60; — batch UDTF-backed view (N:M rows, full refresh). - &#x60;chunker&#x60;, aka &#39;scalar_udtf&#39; — chunker view (1:N row expansion, incremental refresh).  | 
+**source_query** | **str** | Opaque serialized representation of the source query that defines the view&#39;s input. The format is defined by the client; the namespace server stores it without interpreting it.  | 
 **output_schema** | **str** | Base64-encoded Arrow schema of the view output | 
 **udtf_spec** | [**MaterializedViewUdtfEntry**](MaterializedViewUdtfEntry.md) |  | [optional] 
 **with_no_data** | **bool** | If false, the server kicks off an initial refresh immediately after creating the view and the response includes a job ID.  | [optional] [default to True]

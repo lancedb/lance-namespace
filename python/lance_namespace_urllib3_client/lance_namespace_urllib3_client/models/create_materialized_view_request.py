@@ -30,8 +30,8 @@ class CreateMaterializedViewRequest(BaseModel):
     """ # noqa: E501
     identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = Field(default=None, description="View identifier path (namespace + view name)")
-    kind: StrictStr = Field(description="The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker` — chunker view (1:N row expansion, incremental refresh). The legacy value `scalar_udtf` is still accepted on read for views created before the chunker rename. ")
-    source_query: StrictStr = Field(description="JSON-serialized GenevaQueryBuilder representation of the source query that defines the view's input. ")
+    kind: StrictStr = Field(description="The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker`, aka 'scalar_udtf' — chunker view (1:N row expansion, incremental refresh). ")
+    source_query: StrictStr = Field(description="Opaque serialized representation of the source query that defines the view's input. The format is defined by the client; the namespace server stores it without interpreting it. ")
     output_schema: StrictStr = Field(description="Base64-encoded Arrow schema of the view output")
     udtf_spec: Optional[MaterializedViewUdtfEntry] = None
     with_no_data: Optional[StrictBool] = Field(default=True, description="If false, the server kicks off an initial refresh immediately after creating the view and the response includes a job ID. ")
