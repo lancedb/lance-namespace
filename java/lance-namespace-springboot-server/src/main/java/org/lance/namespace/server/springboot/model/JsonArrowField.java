@@ -1,32 +1,37 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.HashMap;
-import java.util.Map;
-import org.lance.namespace.server.springboot.model.JsonArrowDataType;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-/**
- * JSON representation of an Apache Arrow field. 
- */
-
+/** JSON representation of an Apache Arrow field. */
 @Schema(name = "JsonArrowField", description = "JSON representation of an Apache Arrow field. ")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class JsonArrowField {
 
-  @Valid
-  private Map<String, String> metadata = new HashMap<>();
+  @Valid private Map<String, String> metadata = new HashMap<>();
 
   private String name;
 
@@ -38,9 +43,7 @@ public class JsonArrowField {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public JsonArrowField(String name, Boolean nullable, JsonArrowDataType type) {
     this.name = name;
     this.nullable = nullable;
@@ -62,9 +65,9 @@ public class JsonArrowField {
 
   /**
    * Get metadata
+   *
    * @return metadata
    */
-  
   @Schema(name = "metadata", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("metadata")
   public Map<String, String> getMetadata() {
@@ -82,9 +85,10 @@ public class JsonArrowField {
 
   /**
    * Get name
+   *
    * @return name
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
@@ -102,9 +106,10 @@ public class JsonArrowField {
 
   /**
    * Get nullable
+   *
    * @return nullable
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "nullable", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("nullable")
   public Boolean getNullable() {
@@ -122,9 +127,11 @@ public class JsonArrowField {
 
   /**
    * Get type
+   *
    * @return type
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "type", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("type")
   public JsonArrowDataType getType() {
@@ -144,10 +151,10 @@ public class JsonArrowField {
       return false;
     }
     JsonArrowField jsonArrowField = (JsonArrowField) o;
-    return Objects.equals(this.metadata, jsonArrowField.metadata) &&
-        Objects.equals(this.name, jsonArrowField.name) &&
-        Objects.equals(this.nullable, jsonArrowField.nullable) &&
-        Objects.equals(this.type, jsonArrowField.type);
+    return Objects.equals(this.metadata, jsonArrowField.metadata)
+        && Objects.equals(this.name, jsonArrowField.name)
+        && Objects.equals(this.nullable, jsonArrowField.nullable)
+        && Objects.equals(this.type, jsonArrowField.type);
   }
 
   @Override
@@ -168,8 +175,7 @@ public class JsonArrowField {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -178,4 +184,3 @@ public class JsonArrowField {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

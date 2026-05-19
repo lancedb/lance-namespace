@@ -1,34 +1,38 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import org.lance.namespace.server.springboot.model.Identity;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-/**
- * RefreshMaterializedViewRequest
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+/** RefreshMaterializedViewRequest */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class RefreshMaterializedViewRequest {
 
   private Identity identity;
 
-  @Valid
-  private List<String> id = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   private Integer srcVersion = null;
 
@@ -51,9 +55,10 @@ public class RefreshMaterializedViewRequest {
 
   /**
    * Get identity
+   *
    * @return identity
    */
-  @Valid 
+  @Valid
   @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("identity")
   public Identity getIdentity() {
@@ -79,10 +84,13 @@ public class RefreshMaterializedViewRequest {
 
   /**
    * Table identifier path (namespace + table name)
+   *
    * @return id
    */
-  
-  @Schema(name = "id", description = "Table identifier path (namespace + table name)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "id",
+      description = "Table identifier path (namespace + table name)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
     return id;
@@ -99,10 +107,13 @@ public class RefreshMaterializedViewRequest {
 
   /**
    * Optional source version to refresh from
+   *
    * @return srcVersion
    */
-  
-  @Schema(name = "src_version", description = "Optional source version to refresh from", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "src_version",
+      description = "Optional source version to refresh from",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("src_version")
   public Integer getSrcVersion() {
     return srcVersion;
@@ -119,10 +130,13 @@ public class RefreshMaterializedViewRequest {
 
   /**
    * Optional maximum rows per fragment
+   *
    * @return maxRowsPerFragment
    */
-  
-  @Schema(name = "max_rows_per_fragment", description = "Optional maximum rows per fragment", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "max_rows_per_fragment",
+      description = "Optional maximum rows per fragment",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("max_rows_per_fragment")
   public Integer getMaxRowsPerFragment() {
     return maxRowsPerFragment;
@@ -139,10 +153,13 @@ public class RefreshMaterializedViewRequest {
 
   /**
    * Optional concurrency override
+   *
    * @return concurrency
    */
-  
-  @Schema(name = "concurrency", description = "Optional concurrency override", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "concurrency",
+      description = "Optional concurrency override",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("concurrency")
   public Integer getConcurrency() {
     return concurrency;
@@ -159,10 +176,13 @@ public class RefreshMaterializedViewRequest {
 
   /**
    * Optional intra-applier concurrency override
+   *
    * @return intraApplierConcurrency
    */
-  
-  @Schema(name = "intra_applier_concurrency", description = "Optional intra-applier concurrency override", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "intra_applier_concurrency",
+      description = "Optional intra-applier concurrency override",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("intra_applier_concurrency")
   public Integer getIntraApplierConcurrency() {
     return intraApplierConcurrency;
@@ -179,10 +199,13 @@ public class RefreshMaterializedViewRequest {
 
   /**
    * Optional cluster name (operational override)
+   *
    * @return cluster
    */
-  
-  @Schema(name = "cluster", description = "Optional cluster name (operational override)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "cluster",
+      description = "Optional cluster name (operational override)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("cluster")
   public String getCluster() {
     return cluster;
@@ -198,11 +221,16 @@ public class RefreshMaterializedViewRequest {
   }
 
   /**
-   * Post-trim cap on view row count after expansion. Valid only for chunker materialized views; returns 400 if set on other kinds. 
+   * Post-trim cap on view row count after expansion. Valid only for chunker materialized views;
+   * returns 400 if set on other kinds.
+   *
    * @return outputLimit
    */
-  
-  @Schema(name = "output_limit", description = "Post-trim cap on view row count after expansion. Valid only for chunker materialized views; returns 400 if set on other kinds. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "output_limit",
+      description =
+          "Post-trim cap on view row count after expansion. Valid only for chunker materialized views; returns 400 if set on other kinds. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("output_limit")
   public Integer getOutputLimit() {
     return outputLimit;
@@ -218,11 +246,17 @@ public class RefreshMaterializedViewRequest {
   }
 
   /**
-   * Optional inline JSON-serialized GenevaManifest. Operational override for this refresh only; does not mutate the view's snapshotted manifest. When omitted, the manifest stored in the view's metadata is used. 
+   * Optional inline JSON-serialized GenevaManifest. Operational override for this refresh only;
+   * does not mutate the view's snapshotted manifest. When omitted, the manifest stored in the
+   * view's metadata is used.
+   *
    * @return manifest
    */
-  
-  @Schema(name = "manifest", description = "Optional inline JSON-serialized GenevaManifest. Operational override for this refresh only; does not mutate the view's snapshotted manifest. When omitted, the manifest stored in the view's metadata is used. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "manifest",
+      description =
+          "Optional inline JSON-serialized GenevaManifest. Operational override for this refresh only; does not mutate the view's snapshotted manifest. When omitted, the manifest stored in the view's metadata is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("manifest")
   public String getManifest() {
     return manifest;
@@ -240,21 +274,33 @@ public class RefreshMaterializedViewRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    RefreshMaterializedViewRequest refreshMaterializedViewRequest = (RefreshMaterializedViewRequest) o;
-    return Objects.equals(this.identity, refreshMaterializedViewRequest.identity) &&
-        Objects.equals(this.id, refreshMaterializedViewRequest.id) &&
-        Objects.equals(this.srcVersion, refreshMaterializedViewRequest.srcVersion) &&
-        Objects.equals(this.maxRowsPerFragment, refreshMaterializedViewRequest.maxRowsPerFragment) &&
-        Objects.equals(this.concurrency, refreshMaterializedViewRequest.concurrency) &&
-        Objects.equals(this.intraApplierConcurrency, refreshMaterializedViewRequest.intraApplierConcurrency) &&
-        Objects.equals(this.cluster, refreshMaterializedViewRequest.cluster) &&
-        Objects.equals(this.outputLimit, refreshMaterializedViewRequest.outputLimit) &&
-        Objects.equals(this.manifest, refreshMaterializedViewRequest.manifest);
+    RefreshMaterializedViewRequest refreshMaterializedViewRequest =
+        (RefreshMaterializedViewRequest) o;
+    return Objects.equals(this.identity, refreshMaterializedViewRequest.identity)
+        && Objects.equals(this.id, refreshMaterializedViewRequest.id)
+        && Objects.equals(this.srcVersion, refreshMaterializedViewRequest.srcVersion)
+        && Objects.equals(
+            this.maxRowsPerFragment, refreshMaterializedViewRequest.maxRowsPerFragment)
+        && Objects.equals(this.concurrency, refreshMaterializedViewRequest.concurrency)
+        && Objects.equals(
+            this.intraApplierConcurrency, refreshMaterializedViewRequest.intraApplierConcurrency)
+        && Objects.equals(this.cluster, refreshMaterializedViewRequest.cluster)
+        && Objects.equals(this.outputLimit, refreshMaterializedViewRequest.outputLimit)
+        && Objects.equals(this.manifest, refreshMaterializedViewRequest.manifest);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, srcVersion, maxRowsPerFragment, concurrency, intraApplierConcurrency, cluster, outputLimit, manifest);
+    return Objects.hash(
+        identity,
+        id,
+        srcVersion,
+        maxRowsPerFragment,
+        concurrency,
+        intraApplierConcurrency,
+        cluster,
+        outputLimit,
+        manifest);
   }
 
   @Override
@@ -266,7 +312,9 @@ public class RefreshMaterializedViewRequest {
     sb.append("    srcVersion: ").append(toIndentedString(srcVersion)).append("\n");
     sb.append("    maxRowsPerFragment: ").append(toIndentedString(maxRowsPerFragment)).append("\n");
     sb.append("    concurrency: ").append(toIndentedString(concurrency)).append("\n");
-    sb.append("    intraApplierConcurrency: ").append(toIndentedString(intraApplierConcurrency)).append("\n");
+    sb.append("    intraApplierConcurrency: ")
+        .append(toIndentedString(intraApplierConcurrency))
+        .append("\n");
     sb.append("    cluster: ").append(toIndentedString(cluster)).append("\n");
     sb.append("    outputLimit: ").append(toIndentedString(outputLimit)).append("\n");
     sb.append("    manifest: ").append(toIndentedString(manifest)).append("\n");
@@ -275,8 +323,7 @@ public class RefreshMaterializedViewRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -285,4 +332,3 @@ public class RefreshMaterializedViewRequest {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

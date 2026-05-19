@@ -1,33 +1,38 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+
+import java.util.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Objects;
 
-
-import java.util.*;
-import jakarta.annotation.Generated;
-
-/**
- * AlterVirtualColumnEntry
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+/** AlterVirtualColumnEntry */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class AlterVirtualColumnEntry {
 
-  @Valid
-  private List<String> inputColumns;
+  @Valid private List<String> inputColumns;
 
   private String image = null;
 
@@ -45,8 +50,7 @@ public class AlterVirtualColumnEntry {
 
   private String manifestChecksum = null;
 
-  @Valid
-  private Map<String, String> fieldMetadata = new HashMap<>();
+  @Valid private Map<String, String> fieldMetadata = new HashMap<>();
 
   public AlterVirtualColumnEntry inputColumns(List<String> inputColumns) {
     this.inputColumns = inputColumns;
@@ -63,10 +67,13 @@ public class AlterVirtualColumnEntry {
 
   /**
    * List of input column names for the virtual column (optional)
+   *
    * @return inputColumns
    */
-  
-  @Schema(name = "input_columns", description = "List of input column names for the virtual column (optional)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "input_columns",
+      description = "List of input column names for the virtual column (optional)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("input_columns")
   public List<String> getInputColumns() {
     return inputColumns;
@@ -83,10 +90,13 @@ public class AlterVirtualColumnEntry {
 
   /**
    * Docker image to use for the UDF (optional)
+   *
    * @return image
    */
-  
-  @Schema(name = "image", description = "Docker image to use for the UDF (optional)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "image",
+      description = "Docker image to use for the UDF (optional)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("image")
   public String getImage() {
     return image;
@@ -103,10 +113,13 @@ public class AlterVirtualColumnEntry {
 
   /**
    * Base64 encoded pickled UDF (optional)
+   *
    * @return udf
    */
-  
-  @Schema(name = "udf", description = "Base64 encoded pickled UDF (optional)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "udf",
+      description = "Base64 encoded pickled UDF (optional)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("udf")
   public String getUdf() {
     return udf;
@@ -123,10 +136,13 @@ public class AlterVirtualColumnEntry {
 
   /**
    * Name of the UDF (optional)
+   *
    * @return udfName
    */
-  
-  @Schema(name = "udf_name", description = "Name of the UDF (optional)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "udf_name",
+      description = "Name of the UDF (optional)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("udf_name")
   public String getUdfName() {
     return udfName;
@@ -143,10 +159,13 @@ public class AlterVirtualColumnEntry {
 
   /**
    * Version of the UDF (optional)
+   *
    * @return udfVersion
    */
-  
-  @Schema(name = "udf_version", description = "Version of the UDF (optional)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "udf_version",
+      description = "Version of the UDF (optional)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("udf_version")
   public String getUdfVersion() {
     return udfVersion;
@@ -163,10 +182,13 @@ public class AlterVirtualColumnEntry {
 
   /**
    * UDF backend type (e.g. DockerUDFSpecV1) (optional)
+   *
    * @return udfBackend
    */
-  
-  @Schema(name = "udf_backend", description = "UDF backend type (e.g. DockerUDFSpecV1) (optional)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "udf_backend",
+      description = "UDF backend type (e.g. DockerUDFSpecV1) (optional)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("udf_backend")
   public String getUdfBackend() {
     return udfBackend;
@@ -183,10 +205,13 @@ public class AlterVirtualColumnEntry {
 
   /**
    * Whether to automatically backfill the column (optional)
+   *
    * @return autoBackfill
    */
-  
-  @Schema(name = "auto_backfill", description = "Whether to automatically backfill the column (optional)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "auto_backfill",
+      description = "Whether to automatically backfill the column (optional)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("auto_backfill")
   public Boolean getAutoBackfill() {
     return autoBackfill;
@@ -203,10 +228,13 @@ public class AlterVirtualColumnEntry {
 
   /**
    * JSON-serialized manifest for the UDF environment (optional)
+   *
    * @return manifest
    */
-  
-  @Schema(name = "manifest", description = "JSON-serialized manifest for the UDF environment (optional)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "manifest",
+      description = "JSON-serialized manifest for the UDF environment (optional)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("manifest")
   public String getManifest() {
     return manifest;
@@ -223,10 +251,13 @@ public class AlterVirtualColumnEntry {
 
   /**
    * SHA-256 checksum of the manifest content (optional)
+   *
    * @return manifestChecksum
    */
-  
-  @Schema(name = "manifest_checksum", description = "SHA-256 checksum of the manifest content (optional)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "manifest_checksum",
+      description = "SHA-256 checksum of the manifest content (optional)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("manifest_checksum")
   public String getManifestChecksum() {
     return manifestChecksum;
@@ -251,10 +282,13 @@ public class AlterVirtualColumnEntry {
 
   /**
    * User-supplied field metadata (optional)
+   *
    * @return fieldMetadata
    */
-  
-  @Schema(name = "field_metadata", description = "User-supplied field metadata (optional)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "field_metadata",
+      description = "User-supplied field metadata (optional)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("field_metadata")
   public Map<String, String> getFieldMetadata() {
     return fieldMetadata;
@@ -273,21 +307,31 @@ public class AlterVirtualColumnEntry {
       return false;
     }
     AlterVirtualColumnEntry alterVirtualColumnEntry = (AlterVirtualColumnEntry) o;
-    return Objects.equals(this.inputColumns, alterVirtualColumnEntry.inputColumns) &&
-        Objects.equals(this.image, alterVirtualColumnEntry.image) &&
-        Objects.equals(this.udf, alterVirtualColumnEntry.udf) &&
-        Objects.equals(this.udfName, alterVirtualColumnEntry.udfName) &&
-        Objects.equals(this.udfVersion, alterVirtualColumnEntry.udfVersion) &&
-        Objects.equals(this.udfBackend, alterVirtualColumnEntry.udfBackend) &&
-        Objects.equals(this.autoBackfill, alterVirtualColumnEntry.autoBackfill) &&
-        Objects.equals(this.manifest, alterVirtualColumnEntry.manifest) &&
-        Objects.equals(this.manifestChecksum, alterVirtualColumnEntry.manifestChecksum) &&
-        Objects.equals(this.fieldMetadata, alterVirtualColumnEntry.fieldMetadata);
+    return Objects.equals(this.inputColumns, alterVirtualColumnEntry.inputColumns)
+        && Objects.equals(this.image, alterVirtualColumnEntry.image)
+        && Objects.equals(this.udf, alterVirtualColumnEntry.udf)
+        && Objects.equals(this.udfName, alterVirtualColumnEntry.udfName)
+        && Objects.equals(this.udfVersion, alterVirtualColumnEntry.udfVersion)
+        && Objects.equals(this.udfBackend, alterVirtualColumnEntry.udfBackend)
+        && Objects.equals(this.autoBackfill, alterVirtualColumnEntry.autoBackfill)
+        && Objects.equals(this.manifest, alterVirtualColumnEntry.manifest)
+        && Objects.equals(this.manifestChecksum, alterVirtualColumnEntry.manifestChecksum)
+        && Objects.equals(this.fieldMetadata, alterVirtualColumnEntry.fieldMetadata);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(inputColumns, image, udf, udfName, udfVersion, udfBackend, autoBackfill, manifest, manifestChecksum, fieldMetadata);
+    return Objects.hash(
+        inputColumns,
+        image,
+        udf,
+        udfName,
+        udfVersion,
+        udfBackend,
+        autoBackfill,
+        manifest,
+        manifestChecksum,
+        fieldMetadata);
   }
 
   @Override
@@ -309,8 +353,7 @@ public class AlterVirtualColumnEntry {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -319,4 +362,3 @@ public class AlterVirtualColumnEntry {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

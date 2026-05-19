@@ -1,26 +1,33 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.HashMap;
-import java.util.Map;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-/**
- * UpdateTableResponse
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+/** UpdateTableResponse */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class UpdateTableResponse {
 
   private String transactionId;
@@ -29,16 +36,13 @@ public class UpdateTableResponse {
 
   private Long version;
 
-  @Valid
-  private Map<String, String> properties = new HashMap<>();
+  @Valid private Map<String, String> properties = new HashMap<>();
 
   public UpdateTableResponse() {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public UpdateTableResponse(Long updatedRows, Long version) {
     this.updatedRows = updatedRows;
     this.version = version;
@@ -51,10 +55,13 @@ public class UpdateTableResponse {
 
   /**
    * Optional transaction identifier
+   *
    * @return transactionId
    */
-  
-  @Schema(name = "transaction_id", description = "Optional transaction identifier", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "transaction_id",
+      description = "Optional transaction identifier",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("transaction_id")
   public String getTransactionId() {
     return transactionId;
@@ -70,12 +77,16 @@ public class UpdateTableResponse {
   }
 
   /**
-   * Number of rows updated
-   * minimum: 0
+   * Number of rows updated minimum: 0
+   *
    * @return updatedRows
    */
-  @NotNull @Min(0L) 
-  @Schema(name = "updated_rows", description = "Number of rows updated", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Min(0L)
+  @Schema(
+      name = "updated_rows",
+      description = "Number of rows updated",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("updated_rows")
   public Long getUpdatedRows() {
     return updatedRows;
@@ -91,12 +102,16 @@ public class UpdateTableResponse {
   }
 
   /**
-   * The commit version associated with the operation
-   * minimum: 0
+   * The commit version associated with the operation minimum: 0
+   *
    * @return version
    */
-  @NotNull @Min(0L) 
-  @Schema(name = "version", description = "The commit version associated with the operation", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Min(0L)
+  @Schema(
+      name = "version",
+      description = "The commit version associated with the operation",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("version")
   public Long getVersion() {
     return version;
@@ -120,11 +135,16 @@ public class UpdateTableResponse {
   }
 
   /**
-   * If the implementation does not support table properties, it should return null for this field. Otherwise, it should return the properties. 
+   * If the implementation does not support table properties, it should return null for this field.
+   * Otherwise, it should return the properties.
+   *
    * @return properties
    */
-  
-  @Schema(name = "properties", description = "If the implementation does not support table properties, it should return null for this field. Otherwise, it should return the properties. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "properties",
+      description =
+          "If the implementation does not support table properties, it should return null for this field. Otherwise, it should return the properties. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("properties")
   public Map<String, String> getProperties() {
     return properties;
@@ -143,10 +163,10 @@ public class UpdateTableResponse {
       return false;
     }
     UpdateTableResponse updateTableResponse = (UpdateTableResponse) o;
-    return Objects.equals(this.transactionId, updateTableResponse.transactionId) &&
-        Objects.equals(this.updatedRows, updateTableResponse.updatedRows) &&
-        Objects.equals(this.version, updateTableResponse.version) &&
-        Objects.equals(this.properties, updateTableResponse.properties);
+    return Objects.equals(this.transactionId, updateTableResponse.transactionId)
+        && Objects.equals(this.updatedRows, updateTableResponse.updatedRows)
+        && Objects.equals(this.version, updateTableResponse.version)
+        && Objects.equals(this.properties, updateTableResponse.properties);
   }
 
   @Override
@@ -167,8 +187,7 @@ public class UpdateTableResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -177,4 +196,3 @@ public class UpdateTableResponse {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

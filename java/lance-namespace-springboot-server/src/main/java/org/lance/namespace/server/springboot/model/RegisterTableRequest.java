@@ -1,54 +1,54 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+
+import java.util.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.lance.namespace.server.springboot.model.Identity;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Objects;
 
-
-import java.util.*;
-import jakarta.annotation.Generated;
-
-/**
- * RegisterTableRequest
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+/** RegisterTableRequest */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class RegisterTableRequest {
 
   private Identity identity;
 
-  @Valid
-  private Map<String, String> context = new HashMap<>();
+  @Valid private Map<String, String> context = new HashMap<>();
 
-  @Valid
-  private List<String> id = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   private String location;
 
   private String mode;
 
-  @Valid
-  private Map<String, String> properties = new HashMap<>();
+  @Valid private Map<String, String> properties = new HashMap<>();
 
   public RegisterTableRequest() {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public RegisterTableRequest(String location) {
     this.location = location;
   }
@@ -60,9 +60,10 @@ public class RegisterTableRequest {
 
   /**
    * Get identity
+   *
    * @return identity
    */
-  @Valid 
+  @Valid
   @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("identity")
   public Identity getIdentity() {
@@ -87,11 +88,18 @@ public class RegisterTableRequest {
   }
 
   /**
-   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. 
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
+   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
+   * the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry
+   * `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+   *
    * @return context
    */
-  
-  @Schema(name = "context", description = "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "context",
+      description =
+          "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("context")
   public Map<String, String> getContext() {
     return context;
@@ -116,9 +124,9 @@ public class RegisterTableRequest {
 
   /**
    * Get id
+   *
    * @return id
    */
-  
   @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
@@ -136,9 +144,10 @@ public class RegisterTableRequest {
 
   /**
    * Get location
+   *
    * @return location
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "location", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("location")
   public String getLocation() {
@@ -155,11 +164,18 @@ public class RegisterTableRequest {
   }
 
   /**
-   * There are two modes when trying to register a table, to differentiate the behavior when a table of the same name already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are:   * Create (default): the operation fails with 409.   * Overwrite: the existing table registration is replaced with the new registration. 
+   * There are two modes when trying to register a table, to differentiate the behavior when a table
+   * of the same name already exists. Case insensitive, supports both PascalCase and snake_case.
+   * Valid values are: * Create (default): the operation fails with 409. * Overwrite: the existing
+   * table registration is replaced with the new registration.
+   *
    * @return mode
    */
-  
-  @Schema(name = "mode", description = "There are two modes when trying to register a table, to differentiate the behavior when a table of the same name already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are:   * Create (default): the operation fails with 409.   * Overwrite: the existing table registration is replaced with the new registration. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "mode",
+      description =
+          "There are two modes when trying to register a table, to differentiate the behavior when a table of the same name already exists. Case insensitive, supports both PascalCase and snake_case. Valid values are:   * Create (default): the operation fails with 409.   * Overwrite: the existing table registration is replaced with the new registration. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mode")
   public String getMode() {
     return mode;
@@ -183,11 +199,14 @@ public class RegisterTableRequest {
   }
 
   /**
-   * Properties stored on the table, if supported by the implementation. 
+   * Properties stored on the table, if supported by the implementation.
+   *
    * @return properties
    */
-  
-  @Schema(name = "properties", description = "Properties stored on the table, if supported by the implementation. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "properties",
+      description = "Properties stored on the table, if supported by the implementation. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("properties")
   public Map<String, String> getProperties() {
     return properties;
@@ -206,12 +225,12 @@ public class RegisterTableRequest {
       return false;
     }
     RegisterTableRequest registerTableRequest = (RegisterTableRequest) o;
-    return Objects.equals(this.identity, registerTableRequest.identity) &&
-        Objects.equals(this.context, registerTableRequest.context) &&
-        Objects.equals(this.id, registerTableRequest.id) &&
-        Objects.equals(this.location, registerTableRequest.location) &&
-        Objects.equals(this.mode, registerTableRequest.mode) &&
-        Objects.equals(this.properties, registerTableRequest.properties);
+    return Objects.equals(this.identity, registerTableRequest.identity)
+        && Objects.equals(this.context, registerTableRequest.context)
+        && Objects.equals(this.id, registerTableRequest.id)
+        && Objects.equals(this.location, registerTableRequest.location)
+        && Objects.equals(this.mode, registerTableRequest.mode)
+        && Objects.equals(this.properties, registerTableRequest.properties);
   }
 
   @Override
@@ -234,8 +253,7 @@ public class RegisterTableRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -244,4 +262,3 @@ public class RegisterTableRequest {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

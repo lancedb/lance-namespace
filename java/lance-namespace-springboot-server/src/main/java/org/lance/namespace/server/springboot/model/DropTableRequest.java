@@ -1,40 +1,49 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+
+import java.util.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.lance.namespace.server.springboot.model.Identity;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.Objects;
 
 /**
- * If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. 
+ * If the table and its data can be immediately deleted, return information of the deleted table.
+ * Otherwise, return a transaction ID that client can use to track deletion progress.
  */
-
-@Schema(name = "DropTableRequest", description = "If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. ")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+@Schema(
+    name = "DropTableRequest",
+    description =
+        "If the table and its data can be immediately deleted, return information of the deleted table. Otherwise, return a transaction ID that client can use to track deletion progress. ")
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class DropTableRequest {
 
   private Identity identity;
 
-  @Valid
-  private Map<String, String> context = new HashMap<>();
+  @Valid private Map<String, String> context = new HashMap<>();
 
-  @Valid
-  private List<String> id = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   public DropTableRequest identity(Identity identity) {
     this.identity = identity;
@@ -43,9 +52,10 @@ public class DropTableRequest {
 
   /**
    * Get identity
+   *
    * @return identity
    */
-  @Valid 
+  @Valid
   @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("identity")
   public Identity getIdentity() {
@@ -70,11 +80,18 @@ public class DropTableRequest {
   }
 
   /**
-   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. 
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
+   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
+   * the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry
+   * `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+   *
    * @return context
    */
-  
-  @Schema(name = "context", description = "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "context",
+      description =
+          "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("context")
   public Map<String, String> getContext() {
     return context;
@@ -99,9 +116,9 @@ public class DropTableRequest {
 
   /**
    * Get id
+   *
    * @return id
    */
-  
   @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
@@ -121,9 +138,9 @@ public class DropTableRequest {
       return false;
     }
     DropTableRequest dropTableRequest = (DropTableRequest) o;
-    return Objects.equals(this.identity, dropTableRequest.identity) &&
-        Objects.equals(this.context, dropTableRequest.context) &&
-        Objects.equals(this.id, dropTableRequest.id);
+    return Objects.equals(this.identity, dropTableRequest.identity)
+        && Objects.equals(this.context, dropTableRequest.context)
+        && Objects.equals(this.id, dropTableRequest.id);
   }
 
   @Override
@@ -143,8 +160,7 @@ public class DropTableRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -153,4 +169,3 @@ public class DropTableRequest {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

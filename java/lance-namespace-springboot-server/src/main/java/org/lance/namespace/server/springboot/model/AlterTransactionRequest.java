@@ -1,52 +1,57 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+
+import java.util.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.lance.namespace.server.springboot.model.AlterTransactionAction;
-import org.lance.namespace.server.springboot.model.Identity;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.Objects;
 
 /**
- * Alter a transaction with a list of actions. The server should either succeed and apply all actions, or fail and apply no action. 
+ * Alter a transaction with a list of actions. The server should either succeed and apply all
+ * actions, or fail and apply no action.
  */
-
-@Schema(name = "AlterTransactionRequest", description = "Alter a transaction with a list of actions. The server should either succeed and apply all actions, or fail and apply no action. ")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+@Schema(
+    name = "AlterTransactionRequest",
+    description =
+        "Alter a transaction with a list of actions. The server should either succeed and apply all actions, or fail and apply no action. ")
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class AlterTransactionRequest {
 
   private Identity identity;
 
-  @Valid
-  private Map<String, String> context = new HashMap<>();
+  @Valid private Map<String, String> context = new HashMap<>();
 
-  @Valid
-  private List<String> id = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
-  @Valid
-  private List<@Valid AlterTransactionAction> actions = new ArrayList<>();
+  @Valid private List<@Valid AlterTransactionAction> actions = new ArrayList<>();
 
   public AlterTransactionRequest() {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public AlterTransactionRequest(List<@Valid AlterTransactionAction> actions) {
     this.actions = actions;
   }
@@ -58,9 +63,10 @@ public class AlterTransactionRequest {
 
   /**
    * Get identity
+   *
    * @return identity
    */
-  @Valid 
+  @Valid
   @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("identity")
   public Identity getIdentity() {
@@ -85,11 +91,18 @@ public class AlterTransactionRequest {
   }
 
   /**
-   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. 
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
+   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
+   * the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry
+   * `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+   *
    * @return context
    */
-  
-  @Schema(name = "context", description = "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "context",
+      description =
+          "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("context")
   public Map<String, String> getContext() {
     return context;
@@ -114,9 +127,9 @@ public class AlterTransactionRequest {
 
   /**
    * Get id
+   *
    * @return id
    */
-  
   @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
@@ -142,9 +155,12 @@ public class AlterTransactionRequest {
 
   /**
    * Get actions
+   *
    * @return actions
    */
-  @NotNull @Valid @Size(min = 1) 
+  @NotNull
+  @Valid
+  @Size(min = 1)
   @Schema(name = "actions", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("actions")
   public List<@Valid AlterTransactionAction> getActions() {
@@ -164,10 +180,10 @@ public class AlterTransactionRequest {
       return false;
     }
     AlterTransactionRequest alterTransactionRequest = (AlterTransactionRequest) o;
-    return Objects.equals(this.identity, alterTransactionRequest.identity) &&
-        Objects.equals(this.context, alterTransactionRequest.context) &&
-        Objects.equals(this.id, alterTransactionRequest.id) &&
-        Objects.equals(this.actions, alterTransactionRequest.actions);
+    return Objects.equals(this.identity, alterTransactionRequest.identity)
+        && Objects.equals(this.context, alterTransactionRequest.context)
+        && Objects.equals(this.id, alterTransactionRequest.id)
+        && Objects.equals(this.actions, alterTransactionRequest.actions);
   }
 
   @Override
@@ -188,8 +204,7 @@ public class AlterTransactionRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -198,4 +213,3 @@ public class AlterTransactionRequest {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

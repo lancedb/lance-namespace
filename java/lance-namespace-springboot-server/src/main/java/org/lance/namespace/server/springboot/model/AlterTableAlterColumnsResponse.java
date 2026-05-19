@@ -1,24 +1,30 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import jakarta.annotation.Generated;
+import jakarta.validation.constraints.*;
 
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.Objects;
 
-/**
- * AlterTableAlterColumnsResponse
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+/** AlterTableAlterColumnsResponse */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class AlterTableAlterColumnsResponse {
 
   private Long version;
@@ -27,9 +33,7 @@ public class AlterTableAlterColumnsResponse {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public AlterTableAlterColumnsResponse(Long version) {
     this.version = version;
   }
@@ -40,12 +44,16 @@ public class AlterTableAlterColumnsResponse {
   }
 
   /**
-   * The commit version associated with the operation
-   * minimum: 0
+   * The commit version associated with the operation minimum: 0
+   *
    * @return version
    */
-  @NotNull @Min(0L) 
-  @Schema(name = "version", description = "The commit version associated with the operation", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Min(0L)
+  @Schema(
+      name = "version",
+      description = "The commit version associated with the operation",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("version")
   public Long getVersion() {
     return version;
@@ -63,7 +71,8 @@ public class AlterTableAlterColumnsResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AlterTableAlterColumnsResponse alterTableAlterColumnsResponse = (AlterTableAlterColumnsResponse) o;
+    AlterTableAlterColumnsResponse alterTableAlterColumnsResponse =
+        (AlterTableAlterColumnsResponse) o;
     return Objects.equals(this.version, alterTableAlterColumnsResponse.version);
   }
 
@@ -82,8 +91,7 @@ public class AlterTableAlterColumnsResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -92,4 +100,3 @@ public class AlterTableAlterColumnsResponse {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

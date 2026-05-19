@@ -1,36 +1,39 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import org.lance.namespace.server.springboot.model.JsonArrowDataType;
-import org.lance.namespace.server.springboot.model.PartitionTransform;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-/**
- * Partition field definition
- */
-
+/** Partition field definition */
 @Schema(name = "PartitionField", description = "Partition field definition")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class PartitionField {
 
   private String fieldId;
 
-  @Valid
-  private List<Integer> sourceIds = new ArrayList<>();
+  @Valid private List<Integer> sourceIds = new ArrayList<>();
 
   private PartitionTransform transform;
 
@@ -42,9 +45,7 @@ public class PartitionField {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public PartitionField(String fieldId, List<Integer> sourceIds, JsonArrowDataType resultType) {
     this.fieldId = fieldId;
     this.sourceIds = sourceIds;
@@ -58,10 +59,15 @@ public class PartitionField {
 
   /**
    * Unique identifier for this partition field (must not be renamed)
+   *
    * @return fieldId
    */
-  @NotNull 
-  @Schema(name = "field_id", example = "event_year", description = "Unique identifier for this partition field (must not be renamed)", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Schema(
+      name = "field_id",
+      example = "event_year",
+      description = "Unique identifier for this partition field (must not be renamed)",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("field_id")
   public String getFieldId() {
     return fieldId;
@@ -86,10 +92,15 @@ public class PartitionField {
 
   /**
    * Field IDs of the source columns in the schema
+   *
    * @return sourceIds
    */
-  @NotNull 
-  @Schema(name = "source_ids", example = "[1]", description = "Field IDs of the source columns in the schema", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Schema(
+      name = "source_ids",
+      example = "[1]",
+      description = "Field IDs of the source columns in the schema",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("source_ids")
   public List<Integer> getSourceIds() {
     return sourceIds;
@@ -106,10 +117,15 @@ public class PartitionField {
 
   /**
    * Well-known partition transform. Exactly one of transform or expression must be specified.
+   *
    * @return transform
    */
-  @Valid 
-  @Schema(name = "transform", description = "Well-known partition transform. Exactly one of transform or expression must be specified.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Valid
+  @Schema(
+      name = "transform",
+      description =
+          "Well-known partition transform. Exactly one of transform or expression must be specified.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("transform")
   public PartitionTransform getTransform() {
     return transform;
@@ -125,11 +141,17 @@ public class PartitionField {
   }
 
   /**
-   * DataFusion SQL expression using col0, col1, ... as column references. Exactly one of transform or expression must be specified.
+   * DataFusion SQL expression using col0, col1, ... as column references. Exactly one of transform
+   * or expression must be specified.
+   *
    * @return expression
    */
-  
-  @Schema(name = "expression", example = "date_part('year', col0)", description = "DataFusion SQL expression using col0, col1, ... as column references. Exactly one of transform or expression must be specified.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "expression",
+      example = "date_part('year', col0)",
+      description =
+          "DataFusion SQL expression using col0, col1, ... as column references. Exactly one of transform or expression must be specified.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("expression")
   public String getExpression() {
     return expression;
@@ -146,10 +168,16 @@ public class PartitionField {
 
   /**
    * The output type of the partition value (JsonArrowDataType format)
+   *
    * @return resultType
    */
-  @NotNull @Valid 
-  @Schema(name = "result_type", example = "{type=int32}", description = "The output type of the partition value (JsonArrowDataType format)", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Valid
+  @Schema(
+      name = "result_type",
+      example = "{type=int32}",
+      description = "The output type of the partition value (JsonArrowDataType format)",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("result_type")
   public JsonArrowDataType getResultType() {
     return resultType;
@@ -168,11 +196,11 @@ public class PartitionField {
       return false;
     }
     PartitionField partitionField = (PartitionField) o;
-    return Objects.equals(this.fieldId, partitionField.fieldId) &&
-        Objects.equals(this.sourceIds, partitionField.sourceIds) &&
-        Objects.equals(this.transform, partitionField.transform) &&
-        Objects.equals(this.expression, partitionField.expression) &&
-        Objects.equals(this.resultType, partitionField.resultType);
+    return Objects.equals(this.fieldId, partitionField.fieldId)
+        && Objects.equals(this.sourceIds, partitionField.sourceIds)
+        && Objects.equals(this.transform, partitionField.transform)
+        && Objects.equals(this.expression, partitionField.expression)
+        && Objects.equals(this.resultType, partitionField.resultType);
   }
 
   @Override
@@ -194,8 +222,7 @@ public class PartitionField {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -204,4 +231,3 @@ public class PartitionField {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

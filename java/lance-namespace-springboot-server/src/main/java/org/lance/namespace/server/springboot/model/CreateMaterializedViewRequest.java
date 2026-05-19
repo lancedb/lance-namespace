@@ -1,45 +1,52 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import org.lance.namespace.server.springboot.model.Identity;
-import org.lance.namespace.server.springboot.model.MaterializedViewUdtfEntry;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
+import org.springframework.lang.Nullable;
 
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-/**
- * CreateMaterializedViewRequest
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+/** CreateMaterializedViewRequest */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class CreateMaterializedViewRequest {
 
   private Identity identity;
 
-  @Valid
-  private List<String> id = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   /**
-   * The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker`, aka 'scalar_udtf' — chunker view (1:N row expansion, incremental refresh). 
+   * The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` —
+   * batch UDTF-backed view (N:M rows, full refresh). - `chunker`, aka 'scalar_udtf' — chunker view
+   * (1:N row expansion, incremental refresh).
    */
   public enum KindEnum {
     QUERY("query"),
-    
+
     UDTF("udtf"),
-    
+
     CHUNKER("chunker");
 
     private String value;
@@ -85,9 +92,7 @@ public class CreateMaterializedViewRequest {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public CreateMaterializedViewRequest(KindEnum kind, String sourceQuery, String outputSchema) {
     this.kind = kind;
     this.sourceQuery = sourceQuery;
@@ -101,9 +106,10 @@ public class CreateMaterializedViewRequest {
 
   /**
    * Get identity
+   *
    * @return identity
    */
-  @Valid 
+  @Valid
   @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("identity")
   public Identity getIdentity() {
@@ -129,10 +135,13 @@ public class CreateMaterializedViewRequest {
 
   /**
    * View identifier path (namespace + view name)
+   *
    * @return id
    */
-  
-  @Schema(name = "id", description = "View identifier path (namespace + view name)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "id",
+      description = "View identifier path (namespace + view name)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
     return id;
@@ -148,11 +157,18 @@ public class CreateMaterializedViewRequest {
   }
 
   /**
-   * The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker`, aka 'scalar_udtf' — chunker view (1:N row expansion, incremental refresh). 
+   * The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` —
+   * batch UDTF-backed view (N:M rows, full refresh). - `chunker`, aka 'scalar_udtf' — chunker view
+   * (1:N row expansion, incremental refresh).
+   *
    * @return kind
    */
-  @NotNull 
-  @Schema(name = "kind", description = "The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker`, aka 'scalar_udtf' — chunker view (1:N row expansion, incremental refresh). ", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Schema(
+      name = "kind",
+      description =
+          "The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker`, aka 'scalar_udtf' — chunker view (1:N row expansion, incremental refresh). ",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("kind")
   public KindEnum getKind() {
     return kind;
@@ -168,11 +184,17 @@ public class CreateMaterializedViewRequest {
   }
 
   /**
-   * Opaque serialized representation of the source query that defines the view's input. The format is defined by the client; the namespace server stores it without interpreting it. 
+   * Opaque serialized representation of the source query that defines the view's input. The format
+   * is defined by the client; the namespace server stores it without interpreting it.
+   *
    * @return sourceQuery
    */
-  @NotNull 
-  @Schema(name = "source_query", description = "Opaque serialized representation of the source query that defines the view's input. The format is defined by the client; the namespace server stores it without interpreting it. ", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Schema(
+      name = "source_query",
+      description =
+          "Opaque serialized representation of the source query that defines the view's input. The format is defined by the client; the namespace server stores it without interpreting it. ",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("source_query")
   public String getSourceQuery() {
     return sourceQuery;
@@ -189,10 +211,14 @@ public class CreateMaterializedViewRequest {
 
   /**
    * Base64-encoded Arrow schema of the view output
+   *
    * @return outputSchema
    */
-  @NotNull 
-  @Schema(name = "output_schema", description = "Base64-encoded Arrow schema of the view output", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Schema(
+      name = "output_schema",
+      description = "Base64-encoded Arrow schema of the view output",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("output_schema")
   public String getOutputSchema() {
     return outputSchema;
@@ -209,9 +235,10 @@ public class CreateMaterializedViewRequest {
 
   /**
    * Get udtfSpec
+   *
    * @return udtfSpec
    */
-  @Valid 
+  @Valid
   @Schema(name = "udtf_spec", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("udtf_spec")
   public MaterializedViewUdtfEntry getUdtfSpec() {
@@ -228,11 +255,16 @@ public class CreateMaterializedViewRequest {
   }
 
   /**
-   * If false, the server kicks off an initial refresh immediately after creating the view and the response includes a job ID. 
+   * If false, the server kicks off an initial refresh immediately after creating the view and the
+   * response includes a job ID.
+   *
    * @return withNoData
    */
-  
-  @Schema(name = "with_no_data", description = "If false, the server kicks off an initial refresh immediately after creating the view and the response includes a job ID. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "with_no_data",
+      description =
+          "If false, the server kicks off an initial refresh immediately after creating the view and the response includes a job ID. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("with_no_data")
   public Boolean getWithNoData() {
     return withNoData;
@@ -248,11 +280,17 @@ public class CreateMaterializedViewRequest {
   }
 
   /**
-   * If true, the view is automatically refreshed when source-table data changes past the deployment-level threshold. Boolean opt-in only; the threshold and cooldown are configured on the deployment, not per-view. 
+   * If true, the view is automatically refreshed when source-table data changes past the
+   * deployment-level threshold. Boolean opt-in only; the threshold and cooldown are configured on
+   * the deployment, not per-view.
+   *
    * @return autoRefresh
    */
-  
-  @Schema(name = "auto_refresh", description = "If true, the view is automatically refreshed when source-table data changes past the deployment-level threshold. Boolean opt-in only; the threshold and cooldown are configured on the deployment, not per-view. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "auto_refresh",
+      description =
+          "If true, the view is automatically refreshed when source-table data changes past the deployment-level threshold. Boolean opt-in only; the threshold and cooldown are configured on the deployment, not per-view. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("auto_refresh")
   public Boolean getAutoRefresh() {
     return autoRefresh;
@@ -271,19 +309,20 @@ public class CreateMaterializedViewRequest {
       return false;
     }
     CreateMaterializedViewRequest createMaterializedViewRequest = (CreateMaterializedViewRequest) o;
-    return Objects.equals(this.identity, createMaterializedViewRequest.identity) &&
-        Objects.equals(this.id, createMaterializedViewRequest.id) &&
-        Objects.equals(this.kind, createMaterializedViewRequest.kind) &&
-        Objects.equals(this.sourceQuery, createMaterializedViewRequest.sourceQuery) &&
-        Objects.equals(this.outputSchema, createMaterializedViewRequest.outputSchema) &&
-        Objects.equals(this.udtfSpec, createMaterializedViewRequest.udtfSpec) &&
-        Objects.equals(this.withNoData, createMaterializedViewRequest.withNoData) &&
-        Objects.equals(this.autoRefresh, createMaterializedViewRequest.autoRefresh);
+    return Objects.equals(this.identity, createMaterializedViewRequest.identity)
+        && Objects.equals(this.id, createMaterializedViewRequest.id)
+        && Objects.equals(this.kind, createMaterializedViewRequest.kind)
+        && Objects.equals(this.sourceQuery, createMaterializedViewRequest.sourceQuery)
+        && Objects.equals(this.outputSchema, createMaterializedViewRequest.outputSchema)
+        && Objects.equals(this.udtfSpec, createMaterializedViewRequest.udtfSpec)
+        && Objects.equals(this.withNoData, createMaterializedViewRequest.withNoData)
+        && Objects.equals(this.autoRefresh, createMaterializedViewRequest.autoRefresh);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, kind, sourceQuery, outputSchema, udtfSpec, withNoData, autoRefresh);
+    return Objects.hash(
+        identity, id, kind, sourceQuery, outputSchema, udtfSpec, withNoData, autoRefresh);
   }
 
   @Override
@@ -303,8 +342,7 @@ public class CreateMaterializedViewRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -313,4 +351,3 @@ public class CreateMaterializedViewRequest {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

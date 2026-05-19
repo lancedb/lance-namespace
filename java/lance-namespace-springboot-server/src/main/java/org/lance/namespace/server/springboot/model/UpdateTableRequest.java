@@ -1,56 +1,61 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+
+import java.util.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.lance.namespace.server.springboot.model.Identity;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.Objects;
 
 /**
- * Each update consists of a column name and an SQL expression that will be evaluated against the current row&#39;s value. Optionally, a predicate can be provided to filter which rows to update. 
+ * Each update consists of a column name and an SQL expression that will be evaluated against the
+ * current row&#39;s value. Optionally, a predicate can be provided to filter which rows to update.
  */
-
-@Schema(name = "UpdateTableRequest", description = "Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. ")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+@Schema(
+    name = "UpdateTableRequest",
+    description =
+        "Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. ")
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class UpdateTableRequest {
 
   private Identity identity;
 
-  @Valid
-  private Map<String, String> context = new HashMap<>();
+  @Valid private Map<String, String> context = new HashMap<>();
 
-  @Valid
-  private List<String> id = new ArrayList<>();
+  @Valid private List<String> id = new ArrayList<>();
 
   private String predicate;
 
-  @Valid
-  private List<List<String>> updates = new ArrayList<>();
+  @Valid private List<List<String>> updates = new ArrayList<>();
 
-  @Valid
-  private Map<String, String> properties = new HashMap<>();
+  @Valid private Map<String, String> properties = new HashMap<>();
 
   public UpdateTableRequest() {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public UpdateTableRequest(List<List<String>> updates) {
     this.updates = updates;
   }
@@ -62,9 +67,10 @@ public class UpdateTableRequest {
 
   /**
    * Get identity
+   *
    * @return identity
    */
-  @Valid 
+  @Valid
   @Schema(name = "identity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("identity")
   public Identity getIdentity() {
@@ -89,11 +95,18 @@ public class UpdateTableRequest {
   }
 
   /**
-   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. 
+   * Arbitrary context for a request as key-value pairs. How to use the context is custom to the
+   * specific implementation. REST NAMESPACE ONLY Context entries are passed via HTTP headers using
+   * the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry
+   * `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+   *
    * @return context
    */
-  
-  @Schema(name = "context", description = "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "context",
+      description =
+          "Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("context")
   public Map<String, String> getContext() {
     return context;
@@ -118,9 +131,9 @@ public class UpdateTableRequest {
 
   /**
    * Get id
+   *
    * @return id
    */
-  
   @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public List<String> getId() {
@@ -138,10 +151,13 @@ public class UpdateTableRequest {
 
   /**
    * Optional SQL predicate to filter rows for update
+   *
    * @return predicate
    */
-  
-  @Schema(name = "predicate", description = "Optional SQL predicate to filter rows for update", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "predicate",
+      description = "Optional SQL predicate to filter rows for update",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("predicate")
   public String getPredicate() {
     return predicate;
@@ -166,10 +182,15 @@ public class UpdateTableRequest {
 
   /**
    * List of column updates as [column_name, expression] pairs
+   *
    * @return updates
    */
-  @NotNull @Valid 
-  @Schema(name = "updates", description = "List of column updates as [column_name, expression] pairs", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Valid
+  @Schema(
+      name = "updates",
+      description = "List of column updates as [column_name, expression] pairs",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("updates")
   public List<List<String>> getUpdates() {
     return updates;
@@ -193,11 +214,14 @@ public class UpdateTableRequest {
   }
 
   /**
-   * Properties stored on the table, if supported by the implementation. 
+   * Properties stored on the table, if supported by the implementation.
+   *
    * @return properties
    */
-  
-  @Schema(name = "properties", description = "Properties stored on the table, if supported by the implementation. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "properties",
+      description = "Properties stored on the table, if supported by the implementation. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("properties")
   public Map<String, String> getProperties() {
     return properties;
@@ -216,12 +240,12 @@ public class UpdateTableRequest {
       return false;
     }
     UpdateTableRequest updateTableRequest = (UpdateTableRequest) o;
-    return Objects.equals(this.identity, updateTableRequest.identity) &&
-        Objects.equals(this.context, updateTableRequest.context) &&
-        Objects.equals(this.id, updateTableRequest.id) &&
-        Objects.equals(this.predicate, updateTableRequest.predicate) &&
-        Objects.equals(this.updates, updateTableRequest.updates) &&
-        Objects.equals(this.properties, updateTableRequest.properties);
+    return Objects.equals(this.identity, updateTableRequest.identity)
+        && Objects.equals(this.context, updateTableRequest.context)
+        && Objects.equals(this.id, updateTableRequest.id)
+        && Objects.equals(this.predicate, updateTableRequest.predicate)
+        && Objects.equals(this.updates, updateTableRequest.updates)
+        && Objects.equals(this.properties, updateTableRequest.properties);
   }
 
   @Override
@@ -244,8 +268,7 @@ public class UpdateTableRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -254,4 +277,3 @@ public class UpdateTableRequest {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

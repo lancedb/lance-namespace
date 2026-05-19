@@ -1,35 +1,40 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-/**
- * IndexContent
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+/** IndexContent */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class IndexContent {
 
   private String indexName;
 
   private String indexUuid;
 
-  @Valid
-  private List<String> columns = new ArrayList<>();
+  @Valid private List<String> columns = new ArrayList<>();
 
   private String status;
 
@@ -37,9 +42,7 @@ public class IndexContent {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public IndexContent(String indexName, String indexUuid, List<String> columns, String status) {
     this.indexName = indexName;
     this.indexUuid = indexUuid;
@@ -54,10 +57,14 @@ public class IndexContent {
 
   /**
    * Name of the index
+   *
    * @return indexName
    */
-  @NotNull 
-  @Schema(name = "index_name", description = "Name of the index", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Schema(
+      name = "index_name",
+      description = "Name of the index",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("index_name")
   public String getIndexName() {
     return indexName;
@@ -74,10 +81,14 @@ public class IndexContent {
 
   /**
    * Unique identifier for the index
+   *
    * @return indexUuid
    */
-  @NotNull 
-  @Schema(name = "index_uuid", description = "Unique identifier for the index", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Schema(
+      name = "index_uuid",
+      description = "Unique identifier for the index",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("index_uuid")
   public String getIndexUuid() {
     return indexUuid;
@@ -102,10 +113,14 @@ public class IndexContent {
 
   /**
    * Columns covered by this index
+   *
    * @return columns
    */
-  @NotNull 
-  @Schema(name = "columns", description = "Columns covered by this index", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Schema(
+      name = "columns",
+      description = "Columns covered by this index",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("columns")
   public List<String> getColumns() {
     return columns;
@@ -122,10 +137,14 @@ public class IndexContent {
 
   /**
    * Current status of the index
+   *
    * @return status
    */
-  @NotNull 
-  @Schema(name = "status", description = "Current status of the index", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Schema(
+      name = "status",
+      description = "Current status of the index",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public String getStatus() {
     return status;
@@ -144,10 +163,10 @@ public class IndexContent {
       return false;
     }
     IndexContent indexContent = (IndexContent) o;
-    return Objects.equals(this.indexName, indexContent.indexName) &&
-        Objects.equals(this.indexUuid, indexContent.indexUuid) &&
-        Objects.equals(this.columns, indexContent.columns) &&
-        Objects.equals(this.status, indexContent.status);
+    return Objects.equals(this.indexName, indexContent.indexName)
+        && Objects.equals(this.indexUuid, indexContent.indexUuid)
+        && Objects.equals(this.columns, indexContent.columns)
+        && Objects.equals(this.status, indexContent.status);
   }
 
   @Override
@@ -168,8 +187,7 @@ public class IndexContent {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -178,4 +196,3 @@ public class IndexContent {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

@@ -1,24 +1,30 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import jakarta.annotation.Generated;
+import jakarta.validation.constraints.*;
 
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.Objects;
 
-/**
- * AlterTableDropColumnsResponse
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+/** AlterTableDropColumnsResponse */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class AlterTableDropColumnsResponse {
 
   private String transactionId;
@@ -29,9 +35,7 @@ public class AlterTableDropColumnsResponse {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public AlterTableDropColumnsResponse(Long version) {
     this.version = version;
   }
@@ -43,10 +47,13 @@ public class AlterTableDropColumnsResponse {
 
   /**
    * Optional transaction identifier
+   *
    * @return transactionId
    */
-  
-  @Schema(name = "transaction_id", description = "Optional transaction identifier", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "transaction_id",
+      description = "Optional transaction identifier",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("transaction_id")
   public String getTransactionId() {
     return transactionId;
@@ -62,12 +69,16 @@ public class AlterTableDropColumnsResponse {
   }
 
   /**
-   * Version of the table after dropping columns
-   * minimum: 0
+   * Version of the table after dropping columns minimum: 0
+   *
    * @return version
    */
-  @NotNull @Min(0L) 
-  @Schema(name = "version", description = "Version of the table after dropping columns", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Min(0L)
+  @Schema(
+      name = "version",
+      description = "Version of the table after dropping columns",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("version")
   public Long getVersion() {
     return version;
@@ -86,8 +97,8 @@ public class AlterTableDropColumnsResponse {
       return false;
     }
     AlterTableDropColumnsResponse alterTableDropColumnsResponse = (AlterTableDropColumnsResponse) o;
-    return Objects.equals(this.transactionId, alterTableDropColumnsResponse.transactionId) &&
-        Objects.equals(this.version, alterTableDropColumnsResponse.version);
+    return Objects.equals(this.transactionId, alterTableDropColumnsResponse.transactionId)
+        && Objects.equals(this.version, alterTableDropColumnsResponse.version);
   }
 
   @Override
@@ -106,8 +117,7 @@ public class AlterTableDropColumnsResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -116,4 +126,3 @@ public class AlterTableDropColumnsResponse {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

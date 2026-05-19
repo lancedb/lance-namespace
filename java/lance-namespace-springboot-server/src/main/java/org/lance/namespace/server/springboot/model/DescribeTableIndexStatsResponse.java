@@ -1,24 +1,30 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import jakarta.annotation.Generated;
+import jakarta.validation.constraints.*;
 
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.Objects;
 
-/**
- * DescribeTableIndexStatsResponse
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+/** DescribeTableIndexStatsResponse */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class DescribeTableIndexStatsResponse {
 
   private String distanceType;
@@ -38,10 +44,13 @@ public class DescribeTableIndexStatsResponse {
 
   /**
    * Distance type for vector indexes
+   *
    * @return distanceType
    */
-  
-  @Schema(name = "distance_type", description = "Distance type for vector indexes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "distance_type",
+      description = "Distance type for vector indexes",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("distance_type")
   public String getDistanceType() {
     return distanceType;
@@ -58,10 +67,13 @@ public class DescribeTableIndexStatsResponse {
 
   /**
    * Type of the index
+   *
    * @return indexType
    */
-  
-  @Schema(name = "index_type", description = "Type of the index", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "index_type",
+      description = "Type of the index",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("index_type")
   public String getIndexType() {
     return indexType;
@@ -77,12 +89,15 @@ public class DescribeTableIndexStatsResponse {
   }
 
   /**
-   * Number of indexed rows
-   * minimum: 0
+   * Number of indexed rows minimum: 0
+   *
    * @return numIndexedRows
    */
-  @Min(0L) 
-  @Schema(name = "num_indexed_rows", description = "Number of indexed rows", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0L)
+  @Schema(
+      name = "num_indexed_rows",
+      description = "Number of indexed rows",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("num_indexed_rows")
   public Long getNumIndexedRows() {
     return numIndexedRows;
@@ -98,12 +113,15 @@ public class DescribeTableIndexStatsResponse {
   }
 
   /**
-   * Number of unindexed rows
-   * minimum: 0
+   * Number of unindexed rows minimum: 0
+   *
    * @return numUnindexedRows
    */
-  @Min(0L) 
-  @Schema(name = "num_unindexed_rows", description = "Number of unindexed rows", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0L)
+  @Schema(
+      name = "num_unindexed_rows",
+      description = "Number of unindexed rows",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("num_unindexed_rows")
   public Long getNumUnindexedRows() {
     return numUnindexedRows;
@@ -119,12 +137,15 @@ public class DescribeTableIndexStatsResponse {
   }
 
   /**
-   * Number of indices
-   * minimum: 0
+   * Number of indices minimum: 0
+   *
    * @return numIndices
    */
-  @Min(0) 
-  @Schema(name = "num_indices", description = "Number of indices", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0)
+  @Schema(
+      name = "num_indices",
+      description = "Number of indices",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("num_indices")
   public Integer getNumIndices() {
     return numIndices;
@@ -142,12 +163,13 @@ public class DescribeTableIndexStatsResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    DescribeTableIndexStatsResponse describeTableIndexStatsResponse = (DescribeTableIndexStatsResponse) o;
-    return Objects.equals(this.distanceType, describeTableIndexStatsResponse.distanceType) &&
-        Objects.equals(this.indexType, describeTableIndexStatsResponse.indexType) &&
-        Objects.equals(this.numIndexedRows, describeTableIndexStatsResponse.numIndexedRows) &&
-        Objects.equals(this.numUnindexedRows, describeTableIndexStatsResponse.numUnindexedRows) &&
-        Objects.equals(this.numIndices, describeTableIndexStatsResponse.numIndices);
+    DescribeTableIndexStatsResponse describeTableIndexStatsResponse =
+        (DescribeTableIndexStatsResponse) o;
+    return Objects.equals(this.distanceType, describeTableIndexStatsResponse.distanceType)
+        && Objects.equals(this.indexType, describeTableIndexStatsResponse.indexType)
+        && Objects.equals(this.numIndexedRows, describeTableIndexStatsResponse.numIndexedRows)
+        && Objects.equals(this.numUnindexedRows, describeTableIndexStatsResponse.numUnindexedRows)
+        && Objects.equals(this.numIndices, describeTableIndexStatsResponse.numIndices);
   }
 
   @Override
@@ -169,8 +191,7 @@ public class DescribeTableIndexStatsResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -179,4 +200,3 @@ public class DescribeTableIndexStatsResponse {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

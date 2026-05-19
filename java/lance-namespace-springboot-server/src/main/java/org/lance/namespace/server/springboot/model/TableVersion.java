@@ -1,26 +1,33 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.lance.namespace.server.springboot.model;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.HashMap;
-import java.util.Map;
-import org.springframework.lang.Nullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-/**
- * TableVersion
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0")
+/** TableVersion */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    comments = "Generator version: 7.12.0")
 public class TableVersion {
 
   private Long version;
@@ -33,16 +40,13 @@ public class TableVersion {
 
   private Long timestampMillis;
 
-  @Valid
-  private Map<String, String> metadata = new HashMap<>();
+  @Valid private Map<String, String> metadata = new HashMap<>();
 
   public TableVersion() {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public TableVersion(Long version, String manifestPath) {
     this.version = version;
     this.manifestPath = manifestPath;
@@ -54,12 +58,16 @@ public class TableVersion {
   }
 
   /**
-   * Version number
-   * minimum: 0
+   * Version number minimum: 0
+   *
    * @return version
    */
-  @NotNull @Min(0L) 
-  @Schema(name = "version", description = "Version number", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Min(0L)
+  @Schema(
+      name = "version",
+      description = "Version number",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("version")
   public Long getVersion() {
     return version;
@@ -76,10 +84,14 @@ public class TableVersion {
 
   /**
    * Path to the manifest file for this version.
+   *
    * @return manifestPath
    */
-  @NotNull 
-  @Schema(name = "manifest_path", description = "Path to the manifest file for this version.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull
+  @Schema(
+      name = "manifest_path",
+      description = "Path to the manifest file for this version.",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("manifest_path")
   public String getManifestPath() {
     return manifestPath;
@@ -95,12 +107,15 @@ public class TableVersion {
   }
 
   /**
-   * Size of the manifest file in bytes
-   * minimum: 0
+   * Size of the manifest file in bytes minimum: 0
+   *
    * @return manifestSize
    */
-  @Min(0L) 
-  @Schema(name = "manifest_size", description = "Size of the manifest file in bytes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Min(0L)
+  @Schema(
+      name = "manifest_size",
+      description = "Size of the manifest file in bytes",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("manifest_size")
   public Long getManifestSize() {
     return manifestSize;
@@ -116,11 +131,15 @@ public class TableVersion {
   }
 
   /**
-   * Optional ETag for optimistic concurrency control. Useful for S3 and similar object stores. 
+   * Optional ETag for optimistic concurrency control. Useful for S3 and similar object stores.
+   *
    * @return eTag
    */
-  
-  @Schema(name = "e_tag", description = "Optional ETag for optimistic concurrency control. Useful for S3 and similar object stores. ", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "e_tag",
+      description =
+          "Optional ETag for optimistic concurrency control. Useful for S3 and similar object stores. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("e_tag")
   public String geteTag() {
     return eTag;
@@ -137,10 +156,14 @@ public class TableVersion {
 
   /**
    * Timestamp when the version was created, in milliseconds since epoch (Unix time)
+   *
    * @return timestampMillis
    */
-  
-  @Schema(name = "timestamp_millis", description = "Timestamp when the version was created, in milliseconds since epoch (Unix time)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "timestamp_millis",
+      description =
+          "Timestamp when the version was created, in milliseconds since epoch (Unix time)",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("timestamp_millis")
   public Long getTimestampMillis() {
     return timestampMillis;
@@ -165,10 +188,13 @@ public class TableVersion {
 
   /**
    * Optional key-value pairs of metadata
+   *
    * @return metadata
    */
-  
-  @Schema(name = "metadata", description = "Optional key-value pairs of metadata", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "metadata",
+      description = "Optional key-value pairs of metadata",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("metadata")
   public Map<String, String> getMetadata() {
     return metadata;
@@ -187,12 +213,12 @@ public class TableVersion {
       return false;
     }
     TableVersion tableVersion = (TableVersion) o;
-    return Objects.equals(this.version, tableVersion.version) &&
-        Objects.equals(this.manifestPath, tableVersion.manifestPath) &&
-        Objects.equals(this.manifestSize, tableVersion.manifestSize) &&
-        Objects.equals(this.eTag, tableVersion.eTag) &&
-        Objects.equals(this.timestampMillis, tableVersion.timestampMillis) &&
-        Objects.equals(this.metadata, tableVersion.metadata);
+    return Objects.equals(this.version, tableVersion.version)
+        && Objects.equals(this.manifestPath, tableVersion.manifestPath)
+        && Objects.equals(this.manifestSize, tableVersion.manifestSize)
+        && Objects.equals(this.eTag, tableVersion.eTag)
+        && Objects.equals(this.timestampMillis, tableVersion.timestampMillis)
+        && Objects.equals(this.metadata, tableVersion.metadata);
   }
 
   @Override
@@ -215,8 +241,7 @@ public class TableVersion {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -225,4 +250,3 @@ public class TableVersion {
     return o.toString().replace("\n", "\n    ");
   }
 }
-
