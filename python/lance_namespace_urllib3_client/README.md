@@ -117,20 +117,22 @@ Class | Method | HTTP request | Description
 *DataApi* | [**alter_table_backfill_columns**](docs/DataApi.md#alter_table_backfill_columns) | **POST** /v1/table/{id}/backfill_column | Trigger an async column backfill job
 *DataApi* | [**analyze_table_query_plan**](docs/DataApi.md#analyze_table_query_plan) | **POST** /v1/table/{id}/analyze_plan | Analyze query execution plan
 *DataApi* | [**count_table_rows**](docs/DataApi.md#count_table_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
-*DataApi* | [**create_materialized_view**](docs/DataApi.md#create_materialized_view) | **POST** /v1/table/{id}/create_materialized_view | Create a materialized view
+*DataApi* | [**create_materialized_view**](docs/DataApi.md#create_materialized_view) | **POST** /v1/materialized_view/{id}/create | Create a materialized view
 *DataApi* | [**create_table**](docs/DataApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 *DataApi* | [**delete_from_table**](docs/DataApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
 *DataApi* | [**explain_table_query_plan**](docs/DataApi.md#explain_table_query_plan) | **POST** /v1/table/{id}/explain_plan | Get query execution plan explanation
 *DataApi* | [**insert_into_table**](docs/DataApi.md#insert_into_table) | **POST** /v1/table/{id}/insert | Insert records into a table
 *DataApi* | [**merge_insert_into_table**](docs/DataApi.md#merge_insert_into_table) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 *DataApi* | [**query_table**](docs/DataApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
-*DataApi* | [**refresh_materialized_view**](docs/DataApi.md#refresh_materialized_view) | **POST** /v1/table/{id}/refresh | Trigger an async materialized view refresh
+*DataApi* | [**refresh_materialized_view**](docs/DataApi.md#refresh_materialized_view) | **POST** /v1/materialized_view/{id}/refresh | Trigger an async materialized view refresh
 *DataApi* | [**update_table**](docs/DataApi.md#update_table) | **POST** /v1/table/{id}/update | Update rows in a table
 *IndexApi* | [**create_table_index**](docs/IndexApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
 *IndexApi* | [**create_table_scalar_index**](docs/IndexApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *IndexApi* | [**describe_table_index_stats**](docs/IndexApi.md#describe_table_index_stats) | **POST** /v1/table/{id}/index/{index_name}/stats | Get table index statistics
 *IndexApi* | [**drop_table_index**](docs/IndexApi.md#drop_table_index) | **POST** /v1/table/{id}/index/{index_name}/drop | Drop a specific index
 *IndexApi* | [**list_table_indices**](docs/IndexApi.md#list_table_indices) | **POST** /v1/table/{id}/index/list | List indexes on a table
+*MaterializedViewApi* | [**create_materialized_view**](docs/MaterializedViewApi.md#create_materialized_view) | **POST** /v1/materialized_view/{id}/create | Create a materialized view
+*MaterializedViewApi* | [**refresh_materialized_view**](docs/MaterializedViewApi.md#refresh_materialized_view) | **POST** /v1/materialized_view/{id}/refresh | Trigger an async materialized view refresh
 *MetadataApi* | [**alter_table_alter_columns**](docs/MetadataApi.md#alter_table_alter_columns) | **POST** /v1/table/{id}/alter_columns | Modify existing columns
 *MetadataApi* | [**alter_table_drop_columns**](docs/MetadataApi.md#alter_table_drop_columns) | **POST** /v1/table/{id}/drop_columns | Remove columns from table
 *MetadataApi* | [**alter_transaction**](docs/MetadataApi.md#alter_transaction) | **POST** /v1/transaction/{id}/alter | Alter information of a transaction.
@@ -182,7 +184,6 @@ Class | Method | HTTP request | Description
 *TableApi* | [**batch_create_table_versions**](docs/TableApi.md#batch_create_table_versions) | **POST** /v1/table/version/batch-create | Atomically create versions for multiple tables
 *TableApi* | [**batch_delete_table_versions**](docs/TableApi.md#batch_delete_table_versions) | **POST** /v1/table/{id}/version/delete | Delete table version records
 *TableApi* | [**count_table_rows**](docs/TableApi.md#count_table_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
-*TableApi* | [**create_materialized_view**](docs/TableApi.md#create_materialized_view) | **POST** /v1/table/{id}/create_materialized_view | Create a materialized view
 *TableApi* | [**create_table**](docs/TableApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 *TableApi* | [**create_table_index**](docs/TableApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
 *TableApi* | [**create_table_scalar_index**](docs/TableApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
@@ -208,7 +209,6 @@ Class | Method | HTTP request | Description
 *TableApi* | [**list_tables**](docs/TableApi.md#list_tables) | **GET** /v1/namespace/{id}/table/list | List tables in a namespace
 *TableApi* | [**merge_insert_into_table**](docs/TableApi.md#merge_insert_into_table) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 *TableApi* | [**query_table**](docs/TableApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
-*TableApi* | [**refresh_materialized_view**](docs/TableApi.md#refresh_materialized_view) | **POST** /v1/table/{id}/refresh | Trigger an async materialized view refresh
 *TableApi* | [**register_table**](docs/TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
 *TableApi* | [**rename_table**](docs/TableApi.md#rename_table) | **POST** /v1/table/{id}/rename | Rename a table
 *TableApi* | [**restore_table**](docs/TableApi.md#restore_table) | **POST** /v1/table/{id}/restore | Restore table to a specific version

@@ -13,7 +13,6 @@ Method | HTTP request | Description
 [**batch_create_table_versions**](TableApi.md#batch_create_table_versions) | **POST** /v1/table/version/batch-create | Atomically create versions for multiple tables
 [**batch_delete_table_versions**](TableApi.md#batch_delete_table_versions) | **POST** /v1/table/{id}/version/delete | Delete table version records
 [**count_table_rows**](TableApi.md#count_table_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
-[**create_materialized_view**](TableApi.md#create_materialized_view) | **POST** /v1/table/{id}/create_materialized_view | Create a materialized view
 [**create_table**](TableApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 [**create_table_index**](TableApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
 [**create_table_scalar_index**](TableApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
@@ -39,7 +38,6 @@ Method | HTTP request | Description
 [**list_tables**](TableApi.md#list_tables) | **GET** /v1/namespace/{id}/table/list | List tables in a namespace
 [**merge_insert_into_table**](TableApi.md#merge_insert_into_table) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 [**query_table**](TableApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
-[**refresh_materialized_view**](TableApi.md#refresh_materialized_view) | **POST** /v1/table/{id}/refresh | Trigger an async materialized view refresh
 [**register_table**](TableApi.md#register_table) | **POST** /v1/table/{id}/register | Register a table to a namespace
 [**rename_table**](TableApi.md#rename_table) | **POST** /v1/table/{id}/rename | Rename a table
 [**restore_table**](TableApi.md#restore_table) | **POST** /v1/table/{id}/restore | Restore table to a specific version
@@ -323,38 +321,6 @@ Name | Type | Description  | Required | Notes
 ### Return type
 
 **i64**
-
-### Authorization
-
-[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-
-## create_materialized_view
-
-> models::CreateMaterializedViewResponse create_materialized_view(id, create_materialized_view_request, delimiter)
-Create a materialized view
-
-Create a materialized view at table identifier `id`. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the `kind` discriminator. 
-
-### Parameters
-
-
-Name | Type | Description  | Required | Notes
-------------- | ------------- | ------------- | ------------- | -------------
-**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
-**create_materialized_view_request** | [**CreateMaterializedViewRequest**](CreateMaterializedViewRequest.md) |  | [required] |
-**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
-
-### Return type
-
-[**models::CreateMaterializedViewResponse**](CreateMaterializedViewResponse.md)
 
 ### Authorization
 
@@ -1185,38 +1151,6 @@ Name | Type | Description  | Required | Notes
 
 - **Content-Type**: application/json
 - **Accept**: application/vnd.apache.arrow.file, application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-
-## refresh_materialized_view
-
-> models::RefreshMaterializedViewResponse refresh_materialized_view(id, delimiter, refresh_materialized_view_request)
-Trigger an async materialized view refresh
-
-Trigger an asynchronous refresh job for a materialized view backed by table `id`. Returns a job ID for tracking. 
-
-### Parameters
-
-
-Name | Type | Description  | Required | Notes
-------------- | ------------- | ------------- | ------------- | -------------
-**id** | **String** | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  | [required] |
-**delimiter** | Option<**String**> | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  |  |
-**refresh_materialized_view_request** | Option<[**RefreshMaterializedViewRequest**](RefreshMaterializedViewRequest.md)> |  |  |
-
-### Return type
-
-[**models::RefreshMaterializedViewResponse**](RefreshMaterializedViewResponse.md)
-
-### Authorization
-
-[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

@@ -1846,13 +1846,13 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
-  /v1/table/{id}/refresh:
+  /v1/materialized_view/{id}/refresh:
     parameters:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
     post:
       description: |
-        Trigger an asynchronous refresh job for a materialized view backed by table `id`.
+        Trigger an asynchronous refresh job for materialized view `id`.
         Returns a job ID for tracking.
       operationId: RefreshMaterializedView
       parameters:
@@ -1881,18 +1881,18 @@ paths:
           $ref: '#/components/responses/ServerErrorResponse'
       summary: Trigger an async materialized view refresh
       tags:
-      - Table
+      - MaterializedView
       - Data
       x-content-type: application/json
       x-accepts:
       - application/json
-  /v1/table/{id}/create_materialized_view:
+  /v1/materialized_view/{id}/create:
     parameters:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
     post:
       description: |
-        Create a materialized view at table identifier `id`. The view may be
+        Create a materialized view at identifier `id`. The view may be
         query-backed, UDTF-backed, or chunker-backed, controlled by the
         `kind` discriminator.
       operationId: CreateMaterializedView
@@ -1924,7 +1924,7 @@ paths:
           $ref: '#/components/responses/ServerErrorResponse'
       summary: Create a materialized view
       tags:
-      - Table
+      - MaterializedView
       - Data
       x-content-type: application/json
       x-accepts:

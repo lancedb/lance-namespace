@@ -415,14 +415,14 @@ pub async fn count_table_rows(configuration: &configuration::Configuration, id: 
     }
 }
 
-/// Create a materialized view at table identifier `id`. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the `kind` discriminator. 
+/// Create a materialized view at identifier `id`. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the `kind` discriminator. 
 pub async fn create_materialized_view(configuration: &configuration::Configuration, id: &str, create_materialized_view_request: models::CreateMaterializedViewRequest, delimiter: Option<&str>) -> Result<models::CreateMaterializedViewResponse, Error<CreateMaterializedViewError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_create_materialized_view_request = create_materialized_view_request;
     let p_delimiter = delimiter;
 
-    let uri_str = format!("{}/v1/table/{id}/create_materialized_view", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let uri_str = format!("{}/v1/materialized_view/{id}/create", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
     if let Some(ref param_value) = p_delimiter {
@@ -849,14 +849,14 @@ pub async fn query_table(configuration: &configuration::Configuration, id: &str,
     }
 }
 
-/// Trigger an asynchronous refresh job for a materialized view backed by table `id`. Returns a job ID for tracking. 
+/// Trigger an asynchronous refresh job for materialized view `id`. Returns a job ID for tracking. 
 pub async fn refresh_materialized_view(configuration: &configuration::Configuration, id: &str, delimiter: Option<&str>, refresh_materialized_view_request: Option<models::RefreshMaterializedViewRequest>) -> Result<models::RefreshMaterializedViewResponse, Error<RefreshMaterializedViewError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_delimiter = delimiter;
     let p_refresh_materialized_view_request = refresh_materialized_view_request;
 
-    let uri_str = format!("{}/v1/table/{id}/refresh", configuration.base_path, id=crate::apis::urlencode(p_id));
+    let uri_str = format!("{}/v1/materialized_view/{id}/refresh", configuration.base_path, id=crate::apis::urlencode(p_id));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
     if let Some(ref param_value) = p_delimiter {

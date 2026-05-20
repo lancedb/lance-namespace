@@ -727,8 +727,8 @@ public class DataApi {
   }
 
   /**
-   * Create a materialized view Create a materialized view at table identifier &#x60;id&#x60;. The
-   * view may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60;
+   * Create a materialized view Create a materialized view at identifier &#x60;id&#x60;. The view
+   * may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60;
    * discriminator.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
@@ -774,8 +774,8 @@ public class DataApi {
   }
 
   /**
-   * Create a materialized view Create a materialized view at table identifier &#x60;id&#x60;. The
-   * view may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60;
+   * Create a materialized view Create a materialized view at identifier &#x60;id&#x60;. The view
+   * may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60;
    * discriminator.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
@@ -845,8 +845,7 @@ public class DataApi {
     HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
 
     String localVarPath =
-        "/v1/table/{id}/create_materialized_view"
-            .replace("{id}", ApiClient.urlEncode(id.toString()));
+        "/v1/materialized_view/{id}/create".replace("{id}", ApiClient.urlEncode(id.toString()));
 
     List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
@@ -2057,8 +2056,8 @@ public class DataApi {
   }
 
   /**
-   * Trigger an async materialized view refresh Trigger an asynchronous refresh job for a
-   * materialized view backed by table &#x60;id&#x60;. Returns a job ID for tracking.
+   * Trigger an async materialized view refresh Trigger an asynchronous refresh job for materialized
+   * view &#x60;id&#x60;. Returns a job ID for tracking.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -2103,8 +2102,8 @@ public class DataApi {
   }
 
   /**
-   * Trigger an async materialized view refresh Trigger an asynchronous refresh job for a
-   * materialized view backed by table &#x60;id&#x60;. Returns a job ID for tracking.
+   * Trigger an async materialized view refresh Trigger an asynchronous refresh job for materialized
+   * view &#x60;id&#x60;. Returns a job ID for tracking.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -2169,7 +2168,7 @@ public class DataApi {
     HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
 
     String localVarPath =
-        "/v1/table/{id}/refresh".replace("{id}", ApiClient.urlEncode(id.toString()));
+        "/v1/materialized_view/{id}/refresh".replace("{id}", ApiClient.urlEncode(id.toString()));
 
     List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");

@@ -759,7 +759,7 @@ Triggers an async materialized view refresh.
 **HTTP Request:**
 
 ```
-POST /v1/table/{id}/refresh
+POST /v1/materialized_view/{id}/refresh
 Content-Type: application/json
 ```
 

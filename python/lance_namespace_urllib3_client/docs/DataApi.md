@@ -8,14 +8,14 @@ Method | HTTP request | Description
 [**alter_table_backfill_columns**](DataApi.md#alter_table_backfill_columns) | **POST** /v1/table/{id}/backfill_column | Trigger an async column backfill job
 [**analyze_table_query_plan**](DataApi.md#analyze_table_query_plan) | **POST** /v1/table/{id}/analyze_plan | Analyze query execution plan
 [**count_table_rows**](DataApi.md#count_table_rows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
-[**create_materialized_view**](DataApi.md#create_materialized_view) | **POST** /v1/table/{id}/create_materialized_view | Create a materialized view
+[**create_materialized_view**](DataApi.md#create_materialized_view) | **POST** /v1/materialized_view/{id}/create | Create a materialized view
 [**create_table**](DataApi.md#create_table) | **POST** /v1/table/{id}/create | Create a table with the given name
 [**delete_from_table**](DataApi.md#delete_from_table) | **POST** /v1/table/{id}/delete | Delete rows from a table
 [**explain_table_query_plan**](DataApi.md#explain_table_query_plan) | **POST** /v1/table/{id}/explain_plan | Get query execution plan explanation
 [**insert_into_table**](DataApi.md#insert_into_table) | **POST** /v1/table/{id}/insert | Insert records into a table
 [**merge_insert_into_table**](DataApi.md#merge_insert_into_table) | **POST** /v1/table/{id}/merge_insert | Merge insert (upsert) records into a table
 [**query_table**](DataApi.md#query_table) | **POST** /v1/table/{id}/query | Query a table
-[**refresh_materialized_view**](DataApi.md#refresh_materialized_view) | **POST** /v1/table/{id}/refresh | Trigger an async materialized view refresh
+[**refresh_materialized_view**](DataApi.md#refresh_materialized_view) | **POST** /v1/materialized_view/{id}/refresh | Trigger an async materialized view refresh
 [**update_table**](DataApi.md#update_table) | **POST** /v1/table/{id}/update | Update rows in a table
 
 
@@ -432,7 +432,7 @@ Name | Type | Description  | Notes
 
 Create a materialized view
 
-Create a materialized view at table identifier `id`. The view may be
+Create a materialized view at identifier `id`. The view may be
 query-backed, UDTF-backed, or chunker-backed, controlled by the
 `kind` discriminator.
 
@@ -1208,7 +1208,7 @@ Name | Type | Description  | Notes
 
 Trigger an async materialized view refresh
 
-Trigger an asynchronous refresh job for a materialized view backed by table `id`.
+Trigger an asynchronous refresh job for materialized view `id`.
 Returns a job ID for tracking.
 
 

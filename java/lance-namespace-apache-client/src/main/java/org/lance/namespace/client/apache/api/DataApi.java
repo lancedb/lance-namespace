@@ -480,8 +480,8 @@ public class DataApi extends BaseApi {
   }
 
   /**
-   * Create a materialized view Create a materialized view at table identifier &#x60;id&#x60;. The
-   * view may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60;
+   * Create a materialized view Create a materialized view at identifier &#x60;id&#x60;. The view
+   * may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60;
    * discriminator.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
@@ -503,8 +503,8 @@ public class DataApi extends BaseApi {
   }
 
   /**
-   * Create a materialized view Create a materialized view at table identifier &#x60;id&#x60;. The
-   * view may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60;
+   * Create a materialized view Create a materialized view at identifier &#x60;id&#x60;. The view
+   * may be query-backed, UDTF-backed, or chunker-backed, controlled by the &#x60;kind&#x60;
    * discriminator.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
@@ -542,7 +542,7 @@ public class DataApi extends BaseApi {
 
     // create path and map variables
     String localVarPath =
-        "/v1/table/{id}/create_materialized_view"
+        "/v1/materialized_view/{id}/create"
             .replaceAll(
                 "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
@@ -1360,8 +1360,8 @@ public class DataApi extends BaseApi {
   }
 
   /**
-   * Trigger an async materialized view refresh Trigger an asynchronous refresh job for a
-   * materialized view backed by table &#x60;id&#x60;. Returns a job ID for tracking.
+   * Trigger an async materialized view refresh Trigger an asynchronous refresh job for materialized
+   * view &#x60;id&#x60;. Returns a job ID for tracking.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1382,8 +1382,8 @@ public class DataApi extends BaseApi {
   }
 
   /**
-   * Trigger an async materialized view refresh Trigger an asynchronous refresh job for a
-   * materialized view backed by table &#x60;id&#x60;. Returns a job ID for tracking.
+   * Trigger an async materialized view refresh Trigger an asynchronous refresh job for materialized
+   * view &#x60;id&#x60;. Returns a job ID for tracking.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1413,7 +1413,7 @@ public class DataApi extends BaseApi {
 
     // create path and map variables
     String localVarPath =
-        "/v1/table/{id}/refresh"
+        "/v1/materialized_view/{id}/refresh"
             .replaceAll(
                 "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 

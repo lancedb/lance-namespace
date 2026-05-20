@@ -3,6 +3,7 @@
 # import apis into api package
 from lance_namespace_urllib3_client.api.data_api import DataApi
 from lance_namespace_urllib3_client.api.index_api import IndexApi
+from lance_namespace_urllib3_client.api.materialized_view_api import MaterializedViewApi
 from lance_namespace_urllib3_client.api.metadata_api import MetadataApi
 from lance_namespace_urllib3_client.api.namespace_api import NamespaceApi
 from lance_namespace_urllib3_client.api.table_api import TableApi

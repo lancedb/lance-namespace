@@ -1382,7 +1382,7 @@ class DataApi:
     ) -> CreateMaterializedViewResponse:
         """Create a materialized view
 
-        Create a materialized view at table identifier `id`. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the `kind` discriminator. 
+        Create a materialized view at identifier `id`. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the `kind` discriminator. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1464,7 +1464,7 @@ class DataApi:
     ) -> ApiResponse[CreateMaterializedViewResponse]:
         """Create a materialized view
 
-        Create a materialized view at table identifier `id`. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the `kind` discriminator. 
+        Create a materialized view at identifier `id`. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the `kind` discriminator. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1546,7 +1546,7 @@ class DataApi:
     ) -> RESTResponseType:
         """Create a materialized view
 
-        Create a materialized view at table identifier `id`. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the `kind` discriminator. 
+        Create a materialized view at identifier `id`. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the `kind` discriminator. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1674,7 +1674,7 @@ class DataApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/table/{id}/create_materialized_view',
+            resource_path='/v1/materialized_view/{id}/create',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -3899,7 +3899,7 @@ class DataApi:
     ) -> RefreshMaterializedViewResponse:
         """Trigger an async materialized view refresh
 
-        Trigger an asynchronous refresh job for a materialized view backed by table `id`. Returns a job ID for tracking. 
+        Trigger an asynchronous refresh job for materialized view `id`. Returns a job ID for tracking. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -3980,7 +3980,7 @@ class DataApi:
     ) -> ApiResponse[RefreshMaterializedViewResponse]:
         """Trigger an async materialized view refresh
 
-        Trigger an asynchronous refresh job for a materialized view backed by table `id`. Returns a job ID for tracking. 
+        Trigger an asynchronous refresh job for materialized view `id`. Returns a job ID for tracking. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4061,7 +4061,7 @@ class DataApi:
     ) -> RESTResponseType:
         """Trigger an async materialized view refresh
 
-        Trigger an asynchronous refresh job for a materialized view backed by table `id`. Returns a job ID for tracking. 
+        Trigger an asynchronous refresh job for materialized view `id`. Returns a job ID for tracking. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4188,7 +4188,7 @@ class DataApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/table/{id}/refresh',
+            resource_path='/v1/materialized_view/{id}/refresh',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

@@ -89,13 +89,6 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
-    def test_create_materialized_view(self) -> None:
-        """Test case for create_materialized_view
-
-        Create a materialized view
-        """
-        pass
-
     def test_create_table(self) -> None:
         """Test case for create_table
 
@@ -268,13 +261,6 @@ class TestTableApi(unittest.TestCase):
         """Test case for query_table
 
         Query a table
-        """
-        pass
-
-    def test_refresh_materialized_view(self) -> None:
-        """Test case for refresh_materialized_view
-
-        Trigger an async materialized view refresh
         """
         pass
 
