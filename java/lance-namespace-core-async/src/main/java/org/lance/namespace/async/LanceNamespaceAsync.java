@@ -696,8 +696,8 @@ public interface LanceNamespaceAsync {
   }
 
   /**
-   * Create a materialized view (query / UDTF / chunker) backed by a stored UDTF/chunker spec and
-   * an optional initial refresh.
+   * Create a materialized view (query / UDTF / chunker) backed by a stored UDTF/chunker spec and an
+   * optional initial refresh.
    *
    * @param request The create materialized view request
    * @return A CompletableFuture containing the create response with the view's location and an

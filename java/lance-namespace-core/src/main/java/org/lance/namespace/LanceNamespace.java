@@ -669,8 +669,8 @@ public interface LanceNamespace {
   }
 
   /**
-   * Create a materialized view (query / UDTF / chunker) backed by a stored UDTF/chunker spec and
-   * an optional initial refresh.
+   * Create a materialized view (query / UDTF / chunker) backed by a stored UDTF/chunker spec and an
+   * optional initial refresh.
    *
    * @param request The create materialized view request
    * @return The create response containing the view's location and an optional job ID
