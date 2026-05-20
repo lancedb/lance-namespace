@@ -887,6 +887,7 @@ dev = [
     { name = "chevron" },
     { name = "jsf" },
     { name = "jsonpath-ng" },
+    { name = "jsonschema" },
     { name = "mkdocs-awesome-pages-plugin" },
     { name = "mkdocs-linkcheck" },
     { name = "mkdocs-macros-plugin" },
@@ -894,6 +895,7 @@ dev = [
     { name = "openapi-generator-cli" },
     { name = "openapi-spec-validator" },
     { name = "prance" },
+    { name = "pyyaml" },
     { name = "schemathesis" },
 ]
 
@@ -904,6 +906,7 @@ dev = [
     { name = "chevron", specifier = ">=0.14.0" },
     { name = "jsf", specifier = ">=0.7.0" },
     { name = "jsonpath-ng", specifier = ">=1.6.0" },
+    { name = "jsonschema", specifier = ">=4.0" },
     { name = "mkdocs-awesome-pages-plugin" },
     { name = "mkdocs-linkcheck" },
     { name = "mkdocs-macros-plugin" },
@@ -911,6 +914,7 @@ dev = [
     { name = "openapi-generator-cli", specifier = "==7.12.0" },
     { name = "openapi-spec-validator", specifier = "==0.7.1" },
     { name = "prance", specifier = ">=23.0.0" },
+    { name = "pyyaml", specifier = ">=6.0" },
     { name = "schemathesis", specifier = ">=3.30.0" },
 ]
 

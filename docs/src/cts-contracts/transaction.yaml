@@ -1,0 +1,75 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Transaction domain behavioural contracts.
+#
+# OpenAPI tag: TransactionApi.
+# Error source: errors.md › Transaction Metadata Operations.
+#
+# DirectoryNamespace v6.0.0 implements `describe_transaction` natively
+# (it scans the dataset's transaction history) but `alter_transaction`
+# falls through to the trait default → Unsupported (0). The cases below
+# rely on `enforces_optimistic_concurrency` only for the (14) row;
+# `supports_alter_transaction` gates the family of alter cases that
+# DirectoryNamespace cannot drive at all.
+
+contracts:
+  # ──────────────────────────────────────────────────────────────────
+  - operation: DescribeTransaction
+    requires_capabilities: [supports_transactions]
+    cases:
+      - id: describe_transaction_unknown_id_must_404
+        description: |
+          DescribeTransaction with a well-formed (>= 2-component) id
+          whose final segment does not match any committed transaction
+          uuid surfaces TransactionNotFound (10). dir.rs delegates to
+          `find_transaction` against the dataset's read_transaction
+          history; an empty fresh table has no history at all.
+        given:
+          state: empty_catalog
+          fixtures:
+            - kind: table
+              id: ["{{TblA}}"]
+        when:
+          request:
+            id: ["{{TblA}}", "no_such_transaction_uuid"]
+        then:
+          error_code: 10
+
+  # ──────────────────────────────────────────────────────────────────
+  - operation: AlterTransaction
+    requires_capabilities: [supports_alter_transaction]
+    cases:
+      - id: alter_transaction_unknown_id_must_404
+        description: |
+          AlterTransaction with an unknown transaction id surfaces
+          TransactionNotFound (10). DirectoryNamespace skips this case
+          because it does not implement AlterTransaction at all.
+        given:
+          state: empty_catalog
+          fixtures:
+            - kind: table
+              id: ["{{TblA}}"]
+        when:
+          request:
+            id: ["{{TblA}}", "no_such_transaction_uuid"]
+            actions: []
+        then:
+          error_code: 10
+
+      - id: alter_transaction_concurrent_modification_must_409
+        description: |
+          Two concurrent AlterTransaction calls against the same
+          in-flight transaction surface ConcurrentModification (14) on
+          OCC backends.
+        requires_capabilities: [enforces_optimistic_concurrency]
+        given:
+          state: empty_catalog
+          fixtures:
+            - kind: table
+              id: ["{{TblA}}"]
+        when:
+          request:
+            id: ["{{TblA}}", "race_uuid"]
+            actions: []
+        then:
+          error_code: 14

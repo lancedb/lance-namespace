@@ -8,8 +8,8 @@
 //!
 //! No hand-written fixtures — mappings come from build/cts/wiremock/.
 //!
-//! Run:   cargo test --test contract -- --nocapture
-//! Needs: make gen-cts  (downloads wiremock jar + generates mappings)
+//! Run:   cargo test --test wiremock -- --nocapture
+//! Needs: make gen-cts-wiremock  (downloads wiremock jar + generates mappings)
 
 use std::net::TcpStream;
 use std::path::Path;

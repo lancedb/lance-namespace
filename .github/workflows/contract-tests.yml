@@ -5,6 +5,7 @@ on:
     branches: [main, "feat/**", "feature/**"]
     paths:
       - "docs/src/spec.yaml"
+      - "docs/src/cts-contracts/**"
       - "ci/**"
       - "java/**"
       - "python/**"
@@ -13,11 +14,18 @@ on:
   pull_request:
     paths:
       - "docs/src/spec.yaml"
+      - "docs/src/cts-contracts/**"
       - "ci/**"
       - "java/**"
       - "python/**"
       - "rust/**"
       - ".github/workflows/contract-tests.yml"
+  workflow_dispatch:
+    inputs:
+      run_wiremock:
+        description: "Run the legacy WireMock client-conformance matrix"
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -90,12 +98,92 @@ jobs:
   # ─────────────────────────────────────────────────────────────
 
   # ─────────────────────────────────────────────────────────────
-  # Job 3: Client conformance — matrix over java / python / rust.
-  #         Each language generates WireMock stubs from the spec
-  #         and runs its own thin contract runner independently.
+  # Job 3: Behavioural contract conformance — drives the spec-driven
+  #         CTS YAML bundle through the in-process Rust harness in
+  #         `rust/lance-namespace-cts` against `DirectoryNamespace`.
+  #         This is the primary PR-blocking signal; it covers behaviour
+  #         (state changes, error codes, capability gating) — not just
+  #         HTTP wire shape.  Runs on every push and PR.
+  # ─────────────────────────────────────────────────────────────
+  behavior-conformance:
+    name: Behaviour Conformance (Rust in-process)
+    runs-on: ubuntu-latest
+    needs: spec
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install Python workspace (loader/lint/codegen need pyyaml + jsonschema)
+        run: uv sync --all-packages
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      # `lance-namespace-cts` pulls in `lance-namespace-impls` from the sibling
+      # `lance` repository via cargo `path`, which transitively depends on
+      # `lance-encoding`.  `lance-encoding`'s build script invokes `protoc` to
+      # compile its `.proto` files, so the GitHub-hosted runner needs the
+      # protobuf compiler on PATH before we run `cargo test`.  Locally this
+      # works because contributors typically have `protoc` installed; CI does
+      # not, so we install it explicitly here.
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "27.x"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "rust -> rust/target"
+
+      - name: Lint contract bundle (strict)
+        run: uv run python ci/cts/lint_contracts.py --strict
+
+      - name: Verify generated tests are up-to-date
+        run: uv run python ci/cts/gen_contract_tests.py --check
+
+      - name: Run behavioural contract suite
+        run: make test-cts-behavior
+
+      - name: Upload behavioural test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-test-behavior
+          path: rust/lance-namespace-cts/target/nextest/**/*.xml
+          if-no-files-found: ignore
+
+  # ─────────────────────────────────────────────────────────────
+  # Job 4: Client conformance (legacy WireMock) — matrix over
+  #         java / python / rust.  Each language generates WireMock
+  #         stubs from the spec and runs its thin contract runner.
+  #
+  #         As of P5 (the CI-finalisation phase of the behavioural CTS rollout)
+  #         this job is **opt-in**: it runs on push to `main` only and
+  #         on manual workflow_dispatch with `run_wiremock=true`. It is
+  #         skipped on pull_request events and on push to feature
+  #         branches, to keep PR/dev-branch feedback focused on the
+  #         (much faster) behavioural job above.
   # ─────────────────────────────────────────────────────────────
   client-conformance:
     name: Client Conformance (${{ matrix.lang }})
+    # Opt-in only: WireMock matrix is expensive (java + python + rust),
+    # so we restrict push triggering to `main` and otherwise require an
+    # explicit workflow_dispatch with run_wiremock=true.  PRs never run
+    # this job; the behavioural suite above is the PR-blocking signal.
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && inputs.run_wiremock)
     runs-on: ubuntu-latest
     needs: spec
     strategy:
@@ -169,7 +257,7 @@ jobs:
 
       # ── Run contract tests ──────────────────────────────────────
       - name: Run contract tests
-        run: make test-client-${{ matrix.lang }}
+        run: make test-clients-wiremock-${{ matrix.lang }}
 
       # ── Upload reports ──────────────────────────────────────────
       - name: Upload test reports

@@ -1,0 +1,132 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Lance Namespace CTS —— behavioural contracts · top-level entry.
+#
+# This is the single source of truth for the contract test suite.
+# `gen_contract_tests.py` loads this file, walks every entry under
+# `includes`, merges the result into one contracts bundle, and feeds
+# it to the Mustache template that emits the Rust tests.
+#
+# See the maintainer's behavioural-contract design notes (kept outside
+# this repo) for the full design.
+
+version: 1
+
+# ─────────────────────────────────────────────────────────────────────────
+# Capability flags an implementation may declare.
+#
+# Every case (or operation) opts in via `requires_capabilities: [...]`;
+# at runtime the harness resolves the implementation's capability set
+# from env var / config file / compile-time fallback and skips any case
+# whose required flags are missing.
+#
+# Register every new flag here — `ci/cts/lint_contracts.py` rejects
+# references to capability IDs that are not declared in this list.
+# ─────────────────────────────────────────────────────────────────────────
+capabilities:
+  # ─── path shape ────────────────────────────────────────────────────
+  - id: supports_one_level_namespace_path
+    description: Namespace identifiers may be exactly one level deep (e.g. `["sales"]`).
+  - id: supports_two_level_namespace_path
+    description: Namespace identifiers may be two levels deep (e.g. `["org", "sales"]`).
+
+  # ─── namespace operations ──────────────────────────────────────────
+  - id: supports_drop_namespace_cascade
+    description: DropNamespace supports behavior=CASCADE (recursive drop of all children).
+  - id: supports_create_namespace_overwrite
+    description: CreateNamespace supports mode=OVERWRITE semantics.
+
+  # ─── table operations ──────────────────────────────────────────────
+  - id: supports_create_table
+    description: CreateTable (Arrow IPC write path) is implemented.
+  - id: supports_drop_table
+    description: DropTable is implemented.
+  - id: supports_register_table
+    description: RegisterTable is implemented.
+  - id: supports_deregister_table
+    description: DeregisterTable is implemented.
+  - id: supports_rename_table
+    description: RenameTable is implemented.
+  - id: supports_alter_table_columns
+    description: |
+      The full column-evolution family is implemented:
+      AlterTableAddColumns / AlterTableAlterColumns /
+      AlterTableDropColumns / AlterTableBackfillColumns.
+
+  # ─── indices / tags / versions ─────────────────────────────────────
+  - id: supports_table_indices
+    description: The Index operation family is implemented.
+  - id: supports_table_tags
+    description: The Tag operation family is implemented.
+  - id: supports_table_versioning
+    description: The Table Version operation family is implemented.
+
+  # ─── data operations ───────────────────────────────────────────────
+  - id: supports_table_data_read
+    description: QueryTable / CountTableRows / ExplainTableQueryPlan / AnalyzeTableQueryPlan are implemented.
+  - id: supports_table_data_write
+    description: InsertIntoTable / MergeInsertIntoTable are implemented.
+  - id: supports_update_table
+    description: UpdateTable is implemented (`DirectoryNamespace` does not declare this today).
+  - id: supports_delete_from_table
+    description: DeleteFromTable is implemented (`DirectoryNamespace` does not declare this today).
+
+  # ─── transactions ──────────────────────────────────────────────────
+  - id: supports_transactions
+    description: Transaction read paths such as DescribeTransaction are implemented.
+  - id: supports_alter_transaction
+    description: AlterTransaction is implemented (`DirectoryNamespace` does not declare this today).
+
+  # ─── materialized views ────────────────────────────────────────────
+  - id: supports_materialized_view
+    description: RefreshMaterializedView is implemented (`DirectoryNamespace` does not declare this today).
+
+  # ─── concurrency ───────────────────────────────────────────────────
+  - id: enforces_optimistic_concurrency
+    description: The implementation rejects concurrent conflicts with error code 14 (ConcurrentModification) rather than last-write-wins.
+
+  # ─── error-surface flags (P4.2 ~ P4.6) ─────────────────────────────
+  # Many implementations skip the namespace-existence check for table /
+  # index / data ops (DirectoryNamespace in particular treats namespaces
+  # as logical prefixes once manifest mode is on, so a missing namespace
+  # never surfaces as code 1 — the call simply degrades into
+  # TableNotFound). Cases that assert error_code = 1 for those ops must
+  # gate themselves behind this flag so they are skipped on backends
+  # that cannot reach that path.
+  - id: surfaces_namespace_not_found_for_table_ops
+    description: |
+      Table / index / data / version operations distinguish between a
+      missing namespace (code 1, NamespaceNotFound) and a missing table
+      under an existing namespace (code 4, TableNotFound).
+      DirectoryNamespace does NOT declare this capability.
+  # `BatchCreateTableVersions` is in errors.md but not on the
+  # `LanceNamespace` trait at the pinned `lance-namespace = 6.0.0`,
+  # so the CTS cannot drive it through the in-process caller. Cases
+  # for it carry this flag so they are skipped runtime-side; lint-
+  # level coverage is handled via op-level `skip_reason`.
+  - id: trait_has_batch_create_table_versions
+    description: |
+      The pinned `LanceNamespace` Rust trait exposes
+      `batch_create_table_versions`. v6.0.0 does NOT.
+  # The `update_table_tag` / `delete_table_tag` etc. responses arrive
+  # via the trait default in v6.0.0 because dir.rs has no tag impl;
+  # this flag is just `supports_table_tags` re-stated for clarity in
+  # gating cases that need a real table fixture.
+  - id: surfaces_table_tag_not_found
+    description: |
+      Tag operations distinguish a missing tag (code 8, TableTagNotFound)
+      from a missing table (code 4). DirectoryNamespace does NOT declare
+      this — every tag op short-circuits with Unsupported (0).
+
+# ─────────────────────────────────────────────────────────────────────────
+# Per-domain contract files. CI asserts: every file exists, validates
+# against the JSON schema, and the include order matches the domain
+# table above.
+# ─────────────────────────────────────────────────────────────────────────
+includes:
+  - namespace.yaml
+  - table.yaml
+  - data.yaml
+  - index.yaml
+  - tag.yaml
+  - transaction.yaml

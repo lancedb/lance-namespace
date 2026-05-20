@@ -1,0 +1,54 @@
+[package]
+name = "lance-namespace-cts"
+version = "0.7.6"
+edition = "2024"
+description = "Lance Namespace behavioural-contract test suite (in-process driver)."
+license = "Apache-2.0"
+publish = false
+
+# Naming caveat: this repository is *called* `lance-namespace`, but the Rust
+# crate of that same name does NOT live here -- it is published from the
+# sibling `lance` repository (rust/lance-namespace) to crates.io. The two
+# crates that *do* live here are `lance-namespace-cts` (this one) and
+# `lance-namespace-reqwest-client`. So every dependency below resolves to a
+# crates.io release of the sibling repo, never to a local path.
+#
+# This crate is also intentionally *not* a member of the parent `rust/` Cargo
+# workspace and does not inherit workspace.dependencies, so external
+# contributors can run `cargo test -p lance-namespace-cts` without a `lance/`
+# checkout next to this one.
+#
+# Bumping these three pins together is the explicit signal "the CTS now
+# claims contract coverage against this Lance release".
+
+[dependencies]
+# Trait `LanceNamespace` we drive in-process; published from the sibling
+# `lance` repo, *not* defined locally despite the matching repo name.
+lance-namespace = "=6.0.0"
+# Concrete `DirectoryNamespace` SUT. `default-features = false` drops the
+# cloud `dir-*` backends (S3 / Azure / GCS / OSS / HuggingFace); the
+# local-filesystem `DirectoryNamespace` lives outside any feature gate, which
+# is all the CTS needs today.
+lance-namespace-impls = { version = "=6.0.0", default-features = false }
+# `lance-core::Error` is the trait's `Result` error type; we down-cast
+# through its `Namespace { source, .. }` variant to recover the underlying
+# `NamespaceError` and read its `code()`.
+lance-core = "=6.0.0"
+
+async-trait = "0.1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
+tempfile = "3"
+uuid = { version = "1", features = ["v4"] }
+# `Bytes` is the wire type the trait's IPC-bearing operations
+# (CreateTable / InsertIntoTable / MergeInsertIntoTable / QueryTable) take
+# for their request body. The version is left fully open because we only
+# touch it via `Bytes::from(Vec<u8>)`, which is API-stable across all 1.x.
+bytes = "1"
+# Arrow IPC writers used by `Fixtures::arrow_ipc_*` helpers to fabricate
+# the request bodies above. Pinned to the same major as
+# `lance-namespace-impls` 6.0.0 (which depends on arrow 58) so that the
+# IPC stream we produce parses cleanly inside the SUT.
+arrow = { version = "=58.0.0", default-features = false, features = ["ipc"] }
+
+[dev-dependencies]
+# Used by tests/cts.rs sanity test only.

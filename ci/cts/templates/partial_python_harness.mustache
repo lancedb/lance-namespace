@@ -48,7 +48,7 @@ def wiremock_base_url(wiremock_port: int) -> Generator[str, None, None]:
     """Start WireMock standalone jar and yield base URL."""
     if not WIREMOCK_JAR.exists():
         pytest.skip(
-            f"WireMock jar not found: {WIREMOCK_JAR}. Run 'make gen-cts' first."
+            f"WireMock jar not found: {WIREMOCK_JAR}. Run 'make gen-cts-wiremock' first."
         )
 
     cmd = [

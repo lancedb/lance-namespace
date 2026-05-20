@@ -8,10 +8,10 @@ this script re-injects them after generation.
 
 Specifically it adds:
   - <surefire ... <configuration><includes>**/*IT.java ...</includes></configuration>
-    so that surefire picks up integration-style WireMockContractIT.
+so that surefire picks up integration-style WireMockIT.
   - junit-jupiter-engine + junit-platform-launcher test dependencies
     (the generator only declares jupiter-api).
-  - wiremock-standalone test dependency (used by WireMockContractIT).
+    - wiremock-standalone test dependency (used by WireMockIT).
 
 Idempotent: running the script twice produces the same result (it skips edits that
 are already present).

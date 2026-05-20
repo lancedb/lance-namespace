@@ -14,7 +14,7 @@ render.py — Mustache template renderer for the CTS contract-test generator.
 
 Mirrors the openapi-generator template-driven codegen pattern:
 
-  * The Python side (``gen_client_tests.py``) plays the role of
+  * The Python side (``gen_wiremock_tests.py``) plays the role of
     ``DefaultGenerator`` / ``DefaultCodegen`` — it scans the generated
     clients, builds a ``Map<String, Object>``-shaped *bundle* (a plain Python
     dict), and hands it to the renderer.
@@ -29,7 +29,7 @@ expressions.  All conditional logic must be expressed with the standard
 boolean flags inserted into the bundle by Python.
 
 This module is intentionally small and side-effect-free; it does not import
-``gen_client_tests`` to keep the dependency direction one-way (generator →
+``gen_wiremock_tests`` to keep the dependency direction one-way (generator →
 renderer).
 """
 
@@ -75,7 +75,7 @@ class TemplateRenderer:
 
         Args:
             template_name: file stem (without ``.mustache``), e.g.
-                ``"rust_contract"``.
+                ``"rust_wiremock"``.
             data: bundle map; values may be scalars, lists, dicts, or
                 strings of pre-rendered code (the latter must be referenced
                 with the ``{{{var}}}`` triple-mustache form to bypass HTML
@@ -112,7 +112,7 @@ class TemplateRenderer:
 # but the only accepted value is ``"mustache"``.
 #
 # Selection order:
-#   1. ``--engine=mustache`` CLI flag (parsed by gen_client_tests.py).
+#   1. ``--engine=mustache`` CLI flag (parsed by gen_wiremock_tests.py).
 #   2. ``LANCE_CTS_ENGINE`` env var (same value).
 #   3. Default = ``"mustache"``.
 # ---------------------------------------------------------------------------

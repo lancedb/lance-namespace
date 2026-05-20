@@ -26,7 +26,7 @@ fn wiremock() -> &'static WireMockServer {
 
         assert!(
             jar.exists(),
-            "WireMock jar not found at {:?}. Run `make gen-cts` first.",
+            "WireMock jar not found at {:?}. Run `make gen-cts-wiremock` first.",
             jar
         );
 

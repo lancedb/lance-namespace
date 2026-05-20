@@ -11,14 +11,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lance.namespace.client.async.cts;
+package org.lance.namespace.client.apache.cts;
 
-import org.lance.namespace.client.async.ApiClient;
-import org.lance.namespace.client.async.api.IndexApi;
-import org.lance.namespace.client.async.api.NamespaceApi;
-import org.lance.namespace.client.async.api.TableApi;
-import org.lance.namespace.client.async.api.TagApi;
-import org.lance.namespace.client.async.api.TransactionApi;
+import org.lance.namespace.client.apache.ApiClient;
+import org.lance.namespace.client.apache.ApiException;
+import org.lance.namespace.client.apache.api.IndexApi;
+import org.lance.namespace.client.apache.api.NamespaceApi;
+import org.lance.namespace.client.apache.api.TableApi;
+import org.lance.namespace.client.apache.api.TagApi;
+import org.lance.namespace.client.apache.api.TransactionApi;
 import org.lance.namespace.model.AlterTableAddColumnsRequest;
 import org.lance.namespace.model.AlterTableAlterColumnsRequest;
 import org.lance.namespace.model.AlterTableBackfillColumnsRequest;
@@ -66,10 +67,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
-import java.util.concurrent.TimeUnit;
 
 /** Thin contract runner: starts WireMock with pre-generated mappings from build/cts/wiremock/. */
-public class WireMockContractIT {
+public class WireMockIT {
 
   private static WireMockServer wireMock;
   private static ApiClient apiClient;
@@ -89,7 +89,7 @@ public class WireMockContractIT {
     wireMock.start();
 
     apiClient = new ApiClient();
-    apiClient.updateBaseUri("http://localhost:" + wireMock.port());
+    apiClient.setBasePath("http://localhost:" + wireMock.port());
   }
 
   @AfterAll
@@ -100,484 +100,440 @@ public class WireMockContractIT {
   }
 
   @Test
-  void alterTableAddColumnsReturnsValidResponse() throws Exception {
+  void alterTableAddColumnsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.alterTableAddColumns(
-            "test_ns.test_table",
-            new AlterTableAddColumnsRequest().newColumns(new java.util.ArrayList<>()),
-            null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table",
+        new AlterTableAddColumnsRequest().newColumns(new java.util.ArrayList<>()),
+        null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void alterTableAlterColumnsReturnsValidResponse() throws Exception {
+  void alterTableAlterColumnsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.alterTableAlterColumns(
-            "test_ns.test_table",
-            new AlterTableAlterColumnsRequest().alterations(new java.util.ArrayList<>()),
-            null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table",
+        new AlterTableAlterColumnsRequest().alterations(new java.util.ArrayList<>()),
+        null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void alterTableBackfillColumnsReturnsValidResponse() throws Exception {
+  void alterTableBackfillColumnsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.alterTableBackfillColumns(
-            "test_ns.test_table", new AlterTableBackfillColumnsRequest().column("col"), null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table", new AlterTableBackfillColumnsRequest().column("col"), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void alterTableDropColumnsReturnsValidResponse() throws Exception {
+  void alterTableDropColumnsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.alterTableDropColumns(
-            "test_ns.test_table",
-            new AlterTableDropColumnsRequest().columns(new java.util.ArrayList<>()),
-            null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table",
+        new AlterTableDropColumnsRequest().columns(new java.util.ArrayList<>()),
+        null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void alterTransactionReturnsValidResponse() throws Exception {
+  void alterTransactionReturnsValidResponse() throws ApiException {
     TransactionApi api = new TransactionApi(apiClient);
     api.alterTransaction(
-            "test_txn",
-            new AlterTransactionRequest()
-                .actions(java.util.Arrays.asList(new AlterTransactionAction())),
-            null)
-        .get(10, TimeUnit.SECONDS);
+        "test_txn",
+        new AlterTransactionRequest()
+            .actions(java.util.Arrays.asList(new AlterTransactionAction())),
+        null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void analyzeTableQueryPlanReturnsValidResponse() throws Exception {
+  void analyzeTableQueryPlanReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.analyzeTableQueryPlan(
-            "test_ns.test_table",
-            new AnalyzeTableQueryPlanRequest()
-                .k(1)
-                .vector(new QueryTableRequestVector().singleVector(java.util.Arrays.asList(0.1f))),
-            null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table",
+        new AnalyzeTableQueryPlanRequest()
+            .k(1)
+            .vector(new QueryTableRequestVector().singleVector(java.util.Arrays.asList(0.1f))),
+        null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void batchCommitTablesReturnsValidResponse() throws Exception {
+  void batchCommitTablesReturnsValidResponse() throws ApiException {
     TransactionApi api = new TransactionApi(apiClient);
     api.batchCommitTables(
-            new BatchCommitTablesRequest().operations(new java.util.ArrayList<>()), null)
-        .get(10, TimeUnit.SECONDS);
+        new BatchCommitTablesRequest().operations(new java.util.ArrayList<>()), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void batchCreateTableVersionsReturnsValidResponse() throws Exception {
+  void batchCreateTableVersionsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.batchCreateTableVersions(
-            new BatchCreateTableVersionsRequest().entries(new java.util.ArrayList<>()), null)
-        .get(10, TimeUnit.SECONDS);
+        new BatchCreateTableVersionsRequest().entries(new java.util.ArrayList<>()), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void batchDeleteTableVersionsReturnsValidResponse() throws Exception {
+  void batchDeleteTableVersionsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.batchDeleteTableVersions(
-            "test_ns.test_table",
-            new BatchDeleteTableVersionsRequest().ranges(new java.util.ArrayList<>()),
-            null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table",
+        new BatchDeleteTableVersionsRequest().ranges(new java.util.ArrayList<>()),
+        null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void countTableRowsReturnsValidResponse() throws Exception {
+  void countTableRowsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.countTableRows("test_ns.test_table", new CountTableRowsRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.countTableRows("test_ns.test_table", new CountTableRowsRequest(), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void createNamespaceReturnsValidResponse() throws Exception {
+  void createNamespaceReturnsValidResponse() throws ApiException {
     NamespaceApi api = new NamespaceApi(apiClient);
-    api.createNamespace("test_ns", new CreateNamespaceRequest(), null).get(10, TimeUnit.SECONDS);
+    api.createNamespace("test_ns", new CreateNamespaceRequest(), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void createTableReturnsValidResponse() throws Exception {
+  void createTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.createTable("test_ns.test_table", new byte[0], null, null, null, null)
-        .get(10, TimeUnit.SECONDS);
+    api.createTable("test_ns.test_table", new byte[0], null, null, null, null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void createTableIndexReturnsValidResponse() throws Exception {
+  void createTableIndexReturnsValidResponse() throws ApiException {
     IndexApi api = new IndexApi(apiClient);
     api.createTableIndex(
-            "test_ns.test_table",
-            new CreateTableIndexRequest().column("col").indexType("IVF_PQ"),
-            null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table",
+        new CreateTableIndexRequest().column("col").indexType("IVF_PQ"),
+        null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void createTableScalarIndexReturnsValidResponse() throws Exception {
+  void createTableScalarIndexReturnsValidResponse() throws ApiException {
     IndexApi api = new IndexApi(apiClient);
     api.createTableScalarIndex(
-            "test_ns.test_table",
-            new CreateTableIndexRequest().column("col").indexType("BTREE"),
-            null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table", new CreateTableIndexRequest().column("col").indexType("BTREE"), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void createTableTagReturnsValidResponse() throws Exception {
+  void createTableTagReturnsValidResponse() throws ApiException {
     TagApi api = new TagApi(apiClient);
     api.createTableTag(
-            "test_ns.test_table", new CreateTableTagRequest().tag("v1").version(1L), null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table", new CreateTableTagRequest().tag("v1").version(1L), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void createTableVersionReturnsValidResponse() throws Exception {
+  void createTableVersionReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.createTableVersion(
-            "test_ns.test_table",
-            new CreateTableVersionRequest().version(1L).manifestPath("manifest_path"),
-            null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table",
+        new CreateTableVersionRequest().version(1L).manifestPath("manifest_path"),
+        null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void declareTableReturnsValidResponse() throws Exception {
+  void declareTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.declareTable("test_ns.test_table", new DeclareTableRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.declareTable("test_ns.test_table", new DeclareTableRequest(), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void deleteFromTableReturnsValidResponse() throws Exception {
+  void deleteFromTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.deleteFromTable(
-            "test_ns.test_table", new DeleteFromTableRequest().predicate("id = 1"), null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table", new DeleteFromTableRequest().predicate("id = 1"), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void deleteTableTagReturnsValidResponse() throws Exception {
+  void deleteTableTagReturnsValidResponse() throws ApiException {
     TagApi api = new TagApi(apiClient);
-    api.deleteTableTag("test_ns.test_table", new DeleteTableTagRequest().tag("v1"), null)
-        .get(10, TimeUnit.SECONDS);
+    api.deleteTableTag("test_ns.test_table", new DeleteTableTagRequest().tag("v1"), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void deregisterTableReturnsValidResponse() throws Exception {
+  void deregisterTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.deregisterTable("test_ns.test_table", new DeregisterTableRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.deregisterTable("test_ns.test_table", new DeregisterTableRequest(), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void describeNamespaceReturnsValidResponse() throws Exception {
+  void describeNamespaceReturnsValidResponse() throws ApiException {
     NamespaceApi api = new NamespaceApi(apiClient);
-    api.describeNamespace("ns_existing", new DescribeNamespaceRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.describeNamespace("ns_existing", new DescribeNamespaceRequest(), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void describeTableReturnsValidResponse() throws Exception {
+  void describeTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.describeTable(
-            "ns_with_tables.table_alpha", new DescribeTableRequest(), null, null, null, null)
-        .get(10, TimeUnit.SECONDS);
+        "ns_with_tables.table_alpha", new DescribeTableRequest(), null, null, null, null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void describeTableIndexStatsReturnsValidResponse() throws Exception {
+  void describeTableIndexStatsReturnsValidResponse() throws ApiException {
     IndexApi api = new IndexApi(apiClient);
     api.describeTableIndexStats(
-            "test_ns.test_table", "idx", new DescribeTableIndexStatsRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table", "idx", new DescribeTableIndexStatsRequest(), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void describeTableVersionReturnsValidResponse() throws Exception {
+  void describeTableVersionReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.describeTableVersion("test_ns.test_table", new DescribeTableVersionRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.describeTableVersion("test_ns.test_table", new DescribeTableVersionRequest(), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void describeTransactionReturnsValidResponse() throws Exception {
+  void describeTransactionReturnsValidResponse() throws ApiException {
     TransactionApi api = new TransactionApi(apiClient);
-    api.describeTransaction("test_txn", new DescribeTransactionRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.describeTransaction("test_txn", new DescribeTransactionRequest(), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void dropNamespaceReturnsValidResponse() throws Exception {
+  void dropNamespaceReturnsValidResponse() throws ApiException {
     NamespaceApi api = new NamespaceApi(apiClient);
-    api.dropNamespace("ns_existing", new DropNamespaceRequest(), null).get(10, TimeUnit.SECONDS);
+    api.dropNamespace("ns_existing", new DropNamespaceRequest(), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void dropTableReturnsValidResponse() throws Exception {
+  void dropTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.dropTable("test_ns.test_table", null).get(10, TimeUnit.SECONDS);
+    api.dropTable("test_ns.test_table", null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void dropTableIndexReturnsValidResponse() throws Exception {
+  void dropTableIndexReturnsValidResponse() throws ApiException {
     IndexApi api = new IndexApi(apiClient);
-    api.dropTableIndex("test_ns.test_table", "idx", null).get(10, TimeUnit.SECONDS);
+    api.dropTableIndex("test_ns.test_table", "idx", null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void explainTableQueryPlanReturnsValidResponse() throws Exception {
+  void explainTableQueryPlanReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.explainTableQueryPlan(
-            "test_ns.test_table",
-            new ExplainTableQueryPlanRequest()
-                .query(
-                    new QueryTableRequest()
-                        .k(1)
-                        .vector(
-                            new QueryTableRequestVector()
-                                .singleVector(java.util.Arrays.asList(0.1f)))),
-            null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table",
+        new ExplainTableQueryPlanRequest()
+            .query(
+                new QueryTableRequest()
+                    .k(1)
+                    .vector(
+                        new QueryTableRequestVector().singleVector(java.util.Arrays.asList(0.1f)))),
+        null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void getTableStatsReturnsValidResponse() throws Exception {
+  void getTableStatsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.getTableStats("test_ns.test_table", new GetTableStatsRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.getTableStats("test_ns.test_table", new GetTableStatsRequest(), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void getTableTagVersionReturnsValidResponse() throws Exception {
+  void getTableTagVersionReturnsValidResponse() throws ApiException {
     TagApi api = new TagApi(apiClient);
-    api.getTableTagVersion("test_ns.test_table", new GetTableTagVersionRequest().tag("v1"), null)
-        .get(10, TimeUnit.SECONDS);
+    api.getTableTagVersion("test_ns.test_table", new GetTableTagVersionRequest().tag("v1"), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void insertIntoTableReturnsValidResponse() throws Exception {
+  void insertIntoTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.insertIntoTable("test_ns.test_table", new byte[0], null, null).get(10, TimeUnit.SECONDS);
+    api.insertIntoTable("test_ns.test_table", new byte[0], null, null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void listAllTablesReturnsValidResponse() throws Exception {
+  void listAllTablesReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.listAllTables(null, null, null, null).get(10, TimeUnit.SECONDS);
+    api.listAllTables(null, null, null, null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void listNamespacesReturnsValidResponse() throws Exception {
+  void listNamespacesReturnsValidResponse() throws ApiException {
     NamespaceApi api = new NamespaceApi(apiClient);
-    api.listNamespaces("$", null, null, null).get(10, TimeUnit.SECONDS);
+    api.listNamespaces("$", null, null, null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void listTableIndicesReturnsValidResponse() throws Exception {
+  void listTableIndicesReturnsValidResponse() throws ApiException {
     IndexApi api = new IndexApi(apiClient);
-    api.listTableIndices("test_ns.test_table", new ListTableIndicesRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.listTableIndices("test_ns.test_table", new ListTableIndicesRequest(), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void listTableTagsReturnsValidResponse() throws Exception {
+  void listTableTagsReturnsValidResponse() throws ApiException {
     TagApi api = new TagApi(apiClient);
-    api.listTableTags("test_ns.test_table", null, null, null).get(10, TimeUnit.SECONDS);
+    api.listTableTags("test_ns.test_table", null, null, null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void listTableVersionsReturnsValidResponse() throws Exception {
+  void listTableVersionsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.listTableVersions("test_ns.test_table", null, null, null, null).get(10, TimeUnit.SECONDS);
+    api.listTableVersions("test_ns.test_table", null, null, null, null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void listTablesReturnsValidResponse() throws Exception {
+  void listTablesReturnsValidResponse() throws ApiException {
     NamespaceApi api = new NamespaceApi(apiClient);
-    api.listTables("ns_with_tables", null, null, null, null).get(10, TimeUnit.SECONDS);
+    api.listTables("ns_with_tables", null, null, null, null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void mergeInsertIntoTableReturnsValidResponse() throws Exception {
+  void mergeInsertIntoTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.mergeInsertIntoTable(
-            "test_ns.test_table", "id", new byte[0], null, null, null, null, null, null, null, null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table", "id", new byte[0], null, null, null, null, null, null, null, null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void namespaceExistsReturnsValidResponse() throws Exception {
+  void namespaceExistsReturnsValidResponse() throws ApiException {
     NamespaceApi api = new NamespaceApi(apiClient);
-    api.namespaceExists("ns_existing", new NamespaceExistsRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.namespaceExists("ns_existing", new NamespaceExistsRequest(), null);
   }
 
   @Test
-  void queryTableReturnsValidResponse() throws Exception {
+  void queryTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.queryTable(
-            "test_ns.test_table",
-            new QueryTableRequest()
-                .k(1)
-                .vector(new QueryTableRequestVector().singleVector(java.util.Arrays.asList(0.1f))),
-            null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table",
+        new QueryTableRequest()
+            .k(1)
+            .vector(new QueryTableRequestVector().singleVector(java.util.Arrays.asList(0.1f))),
+        null);
     // Binary response — successful return is the contract assertion.
   }
 
   @Test
-  void refreshMaterializedViewReturnsValidResponse() throws Exception {
+  void refreshMaterializedViewReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.refreshMaterializedView("test_ns.test_table", null, new RefreshMaterializedViewRequest())
-        .get(10, TimeUnit.SECONDS);
+    api.refreshMaterializedView("test_ns.test_table", null, new RefreshMaterializedViewRequest());
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void registerTableReturnsValidResponse() throws Exception {
+  void registerTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.registerTable(
-            "test_ns.test_table", new RegisterTableRequest().location("s3://bucket/path"), null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table", new RegisterTableRequest().location("s3://bucket/path"), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void renameTableReturnsValidResponse() throws Exception {
+  void renameTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.renameTable("test_ns.test_table", new RenameTableRequest().newTableName("new_name"), null)
-        .get(10, TimeUnit.SECONDS);
+    api.renameTable("test_ns.test_table", new RenameTableRequest().newTableName("new_name"), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void restoreTableReturnsValidResponse() throws Exception {
+  void restoreTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.restoreTable("test_ns.test_table", new RestoreTableRequest().version(1L), null)
-        .get(10, TimeUnit.SECONDS);
+    api.restoreTable("test_ns.test_table", new RestoreTableRequest().version(1L), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void tableExistsReturnsValidResponse() throws Exception {
+  void tableExistsReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.tableExists("ns_with_tables.table_alpha", new TableExistsRequest(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.tableExists("ns_with_tables.table_alpha", new TableExistsRequest(), null);
   }
 
   @Test
-  void updateTableReturnsValidResponse() throws Exception {
+  void updateTableReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
     api.updateTable(
-            "test_ns.test_table",
-            new UpdateTableRequest().updates(new java.util.ArrayList<>()),
-            null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table", new UpdateTableRequest().updates(new java.util.ArrayList<>()), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void updateTableSchemaMetadataReturnsValidResponse() throws Exception {
+  void updateTableSchemaMetadataReturnsValidResponse() throws ApiException {
     TableApi api = new TableApi(apiClient);
-    api.updateTableSchemaMetadata("test_ns.test_table", new java.util.HashMap<>(), null)
-        .get(10, TimeUnit.SECONDS);
+    api.updateTableSchemaMetadata("test_ns.test_table", new java.util.HashMap<>(), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
 
   @Test
-  void updateTableTagReturnsValidResponse() throws Exception {
+  void updateTableTagReturnsValidResponse() throws ApiException {
     TagApi api = new TagApi(apiClient);
     api.updateTableTag(
-            "test_ns.test_table", new UpdateTableTagRequest().tag("v1").version(2L), null)
-        .get(10, TimeUnit.SECONDS);
+        "test_ns.test_table", new UpdateTableTagRequest().tag("v1").version(2L), null);
     // Non-null assertion omitted: some ops legitimately return null
     // when the response schema is typeless Object / empty body.
   }
