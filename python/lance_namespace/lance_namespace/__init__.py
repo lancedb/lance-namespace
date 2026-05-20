@@ -77,6 +77,8 @@ from lance_namespace_urllib3_client.models import (
     CommitTableOperation,
     CommitTableResult,
     CountTableRowsRequest,
+    CreateMaterializedViewRequest,
+    CreateMaterializedViewResponse,
     CreateTableVersionEntry,
     CreateNamespaceRequest,
     CreateNamespaceResponse,
@@ -206,6 +208,8 @@ __all__ = [
     "CommitTableOperation",
     "CommitTableResult",
     "CountTableRowsRequest",
+    "CreateMaterializedViewRequest",
+    "CreateMaterializedViewResponse",
     "CreateTableVersionEntry",
     "CreateNamespaceRequest",
     "CreateNamespaceResponse",
@@ -938,6 +942,20 @@ class LanceNamespace(ABC):
         """
         raise UnsupportedOperationError(
             "Not supported: alter_table_backfill_columns"
+        )
+
+    def create_materialized_view(
+        self, request: CreateMaterializedViewRequest
+    ) -> CreateMaterializedViewResponse:
+        """Create a materialized view.
+
+        Raises
+        ------
+        TableAlreadyExistsError
+            If a table with the same identifier already exists.
+        """
+        raise UnsupportedOperationError(
+            "Not supported: create_materialized_view"
         )
 
     def refresh_materialized_view(
