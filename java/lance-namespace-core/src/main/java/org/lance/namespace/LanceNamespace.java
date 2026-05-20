@@ -669,6 +669,18 @@ public interface LanceNamespace {
   }
 
   /**
+   * Create a materialized view (query / UDTF / chunker) backed by a stored UDTF/chunker spec and
+   * an optional initial refresh.
+   *
+   * @param request The create materialized view request
+   * @return The create response containing the view's location and an optional job ID
+   */
+  default CreateMaterializedViewResponse createMaterializedView(
+      CreateMaterializedViewRequest request) {
+    throw new UnsupportedOperationException("Not supported: createMaterializedView");
+  }
+
+  /**
    * Drop columns from a table.
    *
    * @param request The alter table drop columns request

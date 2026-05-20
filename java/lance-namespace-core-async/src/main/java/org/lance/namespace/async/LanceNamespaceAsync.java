@@ -696,6 +696,20 @@ public interface LanceNamespaceAsync {
   }
 
   /**
+   * Create a materialized view (query / UDTF / chunker) backed by a stored UDTF/chunker spec and
+   * an optional initial refresh.
+   *
+   * @param request The create materialized view request
+   * @return A CompletableFuture containing the create response with the view's location and an
+   *     optional job ID
+   */
+  default CompletableFuture<CreateMaterializedViewResponse> createMaterializedView(
+      CreateMaterializedViewRequest request) {
+    return CompletableFuture.failedFuture(
+        new UnsupportedOperationException("Not supported: createMaterializedView"));
+  }
+
+  /**
    * Drop columns from a table.
    *
    * @param request The alter table drop columns request
