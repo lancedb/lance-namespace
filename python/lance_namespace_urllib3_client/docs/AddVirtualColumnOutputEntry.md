@@ -5,11 +5,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**column** | **str** | Physical output column name |
-**struct_field** | **str** | Field name in the UDF output struct |
-**data_type** | **object** | Data type of the output column using JSON representation |
-**nullable** | **bool** | Whether the output column is nullable |
-**metadata** | **Dict[str, str]** | User-supplied output field metadata (string key-value pairs) | [optional]
+**column** | **str** | Physical output column name | 
+**struct_field** | **str** | Field name in the UDF output struct | 
+**data_type** | **object** | Data type of the output column using JSON representation | 
+**nullable** | **bool** | Whether the output column is nullable | 
+**metadata** | **Dict[str, str]** | User-supplied output field metadata (string key-value pairs) | [optional] 
 
 ## Example
 
@@ -29,3 +29,5 @@ add_virtual_column_output_entry_dict = add_virtual_column_output_entry_instance.
 add_virtual_column_output_entry_from_dict = AddVirtualColumnOutputEntry.from_dict(add_virtual_column_output_entry_dict)
 ```
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

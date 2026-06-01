@@ -12,3 +12,6 @@
 |**dataType** | **Object** | Data type of the output column using JSON representation |  |
 |**nullable** | **Boolean** | Whether the output column is nullable |  |
 |**metadata** | **Map&lt;String, String&gt;** | User-supplied output field metadata (string key-value pairs) |  [optional] |
+
+
+

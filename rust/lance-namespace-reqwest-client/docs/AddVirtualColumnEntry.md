@@ -4,12 +4,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**input_columns** | **Vec<String>** | List of input column names for the virtual column |
-**outputs** | [**Vec<models::AddVirtualColumnOutputEntry>**](AddVirtualColumnOutputEntry.md) | Output columns produced by the virtual column UDF |
-**image** | **String** | Docker image to use for the UDF |
-**udf** | **String** | Base64 encoded pickled UDF |
-**udf_name** | **String** | Name of the UDF |
-**udf_version** | **String** | Version of the UDF |
+**input_columns** | **Vec<String>** | List of input column names for the virtual column | 
+**outputs** | [**Vec<models::AddVirtualColumnOutputEntry>**](AddVirtualColumnOutputEntry.md) | Output columns produced by the virtual column UDF | 
+**image** | **String** | Docker image to use for the UDF | 
+**udf** | **String** | Base64 encoded pickled UDF | 
+**udf_name** | **String** | Name of the UDF | 
+**udf_version** | **String** | Version of the UDF | 
 **udf_backend** | Option<**String**> | UDF backend type (e.g. DockerUDFSpecV1) | [optional]
 **auto_backfill** | Option<**bool**> | Whether to automatically backfill the column after creation | [optional]
 **manifest** | Option<**String**> | JSON-serialized manifest for the UDF environment | [optional]
