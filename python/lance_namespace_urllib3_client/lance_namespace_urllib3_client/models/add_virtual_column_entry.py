@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from lance_namespace_urllib3_client.models.add_virtual_column_output_entry import AddVirtualColumnOutputEntry
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +28,7 @@ class AddVirtualColumnEntry(BaseModel):
     AddVirtualColumnEntry
     """ # noqa: E501
     input_columns: List[StrictStr] = Field(description="List of input column names for the virtual column")
-    data_type: Dict[str, Any] = Field(description="Data type of the virtual column using JSON representation")
+    outputs: List[AddVirtualColumnOutputEntry] = Field(description="Output columns produced by the virtual column UDF")
     image: StrictStr = Field(description="Docker image to use for the UDF")
     udf: StrictStr = Field(description="Base64 encoded pickled UDF")
     udf_name: StrictStr = Field(description="Name of the UDF")
@@ -37,7 +38,7 @@ class AddVirtualColumnEntry(BaseModel):
     manifest: Optional[StrictStr] = Field(default=None, description="JSON-serialized manifest for the UDF environment")
     manifest_checksum: Optional[StrictStr] = Field(default=None, description="SHA-256 checksum of the manifest content")
     field_metadata: Optional[Dict[str, StrictStr]] = Field(default=None, description="User-supplied field metadata (string key-value pairs)")
-    __properties: ClassVar[List[str]] = ["input_columns", "data_type", "image", "udf", "udf_name", "udf_version", "udf_backend", "auto_backfill", "manifest", "manifest_checksum", "field_metadata"]
+    __properties: ClassVar[List[str]] = ["input_columns", "outputs", "image", "udf", "udf_name", "udf_version", "udf_backend", "auto_backfill", "manifest", "manifest_checksum", "field_metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -78,6 +79,13 @@ class AddVirtualColumnEntry(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in outputs (list)
+        _items = []
+        if self.outputs:
+            for _item_outputs in self.outputs:
+                if _item_outputs:
+                    _items.append(_item_outputs.to_dict())
+            _dict['outputs'] = _items
         # set to None if udf_backend (nullable) is None
         # and model_fields_set contains the field
         if self.udf_backend is None and "udf_backend" in self.model_fields_set:
@@ -111,7 +119,7 @@ class AddVirtualColumnEntry(BaseModel):
 
         _obj = cls.model_validate({
             "input_columns": obj.get("input_columns"),
-            "data_type": obj.get("data_type"),
+            "outputs": [AddVirtualColumnOutputEntry.from_dict(_item) for _item in obj["outputs"]] if obj.get("outputs") is not None else None,
             "image": obj.get("image"),
             "udf": obj.get("udf"),
             "udf_name": obj.get("udf_name"),

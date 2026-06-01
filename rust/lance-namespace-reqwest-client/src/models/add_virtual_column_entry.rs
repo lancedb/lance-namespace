@@ -16,9 +16,9 @@ pub struct AddVirtualColumnEntry {
     /// List of input column names for the virtual column
     #[serde(rename = "input_columns")]
     pub input_columns: Vec<String>,
-    /// Data type of the virtual column using JSON representation
-    #[serde(rename = "data_type")]
-    pub data_type: serde_json::Value,
+    /// Output columns produced by the virtual column UDF
+    #[serde(rename = "outputs")]
+    pub outputs: Vec<models::AddVirtualColumnOutputEntry>,
     /// Docker image to use for the UDF
     #[serde(rename = "image")]
     pub image: String,
@@ -49,10 +49,10 @@ pub struct AddVirtualColumnEntry {
 }
 
 impl AddVirtualColumnEntry {
-    pub fn new(input_columns: Vec<String>, data_type: serde_json::Value, image: String, udf: String, udf_name: String, udf_version: String) -> AddVirtualColumnEntry {
+    pub fn new(input_columns: Vec<String>, outputs: Vec<models::AddVirtualColumnOutputEntry>, image: String, udf: String, udf_name: String, udf_version: String) -> AddVirtualColumnEntry {
         AddVirtualColumnEntry {
             input_columns,
-            data_type,
+            outputs,
             image,
             udf,
             udf_name,

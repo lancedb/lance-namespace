@@ -2,6 +2,8 @@ pub mod add_columns_entry;
 pub use self::add_columns_entry::AddColumnsEntry;
 pub mod add_virtual_column_entry;
 pub use self::add_virtual_column_entry::AddVirtualColumnEntry;
+pub mod add_virtual_column_output_entry;
+pub use self::add_virtual_column_output_entry::AddVirtualColumnOutputEntry;
 pub mod alter_columns_entry;
 pub use self::alter_columns_entry::AlterColumnsEntry;
 pub mod alter_table_add_columns_request;

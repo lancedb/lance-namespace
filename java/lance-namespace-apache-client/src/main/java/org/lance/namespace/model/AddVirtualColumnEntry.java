@@ -32,7 +32,7 @@ import java.util.StringJoiner;
 /** AddVirtualColumnEntry */
 @JsonPropertyOrder({
   AddVirtualColumnEntry.JSON_PROPERTY_INPUT_COLUMNS,
-  AddVirtualColumnEntry.JSON_PROPERTY_DATA_TYPE,
+  AddVirtualColumnEntry.JSON_PROPERTY_OUTPUTS,
   AddVirtualColumnEntry.JSON_PROPERTY_IMAGE,
   AddVirtualColumnEntry.JSON_PROPERTY_UDF,
   AddVirtualColumnEntry.JSON_PROPERTY_UDF_NAME,
@@ -50,8 +50,8 @@ public class AddVirtualColumnEntry {
   public static final String JSON_PROPERTY_INPUT_COLUMNS = "input_columns";
   @javax.annotation.Nonnull private List<String> inputColumns = new ArrayList<>();
 
-  public static final String JSON_PROPERTY_DATA_TYPE = "data_type";
-  @javax.annotation.Nonnull private Object dataType;
+  public static final String JSON_PROPERTY_OUTPUTS = "outputs";
+  @javax.annotation.Nonnull private List<AddVirtualColumnOutputEntry> outputs = new ArrayList<>();
 
   public static final String JSON_PROPERTY_IMAGE = "image";
   @javax.annotation.Nonnull private String image;
@@ -122,28 +122,37 @@ public class AddVirtualColumnEntry {
     this.inputColumns = inputColumns;
   }
 
-  public AddVirtualColumnEntry dataType(@javax.annotation.Nonnull Object dataType) {
+  public AddVirtualColumnEntry outputs(
+      @javax.annotation.Nonnull List<AddVirtualColumnOutputEntry> outputs) {
 
-    this.dataType = dataType;
+    this.outputs = outputs;
+    return this;
+  }
+
+  public AddVirtualColumnEntry addOutputsItem(AddVirtualColumnOutputEntry outputsItem) {
+    if (this.outputs == null) {
+      this.outputs = new ArrayList<>();
+    }
+    this.outputs.add(outputsItem);
     return this;
   }
 
   /**
-   * Data type of the virtual column using JSON representation
+   * Output columns produced by the virtual column UDF
    *
-   * @return dataType
+   * @return outputs
    */
   @javax.annotation.Nonnull
-  @JsonProperty(JSON_PROPERTY_DATA_TYPE)
+  @JsonProperty(JSON_PROPERTY_OUTPUTS)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public Object getDataType() {
-    return dataType;
+  public List<AddVirtualColumnOutputEntry> getOutputs() {
+    return outputs;
   }
 
-  @JsonProperty(JSON_PROPERTY_DATA_TYPE)
+  @JsonProperty(JSON_PROPERTY_OUTPUTS)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setDataType(@javax.annotation.Nonnull Object dataType) {
-    this.dataType = dataType;
+  public void setOutputs(@javax.annotation.Nonnull List<AddVirtualColumnOutputEntry> outputs) {
+    this.outputs = outputs;
   }
 
   public AddVirtualColumnEntry image(@javax.annotation.Nonnull String image) {
@@ -414,7 +423,7 @@ public class AddVirtualColumnEntry {
     }
     AddVirtualColumnEntry addVirtualColumnEntry = (AddVirtualColumnEntry) o;
     return Objects.equals(this.inputColumns, addVirtualColumnEntry.inputColumns)
-        && Objects.equals(this.dataType, addVirtualColumnEntry.dataType)
+        && Objects.equals(this.outputs, addVirtualColumnEntry.outputs)
         && Objects.equals(this.image, addVirtualColumnEntry.image)
         && Objects.equals(this.udf, addVirtualColumnEntry.udf)
         && Objects.equals(this.udfName, addVirtualColumnEntry.udfName)
@@ -439,7 +448,7 @@ public class AddVirtualColumnEntry {
   public int hashCode() {
     return Objects.hash(
         inputColumns,
-        dataType,
+        outputs,
         image,
         udf,
         udfName,
@@ -463,7 +472,7 @@ public class AddVirtualColumnEntry {
     StringBuilder sb = new StringBuilder();
     sb.append("class AddVirtualColumnEntry {\n");
     sb.append("    inputColumns: ").append(toIndentedString(inputColumns)).append("\n");
-    sb.append("    dataType: ").append(toIndentedString(dataType)).append("\n");
+    sb.append("    outputs: ").append(toIndentedString(outputs)).append("\n");
     sb.append("    image: ").append(toIndentedString(image)).append("\n");
     sb.append("    udf: ").append(toIndentedString(udf)).append("\n");
     sb.append("    udfName: ").append(toIndentedString(udfName)).append("\n");
@@ -540,19 +549,22 @@ public class AddVirtualColumnEntry {
       }
     }
 
-    // add `data_type` to the URL query string
-    if (getDataType() != null) {
-      try {
-        joiner.add(
-            String.format(
-                "%sdata_type%s=%s",
-                prefix,
-                suffix,
-                URLEncoder.encode(String.valueOf(getDataType()), "UTF-8")
-                    .replaceAll("\\+", "%20")));
-      } catch (UnsupportedEncodingException e) {
-        // Should never happen, UTF-8 is always supported
-        throw new RuntimeException(e);
+    // add `outputs` to the URL query string
+    if (getOutputs() != null) {
+      for (int i = 0; i < getOutputs().size(); i++) {
+        if (getOutputs().get(i) != null) {
+          joiner.add(
+              getOutputs()
+                  .get(i)
+                  .toUrlQueryString(
+                      String.format(
+                          "%soutputs%s%s",
+                          prefix,
+                          suffix,
+                          "".equals(suffix)
+                              ? ""
+                              : String.format("%s%d%s", containerPrefix, i, containerSuffix))));
+        }
       }
     }
 

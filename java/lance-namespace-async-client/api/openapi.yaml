@@ -7060,6 +7060,19 @@ components:
         - expression: expression
           name: name
           virtual_column:
+            outputs:
+            - metadata:
+                key: metadata
+              nullable: true
+              column: column
+              data_type: "{}"
+              struct_field: struct_field
+            - metadata:
+                key: metadata
+              nullable: true
+              column: column
+              data_type: "{}"
+              struct_field: struct_field
             image: image
             field_metadata:
               key: field_metadata
@@ -7070,13 +7083,25 @@ components:
             input_columns:
             - input_columns
             - input_columns
-            data_type: "{}"
             udf_backend: udf_backend
             auto_backfill: true
             udf_version: udf_version
         - expression: expression
           name: name
           virtual_column:
+            outputs:
+            - metadata:
+                key: metadata
+              nullable: true
+              column: column
+              data_type: "{}"
+              struct_field: struct_field
+            - metadata:
+                key: metadata
+              nullable: true
+              column: column
+              data_type: "{}"
+              struct_field: struct_field
             image: image
             field_metadata:
               key: field_metadata
@@ -7087,7 +7112,6 @@ components:
             input_columns:
             - input_columns
             - input_columns
-            data_type: "{}"
             udf_backend: udf_backend
             auto_backfill: true
             udf_version: udf_version
@@ -7114,6 +7138,19 @@ components:
         expression: expression
         name: name
         virtual_column:
+          outputs:
+          - metadata:
+              key: metadata
+            nullable: true
+            column: column
+            data_type: "{}"
+            struct_field: struct_field
+          - metadata:
+              key: metadata
+            nullable: true
+            column: column
+            data_type: "{}"
+            struct_field: struct_field
           image: image
           field_metadata:
             key: field_metadata
@@ -7124,7 +7161,6 @@ components:
           input_columns:
           - input_columns
           - input_columns
-          data_type: "{}"
           udf_backend: udf_backend
           auto_backfill: true
           udf_version: udf_version
@@ -7143,6 +7179,19 @@ components:
       - name
     AddVirtualColumnEntry:
       example:
+        outputs:
+        - metadata:
+            key: metadata
+          nullable: true
+          column: column
+          data_type: "{}"
+          struct_field: struct_field
+        - metadata:
+            key: metadata
+          nullable: true
+          column: column
+          data_type: "{}"
+          struct_field: struct_field
         image: image
         field_metadata:
           key: field_metadata
@@ -7153,7 +7202,6 @@ components:
         input_columns:
         - input_columns
         - input_columns
-        data_type: "{}"
         udf_backend: udf_backend
         auto_backfill: true
         udf_version: udf_version
@@ -7163,9 +7211,11 @@ components:
           items:
             type: string
           type: array
-        data_type:
-          description: Data type of the virtual column using JSON representation
-          type: object
+        outputs:
+          description: Output columns produced by the virtual column UDF
+          items:
+            $ref: '#/components/schemas/AddVirtualColumnOutputEntry'
+          type: array
         image:
           description: Docker image to use for the UDF
           type: string
@@ -7199,12 +7249,42 @@ components:
             type: string
           description: User-supplied field metadata (string key-value pairs)
       required:
-      - data_type
       - image
       - input_columns
+      - outputs
       - udf
       - udf_name
       - udf_version
+    AddVirtualColumnOutputEntry:
+      example:
+        metadata:
+          key: metadata
+        nullable: true
+        column: column
+        data_type: "{}"
+        struct_field: struct_field
+      properties:
+        column:
+          description: Physical output column name
+          type: string
+        struct_field:
+          description: Field name in the UDF output struct
+          type: string
+        data_type:
+          description: Data type of the output column using JSON representation
+          type: object
+        nullable:
+          description: Whether the output column is nullable
+          type: boolean
+        metadata:
+          additionalProperties:
+            type: string
+          description: User-supplied output field metadata (string key-value pairs)
+      required:
+      - column
+      - data_type
+      - nullable
+      - struct_field
     AlterTableAddColumnsResponse:
       example:
         version: 0

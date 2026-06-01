@@ -34,7 +34,7 @@ public class AddVirtualColumnEntry {
 
   @Valid private List<String> inputColumns = new ArrayList<>();
 
-  private Object dataType;
+  @Valid private List<@Valid AddVirtualColumnOutputEntry> outputs = new ArrayList<>();
 
   private String image;
 
@@ -61,13 +61,13 @@ public class AddVirtualColumnEntry {
   /** Constructor with only required parameters */
   public AddVirtualColumnEntry(
       List<String> inputColumns,
-      Object dataType,
+      List<@Valid AddVirtualColumnOutputEntry> outputs,
       String image,
       String udf,
       String udfName,
       String udfVersion) {
     this.inputColumns = inputColumns;
-    this.dataType = dataType;
+    this.outputs = outputs;
     this.image = image;
     this.udf = udf;
     this.udfName = udfName;
@@ -106,28 +106,37 @@ public class AddVirtualColumnEntry {
     this.inputColumns = inputColumns;
   }
 
-  public AddVirtualColumnEntry dataType(Object dataType) {
-    this.dataType = dataType;
+  public AddVirtualColumnEntry outputs(List<@Valid AddVirtualColumnOutputEntry> outputs) {
+    this.outputs = outputs;
+    return this;
+  }
+
+  public AddVirtualColumnEntry addOutputsItem(AddVirtualColumnOutputEntry outputsItem) {
+    if (this.outputs == null) {
+      this.outputs = new ArrayList<>();
+    }
+    this.outputs.add(outputsItem);
     return this;
   }
 
   /**
-   * Data type of the virtual column using JSON representation
+   * Output columns produced by the virtual column UDF
    *
-   * @return dataType
+   * @return outputs
    */
   @NotNull
+  @Valid
   @Schema(
-      name = "data_type",
-      description = "Data type of the virtual column using JSON representation",
+      name = "outputs",
+      description = "Output columns produced by the virtual column UDF",
       requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("data_type")
-  public Object getDataType() {
-    return dataType;
+  @JsonProperty("outputs")
+  public List<@Valid AddVirtualColumnOutputEntry> getOutputs() {
+    return outputs;
   }
 
-  public void setDataType(Object dataType) {
-    this.dataType = dataType;
+  public void setOutputs(List<@Valid AddVirtualColumnOutputEntry> outputs) {
+    this.outputs = outputs;
   }
 
   public AddVirtualColumnEntry image(String image) {
@@ -359,7 +368,7 @@ public class AddVirtualColumnEntry {
     }
     AddVirtualColumnEntry addVirtualColumnEntry = (AddVirtualColumnEntry) o;
     return Objects.equals(this.inputColumns, addVirtualColumnEntry.inputColumns)
-        && Objects.equals(this.dataType, addVirtualColumnEntry.dataType)
+        && Objects.equals(this.outputs, addVirtualColumnEntry.outputs)
         && Objects.equals(this.image, addVirtualColumnEntry.image)
         && Objects.equals(this.udf, addVirtualColumnEntry.udf)
         && Objects.equals(this.udfName, addVirtualColumnEntry.udfName)
@@ -375,7 +384,7 @@ public class AddVirtualColumnEntry {
   public int hashCode() {
     return Objects.hash(
         inputColumns,
-        dataType,
+        outputs,
         image,
         udf,
         udfName,
@@ -392,7 +401,7 @@ public class AddVirtualColumnEntry {
     StringBuilder sb = new StringBuilder();
     sb.append("class AddVirtualColumnEntry {\n");
     sb.append("    inputColumns: ").append(toIndentedString(inputColumns)).append("\n");
-    sb.append("    dataType: ").append(toIndentedString(dataType)).append("\n");
+    sb.append("    outputs: ").append(toIndentedString(outputs)).append("\n");
     sb.append("    image: ").append(toIndentedString(image)).append("\n");
     sb.append("    udf: ").append(toIndentedString(udf)).append("\n");
     sb.append("    udfName: ").append(toIndentedString(udfName)).append("\n");

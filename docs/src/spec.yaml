@@ -4631,7 +4631,7 @@ components:
       type: object
       required:
         - input_columns
-        - data_type
+        - outputs
         - image
         - udf_version
         - udf_name
@@ -4642,9 +4642,11 @@ components:
           items:
             type: string
           description: List of input column names for the virtual column
-        data_type:
-          type: object
-          description: Data type of the virtual column using JSON representation
+        outputs:
+          type: array
+          items:
+            $ref: "#/components/schemas/AddVirtualColumnOutputEntry"
+          description: Output columns produced by the virtual column UDF
         image:
           type: string
           description: Docker image to use for the UDF
@@ -4684,6 +4686,34 @@ components:
           additionalProperties:
             type: string
           description: User-supplied field metadata (string key-value pairs)
+
+    AddVirtualColumnOutputEntry:
+      type: object
+      required:
+        - column
+        - struct_field
+        - data_type
+        - nullable
+      properties:
+        column:
+          type: string
+          description: Physical output column name
+        struct_field:
+          type: string
+          description: Field name in the UDF output struct
+        data_type:
+          type: object
+          description: Data type of the output column using JSON representation
+        nullable:
+          type: boolean
+          description: Whether the output column is nullable
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+          description: User-supplied output field metadata (string key-value pairs)
 
     AlterTableAddColumnsResponse:
       type: object

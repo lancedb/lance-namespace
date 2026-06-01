@@ -5,17 +5,17 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**input_columns** | **List[str]** | List of input column names for the virtual column | 
-**data_type** | **object** | Data type of the virtual column using JSON representation | 
-**image** | **str** | Docker image to use for the UDF | 
-**udf** | **str** | Base64 encoded pickled UDF | 
-**udf_name** | **str** | Name of the UDF | 
-**udf_version** | **str** | Version of the UDF | 
-**udf_backend** | **str** | UDF backend type (e.g. DockerUDFSpecV1) | [optional] 
-**auto_backfill** | **bool** | Whether to automatically backfill the column after creation | [optional] 
-**manifest** | **str** | JSON-serialized manifest for the UDF environment | [optional] 
-**manifest_checksum** | **str** | SHA-256 checksum of the manifest content | [optional] 
-**field_metadata** | **Dict[str, str]** | User-supplied field metadata (string key-value pairs) | [optional] 
+**input_columns** | **List[str]** | List of input column names for the virtual column |
+**outputs** | [**List[AddVirtualColumnOutputEntry]**](AddVirtualColumnOutputEntry.md) | Output columns produced by the virtual column UDF |
+**image** | **str** | Docker image to use for the UDF |
+**udf** | **str** | Base64 encoded pickled UDF |
+**udf_name** | **str** | Name of the UDF |
+**udf_version** | **str** | Version of the UDF |
+**udf_backend** | **str** | UDF backend type (e.g. DockerUDFSpecV1) | [optional]
+**auto_backfill** | **bool** | Whether to automatically backfill the column after creation | [optional]
+**manifest** | **str** | JSON-serialized manifest for the UDF environment | [optional]
+**manifest_checksum** | **str** | SHA-256 checksum of the manifest content | [optional]
+**field_metadata** | **Dict[str, str]** | User-supplied field metadata (string key-value pairs) | [optional]
 
 ## Example
 
