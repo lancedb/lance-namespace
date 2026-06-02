@@ -79,6 +79,7 @@ See [REST Routes](../../catalog/rest/index.md#rest-routes) for more details.
 | AlterTableBackfillColumns | 1               |           | ✓     |       |          | ✓    |             |
 | AlterTableDropColumns     | 1               |           | ✓     |       | ✓        |      |             |
 | RefreshMaterializedView   | 1               |           | ✓     |       |          | ✓    |             |
+| UpdateFieldMetadata       | 1               |           | ✓     |       | ✓        |      |             |
 | UpdateTableSchemaMetadata | 1               |           | ✓     |       | ✓        |      |             |
 | GetTableStats             | 1               |           | ✓     |       | ✓        |      |             |
 | ListTableTags             | 1               |           | ✓     |       | ✓        |      |             |

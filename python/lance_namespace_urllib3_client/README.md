@@ -167,6 +167,7 @@ Class | Method | HTTP request | Description
 *MetadataApi* | [**rename_table**](docs/MetadataApi.md#rename_table) | **POST** /v1/table/{id}/rename | Rename a table
 *MetadataApi* | [**restore_table**](docs/MetadataApi.md#restore_table) | **POST** /v1/table/{id}/restore | Restore table to a specific version
 *MetadataApi* | [**table_exists**](docs/MetadataApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
+*MetadataApi* | [**update_field_metadata**](docs/MetadataApi.md#update_field_metadata) | **POST** /v1/table/{id}/update_field_metadata | Update per-field metadata
 *MetadataApi* | [**update_table_schema_metadata**](docs/MetadataApi.md#update_table_schema_metadata) | **POST** /v1/table/{id}/schema_metadata/update | Update table schema metadata
 *MetadataApi* | [**update_table_tag**](docs/MetadataApi.md#update_table_tag) | **POST** /v1/table/{id}/tags/update | Update a tag to point to a different version
 *NamespaceApi* | [**create_namespace**](docs/NamespaceApi.md#create_namespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
@@ -213,6 +214,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**rename_table**](docs/TableApi.md#rename_table) | **POST** /v1/table/{id}/rename | Rename a table
 *TableApi* | [**restore_table**](docs/TableApi.md#restore_table) | **POST** /v1/table/{id}/restore | Restore table to a specific version
 *TableApi* | [**table_exists**](docs/TableApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
+*TableApi* | [**update_field_metadata**](docs/TableApi.md#update_field_metadata) | **POST** /v1/table/{id}/update_field_metadata | Update per-field metadata
 *TableApi* | [**update_table**](docs/TableApi.md#update_table) | **POST** /v1/table/{id}/update | Update rows in a table
 *TableApi* | [**update_table_schema_metadata**](docs/TableApi.md#update_table_schema_metadata) | **POST** /v1/table/{id}/schema_metadata/update | Update table schema metadata
 *TableApi* | [**update_table_tag**](docs/TableApi.md#update_table_tag) | **POST** /v1/table/{id}/tags/update | Update a tag to point to a different version
@@ -353,6 +355,9 @@ Class | Method | HTTP request | Description
  - [TableExistsRequest](docs/TableExistsRequest.md)
  - [TableVersion](docs/TableVersion.md)
  - [TagContents](docs/TagContents.md)
+ - [UpdateFieldMetadataEntry](docs/UpdateFieldMetadataEntry.md)
+ - [UpdateFieldMetadataRequest](docs/UpdateFieldMetadataRequest.md)
+ - [UpdateFieldMetadataResponse](docs/UpdateFieldMetadataResponse.md)
  - [UpdateTableRequest](docs/UpdateTableRequest.md)
  - [UpdateTableResponse](docs/UpdateTableResponse.md)
  - [UpdateTableSchemaMetadataRequest](docs/UpdateTableSchemaMetadataRequest.md)

@@ -592,6 +592,16 @@ public interface LanceNamespace {
   }
 
   /**
+   * Update per-field metadata.
+   *
+   * @param request The update field metadata request
+   * @return The update field metadata response
+   */
+  default UpdateFieldMetadataResponse updateFieldMetadata(UpdateFieldMetadataRequest request) {
+    throw new UnsupportedOperationException("Not supported: updateFieldMetadata");
+  }
+
+  /**
    * Get table statistics.
    *
    * @param request The get table stats request

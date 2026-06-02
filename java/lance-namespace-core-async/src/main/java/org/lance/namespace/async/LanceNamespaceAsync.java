@@ -611,6 +611,18 @@ public interface LanceNamespaceAsync {
   }
 
   /**
+   * Update per-field metadata.
+   *
+   * @param request The update field metadata request
+   * @return A CompletableFuture containing the update field metadata response
+   */
+  default CompletableFuture<UpdateFieldMetadataResponse> updateFieldMetadata(
+      UpdateFieldMetadataRequest request) {
+    return CompletableFuture.failedFuture(
+        new UnsupportedOperationException("Not supported: updateFieldMetadata"));
+  }
+
+  /**
    * Get table statistics.
    *
    * @param request The get table stats request

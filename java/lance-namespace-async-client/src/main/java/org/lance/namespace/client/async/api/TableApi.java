@@ -78,6 +78,8 @@ import org.lance.namespace.model.RenameTableResponse;
 import org.lance.namespace.model.RestoreTableRequest;
 import org.lance.namespace.model.RestoreTableResponse;
 import org.lance.namespace.model.TableExistsRequest;
+import org.lance.namespace.model.UpdateFieldMetadataRequest;
+import org.lance.namespace.model.UpdateFieldMetadataResponse;
 import org.lance.namespace.model.UpdateTableRequest;
 import org.lance.namespace.model.UpdateTableResponse;
 import org.lance.namespace.model.UpdateTableTagRequest;
@@ -6263,6 +6265,165 @@ public class TableApi {
 
     try {
       byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(tableExistsRequest);
+      localVarRequestBuilder.method(
+          "POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * Update per-field metadata Update the Arrow field (column) metadata for table &#x60;id&#x60;.
+   * Each entry targets a field by &#x60;path&#x60; and merges the provided key-value pairs into
+   * that field&#39;s existing metadata, or replaces it when &#x60;replace&#x60; is true. A null
+   * metadata value deletes that key.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param updateFieldMetadataRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return CompletableFuture&lt;UpdateFieldMetadataResponse&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public CompletableFuture<UpdateFieldMetadataResponse> updateFieldMetadata(
+      String id, UpdateFieldMetadataRequest updateFieldMetadataRequest, String delimiter)
+      throws ApiException {
+    try {
+      HttpRequest.Builder localVarRequestBuilder =
+          updateFieldMetadataRequestBuilder(id, updateFieldMetadataRequest, delimiter);
+      return memberVarHttpClient
+          .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+          .thenComposeAsync(
+              localVarResponse -> {
+                if (localVarResponse.statusCode() / 100 != 2) {
+                  return CompletableFuture.failedFuture(
+                      getApiException("updateFieldMetadata", localVarResponse));
+                }
+                try {
+                  String responseBody = localVarResponse.body();
+                  return CompletableFuture.completedFuture(
+                      responseBody == null || responseBody.isBlank()
+                          ? null
+                          : memberVarObjectMapper.readValue(
+                              responseBody, new TypeReference<UpdateFieldMetadataResponse>() {}));
+                } catch (IOException e) {
+                  return CompletableFuture.failedFuture(new ApiException(e));
+                }
+              });
+    } catch (ApiException e) {
+      return CompletableFuture.failedFuture(e);
+    }
+  }
+
+  /**
+   * Update per-field metadata Update the Arrow field (column) metadata for table &#x60;id&#x60;.
+   * Each entry targets a field by &#x60;path&#x60; and merges the provided key-value pairs into
+   * that field&#39;s existing metadata, or replaces it when &#x60;replace&#x60; is true. A null
+   * metadata value deletes that key.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param updateFieldMetadataRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return CompletableFuture&lt;ApiResponse&lt;UpdateFieldMetadataResponse&gt;&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public CompletableFuture<ApiResponse<UpdateFieldMetadataResponse>>
+      updateFieldMetadataWithHttpInfo(
+          String id, UpdateFieldMetadataRequest updateFieldMetadataRequest, String delimiter)
+          throws ApiException {
+    try {
+      HttpRequest.Builder localVarRequestBuilder =
+          updateFieldMetadataRequestBuilder(id, updateFieldMetadataRequest, delimiter);
+      return memberVarHttpClient
+          .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+          .thenComposeAsync(
+              localVarResponse -> {
+                if (memberVarAsyncResponseInterceptor != null) {
+                  memberVarAsyncResponseInterceptor.accept(localVarResponse);
+                }
+                if (localVarResponse.statusCode() / 100 != 2) {
+                  return CompletableFuture.failedFuture(
+                      getApiException("updateFieldMetadata", localVarResponse));
+                }
+                try {
+                  String responseBody = localVarResponse.body();
+                  return CompletableFuture.completedFuture(
+                      new ApiResponse<UpdateFieldMetadataResponse>(
+                          localVarResponse.statusCode(),
+                          localVarResponse.headers().map(),
+                          responseBody == null || responseBody.isBlank()
+                              ? null
+                              : memberVarObjectMapper.readValue(
+                                  responseBody,
+                                  new TypeReference<UpdateFieldMetadataResponse>() {})));
+                } catch (IOException e) {
+                  return CompletableFuture.failedFuture(new ApiException(e));
+                }
+              });
+    } catch (ApiException e) {
+      return CompletableFuture.failedFuture(e);
+    }
+  }
+
+  private HttpRequest.Builder updateFieldMetadataRequestBuilder(
+      String id, UpdateFieldMetadataRequest updateFieldMetadataRequest, String delimiter)
+      throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling updateFieldMetadata");
+    }
+    // verify the required parameter 'updateFieldMetadataRequest' is set
+    if (updateFieldMetadataRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'updateFieldMetadataRequest' when calling updateFieldMetadata");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath =
+        "/v1/table/{id}/update_field_metadata".replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    List<Pair> localVarQueryParams = new ArrayList<>();
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    localVarQueryParameterBaseName = "delimiter";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("delimiter", delimiter));
+
+    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
+      StringJoiner queryJoiner = new StringJoiner("&");
+      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
+      if (localVarQueryStringJoiner.length() != 0) {
+        queryJoiner.add(localVarQueryStringJoiner.toString());
+      }
+      localVarRequestBuilder.uri(
+          URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
+    } else {
+      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    }
+
+    localVarRequestBuilder.header("Content-Type", "application/json");
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    try {
+      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(updateFieldMetadataRequest);
       localVarRequestBuilder.method(
           "POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
     } catch (IOException e) {

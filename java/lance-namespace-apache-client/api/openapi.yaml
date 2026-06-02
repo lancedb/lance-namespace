@@ -1038,6 +1038,49 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/table/{id}/update_field_metadata:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
+    post:
+      description: |
+        Update the Arrow field (column) metadata for table `id`.
+
+        Each entry targets a field by `path` and merges the provided key-value
+        pairs into that field's existing metadata, or replaces it when `replace`
+        is true. A null metadata value deletes that key.
+      operationId: UpdateFieldMetadata
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFieldMetadataRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/UpdateFieldMetadataResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Update per-field metadata
+      tags:
+      - Table
+      - Metadata
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/table/{id}/drop_columns:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -2837,6 +2880,12 @@ components:
           schema:
             $ref: '#/components/schemas/AlterTableAddColumnsResponse'
       description: Add columns operation result
+    UpdateFieldMetadataResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateFieldMetadataResponse'
+      description: Field metadata update result
     AlterTableAlterColumnsResponse:
       content:
         application/json:
@@ -7294,6 +7343,84 @@ components:
           format: int64
           minimum: 0
           type: integer
+      required:
+      - version
+    UpdateFieldMetadataRequest:
+      example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
+        id:
+        - id
+        - id
+        updates:
+        - path: path
+          metadata:
+            key: metadata
+          replace: true
+        - path: path
+          metadata:
+            key: metadata
+          replace: true
+      properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
+        id:
+          description: Table identifier path (namespace + table name)
+          items:
+            type: string
+          type: array
+        updates:
+          description: List of per-field metadata updates to apply
+          items:
+            $ref: '#/components/schemas/UpdateFieldMetadataEntry'
+          type: array
+      required:
+      - updates
+    UpdateFieldMetadataEntry:
+      example:
+        path: path
+        metadata:
+          key: metadata
+        replace: true
+      properties:
+        path:
+          description: Field (column) path whose metadata to update
+          type: string
+        metadata:
+          additionalProperties:
+            nullable: true
+            type: string
+          description: |
+            Metadata key-value pairs to apply to the field. A null value
+            deletes that key.
+        replace:
+          description: |
+            If true, replace the field's existing metadata entirely; otherwise
+            merge into it (optional, defaults to false).
+          nullable: true
+          type: boolean
+      required:
+      - metadata
+      - path
+    UpdateFieldMetadataResponse:
+      example:
+        fields:
+          key:
+            key: fields
+        version: 0
+      properties:
+        version:
+          description: The commit version associated with the operation
+          format: int64
+          minimum: 0
+          type: integer
+        fields:
+          additionalProperties:
+            additionalProperties:
+              type: string
+          description: |
+            Resulting metadata for each updated field, keyed by field path.
       required:
       - version
     AlterTableAlterColumnsRequest:

@@ -264,6 +264,13 @@ class TestMetadataApi(unittest.TestCase):
         """
         pass
 
+    def test_update_field_metadata(self) -> None:
+        """Test case for update_field_metadata
+
+        Update per-field metadata
+        """
+        pass
+
     def test_update_table_schema_metadata(self) -> None:
         """Test case for update_table_schema_metadata
 

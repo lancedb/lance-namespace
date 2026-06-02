@@ -938,6 +938,44 @@ paths:
         5XX:
           $ref: "#/components/responses/ServerErrorResponse"
 
+  /v1/table/{id}/update_field_metadata:
+    parameters:
+      - $ref: "#/components/parameters/id"
+      - $ref: "#/components/parameters/delimiter"
+    post:
+      tags:
+        - Table
+        - Metadata
+      summary: Update per-field metadata
+      operationId: UpdateFieldMetadata
+      description: |
+        Update the Arrow field (column) metadata for table `id`.
+
+        Each entry targets a field by `path` and merges the provided key-value
+        pairs into that field's existing metadata, or replaces it when `replace`
+        is true. A null metadata value deletes that key.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateFieldMetadataRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/UpdateFieldMetadataResponse"
+        400:
+          $ref: "#/components/responses/BadRequestErrorResponse"
+        401:
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        403:
+          $ref: "#/components/responses/ForbiddenErrorResponse"
+        404:
+          $ref: "#/components/responses/NotFoundErrorResponse"
+        503:
+          $ref: "#/components/responses/ServiceUnavailableErrorResponse"
+        5XX:
+          $ref: "#/components/responses/ServerErrorResponse"
+
   /v1/table/{id}/drop_columns:
     parameters:
       - $ref: "#/components/parameters/id"
@@ -4726,6 +4764,69 @@ components:
           description: The commit version associated with the operation
           minimum: 0
 
+    UpdateFieldMetadataRequest:
+      type: object
+      required:
+        - updates
+      properties:
+        identity:
+          $ref: "#/components/schemas/Identity"
+        id:
+          type: array
+          items:
+            type: string
+          description: Table identifier path (namespace + table name)
+        updates:
+          type: array
+          items:
+            $ref: "#/components/schemas/UpdateFieldMetadataEntry"
+          description: List of per-field metadata updates to apply
+
+    UpdateFieldMetadataEntry:
+      type: object
+      required:
+        - path
+        - metadata
+      properties:
+        path:
+          type: string
+          description: Field (column) path whose metadata to update
+        metadata:
+          type: object
+          additionalProperties:
+            type:
+              - string
+              - "null"
+          description: |
+            Metadata key-value pairs to apply to the field. A null value
+            deletes that key.
+        replace:
+          type:
+            - boolean
+            - "null"
+          description: |
+            If true, replace the field's existing metadata entirely; otherwise
+            merge into it (optional, defaults to false).
+
+    UpdateFieldMetadataResponse:
+      type: object
+      required:
+        - version
+      properties:
+        version:
+          type: integer
+          format: int64
+          description: The commit version associated with the operation
+          minimum: 0
+        fields:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
+          description: |
+            Resulting metadata for each updated field, keyed by field path.
+
     AlterTableAlterColumnsRequest:
       type: object
       required:
@@ -5647,6 +5748,13 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/AlterTableAddColumnsResponse"
+
+    UpdateFieldMetadataResponse:
+      description: Field metadata update result
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UpdateFieldMetadataResponse"
 
     AlterTableAlterColumnsResponse:
       description: Alter columns operation result

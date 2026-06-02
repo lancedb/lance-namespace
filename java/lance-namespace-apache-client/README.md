@@ -187,6 +187,7 @@ Class | Method | HTTP request | Description
 *MetadataApi* | [**renameTable**](docs/MetadataApi.md#renameTable) | **POST** /v1/table/{id}/rename | Rename a table
 *MetadataApi* | [**restoreTable**](docs/MetadataApi.md#restoreTable) | **POST** /v1/table/{id}/restore | Restore table to a specific version
 *MetadataApi* | [**tableExists**](docs/MetadataApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists
+*MetadataApi* | [**updateFieldMetadata**](docs/MetadataApi.md#updateFieldMetadata) | **POST** /v1/table/{id}/update_field_metadata | Update per-field metadata
 *MetadataApi* | [**updateTableSchemaMetadata**](docs/MetadataApi.md#updateTableSchemaMetadata) | **POST** /v1/table/{id}/schema_metadata/update | Update table schema metadata
 *MetadataApi* | [**updateTableTag**](docs/MetadataApi.md#updateTableTag) | **POST** /v1/table/{id}/tags/update | Update a tag to point to a different version
 *NamespaceApi* | [**createNamespace**](docs/NamespaceApi.md#createNamespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
@@ -233,6 +234,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**renameTable**](docs/TableApi.md#renameTable) | **POST** /v1/table/{id}/rename | Rename a table
 *TableApi* | [**restoreTable**](docs/TableApi.md#restoreTable) | **POST** /v1/table/{id}/restore | Restore table to a specific version
 *TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists
+*TableApi* | [**updateFieldMetadata**](docs/TableApi.md#updateFieldMetadata) | **POST** /v1/table/{id}/update_field_metadata | Update per-field metadata
 *TableApi* | [**updateTable**](docs/TableApi.md#updateTable) | **POST** /v1/table/{id}/update | Update rows in a table
 *TableApi* | [**updateTableSchemaMetadata**](docs/TableApi.md#updateTableSchemaMetadata) | **POST** /v1/table/{id}/schema_metadata/update | Update table schema metadata
 *TableApi* | [**updateTableTag**](docs/TableApi.md#updateTableTag) | **POST** /v1/table/{id}/tags/update | Update a tag to point to a different version
@@ -373,6 +375,9 @@ Class | Method | HTTP request | Description
  - [TableExistsRequest](docs/TableExistsRequest.md)
  - [TableVersion](docs/TableVersion.md)
  - [TagContents](docs/TagContents.md)
+ - [UpdateFieldMetadataEntry](docs/UpdateFieldMetadataEntry.md)
+ - [UpdateFieldMetadataRequest](docs/UpdateFieldMetadataRequest.md)
+ - [UpdateFieldMetadataResponse](docs/UpdateFieldMetadataResponse.md)
  - [UpdateTableRequest](docs/UpdateTableRequest.md)
  - [UpdateTableResponse](docs/UpdateTableResponse.md)
  - [UpdateTableSchemaMetadataRequest](docs/UpdateTableSchemaMetadataRequest.md)

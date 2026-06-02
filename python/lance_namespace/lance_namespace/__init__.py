@@ -147,6 +147,8 @@ from lance_namespace_urllib3_client.models import (
     RestoreTableResponse,
     TableExistsRequest,
     TableVersion,
+    UpdateFieldMetadataRequest,
+    UpdateFieldMetadataResponse,
     UpdateTableRequest,
     UpdateTableResponse,
     UpdateTableSchemaMetadataRequest,
@@ -279,6 +281,8 @@ __all__ = [
     "RestoreTableResponse",
     "TableExistsRequest",
     "TableVersion",
+    "UpdateFieldMetadataRequest",
+    "UpdateFieldMetadataResponse",
     "UpdateTableRequest",
     "UpdateTableResponse",
     "UpdateTableSchemaMetadataRequest",
@@ -857,6 +861,22 @@ class LanceNamespace(ABC):
             If a concurrent modification conflict occurs.
         """
         raise UnsupportedOperationError("Not supported: update_table_schema_metadata")
+
+    def update_field_metadata(
+        self, request: UpdateFieldMetadataRequest
+    ) -> UpdateFieldMetadataResponse:
+        """Update per-field metadata.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: update_field_metadata")
 
     def get_table_stats(self, request: GetTableStatsRequest) -> GetTableStatsResponse:
         """Get table statistics.

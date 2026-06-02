@@ -74,6 +74,8 @@ import org.lance.namespace.server.springboot.model.RenameTableResponse;
 import org.lance.namespace.server.springboot.model.RestoreTableRequest;
 import org.lance.namespace.server.springboot.model.RestoreTableResponse;
 import org.lance.namespace.server.springboot.model.TableExistsRequest;
+import org.lance.namespace.server.springboot.model.UpdateFieldMetadataRequest;
+import org.lance.namespace.server.springboot.model.UpdateFieldMetadataResponse;
 import org.lance.namespace.server.springboot.model.UpdateTableRequest;
 import org.lance.namespace.server.springboot.model.UpdateTableResponse;
 import org.lance.namespace.server.springboot.model.UpdateTableTagRequest;
@@ -6899,6 +6901,183 @@ public interface TableApi {
         .ifPresent(
             request -> {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
+              }
+            });
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
+
+  /**
+   * POST /v1/table/{id}/update_field_metadata : Update per-field metadata Update the Arrow field
+   * (column) metadata for table &#x60;id&#x60;. Each entry targets a field by &#x60;path&#x60; and
+   * merges the provided key-value pairs into that field&#39;s existing metadata, or replaces it
+   * when &#x60;replace&#x60; is true. A null metadata value deletes that key.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param updateFieldMetadataRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return Field metadata update result (status code 200) or Indicates a bad request error. It
+   *     could be caused by an unexpected request body format or other forms of request validation
+   *     failure, such as invalid json. Usually serves application/json content, although in some
+   *     cases simple text/plain content might be returned by the server&#39;s middleware. (status
+   *     code 400) or Unauthorized. The request lacks valid authentication credentials for the
+   *     operation. (status code 401) or Forbidden. Authenticated user does not have the necessary
+   *     permissions. (status code 403) or A server-side problem that means can not find the
+   *     specified resource. (status code 404) or The service is not ready to handle the request.
+   *     The client should wait and retry. The service may additionally send a Retry-After header to
+   *     indicate when to retry. (status code 503) or A server-side problem that might not be
+   *     addressable from the client side. Used for server 5xx errors without more specific
+   *     documentation in individual routes. (status code 5XX)
+   */
+  @Operation(
+      operationId = "updateFieldMetadata",
+      summary = "Update per-field metadata",
+      description =
+          "Update the Arrow field (column) metadata for table `id`.  Each entry targets a field by `path` and merges the provided key-value pairs into that field's existing metadata, or replaces it when `replace` is true. A null metadata value deletes that key. ",
+      tags = {"Table", "Metadata"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Field metadata update result",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = UpdateFieldMetadataResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "400",
+            description =
+                "Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server's middleware.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "401",
+            description =
+                "Unauthorized. The request lacks valid authentication credentials for the operation.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "403",
+            description = "Forbidden. Authenticated user does not have the necessary permissions.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "404",
+            description = "A server-side problem that means can not find the specified resource.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "503",
+            description =
+                "The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "5XX",
+            description =
+                "A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            })
+      },
+      security = {
+        @SecurityRequirement(name = "OAuth2"),
+        @SecurityRequirement(name = "ApiKeyAuth"),
+        @SecurityRequirement(name = "BearerAuth")
+      })
+  @RequestMapping(
+      method = RequestMethod.POST,
+      value = "/v1/table/{id}/update_field_metadata",
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  default ResponseEntity<UpdateFieldMetadataResponse> updateFieldMetadata(
+      @Parameter(
+              name = "id",
+              description =
+                  "`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ",
+              required = true,
+              in = ParameterIn.PATH)
+          @PathVariable("id")
+          String id,
+      @Parameter(name = "UpdateFieldMetadataRequest", description = "", required = true)
+          @Valid
+          @RequestBody
+          UpdateFieldMetadataRequest updateFieldMetadataRequest,
+      @Parameter(
+              name = "delimiter",
+              description =
+                  "An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ",
+              in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "delimiter", required = false)
+          Optional<String> delimiter) {
+    getRequest()
+        .ifPresent(
+            request -> {
+              for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                  String exampleString =
+                      "{ \"fields\" : { \"key\" : { \"key\" : \"fields\" } }, \"version\" : 0 }";
+                  ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                  break;
+                }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
                       "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";

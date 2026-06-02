@@ -77,6 +77,8 @@ import org.lance.namespace.model.RenameTableResponse;
 import org.lance.namespace.model.RestoreTableRequest;
 import org.lance.namespace.model.RestoreTableResponse;
 import org.lance.namespace.model.TableExistsRequest;
+import org.lance.namespace.model.UpdateFieldMetadataRequest;
+import org.lance.namespace.model.UpdateFieldMetadataResponse;
 import org.lance.namespace.model.UpdateTableTagRequest;
 import org.lance.namespace.model.UpdateTableTagResponse;
 
@@ -3639,6 +3641,113 @@ public class MetadataApi extends BaseApi {
         localVarContentType,
         localVarAuthNames,
         null);
+  }
+
+  /**
+   * Update per-field metadata Update the Arrow field (column) metadata for table &#x60;id&#x60;.
+   * Each entry targets a field by &#x60;path&#x60; and merges the provided key-value pairs into
+   * that field&#39;s existing metadata, or replaces it when &#x60;replace&#x60; is true. A null
+   * metadata value deletes that key.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param updateFieldMetadataRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return UpdateFieldMetadataResponse
+   * @throws ApiException if fails to make API call
+   */
+  public UpdateFieldMetadataResponse updateFieldMetadata(
+      String id, UpdateFieldMetadataRequest updateFieldMetadataRequest, String delimiter)
+      throws ApiException {
+    return this.updateFieldMetadata(
+        id, updateFieldMetadataRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Update per-field metadata Update the Arrow field (column) metadata for table &#x60;id&#x60;.
+   * Each entry targets a field by &#x60;path&#x60; and merges the provided key-value pairs into
+   * that field&#39;s existing metadata, or replaces it when &#x60;replace&#x60; is true. A null
+   * metadata value deletes that key.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param updateFieldMetadataRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return UpdateFieldMetadataResponse
+   * @throws ApiException if fails to make API call
+   */
+  public UpdateFieldMetadataResponse updateFieldMetadata(
+      String id,
+      UpdateFieldMetadataRequest updateFieldMetadataRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = updateFieldMetadataRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling updateFieldMetadata");
+    }
+
+    // verify the required parameter 'updateFieldMetadataRequest' is set
+    if (updateFieldMetadataRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'updateFieldMetadataRequest' when calling updateFieldMetadata");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/update_field_metadata"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
+
+    TypeReference<UpdateFieldMetadataResponse> localVarReturnType =
+        new TypeReference<UpdateFieldMetadataResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
   }
 
   /**
