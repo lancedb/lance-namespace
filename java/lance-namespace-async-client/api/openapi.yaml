@@ -4469,17 +4469,33 @@ components:
       example:
         indexes:
         - index_uuid: index_uuid
+          index_version: 0
+          size_bytes: 0
           columns:
           - columns
           - columns
+          created_at: 2000-01-23T04:56:07.000+00:00
+          index_details: index_details
+          num_indexed_rows: 0
           index_name: index_name
+          num_segments: 0
           status: status
+          index_type: index_type
+          type_url: type_url
         - index_uuid: index_uuid
+          index_version: 0
+          size_bytes: 0
           columns:
           - columns
           - columns
+          created_at: 2000-01-23T04:56:07.000+00:00
+          index_details: index_details
+          num_indexed_rows: 0
           index_name: index_name
+          num_segments: 0
           status: status
+          index_type: index_type
+          type_url: type_url
         page_token: page_token
       properties:
         indexes:
@@ -4511,11 +4527,19 @@ components:
     IndexContent:
       example:
         index_uuid: index_uuid
+        index_version: 0
+        size_bytes: 0
         columns:
         - columns
         - columns
+        created_at: 2000-01-23T04:56:07.000+00:00
+        index_details: index_details
+        num_indexed_rows: 0
         index_name: index_name
+        num_segments: 0
         status: status
+        index_type: index_type
+        type_url: type_url
       properties:
         index_name:
           description: Name of the index
@@ -4531,6 +4555,48 @@ components:
         status:
           description: Current status of the index
           type: string
+        index_type:
+          description: "Friendly index type, e.g. IVF_PQ, BTREE. Unknown if no plugin\
+            \ recognizes the index."
+          type: string
+        type_url:
+          description: "Protobuf type URL, a precise type identifier for the index."
+          type: string
+        num_indexed_rows:
+          description: Approximate number of rows covered by the index. May include
+            deleted rows.
+          format: int64
+          minimum: 0
+          type: integer
+        size_bytes:
+          description: Total index size in bytes across all segments. Null for indices
+            predating file-size tracking.
+          format: int64
+          minimum: 0
+          type: integer
+          nullable: true
+        num_segments:
+          description: Number of index deltas/segments.
+          format: int32
+          minimum: 0
+          type: integer
+        created_at:
+          description: Earliest creation time across the index segments. Null for
+            legacy indices.
+          format: date-time
+          type: string
+          nullable: true
+        index_version:
+          description: On-disk index format version.
+          format: int32
+          minimum: 0
+          type: integer
+        index_details:
+          description: "Opaque, type-specific JSON with additional index details.\
+            \ For vector indices this carries metric/distance type, partitioning,\
+            \ and HNSW/PQ/SQ/RQ parameters."
+          type: string
+          nullable: true
       required:
       - columns
       - index_name

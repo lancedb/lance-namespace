@@ -25,6 +25,30 @@ pub struct IndexContent {
     /// Current status of the index
     #[serde(rename = "status")]
     pub status: String,
+    /// Friendly index type, e.g. IVF_PQ, BTREE. Unknown if no plugin recognizes the index.
+    #[serde(rename = "index_type", skip_serializing_if = "Option::is_none")]
+    pub index_type: Option<String>,
+    /// Protobuf type URL, a precise type identifier for the index.
+    #[serde(rename = "type_url", skip_serializing_if = "Option::is_none")]
+    pub type_url: Option<String>,
+    /// Approximate number of rows covered by the index. May include deleted rows.
+    #[serde(rename = "num_indexed_rows", skip_serializing_if = "Option::is_none")]
+    pub num_indexed_rows: Option<i64>,
+    /// Total index size in bytes across all segments. Null for indices predating file-size tracking.
+    #[serde(rename = "size_bytes", skip_serializing_if = "Option::is_none")]
+    pub size_bytes: Option<i64>,
+    /// Number of index deltas/segments.
+    #[serde(rename = "num_segments", skip_serializing_if = "Option::is_none")]
+    pub num_segments: Option<i32>,
+    /// Earliest creation time across the index segments. Null for legacy indices.
+    #[serde(rename = "created_at", skip_serializing_if = "Option::is_none")]
+    pub created_at: Option<String>,
+    /// On-disk index format version.
+    #[serde(rename = "index_version", skip_serializing_if = "Option::is_none")]
+    pub index_version: Option<i32>,
+    /// Opaque, type-specific JSON with additional index details. For vector indices this carries metric/distance type, partitioning, and HNSW/PQ/SQ/RQ parameters.
+    #[serde(rename = "index_details", skip_serializing_if = "Option::is_none")]
+    pub index_details: Option<String>,
 }
 
 impl IndexContent {
@@ -34,6 +58,14 @@ impl IndexContent {
             index_uuid,
             columns,
             status,
+            index_type: None,
+            type_url: None,
+            num_indexed_rows: None,
+            size_bytes: None,
+            num_segments: None,
+            created_at: None,
+            index_version: None,
+            index_details: None,
         }
     }
 }

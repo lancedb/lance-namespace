@@ -3219,6 +3219,53 @@ components:
         status:
           type: string
           description: Current status of the index
+        index_type:
+          type: string
+          description: >-
+            Friendly index type, e.g. IVF_PQ, BTREE. Unknown if no plugin
+            recognizes the index.
+        type_url:
+          type: string
+          description: Protobuf type URL, a precise type identifier for the index.
+        num_indexed_rows:
+          type: integer
+          format: int64
+          minimum: 0
+          description: >-
+            Approximate number of rows covered by the index. May include
+            deleted rows.
+        size_bytes:
+          type: integer
+          format: int64
+          minimum: 0
+          nullable: true
+          description: >-
+            Total index size in bytes across all segments. Null for indices
+            predating file-size tracking.
+        num_segments:
+          type: integer
+          format: int32
+          minimum: 0
+          description: Number of index deltas/segments.
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: >-
+            Earliest creation time across the index segments. Null for legacy
+            indices.
+        index_version:
+          type: integer
+          format: int32
+          minimum: 0
+          description: On-disk index format version.
+        index_details:
+          type: string
+          nullable: true
+          description: >-
+            Opaque, type-specific JSON with additional index details. For vector
+            indices this carries metric/distance type, partitioning, and
+            HNSW/PQ/SQ/RQ parameters.
 
     DescribeTableIndexStatsRequest:
       type: object

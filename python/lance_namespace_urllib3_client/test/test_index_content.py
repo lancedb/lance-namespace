@@ -40,7 +40,15 @@ class TestIndexContent(unittest.TestCase):
                 columns = [
                     ''
                     ],
-                status = ''
+                status = '',
+                index_type = '',
+                type_url = '',
+                num_indexed_rows = 0,
+                size_bytes = 0,
+                num_segments = 0,
+                created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
+                index_version = 0,
+                index_details = ''
             )
         else:
             return IndexContent(

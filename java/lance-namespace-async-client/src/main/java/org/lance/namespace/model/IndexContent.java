@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +30,15 @@ import java.util.StringJoiner;
   IndexContent.JSON_PROPERTY_INDEX_NAME,
   IndexContent.JSON_PROPERTY_INDEX_UUID,
   IndexContent.JSON_PROPERTY_COLUMNS,
-  IndexContent.JSON_PROPERTY_STATUS
+  IndexContent.JSON_PROPERTY_STATUS,
+  IndexContent.JSON_PROPERTY_INDEX_TYPE,
+  IndexContent.JSON_PROPERTY_TYPE_URL,
+  IndexContent.JSON_PROPERTY_NUM_INDEXED_ROWS,
+  IndexContent.JSON_PROPERTY_SIZE_BYTES,
+  IndexContent.JSON_PROPERTY_NUM_SEGMENTS,
+  IndexContent.JSON_PROPERTY_CREATED_AT,
+  IndexContent.JSON_PROPERTY_INDEX_VERSION,
+  IndexContent.JSON_PROPERTY_INDEX_DETAILS
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -46,6 +55,30 @@ public class IndexContent {
 
   public static final String JSON_PROPERTY_STATUS = "status";
   @javax.annotation.Nonnull private String status;
+
+  public static final String JSON_PROPERTY_INDEX_TYPE = "index_type";
+  @javax.annotation.Nullable private String indexType;
+
+  public static final String JSON_PROPERTY_TYPE_URL = "type_url";
+  @javax.annotation.Nullable private String typeUrl;
+
+  public static final String JSON_PROPERTY_NUM_INDEXED_ROWS = "num_indexed_rows";
+  @javax.annotation.Nullable private Long numIndexedRows;
+
+  public static final String JSON_PROPERTY_SIZE_BYTES = "size_bytes";
+  @javax.annotation.Nullable private Long sizeBytes;
+
+  public static final String JSON_PROPERTY_NUM_SEGMENTS = "num_segments";
+  @javax.annotation.Nullable private Integer numSegments;
+
+  public static final String JSON_PROPERTY_CREATED_AT = "created_at";
+  @javax.annotation.Nullable private OffsetDateTime createdAt;
+
+  public static final String JSON_PROPERTY_INDEX_VERSION = "index_version";
+  @javax.annotation.Nullable private Integer indexVersion;
+
+  public static final String JSON_PROPERTY_INDEX_DETAILS = "index_details";
+  @javax.annotation.Nullable private String indexDetails;
 
   public IndexContent() {}
 
@@ -149,6 +182,192 @@ public class IndexContent {
     this.status = status;
   }
 
+  public IndexContent indexType(@javax.annotation.Nullable String indexType) {
+    this.indexType = indexType;
+    return this;
+  }
+
+  /**
+   * Friendly index type, e.g. IVF_PQ, BTREE. Unknown if no plugin recognizes the index.
+   *
+   * @return indexType
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_INDEX_TYPE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getIndexType() {
+    return indexType;
+  }
+
+  @JsonProperty(JSON_PROPERTY_INDEX_TYPE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIndexType(@javax.annotation.Nullable String indexType) {
+    this.indexType = indexType;
+  }
+
+  public IndexContent typeUrl(@javax.annotation.Nullable String typeUrl) {
+    this.typeUrl = typeUrl;
+    return this;
+  }
+
+  /**
+   * Protobuf type URL, a precise type identifier for the index.
+   *
+   * @return typeUrl
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TYPE_URL)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getTypeUrl() {
+    return typeUrl;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TYPE_URL)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTypeUrl(@javax.annotation.Nullable String typeUrl) {
+    this.typeUrl = typeUrl;
+  }
+
+  public IndexContent numIndexedRows(@javax.annotation.Nullable Long numIndexedRows) {
+    this.numIndexedRows = numIndexedRows;
+    return this;
+  }
+
+  /**
+   * Approximate number of rows covered by the index. May include deleted rows. minimum: 0
+   *
+   * @return numIndexedRows
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_NUM_INDEXED_ROWS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Long getNumIndexedRows() {
+    return numIndexedRows;
+  }
+
+  @JsonProperty(JSON_PROPERTY_NUM_INDEXED_ROWS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNumIndexedRows(@javax.annotation.Nullable Long numIndexedRows) {
+    this.numIndexedRows = numIndexedRows;
+  }
+
+  public IndexContent sizeBytes(@javax.annotation.Nullable Long sizeBytes) {
+    this.sizeBytes = sizeBytes;
+    return this;
+  }
+
+  /**
+   * Total index size in bytes across all segments. Null for indices predating file-size tracking.
+   * minimum: 0
+   *
+   * @return sizeBytes
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_SIZE_BYTES)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Long getSizeBytes() {
+    return sizeBytes;
+  }
+
+  @JsonProperty(JSON_PROPERTY_SIZE_BYTES)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setSizeBytes(@javax.annotation.Nullable Long sizeBytes) {
+    this.sizeBytes = sizeBytes;
+  }
+
+  public IndexContent numSegments(@javax.annotation.Nullable Integer numSegments) {
+    this.numSegments = numSegments;
+    return this;
+  }
+
+  /**
+   * Number of index deltas/segments. minimum: 0
+   *
+   * @return numSegments
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_NUM_SEGMENTS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getNumSegments() {
+    return numSegments;
+  }
+
+  @JsonProperty(JSON_PROPERTY_NUM_SEGMENTS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNumSegments(@javax.annotation.Nullable Integer numSegments) {
+    this.numSegments = numSegments;
+  }
+
+  public IndexContent createdAt(@javax.annotation.Nullable OffsetDateTime createdAt) {
+    this.createdAt = createdAt;
+    return this;
+  }
+
+  /**
+   * Earliest creation time across the index segments. Null for legacy indices.
+   *
+   * @return createdAt
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_CREATED_AT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public OffsetDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  @JsonProperty(JSON_PROPERTY_CREATED_AT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setCreatedAt(@javax.annotation.Nullable OffsetDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public IndexContent indexVersion(@javax.annotation.Nullable Integer indexVersion) {
+    this.indexVersion = indexVersion;
+    return this;
+  }
+
+  /**
+   * On-disk index format version. minimum: 0
+   *
+   * @return indexVersion
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_INDEX_VERSION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getIndexVersion() {
+    return indexVersion;
+  }
+
+  @JsonProperty(JSON_PROPERTY_INDEX_VERSION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIndexVersion(@javax.annotation.Nullable Integer indexVersion) {
+    this.indexVersion = indexVersion;
+  }
+
+  public IndexContent indexDetails(@javax.annotation.Nullable String indexDetails) {
+    this.indexDetails = indexDetails;
+    return this;
+  }
+
+  /**
+   * Opaque, type-specific JSON with additional index details. For vector indices this carries
+   * metric/distance type, partitioning, and HNSW/PQ/SQ/RQ parameters.
+   *
+   * @return indexDetails
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_INDEX_DETAILS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getIndexDetails() {
+    return indexDetails;
+  }
+
+  @JsonProperty(JSON_PROPERTY_INDEX_DETAILS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIndexDetails(@javax.annotation.Nullable String indexDetails) {
+    this.indexDetails = indexDetails;
+  }
+
   /** Return true if this IndexContent object is equal to o. */
   @Override
   public boolean equals(Object o) {
@@ -162,12 +381,32 @@ public class IndexContent {
     return Objects.equals(this.indexName, indexContent.indexName)
         && Objects.equals(this.indexUuid, indexContent.indexUuid)
         && Objects.equals(this.columns, indexContent.columns)
-        && Objects.equals(this.status, indexContent.status);
+        && Objects.equals(this.status, indexContent.status)
+        && Objects.equals(this.indexType, indexContent.indexType)
+        && Objects.equals(this.typeUrl, indexContent.typeUrl)
+        && Objects.equals(this.numIndexedRows, indexContent.numIndexedRows)
+        && Objects.equals(this.sizeBytes, indexContent.sizeBytes)
+        && Objects.equals(this.numSegments, indexContent.numSegments)
+        && Objects.equals(this.createdAt, indexContent.createdAt)
+        && Objects.equals(this.indexVersion, indexContent.indexVersion)
+        && Objects.equals(this.indexDetails, indexContent.indexDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(indexName, indexUuid, columns, status);
+    return Objects.hash(
+        indexName,
+        indexUuid,
+        columns,
+        status,
+        indexType,
+        typeUrl,
+        numIndexedRows,
+        sizeBytes,
+        numSegments,
+        createdAt,
+        indexVersion,
+        indexDetails);
   }
 
   @Override
@@ -178,6 +417,14 @@ public class IndexContent {
     sb.append("    indexUuid: ").append(toIndentedString(indexUuid)).append("\n");
     sb.append("    columns: ").append(toIndentedString(columns)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
+    sb.append("    typeUrl: ").append(toIndentedString(typeUrl)).append("\n");
+    sb.append("    numIndexedRows: ").append(toIndentedString(numIndexedRows)).append("\n");
+    sb.append("    sizeBytes: ").append(toIndentedString(sizeBytes)).append("\n");
+    sb.append("    numSegments: ").append(toIndentedString(numSegments)).append("\n");
+    sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
+    sb.append("    indexVersion: ").append(toIndentedString(indexVersion)).append("\n");
+    sb.append("    indexDetails: ").append(toIndentedString(indexDetails)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -261,6 +508,70 @@ public class IndexContent {
           String.format(
               "%sstatus%s=%s",
               prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getStatus()))));
+    }
+
+    // add `index_type` to the URL query string
+    if (getIndexType() != null) {
+      joiner.add(
+          String.format(
+              "%sindex_type%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getIndexType()))));
+    }
+
+    // add `type_url` to the URL query string
+    if (getTypeUrl() != null) {
+      joiner.add(
+          String.format(
+              "%stype_url%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getTypeUrl()))));
+    }
+
+    // add `num_indexed_rows` to the URL query string
+    if (getNumIndexedRows() != null) {
+      joiner.add(
+          String.format(
+              "%snum_indexed_rows%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getNumIndexedRows()))));
+    }
+
+    // add `size_bytes` to the URL query string
+    if (getSizeBytes() != null) {
+      joiner.add(
+          String.format(
+              "%ssize_bytes%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getSizeBytes()))));
+    }
+
+    // add `num_segments` to the URL query string
+    if (getNumSegments() != null) {
+      joiner.add(
+          String.format(
+              "%snum_segments%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getNumSegments()))));
+    }
+
+    // add `created_at` to the URL query string
+    if (getCreatedAt() != null) {
+      joiner.add(
+          String.format(
+              "%screated_at%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getCreatedAt()))));
+    }
+
+    // add `index_version` to the URL query string
+    if (getIndexVersion() != null) {
+      joiner.add(
+          String.format(
+              "%sindex_version%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getIndexVersion()))));
+    }
+
+    // add `index_details` to the URL query string
+    if (getIndexDetails() != null) {
+      joiner.add(
+          String.format(
+              "%sindex_details%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getIndexDetails()))));
     }
 
     return joiner.toString();
