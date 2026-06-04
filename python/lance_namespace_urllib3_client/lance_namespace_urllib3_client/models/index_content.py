@@ -34,10 +34,10 @@ class IndexContent(BaseModel):
     status: StrictStr = Field(description="Current status of the index")
     index_type: Optional[StrictStr] = Field(default=None, description="Friendly index type, e.g. IVF_PQ, BTREE. Unknown if no plugin recognizes the index.")
     type_url: Optional[StrictStr] = Field(default=None, description="Protobuf type URL, a precise type identifier for the index.")
-    num_indexed_rows: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Approximate number of rows covered by the index. May include deleted rows.")
+    num_indexed_rows: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of live rows covered by the index. This does not count rows that are in the index but have since been deleted.")
     size_bytes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Total index size in bytes across all segments. Null for indices predating file-size tracking.")
     num_segments: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of index deltas/segments.")
-    created_at: Optional[datetime] = Field(default=None, description="Earliest creation time across the index segments. Null for legacy indices.")
+    created_at: Optional[datetime] = Field(default=None, description="Creation time for indexes. Null for legacy indices.")
     index_version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="On-disk index format version.")
     index_details: Optional[StrictStr] = Field(default=None, description="Opaque, type-specific JSON with additional index details. For vector indices this carries metric/distance type, partitioning, and HNSW/PQ/SQ/RQ parameters.")
     __properties: ClassVar[List[str]] = ["index_name", "index_uuid", "columns", "status", "index_type", "type_url", "num_indexed_rows", "size_bytes", "num_segments", "created_at", "index_version", "index_details"]

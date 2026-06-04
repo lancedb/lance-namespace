@@ -226,14 +226,16 @@ public class IndexContent {
   }
 
   /**
-   * Approximate number of rows covered by the index. May include deleted rows. minimum: 0
+   * Number of live rows covered by the index. This does not count rows that are in the index but
+   * have since been deleted. minimum: 0
    *
    * @return numIndexedRows
    */
   @Min(0L)
   @Schema(
       name = "num_indexed_rows",
-      description = "Approximate number of rows covered by the index. May include deleted rows.",
+      description =
+          "Number of live rows covered by the index. This does not count rows that are in the index but have since been deleted.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("num_indexed_rows")
   public Long getNumIndexedRows() {
@@ -300,14 +302,14 @@ public class IndexContent {
   }
 
   /**
-   * Earliest creation time across the index segments. Null for legacy indices.
+   * Creation time for indexes. Null for legacy indices.
    *
    * @return createdAt
    */
   @Valid
   @Schema(
       name = "created_at",
-      description = "Earliest creation time across the index segments. Null for legacy indices.",
+      description = "Creation time for indexes. Null for legacy indices.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("created_at")
   public OffsetDateTime getCreatedAt() {

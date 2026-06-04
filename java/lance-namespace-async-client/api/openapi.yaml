@@ -4563,8 +4563,8 @@ components:
           description: "Protobuf type URL, a precise type identifier for the index."
           type: string
         num_indexed_rows:
-          description: Approximate number of rows covered by the index. May include
-            deleted rows.
+          description: Number of live rows covered by the index. This does not count
+            rows that are in the index but have since been deleted.
           format: int64
           minimum: 0
           type: integer
@@ -4581,8 +4581,7 @@ components:
           minimum: 0
           type: integer
         created_at:
-          description: Earliest creation time across the index segments. Null for
-            legacy indices.
+          description: Creation time for indexes. Null for legacy indices.
           format: date-time
           type: string
           nullable: true

@@ -241,7 +241,8 @@ public class IndexContent {
   }
 
   /**
-   * Approximate number of rows covered by the index. May include deleted rows. minimum: 0
+   * Number of live rows covered by the index. This does not count rows that are in the index but
+   * have since been deleted. minimum: 0
    *
    * @return numIndexedRows
    */
@@ -314,7 +315,7 @@ public class IndexContent {
   }
 
   /**
-   * Earliest creation time across the index segments. Null for legacy indices.
+   * Creation time for indexes. Null for legacy indices.
    *
    * @return createdAt
    */

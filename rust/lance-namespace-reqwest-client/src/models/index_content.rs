@@ -31,7 +31,7 @@ pub struct IndexContent {
     /// Protobuf type URL, a precise type identifier for the index.
     #[serde(rename = "type_url", skip_serializing_if = "Option::is_none")]
     pub type_url: Option<String>,
-    /// Approximate number of rows covered by the index. May include deleted rows.
+    /// Number of live rows covered by the index. This does not count rows that are in the index but have since been deleted.
     #[serde(rename = "num_indexed_rows", skip_serializing_if = "Option::is_none")]
     pub num_indexed_rows: Option<i64>,
     /// Total index size in bytes across all segments. Null for indices predating file-size tracking.
@@ -40,7 +40,7 @@ pub struct IndexContent {
     /// Number of index deltas/segments.
     #[serde(rename = "num_segments", skip_serializing_if = "Option::is_none")]
     pub num_segments: Option<i32>,
-    /// Earliest creation time across the index segments. Null for legacy indices.
+    /// Creation time for indexes. Null for legacy indices.
     #[serde(rename = "created_at", skip_serializing_if = "Option::is_none")]
     pub created_at: Option<String>,
     /// On-disk index format version.

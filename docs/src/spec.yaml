@@ -3232,8 +3232,8 @@ components:
           format: int64
           minimum: 0
           description: >-
-            Approximate number of rows covered by the index. May include
-            deleted rows.
+            Number of live rows covered by the index. This does not count
+            rows that are in the index but have since been deleted.
         size_bytes:
           type: integer
           format: int64
@@ -3252,8 +3252,7 @@ components:
           format: date-time
           nullable: true
           description: >-
-            Earliest creation time across the index segments. Null for legacy
-            indices.
+            Creation time for indexes. Null for legacy indices.
         index_version:
           type: integer
           format: int32
