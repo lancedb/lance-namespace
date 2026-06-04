@@ -44,6 +44,7 @@ class TestUpdateTableSchemaMetadataRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 metadata = {
                     'key' : ''
                     }

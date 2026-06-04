@@ -32,11 +32,12 @@ class DescribeTableRequest(BaseModel):
     context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Version of the table to describe. If not specified, server should resolve it to the latest version. ")
+    branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
     with_table_uri: Optional[StrictBool] = Field(default=False, description="Whether to include the table URI in the response. Default is false. ")
     load_detailed_metadata: Optional[StrictBool] = Field(default=None, description="Whether to load detailed metadata that requires opening the dataset. When true, the response must include all detailed metadata such as `version`, `schema`, and `stats` which require reading the dataset. When not set, the implementation can decide whether to return detailed metadata and which parts of detailed metadata to return. ")
     check_declared: Optional[StrictBool] = Field(default=False, description="Whether to check if the table exists only as a namespace declaration without storage data. Default is false. When true, the response should populate `is_only_declared`. When false, the implementation should return null for `is_only_declared` unless another option such as `load_detailed_metadata` requires checking declared-only table state. ")
     vend_credentials: Optional[StrictBool] = Field(default=None, description="Whether to include vended credentials in the response `storage_options`. When true, the implementation should provide vended credentials for accessing storage. When not set, the implementation can decide whether to return vended credentials. ")
-    __properties: ClassVar[List[str]] = ["identity", "context", "id", "version", "with_table_uri", "load_detailed_metadata", "check_declared", "vend_credentials"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "version", "branch", "with_table_uri", "load_detailed_metadata", "check_declared", "vend_credentials"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -96,6 +97,7 @@ class DescribeTableRequest(BaseModel):
             "context": obj.get("context"),
             "id": obj.get("id"),
             "version": obj.get("version"),
+            "branch": obj.get("branch"),
             "with_table_uri": obj.get("with_table_uri") if obj.get("with_table_uri") is not None else False,
             "load_detailed_metadata": obj.get("load_detailed_metadata"),
             "check_declared": obj.get("check_declared") if obj.get("check_declared") is not None else False,

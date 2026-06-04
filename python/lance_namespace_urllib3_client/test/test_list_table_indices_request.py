@@ -45,6 +45,7 @@ class TestListTableIndicesRequest(unittest.TestCase):
                     ''
                     ],
                 version = 0,
+                branch = '',
                 page_token = '',
                 limit = 56
             )

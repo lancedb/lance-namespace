@@ -34,6 +34,7 @@ import java.util.StringJoiner;
   BatchDeleteTableVersionsRequest.JSON_PROPERTY_IDENTITY,
   BatchDeleteTableVersionsRequest.JSON_PROPERTY_CONTEXT,
   BatchDeleteTableVersionsRequest.JSON_PROPERTY_ID,
+  BatchDeleteTableVersionsRequest.JSON_PROPERTY_BRANCH,
   BatchDeleteTableVersionsRequest.JSON_PROPERTY_RANGES
 })
 @javax.annotation.Generated(
@@ -48,6 +49,9 @@ public class BatchDeleteTableVersionsRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_RANGES = "ranges";
   @javax.annotation.Nonnull private List<VersionRange> ranges = new ArrayList<>();
@@ -144,6 +148,29 @@ public class BatchDeleteTableVersionsRequest {
     this.id = id;
   }
 
+  public BatchDeleteTableVersionsRequest branch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public BatchDeleteTableVersionsRequest ranges(
       @javax.annotation.Nonnull List<VersionRange> ranges) {
     this.ranges = ranges;
@@ -191,12 +218,13 @@ public class BatchDeleteTableVersionsRequest {
     return Objects.equals(this.identity, batchDeleteTableVersionsRequest.identity)
         && Objects.equals(this.context, batchDeleteTableVersionsRequest.context)
         && Objects.equals(this.id, batchDeleteTableVersionsRequest.id)
+        && Objects.equals(this.branch, batchDeleteTableVersionsRequest.branch)
         && Objects.equals(this.ranges, batchDeleteTableVersionsRequest.ranges);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, ranges);
+    return Objects.hash(identity, context, id, branch, ranges);
   }
 
   @Override
@@ -206,6 +234,7 @@ public class BatchDeleteTableVersionsRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    ranges: ").append(toIndentedString(ranges)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -287,6 +316,14 @@ public class BatchDeleteTableVersionsRequest {
                     : String.format("%s%d%s", containerPrefix, i, containerSuffix),
                 ApiClient.urlEncode(ApiClient.valueToString(getId().get(i)))));
       }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      joiner.add(
+          String.format(
+              "%sbranch%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBranch()))));
     }
 
     // add `ranges` to the URL query string

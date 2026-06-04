@@ -1045,6 +1045,7 @@ class IndexApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         index_name: Annotated[StrictStr, Field(description="Name of the index to drop")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        branch: Annotated[Optional[StrictStr], Field(description="Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1068,6 +1069,8 @@ class IndexApi:
         :type index_name: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param branch: Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. 
+        :type branch: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1094,6 +1097,7 @@ class IndexApi:
             id=id,
             index_name=index_name,
             delimiter=delimiter,
+            branch=branch,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1126,6 +1130,7 @@ class IndexApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         index_name: Annotated[StrictStr, Field(description="Name of the index to drop")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        branch: Annotated[Optional[StrictStr], Field(description="Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1149,6 +1154,8 @@ class IndexApi:
         :type index_name: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param branch: Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. 
+        :type branch: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1175,6 +1182,7 @@ class IndexApi:
             id=id,
             index_name=index_name,
             delimiter=delimiter,
+            branch=branch,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1207,6 +1215,7 @@ class IndexApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         index_name: Annotated[StrictStr, Field(description="Name of the index to drop")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        branch: Annotated[Optional[StrictStr], Field(description="Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1230,6 +1239,8 @@ class IndexApi:
         :type index_name: str
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param branch: Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. 
+        :type branch: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1256,6 +1267,7 @@ class IndexApi:
             id=id,
             index_name=index_name,
             delimiter=delimiter,
+            branch=branch,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1283,6 +1295,7 @@ class IndexApi:
         id,
         index_name,
         delimiter,
+        branch,
         _request_auth,
         _content_type,
         _headers,
@@ -1312,6 +1325,10 @@ class IndexApi:
         if delimiter is not None:
             
             _query_params.append(('delimiter', delimiter))
+            
+        if branch is not None:
+            
+            _query_params.append(('branch', branch))
             
         # process the header parameters
         # process the form parameters

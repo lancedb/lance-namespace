@@ -38,6 +38,8 @@ public class CreateTableIndexRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   private String column;
 
   private String indexType;
@@ -154,6 +156,29 @@ public class CreateTableIndexRequest {
 
   public void setId(List<String> id) {
     this.id = id;
+  }
+
+  public CreateTableIndexRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
   }
 
   public CreateTableIndexRequest column(String column) {
@@ -448,6 +473,7 @@ public class CreateTableIndexRequest {
     return Objects.equals(this.identity, createTableIndexRequest.identity)
         && Objects.equals(this.context, createTableIndexRequest.context)
         && Objects.equals(this.id, createTableIndexRequest.id)
+        && Objects.equals(this.branch, createTableIndexRequest.branch)
         && Objects.equals(this.column, createTableIndexRequest.column)
         && Objects.equals(this.indexType, createTableIndexRequest.indexType)
         && Objects.equals(this.name, createTableIndexRequest.name)
@@ -468,6 +494,7 @@ public class CreateTableIndexRequest {
         identity,
         context,
         id,
+        branch,
         column,
         indexType,
         name,
@@ -489,6 +516,7 @@ public class CreateTableIndexRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");

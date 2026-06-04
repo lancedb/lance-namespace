@@ -38,6 +38,8 @@ public class QueryTableRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   private Boolean bypassVectorIndex;
 
   private QueryTableRequestColumns columns;
@@ -166,6 +168,29 @@ public class QueryTableRequest {
 
   public void setId(List<String> id) {
     this.id = id;
+  }
+
+  public QueryTableRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
   }
 
   public QueryTableRequest bypassVectorIndex(Boolean bypassVectorIndex) {
@@ -596,6 +621,7 @@ public class QueryTableRequest {
     return Objects.equals(this.identity, queryTableRequest.identity)
         && Objects.equals(this.context, queryTableRequest.context)
         && Objects.equals(this.id, queryTableRequest.id)
+        && Objects.equals(this.branch, queryTableRequest.branch)
         && Objects.equals(this.bypassVectorIndex, queryTableRequest.bypassVectorIndex)
         && Objects.equals(this.columns, queryTableRequest.columns)
         && Objects.equals(this.distanceType, queryTableRequest.distanceType)
@@ -622,6 +648,7 @@ public class QueryTableRequest {
         identity,
         context,
         id,
+        branch,
         bypassVectorIndex,
         columns,
         distanceType,
@@ -649,6 +676,7 @@ public class QueryTableRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    bypassVectorIndex: ").append(toIndentedString(bypassVectorIndex)).append("\n");
     sb.append("    columns: ").append(toIndentedString(columns)).append("\n");
     sb.append("    distanceType: ").append(toIndentedString(distanceType)).append("\n");

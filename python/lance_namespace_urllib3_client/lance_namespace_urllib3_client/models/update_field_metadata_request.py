@@ -30,8 +30,9 @@ class UpdateFieldMetadataRequest(BaseModel):
     """ # noqa: E501
     identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = Field(default=None, description="Table identifier path (namespace + table name)")
+    branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
     updates: List[UpdateFieldMetadataEntry] = Field(description="List of per-field metadata updates to apply")
-    __properties: ClassVar[List[str]] = ["identity", "id", "updates"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "branch", "updates"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -96,6 +97,7 @@ class UpdateFieldMetadataRequest(BaseModel):
         _obj = cls.model_validate({
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
+            "branch": obj.get("branch"),
             "updates": [UpdateFieldMetadataEntry.from_dict(_item) for _item in obj["updates"]] if obj.get("updates") is not None else None
         })
         return _obj

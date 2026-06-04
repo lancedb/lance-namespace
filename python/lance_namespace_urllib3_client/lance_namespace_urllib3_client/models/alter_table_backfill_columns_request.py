@@ -29,6 +29,7 @@ class AlterTableBackfillColumnsRequest(BaseModel):
     """ # noqa: E501
     identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = Field(default=None, description="Table identifier path (namespace + table name)")
+    branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
     column: StrictStr = Field(description="Column name to backfill")
     where: Optional[StrictStr] = Field(default=None, description="Optional WHERE clause filter")
     concurrency: Optional[StrictInt] = Field(default=None, description="Optional concurrency override")
@@ -43,7 +44,7 @@ class AlterTableBackfillColumnsRequest(BaseModel):
     commit_granularity: Optional[StrictInt] = Field(default=None, description="Optional commit granularity")
     cluster: Optional[StrictStr] = Field(default=None, description="Optional cluster name")
     manifest: Optional[StrictStr] = Field(default=None, description="Optional manifest name")
-    __properties: ClassVar[List[str]] = ["identity", "id", "column", "where", "concurrency", "intra_applier_concurrency", "min_checkpoint_size", "max_checkpoint_size", "batch_checkpoint_flush_interval_seconds", "read_version", "task_size", "num_frags", "checkpoint_size", "commit_granularity", "cluster", "manifest"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "branch", "column", "where", "concurrency", "intra_applier_concurrency", "min_checkpoint_size", "max_checkpoint_size", "batch_checkpoint_flush_interval_seconds", "read_version", "task_size", "num_frags", "checkpoint_size", "commit_granularity", "cluster", "manifest"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -166,6 +167,7 @@ class AlterTableBackfillColumnsRequest(BaseModel):
         _obj = cls.model_validate({
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
+            "branch": obj.get("branch"),
             "column": obj.get("column"),
             "where": obj.get("where"),
             "concurrency": obj.get("concurrency"),

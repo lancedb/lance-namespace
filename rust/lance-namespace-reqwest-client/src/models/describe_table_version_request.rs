@@ -25,6 +25,9 @@ pub struct DescribeTableVersionRequest {
     /// Version number to describe
     #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
     pub version: Option<i64>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
 }
 
 impl DescribeTableVersionRequest {
@@ -35,6 +38,7 @@ impl DescribeTableVersionRequest {
             context: None,
             id: None,
             version: None,
+            branch: None,
         }
     }
 }

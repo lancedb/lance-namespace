@@ -40,6 +40,8 @@ public class ListTableIndicesRequest {
 
   private Long version;
 
+  private String branch;
+
   private String pageToken;
 
   private Integer limit;
@@ -155,6 +157,29 @@ public class ListTableIndicesRequest {
     this.version = version;
   }
 
+  public ListTableIndicesRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   public ListTableIndicesRequest pageToken(String pageToken) {
     this.pageToken = pageToken;
     return this;
@@ -223,13 +248,14 @@ public class ListTableIndicesRequest {
         && Objects.equals(this.context, listTableIndicesRequest.context)
         && Objects.equals(this.id, listTableIndicesRequest.id)
         && Objects.equals(this.version, listTableIndicesRequest.version)
+        && Objects.equals(this.branch, listTableIndicesRequest.branch)
         && Objects.equals(this.pageToken, listTableIndicesRequest.pageToken)
         && Objects.equals(this.limit, listTableIndicesRequest.limit);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, version, pageToken, limit);
+    return Objects.hash(identity, context, id, version, branch, pageToken, limit);
   }
 
   @Override
@@ -240,6 +266,7 @@ public class ListTableIndicesRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
     sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
     sb.append("}");

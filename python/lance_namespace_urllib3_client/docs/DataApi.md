@@ -856,7 +856,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **insert_into_table**
-> InsertIntoTableResponse insert_into_table(id, body, delimiter=delimiter, mode=mode)
+> InsertIntoTableResponse insert_into_table(id, body, delimiter=delimiter, branch=branch, mode=mode)
 
 Insert records into a table
 
@@ -916,11 +916,12 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
     body = None # bytearray | Arrow IPC stream containing the records to insert
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
+    branch = 'branch_example' # str | Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead.  (optional)
     mode = 'append' # str | How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it  (optional) (default to 'append')
 
     try:
         # Insert records into a table
-        api_response = api_instance.insert_into_table(id, body, delimiter=delimiter, mode=mode)
+        api_response = api_instance.insert_into_table(id, body, delimiter=delimiter, branch=branch, mode=mode)
         print("The response of DataApi->insert_into_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -937,6 +938,7 @@ Name | Type | Description  | Notes
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **body** | **bytearray**| Arrow IPC stream containing the records to insert | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] 
+ **branch** | **str**| Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry &#x60;branch&#x60; as a body field instead.  | [optional] 
  **mode** | **str**| How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it  | [optional] [default to &#39;append&#39;]
 
 ### Return type
@@ -967,7 +969,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merge_insert_into_table**
-> MergeInsertIntoTableResponse merge_insert_into_table(id, on, body, delimiter=delimiter, when_matched_update_all=when_matched_update_all, when_matched_update_all_filt=when_matched_update_all_filt, when_not_matched_insert_all=when_not_matched_insert_all, when_not_matched_by_source_delete=when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt, timeout=timeout, use_index=use_index)
+> MergeInsertIntoTableResponse merge_insert_into_table(id, on, body, delimiter=delimiter, branch=branch, when_matched_update_all=when_matched_update_all, when_matched_update_all_filt=when_matched_update_all_filt, when_not_matched_insert_all=when_not_matched_insert_all, when_not_matched_by_source_delete=when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt, timeout=timeout, use_index=use_index)
 
 Merge insert (upsert) records into a table
 
@@ -1036,6 +1038,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     on = 'on_example' # str | Column name to use for matching rows (required)
     body = None # bytearray | Arrow IPC stream containing the records to merge
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
+    branch = 'branch_example' # str | Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead.  (optional)
     when_matched_update_all = False # bool | Update all columns when rows match (optional) (default to False)
     when_matched_update_all_filt = 'when_matched_update_all_filt_example' # str | The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true (optional)
     when_not_matched_insert_all = False # bool | Insert all columns when rows don't match (optional) (default to False)
@@ -1046,7 +1049,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 
     try:
         # Merge insert (upsert) records into a table
-        api_response = api_instance.merge_insert_into_table(id, on, body, delimiter=delimiter, when_matched_update_all=when_matched_update_all, when_matched_update_all_filt=when_matched_update_all_filt, when_not_matched_insert_all=when_not_matched_insert_all, when_not_matched_by_source_delete=when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt, timeout=timeout, use_index=use_index)
+        api_response = api_instance.merge_insert_into_table(id, on, body, delimiter=delimiter, branch=branch, when_matched_update_all=when_matched_update_all, when_matched_update_all_filt=when_matched_update_all_filt, when_not_matched_insert_all=when_not_matched_insert_all, when_not_matched_by_source_delete=when_not_matched_by_source_delete, when_not_matched_by_source_delete_filt=when_not_matched_by_source_delete_filt, timeout=timeout, use_index=use_index)
         print("The response of DataApi->merge_insert_into_table:\n")
         pprint(api_response)
     except Exception as e:
@@ -1064,6 +1067,7 @@ Name | Type | Description  | Notes
  **on** | **str**| Column name to use for matching rows (required) | 
  **body** | **bytearray**| Arrow IPC stream containing the records to merge | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] 
+ **branch** | **str**| Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry &#x60;branch&#x60; as a body field instead.  | [optional] 
  **when_matched_update_all** | **bool**| Update all columns when rows match | [optional] [default to False]
  **when_matched_update_all_filt** | **str**| The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true | [optional] 
  **when_not_matched_insert_all** | **bool**| Insert all columns when rows don&#39;t match | [optional] [default to False]

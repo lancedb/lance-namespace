@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Vec<String>** | The table identifier | 
 **version** | **i64** | Version number to create | 
+**branch** | Option<**String**> | Branch to target. When not specified, the main branch is used.  | [optional]
 **manifest_path** | **String** | Path to the manifest file for this version | 
 **manifest_size** | Option<**i64**> | Size of the manifest file in bytes | [optional]
 **e_tag** | Option<**String**> | Optional ETag for the manifest file | [optional]

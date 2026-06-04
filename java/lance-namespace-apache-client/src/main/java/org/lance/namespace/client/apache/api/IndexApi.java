@@ -399,12 +399,16 @@ public class IndexApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @return DropTableIndexResponse
    * @throws ApiException if fails to make API call
    */
-  public DropTableIndexResponse dropTableIndex(String id, String indexName, String delimiter)
-      throws ApiException {
-    return this.dropTableIndex(id, indexName, delimiter, Collections.emptyMap());
+  public DropTableIndexResponse dropTableIndex(
+      String id, String indexName, String delimiter, String branch) throws ApiException {
+    return this.dropTableIndex(id, indexName, delimiter, branch, Collections.emptyMap());
   }
 
   /**
@@ -422,12 +426,20 @@ public class IndexApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return DropTableIndexResponse
    * @throws ApiException if fails to make API call
    */
   public DropTableIndexResponse dropTableIndex(
-      String id, String indexName, String delimiter, Map<String, String> additionalHeaders)
+      String id,
+      String indexName,
+      String delimiter,
+      String branch,
+      Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
 
@@ -461,6 +473,7 @@ public class IndexApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("branch", branch));
 
     localVarHeaderParams.putAll(additionalHeaders);
 

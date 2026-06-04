@@ -28,6 +28,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({
   AlterTableAlterColumnsRequest.JSON_PROPERTY_IDENTITY,
   AlterTableAlterColumnsRequest.JSON_PROPERTY_ID,
+  AlterTableAlterColumnsRequest.JSON_PROPERTY_BRANCH,
   AlterTableAlterColumnsRequest.JSON_PROPERTY_ALTERATIONS
 })
 @javax.annotation.Generated(
@@ -39,6 +40,9 @@ public class AlterTableAlterColumnsRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_ALTERATIONS = "alterations";
   @javax.annotation.Nonnull private List<AlterColumnsEntry> alterations = new ArrayList<>();
@@ -101,6 +105,30 @@ public class AlterTableAlterColumnsRequest {
     this.id = id;
   }
 
+  public AlterTableAlterColumnsRequest branch(@javax.annotation.Nullable String branch) {
+
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public AlterTableAlterColumnsRequest alterations(
       @javax.annotation.Nonnull List<AlterColumnsEntry> alterations) {
 
@@ -145,12 +173,13 @@ public class AlterTableAlterColumnsRequest {
     AlterTableAlterColumnsRequest alterTableAlterColumnsRequest = (AlterTableAlterColumnsRequest) o;
     return Objects.equals(this.identity, alterTableAlterColumnsRequest.identity)
         && Objects.equals(this.id, alterTableAlterColumnsRequest.id)
+        && Objects.equals(this.branch, alterTableAlterColumnsRequest.branch)
         && Objects.equals(this.alterations, alterTableAlterColumnsRequest.alterations);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, alterations);
+    return Objects.hash(identity, id, branch, alterations);
   }
 
   @Override
@@ -159,6 +188,7 @@ public class AlterTableAlterColumnsRequest {
     sb.append("class AlterTableAlterColumnsRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    alterations: ").append(toIndentedString(alterations)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -229,6 +259,21 @@ public class AlterTableAlterColumnsRequest {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
+      }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sbranch%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getBranch()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
       }
     }
 

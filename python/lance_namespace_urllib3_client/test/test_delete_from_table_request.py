@@ -44,6 +44,7 @@ class TestDeleteFromTableRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 predicate = ''
             )
         else:

@@ -96,6 +96,13 @@ class TestTableApi(unittest.TestCase):
         """
         pass
 
+    def test_create_table_branch(self) -> None:
+        """Test case for create_table_branch
+
+        Create a new branch
+        """
+        pass
+
     def test_create_table_index(self) -> None:
         """Test case for create_table_index
 
@@ -135,6 +142,13 @@ class TestTableApi(unittest.TestCase):
         """Test case for delete_from_table
 
         Delete rows from a table
+        """
+        pass
+
+    def test_delete_table_branch(self) -> None:
+        """Test case for delete_table_branch
+
+        Delete a branch
         """
         pass
 
@@ -219,6 +233,13 @@ class TestTableApi(unittest.TestCase):
         """Test case for list_all_tables
 
         List all tables
+        """
+        pass
+
+    def test_list_table_branches(self) -> None:
+        """Test case for list_table_branches
+
+        List all branches for a table
         """
         pass
 

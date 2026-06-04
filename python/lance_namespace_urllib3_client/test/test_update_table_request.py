@@ -44,6 +44,7 @@ class TestUpdateTableRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 predicate = '',
                 updates = [
                     [

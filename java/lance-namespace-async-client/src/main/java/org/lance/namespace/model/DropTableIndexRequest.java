@@ -31,6 +31,7 @@ import java.util.StringJoiner;
   DropTableIndexRequest.JSON_PROPERTY_IDENTITY,
   DropTableIndexRequest.JSON_PROPERTY_CONTEXT,
   DropTableIndexRequest.JSON_PROPERTY_ID,
+  DropTableIndexRequest.JSON_PROPERTY_BRANCH,
   DropTableIndexRequest.JSON_PROPERTY_INDEX_NAME
 })
 @javax.annotation.Generated(
@@ -45,6 +46,9 @@ public class DropTableIndexRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_INDEX_NAME = "index_name";
   @javax.annotation.Nullable private String indexName;
@@ -140,6 +144,29 @@ public class DropTableIndexRequest {
     this.id = id;
   }
 
+  public DropTableIndexRequest branch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public DropTableIndexRequest indexName(@javax.annotation.Nullable String indexName) {
     this.indexName = indexName;
     return this;
@@ -176,12 +203,13 @@ public class DropTableIndexRequest {
     return Objects.equals(this.identity, dropTableIndexRequest.identity)
         && Objects.equals(this.context, dropTableIndexRequest.context)
         && Objects.equals(this.id, dropTableIndexRequest.id)
+        && Objects.equals(this.branch, dropTableIndexRequest.branch)
         && Objects.equals(this.indexName, dropTableIndexRequest.indexName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, indexName);
+    return Objects.hash(identity, context, id, branch, indexName);
   }
 
   @Override
@@ -191,6 +219,7 @@ public class DropTableIndexRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    indexName: ").append(toIndentedString(indexName)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -272,6 +301,14 @@ public class DropTableIndexRequest {
                     : String.format("%s%d%s", containerPrefix, i, containerSuffix),
                 ApiClient.urlEncode(ApiClient.valueToString(getId().get(i)))));
       }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      joiner.add(
+          String.format(
+              "%sbranch%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBranch()))));
     }
 
     // add `index_name` to the URL query string

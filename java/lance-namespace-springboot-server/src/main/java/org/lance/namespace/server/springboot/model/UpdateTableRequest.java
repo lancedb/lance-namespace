@@ -45,6 +45,8 @@ public class UpdateTableRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   private String predicate;
 
   @Valid private List<List<String>> updates = new ArrayList<>();
@@ -142,6 +144,29 @@ public class UpdateTableRequest {
 
   public void setId(List<String> id) {
     this.id = id;
+  }
+
+  public UpdateTableRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
   }
 
   public UpdateTableRequest predicate(String predicate) {
@@ -243,6 +268,7 @@ public class UpdateTableRequest {
     return Objects.equals(this.identity, updateTableRequest.identity)
         && Objects.equals(this.context, updateTableRequest.context)
         && Objects.equals(this.id, updateTableRequest.id)
+        && Objects.equals(this.branch, updateTableRequest.branch)
         && Objects.equals(this.predicate, updateTableRequest.predicate)
         && Objects.equals(this.updates, updateTableRequest.updates)
         && Objects.equals(this.properties, updateTableRequest.properties);
@@ -250,7 +276,7 @@ public class UpdateTableRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, predicate, updates, properties);
+    return Objects.hash(identity, context, id, branch, predicate, updates, properties);
   }
 
   @Override
@@ -260,6 +286,7 @@ public class UpdateTableRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    predicate: ").append(toIndentedString(predicate)).append("\n");
     sb.append("    updates: ").append(toIndentedString(updates)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");

@@ -22,6 +22,9 @@ pub struct DeleteFromTableRequest {
     /// The namespace identifier
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// SQL predicate to filter rows for deletion
     #[serde(rename = "predicate")]
     pub predicate: String,
@@ -34,6 +37,7 @@ impl DeleteFromTableRequest {
             identity: None,
             context: None,
             id: None,
+            branch: None,
             predicate,
         }
     }

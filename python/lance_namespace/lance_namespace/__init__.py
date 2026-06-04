@@ -84,6 +84,8 @@ from lance_namespace_urllib3_client.models import (
     CreateTableVersionEntry,
     CreateNamespaceRequest,
     CreateNamespaceResponse,
+    CreateTableBranchRequest,
+    CreateTableBranchResponse,
     CreateTableIndexRequest,
     CreateTableIndexResponse,
     CreateTableScalarIndexResponse,
@@ -97,6 +99,8 @@ from lance_namespace_urllib3_client.models import (
     DeclareTableResponse,
     DeleteFromTableRequest,
     DeleteFromTableResponse,
+    DeleteTableBranchRequest,
+    DeleteTableBranchResponse,
     DeleteTableTagRequest,
     DeleteTableTagResponse,
     DeregisterTableRequest,
@@ -126,6 +130,8 @@ from lance_namespace_urllib3_client.models import (
     InsertIntoTableResponse,
     ListNamespacesRequest,
     ListNamespacesResponse,
+    ListTableBranchesRequest,
+    ListTableBranchesResponse,
     ListTableIndicesRequest,
     ListTableIndicesResponse,
     ListTableTagsRequest,
@@ -229,6 +235,8 @@ __all__ = [
     "CreateEmptyTableResponse",
     "CreateNamespaceRequest",
     "CreateNamespaceResponse",
+    "CreateTableBranchRequest",
+    "CreateTableBranchResponse",
     "CreateTableIndexRequest",
     "CreateTableIndexResponse",
     "CreateTableScalarIndexResponse",
@@ -242,6 +250,8 @@ __all__ = [
     "DeclareTableResponse",
     "DeleteFromTableRequest",
     "DeleteFromTableResponse",
+    "DeleteTableBranchRequest",
+    "DeleteTableBranchResponse",
     "DeleteTableTagRequest",
     "DeleteTableTagResponse",
     "DeregisterTableRequest",
@@ -271,6 +281,8 @@ __all__ = [
     "InsertIntoTableResponse",
     "ListNamespacesRequest",
     "ListNamespacesResponse",
+    "ListTableBranchesRequest",
+    "ListTableBranchesResponse",
     "ListTableIndicesRequest",
     "ListTableIndicesResponse",
     "ListTableTagsRequest",
@@ -1131,6 +1143,52 @@ class LanceNamespace(ABC):
             If a concurrent modification conflict occurs.
         """
         raise UnsupportedOperationError("Not supported: update_table_tag")
+
+    def create_table_branch(
+        self, request: CreateTableBranchRequest
+    ) -> CreateTableBranchResponse:
+        """Create a branch for a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableVersionNotFoundError
+            If the source version does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: create_table_branch")
+
+    def list_table_branches(
+        self, request: ListTableBranchesRequest
+    ) -> ListTableBranchesResponse:
+        """List all branches for a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: list_table_branches")
+
+    def delete_table_branch(
+        self, request: DeleteTableBranchRequest
+    ) -> DeleteTableBranchResponse:
+        """Delete a branch from a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: delete_table_branch")
 
     def describe_transaction(
         self, request: DescribeTransactionRequest

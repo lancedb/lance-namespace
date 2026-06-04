@@ -18,6 +18,9 @@ pub struct UpdateFieldMetadataRequest {
     /// Table identifier path (namespace + table name)
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// List of per-field metadata updates to apply
     #[serde(rename = "updates")]
     pub updates: Vec<models::UpdateFieldMetadataEntry>,
@@ -28,6 +31,7 @@ impl UpdateFieldMetadataRequest {
         UpdateFieldMetadataRequest {
             identity: None,
             id: None,
+            branch: None,
             updates,
         }
     }

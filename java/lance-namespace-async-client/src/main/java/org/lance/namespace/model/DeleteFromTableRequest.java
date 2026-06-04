@@ -33,6 +33,7 @@ import java.util.StringJoiner;
   DeleteFromTableRequest.JSON_PROPERTY_IDENTITY,
   DeleteFromTableRequest.JSON_PROPERTY_CONTEXT,
   DeleteFromTableRequest.JSON_PROPERTY_ID,
+  DeleteFromTableRequest.JSON_PROPERTY_BRANCH,
   DeleteFromTableRequest.JSON_PROPERTY_PREDICATE
 })
 @javax.annotation.Generated(
@@ -47,6 +48,9 @@ public class DeleteFromTableRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_PREDICATE = "predicate";
   @javax.annotation.Nonnull private String predicate;
@@ -142,6 +146,29 @@ public class DeleteFromTableRequest {
     this.id = id;
   }
 
+  public DeleteFromTableRequest branch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public DeleteFromTableRequest predicate(@javax.annotation.Nonnull String predicate) {
     this.predicate = predicate;
     return this;
@@ -178,12 +205,13 @@ public class DeleteFromTableRequest {
     return Objects.equals(this.identity, deleteFromTableRequest.identity)
         && Objects.equals(this.context, deleteFromTableRequest.context)
         && Objects.equals(this.id, deleteFromTableRequest.id)
+        && Objects.equals(this.branch, deleteFromTableRequest.branch)
         && Objects.equals(this.predicate, deleteFromTableRequest.predicate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, predicate);
+    return Objects.hash(identity, context, id, branch, predicate);
   }
 
   @Override
@@ -193,6 +221,7 @@ public class DeleteFromTableRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    predicate: ").append(toIndentedString(predicate)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -274,6 +303,14 @@ public class DeleteFromTableRequest {
                     : String.format("%s%d%s", containerPrefix, i, containerSuffix),
                 ApiClient.urlEncode(ApiClient.valueToString(getId().get(i)))));
       }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      joiner.add(
+          String.format(
+              "%sbranch%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBranch()))));
     }
 
     // add `predicate` to the URL query string

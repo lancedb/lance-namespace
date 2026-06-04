@@ -32,6 +32,8 @@ import org.lance.namespace.model.BatchDeleteTableVersionsRequest;
 import org.lance.namespace.model.BatchDeleteTableVersionsResponse;
 import org.lance.namespace.model.CreateNamespaceRequest;
 import org.lance.namespace.model.CreateNamespaceResponse;
+import org.lance.namespace.model.CreateTableBranchRequest;
+import org.lance.namespace.model.CreateTableBranchResponse;
 import org.lance.namespace.model.CreateTableIndexRequest;
 import org.lance.namespace.model.CreateTableIndexResponse;
 import org.lance.namespace.model.CreateTableScalarIndexResponse;
@@ -41,6 +43,8 @@ import org.lance.namespace.model.CreateTableVersionRequest;
 import org.lance.namespace.model.CreateTableVersionResponse;
 import org.lance.namespace.model.DeclareTableRequest;
 import org.lance.namespace.model.DeclareTableResponse;
+import org.lance.namespace.model.DeleteTableBranchRequest;
+import org.lance.namespace.model.DeleteTableBranchResponse;
 import org.lance.namespace.model.DeleteTableTagRequest;
 import org.lance.namespace.model.DeleteTableTagResponse;
 import org.lance.namespace.model.DeregisterTableRequest;
@@ -64,6 +68,7 @@ import org.lance.namespace.model.GetTableStatsResponse;
 import org.lance.namespace.model.GetTableTagVersionRequest;
 import org.lance.namespace.model.GetTableTagVersionResponse;
 import org.lance.namespace.model.ListNamespacesResponse;
+import org.lance.namespace.model.ListTableBranchesResponse;
 import org.lance.namespace.model.ListTableIndicesRequest;
 import org.lance.namespace.model.ListTableIndicesResponse;
 import org.lance.namespace.model.ListTableTagsResponse;
@@ -1222,6 +1227,160 @@ public class MetadataApi {
   }
 
   /**
+   * Create a new branch Create a new branch for table &#x60;id&#x60; starting from a source ref
+   * (another branch and/or version), defaulting to the latest version of the main branch.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param createTableBranchRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return CompletableFuture&lt;CreateTableBranchResponse&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public CompletableFuture<CreateTableBranchResponse> createTableBranch(
+      String id, CreateTableBranchRequest createTableBranchRequest, String delimiter)
+      throws ApiException {
+    try {
+      HttpRequest.Builder localVarRequestBuilder =
+          createTableBranchRequestBuilder(id, createTableBranchRequest, delimiter);
+      return memberVarHttpClient
+          .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+          .thenComposeAsync(
+              localVarResponse -> {
+                if (localVarResponse.statusCode() / 100 != 2) {
+                  return CompletableFuture.failedFuture(
+                      getApiException("createTableBranch", localVarResponse));
+                }
+                try {
+                  String responseBody = localVarResponse.body();
+                  return CompletableFuture.completedFuture(
+                      responseBody == null || responseBody.isBlank()
+                          ? null
+                          : memberVarObjectMapper.readValue(
+                              responseBody, new TypeReference<CreateTableBranchResponse>() {}));
+                } catch (IOException e) {
+                  return CompletableFuture.failedFuture(new ApiException(e));
+                }
+              });
+    } catch (ApiException e) {
+      return CompletableFuture.failedFuture(e);
+    }
+  }
+
+  /**
+   * Create a new branch Create a new branch for table &#x60;id&#x60; starting from a source ref
+   * (another branch and/or version), defaulting to the latest version of the main branch.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param createTableBranchRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return CompletableFuture&lt;ApiResponse&lt;CreateTableBranchResponse&gt;&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public CompletableFuture<ApiResponse<CreateTableBranchResponse>> createTableBranchWithHttpInfo(
+      String id, CreateTableBranchRequest createTableBranchRequest, String delimiter)
+      throws ApiException {
+    try {
+      HttpRequest.Builder localVarRequestBuilder =
+          createTableBranchRequestBuilder(id, createTableBranchRequest, delimiter);
+      return memberVarHttpClient
+          .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+          .thenComposeAsync(
+              localVarResponse -> {
+                if (memberVarAsyncResponseInterceptor != null) {
+                  memberVarAsyncResponseInterceptor.accept(localVarResponse);
+                }
+                if (localVarResponse.statusCode() / 100 != 2) {
+                  return CompletableFuture.failedFuture(
+                      getApiException("createTableBranch", localVarResponse));
+                }
+                try {
+                  String responseBody = localVarResponse.body();
+                  return CompletableFuture.completedFuture(
+                      new ApiResponse<CreateTableBranchResponse>(
+                          localVarResponse.statusCode(),
+                          localVarResponse.headers().map(),
+                          responseBody == null || responseBody.isBlank()
+                              ? null
+                              : memberVarObjectMapper.readValue(
+                                  responseBody,
+                                  new TypeReference<CreateTableBranchResponse>() {})));
+                } catch (IOException e) {
+                  return CompletableFuture.failedFuture(new ApiException(e));
+                }
+              });
+    } catch (ApiException e) {
+      return CompletableFuture.failedFuture(e);
+    }
+  }
+
+  private HttpRequest.Builder createTableBranchRequestBuilder(
+      String id, CreateTableBranchRequest createTableBranchRequest, String delimiter)
+      throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling createTableBranch");
+    }
+    // verify the required parameter 'createTableBranchRequest' is set
+    if (createTableBranchRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'createTableBranchRequest' when calling createTableBranch");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath =
+        "/v1/table/{id}/branches/create".replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    List<Pair> localVarQueryParams = new ArrayList<>();
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    localVarQueryParameterBaseName = "delimiter";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("delimiter", delimiter));
+
+    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
+      StringJoiner queryJoiner = new StringJoiner("&");
+      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
+      if (localVarQueryStringJoiner.length() != 0) {
+        queryJoiner.add(localVarQueryStringJoiner.toString());
+      }
+      localVarRequestBuilder.uri(
+          URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
+    } else {
+      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    }
+
+    localVarRequestBuilder.header("Content-Type", "application/json");
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    try {
+      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(createTableBranchRequest);
+      localVarRequestBuilder.method(
+          "POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
    * Create an index on a table Create an index on a table column for faster search operations.
    * Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE,
    * BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the
@@ -1989,6 +2148,158 @@ public class MetadataApi {
 
     try {
       byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(declareTableRequest);
+      localVarRequestBuilder.method(
+          "POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
+   * Delete a branch Delete an existing branch from table &#x60;id&#x60;.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param deleteTableBranchRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return CompletableFuture&lt;DeleteTableBranchResponse&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public CompletableFuture<DeleteTableBranchResponse> deleteTableBranch(
+      String id, DeleteTableBranchRequest deleteTableBranchRequest, String delimiter)
+      throws ApiException {
+    try {
+      HttpRequest.Builder localVarRequestBuilder =
+          deleteTableBranchRequestBuilder(id, deleteTableBranchRequest, delimiter);
+      return memberVarHttpClient
+          .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+          .thenComposeAsync(
+              localVarResponse -> {
+                if (localVarResponse.statusCode() / 100 != 2) {
+                  return CompletableFuture.failedFuture(
+                      getApiException("deleteTableBranch", localVarResponse));
+                }
+                try {
+                  String responseBody = localVarResponse.body();
+                  return CompletableFuture.completedFuture(
+                      responseBody == null || responseBody.isBlank()
+                          ? null
+                          : memberVarObjectMapper.readValue(
+                              responseBody, new TypeReference<DeleteTableBranchResponse>() {}));
+                } catch (IOException e) {
+                  return CompletableFuture.failedFuture(new ApiException(e));
+                }
+              });
+    } catch (ApiException e) {
+      return CompletableFuture.failedFuture(e);
+    }
+  }
+
+  /**
+   * Delete a branch Delete an existing branch from table &#x60;id&#x60;.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param deleteTableBranchRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return CompletableFuture&lt;ApiResponse&lt;DeleteTableBranchResponse&gt;&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public CompletableFuture<ApiResponse<DeleteTableBranchResponse>> deleteTableBranchWithHttpInfo(
+      String id, DeleteTableBranchRequest deleteTableBranchRequest, String delimiter)
+      throws ApiException {
+    try {
+      HttpRequest.Builder localVarRequestBuilder =
+          deleteTableBranchRequestBuilder(id, deleteTableBranchRequest, delimiter);
+      return memberVarHttpClient
+          .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+          .thenComposeAsync(
+              localVarResponse -> {
+                if (memberVarAsyncResponseInterceptor != null) {
+                  memberVarAsyncResponseInterceptor.accept(localVarResponse);
+                }
+                if (localVarResponse.statusCode() / 100 != 2) {
+                  return CompletableFuture.failedFuture(
+                      getApiException("deleteTableBranch", localVarResponse));
+                }
+                try {
+                  String responseBody = localVarResponse.body();
+                  return CompletableFuture.completedFuture(
+                      new ApiResponse<DeleteTableBranchResponse>(
+                          localVarResponse.statusCode(),
+                          localVarResponse.headers().map(),
+                          responseBody == null || responseBody.isBlank()
+                              ? null
+                              : memberVarObjectMapper.readValue(
+                                  responseBody,
+                                  new TypeReference<DeleteTableBranchResponse>() {})));
+                } catch (IOException e) {
+                  return CompletableFuture.failedFuture(new ApiException(e));
+                }
+              });
+    } catch (ApiException e) {
+      return CompletableFuture.failedFuture(e);
+    }
+  }
+
+  private HttpRequest.Builder deleteTableBranchRequestBuilder(
+      String id, DeleteTableBranchRequest deleteTableBranchRequest, String delimiter)
+      throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling deleteTableBranch");
+    }
+    // verify the required parameter 'deleteTableBranchRequest' is set
+    if (deleteTableBranchRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'deleteTableBranchRequest' when calling deleteTableBranch");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath =
+        "/v1/table/{id}/branches/delete".replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    List<Pair> localVarQueryParams = new ArrayList<>();
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    localVarQueryParameterBaseName = "delimiter";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("delimiter", delimiter));
+
+    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
+      StringJoiner queryJoiner = new StringJoiner("&");
+      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
+      if (localVarQueryStringJoiner.length() != 0) {
+        queryJoiner.add(localVarQueryStringJoiner.toString());
+      }
+      localVarRequestBuilder.uri(
+          URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
+    } else {
+      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    }
+
+    localVarRequestBuilder.header("Content-Type", "application/json");
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    try {
+      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(deleteTableBranchRequest);
       localVarRequestBuilder.method(
           "POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
     } catch (IOException e) {
@@ -3446,14 +3757,18 @@ public class MetadataApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @return CompletableFuture&lt;DropTableIndexResponse&gt;
    * @throws ApiException if fails to make API call
    */
   public CompletableFuture<DropTableIndexResponse> dropTableIndex(
-      String id, String indexName, String delimiter) throws ApiException {
+      String id, String indexName, String delimiter, String branch) throws ApiException {
     try {
       HttpRequest.Builder localVarRequestBuilder =
-          dropTableIndexRequestBuilder(id, indexName, delimiter);
+          dropTableIndexRequestBuilder(id, indexName, delimiter, branch);
       return memberVarHttpClient
           .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
           .thenComposeAsync(
@@ -3493,14 +3808,18 @@ public class MetadataApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @return CompletableFuture&lt;ApiResponse&lt;DropTableIndexResponse&gt;&gt;
    * @throws ApiException if fails to make API call
    */
   public CompletableFuture<ApiResponse<DropTableIndexResponse>> dropTableIndexWithHttpInfo(
-      String id, String indexName, String delimiter) throws ApiException {
+      String id, String indexName, String delimiter, String branch) throws ApiException {
     try {
       HttpRequest.Builder localVarRequestBuilder =
-          dropTableIndexRequestBuilder(id, indexName, delimiter);
+          dropTableIndexRequestBuilder(id, indexName, delimiter, branch);
       return memberVarHttpClient
           .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
           .thenComposeAsync(
@@ -3532,7 +3851,7 @@ public class MetadataApi {
   }
 
   private HttpRequest.Builder dropTableIndexRequestBuilder(
-      String id, String indexName, String delimiter) throws ApiException {
+      String id, String indexName, String delimiter, String branch) throws ApiException {
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(
@@ -3556,6 +3875,8 @@ public class MetadataApi {
     String localVarQueryParameterBaseName;
     localVarQueryParameterBaseName = "delimiter";
     localVarQueryParams.addAll(ApiClient.parameterToPairs("delimiter", delimiter));
+    localVarQueryParameterBaseName = "branch";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("branch", branch));
 
     if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
       StringJoiner queryJoiner = new StringJoiner("&");
@@ -4035,6 +4356,160 @@ public class MetadataApi {
   }
 
   /**
+   * List all branches for a table List all branches that have been created for table
+   * &#x60;id&#x60;. Returns a map of branch names to their contents. REST NAMESPACE ONLY REST
+   * namespace does not use a request body for this operation. The
+   * &#x60;ListTableBranchesRequest&#x60; information is passed in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass
+   * through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of
+   * the same name
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
+   * @return CompletableFuture&lt;ListTableBranchesResponse&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public CompletableFuture<ListTableBranchesResponse> listTableBranches(
+      String id, String delimiter, String pageToken, Integer limit) throws ApiException {
+    try {
+      HttpRequest.Builder localVarRequestBuilder =
+          listTableBranchesRequestBuilder(id, delimiter, pageToken, limit);
+      return memberVarHttpClient
+          .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+          .thenComposeAsync(
+              localVarResponse -> {
+                if (localVarResponse.statusCode() / 100 != 2) {
+                  return CompletableFuture.failedFuture(
+                      getApiException("listTableBranches", localVarResponse));
+                }
+                try {
+                  String responseBody = localVarResponse.body();
+                  return CompletableFuture.completedFuture(
+                      responseBody == null || responseBody.isBlank()
+                          ? null
+                          : memberVarObjectMapper.readValue(
+                              responseBody, new TypeReference<ListTableBranchesResponse>() {}));
+                } catch (IOException e) {
+                  return CompletableFuture.failedFuture(new ApiException(e));
+                }
+              });
+    } catch (ApiException e) {
+      return CompletableFuture.failedFuture(e);
+    }
+  }
+
+  /**
+   * List all branches for a table List all branches that have been created for table
+   * &#x60;id&#x60;. Returns a map of branch names to their contents. REST NAMESPACE ONLY REST
+   * namespace does not use a request body for this operation. The
+   * &#x60;ListTableBranchesRequest&#x60; information is passed in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass
+   * through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of
+   * the same name
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
+   * @return CompletableFuture&lt;ApiResponse&lt;ListTableBranchesResponse&gt;&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public CompletableFuture<ApiResponse<ListTableBranchesResponse>> listTableBranchesWithHttpInfo(
+      String id, String delimiter, String pageToken, Integer limit) throws ApiException {
+    try {
+      HttpRequest.Builder localVarRequestBuilder =
+          listTableBranchesRequestBuilder(id, delimiter, pageToken, limit);
+      return memberVarHttpClient
+          .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+          .thenComposeAsync(
+              localVarResponse -> {
+                if (memberVarAsyncResponseInterceptor != null) {
+                  memberVarAsyncResponseInterceptor.accept(localVarResponse);
+                }
+                if (localVarResponse.statusCode() / 100 != 2) {
+                  return CompletableFuture.failedFuture(
+                      getApiException("listTableBranches", localVarResponse));
+                }
+                try {
+                  String responseBody = localVarResponse.body();
+                  return CompletableFuture.completedFuture(
+                      new ApiResponse<ListTableBranchesResponse>(
+                          localVarResponse.statusCode(),
+                          localVarResponse.headers().map(),
+                          responseBody == null || responseBody.isBlank()
+                              ? null
+                              : memberVarObjectMapper.readValue(
+                                  responseBody,
+                                  new TypeReference<ListTableBranchesResponse>() {})));
+                } catch (IOException e) {
+                  return CompletableFuture.failedFuture(new ApiException(e));
+                }
+              });
+    } catch (ApiException e) {
+      return CompletableFuture.failedFuture(e);
+    }
+  }
+
+  private HttpRequest.Builder listTableBranchesRequestBuilder(
+      String id, String delimiter, String pageToken, Integer limit) throws ApiException {
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling listTableBranches");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath =
+        "/v1/table/{id}/branches/list".replace("{id}", ApiClient.urlEncode(id.toString()));
+
+    List<Pair> localVarQueryParams = new ArrayList<>();
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    localVarQueryParameterBaseName = "delimiter";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("delimiter", delimiter));
+    localVarQueryParameterBaseName = "page_token";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("page_token", pageToken));
+    localVarQueryParameterBaseName = "limit";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("limit", limit));
+
+    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
+      StringJoiner queryJoiner = new StringJoiner("&");
+      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
+      if (localVarQueryStringJoiner.length() != 0) {
+        queryJoiner.add(localVarQueryStringJoiner.toString());
+      }
+      localVarRequestBuilder.uri(
+          URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
+    } else {
+      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    }
+
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+
+  /**
    * List indexes on a table List all indices created on a table. Returns information about each
    * index including name, columns, status, and UUID.
    *
@@ -4354,6 +4829,10 @@ public class MetadataApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param pageToken Pagination token from a previous request (optional)
    * @param limit Maximum number of items to return (optional)
    * @param descending When true, versions are guaranteed to be returned in descending order (latest
@@ -4362,11 +4841,16 @@ public class MetadataApi {
    * @throws ApiException if fails to make API call
    */
   public CompletableFuture<ListTableVersionsResponse> listTableVersions(
-      String id, String delimiter, String pageToken, Integer limit, Boolean descending)
+      String id,
+      String delimiter,
+      String branch,
+      String pageToken,
+      Integer limit,
+      Boolean descending)
       throws ApiException {
     try {
       HttpRequest.Builder localVarRequestBuilder =
-          listTableVersionsRequestBuilder(id, delimiter, pageToken, limit, descending);
+          listTableVersionsRequestBuilder(id, delimiter, branch, pageToken, limit, descending);
       return memberVarHttpClient
           .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
           .thenComposeAsync(
@@ -4408,6 +4892,10 @@ public class MetadataApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param pageToken Pagination token from a previous request (optional)
    * @param limit Maximum number of items to return (optional)
    * @param descending When true, versions are guaranteed to be returned in descending order (latest
@@ -4416,11 +4904,16 @@ public class MetadataApi {
    * @throws ApiException if fails to make API call
    */
   public CompletableFuture<ApiResponse<ListTableVersionsResponse>> listTableVersionsWithHttpInfo(
-      String id, String delimiter, String pageToken, Integer limit, Boolean descending)
+      String id,
+      String delimiter,
+      String branch,
+      String pageToken,
+      Integer limit,
+      Boolean descending)
       throws ApiException {
     try {
       HttpRequest.Builder localVarRequestBuilder =
-          listTableVersionsRequestBuilder(id, delimiter, pageToken, limit, descending);
+          listTableVersionsRequestBuilder(id, delimiter, branch, pageToken, limit, descending);
       return memberVarHttpClient
           .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
           .thenComposeAsync(
@@ -4453,7 +4946,12 @@ public class MetadataApi {
   }
 
   private HttpRequest.Builder listTableVersionsRequestBuilder(
-      String id, String delimiter, String pageToken, Integer limit, Boolean descending)
+      String id,
+      String delimiter,
+      String branch,
+      String pageToken,
+      Integer limit,
+      Boolean descending)
       throws ApiException {
     // verify the required parameter 'id' is set
     if (id == null) {
@@ -4471,6 +4969,8 @@ public class MetadataApi {
     String localVarQueryParameterBaseName;
     localVarQueryParameterBaseName = "delimiter";
     localVarQueryParams.addAll(ApiClient.parameterToPairs("delimiter", delimiter));
+    localVarQueryParameterBaseName = "branch";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("branch", branch));
     localVarQueryParameterBaseName = "page_token";
     localVarQueryParams.addAll(ApiClient.parameterToPairs("page_token", pageToken));
     localVarQueryParameterBaseName = "limit";
@@ -5545,14 +6045,19 @@ public class MetadataApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @return CompletableFuture&lt;Map&lt;String, String&gt;&gt;
    * @throws ApiException if fails to make API call
    */
   public CompletableFuture<Map<String, String>> updateTableSchemaMetadata(
-      String id, Map<String, String> requestBody, String delimiter) throws ApiException {
+      String id, Map<String, String> requestBody, String delimiter, String branch)
+      throws ApiException {
     try {
       HttpRequest.Builder localVarRequestBuilder =
-          updateTableSchemaMetadataRequestBuilder(id, requestBody, delimiter);
+          updateTableSchemaMetadataRequestBuilder(id, requestBody, delimiter, branch);
       return memberVarHttpClient
           .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
           .thenComposeAsync(
@@ -5591,14 +6096,19 @@ public class MetadataApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @return CompletableFuture&lt;ApiResponse&lt;Map&lt;String, String&gt;&gt;&gt;
    * @throws ApiException if fails to make API call
    */
   public CompletableFuture<ApiResponse<Map<String, String>>> updateTableSchemaMetadataWithHttpInfo(
-      String id, Map<String, String> requestBody, String delimiter) throws ApiException {
+      String id, Map<String, String> requestBody, String delimiter, String branch)
+      throws ApiException {
     try {
       HttpRequest.Builder localVarRequestBuilder =
-          updateTableSchemaMetadataRequestBuilder(id, requestBody, delimiter);
+          updateTableSchemaMetadataRequestBuilder(id, requestBody, delimiter, branch);
       return memberVarHttpClient
           .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
           .thenComposeAsync(
@@ -5630,7 +6140,8 @@ public class MetadataApi {
   }
 
   private HttpRequest.Builder updateTableSchemaMetadataRequestBuilder(
-      String id, Map<String, String> requestBody, String delimiter) throws ApiException {
+      String id, Map<String, String> requestBody, String delimiter, String branch)
+      throws ApiException {
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(
@@ -5653,6 +6164,8 @@ public class MetadataApi {
     String localVarQueryParameterBaseName;
     localVarQueryParameterBaseName = "delimiter";
     localVarQueryParams.addAll(ApiClient.parameterToPairs("delimiter", delimiter));
+    localVarQueryParameterBaseName = "branch";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("branch", branch));
 
     if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
       StringJoiner queryJoiner = new StringJoiner("&");

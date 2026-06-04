@@ -34,6 +34,8 @@ public class AlterTableAddColumnsRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   @Valid private List<@Valid AddColumnsEntry> newColumns = new ArrayList<>();
 
   public AlterTableAddColumnsRequest() {
@@ -97,6 +99,29 @@ public class AlterTableAddColumnsRequest {
     this.id = id;
   }
 
+  public AlterTableAddColumnsRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   public AlterTableAddColumnsRequest newColumns(List<@Valid AddColumnsEntry> newColumns) {
     this.newColumns = newColumns;
     return this;
@@ -141,12 +166,13 @@ public class AlterTableAddColumnsRequest {
     AlterTableAddColumnsRequest alterTableAddColumnsRequest = (AlterTableAddColumnsRequest) o;
     return Objects.equals(this.identity, alterTableAddColumnsRequest.identity)
         && Objects.equals(this.id, alterTableAddColumnsRequest.id)
+        && Objects.equals(this.branch, alterTableAddColumnsRequest.branch)
         && Objects.equals(this.newColumns, alterTableAddColumnsRequest.newColumns);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, newColumns);
+    return Objects.hash(identity, id, branch, newColumns);
   }
 
   @Override
@@ -155,6 +181,7 @@ public class AlterTableAddColumnsRequest {
     sb.append("class AlterTableAddColumnsRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    newColumns: ").append(toIndentedString(newColumns)).append("\n");
     sb.append("}");
     return sb.toString();

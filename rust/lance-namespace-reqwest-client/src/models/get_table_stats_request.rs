@@ -20,6 +20,9 @@ pub struct GetTableStatsRequest {
     pub context: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
 }
 
 impl GetTableStatsRequest {
@@ -28,6 +31,7 @@ impl GetTableStatsRequest {
             identity: None,
             context: None,
             id: None,
+            branch: None,
         }
     }
 }

@@ -40,6 +40,8 @@ public class CountTableRowsRequest {
 
   private Long version;
 
+  private String branch;
+
   private String predicate;
 
   public CountTableRowsRequest identity(Identity identity) {
@@ -152,6 +154,29 @@ public class CountTableRowsRequest {
     this.version = version;
   }
 
+  public CountTableRowsRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   public CountTableRowsRequest predicate(String predicate) {
     this.predicate = predicate;
     return this;
@@ -188,12 +213,13 @@ public class CountTableRowsRequest {
         && Objects.equals(this.context, countTableRowsRequest.context)
         && Objects.equals(this.id, countTableRowsRequest.id)
         && Objects.equals(this.version, countTableRowsRequest.version)
+        && Objects.equals(this.branch, countTableRowsRequest.branch)
         && Objects.equals(this.predicate, countTableRowsRequest.predicate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, version, predicate);
+    return Objects.hash(identity, context, id, version, branch, predicate);
   }
 
   @Override
@@ -204,6 +230,7 @@ public class CountTableRowsRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    predicate: ").append(toIndentedString(predicate)).append("\n");
     sb.append("}");
     return sb.toString();

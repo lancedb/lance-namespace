@@ -42,6 +42,8 @@ public class CreateTableTagRequest {
 
   private Long version;
 
+  private String branch;
+
   public CreateTableTagRequest() {
     super();
   }
@@ -185,6 +187,29 @@ public class CreateTableTagRequest {
     this.version = version;
   }
 
+  public CreateTableTagRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -198,12 +223,13 @@ public class CreateTableTagRequest {
         && Objects.equals(this.context, createTableTagRequest.context)
         && Objects.equals(this.id, createTableTagRequest.id)
         && Objects.equals(this.tag, createTableTagRequest.tag)
-        && Objects.equals(this.version, createTableTagRequest.version);
+        && Objects.equals(this.version, createTableTagRequest.version)
+        && Objects.equals(this.branch, createTableTagRequest.branch);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, tag, version);
+    return Objects.hash(identity, context, id, tag, version, branch);
   }
 
   @Override
@@ -215,6 +241,7 @@ public class CreateTableTagRequest {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tag: ").append(toIndentedString(tag)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("}");
     return sb.toString();
   }

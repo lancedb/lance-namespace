@@ -1,6 +1,7 @@
 # flake8: noqa
 
 # import apis into api package
+from lance_namespace_urllib3_client.api.branch_api import BranchApi
 from lance_namespace_urllib3_client.api.data_api import DataApi
 from lance_namespace_urllib3_client.api.index_api import IndexApi
 from lance_namespace_urllib3_client.api.materialized_view_api import MaterializedViewApi

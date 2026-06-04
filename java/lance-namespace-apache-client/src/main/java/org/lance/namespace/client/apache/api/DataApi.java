@@ -959,6 +959,10 @@ public class DataApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param mode How the insert should behave. Case insensitive, supports both PascalCase and
    *     snake_case. Valid values are: - Append (default): insert data to the existing table -
    *     Overwrite: remove all data in the table and then insert data to it (optional, default to
@@ -967,8 +971,8 @@ public class DataApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public InsertIntoTableResponse insertIntoTable(
-      String id, byte[] body, String delimiter, String mode) throws ApiException {
-    return this.insertIntoTable(id, body, delimiter, mode, Collections.emptyMap());
+      String id, byte[] body, String delimiter, String branch, String mode) throws ApiException {
+    return this.insertIntoTable(id, body, delimiter, branch, mode, Collections.emptyMap());
   }
 
   /**
@@ -987,6 +991,10 @@ public class DataApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param mode How the insert should behave. Case insensitive, supports both PascalCase and
    *     snake_case. Valid values are: - Append (default): insert data to the existing table -
    *     Overwrite: remove all data in the table and then insert data to it (optional, default to
@@ -996,7 +1004,12 @@ public class DataApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public InsertIntoTableResponse insertIntoTable(
-      String id, byte[] body, String delimiter, String mode, Map<String, String> additionalHeaders)
+      String id,
+      byte[] body,
+      String delimiter,
+      String branch,
+      String mode,
+      Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = body;
 
@@ -1027,6 +1040,7 @@ public class DataApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("branch", branch));
     localVarQueryParams.addAll(apiClient.parameterToPair("mode", mode));
 
     localVarHeaderParams.putAll(additionalHeaders);
@@ -1082,6 +1096,10 @@ public class DataApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
    * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
    *     the SQL expression evaluates to true (optional)
@@ -1101,6 +1119,7 @@ public class DataApi extends BaseApi {
       String on,
       byte[] body,
       String delimiter,
+      String branch,
       Boolean whenMatchedUpdateAll,
       String whenMatchedUpdateAllFilt,
       Boolean whenNotMatchedInsertAll,
@@ -1114,6 +1133,7 @@ public class DataApi extends BaseApi {
         on,
         body,
         delimiter,
+        branch,
         whenMatchedUpdateAll,
         whenMatchedUpdateAllFilt,
         whenNotMatchedInsertAll,
@@ -1149,6 +1169,10 @@ public class DataApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
    * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
    *     the SQL expression evaluates to true (optional)
@@ -1169,6 +1193,7 @@ public class DataApi extends BaseApi {
       String on,
       byte[] body,
       String delimiter,
+      String branch,
       Boolean whenMatchedUpdateAll,
       String whenMatchedUpdateAllFilt,
       Boolean whenNotMatchedInsertAll,
@@ -1213,6 +1238,7 @@ public class DataApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("branch", branch));
     localVarQueryParams.addAll(apiClient.parameterToPair("on", on));
     localVarQueryParams.addAll(
         apiClient.parameterToPair("when_matched_update_all", whenMatchedUpdateAll));

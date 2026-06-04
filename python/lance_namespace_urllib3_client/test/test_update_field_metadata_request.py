@@ -41,6 +41,7 @@ class TestUpdateFieldMetadataRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 updates = [
                     lance_namespace_urllib3_client.models.update_field_metadata_entry.UpdateFieldMetadataEntry(
                         path = '', 

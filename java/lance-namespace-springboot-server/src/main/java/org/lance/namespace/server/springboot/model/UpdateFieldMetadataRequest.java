@@ -34,6 +34,8 @@ public class UpdateFieldMetadataRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   @Valid private List<@Valid UpdateFieldMetadataEntry> updates = new ArrayList<>();
 
   public UpdateFieldMetadataRequest() {
@@ -97,6 +99,29 @@ public class UpdateFieldMetadataRequest {
     this.id = id;
   }
 
+  public UpdateFieldMetadataRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   public UpdateFieldMetadataRequest updates(List<@Valid UpdateFieldMetadataEntry> updates) {
     this.updates = updates;
     return this;
@@ -141,12 +166,13 @@ public class UpdateFieldMetadataRequest {
     UpdateFieldMetadataRequest updateFieldMetadataRequest = (UpdateFieldMetadataRequest) o;
     return Objects.equals(this.identity, updateFieldMetadataRequest.identity)
         && Objects.equals(this.id, updateFieldMetadataRequest.id)
+        && Objects.equals(this.branch, updateFieldMetadataRequest.branch)
         && Objects.equals(this.updates, updateFieldMetadataRequest.updates);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, updates);
+    return Objects.hash(identity, id, branch, updates);
   }
 
   @Override
@@ -155,6 +181,7 @@ public class UpdateFieldMetadataRequest {
     sb.append("class UpdateFieldMetadataRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    updates: ").append(toIndentedString(updates)).append("\n");
     sb.append("}");
     return sb.toString();

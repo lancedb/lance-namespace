@@ -31,6 +31,7 @@ import java.util.StringJoiner;
   QueryTableRequest.JSON_PROPERTY_IDENTITY,
   QueryTableRequest.JSON_PROPERTY_CONTEXT,
   QueryTableRequest.JSON_PROPERTY_ID,
+  QueryTableRequest.JSON_PROPERTY_BRANCH,
   QueryTableRequest.JSON_PROPERTY_BYPASS_VECTOR_INDEX,
   QueryTableRequest.JSON_PROPERTY_COLUMNS,
   QueryTableRequest.JSON_PROPERTY_DISTANCE_TYPE,
@@ -62,6 +63,9 @@ public class QueryTableRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_BYPASS_VECTOR_INDEX = "bypass_vector_index";
   @javax.annotation.Nullable private Boolean bypassVectorIndex;
@@ -209,6 +213,30 @@ public class QueryTableRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setId(@javax.annotation.Nullable List<String> id) {
     this.id = id;
+  }
+
+  public QueryTableRequest branch(@javax.annotation.Nullable String branch) {
+
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
   }
 
   public QueryTableRequest bypassVectorIndex(@javax.annotation.Nullable Boolean bypassVectorIndex) {
@@ -657,6 +685,7 @@ public class QueryTableRequest {
     return Objects.equals(this.identity, queryTableRequest.identity)
         && Objects.equals(this.context, queryTableRequest.context)
         && Objects.equals(this.id, queryTableRequest.id)
+        && Objects.equals(this.branch, queryTableRequest.branch)
         && Objects.equals(this.bypassVectorIndex, queryTableRequest.bypassVectorIndex)
         && Objects.equals(this.columns, queryTableRequest.columns)
         && Objects.equals(this.distanceType, queryTableRequest.distanceType)
@@ -683,6 +712,7 @@ public class QueryTableRequest {
         identity,
         context,
         id,
+        branch,
         bypassVectorIndex,
         columns,
         distanceType,
@@ -710,6 +740,7 @@ public class QueryTableRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    bypassVectorIndex: ").append(toIndentedString(bypassVectorIndex)).append("\n");
     sb.append("    columns: ").append(toIndentedString(columns)).append("\n");
     sb.append("    distanceType: ").append(toIndentedString(distanceType)).append("\n");
@@ -819,6 +850,21 @@ public class QueryTableRequest {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
+      }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sbranch%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getBranch()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
       }
     }
 

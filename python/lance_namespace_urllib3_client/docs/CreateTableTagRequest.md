@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **id** | **List[str]** |  | [optional] 
 **tag** | **str** | Name of the tag to create | 
 **version** | **int** | Version number for the tag to point to | 
+**branch** | **str** | Branch to target. When not specified, the main branch is used.  | [optional] 
 
 ## Example
 

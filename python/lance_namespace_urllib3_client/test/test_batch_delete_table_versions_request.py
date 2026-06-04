@@ -44,6 +44,7 @@ class TestBatchDeleteTableVersionsRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 ranges = [
                     lance_namespace_urllib3_client.models.version_range.VersionRange(
                         start_version = 56, 

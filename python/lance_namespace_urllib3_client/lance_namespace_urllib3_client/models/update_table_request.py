@@ -31,10 +31,11 @@ class UpdateTableRequest(BaseModel):
     identity: Optional[Identity] = None
     context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
+    branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
     predicate: Optional[StrictStr] = Field(default=None, description="Optional SQL predicate to filter rows for update")
     updates: List[Annotated[List[StrictStr], Field(min_length=2, max_length=2)]] = Field(description="List of column updates as [column_name, expression] pairs")
     properties: Optional[Dict[str, StrictStr]] = Field(default=None, description="Properties stored on the table, if supported by the implementation. ")
-    __properties: ClassVar[List[str]] = ["identity", "context", "id", "predicate", "updates", "properties"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "branch", "predicate", "updates", "properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -93,6 +94,7 @@ class UpdateTableRequest(BaseModel):
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "context": obj.get("context"),
             "id": obj.get("id"),
+            "branch": obj.get("branch"),
             "predicate": obj.get("predicate"),
             "updates": obj.get("updates"),
             "properties": obj.get("properties")

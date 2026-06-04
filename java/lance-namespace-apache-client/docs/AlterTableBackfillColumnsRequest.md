@@ -9,6 +9,7 @@
 |------------ | ------------- | ------------- | -------------|
 |**identity** | [**Identity**](Identity.md) |  |  [optional] |
 |**id** | **List&lt;String&gt;** | Table identifier path (namespace + table name) |  [optional] |
+|**branch** | **String** | Branch to target. When not specified, the main branch is used.  |  [optional] |
 |**column** | **String** | Column name to backfill |  |
 |**where** | **String** | Optional WHERE clause filter |  [optional] |
 |**concurrency** | **Integer** | Optional concurrency override |  [optional] |

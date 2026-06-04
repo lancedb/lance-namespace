@@ -44,7 +44,8 @@ class TestDescribeTableVersionRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
-                version = 0
+                version = 0,
+                branch = ''
             )
         else:
             return DescribeTableVersionRequest(

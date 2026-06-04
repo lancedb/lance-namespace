@@ -44,6 +44,7 @@ class TestMergeInsertIntoTableRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 on = '',
                 when_matched_update_all = True,
                 when_matched_update_all_filt = '',

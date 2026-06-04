@@ -41,6 +41,7 @@ class TestAlterTableBackfillColumnsRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 column = '',
                 where = '',
                 concurrency = 56,

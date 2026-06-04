@@ -9,6 +9,7 @@
 |------------ | ------------- | ------------- | -------------|
 |**identity** | [**Identity**](Identity.md) |  |  [optional] |
 |**id** | **List&lt;String&gt;** | Table identifier path (namespace + table name) |  [optional] |
+|**branch** | **String** | Branch to target. When not specified, the main branch is used.  |  [optional] |
 |**updates** | [**List&lt;UpdateFieldMetadataEntry&gt;**](UpdateFieldMetadataEntry.md) | List of per-field metadata updates to apply |  |
 
 

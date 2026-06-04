@@ -32,6 +32,7 @@ import java.util.StringJoiner;
   DescribeTableIndexStatsRequest.JSON_PROPERTY_CONTEXT,
   DescribeTableIndexStatsRequest.JSON_PROPERTY_ID,
   DescribeTableIndexStatsRequest.JSON_PROPERTY_VERSION,
+  DescribeTableIndexStatsRequest.JSON_PROPERTY_BRANCH,
   DescribeTableIndexStatsRequest.JSON_PROPERTY_INDEX_NAME
 })
 @javax.annotation.Generated(
@@ -49,6 +50,9 @@ public class DescribeTableIndexStatsRequest {
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nullable private Long version;
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_INDEX_NAME = "index_name";
   @javax.annotation.Nullable private String indexName;
@@ -168,6 +172,29 @@ public class DescribeTableIndexStatsRequest {
     this.version = version;
   }
 
+  public DescribeTableIndexStatsRequest branch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public DescribeTableIndexStatsRequest indexName(@javax.annotation.Nullable String indexName) {
     this.indexName = indexName;
     return this;
@@ -206,12 +233,13 @@ public class DescribeTableIndexStatsRequest {
         && Objects.equals(this.context, describeTableIndexStatsRequest.context)
         && Objects.equals(this.id, describeTableIndexStatsRequest.id)
         && Objects.equals(this.version, describeTableIndexStatsRequest.version)
+        && Objects.equals(this.branch, describeTableIndexStatsRequest.branch)
         && Objects.equals(this.indexName, describeTableIndexStatsRequest.indexName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, version, indexName);
+    return Objects.hash(identity, context, id, version, branch, indexName);
   }
 
   @Override
@@ -222,6 +250,7 @@ public class DescribeTableIndexStatsRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    indexName: ").append(toIndentedString(indexName)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -311,6 +340,14 @@ public class DescribeTableIndexStatsRequest {
           String.format(
               "%sversion%s=%s",
               prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getVersion()))));
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      joiner.add(
+          String.format(
+              "%sbranch%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBranch()))));
     }
 
     // add `index_name` to the URL query string

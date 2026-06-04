@@ -44,6 +44,7 @@ class TestInsertIntoTableRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 mode = 'append'
             )
         else:

@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **List[str]** | The table identifier | 
 **version** | **int** | Version number to create | 
+**branch** | **str** | Branch to target. When not specified, the main branch is used.  | [optional] 
 **manifest_path** | **str** | Path to the manifest file for this version | 
 **manifest_size** | **int** | Size of the manifest file in bytes | [optional] 
 **e_tag** | **str** | Optional ETag for the manifest file | [optional] 

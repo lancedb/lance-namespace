@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **identity** | [**Identity**](Identity.md) |  | [optional] 
 **id** | **List[str]** | Table identifier path (namespace + table name) | [optional] 
+**branch** | **str** | Branch to target. When not specified, the main branch is used.  | [optional] 
 **updates** | [**List[UpdateFieldMetadataEntry]**](UpdateFieldMetadataEntry.md) | List of per-field metadata updates to apply | 
 
 ## Example

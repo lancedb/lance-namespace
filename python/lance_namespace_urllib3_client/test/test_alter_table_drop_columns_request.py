@@ -44,6 +44,7 @@ class TestAlterTableDropColumnsRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 columns = [
                     ''
                     ]

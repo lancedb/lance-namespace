@@ -31,6 +31,7 @@ import java.util.StringJoiner;
   AnalyzeTableQueryPlanRequest.JSON_PROPERTY_IDENTITY,
   AnalyzeTableQueryPlanRequest.JSON_PROPERTY_CONTEXT,
   AnalyzeTableQueryPlanRequest.JSON_PROPERTY_ID,
+  AnalyzeTableQueryPlanRequest.JSON_PROPERTY_BRANCH,
   AnalyzeTableQueryPlanRequest.JSON_PROPERTY_BYPASS_VECTOR_INDEX,
   AnalyzeTableQueryPlanRequest.JSON_PROPERTY_COLUMNS,
   AnalyzeTableQueryPlanRequest.JSON_PROPERTY_DISTANCE_TYPE,
@@ -62,6 +63,9 @@ public class AnalyzeTableQueryPlanRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_BYPASS_VECTOR_INDEX = "bypass_vector_index";
   @javax.annotation.Nullable private Boolean bypassVectorIndex;
@@ -210,6 +214,30 @@ public class AnalyzeTableQueryPlanRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setId(@javax.annotation.Nullable List<String> id) {
     this.id = id;
+  }
+
+  public AnalyzeTableQueryPlanRequest branch(@javax.annotation.Nullable String branch) {
+
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
   }
 
   public AnalyzeTableQueryPlanRequest bypassVectorIndex(
@@ -662,6 +690,7 @@ public class AnalyzeTableQueryPlanRequest {
     return Objects.equals(this.identity, analyzeTableQueryPlanRequest.identity)
         && Objects.equals(this.context, analyzeTableQueryPlanRequest.context)
         && Objects.equals(this.id, analyzeTableQueryPlanRequest.id)
+        && Objects.equals(this.branch, analyzeTableQueryPlanRequest.branch)
         && Objects.equals(this.bypassVectorIndex, analyzeTableQueryPlanRequest.bypassVectorIndex)
         && Objects.equals(this.columns, analyzeTableQueryPlanRequest.columns)
         && Objects.equals(this.distanceType, analyzeTableQueryPlanRequest.distanceType)
@@ -688,6 +717,7 @@ public class AnalyzeTableQueryPlanRequest {
         identity,
         context,
         id,
+        branch,
         bypassVectorIndex,
         columns,
         distanceType,
@@ -715,6 +745,7 @@ public class AnalyzeTableQueryPlanRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    bypassVectorIndex: ").append(toIndentedString(bypassVectorIndex)).append("\n");
     sb.append("    columns: ").append(toIndentedString(columns)).append("\n");
     sb.append("    distanceType: ").append(toIndentedString(distanceType)).append("\n");
@@ -824,6 +855,21 @@ public class AnalyzeTableQueryPlanRequest {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
+      }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sbranch%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getBranch()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
       }
     }
 

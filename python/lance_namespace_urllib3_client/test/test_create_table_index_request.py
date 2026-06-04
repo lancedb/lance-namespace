@@ -44,6 +44,7 @@ class TestCreateTableIndexRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 column = '',
                 index_type = '',
                 name = '',

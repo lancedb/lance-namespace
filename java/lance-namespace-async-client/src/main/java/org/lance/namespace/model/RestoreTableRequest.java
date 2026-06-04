@@ -31,7 +31,8 @@ import java.util.StringJoiner;
   RestoreTableRequest.JSON_PROPERTY_IDENTITY,
   RestoreTableRequest.JSON_PROPERTY_CONTEXT,
   RestoreTableRequest.JSON_PROPERTY_ID,
-  RestoreTableRequest.JSON_PROPERTY_VERSION
+  RestoreTableRequest.JSON_PROPERTY_VERSION,
+  RestoreTableRequest.JSON_PROPERTY_BRANCH
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -48,6 +49,9 @@ public class RestoreTableRequest {
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nonnull private Long version;
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public RestoreTableRequest() {}
 
@@ -163,6 +167,29 @@ public class RestoreTableRequest {
     this.version = version;
   }
 
+  public RestoreTableRequest branch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   /** Return true if this RestoreTableRequest object is equal to o. */
   @Override
   public boolean equals(Object o) {
@@ -176,12 +203,13 @@ public class RestoreTableRequest {
     return Objects.equals(this.identity, restoreTableRequest.identity)
         && Objects.equals(this.context, restoreTableRequest.context)
         && Objects.equals(this.id, restoreTableRequest.id)
-        && Objects.equals(this.version, restoreTableRequest.version);
+        && Objects.equals(this.version, restoreTableRequest.version)
+        && Objects.equals(this.branch, restoreTableRequest.branch);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, version);
+    return Objects.hash(identity, context, id, version, branch);
   }
 
   @Override
@@ -192,6 +220,7 @@ public class RestoreTableRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -280,6 +309,14 @@ public class RestoreTableRequest {
           String.format(
               "%sversion%s=%s",
               prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getVersion()))));
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      joiner.add(
+          String.format(
+              "%sbranch%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBranch()))));
     }
 
     return joiner.toString();

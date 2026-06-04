@@ -44,6 +44,7 @@ class TestQueryTableRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 bypass_vector_index = True,
                 columns = lance_namespace_urllib3_client.models.query_table_request_columns.QueryTableRequest_columns(
                     column_names = [

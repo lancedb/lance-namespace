@@ -31,6 +31,7 @@ class CreateTableIndexRequest(BaseModel):
     identity: Optional[Identity] = None
     context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
+    branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
     column: StrictStr = Field(description="Name of the column to create index on")
     index_type: StrictStr = Field(description="Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS)")
     name: Optional[StrictStr] = Field(default=None, description="Optional name for the index. If not provided, a name will be auto-generated.")
@@ -43,7 +44,7 @@ class CreateTableIndexRequest(BaseModel):
     stem: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for stemming")
     remove_stop_words: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for stop word removal")
     ascii_folding: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for ASCII folding")
-    __properties: ClassVar[List[str]] = ["identity", "context", "id", "column", "index_type", "name", "distance_type", "with_position", "base_tokenizer", "language", "max_token_length", "lower_case", "stem", "remove_stop_words", "ascii_folding"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "branch", "column", "index_type", "name", "distance_type", "with_position", "base_tokenizer", "language", "max_token_length", "lower_case", "stem", "remove_stop_words", "ascii_folding"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -102,6 +103,7 @@ class CreateTableIndexRequest(BaseModel):
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "context": obj.get("context"),
             "id": obj.get("id"),
+            "branch": obj.get("branch"),
             "column": obj.get("column"),
             "index_type": obj.get("index_type"),
             "name": obj.get("name"),

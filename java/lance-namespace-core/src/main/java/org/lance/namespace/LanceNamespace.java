@@ -753,6 +753,38 @@ public interface LanceNamespace {
     throw new UnsupportedOperationException("Not supported: updateTableTag");
   }
 
+  // Branch operations
+
+  /**
+   * Create a branch for a table.
+   *
+   * @param request The create table branch request
+   * @return The create table branch response
+   */
+  default CreateTableBranchResponse createTableBranch(CreateTableBranchRequest request) {
+    throw new UnsupportedOperationException("Not supported: createTableBranch");
+  }
+
+  /**
+   * List all branches for a table.
+   *
+   * @param request The list table branches request
+   * @return The list table branches response
+   */
+  default ListTableBranchesResponse listTableBranches(ListTableBranchesRequest request) {
+    throw new UnsupportedOperationException("Not supported: listTableBranches");
+  }
+
+  /**
+   * Delete a branch from a table.
+   *
+   * @param request The delete table branch request
+   * @return The delete table branch response
+   */
+  default DeleteTableBranchResponse deleteTableBranch(DeleteTableBranchRequest request) {
+    throw new UnsupportedOperationException("Not supported: deleteTableBranch");
+  }
+
   // Transaction operations
 
   /**

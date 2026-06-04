@@ -38,6 +38,8 @@ public class ListTableVersionsRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   private String pageToken;
 
   private Integer limit;
@@ -126,6 +128,29 @@ public class ListTableVersionsRequest {
 
   public void setId(List<String> id) {
     this.id = id;
+  }
+
+  public ListTableVersionsRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
   }
 
   public ListTableVersionsRequest pageToken(String pageToken) {
@@ -220,6 +245,7 @@ public class ListTableVersionsRequest {
     return Objects.equals(this.identity, listTableVersionsRequest.identity)
         && Objects.equals(this.context, listTableVersionsRequest.context)
         && Objects.equals(this.id, listTableVersionsRequest.id)
+        && Objects.equals(this.branch, listTableVersionsRequest.branch)
         && Objects.equals(this.pageToken, listTableVersionsRequest.pageToken)
         && Objects.equals(this.limit, listTableVersionsRequest.limit)
         && Objects.equals(this.descending, listTableVersionsRequest.descending);
@@ -227,7 +253,7 @@ public class ListTableVersionsRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, pageToken, limit, descending);
+    return Objects.hash(identity, context, id, branch, pageToken, limit, descending);
   }
 
   @Override
@@ -237,6 +263,7 @@ public class ListTableVersionsRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
     sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
     sb.append("    descending: ").append(toIndentedString(descending)).append("\n");

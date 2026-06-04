@@ -44,6 +44,7 @@ class TestListTableVersionsRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 page_token = '',
                 limit = 56,
                 descending = True

@@ -87,6 +87,9 @@ See [REST Routes](../../catalog/rest/index.md#rest-routes) for more details.
 | CreateTableTag            | 1               |           | ✓     |       | ✓        |      |             |
 | DeleteTableTag            | 1               |           | ✓     |       | ✓        |      |             |
 | UpdateTableTag            | 1               |           | ✓     |       | ✓        |      |             |
+| ListTableBranches         | 1               |           | ✓     |       | ✓        |      |             |
+| CreateTableBranch         | 1               |           | ✓     |       | ✓        |      |             |
+| DeleteTableBranch         | 1               |           | ✓     |       | ✓        |      |             |
 | DropTableIndex            | 1               |           | ✓     | ✓     | ✓        |      |             |
 | DescribeTransaction       | 1               |           |       |       | ✓        |      | ✓           |
 | AlterTransaction          | 1               |           |       |       | ✓        |      | ✓           |

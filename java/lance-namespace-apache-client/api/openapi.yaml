@@ -659,6 +659,7 @@ paths:
     parameters:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
+    - $ref: '#/components/parameters/branch'
     post:
       description: |
         Replace the schema metadata for table `id` with the provided key-value pairs.
@@ -670,6 +671,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
+      - $ref: '#/components/parameters/branch'
       requestBody:
         content:
           application/json:
@@ -710,6 +712,7 @@ paths:
     parameters:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
+    - $ref: '#/components/parameters/branch'
     - $ref: '#/components/parameters/page_token'
     - $ref: '#/components/parameters/limit'
     - description: |
@@ -740,6 +743,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
+      - $ref: '#/components/parameters/branch'
       - $ref: '#/components/parameters/page_token'
       - $ref: '#/components/parameters/limit'
       - description: |
@@ -1163,6 +1167,7 @@ paths:
     parameters:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
+    - $ref: '#/components/parameters/branch'
     - description: |
         How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are:
         - Append (default): insert data to the existing table
@@ -1192,6 +1197,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
+      - $ref: '#/components/parameters/branch'
       - description: |
           How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are:
           - Append (default): insert data to the existing table
@@ -1238,6 +1244,7 @@ paths:
     parameters:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
+    - $ref: '#/components/parameters/branch'
     - description: Column name to use for matching rows (required)
       explode: true
       in: query
@@ -1334,6 +1341,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
+      - $ref: '#/components/parameters/branch'
       - description: Column name to use for matching rows (required)
         explode: true
         in: query
@@ -2165,6 +2173,7 @@ paths:
     parameters:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
+    - $ref: '#/components/parameters/branch'
     - description: Name of the index to drop
       explode: false
       in: path
@@ -2186,6 +2195,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
+      - $ref: '#/components/parameters/branch'
       - description: Name of the index to drop
         explode: false
         in: path
@@ -2468,6 +2478,134 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/table/{id}/branches/list:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
+    - $ref: '#/components/parameters/page_token'
+    - $ref: '#/components/parameters/limit'
+    post:
+      description: |
+        List all branches that have been created for table `id`.
+        Returns a map of branch names to their contents.
+
+        REST NAMESPACE ONLY
+        REST namespace does not use a request body for this operation.
+        The `ListTableBranchesRequest` information is passed in the following way:
+        - `id`: pass through path parameter of the same name
+        - `page_token`: pass through query parameter of the same name
+        - `limit`: pass through query parameter of the same name
+      operationId: ListTableBranches
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      - $ref: '#/components/parameters/page_token'
+      - $ref: '#/components/parameters/limit'
+      responses:
+        "200":
+          $ref: '#/components/responses/ListTableBranchesResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: List all branches for a table
+      tags:
+      - Table
+      - Branch
+      - Metadata
+      x-accepts:
+      - application/json
+  /v1/table/{id}/branches/create:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
+    post:
+      description: |
+        Create a new branch for table `id` starting from a source ref (another
+        branch and/or version), defaulting to the latest version of the main branch.
+      operationId: CreateTableBranch
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTableBranchRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/CreateTableBranchResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "409":
+          $ref: '#/components/responses/ConflictErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Create a new branch
+      tags:
+      - Table
+      - Branch
+      - Metadata
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /v1/table/{id}/branches/delete:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
+    post:
+      description: |
+        Delete an existing branch from table `id`.
+      operationId: DeleteTableBranch
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteTableBranchRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/DeleteTableBranchResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Delete a branch
+      tags:
+      - Table
+      - Branch
+      - Metadata
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/transaction/{id}/describe:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -2581,6 +2719,19 @@ components:
       explode: true
       in: query
       name: delimiter
+      required: false
+      schema:
+        type: string
+      style: form
+    branch:
+      description: |
+        Optional branch to target. When not specified, the main branch is used.
+        Used by branch-scoped operations that cannot carry a `branch` field in
+        their request body (Arrow IPC stream and bodyless operations). Operations
+        with a JSON request body carry `branch` as a body field instead.
+      explode: true
+      in: query
+      name: branch
       required: false
       schema:
         type: string
@@ -2824,6 +2975,24 @@ components:
           schema:
             $ref: '#/components/schemas/UpdateTableTagResponse'
       description: Update tag response
+    ListTableBranchesResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListTableBranchesResponse'
+      description: List of table branches
+    CreateTableBranchResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateTableBranchResponse'
+      description: Create branch response
+    DeleteTableBranchResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeleteTableBranchResponse'
+      description: Delete branch response
     ListTableVersionsResponse:
       content:
         application/json:
@@ -3612,6 +3781,7 @@ components:
         - id
         - id
         version: 0
+        branch: branch
         with_table_uri: false
         load_detailed_metadata: true
         vend_credentials: true
@@ -3640,6 +3810,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         with_table_uri:
           default: false
           description: |
@@ -3826,6 +4000,7 @@ components:
         - id
         - id
         version: 0
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -3851,6 +4026,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         predicate:
           description: |
             Optional SQL predicate to filter rows for counting
@@ -3883,6 +4062,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         mode:
           default: append
           description: |
@@ -3919,6 +4102,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         "on":
           description: Column name to use for matching rows (required)
           type: string
@@ -4002,6 +4189,7 @@ components:
           - updates
         - - updates
           - updates
+        branch: branch
         properties:
           key: properties
       properties:
@@ -4022,6 +4210,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         predicate:
           description: Optional SQL predicate to filter rows for update
           type: string
@@ -4085,6 +4277,7 @@ components:
         id:
         - id
         - id
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -4104,6 +4297,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         predicate:
           description: SQL predicate to filter rows for deletion
           type: string
@@ -4136,6 +4333,7 @@ components:
         fast_search: true
         k: 0
         upper_bound: 1.2315135
+        branch: branch
         version: 0
         with_row_id: true
         prefilter: true
@@ -4230,6 +4428,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         bypass_vector_index:
           description: Whether to bypass vector index
           type: boolean
@@ -4300,6 +4502,7 @@ components:
         column: column
         max_token_length: 0
         language: language
+        branch: branch
         index_type: index_type
         with_position: true
         lower_case: true
@@ -4334,6 +4537,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         column:
           description: Name of the column to create index on
           type: string
@@ -4415,6 +4622,7 @@ components:
         - id
         - id
         version: 0
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -4440,6 +4648,10 @@ components:
           minimum: 0
           type: integer
           nullable: true
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         page_token:
           description: |
             An opaque token that allows pagination for list operations (e.g. ListNamespaces).
@@ -4547,6 +4759,7 @@ components:
         - id
         - id
         version: 0
+        branch: branch
         index_name: index_name
       properties:
         identity:
@@ -4572,6 +4785,10 @@ components:
           minimum: 0
           type: integer
           nullable: true
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         index_name:
           description: Name of the index
           type: string
@@ -5549,12 +5766,18 @@ components:
     GetTableTagVersionResponse:
       example:
         version: 0
+        branch: branch
       properties:
         version:
           description: version number that the tag points to
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch the tag's version lives on.
+            Absent when the tag points to the main branch.
+          type: string
       required:
       - version
     CreateTableTagRequest:
@@ -5569,6 +5792,7 @@ components:
         - id
         tag: tag
         version: 0
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -5595,6 +5819,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
       required:
       - tag
       - version
@@ -5660,6 +5888,7 @@ components:
         - id
         tag: tag
         version: 0
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -5686,6 +5915,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
       required:
       - tag
       - version
@@ -5799,6 +6032,225 @@ components:
       required:
       - manifestSize
       - version
+    BranchContents:
+      example:
+        parentBranch: parentBranch
+        metadata:
+          key: metadata
+        createAt: 0
+        parentVersion: 0
+        manifestSize: 0
+      properties:
+        parentBranch:
+          description: |
+            Name of the branch this branch was created from.
+            Absent when the branch was created from the main branch.
+          type: string
+        parentVersion:
+          description: Version of the parent (branch or main) this branch was created
+            from
+          format: int64
+          minimum: 0
+          type: integer
+        createAt:
+          description: Unix timestamp (in seconds) when the branch was created
+          format: int64
+          minimum: 0
+          type: integer
+        manifestSize:
+          description: Size of the branch's manifest file in bytes
+          format: int64
+          minimum: 0
+          type: integer
+        metadata:
+          additionalProperties:
+            type: string
+          description: Key-value metadata associated with the branch
+      required:
+      - createAt
+      - manifestSize
+      - parentVersion
+    CreateTableBranchRequest:
+      example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
+        context:
+          key: context
+        name: name
+        from_branch: from_branch
+        id:
+        - id
+        - id
+        from_version: 0
+      properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+        id:
+          items:
+            type: string
+          type: array
+        name:
+          description: Name of the branch to create
+          type: string
+        from_branch:
+          description: |
+            Source branch to create the new branch from.
+            When omitted, the new branch is created from the main branch.
+          type: string
+        from_version:
+          description: |
+            Version of the source (branch or main) to create from.
+            When omitted, the latest version of the source is used.
+          format: int64
+          minimum: 0
+          type: integer
+      required:
+      - name
+    CreateTableBranchResponse:
+      description: Response for create branch operation
+      example:
+        transaction_id: transaction_id
+      properties:
+        transaction_id:
+          description: Optional transaction identifier
+          type: string
+    DeleteTableBranchRequest:
+      example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
+        context:
+          key: context
+        name: name
+        id:
+        - id
+        - id
+      properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+        id:
+          items:
+            type: string
+          type: array
+        name:
+          description: Name of the branch to delete
+          type: string
+      required:
+      - name
+    DeleteTableBranchResponse:
+      description: Response for delete branch operation
+      example:
+        transaction_id: transaction_id
+      properties:
+        transaction_id:
+          description: Optional transaction identifier
+          type: string
+    ListTableBranchesRequest:
+      properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+        id:
+          description: The table identifier
+          items:
+            type: string
+          type: array
+        page_token:
+          description: |
+            An opaque token that allows pagination for list operations (e.g. ListNamespaces).
+
+            For an initial request of a list operation,
+            if the implementation cannot return all items in one response,
+            or if there are more items than the page limit specified in the request,
+            the implementation must return a page token in the response,
+            indicating there are more results available.
+
+            After the initial request,
+            the value of the page token from each response must be used
+            as the page token value for the next request.
+
+            Caller must interpret either `null`,
+            missing value or empty string value of the page token from
+            the implementation's response as the end of the listing results.
+          type: string
+          nullable: true
+        limit:
+          description: |
+            An inclusive upper bound of the
+            number of results that a caller will receive.
+          type: integer
+          nullable: true
+    ListTableBranchesResponse:
+      description: Response containing table branches
+      example:
+        page_token: page_token
+        branches:
+          key:
+            parentBranch: parentBranch
+            metadata:
+              key: metadata
+            createAt: 0
+            parentVersion: 0
+            manifestSize: 0
+      properties:
+        branches:
+          additionalProperties:
+            $ref: '#/components/schemas/BranchContents'
+          description: Map of branch names to their contents
+        page_token:
+          description: |
+            An opaque token that allows pagination for list operations (e.g. ListNamespaces).
+
+            For an initial request of a list operation,
+            if the implementation cannot return all items in one response,
+            or if there are more items than the page limit specified in the request,
+            the implementation must return a page token in the response,
+            indicating there are more results available.
+
+            After the initial request,
+            the value of the page token from each response must be used
+            as the page token value for the next request.
+
+            Caller must interpret either `null`,
+            missing value or empty string value of the page token from
+            the implementation's response as the end of the listing results.
+          type: string
+          nullable: true
+      required:
+      - branches
     RestoreTableRequest:
       example:
         identity:
@@ -5810,6 +6262,7 @@ components:
         - id
         - id
         version: 0
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -5833,6 +6286,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
       required:
       - version
     RestoreTableResponse:
@@ -5914,6 +6371,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         metadata:
           additionalProperties:
             type: string
@@ -5946,6 +6407,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         page_token:
           description: |
             An opaque token that allows pagination for list operations (e.g. ListNamespaces).
@@ -6044,6 +6509,7 @@ components:
         - id
         e_tag: e_tag
         version: 0
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -6068,6 +6534,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         manifest_path:
           description: Path to the manifest file for this version
           type: string
@@ -6129,6 +6599,7 @@ components:
         - id
         - id
         version: 0
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -6153,6 +6624,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
     DescribeTableVersionResponse:
       description: Response containing the table version information
       example:
@@ -6187,6 +6662,7 @@ components:
         id:
         - id
         - id
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -6206,6 +6682,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         ranges:
           description: |
             List of version ranges to delete.
@@ -6269,6 +6749,7 @@ components:
           - id
           e_tag: e_tag
           version: 0
+          branch: branch
         - naming_scheme: V2
           metadata:
             key: metadata
@@ -6279,6 +6760,7 @@ components:
           - id
           e_tag: e_tag
           version: 0
+          branch: branch
         identity:
           api_key: api_key
           auth_token: auth_token
@@ -6321,6 +6803,7 @@ components:
         - id
         e_tag: e_tag
         version: 0
+        branch: branch
       properties:
         id:
           description: The table identifier
@@ -6332,6 +6815,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         manifest_path:
           description: Path to the manifest file for this version
           type: string
@@ -6433,6 +6920,7 @@ components:
             - id
             e_tag: e_tag
             version: 0
+            branch: branch
           delete_table_versions:
             ranges:
             - start_version: 0
@@ -6447,6 +6935,7 @@ components:
             id:
             - id
             - id
+            branch: branch
           declare_table:
             identity:
               api_key: api_key
@@ -6485,6 +6974,7 @@ components:
             - id
             e_tag: e_tag
             version: 0
+            branch: branch
           delete_table_versions:
             ranges:
             - start_version: 0
@@ -6499,6 +6989,7 @@ components:
             id:
             - id
             - id
+            branch: branch
           declare_table:
             identity:
               api_key: api_key
@@ -6571,6 +7062,7 @@ components:
           - id
           e_tag: e_tag
           version: 0
+          branch: branch
         delete_table_versions:
           ranges:
           - start_version: 0
@@ -6585,6 +7077,7 @@ components:
           id:
           - id
           - id
+          branch: branch
         declare_table:
           identity:
             api_key: api_key
@@ -6806,6 +7299,7 @@ components:
           fast_search: true
           k: 0
           upper_bound: 1.2315135
+          branch: branch
           version: 0
           with_row_id: true
           prefilter: true
@@ -6887,6 +7381,7 @@ components:
         id:
         - id
         - id
+        branch: branch
         verbose: false
       properties:
         identity:
@@ -6906,6 +7401,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         query:
           $ref: '#/components/schemas/QueryTableRequest'
         verbose:
@@ -6935,6 +7434,7 @@ components:
         fast_search: true
         k: 0
         upper_bound: 1.2315135
+        branch: branch
         version: 0
         with_row_id: true
         prefilter: true
@@ -7029,6 +7529,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         bypass_vector_index:
           description: Whether to bypass vector index
           type: boolean
@@ -7167,6 +7671,7 @@ components:
         id:
         - id
         - id
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -7175,6 +7680,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         new_columns:
           description: List of new columns to add to the table
           items:
@@ -7362,6 +7871,7 @@ components:
           metadata:
             key: metadata
           replace: true
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -7370,6 +7880,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         updates:
           description: List of per-field metadata updates to apply
           items:
@@ -7468,6 +7982,7 @@ components:
         id:
         - id
         - id
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -7476,6 +7991,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         alterations:
           description: List of column alterations to apply to the table
           items:
@@ -7599,6 +8118,7 @@ components:
         read_version: 2
         manifest: manifest
         column: column
+        branch: branch
         concurrency: 0
         num_frags: 9
         checkpoint_size: 3
@@ -7621,6 +8141,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         column:
           description: Column name to backfill
           type: string
@@ -7965,6 +8489,7 @@ components:
         id:
         - id
         - id
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -7983,6 +8508,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         columns:
           description: Names of columns to drop
           items:
@@ -8015,6 +8544,7 @@ components:
         id:
         - id
         - id
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -8033,6 +8563,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
     GetTableStatsResponse:
       example:
         num_indices: 0
@@ -8166,6 +8700,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         index_name:
           description: Name of the index to drop
           type: string

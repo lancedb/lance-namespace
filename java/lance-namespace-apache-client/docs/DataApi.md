@@ -758,7 +758,7 @@ public class Example {
 
 ## insertIntoTable
 
-> InsertIntoTableResponse insertIntoTable(id, body, delimiter, mode)
+> InsertIntoTableResponse insertIntoTable(id, body, delimiter, branch, mode)
 
 Insert records into a table
 
@@ -798,9 +798,10 @@ public class Example {
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         byte[] body = null; // byte[] | Arrow IPC stream containing the records to insert
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
+        String branch = "branch_example"; // String | Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. 
         String mode = "append"; // String | How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it 
         try {
-            InsertIntoTableResponse result = apiInstance.insertIntoTable(id, body, delimiter, mode);
+            InsertIntoTableResponse result = apiInstance.insertIntoTable(id, body, delimiter, branch, mode);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DataApi#insertIntoTable");
@@ -821,6 +822,7 @@ public class Example {
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **body** | **byte[]**| Arrow IPC stream containing the records to insert | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] |
+| **branch** | **String**| Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry &#x60;branch&#x60; as a body field instead.  | [optional] |
 | **mode** | **String**| How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it  | [optional] [default to append] |
 
 ### Return type
@@ -851,7 +853,7 @@ public class Example {
 
 ## mergeInsertIntoTable
 
-> MergeInsertIntoTableResponse mergeInsertIntoTable(id, on, body, delimiter, whenMatchedUpdateAll, whenMatchedUpdateAllFilt, whenNotMatchedInsertAll, whenNotMatchedBySourceDelete, whenNotMatchedBySourceDeleteFilt, timeout, useIndex)
+> MergeInsertIntoTableResponse mergeInsertIntoTable(id, on, body, delimiter, branch, whenMatchedUpdateAll, whenMatchedUpdateAllFilt, whenNotMatchedInsertAll, whenNotMatchedBySourceDelete, whenNotMatchedBySourceDeleteFilt, timeout, useIndex)
 
 Merge insert (upsert) records into a table
 
@@ -892,6 +894,7 @@ public class Example {
         String on = "on_example"; // String | Column name to use for matching rows (required)
         byte[] body = null; // byte[] | Arrow IPC stream containing the records to merge
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
+        String branch = "branch_example"; // String | Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. 
         Boolean whenMatchedUpdateAll = false; // Boolean | Update all columns when rows match
         String whenMatchedUpdateAllFilt = "whenMatchedUpdateAllFilt_example"; // String | The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
         Boolean whenNotMatchedInsertAll = false; // Boolean | Insert all columns when rows don't match
@@ -900,7 +903,7 @@ public class Example {
         String timeout = "timeout_example"; // String | Timeout for the operation (e.g., \"30s\", \"5m\")
         Boolean useIndex = false; // Boolean | Whether to use index for matching rows
         try {
-            MergeInsertIntoTableResponse result = apiInstance.mergeInsertIntoTable(id, on, body, delimiter, whenMatchedUpdateAll, whenMatchedUpdateAllFilt, whenNotMatchedInsertAll, whenNotMatchedBySourceDelete, whenNotMatchedBySourceDeleteFilt, timeout, useIndex);
+            MergeInsertIntoTableResponse result = apiInstance.mergeInsertIntoTable(id, on, body, delimiter, branch, whenMatchedUpdateAll, whenMatchedUpdateAllFilt, whenNotMatchedInsertAll, whenNotMatchedBySourceDelete, whenNotMatchedBySourceDeleteFilt, timeout, useIndex);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DataApi#mergeInsertIntoTable");
@@ -922,6 +925,7 @@ public class Example {
 | **on** | **String**| Column name to use for matching rows (required) | |
 | **body** | **byte[]**| Arrow IPC stream containing the records to merge | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] |
+| **branch** | **String**| Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry &#x60;branch&#x60; as a body field instead.  | [optional] |
 | **whenMatchedUpdateAll** | **Boolean**| Update all columns when rows match | [optional] [default to false] |
 | **whenMatchedUpdateAllFilt** | **String**| The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true | [optional] |
 | **whenNotMatchedInsertAll** | **Boolean**| Insert all columns when rows don&#39;t match | [optional] [default to false] |

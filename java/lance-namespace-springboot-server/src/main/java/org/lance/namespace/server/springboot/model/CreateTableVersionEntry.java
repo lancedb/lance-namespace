@@ -43,6 +43,8 @@ public class CreateTableVersionEntry {
 
   private Long version;
 
+  private String branch;
+
   private String manifestPath;
 
   private Long manifestSize;
@@ -119,6 +121,29 @@ public class CreateTableVersionEntry {
 
   public void setVersion(Long version) {
     this.version = version;
+  }
+
+  public CreateTableVersionEntry branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
   }
 
   public CreateTableVersionEntry manifestPath(String manifestPath) {
@@ -263,6 +288,7 @@ public class CreateTableVersionEntry {
     CreateTableVersionEntry createTableVersionEntry = (CreateTableVersionEntry) o;
     return Objects.equals(this.id, createTableVersionEntry.id)
         && Objects.equals(this.version, createTableVersionEntry.version)
+        && Objects.equals(this.branch, createTableVersionEntry.branch)
         && Objects.equals(this.manifestPath, createTableVersionEntry.manifestPath)
         && Objects.equals(this.manifestSize, createTableVersionEntry.manifestSize)
         && Objects.equals(this.eTag, createTableVersionEntry.eTag)
@@ -272,7 +298,8 @@ public class CreateTableVersionEntry {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version, manifestPath, manifestSize, eTag, metadata, namingScheme);
+    return Objects.hash(
+        id, version, branch, manifestPath, manifestSize, eTag, metadata, namingScheme);
   }
 
   @Override
@@ -281,6 +308,7 @@ public class CreateTableVersionEntry {
     sb.append("class CreateTableVersionEntry {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    manifestPath: ").append(toIndentedString(manifestPath)).append("\n");
     sb.append("    manifestSize: ").append(toIndentedString(manifestSize)).append("\n");
     sb.append("    eTag: ").append(toIndentedString(eTag)).append("\n");

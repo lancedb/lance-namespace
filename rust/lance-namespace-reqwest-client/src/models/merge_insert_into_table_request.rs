@@ -21,6 +21,9 @@ pub struct MergeInsertIntoTableRequest {
     pub context: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// Column name to use for matching rows (required)
     #[serde(rename = "on", skip_serializing_if = "Option::is_none")]
     pub on: Option<String>,
@@ -54,6 +57,7 @@ impl MergeInsertIntoTableRequest {
             identity: None,
             context: None,
             id: None,
+            branch: None,
             on: None,
             when_matched_update_all: None,
             when_matched_update_all_filt: None,

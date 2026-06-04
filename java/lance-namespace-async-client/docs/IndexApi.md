@@ -602,7 +602,7 @@ CompletableFuture<ApiResponse<[**DescribeTableIndexStatsResponse**](DescribeTabl
 
 ## dropTableIndex
 
-> CompletableFuture<DropTableIndexResponse> dropTableIndex(id, indexName, delimiter)
+> CompletableFuture<DropTableIndexResponse> dropTableIndex(id, indexName, delimiter, branch)
 
 Drop a specific index
 
@@ -643,8 +643,9 @@ public class Example {
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         String indexName = "indexName_example"; // String | Name of the index to drop
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
+        String branch = "branch_example"; // String | Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. 
         try {
-            CompletableFuture<DropTableIndexResponse> result = apiInstance.dropTableIndex(id, indexName, delimiter);
+            CompletableFuture<DropTableIndexResponse> result = apiInstance.dropTableIndex(id, indexName, delimiter, branch);
             System.out.println(result.get());
         } catch (ApiException e) {
             System.err.println("Exception when calling IndexApi#dropTableIndex");
@@ -665,6 +666,7 @@ public class Example {
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **indexName** | **String**| Name of the index to drop | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] |
+| **branch** | **String**| Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry &#x60;branch&#x60; as a body field instead.  | [optional] |
 
 ### Return type
 
@@ -693,7 +695,7 @@ CompletableFuture<[**DropTableIndexResponse**](DropTableIndexResponse.md)>
 
 ## dropTableIndexWithHttpInfo
 
-> CompletableFuture<ApiResponse<DropTableIndexResponse>> dropTableIndex dropTableIndexWithHttpInfo(id, indexName, delimiter)
+> CompletableFuture<ApiResponse<DropTableIndexResponse>> dropTableIndex dropTableIndexWithHttpInfo(id, indexName, delimiter, branch)
 
 Drop a specific index
 
@@ -735,8 +737,9 @@ public class Example {
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         String indexName = "indexName_example"; // String | Name of the index to drop
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
+        String branch = "branch_example"; // String | Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. 
         try {
-            CompletableFuture<ApiResponse<DropTableIndexResponse>> response = apiInstance.dropTableIndexWithHttpInfo(id, indexName, delimiter);
+            CompletableFuture<ApiResponse<DropTableIndexResponse>> response = apiInstance.dropTableIndexWithHttpInfo(id, indexName, delimiter, branch);
             System.out.println("Status code: " + response.get().getStatusCode());
             System.out.println("Response headers: " + response.get().getHeaders());
             System.out.println("Response body: " + response.get().getData());
@@ -766,6 +769,7 @@ public class Example {
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **indexName** | **String**| Name of the index to drop | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] |
+| **branch** | **String**| Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry &#x60;branch&#x60; as a body field instead.  | [optional] |
 
 ### Return type
 

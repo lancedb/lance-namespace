@@ -32,6 +32,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({
   AlterTableBackfillColumnsRequest.JSON_PROPERTY_IDENTITY,
   AlterTableBackfillColumnsRequest.JSON_PROPERTY_ID,
+  AlterTableBackfillColumnsRequest.JSON_PROPERTY_BRANCH,
   AlterTableBackfillColumnsRequest.JSON_PROPERTY_COLUMN,
   AlterTableBackfillColumnsRequest.JSON_PROPERTY_WHERE,
   AlterTableBackfillColumnsRequest.JSON_PROPERTY_CONCURRENCY,
@@ -56,6 +57,9 @@ public class AlterTableBackfillColumnsRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_COLUMN = "column";
   @javax.annotation.Nonnull private String column;
@@ -181,6 +185,30 @@ public class AlterTableBackfillColumnsRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setId(@javax.annotation.Nullable List<String> id) {
     this.id = id;
+  }
+
+  public AlterTableBackfillColumnsRequest branch(@javax.annotation.Nullable String branch) {
+
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
   }
 
   public AlterTableBackfillColumnsRequest column(@javax.annotation.Nonnull String column) {
@@ -649,6 +677,7 @@ public class AlterTableBackfillColumnsRequest {
         (AlterTableBackfillColumnsRequest) o;
     return Objects.equals(this.identity, alterTableBackfillColumnsRequest.identity)
         && Objects.equals(this.id, alterTableBackfillColumnsRequest.id)
+        && Objects.equals(this.branch, alterTableBackfillColumnsRequest.branch)
         && Objects.equals(this.column, alterTableBackfillColumnsRequest.column)
         && equalsNullable(this.where, alterTableBackfillColumnsRequest.where)
         && equalsNullable(this.concurrency, alterTableBackfillColumnsRequest.concurrency)
@@ -685,6 +714,7 @@ public class AlterTableBackfillColumnsRequest {
     return Objects.hash(
         identity,
         id,
+        branch,
         column,
         hashCodeNullable(where),
         hashCodeNullable(concurrency),
@@ -714,6 +744,7 @@ public class AlterTableBackfillColumnsRequest {
     sb.append("class AlterTableBackfillColumnsRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    where: ").append(toIndentedString(where)).append("\n");
     sb.append("    concurrency: ").append(toIndentedString(concurrency)).append("\n");
@@ -801,6 +832,21 @@ public class AlterTableBackfillColumnsRequest {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
+      }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sbranch%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getBranch()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
       }
     }
 

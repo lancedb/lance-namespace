@@ -40,6 +40,8 @@ public class DescribeTableIndexStatsRequest {
 
   private Long version;
 
+  private String branch;
+
   private String indexName;
 
   public DescribeTableIndexStatsRequest identity(Identity identity) {
@@ -150,6 +152,29 @@ public class DescribeTableIndexStatsRequest {
     this.version = version;
   }
 
+  public DescribeTableIndexStatsRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   public DescribeTableIndexStatsRequest indexName(String indexName) {
     this.indexName = indexName;
     return this;
@@ -187,12 +212,13 @@ public class DescribeTableIndexStatsRequest {
         && Objects.equals(this.context, describeTableIndexStatsRequest.context)
         && Objects.equals(this.id, describeTableIndexStatsRequest.id)
         && Objects.equals(this.version, describeTableIndexStatsRequest.version)
+        && Objects.equals(this.branch, describeTableIndexStatsRequest.branch)
         && Objects.equals(this.indexName, describeTableIndexStatsRequest.indexName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, version, indexName);
+    return Objects.hash(identity, context, id, version, branch, indexName);
   }
 
   @Override
@@ -203,6 +229,7 @@ public class DescribeTableIndexStatsRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    indexName: ").append(toIndentedString(indexName)).append("\n");
     sb.append("}");
     return sb.toString();

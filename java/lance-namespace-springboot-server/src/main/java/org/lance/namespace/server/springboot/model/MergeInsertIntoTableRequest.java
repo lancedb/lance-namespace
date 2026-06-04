@@ -42,6 +42,8 @@ public class MergeInsertIntoTableRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   private String on;
 
   private Boolean whenMatchedUpdateAll = false;
@@ -140,6 +142,29 @@ public class MergeInsertIntoTableRequest {
 
   public void setId(List<String> id) {
     this.id = id;
+  }
+
+  public MergeInsertIntoTableRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
   }
 
   public MergeInsertIntoTableRequest on(String on) {
@@ -343,6 +368,7 @@ public class MergeInsertIntoTableRequest {
     return Objects.equals(this.identity, mergeInsertIntoTableRequest.identity)
         && Objects.equals(this.context, mergeInsertIntoTableRequest.context)
         && Objects.equals(this.id, mergeInsertIntoTableRequest.id)
+        && Objects.equals(this.branch, mergeInsertIntoTableRequest.branch)
         && Objects.equals(this.on, mergeInsertIntoTableRequest.on)
         && Objects.equals(
             this.whenMatchedUpdateAll, mergeInsertIntoTableRequest.whenMatchedUpdateAll)
@@ -366,6 +392,7 @@ public class MergeInsertIntoTableRequest {
         identity,
         context,
         id,
+        branch,
         on,
         whenMatchedUpdateAll,
         whenMatchedUpdateAllFilt,
@@ -383,6 +410,7 @@ public class MergeInsertIntoTableRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    on: ").append(toIndentedString(on)).append("\n");
     sb.append("    whenMatchedUpdateAll: ")
         .append(toIndentedString(whenMatchedUpdateAll))

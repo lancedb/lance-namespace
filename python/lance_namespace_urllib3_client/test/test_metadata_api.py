@@ -75,6 +75,13 @@ class TestMetadataApi(unittest.TestCase):
         """
         pass
 
+    def test_create_table_branch(self) -> None:
+        """Test case for create_table_branch
+
+        Create a new branch
+        """
+        pass
+
     def test_create_table_index(self) -> None:
         """Test case for create_table_index
 
@@ -107,6 +114,13 @@ class TestMetadataApi(unittest.TestCase):
         """Test case for declare_table
 
         Declare a table
+        """
+        pass
+
+    def test_delete_table_branch(self) -> None:
+        """Test case for delete_table_branch
+
+        Delete a branch
         """
         pass
 
@@ -198,6 +212,13 @@ class TestMetadataApi(unittest.TestCase):
         """Test case for list_namespaces
 
         List namespaces
+        """
+        pass
+
+    def test_list_table_branches(self) -> None:
+        """Test case for list_table_branches
+
+        List all branches for a table
         """
         pass
 

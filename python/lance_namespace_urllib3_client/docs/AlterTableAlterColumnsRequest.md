@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **identity** | [**Identity**](Identity.md) |  | [optional] 
 **id** | **List[str]** | Table identifier path (namespace + table name) | [optional] 
+**branch** | **str** | Branch to target. When not specified, the main branch is used.  | [optional] 
 **alterations** | [**List[AlterColumnsEntry]**](AlterColumnsEntry.md) | List of column alterations to apply to the table | 
 
 ## Example

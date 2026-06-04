@@ -41,6 +41,7 @@ class TestAlterTableAlterColumnsRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 alterations = [
                     lance_namespace_urllib3_client.models.alter_columns_entry.AlterColumnsEntry(
                         path = '', 

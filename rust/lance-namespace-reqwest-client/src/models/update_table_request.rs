@@ -21,6 +21,9 @@ pub struct UpdateTableRequest {
     pub context: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// Optional SQL predicate to filter rows for update
     #[serde(rename = "predicate", skip_serializing_if = "Option::is_none")]
     pub predicate: Option<String>,
@@ -39,6 +42,7 @@ impl UpdateTableRequest {
             identity: None,
             context: None,
             id: None,
+            branch: None,
             predicate: None,
             updates,
             properties: None,

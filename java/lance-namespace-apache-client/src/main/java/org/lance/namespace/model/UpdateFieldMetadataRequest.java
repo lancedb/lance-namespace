@@ -28,6 +28,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({
   UpdateFieldMetadataRequest.JSON_PROPERTY_IDENTITY,
   UpdateFieldMetadataRequest.JSON_PROPERTY_ID,
+  UpdateFieldMetadataRequest.JSON_PROPERTY_BRANCH,
   UpdateFieldMetadataRequest.JSON_PROPERTY_UPDATES
 })
 @javax.annotation.Generated(
@@ -39,6 +40,9 @@ public class UpdateFieldMetadataRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_UPDATES = "updates";
   @javax.annotation.Nonnull private List<UpdateFieldMetadataEntry> updates = new ArrayList<>();
@@ -101,6 +105,30 @@ public class UpdateFieldMetadataRequest {
     this.id = id;
   }
 
+  public UpdateFieldMetadataRequest branch(@javax.annotation.Nullable String branch) {
+
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public UpdateFieldMetadataRequest updates(
       @javax.annotation.Nonnull List<UpdateFieldMetadataEntry> updates) {
 
@@ -145,12 +173,13 @@ public class UpdateFieldMetadataRequest {
     UpdateFieldMetadataRequest updateFieldMetadataRequest = (UpdateFieldMetadataRequest) o;
     return Objects.equals(this.identity, updateFieldMetadataRequest.identity)
         && Objects.equals(this.id, updateFieldMetadataRequest.id)
+        && Objects.equals(this.branch, updateFieldMetadataRequest.branch)
         && Objects.equals(this.updates, updateFieldMetadataRequest.updates);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, updates);
+    return Objects.hash(identity, id, branch, updates);
   }
 
   @Override
@@ -159,6 +188,7 @@ public class UpdateFieldMetadataRequest {
     sb.append("class UpdateFieldMetadataRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    updates: ").append(toIndentedString(updates)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -229,6 +259,21 @@ public class UpdateFieldMetadataRequest {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
+      }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sbranch%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getBranch()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
       }
     }
 

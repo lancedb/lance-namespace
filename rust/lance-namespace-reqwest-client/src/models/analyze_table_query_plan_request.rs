@@ -20,6 +20,9 @@ pub struct AnalyzeTableQueryPlanRequest {
     pub context: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// Whether to bypass vector index
     #[serde(rename = "bypass_vector_index", skip_serializing_if = "Option::is_none")]
     pub bypass_vector_index: Option<bool>,
@@ -79,6 +82,7 @@ impl AnalyzeTableQueryPlanRequest {
             identity: None,
             context: None,
             id: None,
+            branch: None,
             bypass_vector_index: None,
             columns: None,
             distance_type: None,

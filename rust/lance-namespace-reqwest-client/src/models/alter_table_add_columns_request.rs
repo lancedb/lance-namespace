@@ -18,6 +18,9 @@ pub struct AlterTableAddColumnsRequest {
     /// Table identifier path (namespace + table name)
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// List of new columns to add to the table
     #[serde(rename = "new_columns")]
     pub new_columns: Vec<models::AddColumnsEntry>,
@@ -28,6 +31,7 @@ impl AlterTableAddColumnsRequest {
         AlterTableAddColumnsRequest {
             identity: None,
             id: None,
+            branch: None,
             new_columns,
         }
     }

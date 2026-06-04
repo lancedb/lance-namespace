@@ -32,6 +32,7 @@ import java.util.StringJoiner;
   ListTableIndicesRequest.JSON_PROPERTY_CONTEXT,
   ListTableIndicesRequest.JSON_PROPERTY_ID,
   ListTableIndicesRequest.JSON_PROPERTY_VERSION,
+  ListTableIndicesRequest.JSON_PROPERTY_BRANCH,
   ListTableIndicesRequest.JSON_PROPERTY_PAGE_TOKEN,
   ListTableIndicesRequest.JSON_PROPERTY_LIMIT
 })
@@ -50,6 +51,9 @@ public class ListTableIndicesRequest {
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nullable private Long version;
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_PAGE_TOKEN = "page_token";
   @javax.annotation.Nullable private String pageToken;
@@ -171,6 +175,29 @@ public class ListTableIndicesRequest {
     this.version = version;
   }
 
+  public ListTableIndicesRequest branch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public ListTableIndicesRequest pageToken(@javax.annotation.Nullable String pageToken) {
     this.pageToken = pageToken;
     return this;
@@ -238,13 +265,14 @@ public class ListTableIndicesRequest {
         && Objects.equals(this.context, listTableIndicesRequest.context)
         && Objects.equals(this.id, listTableIndicesRequest.id)
         && Objects.equals(this.version, listTableIndicesRequest.version)
+        && Objects.equals(this.branch, listTableIndicesRequest.branch)
         && Objects.equals(this.pageToken, listTableIndicesRequest.pageToken)
         && Objects.equals(this.limit, listTableIndicesRequest.limit);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, version, pageToken, limit);
+    return Objects.hash(identity, context, id, version, branch, pageToken, limit);
   }
 
   @Override
@@ -255,6 +283,7 @@ public class ListTableIndicesRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
     sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
     sb.append("}");
@@ -345,6 +374,14 @@ public class ListTableIndicesRequest {
           String.format(
               "%sversion%s=%s",
               prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getVersion()))));
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      joiner.add(
+          String.format(
+              "%sbranch%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBranch()))));
     }
 
     // add `page_token` to the URL query string

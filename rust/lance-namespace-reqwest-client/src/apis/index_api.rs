@@ -254,17 +254,21 @@ pub async fn describe_table_index_stats(configuration: &configuration::Configura
 }
 
 /// Drop the specified index from table `id`.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `DropTableIndexRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `index_name`: pass through path parameter of the same name 
-pub async fn drop_table_index(configuration: &configuration::Configuration, id: &str, index_name: &str, delimiter: Option<&str>) -> Result<models::DropTableIndexResponse, Error<DropTableIndexError>> {
+pub async fn drop_table_index(configuration: &configuration::Configuration, id: &str, index_name: &str, delimiter: Option<&str>, branch: Option<&str>) -> Result<models::DropTableIndexResponse, Error<DropTableIndexError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_index_name = index_name;
     let p_delimiter = delimiter;
+    let p_branch = branch;
 
     let uri_str = format!("{}/v1/table/{id}/index/{index_name}/drop", configuration.base_path, id=crate::apis::urlencode(p_id), index_name=crate::apis::urlencode(p_index_name));
     let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
     if let Some(ref param_value) = p_delimiter {
         req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_branch {
+        req_builder = req_builder.query(&[("branch", &param_value.to_string())]);
     }
     if let Some(ref user_agent) = configuration.user_agent {
         req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());

@@ -22,6 +22,9 @@ pub struct BatchDeleteTableVersionsRequest {
     /// The table identifier
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// List of version ranges to delete. Each range specifies start (inclusive) and end (exclusive) versions. 
     #[serde(rename = "ranges")]
     pub ranges: Vec<models::VersionRange>,
@@ -34,6 +37,7 @@ impl BatchDeleteTableVersionsRequest {
             identity: None,
             context: None,
             id: None,
+            branch: None,
             ranges,
         }
     }

@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **identity** | Option<[**models::Identity**](Identity.md)> |  | [optional]
 **id** | Option<**Vec<String>**> | Table identifier path (namespace + table name) | [optional]
+**branch** | Option<**String**> | Branch to target. When not specified, the main branch is used.  | [optional]
 **column** | **String** | Column name to backfill | 
 **r#where** | Option<**String**> | Optional WHERE clause filter | [optional]
 **concurrency** | Option<**i32**> | Optional concurrency override | [optional]

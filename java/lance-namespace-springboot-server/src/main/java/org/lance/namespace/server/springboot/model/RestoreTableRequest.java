@@ -40,6 +40,8 @@ public class RestoreTableRequest {
 
   private Long version;
 
+  private String branch;
+
   public RestoreTableRequest() {
     super();
   }
@@ -158,6 +160,29 @@ public class RestoreTableRequest {
     this.version = version;
   }
 
+  public RestoreTableRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -170,12 +195,13 @@ public class RestoreTableRequest {
     return Objects.equals(this.identity, restoreTableRequest.identity)
         && Objects.equals(this.context, restoreTableRequest.context)
         && Objects.equals(this.id, restoreTableRequest.id)
-        && Objects.equals(this.version, restoreTableRequest.version);
+        && Objects.equals(this.version, restoreTableRequest.version)
+        && Objects.equals(this.branch, restoreTableRequest.branch);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, version);
+    return Objects.hash(identity, context, id, version, branch);
   }
 
   @Override
@@ -186,6 +212,7 @@ public class RestoreTableRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("}");
     return sb.toString();
   }

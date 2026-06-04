@@ -31,6 +31,7 @@ import java.util.StringJoiner;
   UpdateTableSchemaMetadataRequest.JSON_PROPERTY_IDENTITY,
   UpdateTableSchemaMetadataRequest.JSON_PROPERTY_CONTEXT,
   UpdateTableSchemaMetadataRequest.JSON_PROPERTY_ID,
+  UpdateTableSchemaMetadataRequest.JSON_PROPERTY_BRANCH,
   UpdateTableSchemaMetadataRequest.JSON_PROPERTY_METADATA
 })
 @javax.annotation.Generated(
@@ -45,6 +46,9 @@ public class UpdateTableSchemaMetadataRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_METADATA = "metadata";
   @javax.annotation.Nullable private Map<String, String> metadata = new HashMap<>();
@@ -144,6 +148,30 @@ public class UpdateTableSchemaMetadataRequest {
     this.id = id;
   }
 
+  public UpdateTableSchemaMetadataRequest branch(@javax.annotation.Nullable String branch) {
+
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public UpdateTableSchemaMetadataRequest metadata(
       @javax.annotation.Nullable Map<String, String> metadata) {
 
@@ -190,12 +218,13 @@ public class UpdateTableSchemaMetadataRequest {
     return Objects.equals(this.identity, updateTableSchemaMetadataRequest.identity)
         && Objects.equals(this.context, updateTableSchemaMetadataRequest.context)
         && Objects.equals(this.id, updateTableSchemaMetadataRequest.id)
+        && Objects.equals(this.branch, updateTableSchemaMetadataRequest.branch)
         && Objects.equals(this.metadata, updateTableSchemaMetadataRequest.metadata);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, metadata);
+    return Objects.hash(identity, context, id, branch, metadata);
   }
 
   @Override
@@ -205,6 +234,7 @@ public class UpdateTableSchemaMetadataRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -297,6 +327,21 @@ public class UpdateTableSchemaMetadataRequest {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
+      }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sbranch%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getBranch()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
       }
     }
 

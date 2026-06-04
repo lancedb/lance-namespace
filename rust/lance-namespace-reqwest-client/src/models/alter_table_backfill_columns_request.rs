@@ -18,6 +18,9 @@ pub struct AlterTableBackfillColumnsRequest {
     /// Table identifier path (namespace + table name)
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// Column name to backfill
     #[serde(rename = "column")]
     pub column: String,
@@ -67,6 +70,7 @@ impl AlterTableBackfillColumnsRequest {
         AlterTableBackfillColumnsRequest {
             identity: None,
             id: None,
+            branch: None,
             column,
             r#where: None,
             concurrency: None,

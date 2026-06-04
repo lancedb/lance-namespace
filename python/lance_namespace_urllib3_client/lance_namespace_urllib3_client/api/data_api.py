@@ -2736,6 +2736,7 @@ class DataApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to insert")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        branch: Annotated[Optional[StrictStr], Field(description="Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. ")] = None,
         mode: Annotated[Optional[StrictStr], Field(description="How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it ")] = None,
         _request_timeout: Union[
             None,
@@ -2760,6 +2761,8 @@ class DataApi:
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param branch: Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. 
+        :type branch: str
         :param mode: How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it 
         :type mode: str
         :param _request_timeout: timeout setting for this request. If one
@@ -2788,6 +2791,7 @@ class DataApi:
             id=id,
             body=body,
             delimiter=delimiter,
+            branch=branch,
             mode=mode,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -2821,6 +2825,7 @@ class DataApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to insert")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        branch: Annotated[Optional[StrictStr], Field(description="Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. ")] = None,
         mode: Annotated[Optional[StrictStr], Field(description="How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it ")] = None,
         _request_timeout: Union[
             None,
@@ -2845,6 +2850,8 @@ class DataApi:
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param branch: Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. 
+        :type branch: str
         :param mode: How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it 
         :type mode: str
         :param _request_timeout: timeout setting for this request. If one
@@ -2873,6 +2880,7 @@ class DataApi:
             id=id,
             body=body,
             delimiter=delimiter,
+            branch=branch,
             mode=mode,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -2906,6 +2914,7 @@ class DataApi:
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to insert")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        branch: Annotated[Optional[StrictStr], Field(description="Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. ")] = None,
         mode: Annotated[Optional[StrictStr], Field(description="How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it ")] = None,
         _request_timeout: Union[
             None,
@@ -2930,6 +2939,8 @@ class DataApi:
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param branch: Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. 
+        :type branch: str
         :param mode: How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it 
         :type mode: str
         :param _request_timeout: timeout setting for this request. If one
@@ -2958,6 +2969,7 @@ class DataApi:
             id=id,
             body=body,
             delimiter=delimiter,
+            branch=branch,
             mode=mode,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -2986,6 +2998,7 @@ class DataApi:
         id,
         body,
         delimiter,
+        branch,
         mode,
         _request_auth,
         _content_type,
@@ -3014,6 +3027,10 @@ class DataApi:
         if delimiter is not None:
             
             _query_params.append(('delimiter', delimiter))
+            
+        if branch is not None:
+            
+            _query_params.append(('branch', branch))
             
         if mode is not None:
             
@@ -3088,6 +3105,7 @@ class DataApi:
         on: Annotated[StrictStr, Field(description="Column name to use for matching rows (required)")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to merge")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        branch: Annotated[Optional[StrictStr], Field(description="Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. ")] = None,
         when_matched_update_all: Annotated[Optional[StrictBool], Field(description="Update all columns when rows match")] = None,
         when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true")] = None,
         when_not_matched_insert_all: Annotated[Optional[StrictBool], Field(description="Insert all columns when rows don't match")] = None,
@@ -3120,6 +3138,8 @@ class DataApi:
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param branch: Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. 
+        :type branch: str
         :param when_matched_update_all: Update all columns when rows match
         :type when_matched_update_all: bool
         :param when_matched_update_all_filt: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
@@ -3161,6 +3181,7 @@ class DataApi:
             on=on,
             body=body,
             delimiter=delimiter,
+            branch=branch,
             when_matched_update_all=when_matched_update_all,
             when_matched_update_all_filt=when_matched_update_all_filt,
             when_not_matched_insert_all=when_not_matched_insert_all,
@@ -3201,6 +3222,7 @@ class DataApi:
         on: Annotated[StrictStr, Field(description="Column name to use for matching rows (required)")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to merge")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        branch: Annotated[Optional[StrictStr], Field(description="Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. ")] = None,
         when_matched_update_all: Annotated[Optional[StrictBool], Field(description="Update all columns when rows match")] = None,
         when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true")] = None,
         when_not_matched_insert_all: Annotated[Optional[StrictBool], Field(description="Insert all columns when rows don't match")] = None,
@@ -3233,6 +3255,8 @@ class DataApi:
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param branch: Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. 
+        :type branch: str
         :param when_matched_update_all: Update all columns when rows match
         :type when_matched_update_all: bool
         :param when_matched_update_all_filt: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
@@ -3274,6 +3298,7 @@ class DataApi:
             on=on,
             body=body,
             delimiter=delimiter,
+            branch=branch,
             when_matched_update_all=when_matched_update_all,
             when_matched_update_all_filt=when_matched_update_all_filt,
             when_not_matched_insert_all=when_not_matched_insert_all,
@@ -3314,6 +3339,7 @@ class DataApi:
         on: Annotated[StrictStr, Field(description="Column name to use for matching rows (required)")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to merge")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
+        branch: Annotated[Optional[StrictStr], Field(description="Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. ")] = None,
         when_matched_update_all: Annotated[Optional[StrictBool], Field(description="Update all columns when rows match")] = None,
         when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true")] = None,
         when_not_matched_insert_all: Annotated[Optional[StrictBool], Field(description="Insert all columns when rows don't match")] = None,
@@ -3346,6 +3372,8 @@ class DataApi:
         :type body: bytearray
         :param delimiter: An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         :type delimiter: str
+        :param branch: Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. 
+        :type branch: str
         :param when_matched_update_all: Update all columns when rows match
         :type when_matched_update_all: bool
         :param when_matched_update_all_filt: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
@@ -3387,6 +3415,7 @@ class DataApi:
             on=on,
             body=body,
             delimiter=delimiter,
+            branch=branch,
             when_matched_update_all=when_matched_update_all,
             when_matched_update_all_filt=when_matched_update_all_filt,
             when_not_matched_insert_all=when_not_matched_insert_all,
@@ -3422,6 +3451,7 @@ class DataApi:
         on,
         body,
         delimiter,
+        branch,
         when_matched_update_all,
         when_matched_update_all_filt,
         when_not_matched_insert_all,
@@ -3456,6 +3486,10 @@ class DataApi:
         if delimiter is not None:
             
             _query_params.append(('delimiter', delimiter))
+            
+        if branch is not None:
+            
+            _query_params.append(('branch', branch))
             
         if on is not None:
             

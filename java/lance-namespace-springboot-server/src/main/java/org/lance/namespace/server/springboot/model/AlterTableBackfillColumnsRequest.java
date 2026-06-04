@@ -35,6 +35,8 @@ public class AlterTableBackfillColumnsRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   private String column;
 
   private String where = null;
@@ -122,6 +124,29 @@ public class AlterTableBackfillColumnsRequest {
 
   public void setId(List<String> id) {
     this.id = id;
+  }
+
+  public AlterTableBackfillColumnsRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
   }
 
   public AlterTableBackfillColumnsRequest column(String column) {
@@ -462,6 +487,7 @@ public class AlterTableBackfillColumnsRequest {
         (AlterTableBackfillColumnsRequest) o;
     return Objects.equals(this.identity, alterTableBackfillColumnsRequest.identity)
         && Objects.equals(this.id, alterTableBackfillColumnsRequest.id)
+        && Objects.equals(this.branch, alterTableBackfillColumnsRequest.branch)
         && Objects.equals(this.column, alterTableBackfillColumnsRequest.column)
         && Objects.equals(this.where, alterTableBackfillColumnsRequest.where)
         && Objects.equals(this.concurrency, alterTableBackfillColumnsRequest.concurrency)
@@ -489,6 +515,7 @@ public class AlterTableBackfillColumnsRequest {
     return Objects.hash(
         identity,
         id,
+        branch,
         column,
         where,
         concurrency,
@@ -511,6 +538,7 @@ public class AlterTableBackfillColumnsRequest {
     sb.append("class AlterTableBackfillColumnsRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    where: ").append(toIndentedString(where)).append("\n");
     sb.append("    concurrency: ").append(toIndentedString(concurrency)).append("\n");

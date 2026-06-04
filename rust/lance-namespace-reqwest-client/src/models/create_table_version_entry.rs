@@ -20,6 +20,9 @@ pub struct CreateTableVersionEntry {
     /// Version number to create
     #[serde(rename = "version")]
     pub version: i64,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// Path to the manifest file for this version
     #[serde(rename = "manifest_path")]
     pub manifest_path: String,
@@ -43,6 +46,7 @@ impl CreateTableVersionEntry {
         CreateTableVersionEntry {
             id,
             version,
+            branch: None,
             manifest_path,
             manifest_size: None,
             e_tag: None,

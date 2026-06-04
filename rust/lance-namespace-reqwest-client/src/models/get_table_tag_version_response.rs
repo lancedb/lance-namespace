@@ -16,12 +16,16 @@ pub struct GetTableTagVersionResponse {
     /// version number that the tag points to
     #[serde(rename = "version")]
     pub version: i64,
+    /// Branch the tag's version lives on. Absent when the tag points to the main branch. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
 }
 
 impl GetTableTagVersionResponse {
     pub fn new(version: i64) -> GetTableTagVersionResponse {
         GetTableTagVersionResponse {
             version,
+            branch: None,
         }
     }
 }
