@@ -34,6 +34,9 @@ pub struct IndexContent {
     /// Number of live rows covered by the index. This does not count rows that are in the index but have since been deleted.
     #[serde(rename = "num_indexed_rows", skip_serializing_if = "Option::is_none")]
     pub num_indexed_rows: Option<i64>,
+    /// Number of rows that are not indexed.
+    #[serde(rename = "num_unindexed_rows", skip_serializing_if = "Option::is_none")]
+    pub num_unindexed_rows: Option<i64>,
     /// Total index size in bytes across all segments. Null for indices predating file-size tracking.
     #[serde(rename = "size_bytes", skip_serializing_if = "Option::is_none")]
     pub size_bytes: Option<i64>,
@@ -61,6 +64,7 @@ impl IndexContent {
             index_type: None,
             type_url: None,
             num_indexed_rows: None,
+            num_unindexed_rows: None,
             size_bytes: None,
             num_segments: None,
             created_at: None,

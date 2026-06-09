@@ -34,6 +34,7 @@ import java.util.StringJoiner;
   IndexContent.JSON_PROPERTY_INDEX_TYPE,
   IndexContent.JSON_PROPERTY_TYPE_URL,
   IndexContent.JSON_PROPERTY_NUM_INDEXED_ROWS,
+  IndexContent.JSON_PROPERTY_NUM_UNINDEXED_ROWS,
   IndexContent.JSON_PROPERTY_SIZE_BYTES,
   IndexContent.JSON_PROPERTY_NUM_SEGMENTS,
   IndexContent.JSON_PROPERTY_CREATED_AT,
@@ -64,6 +65,9 @@ public class IndexContent {
 
   public static final String JSON_PROPERTY_NUM_INDEXED_ROWS = "num_indexed_rows";
   @javax.annotation.Nullable private Long numIndexedRows;
+
+  public static final String JSON_PROPERTY_NUM_UNINDEXED_ROWS = "num_unindexed_rows";
+  @javax.annotation.Nullable private Long numUnindexedRows;
 
   public static final String JSON_PROPERTY_SIZE_BYTES = "size_bytes";
   @javax.annotation.Nullable private Long sizeBytes;
@@ -252,6 +256,29 @@ public class IndexContent {
     this.numIndexedRows = numIndexedRows;
   }
 
+  public IndexContent numUnindexedRows(@javax.annotation.Nullable Long numUnindexedRows) {
+    this.numUnindexedRows = numUnindexedRows;
+    return this;
+  }
+
+  /**
+   * Number of rows that are not indexed. minimum: 0
+   *
+   * @return numUnindexedRows
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_NUM_UNINDEXED_ROWS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Long getNumUnindexedRows() {
+    return numUnindexedRows;
+  }
+
+  @JsonProperty(JSON_PROPERTY_NUM_UNINDEXED_ROWS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNumUnindexedRows(@javax.annotation.Nullable Long numUnindexedRows) {
+    this.numUnindexedRows = numUnindexedRows;
+  }
+
   public IndexContent sizeBytes(@javax.annotation.Nullable Long sizeBytes) {
     this.sizeBytes = sizeBytes;
     return this;
@@ -386,6 +413,7 @@ public class IndexContent {
         && Objects.equals(this.indexType, indexContent.indexType)
         && Objects.equals(this.typeUrl, indexContent.typeUrl)
         && Objects.equals(this.numIndexedRows, indexContent.numIndexedRows)
+        && Objects.equals(this.numUnindexedRows, indexContent.numUnindexedRows)
         && Objects.equals(this.sizeBytes, indexContent.sizeBytes)
         && Objects.equals(this.numSegments, indexContent.numSegments)
         && Objects.equals(this.createdAt, indexContent.createdAt)
@@ -403,6 +431,7 @@ public class IndexContent {
         indexType,
         typeUrl,
         numIndexedRows,
+        numUnindexedRows,
         sizeBytes,
         numSegments,
         createdAt,
@@ -421,6 +450,7 @@ public class IndexContent {
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
     sb.append("    typeUrl: ").append(toIndentedString(typeUrl)).append("\n");
     sb.append("    numIndexedRows: ").append(toIndentedString(numIndexedRows)).append("\n");
+    sb.append("    numUnindexedRows: ").append(toIndentedString(numUnindexedRows)).append("\n");
     sb.append("    sizeBytes: ").append(toIndentedString(sizeBytes)).append("\n");
     sb.append("    numSegments: ").append(toIndentedString(numSegments)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
@@ -533,6 +563,14 @@ public class IndexContent {
           String.format(
               "%snum_indexed_rows%s=%s",
               prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getNumIndexedRows()))));
+    }
+
+    // add `num_unindexed_rows` to the URL query string
+    if (getNumUnindexedRows() != null) {
+      joiner.add(
+          String.format(
+              "%snum_unindexed_rows%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getNumUnindexedRows()))));
     }
 
     // add `size_bytes` to the URL query string

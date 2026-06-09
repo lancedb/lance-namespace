@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **index_type** | Option<**String**> | Friendly index type, e.g. IVF_PQ, BTREE. Unknown if no plugin recognizes the index. | [optional]
 **type_url** | Option<**String**> | Protobuf type URL, a precise type identifier for the index. | [optional]
 **num_indexed_rows** | Option<**i64**> | Number of live rows covered by the index. This does not count rows that are in the index but have since been deleted. | [optional]
+**num_unindexed_rows** | Option<**i64**> | Number of rows that are not indexed. | [optional]
 **size_bytes** | Option<**i64**> | Total index size in bytes across all segments. Null for indices predating file-size tracking. | [optional]
 **num_segments** | Option<**i32**> | Number of index deltas/segments. | [optional]
 **created_at** | Option<**String**> | Creation time for indexes. Null for legacy indices. | [optional]

@@ -4469,7 +4469,6 @@ components:
       example:
         indexes:
         - index_uuid: index_uuid
-          index_version: 0
           size_bytes: 0
           columns:
           - columns
@@ -4477,13 +4476,14 @@ components:
           created_at: 2000-01-23T04:56:07.000+00:00
           index_details: index_details
           num_indexed_rows: 0
-          index_name: index_name
           num_segments: 0
-          status: status
           index_type: index_type
+          index_version: 0
+          num_unindexed_rows: 0
+          index_name: index_name
+          status: status
           type_url: type_url
         - index_uuid: index_uuid
-          index_version: 0
           size_bytes: 0
           columns:
           - columns
@@ -4491,10 +4491,12 @@ components:
           created_at: 2000-01-23T04:56:07.000+00:00
           index_details: index_details
           num_indexed_rows: 0
-          index_name: index_name
           num_segments: 0
-          status: status
           index_type: index_type
+          index_version: 0
+          num_unindexed_rows: 0
+          index_name: index_name
+          status: status
           type_url: type_url
         page_token: page_token
       properties:
@@ -4527,7 +4529,6 @@ components:
     IndexContent:
       example:
         index_uuid: index_uuid
-        index_version: 0
         size_bytes: 0
         columns:
         - columns
@@ -4535,10 +4536,12 @@ components:
         created_at: 2000-01-23T04:56:07.000+00:00
         index_details: index_details
         num_indexed_rows: 0
-        index_name: index_name
         num_segments: 0
-        status: status
         index_type: index_type
+        index_version: 0
+        num_unindexed_rows: 0
+        index_name: index_name
+        status: status
         type_url: type_url
       properties:
         index_name:
@@ -4565,6 +4568,11 @@ components:
         num_indexed_rows:
           description: Number of live rows covered by the index. This does not count
             rows that are in the index but have since been deleted.
+          format: int64
+          minimum: 0
+          type: integer
+        num_unindexed_rows:
+          description: Number of rows that are not indexed.
           format: int64
           minimum: 0
           type: integer

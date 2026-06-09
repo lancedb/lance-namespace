@@ -46,6 +46,8 @@ public class IndexContent {
 
   private Long numIndexedRows;
 
+  private Long numUnindexedRows;
+
   private Long sizeBytes;
 
   private Integer numSegments;
@@ -246,6 +248,30 @@ public class IndexContent {
     this.numIndexedRows = numIndexedRows;
   }
 
+  public IndexContent numUnindexedRows(Long numUnindexedRows) {
+    this.numUnindexedRows = numUnindexedRows;
+    return this;
+  }
+
+  /**
+   * Number of rows that are not indexed. minimum: 0
+   *
+   * @return numUnindexedRows
+   */
+  @Min(0L)
+  @Schema(
+      name = "num_unindexed_rows",
+      description = "Number of rows that are not indexed.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("num_unindexed_rows")
+  public Long getNumUnindexedRows() {
+    return numUnindexedRows;
+  }
+
+  public void setNumUnindexedRows(Long numUnindexedRows) {
+    this.numUnindexedRows = numUnindexedRows;
+  }
+
   public IndexContent sizeBytes(Long sizeBytes) {
     this.sizeBytes = sizeBytes;
     return this;
@@ -385,6 +411,7 @@ public class IndexContent {
         && Objects.equals(this.indexType, indexContent.indexType)
         && Objects.equals(this.typeUrl, indexContent.typeUrl)
         && Objects.equals(this.numIndexedRows, indexContent.numIndexedRows)
+        && Objects.equals(this.numUnindexedRows, indexContent.numUnindexedRows)
         && Objects.equals(this.sizeBytes, indexContent.sizeBytes)
         && Objects.equals(this.numSegments, indexContent.numSegments)
         && Objects.equals(this.createdAt, indexContent.createdAt)
@@ -402,6 +429,7 @@ public class IndexContent {
         indexType,
         typeUrl,
         numIndexedRows,
+        numUnindexedRows,
         sizeBytes,
         numSegments,
         createdAt,
@@ -420,6 +448,7 @@ public class IndexContent {
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
     sb.append("    typeUrl: ").append(toIndentedString(typeUrl)).append("\n");
     sb.append("    numIndexedRows: ").append(toIndentedString(numIndexedRows)).append("\n");
+    sb.append("    numUnindexedRows: ").append(toIndentedString(numUnindexedRows)).append("\n");
     sb.append("    sizeBytes: ").append(toIndentedString(sizeBytes)).append("\n");
     sb.append("    numSegments: ").append(toIndentedString(numSegments)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");

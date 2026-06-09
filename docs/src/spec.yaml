@@ -3234,6 +3234,12 @@ components:
           description: >-
             Number of live rows covered by the index. This does not count
             rows that are in the index but have since been deleted.
+        num_unindexed_rows:
+          type: integer
+          format: int64
+          minimum: 0
+          description: >-
+            Number of rows that are not indexed.
         size_bytes:
           type: integer
           format: int64
