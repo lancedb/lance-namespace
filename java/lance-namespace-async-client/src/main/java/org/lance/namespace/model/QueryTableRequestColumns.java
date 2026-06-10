@@ -57,7 +57,8 @@ public class QueryTableRequestColumns {
   }
 
   /**
-   * List of field paths to return
+   * List of Lance field paths to return. Nested fields use dot-separated segments; use
+   * backtick-quoted segments for literal dots and double backticks inside quoted segments.
    *
    * @return columnNames
    */
@@ -89,7 +90,9 @@ public class QueryTableRequestColumns {
   }
 
   /**
-   * Object mapping output aliases to source field paths
+   * Object mapping output aliases to source Lance field paths. Nested fields use dot-separated
+   * segments; use backtick-quoted segments for literal dots and double backticks inside quoted
+   * segments.
    *
    * @return columnAliases
    */

@@ -5900,7 +5900,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"indexes\" : [ { \"index_uuid\" : \"index_uuid\", \"size_bytes\" : 0, \"columns\" : [ null, null ], \"created_at\" : \"2000-01-23T04:56:07.000+00:00\", \"index_details\" : \"index_details\", \"num_indexed_rows\" : 0, \"num_segments\" : 0, \"index_type\" : \"index_type\", \"index_version\" : 0, \"num_unindexed_rows\" : 0, \"index_name\" : \"index_name\", \"status\" : \"status\", \"type_url\" : \"type_url\" }, { \"index_uuid\" : \"index_uuid\", \"size_bytes\" : 0, \"columns\" : [ null, null ], \"created_at\" : \"2000-01-23T04:56:07.000+00:00\", \"index_details\" : \"index_details\", \"num_indexed_rows\" : 0, \"num_segments\" : 0, \"index_type\" : \"index_type\", \"index_version\" : 0, \"num_unindexed_rows\" : 0, \"index_name\" : \"index_name\", \"status\" : \"status\", \"type_url\" : \"type_url\" } ], \"page_token\" : \"page_token\" }";
+                      "{ \"indexes\" : [ { \"index_uuid\" : \"index_uuid\", \"size_bytes\" : 0, \"columns\" : [ \"columns\", \"columns\" ], \"created_at\" : \"2000-01-23T04:56:07.000+00:00\", \"index_details\" : \"index_details\", \"num_indexed_rows\" : 0, \"num_segments\" : 0, \"index_type\" : \"index_type\", \"index_version\" : 0, \"num_unindexed_rows\" : 0, \"index_name\" : \"index_name\", \"status\" : \"status\", \"type_url\" : \"type_url\" }, { \"index_uuid\" : \"index_uuid\", \"size_bytes\" : 0, \"columns\" : [ \"columns\", \"columns\" ], \"created_at\" : \"2000-01-23T04:56:07.000+00:00\", \"index_details\" : \"index_details\", \"num_indexed_rows\" : 0, \"num_segments\" : 0, \"index_type\" : \"index_type\", \"index_version\" : 0, \"num_unindexed_rows\" : 0, \"index_name\" : \"index_name\", \"status\" : \"status\", \"type_url\" : \"type_url\" } ], \"page_token\" : \"page_token\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -6369,7 +6369,11 @@ public interface TableApi {
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param on Field path to use for matching rows (required) (required)
+   * @param on Lance field path to use for matching rows. Nested fields use dot-separated segments;
+   *     use backtick-quoted segments for literal dots and double backticks inside quoted segments.
+   *     Use canonical full paths for display and errors; leaf names alone only identify top-level
+   *     fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
+   *     (required)
    * @param body Arrow IPC stream containing the records to merge (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
@@ -6380,15 +6384,17 @@ public interface TableApi {
    *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
    * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
-   *     the SQL expression evaluates to true. Field references must use Lance field path syntax.
-   *     (optional)
+   *     the SQL expression evaluates to true. Field references must use Lance field path syntax:
+   *     nested fields use dot-separated segments, literal dots require backtick-quoted segments,
+   *     and backticks inside quoted segments are doubled. (optional)
    * @param whenNotMatchedInsertAll Insert all columns when rows don&#39;t match (optional, default
    *     to false)
    * @param whenNotMatchedBySourceDelete Delete all rows from target table that don&#39;t match a
    *     row in the source table (optional, default to false)
    * @param whenNotMatchedBySourceDeleteFilt Delete rows from the target table if there is no match
    *     AND the SQL expression evaluates to true. Field references must use Lance field path
-   *     syntax. (optional)
+   *     syntax: nested fields use dot-separated segments, literal dots require backtick-quoted
+   *     segments, and backticks inside quoted segments are doubled. (optional)
    * @param timeout Timeout for the operation (e.g., \&quot;30s\&quot;, \&quot;5m\&quot;) (optional)
    * @param useIndex Whether to use index for matching rows (optional, default to false)
    * @return Result of merge insert operation (status code 200) or Indicates a bad request error. It
@@ -6495,7 +6501,8 @@ public interface TableApi {
           @Size(min = 1)
           @Parameter(
               name = "on",
-              description = "Field path to use for matching rows (required)",
+              description =
+                  "Lance field path to use for matching rows. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.",
               required = true,
               in = ParameterIn.QUERY)
           @Valid
@@ -6534,7 +6541,7 @@ public interface TableApi {
       @Parameter(
               name = "when_matched_update_all_filt",
               description =
-                  "The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax.",
+                  "The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "when_matched_update_all_filt", required = false)
@@ -6563,7 +6570,7 @@ public interface TableApi {
       @Parameter(
               name = "when_not_matched_by_source_delete_filt",
               description =
-                  "Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax.",
+                  "Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "when_not_matched_by_source_delete_filt", required = false)

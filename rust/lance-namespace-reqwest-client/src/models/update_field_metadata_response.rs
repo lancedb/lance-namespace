@@ -16,7 +16,7 @@ pub struct UpdateFieldMetadataResponse {
     /// The commit version associated with the operation
     #[serde(rename = "version")]
     pub version: i64,
-    /// Resulting metadata for each updated field, keyed by field path. 
+    /// Resulting metadata for each updated field, keyed by canonical Lance field path. 
     #[serde(rename = "fields", skip_serializing_if = "Option::is_none")]
     pub fields: Option<std::collections::HashMap<String, std::collections::HashMap<String, String>>>,
 }

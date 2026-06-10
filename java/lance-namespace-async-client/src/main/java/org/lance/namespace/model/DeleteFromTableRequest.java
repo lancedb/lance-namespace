@@ -175,7 +175,9 @@ public class DeleteFromTableRequest {
   }
 
   /**
-   * SQL predicate to filter rows for deletion. Field references must use Lance field path syntax.
+   * SQL predicate to filter rows for deletion. Field references must use Lance field path syntax:
+   * nested fields use dot-separated segments, literal dots require backtick-quoted segments, and
+   * backticks inside quoted segments are doubled.
    *
    * @return predicate
    */

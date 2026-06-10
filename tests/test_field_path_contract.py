@@ -2,7 +2,6 @@ from pathlib import Path
 
 
 SPEC_PATH = Path(__file__).resolve().parents[1] / "docs" / "src" / "spec.yaml"
-FIELD_PATH_REF = '$ref: "#/components/schemas/FieldPath"'
 
 
 def _spec_text() -> str:
@@ -21,19 +20,22 @@ def _block_after(text: str, marker: str) -> str:
     return "\n".join(block)
 
 
-def test_field_path_schema_documents_nested_path_contract():
-    block = _block_after(_spec_text(), "    FieldPath:")
-
+def _assert_field_path_contract(block: str) -> None:
     assert "type: string" in block
     assert "minLength: 1" in block
-    assert "addressed by joining path segments with `.`" in block
-    assert "literal `.`" in block
-    assert "Backticks inside a quoted segment are escaped" in block
-    assert "same leaf name under different parents unambiguous" in block
-    assert "canonical display form" in block
+    assert "dot-separated segments" in block
+    assert "literal dots" in block
+    assert "backtick" in block
 
 
-def test_projection_index_and_metadata_fields_use_field_path_schema():
+def test_field_path_contract_is_inline_string_schema():
+    text = _spec_text()
+
+    assert "    FieldPath:" not in text
+    assert "#/components/schemas/FieldPath" not in text
+
+
+def test_projection_index_and_metadata_fields_document_field_path_contract():
     text = _spec_text()
 
     for marker in [
@@ -53,14 +55,32 @@ def test_projection_index_and_metadata_fields_use_field_path_schema():
         "    MaterializedViewUdtfEntry:",
         "    AlterTableDropColumnsRequest:",
     ]:
-        assert FIELD_PATH_REF in _block_after(text, marker), marker
+        _assert_field_path_contract(_block_after(text, marker))
 
 
-def test_rest_merge_insert_on_parameter_uses_field_path_schema():
+def test_ambiguous_and_unresolved_paths_define_display_and_errors():
+    text = _spec_text()
+
+    for marker in [
+        "    CreateTableIndexRequest:",
+        "    MergeInsertIntoTableRequest:",
+        "    UpdateFieldMetadataEntry:",
+        "    AlterColumnsEntry:",
+        "    AlterTableBackfillColumnsRequest:",
+        "    AlterTableDropColumnsRequest:",
+    ]:
+        block = _block_after(text, marker)
+        assert "canonical full paths" in block
+        assert "leaf names alone only identify top-level fields" in block
+        assert "InvalidInput or TableColumnNotFound" in block
+
+
+def test_rest_merge_insert_on_parameter_documents_field_path_contract():
     block = _block_after(_spec_text(), '      - name: "on"')
 
-    assert "description: Field path to use for matching rows" in block
-    assert FIELD_PATH_REF in block
+    _assert_field_path_contract(block)
+    assert "canonical full paths" in block
+    assert "InvalidInput or TableColumnNotFound" in block
 
 
 def test_sql_expression_fields_reference_field_path_contract():
@@ -74,4 +94,6 @@ def test_sql_expression_fields_reference_field_path_contract():
         "    QueryTableRequest:",
         "    AnalyzeTableQueryPlanRequest:",
     ]:
-        assert "field path syntax" in _block_after(text, marker), marker
+        block = _block_after(text, marker)
+        assert "field path syntax" in block, marker
+        assert "literal dots require backtick-quoted segments" in block, marker

@@ -1245,13 +1245,18 @@ paths:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
     - $ref: '#/components/parameters/branch'
-    - description: Field path to use for matching rows (required)
+    - description: Lance field path to use for matching rows. Nested fields use dot-separated
+        segments; use backtick-quoted segments for literal dots and double backticks
+        inside quoted segments. Use canonical full paths for display and errors; leaf
+        names alone only identify top-level fields; invalid or unresolved paths should
+        return InvalidInput or TableColumnNotFound.
       explode: true
       in: query
       name: "on"
       required: true
       schema:
-        $ref: '#/components/schemas/FieldPath'
+        minLength: 1
+        type: string
       style: form
     - description: Update all columns when rows match
       explode: true
@@ -1262,9 +1267,10 @@ paths:
         default: false
         type: boolean
       style: form
-    - description: The row is updated (similar to UpdateAll) only for rows where the
-        SQL expression evaluates to true. Field references must use Lance field path
-        syntax.
+    - description: "The row is updated (similar to UpdateAll) only for rows where\
+        \ the SQL expression evaluates to true. Field references must use Lance field\
+        \ path syntax: nested fields use dot-separated segments, literal dots require\
+        \ backtick-quoted segments, and backticks inside quoted segments are doubled."
       explode: true
       in: query
       name: when_matched_update_all_filt
@@ -1291,9 +1297,10 @@ paths:
         default: false
         type: boolean
       style: form
-    - description: Delete rows from the target table if there is no match AND the
-        SQL expression evaluates to true. Field references must use Lance field path
-        syntax.
+    - description: "Delete rows from the target table if there is no match AND the\
+        \ SQL expression evaluates to true. Field references must use Lance field\
+        \ path syntax: nested fields use dot-separated segments, literal dots require\
+        \ backtick-quoted segments, and backticks inside quoted segments are doubled."
       explode: true
       in: query
       name: when_not_matched_by_source_delete_filt
@@ -1344,13 +1351,18 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
       - $ref: '#/components/parameters/branch'
-      - description: Field path to use for matching rows (required)
+      - description: Lance field path to use for matching rows. Nested fields use
+          dot-separated segments; use backtick-quoted segments for literal dots and
+          double backticks inside quoted segments. Use canonical full paths for display
+          and errors; leaf names alone only identify top-level fields; invalid or
+          unresolved paths should return InvalidInput or TableColumnNotFound.
         explode: true
         in: query
         name: "on"
         required: true
         schema:
-          $ref: '#/components/schemas/FieldPath'
+          minLength: 1
+          type: string
         style: form
       - description: Update all columns when rows match
         explode: true
@@ -1361,9 +1373,11 @@ paths:
           default: false
           type: boolean
         style: form
-      - description: The row is updated (similar to UpdateAll) only for rows where
-          the SQL expression evaluates to true. Field references must use Lance field
-          path syntax.
+      - description: "The row is updated (similar to UpdateAll) only for rows where\
+          \ the SQL expression evaluates to true. Field references must use Lance\
+          \ field path syntax: nested fields use dot-separated segments, literal dots\
+          \ require backtick-quoted segments, and backticks inside quoted segments\
+          \ are doubled."
         explode: true
         in: query
         name: when_matched_update_all_filt
@@ -1390,9 +1404,10 @@ paths:
           default: false
           type: boolean
         style: form
-      - description: Delete rows from the target table if there is no match AND the
-          SQL expression evaluates to true. Field references must use Lance field
-          path syntax.
+      - description: "Delete rows from the target table if there is no match AND the\
+          \ SQL expression evaluates to true. Field references must use Lance field\
+          \ path syntax: nested fields use dot-separated segments, literal dots require\
+          \ backtick-quoted segments, and backticks inside quoted segments are doubled."
         explode: true
         in: query
         name: when_not_matched_by_source_delete_filt
@@ -3618,30 +3633,6 @@ components:
         number of results that a caller will receive.
       type: integer
       nullable: true
-    FieldPath:
-      description: |
-        Lance field path.
-
-        A field path identifies a field in a Lance schema. Nested fields are
-        addressed by joining path segments with `.`. A `.` that is not inside
-        backticks is always a path separator, so a field name that contains a
-        literal `.` must be written as a backtick-quoted segment, for example
-        `parent.`child.with.dot``. Backticks inside a quoted segment are escaped
-        by doubling them.
-
-        The canonical display form is the full path from the table schema root
-        to the field, with any segment containing characters other than
-        alphanumeric characters or `_` quoted with backticks, for example
-        `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`.
-        Index listings and error messages should use this canonical form.
-
-        A leaf field name by itself only identifies a top-level field. Nested
-        fields must be referenced by their full path, which keeps schemas with
-        the same leaf name under different parents unambiguous. If a path cannot
-        be parsed or resolved against the table schema, the implementation should
-        reject the request with InvalidInput or TableColumnNotFound.
-      minLength: 1
-      type: string
     RegisterTableRequest:
       example:
         mode: mode
@@ -4061,7 +4052,7 @@ components:
         predicate:
           description: |
             Optional SQL predicate to filter rows for counting. Field
-            references must use Lance field path syntax.
+            references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.
           type: string
     CountTableRowsResponse:
       description: |
@@ -4136,27 +4127,11 @@ components:
             Branch to target. When not specified, the main branch is used.
           type: string
         "on":
-          description: |
-            Lance field path.
-
-            A field path identifies a field in a Lance schema. Nested fields are
-            addressed by joining path segments with `.`. A `.` that is not inside
-            backticks is always a path separator, so a field name that contains a
-            literal `.` must be written as a backtick-quoted segment, for example
-            `parent.`child.with.dot``. Backticks inside a quoted segment are escaped
-            by doubling them.
-
-            The canonical display form is the full path from the table schema root
-            to the field, with any segment containing characters other than
-            alphanumeric characters or `_` quoted with backticks, for example
-            `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`.
-            Index listings and error messages should use this canonical form.
-
-            A leaf field name by itself only identifies a top-level field. Nested
-            fields must be referenced by their full path, which keeps schemas with
-            the same leaf name under different parents unambiguous. If a path cannot
-            be parsed or resolved against the table schema, the implementation should
-            reject the request with InvalidInput or TableColumnNotFound.
+          description: Lance field path to use for matching rows. Nested fields use
+            dot-separated segments; use backtick-quoted segments for literal dots
+            and double backticks inside quoted segments. Use canonical full paths
+            for display and errors; leaf names alone only identify top-level fields;
+            invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
           minLength: 1
           type: string
         when_matched_update_all:
@@ -4164,9 +4139,11 @@ components:
           description: Update all columns when rows match
           type: boolean
         when_matched_update_all_filt:
-          description: The row is updated (similar to UpdateAll) only for rows where
-            the SQL expression evaluates to true. Field references must use Lance
-            field path syntax.
+          description: "The row is updated (similar to UpdateAll) only for rows where\
+            \ the SQL expression evaluates to true. Field references must use Lance\
+            \ field path syntax: nested fields use dot-separated segments, literal\
+            \ dots require backtick-quoted segments, and backticks inside quoted segments\
+            \ are doubled."
           type: string
         when_not_matched_insert_all:
           default: false
@@ -4178,9 +4155,11 @@ components:
             the source table
           type: boolean
         when_not_matched_by_source_delete_filt:
-          description: Delete rows from the target table if there is no match AND
-            the SQL expression evaluates to true. Field references must use Lance
-            field path syntax.
+          description: "Delete rows from the target table if there is no match AND\
+            \ the SQL expression evaluates to true. Field references must use Lance\
+            \ field path syntax: nested fields use dot-separated segments, literal\
+            \ dots require backtick-quoted segments, and backticks inside quoted segments\
+            \ are doubled."
           type: string
         timeout:
           description: "Timeout for the operation (e.g., \"30s\", \"5m\")"
@@ -4267,13 +4246,17 @@ components:
             Branch to target. When not specified, the main branch is used.
           type: string
         predicate:
-          description: Optional SQL predicate to filter rows for update. Field references
-            must use Lance field path syntax.
+          description: "Optional SQL predicate to filter rows for update. Field references\
+            \ must use Lance field path syntax: nested fields use dot-separated segments,\
+            \ literal dots require backtick-quoted segments, and backticks inside\
+            \ quoted segments are doubled."
           type: string
           nullable: true
         updates:
           description: "List of field updates as [field_path, expression] pairs. Field\
-            \ paths and expression references must use Lance field path syntax."
+            \ paths and expression references must use Lance field path syntax: nested\
+            \ fields use dot-separated segments, literal dots require backtick-quoted\
+            \ segments, and backticks inside quoted segments are doubled."
           items:
             items:
               type: string
@@ -4356,8 +4339,10 @@ components:
             Branch to target. When not specified, the main branch is used.
           type: string
         predicate:
-          description: SQL predicate to filter rows for deletion. Field references
-            must use Lance field path syntax.
+          description: "SQL predicate to filter rows for deletion. Field references\
+            \ must use Lance field path syntax: nested fields use dot-separated segments,\
+            \ literal dots require backtick-quoted segments, and backticks inside\
+            \ quoted segments are doubled."
           type: string
       required:
       - predicate
@@ -4380,10 +4365,10 @@ components:
         offset: 0
         columns:
           column_aliases:
-            key: null
+            key: column_aliases
           column_names:
-          - null
-          - null
+          - column_names
+          - column_names
         vector_column: vector_column
         fast_search: true
         k: 0
@@ -4397,8 +4382,8 @@ components:
         full_text_query:
           string_query:
             columns:
-            - null
-            - null
+            - columns
+            - columns
             query: query
           structured_query:
             query:
@@ -4504,8 +4489,7 @@ components:
           type: boolean
         filter:
           description: |
-            Optional SQL filter expression. Field references in the expression
-            must use Lance field path syntax.
+            Optional SQL filter expression. Field references in the expression must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.
           type: string
         full_text_query:
           $ref: '#/components/schemas/QueryTableRequest_full_text_query'
@@ -4540,27 +4524,11 @@ components:
         vector:
           $ref: '#/components/schemas/QueryTableRequest_vector'
         vector_column:
-          description: |
-            Lance field path.
-
-            A field path identifies a field in a Lance schema. Nested fields are
-            addressed by joining path segments with `.`. A `.` that is not inside
-            backticks is always a path separator, so a field name that contains a
-            literal `.` must be written as a backtick-quoted segment, for example
-            `parent.`child.with.dot``. Backticks inside a quoted segment are escaped
-            by doubling them.
-
-            The canonical display form is the full path from the table schema root
-            to the field, with any segment containing characters other than
-            alphanumeric characters or `_` quoted with backticks, for example
-            `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`.
-            Index listings and error messages should use this canonical form.
-
-            A leaf field name by itself only identifies a top-level field. Nested
-            fields must be referenced by their full path, which keeps schemas with
-            the same leaf name under different parents unambiguous. If a path cannot
-            be parsed or resolved against the table schema, the implementation should
-            reject the request with InvalidInput or TableColumnNotFound.
+          description: Lance field path of the vector field to search. Nested fields
+            use dot-separated segments; use backtick-quoted segments for literal dots
+            and double backticks inside quoted segments. Use canonical full paths
+            for display and errors; leaf names alone only identify top-level fields;
+            invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
           minLength: 1
           type: string
         version:
@@ -4620,27 +4588,11 @@ components:
             Branch to target. When not specified, the main branch is used.
           type: string
         column:
-          description: |
-            Lance field path.
-
-            A field path identifies a field in a Lance schema. Nested fields are
-            addressed by joining path segments with `.`. A `.` that is not inside
-            backticks is always a path separator, so a field name that contains a
-            literal `.` must be written as a backtick-quoted segment, for example
-            `parent.`child.with.dot``. Backticks inside a quoted segment are escaped
-            by doubling them.
-
-            The canonical display form is the full path from the table schema root
-            to the field, with any segment containing characters other than
-            alphanumeric characters or `_` quoted with backticks, for example
-            `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`.
-            Index listings and error messages should use this canonical form.
-
-            A leaf field name by itself only identifies a top-level field. Nested
-            fields must be referenced by their full path, which keeps schemas with
-            the same leaf name under different parents unambiguous. If a path cannot
-            be parsed or resolved against the table schema, the implementation should
-            reject the request with InvalidInput or TableColumnNotFound.
+          description: Lance field path to create the index on. Nested fields use
+            dot-separated segments; use backtick-quoted segments for literal dots
+            and double backticks inside quoted segments. Use canonical full paths
+            for display and errors; leaf names alone only identify top-level fields;
+            invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
           minLength: 1
           type: string
         index_type:
@@ -4782,8 +4734,8 @@ components:
         - index_uuid: index_uuid
           size_bytes: 0
           columns:
-          - null
-          - null
+          - columns
+          - columns
           created_at: 2000-01-23T04:56:07.000+00:00
           index_details: index_details
           num_indexed_rows: 0
@@ -4797,8 +4749,8 @@ components:
         - index_uuid: index_uuid
           size_bytes: 0
           columns:
-          - null
-          - null
+          - columns
+          - columns
           created_at: 2000-01-23T04:56:07.000+00:00
           index_details: index_details
           num_indexed_rows: 0
@@ -4842,8 +4794,8 @@ components:
         index_uuid: index_uuid
         size_bytes: 0
         columns:
-        - null
-        - null
+        - columns
+        - columns
         created_at: 2000-01-23T04:56:07.000+00:00
         index_details: index_details
         num_indexed_rows: 0
@@ -4862,9 +4814,12 @@ components:
           description: Unique identifier for the index
           type: string
         columns:
-          description: Canonical field paths covered by this index
+          description: "Canonical Lance field paths covered by this index. Nested\
+            \ fields use dot-separated segments; segments containing literal dots\
+            \ are backtick-quoted, and backticks inside quoted segments are doubled."
           items:
-            $ref: '#/components/schemas/FieldPath'
+            minLength: 1
+            type: string
           type: array
         status:
           description: Current status of the index
@@ -5638,14 +5593,17 @@ components:
     StringFtsQuery:
       example:
         columns:
-        - null
-        - null
+        - columns
+        - columns
         query: query
       properties:
         columns:
-          description: Field paths to search. Omit to search all indexed FTS fields.
+          description: Lance field paths to search. Nested fields use dot-separated
+            segments; use backtick-quoted segments for literal dots and double backticks
+            inside quoted segments. Omit to search all indexed FTS fields.
           items:
-            $ref: '#/components/schemas/FieldPath'
+            minLength: 1
+            type: string
           type: array
         query:
           type: string
@@ -5774,27 +5732,9 @@ components:
           format: float
           type: number
         column:
-          description: |
-            Lance field path.
-
-            A field path identifies a field in a Lance schema. Nested fields are
-            addressed by joining path segments with `.`. A `.` that is not inside
-            backticks is always a path separator, so a field name that contains a
-            literal `.` must be written as a backtick-quoted segment, for example
-            `parent.`child.with.dot``. Backticks inside a quoted segment are escaped
-            by doubling them.
-
-            The canonical display form is the full path from the table schema root
-            to the field, with any segment containing characters other than
-            alphanumeric characters or `_` quoted with backticks, for example
-            `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`.
-            Index listings and error messages should use this canonical form.
-
-            A leaf field name by itself only identifies a top-level field. Nested
-            fields must be referenced by their full path, which keeps schemas with
-            the same leaf name under different parents unambiguous. If a path cannot
-            be parsed or resolved against the table schema, the implementation should
-            reject the request with InvalidInput or TableColumnNotFound.
+          description: Lance field path to match. Nested fields use dot-separated
+            segments; use backtick-quoted segments for literal dots and double backticks
+            inside quoted segments. Omit to use the query default fields.
           minLength: 1
           type: string
         fuzziness:
@@ -5832,27 +5772,9 @@ components:
         slop: 0
       properties:
         column:
-          description: |
-            Lance field path.
-
-            A field path identifies a field in a Lance schema. Nested fields are
-            addressed by joining path segments with `.`. A `.` that is not inside
-            backticks is always a path separator, so a field name that contains a
-            literal `.` must be written as a backtick-quoted segment, for example
-            `parent.`child.with.dot``. Backticks inside a quoted segment are escaped
-            by doubling them.
-
-            The canonical display form is the full path from the table schema root
-            to the field, with any segment containing characters other than
-            alphanumeric characters or `_` quoted with backticks, for example
-            `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`.
-            Index listings and error messages should use this canonical form.
-
-            A leaf field name by itself only identifies a top-level field. Nested
-            fields must be referenced by their full path, which keeps schemas with
-            the same leaf name under different parents unambiguous. If a path cannot
-            be parsed or resolved against the table schema, the implementation should
-            reject the request with InvalidInput or TableColumnNotFound.
+          description: Lance field path to match. Nested fields use dot-separated
+            segments; use backtick-quoted segments for literal dots and double backticks
+            inside quoted segments. Omit to use the query default fields.
           minLength: 1
           type: string
         slop:
@@ -7508,10 +7430,10 @@ components:
           offset: 0
           columns:
             column_aliases:
-              key: null
+              key: column_aliases
             column_names:
-            - null
-            - null
+            - column_names
+            - column_names
           vector_column: vector_column
           fast_search: true
           k: 0
@@ -7525,8 +7447,8 @@ components:
           full_text_query:
             string_query:
               columns:
-              - null
-              - null
+              - columns
+              - columns
               query: query
             structured_query:
               query:
@@ -7643,10 +7565,10 @@ components:
         offset: 0
         columns:
           column_aliases:
-            key: null
+            key: column_aliases
           column_names:
-          - null
-          - null
+          - column_names
+          - column_names
         vector_column: vector_column
         fast_search: true
         k: 0
@@ -7660,8 +7582,8 @@ components:
         full_text_query:
           string_query:
             columns:
-            - null
-            - null
+            - columns
+            - columns
             query: query
           structured_query:
             query:
@@ -7767,8 +7689,7 @@ components:
           type: boolean
         filter:
           description: |
-            Optional SQL filter expression. Field references in the expression
-            must use Lance field path syntax.
+            Optional SQL filter expression. Field references in the expression must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.
           type: string
         full_text_query:
           $ref: '#/components/schemas/QueryTableRequest_full_text_query'
@@ -7803,27 +7724,11 @@ components:
         vector:
           $ref: '#/components/schemas/QueryTableRequest_vector'
         vector_column:
-          description: |
-            Lance field path.
-
-            A field path identifies a field in a Lance schema. Nested fields are
-            addressed by joining path segments with `.`. A `.` that is not inside
-            backticks is always a path separator, so a field name that contains a
-            literal `.` must be written as a backtick-quoted segment, for example
-            `parent.`child.with.dot``. Backticks inside a quoted segment are escaped
-            by doubling them.
-
-            The canonical display form is the full path from the table schema root
-            to the field, with any segment containing characters other than
-            alphanumeric characters or `_` quoted with backticks, for example
-            `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`.
-            Index listings and error messages should use this canonical form.
-
-            A leaf field name by itself only identifies a top-level field. Nested
-            fields must be referenced by their full path, which keeps schemas with
-            the same leaf name under different parents unambiguous. If a path cannot
-            be parsed or resolved against the table schema, the implementation should
-            reject the request with InvalidInput or TableColumnNotFound.
+          description: Lance field path of the vector field to search. Nested fields
+            use dot-separated segments; use backtick-quoted segments for literal dots
+            and double backticks inside quoted segments. Use canonical full paths
+            for display and errors; leaf names alone only identify top-level fields;
+            invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
           minLength: 1
           type: string
         version:
@@ -7874,8 +7779,8 @@ components:
             udf_name: udf_name
             manifest: manifest
             input_columns:
-            - null
-            - null
+            - input_columns
+            - input_columns
             udf_backend: udf_backend
             auto_backfill: true
             udf_version: udf_version
@@ -7903,8 +7808,8 @@ components:
             udf_name: udf_name
             manifest: manifest
             input_columns:
-            - null
-            - null
+            - input_columns
+            - input_columns
             udf_backend: udf_backend
             auto_backfill: true
             udf_version: udf_version
@@ -7957,8 +7862,8 @@ components:
           udf_name: udf_name
           manifest: manifest
           input_columns:
-          - null
-          - null
+          - input_columns
+          - input_columns
           udf_backend: udf_backend
           auto_backfill: true
           udf_version: udf_version
@@ -7998,16 +7903,19 @@ components:
         udf_name: udf_name
         manifest: manifest
         input_columns:
-        - null
-        - null
+        - input_columns
+        - input_columns
         udf_backend: udf_backend
         auto_backfill: true
         udf_version: udf_version
       properties:
         input_columns:
-          description: List of input field paths for the virtual column
+          description: List of input Lance field paths for the virtual column. Nested
+            fields use dot-separated segments; use backtick-quoted segments for literal
+            dots and double backticks inside quoted segments.
           items:
-            $ref: '#/components/schemas/FieldPath'
+            minLength: 1
+            type: string
           type: array
         outputs:
           description: Output columns produced by the virtual column UDF
@@ -8139,27 +8047,11 @@ components:
         replace: true
       properties:
         path:
-          description: |
-            Lance field path.
-
-            A field path identifies a field in a Lance schema. Nested fields are
-            addressed by joining path segments with `.`. A `.` that is not inside
-            backticks is always a path separator, so a field name that contains a
-            literal `.` must be written as a backtick-quoted segment, for example
-            `parent.`child.with.dot``. Backticks inside a quoted segment are escaped
-            by doubling them.
-
-            The canonical display form is the full path from the table schema root
-            to the field, with any segment containing characters other than
-            alphanumeric characters or `_` quoted with backticks, for example
-            `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`.
-            Index listings and error messages should use this canonical form.
-
-            A leaf field name by itself only identifies a top-level field. Nested
-            fields must be referenced by their full path, which keeps schemas with
-            the same leaf name under different parents unambiguous. If a path cannot
-            be parsed or resolved against the table schema, the implementation should
-            reject the request with InvalidInput or TableColumnNotFound.
+          description: Lance field path whose metadata to update. Nested fields use
+            dot-separated segments; use backtick-quoted segments for literal dots
+            and double backticks inside quoted segments. Use canonical full paths
+            for display and errors; leaf names alone only identify top-level fields;
+            invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
           minLength: 1
           type: string
         metadata:
@@ -8195,7 +8087,7 @@ components:
             additionalProperties:
               type: string
           description: |
-            Resulting metadata for each updated field, keyed by field path.
+            Resulting metadata for each updated field, keyed by canonical Lance field path.
       required:
       - version
     AlterTableAlterColumnsRequest:
@@ -8217,8 +8109,8 @@ components:
             udf_name: udf_name
             manifest: manifest
             input_columns:
-            - null
-            - null
+            - input_columns
+            - input_columns
             udf_backend: udf_backend
             auto_backfill: true
             udf_version: udf_version
@@ -8235,8 +8127,8 @@ components:
             udf_name: udf_name
             manifest: manifest
             input_columns:
-            - null
-            - null
+            - input_columns
+            - input_columns
             udf_backend: udf_backend
             auto_backfill: true
             udf_version: udf_version
@@ -8278,34 +8170,18 @@ components:
           udf_name: udf_name
           manifest: manifest
           input_columns:
-          - null
-          - null
+          - input_columns
+          - input_columns
           udf_backend: udf_backend
           auto_backfill: true
           udf_version: udf_version
       properties:
         path:
-          description: |
-            Lance field path.
-
-            A field path identifies a field in a Lance schema. Nested fields are
-            addressed by joining path segments with `.`. A `.` that is not inside
-            backticks is always a path separator, so a field name that contains a
-            literal `.` must be written as a backtick-quoted segment, for example
-            `parent.`child.with.dot``. Backticks inside a quoted segment are escaped
-            by doubling them.
-
-            The canonical display form is the full path from the table schema root
-            to the field, with any segment containing characters other than
-            alphanumeric characters or `_` quoted with backticks, for example
-            `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`.
-            Index listings and error messages should use this canonical form.
-
-            A leaf field name by itself only identifies a top-level field. Nested
-            fields must be referenced by their full path, which keeps schemas with
-            the same leaf name under different parents unambiguous. If a path cannot
-            be parsed or resolved against the table schema, the implementation should
-            reject the request with InvalidInput or TableColumnNotFound.
+          description: Lance field path to alter. Nested fields use dot-separated
+            segments; use backtick-quoted segments for literal dots and double backticks
+            inside quoted segments. Use canonical full paths for display and errors;
+            leaf names alone only identify top-level fields; invalid or unresolved
+            paths should return InvalidInput or TableColumnNotFound.
           minLength: 1
           type: string
         data_type:
@@ -8333,16 +8209,19 @@ components:
         udf_name: udf_name
         manifest: manifest
         input_columns:
-        - null
-        - null
+        - input_columns
+        - input_columns
         udf_backend: udf_backend
         auto_backfill: true
         udf_version: udf_version
       properties:
         input_columns:
-          description: List of input field paths for the virtual column (optional)
+          description: List of input Lance field paths for the virtual column. Nested
+            fields use dot-separated segments; use backtick-quoted segments for literal
+            dots and double backticks inside quoted segments. Optional.
           items:
-            $ref: '#/components/schemas/FieldPath'
+            minLength: 1
+            type: string
           nullable: true
           type: array
         image:
@@ -8428,27 +8307,11 @@ components:
             Branch to target. When not specified, the main branch is used.
           type: string
         column:
-          description: |
-            Lance field path.
-
-            A field path identifies a field in a Lance schema. Nested fields are
-            addressed by joining path segments with `.`. A `.` that is not inside
-            backticks is always a path separator, so a field name that contains a
-            literal `.` must be written as a backtick-quoted segment, for example
-            `parent.`child.with.dot``. Backticks inside a quoted segment are escaped
-            by doubling them.
-
-            The canonical display form is the full path from the table schema root
-            to the field, with any segment containing characters other than
-            alphanumeric characters or `_` quoted with backticks, for example
-            `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`.
-            Index listings and error messages should use this canonical form.
-
-            A leaf field name by itself only identifies a top-level field. Nested
-            fields must be referenced by their full path, which keeps schemas with
-            the same leaf name under different parents unambiguous. If a path cannot
-            be parsed or resolved against the table schema, the implementation should
-            reject the request with InvalidInput or TableColumnNotFound.
+          description: Lance field path to backfill. Nested fields use dot-separated
+            segments; use backtick-quoted segments for literal dots and double backticks
+            inside quoted segments. Use canonical full paths for display and errors;
+            leaf names alone only identify top-level fields; invalid or unresolved
+            paths should return InvalidInput or TableColumnNotFound.
           minLength: 1
           type: string
         where:
@@ -8603,8 +8466,8 @@ components:
           manifest_checksum: manifest_checksum
           udtf: udtf
           input_columns:
-          - null
-          - null
+          - input_columns
+          - input_columns
           udtf_sha: udtf_sha
         with_no_data: true
         id:
@@ -8676,8 +8539,8 @@ components:
         manifest_checksum: manifest_checksum
         udtf: udtf
         input_columns:
-        - null
-        - null
+        - input_columns
+        - input_columns
         udtf_sha: udtf_sha
       properties:
         kind:
@@ -8704,59 +8567,19 @@ components:
           type: string
         input_columns:
           description: |
-            Source field paths the UDTF reads. Null means all fields (batch
-            UDTF only).
+            Source Lance field paths the UDTF reads. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Null means all fields (batch UDTF only).
           items:
-            $ref: '#/components/schemas/FieldPath'
+            minLength: 1
+            type: string
           nullable: true
           type: array
         partition_by:
-          description: |
-            Lance field path.
-
-            A field path identifies a field in a Lance schema. Nested fields are
-            addressed by joining path segments with `.`. A `.` that is not inside
-            backticks is always a path separator, so a field name that contains a
-            literal `.` must be written as a backtick-quoted segment, for example
-            `parent.`child.with.dot``. Backticks inside a quoted segment are escaped
-            by doubling them.
-
-            The canonical display form is the full path from the table schema root
-            to the field, with any segment containing characters other than
-            alphanumeric characters or `_` quoted with backticks, for example
-            `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`.
-            Index listings and error messages should use this canonical form.
-
-            A leaf field name by itself only identifies a top-level field. Nested
-            fields must be referenced by their full path, which keeps schemas with
-            the same leaf name under different parents unambiguous. If a path cannot
-            be parsed or resolved against the table schema, the implementation should
-            reject the request with InvalidInput or TableColumnNotFound.
           minLength: 1
+          nullable: true
           type: string
         partition_by_indexed_column:
-          description: |
-            Lance field path.
-
-            A field path identifies a field in a Lance schema. Nested fields are
-            addressed by joining path segments with `.`. A `.` that is not inside
-            backticks is always a path separator, so a field name that contains a
-            literal `.` must be written as a backtick-quoted segment, for example
-            `parent.`child.with.dot``. Backticks inside a quoted segment are escaped
-            by doubling them.
-
-            The canonical display form is the full path from the table schema root
-            to the field, with any segment containing characters other than
-            alphanumeric characters or `_` quoted with backticks, for example
-            `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`.
-            Index listings and error messages should use this canonical form.
-
-            A leaf field name by itself only identifies a top-level field. Nested
-            fields must be referenced by their full path, which keeps schemas with
-            the same leaf name under different parents unambiguous. If a path cannot
-            be parsed or resolved against the table schema, the implementation should
-            reject the request with InvalidInput or TableColumnNotFound.
           minLength: 1
+          nullable: true
           type: string
         num_cpus:
           description: Ray actor CPU request.
@@ -8819,8 +8642,8 @@ components:
           api_key: api_key
           auth_token: auth_token
         columns:
-        - null
-        - null
+        - columns
+        - columns
         context:
           key: context
         id:
@@ -8850,9 +8673,14 @@ components:
             Branch to target. When not specified, the main branch is used.
           type: string
         columns:
-          description: Field paths to drop
+          description: Lance field paths to drop. Nested fields use dot-separated
+            segments; use backtick-quoted segments for literal dots and double backticks
+            inside quoted segments. Use canonical full paths for display and errors;
+            leaf names alone only identify top-level fields; invalid or unresolved
+            paths should return InvalidInput or TableColumnNotFound.
           items:
-            $ref: '#/components/schemas/FieldPath'
+            minLength: 1
+            type: string
           type: array
       required:
       - columns
@@ -9115,20 +8943,26 @@ components:
         column_aliases, not both.
       example:
         column_aliases:
-          key: null
+          key: column_aliases
         column_names:
-        - null
-        - null
+        - column_names
+        - column_names
       properties:
         column_names:
-          description: List of field paths to return
+          description: List of Lance field paths to return. Nested fields use dot-separated
+            segments; use backtick-quoted segments for literal dots and double backticks
+            inside quoted segments.
           items:
-            $ref: '#/components/schemas/FieldPath'
+            minLength: 1
+            type: string
           type: array
         column_aliases:
           additionalProperties:
-            $ref: '#/components/schemas/FieldPath'
-          description: Object mapping output aliases to source field paths
+            minLength: 1
+            type: string
+          description: Object mapping output aliases to source Lance field paths.
+            Nested fields use dot-separated segments; use backtick-quoted segments
+            for literal dots and double backticks inside quoted segments.
       nullable: true
     QueryTableRequest_full_text_query:
       description: "Optional full-text search query. Provide either string_query or\
@@ -9136,8 +8970,8 @@ components:
       example:
         string_query:
           columns:
-          - null
-          - null
+          - columns
+          - columns
           query: query
         structured_query:
           query:

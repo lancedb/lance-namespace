@@ -81,7 +81,7 @@ public class UpdateFieldMetadataResponse {
   }
 
   /**
-   * Resulting metadata for each updated field, keyed by field path.
+   * Resulting metadata for each updated field, keyed by canonical Lance field path.
    *
    * @return fields
    */

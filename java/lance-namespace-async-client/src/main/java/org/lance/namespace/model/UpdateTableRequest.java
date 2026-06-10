@@ -185,7 +185,8 @@ public class UpdateTableRequest {
 
   /**
    * Optional SQL predicate to filter rows for update. Field references must use Lance field path
-   * syntax.
+   * syntax: nested fields use dot-separated segments, literal dots require backtick-quoted
+   * segments, and backticks inside quoted segments are doubled.
    *
    * @return predicate
    */
@@ -217,7 +218,8 @@ public class UpdateTableRequest {
 
   /**
    * List of field updates as [field_path, expression] pairs. Field paths and expression references
-   * must use Lance field path syntax.
+   * must use Lance field path syntax: nested fields use dot-separated segments, literal dots
+   * require backtick-quoted segments, and backticks inside quoted segments are doubled.
    *
    * @return updates
    */

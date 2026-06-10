@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **version** | **int** | The commit version associated with the operation | 
-**fields** | **Dict[str, Dict[str, str]]** | Resulting metadata for each updated field, keyed by field path.  | [optional] 
+**fields** | **Dict[str, Dict[str, str]]** | Resulting metadata for each updated field, keyed by canonical Lance field path.  | [optional] 
 
 ## Example
 

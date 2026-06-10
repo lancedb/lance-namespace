@@ -28,7 +28,7 @@ class UpdateFieldMetadataResponse(BaseModel):
     UpdateFieldMetadataResponse
     """ # noqa: E501
     version: Annotated[int, Field(strict=True, ge=0)] = Field(description="The commit version associated with the operation")
-    fields: Optional[Dict[str, Dict[str, StrictStr]]] = Field(default=None, description="Resulting metadata for each updated field, keyed by field path. ")
+    fields: Optional[Dict[str, Dict[str, StrictStr]]] = Field(default=None, description="Resulting metadata for each updated field, keyed by canonical Lance field path. ")
     __properties: ClassVar[List[str]] = ["version", "fields"]
 
     model_config = ConfigDict(

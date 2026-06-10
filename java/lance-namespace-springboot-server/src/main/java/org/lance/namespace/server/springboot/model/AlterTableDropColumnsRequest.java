@@ -172,14 +172,18 @@ public class AlterTableDropColumnsRequest {
   }
 
   /**
-   * Field paths to drop
+   * Lance field paths to drop. Nested fields use dot-separated segments; use backtick-quoted
+   * segments for literal dots and double backticks inside quoted segments. Use canonical full paths
+   * for display and errors; leaf names alone only identify top-level fields; invalid or unresolved
+   * paths should return InvalidInput or TableColumnNotFound.
    *
    * @return columns
    */
   @NotNull
   @Schema(
       name = "columns",
-      description = "Field paths to drop",
+      description =
+          "Lance field paths to drop. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("columns")
   public List<@Size(min = 1) String> getColumns() {

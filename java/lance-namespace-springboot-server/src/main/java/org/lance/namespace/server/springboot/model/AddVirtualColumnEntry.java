@@ -88,14 +88,17 @@ public class AddVirtualColumnEntry {
   }
 
   /**
-   * List of input field paths for the virtual column
+   * List of input Lance field paths for the virtual column. Nested fields use dot-separated
+   * segments; use backtick-quoted segments for literal dots and double backticks inside quoted
+   * segments.
    *
    * @return inputColumns
    */
   @NotNull
   @Schema(
       name = "input_columns",
-      description = "List of input field paths for the virtual column",
+      description =
+          "List of input Lance field paths for the virtual column. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments.",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("input_columns")
   public List<@Size(min = 1) String> getInputColumns() {

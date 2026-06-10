@@ -28,7 +28,7 @@ class AddVirtualColumnEntry(BaseModel):
     """
     AddVirtualColumnEntry
     """ # noqa: E501
-    input_columns: List[Annotated[str, Field(min_length=1, strict=True)]] = Field(description="List of input field paths for the virtual column")
+    input_columns: List[Annotated[str, Field(min_length=1, strict=True)]] = Field(description="List of input Lance field paths for the virtual column. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments.")
     outputs: List[AddVirtualColumnOutputEntry] = Field(description="Output columns produced by the virtual column UDF")
     image: StrictStr = Field(description="Docker image to use for the UDF")
     udf: StrictStr = Field(description="Base64 encoded pickled UDF")

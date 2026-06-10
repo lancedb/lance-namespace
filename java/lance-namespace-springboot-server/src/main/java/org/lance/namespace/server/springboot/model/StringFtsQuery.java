@@ -57,13 +57,16 @@ public class StringFtsQuery {
   }
 
   /**
-   * Field paths to search. Omit to search all indexed FTS fields.
+   * Lance field paths to search. Nested fields use dot-separated segments; use backtick-quoted
+   * segments for literal dots and double backticks inside quoted segments. Omit to search all
+   * indexed FTS fields.
    *
    * @return columns
    */
   @Schema(
       name = "columns",
-      description = "Field paths to search. Omit to search all indexed FTS fields.",
+      description =
+          "Lance field paths to search. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Omit to search all indexed FTS fields.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("columns")
   public List<@Size(min = 1) String> getColumns() {

@@ -110,11 +110,15 @@ public class MaterializedViewUdtfEntry {
   private JsonNullable<List<String>> inputColumns = JsonNullable.<List<String>>undefined();
 
   public static final String JSON_PROPERTY_PARTITION_BY = "partition_by";
-  @javax.annotation.Nullable private String partitionBy;
+
+  @javax.annotation.Nullable
+  private JsonNullable<String> partitionBy = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_PARTITION_BY_INDEXED_COLUMN =
       "partition_by_indexed_column";
-  @javax.annotation.Nullable private String partitionByIndexedColumn;
+
+  @javax.annotation.Nullable
+  private JsonNullable<String> partitionByIndexedColumn = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_NUM_CPUS = "num_cpus";
 
@@ -295,7 +299,9 @@ public class MaterializedViewUdtfEntry {
   }
 
   /**
-   * Source field paths the UDTF reads. Null means all fields (batch UDTF only).
+   * Source Lance field paths the UDTF reads. Nested fields use dot-separated segments; use
+   * backtick-quoted segments for literal dots and double backticks inside quoted segments. Null
+   * means all fields (batch UDTF only).
    *
    * @return inputColumns
    */
@@ -321,79 +327,70 @@ public class MaterializedViewUdtfEntry {
   }
 
   public MaterializedViewUdtfEntry partitionBy(@javax.annotation.Nullable String partitionBy) {
+    this.partitionBy = JsonNullable.<String>of(partitionBy);
 
-    this.partitionBy = partitionBy;
     return this;
   }
 
   /**
-   * Lance field path. A field path identifies a field in a Lance schema. Nested fields are
-   * addressed by joining path segments with &#x60;.&#x60;. A &#x60;.&#x60; that is not inside
-   * backticks is always a path separator, so a field name that contains a literal &#x60;.&#x60;
-   * must be written as a backtick-quoted segment, for example
-   * &#x60;parent.&#x60;child.with.dot&#x60;&#x60;. Backticks inside a quoted segment are escaped by
-   * doubling them. The canonical display form is the full path from the table schema root to the
-   * field, with any segment containing characters other than alphanumeric characters or
-   * &#x60;_&#x60; quoted with backticks, for example &#x60;metadata.status&#x60;,
-   * &#x60;MetaData.userId&#x60;, and &#x60;meta-data&#x60;.&#x60;user-id&#x60;. Index listings and
-   * error messages should use this canonical form. A leaf field name by itself only identifies a
-   * top-level field. Nested fields must be referenced by their full path, which keeps schemas with
-   * the same leaf name under different parents unambiguous. If a path cannot be parsed or resolved
-   * against the table schema, the implementation should reject the request with InvalidInput or
-   * TableColumnNotFound.
+   * Get partitionBy
    *
    * @return partitionBy
    */
   @javax.annotation.Nullable
+  @JsonIgnore
+  public String getPartitionBy() {
+    return partitionBy.orElse(null);
+  }
+
   @JsonProperty(JSON_PROPERTY_PARTITION_BY)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getPartitionBy() {
+  public JsonNullable<String> getPartitionBy_JsonNullable() {
     return partitionBy;
   }
 
   @JsonProperty(JSON_PROPERTY_PARTITION_BY)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setPartitionBy(@javax.annotation.Nullable String partitionBy) {
+  public void setPartitionBy_JsonNullable(JsonNullable<String> partitionBy) {
     this.partitionBy = partitionBy;
+  }
+
+  public void setPartitionBy(@javax.annotation.Nullable String partitionBy) {
+    this.partitionBy = JsonNullable.<String>of(partitionBy);
   }
 
   public MaterializedViewUdtfEntry partitionByIndexedColumn(
       @javax.annotation.Nullable String partitionByIndexedColumn) {
+    this.partitionByIndexedColumn = JsonNullable.<String>of(partitionByIndexedColumn);
 
-    this.partitionByIndexedColumn = partitionByIndexedColumn;
     return this;
   }
 
   /**
-   * Lance field path. A field path identifies a field in a Lance schema. Nested fields are
-   * addressed by joining path segments with &#x60;.&#x60;. A &#x60;.&#x60; that is not inside
-   * backticks is always a path separator, so a field name that contains a literal &#x60;.&#x60;
-   * must be written as a backtick-quoted segment, for example
-   * &#x60;parent.&#x60;child.with.dot&#x60;&#x60;. Backticks inside a quoted segment are escaped by
-   * doubling them. The canonical display form is the full path from the table schema root to the
-   * field, with any segment containing characters other than alphanumeric characters or
-   * &#x60;_&#x60; quoted with backticks, for example &#x60;metadata.status&#x60;,
-   * &#x60;MetaData.userId&#x60;, and &#x60;meta-data&#x60;.&#x60;user-id&#x60;. Index listings and
-   * error messages should use this canonical form. A leaf field name by itself only identifies a
-   * top-level field. Nested fields must be referenced by their full path, which keeps schemas with
-   * the same leaf name under different parents unambiguous. If a path cannot be parsed or resolved
-   * against the table schema, the implementation should reject the request with InvalidInput or
-   * TableColumnNotFound.
+   * Get partitionByIndexedColumn
    *
    * @return partitionByIndexedColumn
    */
   @javax.annotation.Nullable
-  @JsonProperty(JSON_PROPERTY_PARTITION_BY_INDEXED_COLUMN)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonIgnore
   public String getPartitionByIndexedColumn() {
-    return partitionByIndexedColumn;
+    return partitionByIndexedColumn.orElse(null);
   }
 
   @JsonProperty(JSON_PROPERTY_PARTITION_BY_INDEXED_COLUMN)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public JsonNullable<String> getPartitionByIndexedColumn_JsonNullable() {
+    return partitionByIndexedColumn;
+  }
+
+  @JsonProperty(JSON_PROPERTY_PARTITION_BY_INDEXED_COLUMN)
+  public void setPartitionByIndexedColumn_JsonNullable(
+      JsonNullable<String> partitionByIndexedColumn) {
+    this.partitionByIndexedColumn = partitionByIndexedColumn;
+  }
+
   public void setPartitionByIndexedColumn(
       @javax.annotation.Nullable String partitionByIndexedColumn) {
-    this.partitionByIndexedColumn = partitionByIndexedColumn;
+    this.partitionByIndexedColumn = JsonNullable.<String>of(partitionByIndexedColumn);
   }
 
   public MaterializedViewUdtfEntry numCpus(@javax.annotation.Nullable BigDecimal numCpus) {
@@ -637,8 +634,8 @@ public class MaterializedViewUdtfEntry {
         && Objects.equals(this.udtfName, materializedViewUdtfEntry.udtfName)
         && Objects.equals(this.udtfVersion, materializedViewUdtfEntry.udtfVersion)
         && equalsNullable(this.inputColumns, materializedViewUdtfEntry.inputColumns)
-        && Objects.equals(this.partitionBy, materializedViewUdtfEntry.partitionBy)
-        && Objects.equals(
+        && equalsNullable(this.partitionBy, materializedViewUdtfEntry.partitionBy)
+        && equalsNullable(
             this.partitionByIndexedColumn, materializedViewUdtfEntry.partitionByIndexedColumn)
         && equalsNullable(this.numCpus, materializedViewUdtfEntry.numCpus)
         && equalsNullable(this.numGpus, materializedViewUdtfEntry.numGpus)
@@ -667,8 +664,8 @@ public class MaterializedViewUdtfEntry {
         udtfName,
         udtfVersion,
         hashCodeNullable(inputColumns),
-        partitionBy,
-        partitionByIndexedColumn,
+        hashCodeNullable(partitionBy),
+        hashCodeNullable(partitionByIndexedColumn),
         hashCodeNullable(numCpus),
         hashCodeNullable(numGpus),
         hashCodeNullable(memory),

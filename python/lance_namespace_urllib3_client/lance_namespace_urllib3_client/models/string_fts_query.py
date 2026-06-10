@@ -27,7 +27,7 @@ class StringFtsQuery(BaseModel):
     """
     StringFtsQuery
     """ # noqa: E501
-    columns: Optional[List[Annotated[str, Field(min_length=1, strict=True)]]] = Field(default=None, description="Field paths to search. Omit to search all indexed FTS fields.")
+    columns: Optional[List[Annotated[str, Field(min_length=1, strict=True)]]] = Field(default=None, description="Lance field paths to search. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Omit to search all indexed FTS fields.")
     query: StrictStr
     __properties: ClassVar[List[str]] = ["columns", "query"]
 

@@ -56,13 +56,15 @@ public class QueryTableRequestColumns {
   }
 
   /**
-   * List of field paths to return
+   * List of Lance field paths to return. Nested fields use dot-separated segments; use
+   * backtick-quoted segments for literal dots and double backticks inside quoted segments.
    *
    * @return columnNames
    */
   @Schema(
       name = "column_names",
-      description = "List of field paths to return",
+      description =
+          "List of Lance field paths to return. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("column_names")
   public List<@Size(min = 1) String> getColumnNames() {
@@ -87,13 +89,16 @@ public class QueryTableRequestColumns {
   }
 
   /**
-   * Object mapping output aliases to source field paths
+   * Object mapping output aliases to source Lance field paths. Nested fields use dot-separated
+   * segments; use backtick-quoted segments for literal dots and double backticks inside quoted
+   * segments.
    *
    * @return columnAliases
    */
   @Schema(
       name = "column_aliases",
-      description = "Object mapping output aliases to source field paths",
+      description =
+          "Object mapping output aliases to source Lance field paths. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("column_aliases")
   public Map<String, String> getColumnAliases() {

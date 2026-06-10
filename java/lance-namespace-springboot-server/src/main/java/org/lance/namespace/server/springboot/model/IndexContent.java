@@ -134,14 +134,17 @@ public class IndexContent {
   }
 
   /**
-   * Canonical field paths covered by this index
+   * Canonical Lance field paths covered by this index. Nested fields use dot-separated segments;
+   * segments containing literal dots are backtick-quoted, and backticks inside quoted segments are
+   * doubled.
    *
    * @return columns
    */
   @NotNull
   @Schema(
       name = "columns",
-      description = "Canonical field paths covered by this index",
+      description =
+          "Canonical Lance field paths covered by this index. Nested fields use dot-separated segments; segments containing literal dots are backtick-quoted, and backticks inside quoted segments are doubled.",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("columns")
   public List<@Size(min = 1) String> getColumns() {

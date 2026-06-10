@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **distance_type** | Option<**String**> | Distance metric to use | [optional]
 **ef** | Option<**i32**> | Search effort parameter for HNSW index | [optional]
 **fast_search** | Option<**bool**> | Whether to use fast search | [optional]
-**filter** | Option<**String**> | Optional SQL filter expression. Field references in the expression must use Lance field path syntax.  | [optional]
+**filter** | Option<**String**> | Optional SQL filter expression. Field references in the expression must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.  | [optional]
 **full_text_query** | Option<[**models::QueryTableRequestFullTextQuery**](QueryTableRequest_full_text_query.md)> |  | [optional]
 **k** | **i32** | Number of results to return | 
 **lower_bound** | Option<**f32**> | Lower bound for search | [optional]
@@ -23,7 +23,7 @@ Name | Type | Description | Notes
 **refine_factor** | Option<**i32**> | Refine factor for search | [optional]
 **upper_bound** | Option<**f32**> | Upper bound for search | [optional]
 **vector** | [**models::QueryTableRequestVector**](QueryTableRequest_vector.md) |  | 
-**vector_column** | Option<**String**> | Lance field path.  A field path identifies a field in a Lance schema. Nested fields are addressed by joining path segments with `.`. A `.` that is not inside backticks is always a path separator, so a field name that contains a literal `.` must be written as a backtick-quoted segment, for example `parent.`child.with.dot``. Backticks inside a quoted segment are escaped by doubling them.  The canonical display form is the full path from the table schema root to the field, with any segment containing characters other than alphanumeric characters or `_` quoted with backticks, for example `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`. Index listings and error messages should use this canonical form.  A leaf field name by itself only identifies a top-level field. Nested fields must be referenced by their full path, which keeps schemas with the same leaf name under different parents unambiguous. If a path cannot be parsed or resolved against the table schema, the implementation should reject the request with InvalidInput or TableColumnNotFound.  | [optional]
+**vector_column** | Option<**String**> | Lance field path of the vector field to search. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound. | [optional]
 **version** | Option<**i64**> | Table version to query | [optional]
 **with_row_id** | Option<**bool**> | If true, return the row id as a column called `_rowid` | [optional]
 

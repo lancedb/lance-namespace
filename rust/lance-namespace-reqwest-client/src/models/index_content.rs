@@ -19,7 +19,7 @@ pub struct IndexContent {
     /// Unique identifier for the index
     #[serde(rename = "index_uuid")]
     pub index_uuid: String,
-    /// Canonical field paths covered by this index
+    /// Canonical Lance field paths covered by this index. Nested fields use dot-separated segments; segments containing literal dots are backtick-quoted, and backticks inside quoted segments are doubled.
     #[serde(rename = "columns")]
     pub columns: Vec<String>,
     /// Current status of the index

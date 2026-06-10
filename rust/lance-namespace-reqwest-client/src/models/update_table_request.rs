@@ -24,10 +24,10 @@ pub struct UpdateTableRequest {
     /// Branch to target. When not specified, the main branch is used. 
     #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
     pub branch: Option<String>,
-    /// Optional SQL predicate to filter rows for update. Field references must use Lance field path syntax.
+    /// Optional SQL predicate to filter rows for update. Field references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.
     #[serde(rename = "predicate", skip_serializing_if = "Option::is_none")]
     pub predicate: Option<String>,
-    /// List of field updates as [field_path, expression] pairs. Field paths and expression references must use Lance field path syntax.
+    /// List of field updates as [field_path, expression] pairs. Field paths and expression references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.
     #[serde(rename = "updates")]
     pub updates: Vec<Vec<String>>,
     /// Properties stored on the table, if supported by the implementation. 

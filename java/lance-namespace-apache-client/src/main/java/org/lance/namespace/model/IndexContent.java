@@ -149,7 +149,9 @@ public class IndexContent {
   }
 
   /**
-   * Canonical field paths covered by this index
+   * Canonical Lance field paths covered by this index. Nested fields use dot-separated segments;
+   * segments containing literal dots are backtick-quoted, and backticks inside quoted segments are
+   * doubled.
    *
    * @return columns
    */

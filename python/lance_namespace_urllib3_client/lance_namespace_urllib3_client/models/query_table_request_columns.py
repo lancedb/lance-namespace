@@ -27,8 +27,8 @@ class QueryTableRequestColumns(BaseModel):
     """
     Optional field paths to return. Provide either column_names or column_aliases, not both. 
     """ # noqa: E501
-    column_names: Optional[List[Annotated[str, Field(min_length=1, strict=True)]]] = Field(default=None, description="List of field paths to return")
-    column_aliases: Optional[Dict[str, Annotated[str, Field(min_length=1, strict=True)]]] = Field(default=None, description="Object mapping output aliases to source field paths")
+    column_names: Optional[List[Annotated[str, Field(min_length=1, strict=True)]]] = Field(default=None, description="List of Lance field paths to return. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments.")
+    column_aliases: Optional[Dict[str, Annotated[str, Field(min_length=1, strict=True)]]] = Field(default=None, description="Object mapping output aliases to source Lance field paths. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments.")
     __properties: ClassVar[List[str]] = ["column_names", "column_aliases"]
 
     model_config = ConfigDict(

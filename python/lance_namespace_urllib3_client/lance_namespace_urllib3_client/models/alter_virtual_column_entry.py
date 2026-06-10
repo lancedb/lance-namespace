@@ -27,7 +27,7 @@ class AlterVirtualColumnEntry(BaseModel):
     """
     AlterVirtualColumnEntry
     """ # noqa: E501
-    input_columns: Optional[List[Annotated[str, Field(min_length=1, strict=True)]]] = Field(default=None, description="List of input field paths for the virtual column (optional)")
+    input_columns: Optional[List[Annotated[str, Field(min_length=1, strict=True)]]] = Field(default=None, description="List of input Lance field paths for the virtual column. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Optional.")
     image: Optional[StrictStr] = Field(default=None, description="Docker image to use for the UDF (optional)")
     udf: Optional[StrictStr] = Field(default=None, description="Base64 encoded pickled UDF (optional)")
     udf_name: Optional[StrictStr] = Field(default=None, description="Name of the UDF (optional)")

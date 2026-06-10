@@ -74,6 +74,7 @@ class TestQueryTableRequest(unittest.TestCase):
                                 prefix_length = 0, 
                                 terms = '', ), 
                             phrase = lance_namespace_urllib3_client.models.phrase_query.PhraseQuery(
+                                column = '0', 
                                 slop = 0, 
                                 terms = '', ), 
                             boost = lance_namespace_urllib3_client.models.boost_query.BoostQuery(
@@ -81,6 +82,7 @@ class TestQueryTableRequest(unittest.TestCase):
                                     multi_match = lance_namespace_urllib3_client.models.multi_match_query.MultiMatchQuery(
                                         match_queries = [
                                             lance_namespace_urllib3_client.models.match_query.MatchQuery(
+                                                column = '0', 
                                                 fuzziness = 0, 
                                                 max_expansions = 0, 
                                                 prefix_length = 0, 

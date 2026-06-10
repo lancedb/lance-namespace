@@ -33,7 +33,7 @@ class CountTableRowsRequest(BaseModel):
     id: Optional[List[StrictStr]] = None
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Version of the table to describe. If not specified, server should resolve it to the latest version. ")
     branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
-    predicate: Optional[StrictStr] = Field(default=None, description="Optional SQL predicate to filter rows for counting. Field references must use Lance field path syntax. ")
+    predicate: Optional[StrictStr] = Field(default=None, description="Optional SQL predicate to filter rows for counting. Field references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled. ")
     __properties: ClassVar[List[str]] = ["identity", "context", "id", "version", "branch", "predicate"]
 
     model_config = ConfigDict(

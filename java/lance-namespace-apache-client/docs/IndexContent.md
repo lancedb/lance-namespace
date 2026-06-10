@@ -9,7 +9,7 @@
 |------------ | ------------- | ------------- | -------------|
 |**indexName** | **String** | Name of the index |  |
 |**indexUuid** | **String** | Unique identifier for the index |  |
-|**columns** | **List&lt;String&gt;** | Canonical field paths covered by this index |  |
+|**columns** | **List&lt;String&gt;** | Canonical Lance field paths covered by this index. Nested fields use dot-separated segments; segments containing literal dots are backtick-quoted, and backticks inside quoted segments are doubled. |  |
 |**status** | **String** | Current status of the index |  |
 |**indexType** | **String** | Friendly index type, e.g. IVF_PQ, BTREE. Unknown if no plugin recognizes the index. |  [optional] |
 |**typeUrl** | **String** | Protobuf type URL, a precise type identifier for the index. |  [optional] |
