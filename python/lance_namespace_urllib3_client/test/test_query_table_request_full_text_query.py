@@ -37,21 +37,21 @@ class TestQueryTableRequestFullTextQuery(unittest.TestCase):
             return QueryTableRequestFullTextQuery(
                 string_query = lance_namespace_urllib3_client.models.string_fts_query.StringFtsQuery(
                     columns = [
-                        ''
+                        '0'
                         ], 
                     query = '', ),
                 structured_query = lance_namespace_urllib3_client.models.structured_fts_query.StructuredFtsQuery(
                     query = lance_namespace_urllib3_client.models.fts_query.FtsQuery(
                         match = lance_namespace_urllib3_client.models.match_query.MatchQuery(
                             boost = 1.337, 
-                            column = '', 
+                            column = '0', 
                             fuzziness = 0, 
                             max_expansions = 0, 
                             operator = '', 
                             prefix_length = 0, 
                             terms = '', ), 
                         phrase = lance_namespace_urllib3_client.models.phrase_query.PhraseQuery(
-                            column = '', 
+                            column = '0', 
                             slop = 0, 
                             terms = '', ), 
                         boost = lance_namespace_urllib3_client.models.boost_query.BoostQuery(
@@ -59,7 +59,7 @@ class TestQueryTableRequestFullTextQuery(unittest.TestCase):
                                 multi_match = lance_namespace_urllib3_client.models.multi_match_query.MultiMatchQuery(
                                     match_queries = [
                                         lance_namespace_urllib3_client.models.match_query.MatchQuery(
-                                            column = '', 
+                                            column = '0', 
                                             fuzziness = 0, 
                                             max_expansions = 0, 
                                             operator = '', 

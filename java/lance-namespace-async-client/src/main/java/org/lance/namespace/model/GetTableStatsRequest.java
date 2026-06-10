@@ -30,7 +30,8 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({
   GetTableStatsRequest.JSON_PROPERTY_IDENTITY,
   GetTableStatsRequest.JSON_PROPERTY_CONTEXT,
-  GetTableStatsRequest.JSON_PROPERTY_ID
+  GetTableStatsRequest.JSON_PROPERTY_ID,
+  GetTableStatsRequest.JSON_PROPERTY_BRANCH
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -44,6 +45,9 @@ public class GetTableStatsRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public GetTableStatsRequest() {}
 
@@ -136,6 +140,29 @@ public class GetTableStatsRequest {
     this.id = id;
   }
 
+  public GetTableStatsRequest branch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   /** Return true if this GetTableStatsRequest object is equal to o. */
   @Override
   public boolean equals(Object o) {
@@ -148,12 +175,13 @@ public class GetTableStatsRequest {
     GetTableStatsRequest getTableStatsRequest = (GetTableStatsRequest) o;
     return Objects.equals(this.identity, getTableStatsRequest.identity)
         && Objects.equals(this.context, getTableStatsRequest.context)
-        && Objects.equals(this.id, getTableStatsRequest.id);
+        && Objects.equals(this.id, getTableStatsRequest.id)
+        && Objects.equals(this.branch, getTableStatsRequest.branch);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id);
+    return Objects.hash(identity, context, id, branch);
   }
 
   @Override
@@ -163,6 +191,7 @@ public class GetTableStatsRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -243,6 +272,14 @@ public class GetTableStatsRequest {
                     : String.format("%s%d%s", containerPrefix, i, containerSuffix),
                 ApiClient.urlEncode(ApiClient.valueToString(getId().get(i)))));
       }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      joiner.add(
+          String.format(
+              "%sbranch%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBranch()))));
     }
 
     return joiner.toString();

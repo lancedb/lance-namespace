@@ -60,6 +60,7 @@ class TestBatchCommitTablesRequest(unittest.TestCase):
                                 }, ), 
                         create_table_version = lance_namespace_urllib3_client.models.create_table_version_request.CreateTableVersionRequest(
                             version = 0, 
+                            branch = '', 
                             manifest_path = '', 
                             manifest_size = 0, 
                             e_tag = '', 
@@ -68,6 +69,7 @@ class TestBatchCommitTablesRequest(unittest.TestCase):
                                 }, 
                             naming_scheme = 'V2', ), 
                         delete_table_versions = lance_namespace_urllib3_client.models.batch_delete_table_versions_request.BatchDeleteTableVersionsRequest(
+                            branch = '', 
                             ranges = [
                                 lance_namespace_urllib3_client.models.version_range.VersionRange(
                                     start_version = 56, 
@@ -97,6 +99,7 @@ class TestBatchCommitTablesRequest(unittest.TestCase):
                                 }, ), 
                         create_table_version = lance_namespace_urllib3_client.models.create_table_version_request.CreateTableVersionRequest(
                             version = 0, 
+                            branch = '', 
                             manifest_path = '', 
                             manifest_size = 0, 
                             e_tag = '', 
@@ -105,6 +108,7 @@ class TestBatchCommitTablesRequest(unittest.TestCase):
                                 }, 
                             naming_scheme = 'V2', ), 
                         delete_table_versions = lance_namespace_urllib3_client.models.batch_delete_table_versions_request.BatchDeleteTableVersionsRequest(
+                            branch = '', 
                             ranges = [
                                 lance_namespace_urllib3_client.models.version_range.VersionRange(
                                     start_version = 56, 

@@ -38,6 +38,8 @@ public class GetTableStatsRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   public GetTableStatsRequest identity(Identity identity) {
     this.identity = identity;
     return this;
@@ -122,6 +124,29 @@ public class GetTableStatsRequest {
     this.id = id;
   }
 
+  public GetTableStatsRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -133,12 +158,13 @@ public class GetTableStatsRequest {
     GetTableStatsRequest getTableStatsRequest = (GetTableStatsRequest) o;
     return Objects.equals(this.identity, getTableStatsRequest.identity)
         && Objects.equals(this.context, getTableStatsRequest.context)
-        && Objects.equals(this.id, getTableStatsRequest.id);
+        && Objects.equals(this.id, getTableStatsRequest.id)
+        && Objects.equals(this.branch, getTableStatsRequest.branch);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id);
+    return Objects.hash(identity, context, id, branch);
   }
 
   @Override
@@ -148,6 +174,7 @@ public class GetTableStatsRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("}");
     return sb.toString();
   }

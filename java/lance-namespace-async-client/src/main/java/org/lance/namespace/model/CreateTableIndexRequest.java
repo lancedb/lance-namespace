@@ -31,6 +31,7 @@ import java.util.StringJoiner;
   CreateTableIndexRequest.JSON_PROPERTY_IDENTITY,
   CreateTableIndexRequest.JSON_PROPERTY_CONTEXT,
   CreateTableIndexRequest.JSON_PROPERTY_ID,
+  CreateTableIndexRequest.JSON_PROPERTY_BRANCH,
   CreateTableIndexRequest.JSON_PROPERTY_COLUMN,
   CreateTableIndexRequest.JSON_PROPERTY_INDEX_TYPE,
   CreateTableIndexRequest.JSON_PROPERTY_NAME,
@@ -56,6 +57,9 @@ public class CreateTableIndexRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_COLUMN = "column";
   @javax.annotation.Nonnull private String column;
@@ -184,13 +188,39 @@ public class CreateTableIndexRequest {
     this.id = id;
   }
 
+  public CreateTableIndexRequest branch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public CreateTableIndexRequest column(@javax.annotation.Nonnull String column) {
     this.column = column;
     return this;
   }
 
   /**
-   * Name of the column to create index on
+   * Lance field path to create the index on. Nested fields use dot-separated segments; use
+   * backtick-quoted segments for literal dots and double backticks inside quoted segments. Use
+   * canonical full paths for display and errors; leaf names alone only identify top-level fields;
+   * invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
    *
    * @return column
    */
@@ -474,6 +504,7 @@ public class CreateTableIndexRequest {
     return Objects.equals(this.identity, createTableIndexRequest.identity)
         && Objects.equals(this.context, createTableIndexRequest.context)
         && Objects.equals(this.id, createTableIndexRequest.id)
+        && Objects.equals(this.branch, createTableIndexRequest.branch)
         && Objects.equals(this.column, createTableIndexRequest.column)
         && Objects.equals(this.indexType, createTableIndexRequest.indexType)
         && Objects.equals(this.name, createTableIndexRequest.name)
@@ -494,6 +525,7 @@ public class CreateTableIndexRequest {
         identity,
         context,
         id,
+        branch,
         column,
         indexType,
         name,
@@ -515,6 +547,7 @@ public class CreateTableIndexRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
@@ -607,6 +640,14 @@ public class CreateTableIndexRequest {
                     : String.format("%s%d%s", containerPrefix, i, containerSuffix),
                 ApiClient.urlEncode(ApiClient.valueToString(getId().get(i)))));
       }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      joiner.add(
+          String.format(
+              "%sbranch%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBranch()))));
     }
 
     // add `column` to the URL query string

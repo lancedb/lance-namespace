@@ -91,7 +91,7 @@ public class PartitionField {
   }
 
   /**
-   * Field IDs of the source columns in the schema
+   * Field IDs of the source fields in the schema
    *
    * @return sourceIds
    */
@@ -99,7 +99,7 @@ public class PartitionField {
   @Schema(
       name = "source_ids",
       example = "[1]",
-      description = "Field IDs of the source columns in the schema",
+      description = "Field IDs of the source fields in the schema",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("source_ids")
   public List<Integer> getSourceIds() {

@@ -43,7 +43,8 @@ class TestGetTableStatsRequest(unittest.TestCase):
                     },
                 id = [
                     ''
-                    ]
+                    ],
+                branch = ''
             )
         else:
             return GetTableStatsRequest(

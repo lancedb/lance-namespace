@@ -31,6 +31,7 @@ import java.util.StringJoiner;
   AlterTableDropColumnsRequest.JSON_PROPERTY_IDENTITY,
   AlterTableDropColumnsRequest.JSON_PROPERTY_CONTEXT,
   AlterTableDropColumnsRequest.JSON_PROPERTY_ID,
+  AlterTableDropColumnsRequest.JSON_PROPERTY_BRANCH,
   AlterTableDropColumnsRequest.JSON_PROPERTY_COLUMNS
 })
 @javax.annotation.Generated(
@@ -45,6 +46,9 @@ public class AlterTableDropColumnsRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_COLUMNS = "columns";
   @javax.annotation.Nonnull private List<String> columns = new ArrayList<>();
@@ -144,6 +148,30 @@ public class AlterTableDropColumnsRequest {
     this.id = id;
   }
 
+  public AlterTableDropColumnsRequest branch(@javax.annotation.Nullable String branch) {
+
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public AlterTableDropColumnsRequest columns(@javax.annotation.Nonnull List<String> columns) {
 
     this.columns = columns;
@@ -159,7 +187,10 @@ public class AlterTableDropColumnsRequest {
   }
 
   /**
-   * Names of columns to drop
+   * Lance field paths to drop. Nested fields use dot-separated segments; use backtick-quoted
+   * segments for literal dots and double backticks inside quoted segments. Use canonical full paths
+   * for display and errors; leaf names alone only identify top-level fields; invalid or unresolved
+   * paths should return InvalidInput or TableColumnNotFound.
    *
    * @return columns
    */
@@ -188,12 +219,13 @@ public class AlterTableDropColumnsRequest {
     return Objects.equals(this.identity, alterTableDropColumnsRequest.identity)
         && Objects.equals(this.context, alterTableDropColumnsRequest.context)
         && Objects.equals(this.id, alterTableDropColumnsRequest.id)
+        && Objects.equals(this.branch, alterTableDropColumnsRequest.branch)
         && Objects.equals(this.columns, alterTableDropColumnsRequest.columns);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, columns);
+    return Objects.hash(identity, context, id, branch, columns);
   }
 
   @Override
@@ -203,6 +235,7 @@ public class AlterTableDropColumnsRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    columns: ").append(toIndentedString(columns)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -295,6 +328,21 @@ public class AlterTableDropColumnsRequest {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
+      }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sbranch%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getBranch()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
       }
     }
 

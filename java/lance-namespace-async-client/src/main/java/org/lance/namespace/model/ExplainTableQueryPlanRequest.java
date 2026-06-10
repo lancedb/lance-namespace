@@ -31,6 +31,7 @@ import java.util.StringJoiner;
   ExplainTableQueryPlanRequest.JSON_PROPERTY_IDENTITY,
   ExplainTableQueryPlanRequest.JSON_PROPERTY_CONTEXT,
   ExplainTableQueryPlanRequest.JSON_PROPERTY_ID,
+  ExplainTableQueryPlanRequest.JSON_PROPERTY_BRANCH,
   ExplainTableQueryPlanRequest.JSON_PROPERTY_QUERY,
   ExplainTableQueryPlanRequest.JSON_PROPERTY_VERBOSE
 })
@@ -46,6 +47,9 @@ public class ExplainTableQueryPlanRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_QUERY = "query";
   @javax.annotation.Nonnull private QueryTableRequest query;
@@ -145,6 +149,29 @@ public class ExplainTableQueryPlanRequest {
     this.id = id;
   }
 
+  public ExplainTableQueryPlanRequest branch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public ExplainTableQueryPlanRequest query(@javax.annotation.Nonnull QueryTableRequest query) {
     this.query = query;
     return this;
@@ -204,13 +231,14 @@ public class ExplainTableQueryPlanRequest {
     return Objects.equals(this.identity, explainTableQueryPlanRequest.identity)
         && Objects.equals(this.context, explainTableQueryPlanRequest.context)
         && Objects.equals(this.id, explainTableQueryPlanRequest.id)
+        && Objects.equals(this.branch, explainTableQueryPlanRequest.branch)
         && Objects.equals(this.query, explainTableQueryPlanRequest.query)
         && Objects.equals(this.verbose, explainTableQueryPlanRequest.verbose);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, query, verbose);
+    return Objects.hash(identity, context, id, branch, query, verbose);
   }
 
   @Override
@@ -220,6 +248,7 @@ public class ExplainTableQueryPlanRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
     sb.append("    verbose: ").append(toIndentedString(verbose)).append("\n");
     sb.append("}");
@@ -302,6 +331,14 @@ public class ExplainTableQueryPlanRequest {
                     : String.format("%s%d%s", containerPrefix, i, containerSuffix),
                 ApiClient.urlEncode(ApiClient.valueToString(getId().get(i)))));
       }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      joiner.add(
+          String.format(
+              "%sbranch%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBranch()))));
     }
 
     // add `query` to the URL query string

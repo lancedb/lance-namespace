@@ -38,6 +38,8 @@ public class QueryTableRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   private Boolean bypassVectorIndex;
 
   private QueryTableRequestColumns columns;
@@ -168,6 +170,29 @@ public class QueryTableRequest {
     this.id = id;
   }
 
+  public QueryTableRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   public QueryTableRequest bypassVectorIndex(Boolean bypassVectorIndex) {
     this.bypassVectorIndex = bypassVectorIndex;
     return this;
@@ -288,13 +313,16 @@ public class QueryTableRequest {
   }
 
   /**
-   * Optional SQL filter expression
+   * Optional SQL filter expression. Field references in the expression must use Lance field path
+   * syntax: nested fields use dot-separated segments, literal dots require backtick-quoted
+   * segments, and backticks inside quoted segments are doubled.
    *
    * @return filter
    */
   @Schema(
       name = "filter",
-      description = "Optional SQL filter expression",
+      description =
+          "Optional SQL filter expression. Field references in the expression must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("filter")
   public String getFilter() {
@@ -520,13 +548,18 @@ public class QueryTableRequest {
   }
 
   /**
-   * Name of the vector column to search
+   * Lance field path of the vector field to search. Nested fields use dot-separated segments; use
+   * backtick-quoted segments for literal dots and double backticks inside quoted segments. Use
+   * canonical full paths for display and errors; leaf names alone only identify top-level fields;
+   * invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
    *
    * @return vectorColumn
    */
+  @Size(min = 1)
   @Schema(
       name = "vector_column",
-      description = "Name of the vector column to search",
+      description =
+          "Lance field path of the vector field to search. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("vector_column")
   public String getVectorColumn() {
@@ -596,6 +629,7 @@ public class QueryTableRequest {
     return Objects.equals(this.identity, queryTableRequest.identity)
         && Objects.equals(this.context, queryTableRequest.context)
         && Objects.equals(this.id, queryTableRequest.id)
+        && Objects.equals(this.branch, queryTableRequest.branch)
         && Objects.equals(this.bypassVectorIndex, queryTableRequest.bypassVectorIndex)
         && Objects.equals(this.columns, queryTableRequest.columns)
         && Objects.equals(this.distanceType, queryTableRequest.distanceType)
@@ -622,6 +656,7 @@ public class QueryTableRequest {
         identity,
         context,
         id,
+        branch,
         bypassVectorIndex,
         columns,
         distanceType,
@@ -649,6 +684,7 @@ public class QueryTableRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    bypassVectorIndex: ").append(toIndentedString(bypassVectorIndex)).append("\n");
     sb.append("    columns: ").append(toIndentedString(columns)).append("\n");
     sb.append("    distanceType: ").append(toIndentedString(distanceType)).append("\n");

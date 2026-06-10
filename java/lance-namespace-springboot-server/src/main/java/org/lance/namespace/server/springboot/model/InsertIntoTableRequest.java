@@ -41,6 +41,8 @@ public class InsertIntoTableRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   private String mode = "append";
 
   public InsertIntoTableRequest identity(Identity identity) {
@@ -127,6 +129,29 @@ public class InsertIntoTableRequest {
     this.id = id;
   }
 
+  public InsertIntoTableRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   public InsertIntoTableRequest mode(String mode) {
     this.mode = mode;
     return this;
@@ -165,12 +190,13 @@ public class InsertIntoTableRequest {
     return Objects.equals(this.identity, insertIntoTableRequest.identity)
         && Objects.equals(this.context, insertIntoTableRequest.context)
         && Objects.equals(this.id, insertIntoTableRequest.id)
+        && Objects.equals(this.branch, insertIntoTableRequest.branch)
         && Objects.equals(this.mode, insertIntoTableRequest.mode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, mode);
+    return Objects.hash(identity, context, id, branch, mode);
   }
 
   @Override
@@ -180,6 +206,7 @@ public class InsertIntoTableRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("}");
     return sb.toString();

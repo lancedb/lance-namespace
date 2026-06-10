@@ -20,6 +20,9 @@ pub struct DropTableIndexRequest {
     pub context: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// Name of the index to drop
     #[serde(rename = "index_name", skip_serializing_if = "Option::is_none")]
     pub index_name: Option<String>,
@@ -31,6 +34,7 @@ impl DropTableIndexRequest {
             identity: None,
             context: None,
             id: None,
+            branch: None,
             index_name: None,
         }
     }

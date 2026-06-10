@@ -25,6 +25,7 @@ and plugin registration mechanism.
 """
 
 import importlib
+import warnings
 from abc import ABC, abstractmethod
 from typing import Dict
 
@@ -83,6 +84,8 @@ from lance_namespace_urllib3_client.models import (
     CreateTableVersionEntry,
     CreateNamespaceRequest,
     CreateNamespaceResponse,
+    CreateTableBranchRequest,
+    CreateTableBranchResponse,
     CreateTableIndexRequest,
     CreateTableIndexResponse,
     CreateTableScalarIndexResponse,
@@ -96,6 +99,8 @@ from lance_namespace_urllib3_client.models import (
     DeclareTableResponse,
     DeleteFromTableRequest,
     DeleteFromTableResponse,
+    DeleteTableBranchRequest,
+    DeleteTableBranchResponse,
     DeleteTableTagRequest,
     DeleteTableTagResponse,
     DeregisterTableRequest,
@@ -125,6 +130,8 @@ from lance_namespace_urllib3_client.models import (
     InsertIntoTableResponse,
     ListNamespacesRequest,
     ListNamespacesResponse,
+    ListTableBranchesRequest,
+    ListTableBranchesResponse,
     ListTableIndicesRequest,
     ListTableIndicesResponse,
     ListTableTagsRequest,
@@ -147,6 +154,8 @@ from lance_namespace_urllib3_client.models import (
     RestoreTableResponse,
     TableExistsRequest,
     TableVersion,
+    UpdateFieldMetadataRequest,
+    UpdateFieldMetadataResponse,
     UpdateTableRequest,
     UpdateTableResponse,
     UpdateTableSchemaMetadataRequest,
@@ -154,6 +163,14 @@ from lance_namespace_urllib3_client.models import (
     UpdateTableTagRequest,
     UpdateTableTagResponse,
 )
+
+# Backwards-compat shims for symbols removed in 0.7.0.
+# Released pylance wheels (e.g. 2.0.1, 4.0.0b1) do:
+#   from lance_namespace import CreateEmptyTableRequest, CreateEmptyTableResponse
+# Provide deprecated aliases so those imports don't break.
+# These will be removed in a future release.
+CreateEmptyTableRequest = CreateTableRequest
+CreateEmptyTableResponse = CreateTableResponse
 
 __all__ = [
     # Interface and factory
@@ -213,8 +230,13 @@ __all__ = [
     "CreateMaterializedViewResponse",
     "MaterializedViewUdtfEntry",
     "CreateTableVersionEntry",
+    # Deprecated aliases (removed in 0.7.0, kept for backwards compatibility)
+    "CreateEmptyTableRequest",
+    "CreateEmptyTableResponse",
     "CreateNamespaceRequest",
     "CreateNamespaceResponse",
+    "CreateTableBranchRequest",
+    "CreateTableBranchResponse",
     "CreateTableIndexRequest",
     "CreateTableIndexResponse",
     "CreateTableScalarIndexResponse",
@@ -228,6 +250,8 @@ __all__ = [
     "DeclareTableResponse",
     "DeleteFromTableRequest",
     "DeleteFromTableResponse",
+    "DeleteTableBranchRequest",
+    "DeleteTableBranchResponse",
     "DeleteTableTagRequest",
     "DeleteTableTagResponse",
     "DeregisterTableRequest",
@@ -257,6 +281,8 @@ __all__ = [
     "InsertIntoTableResponse",
     "ListNamespacesRequest",
     "ListNamespacesResponse",
+    "ListTableBranchesRequest",
+    "ListTableBranchesResponse",
     "ListTableIndicesRequest",
     "ListTableIndicesResponse",
     "ListTableTagsRequest",
@@ -279,6 +305,8 @@ __all__ = [
     "RestoreTableResponse",
     "TableExistsRequest",
     "TableVersion",
+    "UpdateFieldMetadataRequest",
+    "UpdateFieldMetadataResponse",
     "UpdateTableRequest",
     "UpdateTableResponse",
     "UpdateTableSchemaMetadataRequest",
@@ -514,6 +542,30 @@ class LanceNamespace(ABC):
             If a concurrent modification conflict occurs.
         """
         raise UnsupportedOperationError("Not supported: declare_table")
+
+    def create_empty_table(
+        self, request: "CreateEmptyTableRequest"
+    ) -> "CreateEmptyTableResponse":
+        """Create an empty table (metadata only operation).
+
+        .. deprecated::
+            Use :meth:`declare_table` instead.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableAlreadyExistsError
+            If a table with the same name already exists.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        warnings.warn(
+            "create_empty_table is deprecated, use declare_table instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        raise UnsupportedOperationError("Not supported: create_empty_table")
 
     def insert_into_table(
         self, request: InsertIntoTableRequest, request_data: bytes
@@ -858,6 +910,22 @@ class LanceNamespace(ABC):
         """
         raise UnsupportedOperationError("Not supported: update_table_schema_metadata")
 
+    def update_field_metadata(
+        self, request: UpdateFieldMetadataRequest
+    ) -> UpdateFieldMetadataResponse:
+        """Update per-field metadata.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: update_field_metadata")
+
     def get_table_stats(self, request: GetTableStatsRequest) -> GetTableStatsResponse:
         """Get table statistics.
 
@@ -1075,6 +1143,52 @@ class LanceNamespace(ABC):
             If a concurrent modification conflict occurs.
         """
         raise UnsupportedOperationError("Not supported: update_table_tag")
+
+    def create_table_branch(
+        self, request: CreateTableBranchRequest
+    ) -> CreateTableBranchResponse:
+        """Create a branch for a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        TableVersionNotFoundError
+            If the source version does not exist.
+        ConcurrentModificationError
+            If a concurrent modification conflict occurs.
+        """
+        raise UnsupportedOperationError("Not supported: create_table_branch")
+
+    def list_table_branches(
+        self, request: ListTableBranchesRequest
+    ) -> ListTableBranchesResponse:
+        """List all branches for a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: list_table_branches")
+
+    def delete_table_branch(
+        self, request: DeleteTableBranchRequest
+    ) -> DeleteTableBranchResponse:
+        """Delete a branch from a table.
+
+        Raises
+        ------
+        NamespaceNotFoundError
+            If the namespace does not exist.
+        TableNotFoundError
+            If the table does not exist.
+        """
+        raise UnsupportedOperationError("Not supported: delete_table_branch")
 
     def describe_transaction(
         self, request: DescribeTransactionRequest

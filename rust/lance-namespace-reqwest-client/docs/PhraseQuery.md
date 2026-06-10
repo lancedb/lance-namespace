@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**column** | Option<**String**> |  | [optional]
+**column** | Option<**String**> | Lance field path to match. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Omit to use the query default fields. | [optional]
 **slop** | Option<**i32**> |  | [optional]
 **terms** | **String** |  | 
 

@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**input_columns** | **Vec<String>** | List of input column names for the virtual column | 
-**data_type** | [**serde_json::Value**](.md) | Data type of the virtual column using JSON representation | 
+**input_columns** | **Vec<String>** | List of input Lance field paths for the virtual column. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. | 
+**outputs** | [**Vec<models::AddVirtualColumnOutputEntry>**](AddVirtualColumnOutputEntry.md) | Output columns produced by the virtual column UDF | 
 **image** | **String** | Docker image to use for the UDF | 
 **udf** | **String** | Base64 encoded pickled UDF | 
 **udf_name** | **String** | Name of the UDF | 

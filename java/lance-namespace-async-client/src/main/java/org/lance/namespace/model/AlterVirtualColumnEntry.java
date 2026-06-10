@@ -97,7 +97,9 @@ public class AlterVirtualColumnEntry {
   }
 
   /**
-   * List of input column names for the virtual column (optional)
+   * List of input Lance field paths for the virtual column. Nested fields use dot-separated
+   * segments; use backtick-quoted segments for literal dots and double backticks inside quoted
+   * segments. Optional.
    *
    * @return inputColumns
    */

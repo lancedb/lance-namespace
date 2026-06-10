@@ -31,6 +31,7 @@ import java.util.StringJoiner;
   ListTableVersionsRequest.JSON_PROPERTY_IDENTITY,
   ListTableVersionsRequest.JSON_PROPERTY_CONTEXT,
   ListTableVersionsRequest.JSON_PROPERTY_ID,
+  ListTableVersionsRequest.JSON_PROPERTY_BRANCH,
   ListTableVersionsRequest.JSON_PROPERTY_PAGE_TOKEN,
   ListTableVersionsRequest.JSON_PROPERTY_LIMIT,
   ListTableVersionsRequest.JSON_PROPERTY_DESCENDING
@@ -47,6 +48,9 @@ public class ListTableVersionsRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_PAGE_TOKEN = "page_token";
   @javax.annotation.Nullable private String pageToken;
@@ -148,6 +152,29 @@ public class ListTableVersionsRequest {
     this.id = id;
   }
 
+  public ListTableVersionsRequest branch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public ListTableVersionsRequest pageToken(@javax.annotation.Nullable String pageToken) {
     this.pageToken = pageToken;
     return this;
@@ -238,6 +265,7 @@ public class ListTableVersionsRequest {
     return Objects.equals(this.identity, listTableVersionsRequest.identity)
         && Objects.equals(this.context, listTableVersionsRequest.context)
         && Objects.equals(this.id, listTableVersionsRequest.id)
+        && Objects.equals(this.branch, listTableVersionsRequest.branch)
         && Objects.equals(this.pageToken, listTableVersionsRequest.pageToken)
         && Objects.equals(this.limit, listTableVersionsRequest.limit)
         && Objects.equals(this.descending, listTableVersionsRequest.descending);
@@ -245,7 +273,7 @@ public class ListTableVersionsRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, pageToken, limit, descending);
+    return Objects.hash(identity, context, id, branch, pageToken, limit, descending);
   }
 
   @Override
@@ -255,6 +283,7 @@ public class ListTableVersionsRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
     sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
     sb.append("    descending: ").append(toIndentedString(descending)).append("\n");
@@ -338,6 +367,14 @@ public class ListTableVersionsRequest {
                     : String.format("%s%d%s", containerPrefix, i, containerSuffix),
                 ApiClient.urlEncode(ApiClient.valueToString(getId().get(i)))));
       }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      joiner.add(
+          String.format(
+              "%sbranch%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBranch()))));
     }
 
     // add `page_token` to the URL query string

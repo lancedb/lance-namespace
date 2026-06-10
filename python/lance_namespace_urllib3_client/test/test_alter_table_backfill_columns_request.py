@@ -41,7 +41,8 @@ class TestAlterTableBackfillColumnsRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
-                column = '',
+                branch = '',
+                column = '0',
                 where = '',
                 concurrency = 56,
                 intra_applier_concurrency = 56,
@@ -58,7 +59,7 @@ class TestAlterTableBackfillColumnsRequest(unittest.TestCase):
             )
         else:
             return AlterTableBackfillColumnsRequest(
-                column = '',
+                column = '0',
         )
         """
 

@@ -30,8 +30,9 @@ class InsertIntoTableRequest(BaseModel):
     identity: Optional[Identity] = None
     context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
+    branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
     mode: Optional[StrictStr] = Field(default='append', description="How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are: - Append (default): insert data to the existing table - Overwrite: remove all data in the table and then insert data to it ")
-    __properties: ClassVar[List[str]] = ["identity", "context", "id", "mode"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "branch", "mode"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -90,6 +91,7 @@ class InsertIntoTableRequest(BaseModel):
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "context": obj.get("context"),
             "id": obj.get("id"),
+            "branch": obj.get("branch"),
             "mode": obj.get("mode") if obj.get("mode") is not None else 'append'
         })
         return _obj

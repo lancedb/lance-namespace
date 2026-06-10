@@ -20,6 +20,9 @@ pub struct ListTableVersionsRequest {
     pub context: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// An opaque token that allows pagination for list operations (e.g. ListNamespaces).  For an initial request of a list operation, if the implementation cannot return all items in one response, or if there are more items than the page limit specified in the request, the implementation must return a page token in the response, indicating there are more results available.  After the initial request, the value of the page token from each response must be used as the page token value for the next request.  Caller must interpret either `null`, missing value or empty string value of the page token from the implementation's response as the end of the listing results. 
     #[serde(rename = "page_token", skip_serializing_if = "Option::is_none")]
     pub page_token: Option<String>,
@@ -37,6 +40,7 @@ impl ListTableVersionsRequest {
             identity: None,
             context: None,
             id: None,
+            branch: None,
             page_token: None,
             limit: None,
             descending: None,

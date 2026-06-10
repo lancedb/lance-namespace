@@ -35,6 +35,8 @@ public class AlterTableBackfillColumnsRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   private String column;
 
   private String where = null;
@@ -124,20 +126,48 @@ public class AlterTableBackfillColumnsRequest {
     this.id = id;
   }
 
+  public AlterTableBackfillColumnsRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   public AlterTableBackfillColumnsRequest column(String column) {
     this.column = column;
     return this;
   }
 
   /**
-   * Column name to backfill
+   * Lance field path to backfill. Nested fields use dot-separated segments; use backtick-quoted
+   * segments for literal dots and double backticks inside quoted segments. Use canonical full paths
+   * for display and errors; leaf names alone only identify top-level fields; invalid or unresolved
+   * paths should return InvalidInput or TableColumnNotFound.
    *
    * @return column
    */
   @NotNull
+  @Size(min = 1)
   @Schema(
       name = "column",
-      description = "Column name to backfill",
+      description =
+          "Lance field path to backfill. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("column")
   public String getColumn() {
@@ -462,6 +492,7 @@ public class AlterTableBackfillColumnsRequest {
         (AlterTableBackfillColumnsRequest) o;
     return Objects.equals(this.identity, alterTableBackfillColumnsRequest.identity)
         && Objects.equals(this.id, alterTableBackfillColumnsRequest.id)
+        && Objects.equals(this.branch, alterTableBackfillColumnsRequest.branch)
         && Objects.equals(this.column, alterTableBackfillColumnsRequest.column)
         && Objects.equals(this.where, alterTableBackfillColumnsRequest.where)
         && Objects.equals(this.concurrency, alterTableBackfillColumnsRequest.concurrency)
@@ -489,6 +520,7 @@ public class AlterTableBackfillColumnsRequest {
     return Objects.hash(
         identity,
         id,
+        branch,
         column,
         where,
         concurrency,
@@ -511,6 +543,7 @@ public class AlterTableBackfillColumnsRequest {
     sb.append("class AlterTableBackfillColumnsRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    column: ").append(toIndentedString(column)).append("\n");
     sb.append("    where: ").append(toIndentedString(where)).append("\n");
     sb.append("    concurrency: ").append(toIndentedString(concurrency)).append("\n");

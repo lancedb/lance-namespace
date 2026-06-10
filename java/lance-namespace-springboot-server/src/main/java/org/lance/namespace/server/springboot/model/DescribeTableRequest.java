@@ -40,6 +40,8 @@ public class DescribeTableRequest {
 
   private Long version;
 
+  private String branch;
+
   private Boolean withTableUri = false;
 
   private Boolean loadDetailedMetadata;
@@ -158,6 +160,29 @@ public class DescribeTableRequest {
     this.version = version;
   }
 
+  public DescribeTableRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   public DescribeTableRequest withTableUri(Boolean withTableUri) {
     this.withTableUri = withTableUri;
     return this;
@@ -274,6 +299,7 @@ public class DescribeTableRequest {
         && Objects.equals(this.context, describeTableRequest.context)
         && Objects.equals(this.id, describeTableRequest.id)
         && Objects.equals(this.version, describeTableRequest.version)
+        && Objects.equals(this.branch, describeTableRequest.branch)
         && Objects.equals(this.withTableUri, describeTableRequest.withTableUri)
         && Objects.equals(this.loadDetailedMetadata, describeTableRequest.loadDetailedMetadata)
         && Objects.equals(this.checkDeclared, describeTableRequest.checkDeclared)
@@ -287,6 +313,7 @@ public class DescribeTableRequest {
         context,
         id,
         version,
+        branch,
         withTableUri,
         loadDetailedMetadata,
         checkDeclared,
@@ -301,6 +328,7 @@ public class DescribeTableRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    withTableUri: ").append(toIndentedString(withTableUri)).append("\n");
     sb.append("    loadDetailedMetadata: ")
         .append(toIndentedString(loadDetailedMetadata))

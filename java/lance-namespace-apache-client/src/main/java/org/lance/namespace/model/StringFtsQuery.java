@@ -53,7 +53,9 @@ public class StringFtsQuery {
   }
 
   /**
-   * Get columns
+   * Lance field paths to search. Nested fields use dot-separated segments; use backtick-quoted
+   * segments for literal dots and double backticks inside quoted segments. Omit to search all
+   * indexed FTS fields.
    *
    * @return columns
    */

@@ -26,6 +26,9 @@ pub struct UpdateTableTagRequest {
     /// New version number for the tag to point to
     #[serde(rename = "version")]
     pub version: i64,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
 }
 
 impl UpdateTableTagRequest {
@@ -36,6 +39,7 @@ impl UpdateTableTagRequest {
             id: None,
             tag,
             version,
+            branch: None,
         }
     }
 }

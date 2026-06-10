@@ -82,7 +82,7 @@ public class IndexApi {
   }
 
   /**
-   * Create an index on a table Create an index on a table column for faster search operations.
+   * Create an index on a table Create an index on a table field for faster search operations.
    * Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE,
    * BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the
    * &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to monitor
@@ -130,7 +130,7 @@ public class IndexApi {
   }
 
   /**
-   * Create an index on a table Create an index on a table column for faster search operations.
+   * Create an index on a table Create an index on a table field for faster search operations.
    * Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE,
    * BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the
    * &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to monitor
@@ -241,7 +241,7 @@ public class IndexApi {
   }
 
   /**
-   * Create a scalar index on a table Create a scalar index on a table column for faster filtering
+   * Create a scalar index on a table Create a scalar index on a table field for faster filtering
    * operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias
    * for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously.
    * Use the &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to
@@ -290,7 +290,7 @@ public class IndexApi {
   }
 
   /**
-   * Create a scalar index on a table Create a scalar index on a table column for faster filtering
+   * Create a scalar index on a table Create a scalar index on a table field for faster filtering
    * operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias
    * for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously.
    * Use the &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to
@@ -594,14 +594,18 @@ public class IndexApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @return CompletableFuture&lt;DropTableIndexResponse&gt;
    * @throws ApiException if fails to make API call
    */
   public CompletableFuture<DropTableIndexResponse> dropTableIndex(
-      String id, String indexName, String delimiter) throws ApiException {
+      String id, String indexName, String delimiter, String branch) throws ApiException {
     try {
       HttpRequest.Builder localVarRequestBuilder =
-          dropTableIndexRequestBuilder(id, indexName, delimiter);
+          dropTableIndexRequestBuilder(id, indexName, delimiter, branch);
       return memberVarHttpClient
           .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
           .thenComposeAsync(
@@ -641,14 +645,18 @@ public class IndexApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @return CompletableFuture&lt;ApiResponse&lt;DropTableIndexResponse&gt;&gt;
    * @throws ApiException if fails to make API call
    */
   public CompletableFuture<ApiResponse<DropTableIndexResponse>> dropTableIndexWithHttpInfo(
-      String id, String indexName, String delimiter) throws ApiException {
+      String id, String indexName, String delimiter, String branch) throws ApiException {
     try {
       HttpRequest.Builder localVarRequestBuilder =
-          dropTableIndexRequestBuilder(id, indexName, delimiter);
+          dropTableIndexRequestBuilder(id, indexName, delimiter, branch);
       return memberVarHttpClient
           .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
           .thenComposeAsync(
@@ -680,7 +688,7 @@ public class IndexApi {
   }
 
   private HttpRequest.Builder dropTableIndexRequestBuilder(
-      String id, String indexName, String delimiter) throws ApiException {
+      String id, String indexName, String delimiter, String branch) throws ApiException {
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(
@@ -704,6 +712,8 @@ public class IndexApi {
     String localVarQueryParameterBaseName;
     localVarQueryParameterBaseName = "delimiter";
     localVarQueryParams.addAll(ApiClient.parameterToPairs("delimiter", delimiter));
+    localVarQueryParameterBaseName = "branch";
+    localVarQueryParams.addAll(ApiClient.parameterToPairs("branch", branch));
 
     if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
       StringJoiner queryJoiner = new StringJoiner("&");

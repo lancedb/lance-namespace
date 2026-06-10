@@ -27,7 +27,7 @@ class PhraseQuery(BaseModel):
     """
     PhraseQuery
     """ # noqa: E501
-    column: Optional[StrictStr] = None
+    column: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Lance field path to match. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Omit to use the query default fields.")
     slop: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
     terms: StrictStr
     __properties: ClassVar[List[str]] = ["column", "slop", "terms"]

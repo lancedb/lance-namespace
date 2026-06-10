@@ -10,6 +10,7 @@ An entry for creating a new table version in a batch operation. This supports `p
 |------------ | ------------- | ------------- | -------------|
 |**id** | **List&lt;String&gt;** | The table identifier |  |
 |**version** | **Long** | Version number to create |  |
+|**branch** | **String** | Branch to target. When not specified, the main branch is used.  |  [optional] |
 |**manifestPath** | **String** | Path to the manifest file for this version |  |
 |**manifestSize** | **Long** | Size of the manifest file in bytes |  [optional] |
 |**eTag** | **String** | Optional ETag for the manifest file |  [optional] |

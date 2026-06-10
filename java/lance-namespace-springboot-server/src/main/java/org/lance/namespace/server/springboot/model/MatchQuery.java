@@ -76,11 +76,18 @@ public class MatchQuery {
   }
 
   /**
-   * Get column
+   * Lance field path to match. Nested fields use dot-separated segments; use backtick-quoted
+   * segments for literal dots and double backticks inside quoted segments. Omit to use the query
+   * default fields.
    *
    * @return column
    */
-  @Schema(name = "column", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Size(min = 1)
+  @Schema(
+      name = "column",
+      description =
+          "Lance field path to match. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Omit to use the query default fields.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("column")
   public String getColumn() {
     return column;

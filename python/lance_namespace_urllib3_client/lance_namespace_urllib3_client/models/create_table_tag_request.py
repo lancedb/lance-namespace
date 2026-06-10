@@ -33,7 +33,8 @@ class CreateTableTagRequest(BaseModel):
     id: Optional[List[StrictStr]] = None
     tag: StrictStr = Field(description="Name of the tag to create")
     version: Annotated[int, Field(strict=True, ge=0)] = Field(description="Version number for the tag to point to")
-    __properties: ClassVar[List[str]] = ["identity", "context", "id", "tag", "version"]
+    branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "tag", "version", "branch"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -93,7 +94,8 @@ class CreateTableTagRequest(BaseModel):
             "context": obj.get("context"),
             "id": obj.get("id"),
             "tag": obj.get("tag"),
-            "version": obj.get("version")
+            "version": obj.get("version"),
+            "branch": obj.get("branch")
         })
         return _obj
 

@@ -21,6 +21,9 @@ pub struct UpdateTableSchemaMetadataRequest {
     /// The table identifier
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// Schema metadata key-value pairs to set
     #[serde(rename = "metadata", skip_serializing_if = "Option::is_none")]
     pub metadata: Option<std::collections::HashMap<String, String>>,
@@ -32,6 +35,7 @@ impl UpdateTableSchemaMetadataRequest {
             identity: None,
             context: None,
             id: None,
+            branch: None,
             metadata: None,
         }
     }

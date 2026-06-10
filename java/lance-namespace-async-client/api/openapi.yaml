@@ -659,6 +659,7 @@ paths:
     parameters:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
+    - $ref: '#/components/parameters/branch'
     post:
       description: |
         Replace the schema metadata for table `id` with the provided key-value pairs.
@@ -670,6 +671,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
+      - $ref: '#/components/parameters/branch'
       requestBody:
         content:
           application/json:
@@ -710,6 +712,7 @@ paths:
     parameters:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
+    - $ref: '#/components/parameters/branch'
     - $ref: '#/components/parameters/page_token'
     - $ref: '#/components/parameters/limit'
     - description: |
@@ -740,6 +743,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
+      - $ref: '#/components/parameters/branch'
       - $ref: '#/components/parameters/page_token'
       - $ref: '#/components/parameters/limit'
       - description: |
@@ -1038,6 +1042,49 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/table/{id}/update_field_metadata:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
+    post:
+      description: |
+        Update the Arrow field (column) metadata for table `id`.
+
+        Each entry targets a field by `path` and merges the provided key-value
+        pairs into that field's existing metadata, or replaces it when `replace`
+        is true. A null metadata value deletes that key.
+      operationId: UpdateFieldMetadata
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFieldMetadataRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/UpdateFieldMetadataResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Update per-field metadata
+      tags:
+      - Table
+      - Metadata
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/table/{id}/drop_columns:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -1120,6 +1167,7 @@ paths:
     parameters:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
+    - $ref: '#/components/parameters/branch'
     - description: |
         How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are:
         - Append (default): insert data to the existing table
@@ -1149,6 +1197,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
+      - $ref: '#/components/parameters/branch'
       - description: |
           How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are:
           - Append (default): insert data to the existing table
@@ -1195,12 +1244,18 @@ paths:
     parameters:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
-    - description: Column name to use for matching rows (required)
+    - $ref: '#/components/parameters/branch'
+    - description: Lance field path to use for matching rows. Nested fields use dot-separated
+        segments; use backtick-quoted segments for literal dots and double backticks
+        inside quoted segments. Use canonical full paths for display and errors; leaf
+        names alone only identify top-level fields; invalid or unresolved paths should
+        return InvalidInput or TableColumnNotFound.
       explode: true
       in: query
       name: "on"
       required: true
       schema:
+        minLength: 1
         type: string
       style: form
     - description: Update all columns when rows match
@@ -1212,8 +1267,10 @@ paths:
         default: false
         type: boolean
       style: form
-    - description: The row is updated (similar to UpdateAll) only for rows where the
-        SQL expression evaluates to true
+    - description: "The row is updated (similar to UpdateAll) only for rows where\
+        \ the SQL expression evaluates to true. Field references must use Lance field\
+        \ path syntax: nested fields use dot-separated segments, literal dots require\
+        \ backtick-quoted segments, and backticks inside quoted segments are doubled."
       explode: true
       in: query
       name: when_matched_update_all_filt
@@ -1240,8 +1297,10 @@ paths:
         default: false
         type: boolean
       style: form
-    - description: Delete rows from the target table if there is no match AND the
-        SQL expression evaluates to true
+    - description: "Delete rows from the target table if there is no match AND the\
+        \ SQL expression evaluates to true. Field references must use Lance field\
+        \ path syntax: nested fields use dot-separated segments, literal dots require\
+        \ backtick-quoted segments, and backticks inside quoted segments are doubled."
       explode: true
       in: query
       name: when_not_matched_by_source_delete_filt
@@ -1291,12 +1350,18 @@ paths:
       parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
-      - description: Column name to use for matching rows (required)
+      - $ref: '#/components/parameters/branch'
+      - description: Lance field path to use for matching rows. Nested fields use
+          dot-separated segments; use backtick-quoted segments for literal dots and
+          double backticks inside quoted segments. Use canonical full paths for display
+          and errors; leaf names alone only identify top-level fields; invalid or
+          unresolved paths should return InvalidInput or TableColumnNotFound.
         explode: true
         in: query
         name: "on"
         required: true
         schema:
+          minLength: 1
           type: string
         style: form
       - description: Update all columns when rows match
@@ -1308,8 +1373,11 @@ paths:
           default: false
           type: boolean
         style: form
-      - description: The row is updated (similar to UpdateAll) only for rows where
-          the SQL expression evaluates to true
+      - description: "The row is updated (similar to UpdateAll) only for rows where\
+          \ the SQL expression evaluates to true. Field references must use Lance\
+          \ field path syntax: nested fields use dot-separated segments, literal dots\
+          \ require backtick-quoted segments, and backticks inside quoted segments\
+          \ are doubled."
         explode: true
         in: query
         name: when_matched_update_all_filt
@@ -1336,8 +1404,10 @@ paths:
           default: false
           type: boolean
         style: form
-      - description: Delete rows from the target table if there is no match AND the
-          SQL expression evaluates to true
+      - description: "Delete rows from the target table if there is no match AND the\
+          \ SQL expression evaluates to true. Field references must use Lance field\
+          \ path syntax: nested fields use dot-separated segments, literal dots require\
+          \ backtick-quoted segments, and backticks inside quoted segments are doubled."
         explode: true
         in: query
         name: when_not_matched_by_source_delete_filt
@@ -1935,7 +2005,7 @@ paths:
     - $ref: '#/components/parameters/delimiter'
     post:
       description: |
-        Create an index on a table column for faster search operations.
+        Create an index on a table field for faster search operations.
         Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.).
         Index creation is handled asynchronously.
         Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress.
@@ -1979,7 +2049,7 @@ paths:
     - $ref: '#/components/parameters/delimiter'
     post:
       description: |
-        Create a scalar index on a table column for faster filtering operations.
+        Create a scalar index on a table field for faster filtering operations.
         Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.).
         This is an alias for CreateTableIndex specifically for scalar indexes.
         Index creation is handled asynchronously.
@@ -2122,6 +2192,7 @@ paths:
     parameters:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
+    - $ref: '#/components/parameters/branch'
     - description: Name of the index to drop
       explode: false
       in: path
@@ -2143,6 +2214,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
+      - $ref: '#/components/parameters/branch'
       - description: Name of the index to drop
         explode: false
         in: path
@@ -2425,6 +2497,134 @@ paths:
       x-content-type: application/json
       x-accepts:
       - application/json
+  /v1/table/{id}/branches/list:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
+    - $ref: '#/components/parameters/page_token'
+    - $ref: '#/components/parameters/limit'
+    post:
+      description: |
+        List all branches that have been created for table `id`.
+        Returns a map of branch names to their contents.
+
+        REST NAMESPACE ONLY
+        REST namespace does not use a request body for this operation.
+        The `ListTableBranchesRequest` information is passed in the following way:
+        - `id`: pass through path parameter of the same name
+        - `page_token`: pass through query parameter of the same name
+        - `limit`: pass through query parameter of the same name
+      operationId: ListTableBranches
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      - $ref: '#/components/parameters/page_token'
+      - $ref: '#/components/parameters/limit'
+      responses:
+        "200":
+          $ref: '#/components/responses/ListTableBranchesResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: List all branches for a table
+      tags:
+      - Table
+      - Branch
+      - Metadata
+      x-accepts:
+      - application/json
+  /v1/table/{id}/branches/create:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
+    post:
+      description: |
+        Create a new branch for table `id` starting from a source ref (another
+        branch and/or version), defaulting to the latest version of the main branch.
+      operationId: CreateTableBranch
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTableBranchRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/CreateTableBranchResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "409":
+          $ref: '#/components/responses/ConflictErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Create a new branch
+      tags:
+      - Table
+      - Branch
+      - Metadata
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /v1/table/{id}/branches/delete:
+    parameters:
+    - $ref: '#/components/parameters/id'
+    - $ref: '#/components/parameters/delimiter'
+    post:
+      description: |
+        Delete an existing branch from table `id`.
+      operationId: DeleteTableBranch
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/delimiter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteTableBranchRequest'
+        required: true
+      responses:
+        "200":
+          $ref: '#/components/responses/DeleteTableBranchResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestErrorResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        "403":
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        "404":
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        "503":
+          $ref: '#/components/responses/ServiceUnavailableErrorResponse'
+        "5XX":
+          $ref: '#/components/responses/ServerErrorResponse'
+      summary: Delete a branch
+      tags:
+      - Table
+      - Branch
+      - Metadata
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /v1/transaction/{id}/describe:
     parameters:
     - $ref: '#/components/parameters/id'
@@ -2538,6 +2738,19 @@ components:
       explode: true
       in: query
       name: delimiter
+      required: false
+      schema:
+        type: string
+      style: form
+    branch:
+      description: |
+        Optional branch to target. When not specified, the main branch is used.
+        Used by branch-scoped operations that cannot carry a `branch` field in
+        their request body (Arrow IPC stream and bodyless operations). Operations
+        with a JSON request body carry `branch` as a body field instead.
+      explode: true
+      in: query
+      name: branch
       required: false
       schema:
         type: string
@@ -2781,6 +2994,24 @@ components:
           schema:
             $ref: '#/components/schemas/UpdateTableTagResponse'
       description: Update tag response
+    ListTableBranchesResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListTableBranchesResponse'
+      description: List of table branches
+    CreateTableBranchResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateTableBranchResponse'
+      description: Create branch response
+    DeleteTableBranchResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeleteTableBranchResponse'
+      description: Delete branch response
     ListTableVersionsResponse:
       content:
         application/json:
@@ -2837,6 +3068,12 @@ components:
           schema:
             $ref: '#/components/schemas/AlterTableAddColumnsResponse'
       description: Add columns operation result
+    UpdateFieldMetadataResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateFieldMetadataResponse'
+      description: Field metadata update result
     AlterTableAlterColumnsResponse:
       content:
         application/json:
@@ -3032,7 +3269,7 @@ components:
               9 - TableTagAlreadyExists: A table tag with this name already exists
               10 - TransactionNotFound: The specified transaction does not exist
               11 - TableVersionNotFound: The specified table version does not exist
-              12 - TableColumnNotFound: The specified table column does not exist
+              12 - TableColumnNotFound: The specified table field does not exist
               13 - InvalidInput: Malformed request or invalid parameters
               14 - ConcurrentModification: Optimistic concurrency conflict
               15 - PermissionDenied: User lacks permission for this operation
@@ -3563,6 +3800,7 @@ components:
         - id
         - id
         version: 0
+        branch: branch
         with_table_uri: false
         load_detailed_metadata: true
         vend_credentials: true
@@ -3591,6 +3829,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         with_table_uri:
           default: false
           description: |
@@ -3777,6 +4019,7 @@ components:
         - id
         - id
         version: 0
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -3802,9 +4045,14 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         predicate:
           description: |
-            Optional SQL predicate to filter rows for counting
+            Optional SQL predicate to filter rows for counting. Field
+            references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.
           type: string
     CountTableRowsResponse:
       description: |
@@ -3834,6 +4082,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         mode:
           default: append
           description: |
@@ -3870,16 +4122,28 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         "on":
-          description: Column name to use for matching rows (required)
+          description: Lance field path to use for matching rows. Nested fields use
+            dot-separated segments; use backtick-quoted segments for literal dots
+            and double backticks inside quoted segments. Use canonical full paths
+            for display and errors; leaf names alone only identify top-level fields;
+            invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
+          minLength: 1
           type: string
         when_matched_update_all:
           default: false
           description: Update all columns when rows match
           type: boolean
         when_matched_update_all_filt:
-          description: The row is updated (similar to UpdateAll) only for rows where
-            the SQL expression evaluates to true
+          description: "The row is updated (similar to UpdateAll) only for rows where\
+            \ the SQL expression evaluates to true. Field references must use Lance\
+            \ field path syntax: nested fields use dot-separated segments, literal\
+            \ dots require backtick-quoted segments, and backticks inside quoted segments\
+            \ are doubled."
           type: string
         when_not_matched_insert_all:
           default: false
@@ -3891,8 +4155,11 @@ components:
             the source table
           type: boolean
         when_not_matched_by_source_delete_filt:
-          description: Delete rows from the target table if there is no match AND
-            the SQL expression evaluates to true
+          description: "Delete rows from the target table if there is no match AND\
+            \ the SQL expression evaluates to true. Field references must use Lance\
+            \ field path syntax: nested fields use dot-separated segments, literal\
+            \ dots require backtick-quoted segments, and backticks inside quoted segments\
+            \ are doubled."
           type: string
         timeout:
           description: "Timeout for the operation (e.g., \"30s\", \"5m\")"
@@ -3935,7 +4202,7 @@ components:
           type: integer
     UpdateTableRequest:
       description: |
-        Each update consists of a column name and an SQL expression that will be
+        Each update consists of a field path and an SQL expression that will be
         evaluated against the current row's value. Optionally, a predicate can be
         provided to filter which rows to update.
       example:
@@ -3953,6 +4220,7 @@ components:
           - updates
         - - updates
           - updates
+        branch: branch
         properties:
           key: properties
       properties:
@@ -3973,12 +4241,22 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         predicate:
-          description: Optional SQL predicate to filter rows for update
+          description: "Optional SQL predicate to filter rows for update. Field references\
+            \ must use Lance field path syntax: nested fields use dot-separated segments,\
+            \ literal dots require backtick-quoted segments, and backticks inside\
+            \ quoted segments are doubled."
           type: string
           nullable: true
         updates:
-          description: "List of column updates as [column_name, expression] pairs"
+          description: "List of field updates as [field_path, expression] pairs. Field\
+            \ paths and expression references must use Lance field path syntax: nested\
+            \ fields use dot-separated segments, literal dots require backtick-quoted\
+            \ segments, and backticks inside quoted segments are doubled."
           items:
             items:
               type: string
@@ -4036,6 +4314,7 @@ components:
         id:
         - id
         - id
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -4055,8 +4334,15 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         predicate:
-          description: SQL predicate to filter rows for deletion
+          description: "SQL predicate to filter rows for deletion. Field references\
+            \ must use Lance field path syntax: nested fields use dot-separated segments,\
+            \ literal dots require backtick-quoted segments, and backticks inside\
+            \ quoted segments are doubled."
           type: string
       required:
       - predicate
@@ -4087,6 +4373,7 @@ components:
         fast_search: true
         k: 0
         upper_bound: 1.2315135
+        branch: branch
         version: 0
         with_row_id: true
         prefilter: true
@@ -4181,6 +4468,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         bypass_vector_index:
           description: Whether to bypass vector index
           type: boolean
@@ -4197,7 +4488,8 @@ components:
           description: Whether to use fast search
           type: boolean
         filter:
-          description: Optional SQL filter expression
+          description: |
+            Optional SQL filter expression. Field references in the expression must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.
           type: string
         full_text_query:
           $ref: '#/components/schemas/QueryTableRequest_full_text_query'
@@ -4232,7 +4524,12 @@ components:
         vector:
           $ref: '#/components/schemas/QueryTableRequest_vector'
         vector_column:
-          description: Name of the vector column to search
+          description: Lance field path of the vector field to search. Nested fields
+            use dot-separated segments; use backtick-quoted segments for literal dots
+            and double backticks inside quoted segments. Use canonical full paths
+            for display and errors; leaf names alone only identify top-level fields;
+            invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
+          minLength: 1
           type: string
         version:
           description: Table version to query
@@ -4251,6 +4548,7 @@ components:
         column: column
         max_token_length: 0
         language: language
+        branch: branch
         index_type: index_type
         with_position: true
         lower_case: true
@@ -4285,8 +4583,17 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         column:
-          description: Name of the column to create index on
+          description: Lance field path to create the index on. Nested fields use
+            dot-separated segments; use backtick-quoted segments for literal dots
+            and double backticks inside quoted segments. Use canonical full paths
+            for display and errors; leaf names alone only identify top-level fields;
+            invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
+          minLength: 1
           type: string
         index_type:
           description: "Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST,\
@@ -4366,6 +4673,7 @@ components:
         - id
         - id
         version: 0
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -4391,6 +4699,10 @@ components:
           minimum: 0
           type: integer
           nullable: true
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         page_token:
           description: |
             An opaque token that allows pagination for list operations (e.g. ListNamespaces).
@@ -4420,17 +4732,35 @@ components:
       example:
         indexes:
         - index_uuid: index_uuid
+          size_bytes: 0
           columns:
           - columns
           - columns
+          created_at: 2000-01-23T04:56:07.000+00:00
+          index_details: index_details
+          num_indexed_rows: 0
+          num_segments: 0
+          index_type: index_type
+          index_version: 0
+          num_unindexed_rows: 0
           index_name: index_name
           status: status
+          type_url: type_url
         - index_uuid: index_uuid
+          size_bytes: 0
           columns:
           - columns
           - columns
+          created_at: 2000-01-23T04:56:07.000+00:00
+          index_details: index_details
+          num_indexed_rows: 0
+          num_segments: 0
+          index_type: index_type
+          index_version: 0
+          num_unindexed_rows: 0
           index_name: index_name
           status: status
+          type_url: type_url
         page_token: page_token
       properties:
         indexes:
@@ -4462,11 +4792,20 @@ components:
     IndexContent:
       example:
         index_uuid: index_uuid
+        size_bytes: 0
         columns:
         - columns
         - columns
+        created_at: 2000-01-23T04:56:07.000+00:00
+        index_details: index_details
+        num_indexed_rows: 0
+        num_segments: 0
+        index_type: index_type
+        index_version: 0
+        num_unindexed_rows: 0
         index_name: index_name
         status: status
+        type_url: type_url
       properties:
         index_name:
           description: Name of the index
@@ -4475,13 +4814,62 @@ components:
           description: Unique identifier for the index
           type: string
         columns:
-          description: Columns covered by this index
+          description: "Canonical Lance field paths covered by this index. Nested\
+            \ fields use dot-separated segments; segments containing literal dots\
+            \ are backtick-quoted, and backticks inside quoted segments are doubled."
           items:
+            minLength: 1
             type: string
           type: array
         status:
           description: Current status of the index
           type: string
+        index_type:
+          description: "Friendly index type, e.g. IVF_PQ, BTREE. Unknown if no plugin\
+            \ recognizes the index."
+          type: string
+        type_url:
+          description: "Protobuf type URL, a precise type identifier for the index."
+          type: string
+        num_indexed_rows:
+          description: Number of live rows covered by the index. This does not count
+            rows that are in the index but have since been deleted.
+          format: int64
+          minimum: 0
+          type: integer
+        num_unindexed_rows:
+          description: Number of rows that are not indexed.
+          format: int64
+          minimum: 0
+          type: integer
+        size_bytes:
+          description: Total index size in bytes across all segments. Null for indices
+            predating file-size tracking.
+          format: int64
+          minimum: 0
+          type: integer
+          nullable: true
+        num_segments:
+          description: Number of index deltas/segments.
+          format: int32
+          minimum: 0
+          type: integer
+        created_at:
+          description: Creation time for indexes. Null for legacy indices.
+          format: date-time
+          type: string
+          nullable: true
+        index_version:
+          description: On-disk index format version.
+          format: int32
+          minimum: 0
+          type: integer
+        index_details:
+          description: "Opaque, type-specific JSON with additional index details.\
+            \ For vector indices this carries metric/distance type, partitioning,\
+            \ and HNSW/PQ/SQ/RQ parameters."
+          type: string
+          nullable: true
       required:
       - columns
       - index_name
@@ -4498,6 +4886,7 @@ components:
         - id
         - id
         version: 0
+        branch: branch
         index_name: index_name
       properties:
         identity:
@@ -4523,6 +4912,10 @@ components:
           minimum: 0
           type: integer
           nullable: true
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         index_name:
           description: Name of the index
           type: string
@@ -5205,7 +5598,11 @@ components:
         query: query
       properties:
         columns:
+          description: Lance field paths to search. Nested fields use dot-separated
+            segments; use backtick-quoted segments for literal dots and double backticks
+            inside quoted segments. Omit to search all indexed FTS fields.
           items:
+            minLength: 1
             type: string
           type: array
         query:
@@ -5335,6 +5732,10 @@ components:
           format: float
           type: number
         column:
+          description: Lance field path to match. Nested fields use dot-separated
+            segments; use backtick-quoted segments for literal dots and double backticks
+            inside quoted segments. Omit to use the query default fields.
+          minLength: 1
           type: string
         fuzziness:
           format: int32
@@ -5371,6 +5772,10 @@ components:
         slop: 0
       properties:
         column:
+          description: Lance field path to match. Nested fields use dot-separated
+            segments; use backtick-quoted segments for literal dots and double backticks
+            inside quoted segments. Omit to use the query default fields.
+          minLength: 1
           type: string
         slop:
           format: int32
@@ -5500,12 +5905,18 @@ components:
     GetTableTagVersionResponse:
       example:
         version: 0
+        branch: branch
       properties:
         version:
           description: version number that the tag points to
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch the tag's version lives on.
+            Absent when the tag points to the main branch.
+          type: string
       required:
       - version
     CreateTableTagRequest:
@@ -5520,6 +5931,7 @@ components:
         - id
         tag: tag
         version: 0
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -5546,6 +5958,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
       required:
       - tag
       - version
@@ -5611,6 +6027,7 @@ components:
         - id
         tag: tag
         version: 0
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -5637,6 +6054,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
       required:
       - tag
       - version
@@ -5750,6 +6171,225 @@ components:
       required:
       - manifestSize
       - version
+    BranchContents:
+      example:
+        parentBranch: parentBranch
+        metadata:
+          key: metadata
+        createAt: 0
+        parentVersion: 0
+        manifestSize: 0
+      properties:
+        parentBranch:
+          description: |
+            Name of the branch this branch was created from.
+            Absent when the branch was created from the main branch.
+          type: string
+        parentVersion:
+          description: Version of the parent (branch or main) this branch was created
+            from
+          format: int64
+          minimum: 0
+          type: integer
+        createAt:
+          description: Unix timestamp (in seconds) when the branch was created
+          format: int64
+          minimum: 0
+          type: integer
+        manifestSize:
+          description: Size of the branch's manifest file in bytes
+          format: int64
+          minimum: 0
+          type: integer
+        metadata:
+          additionalProperties:
+            type: string
+          description: Key-value metadata associated with the branch
+      required:
+      - createAt
+      - manifestSize
+      - parentVersion
+    CreateTableBranchRequest:
+      example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
+        context:
+          key: context
+        name: name
+        from_branch: from_branch
+        id:
+        - id
+        - id
+        from_version: 0
+      properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+        id:
+          items:
+            type: string
+          type: array
+        name:
+          description: Name of the branch to create
+          type: string
+        from_branch:
+          description: |
+            Source branch to create the new branch from.
+            When omitted, the new branch is created from the main branch.
+          type: string
+        from_version:
+          description: |
+            Version of the source (branch or main) to create from.
+            When omitted, the latest version of the source is used.
+          format: int64
+          minimum: 0
+          type: integer
+      required:
+      - name
+    CreateTableBranchResponse:
+      description: Response for create branch operation
+      example:
+        transaction_id: transaction_id
+      properties:
+        transaction_id:
+          description: Optional transaction identifier
+          type: string
+    DeleteTableBranchRequest:
+      example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
+        context:
+          key: context
+        name: name
+        id:
+        - id
+        - id
+      properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+        id:
+          items:
+            type: string
+          type: array
+        name:
+          description: Name of the branch to delete
+          type: string
+      required:
+      - name
+    DeleteTableBranchResponse:
+      description: Response for delete branch operation
+      example:
+        transaction_id: transaction_id
+      properties:
+        transaction_id:
+          description: Optional transaction identifier
+          type: string
+    ListTableBranchesRequest:
+      properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context for a request as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            REST NAMESPACE ONLY
+            Context entries are passed via HTTP headers using the naming convention
+            `x-lance-ctx-<key>: <value>`. For example, a context entry
+            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+        id:
+          description: The table identifier
+          items:
+            type: string
+          type: array
+        page_token:
+          description: |
+            An opaque token that allows pagination for list operations (e.g. ListNamespaces).
+
+            For an initial request of a list operation,
+            if the implementation cannot return all items in one response,
+            or if there are more items than the page limit specified in the request,
+            the implementation must return a page token in the response,
+            indicating there are more results available.
+
+            After the initial request,
+            the value of the page token from each response must be used
+            as the page token value for the next request.
+
+            Caller must interpret either `null`,
+            missing value or empty string value of the page token from
+            the implementation's response as the end of the listing results.
+          type: string
+          nullable: true
+        limit:
+          description: |
+            An inclusive upper bound of the
+            number of results that a caller will receive.
+          type: integer
+          nullable: true
+    ListTableBranchesResponse:
+      description: Response containing table branches
+      example:
+        page_token: page_token
+        branches:
+          key:
+            parentBranch: parentBranch
+            metadata:
+              key: metadata
+            createAt: 0
+            parentVersion: 0
+            manifestSize: 0
+      properties:
+        branches:
+          additionalProperties:
+            $ref: '#/components/schemas/BranchContents'
+          description: Map of branch names to their contents
+        page_token:
+          description: |
+            An opaque token that allows pagination for list operations (e.g. ListNamespaces).
+
+            For an initial request of a list operation,
+            if the implementation cannot return all items in one response,
+            or if there are more items than the page limit specified in the request,
+            the implementation must return a page token in the response,
+            indicating there are more results available.
+
+            After the initial request,
+            the value of the page token from each response must be used
+            as the page token value for the next request.
+
+            Caller must interpret either `null`,
+            missing value or empty string value of the page token from
+            the implementation's response as the end of the listing results.
+          type: string
+          nullable: true
+      required:
+      - branches
     RestoreTableRequest:
       example:
         identity:
@@ -5761,6 +6401,7 @@ components:
         - id
         - id
         version: 0
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -5784,6 +6425,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
       required:
       - version
     RestoreTableResponse:
@@ -5865,6 +6510,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         metadata:
           additionalProperties:
             type: string
@@ -5897,6 +6546,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         page_token:
           description: |
             An opaque token that allows pagination for list operations (e.g. ListNamespaces).
@@ -5995,6 +6648,7 @@ components:
         - id
         e_tag: e_tag
         version: 0
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -6019,6 +6673,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         manifest_path:
           description: Path to the manifest file for this version
           type: string
@@ -6080,6 +6738,7 @@ components:
         - id
         - id
         version: 0
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -6104,6 +6763,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
     DescribeTableVersionResponse:
       description: Response containing the table version information
       example:
@@ -6138,6 +6801,7 @@ components:
         id:
         - id
         - id
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -6157,6 +6821,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         ranges:
           description: |
             List of version ranges to delete.
@@ -6220,6 +6888,7 @@ components:
           - id
           e_tag: e_tag
           version: 0
+          branch: branch
         - naming_scheme: V2
           metadata:
             key: metadata
@@ -6230,6 +6899,7 @@ components:
           - id
           e_tag: e_tag
           version: 0
+          branch: branch
         identity:
           api_key: api_key
           auth_token: auth_token
@@ -6272,6 +6942,7 @@ components:
         - id
         e_tag: e_tag
         version: 0
+        branch: branch
       properties:
         id:
           description: The table identifier
@@ -6283,6 +6954,10 @@ components:
           format: int64
           minimum: 0
           type: integer
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         manifest_path:
           description: Path to the manifest file for this version
           type: string
@@ -6384,6 +7059,7 @@ components:
             - id
             e_tag: e_tag
             version: 0
+            branch: branch
           delete_table_versions:
             ranges:
             - start_version: 0
@@ -6398,6 +7074,7 @@ components:
             id:
             - id
             - id
+            branch: branch
           declare_table:
             identity:
               api_key: api_key
@@ -6436,6 +7113,7 @@ components:
             - id
             e_tag: e_tag
             version: 0
+            branch: branch
           delete_table_versions:
             ranges:
             - start_version: 0
@@ -6450,6 +7128,7 @@ components:
             id:
             - id
             - id
+            branch: branch
           declare_table:
             identity:
               api_key: api_key
@@ -6522,6 +7201,7 @@ components:
           - id
           e_tag: e_tag
           version: 0
+          branch: branch
         delete_table_versions:
           ranges:
           - start_version: 0
@@ -6536,6 +7216,7 @@ components:
           id:
           - id
           - id
+          branch: branch
         declare_table:
           identity:
             api_key: api_key
@@ -6757,6 +7438,7 @@ components:
           fast_search: true
           k: 0
           upper_bound: 1.2315135
+          branch: branch
           version: 0
           with_row_id: true
           prefilter: true
@@ -6838,6 +7520,7 @@ components:
         id:
         - id
         - id
+        branch: branch
         verbose: false
       properties:
         identity:
@@ -6857,6 +7540,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         query:
           $ref: '#/components/schemas/QueryTableRequest'
         verbose:
@@ -6886,6 +7573,7 @@ components:
         fast_search: true
         k: 0
         upper_bound: 1.2315135
+        branch: branch
         version: 0
         with_row_id: true
         prefilter: true
@@ -6980,6 +7668,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         bypass_vector_index:
           description: Whether to bypass vector index
           type: boolean
@@ -6996,7 +7688,8 @@ components:
           description: Whether to use fast search
           type: boolean
         filter:
-          description: Optional SQL filter expression
+          description: |
+            Optional SQL filter expression. Field references in the expression must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.
           type: string
         full_text_query:
           $ref: '#/components/schemas/QueryTableRequest_full_text_query'
@@ -7031,7 +7724,12 @@ components:
         vector:
           $ref: '#/components/schemas/QueryTableRequest_vector'
         vector_column:
-          description: Name of the vector column to search
+          description: Lance field path of the vector field to search. Nested fields
+            use dot-separated segments; use backtick-quoted segments for literal dots
+            and double backticks inside quoted segments. Use canonical full paths
+            for display and errors; leaf names alone only identify top-level fields;
+            invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
+          minLength: 1
           type: string
         version:
           description: Table version to query
@@ -7060,6 +7758,19 @@ components:
         - expression: expression
           name: name
           virtual_column:
+            outputs:
+            - metadata:
+                key: metadata
+              nullable: true
+              column: column
+              data_type: "{}"
+              struct_field: struct_field
+            - metadata:
+                key: metadata
+              nullable: true
+              column: column
+              data_type: "{}"
+              struct_field: struct_field
             image: image
             field_metadata:
               key: field_metadata
@@ -7070,13 +7781,25 @@ components:
             input_columns:
             - input_columns
             - input_columns
-            data_type: "{}"
             udf_backend: udf_backend
             auto_backfill: true
             udf_version: udf_version
         - expression: expression
           name: name
           virtual_column:
+            outputs:
+            - metadata:
+                key: metadata
+              nullable: true
+              column: column
+              data_type: "{}"
+              struct_field: struct_field
+            - metadata:
+                key: metadata
+              nullable: true
+              column: column
+              data_type: "{}"
+              struct_field: struct_field
             image: image
             field_metadata:
               key: field_metadata
@@ -7087,13 +7810,13 @@ components:
             input_columns:
             - input_columns
             - input_columns
-            data_type: "{}"
             udf_backend: udf_backend
             auto_backfill: true
             udf_version: udf_version
         id:
         - id
         - id
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -7102,6 +7825,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         new_columns:
           description: List of new columns to add to the table
           items:
@@ -7114,6 +7841,19 @@ components:
         expression: expression
         name: name
         virtual_column:
+          outputs:
+          - metadata:
+              key: metadata
+            nullable: true
+            column: column
+            data_type: "{}"
+            struct_field: struct_field
+          - metadata:
+              key: metadata
+            nullable: true
+            column: column
+            data_type: "{}"
+            struct_field: struct_field
           image: image
           field_metadata:
             key: field_metadata
@@ -7124,7 +7864,6 @@ components:
           input_columns:
           - input_columns
           - input_columns
-          data_type: "{}"
           udf_backend: udf_backend
           auto_backfill: true
           udf_version: udf_version
@@ -7143,6 +7882,19 @@ components:
       - name
     AddVirtualColumnEntry:
       example:
+        outputs:
+        - metadata:
+            key: metadata
+          nullable: true
+          column: column
+          data_type: "{}"
+          struct_field: struct_field
+        - metadata:
+            key: metadata
+          nullable: true
+          column: column
+          data_type: "{}"
+          struct_field: struct_field
         image: image
         field_metadata:
           key: field_metadata
@@ -7153,19 +7905,23 @@ components:
         input_columns:
         - input_columns
         - input_columns
-        data_type: "{}"
         udf_backend: udf_backend
         auto_backfill: true
         udf_version: udf_version
       properties:
         input_columns:
-          description: List of input column names for the virtual column
+          description: List of input Lance field paths for the virtual column. Nested
+            fields use dot-separated segments; use backtick-quoted segments for literal
+            dots and double backticks inside quoted segments.
           items:
+            minLength: 1
             type: string
           type: array
-        data_type:
-          description: Data type of the virtual column using JSON representation
-          type: object
+        outputs:
+          description: Output columns produced by the virtual column UDF
+          items:
+            $ref: '#/components/schemas/AddVirtualColumnOutputEntry'
+          type: array
         image:
           description: Docker image to use for the UDF
           type: string
@@ -7199,12 +7955,42 @@ components:
             type: string
           description: User-supplied field metadata (string key-value pairs)
       required:
-      - data_type
       - image
       - input_columns
+      - outputs
       - udf
       - udf_name
       - udf_version
+    AddVirtualColumnOutputEntry:
+      example:
+        metadata:
+          key: metadata
+        nullable: true
+        column: column
+        data_type: "{}"
+        struct_field: struct_field
+      properties:
+        column:
+          description: Physical output column name
+          type: string
+        struct_field:
+          description: Field name in the UDF output struct
+          type: string
+        data_type:
+          description: Data type of the output column using JSON representation
+          type: object
+        nullable:
+          description: Whether the output column is nullable
+          type: boolean
+        metadata:
+          additionalProperties:
+            type: string
+          description: User-supplied output field metadata (string key-value pairs)
+      required:
+      - column
+      - data_type
+      - nullable
+      - struct_field
     AlterTableAddColumnsResponse:
       example:
         version: 0
@@ -7214,6 +8000,94 @@ components:
           format: int64
           minimum: 0
           type: integer
+      required:
+      - version
+    UpdateFieldMetadataRequest:
+      example:
+        identity:
+          api_key: api_key
+          auth_token: auth_token
+        id:
+        - id
+        - id
+        updates:
+        - path: path
+          metadata:
+            key: metadata
+          replace: true
+        - path: path
+          metadata:
+            key: metadata
+          replace: true
+        branch: branch
+      properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
+        id:
+          description: Table identifier path (namespace + table name)
+          items:
+            type: string
+          type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
+        updates:
+          description: List of per-field metadata updates to apply
+          items:
+            $ref: '#/components/schemas/UpdateFieldMetadataEntry'
+          type: array
+      required:
+      - updates
+    UpdateFieldMetadataEntry:
+      example:
+        path: path
+        metadata:
+          key: metadata
+        replace: true
+      properties:
+        path:
+          description: Lance field path whose metadata to update. Nested fields use
+            dot-separated segments; use backtick-quoted segments for literal dots
+            and double backticks inside quoted segments. Use canonical full paths
+            for display and errors; leaf names alone only identify top-level fields;
+            invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
+          minLength: 1
+          type: string
+        metadata:
+          additionalProperties:
+            nullable: true
+            type: string
+          description: |
+            Metadata key-value pairs to apply to the field. A null value
+            deletes that key.
+        replace:
+          description: |
+            If true, replace the field's existing metadata entirely; otherwise
+            merge into it (optional, defaults to false).
+          nullable: true
+          type: boolean
+      required:
+      - metadata
+      - path
+    UpdateFieldMetadataResponse:
+      example:
+        fields:
+          key:
+            key: fields
+        version: 0
+      properties:
+        version:
+          description: The commit version associated with the operation
+          format: int64
+          minimum: 0
+          type: integer
+        fields:
+          additionalProperties:
+            additionalProperties:
+              type: string
+          description: |
+            Resulting metadata for each updated field, keyed by canonical Lance field path.
       required:
       - version
     AlterTableAlterColumnsRequest:
@@ -7261,6 +8135,7 @@ components:
         id:
         - id
         - id
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -7269,6 +8144,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         alterations:
           description: List of column alterations to apply to the table
           items:
@@ -7298,7 +8177,12 @@ components:
           udf_version: udf_version
       properties:
         path:
-          description: Column path to alter
+          description: Lance field path to alter. Nested fields use dot-separated
+            segments; use backtick-quoted segments for literal dots and double backticks
+            inside quoted segments. Use canonical full paths for display and errors;
+            leaf names alone only identify top-level fields; invalid or unresolved
+            paths should return InvalidInput or TableColumnNotFound.
+          minLength: 1
           type: string
         data_type:
           description: New data type for the column using JSON representation (optional)
@@ -7332,8 +8216,11 @@ components:
         udf_version: udf_version
       properties:
         input_columns:
-          description: List of input column names for the virtual column (optional)
+          description: List of input Lance field paths for the virtual column. Nested
+            fields use dot-separated segments; use backtick-quoted segments for literal
+            dots and double backticks inside quoted segments. Optional.
           items:
+            minLength: 1
             type: string
           nullable: true
           type: array
@@ -7392,6 +8279,7 @@ components:
         read_version: 2
         manifest: manifest
         column: column
+        branch: branch
         concurrency: 0
         num_frags: 9
         checkpoint_size: 3
@@ -7414,8 +8302,17 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         column:
-          description: Column name to backfill
+          description: Lance field path to backfill. Nested fields use dot-separated
+            segments; use backtick-quoted segments for literal dots and double backticks
+            inside quoted segments. Use canonical full paths for display and errors;
+            leaf names alone only identify top-level fields; invalid or unresolved
+            paths should return InvalidInput or TableColumnNotFound.
+          minLength: 1
           type: string
         where:
           description: Optional WHERE clause filter
@@ -7670,24 +8567,18 @@ components:
           type: string
         input_columns:
           description: |
-            Source columns the UDTF reads. Null means all columns (batch
-            UDTF only).
+            Source Lance field paths the UDTF reads. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Null means all fields (batch UDTF only).
           items:
+            minLength: 1
             type: string
           nullable: true
           type: array
         partition_by:
-          description: |
-            Batch UDTF only. Column-value partition key for
-            partition-parallel execution. Mutually exclusive with
-            `partition_by_indexed_column`.
+          minLength: 1
           nullable: true
           type: string
         partition_by_indexed_column:
-          description: |
-            Batch UDTF only. Source column with an IVF-family index used
-            for index-based partitioning. The server validates the index
-            exists at create time.
+          minLength: 1
           nullable: true
           type: string
         num_cpus:
@@ -7758,6 +8649,7 @@ components:
         id:
         - id
         - id
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -7776,9 +8668,18 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         columns:
-          description: Names of columns to drop
+          description: Lance field paths to drop. Nested fields use dot-separated
+            segments; use backtick-quoted segments for literal dots and double backticks
+            inside quoted segments. Use canonical full paths for display and errors;
+            leaf names alone only identify top-level fields; invalid or unresolved
+            paths should return InvalidInput or TableColumnNotFound.
           items:
+            minLength: 1
             type: string
           type: array
       required:
@@ -7808,6 +8709,7 @@ components:
         id:
         - id
         - id
+        branch: branch
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
@@ -7826,6 +8728,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
     GetTableStatsResponse:
       example:
         num_indices: 0
@@ -7959,6 +8865,10 @@ components:
           items:
             type: string
           type: array
+        branch:
+          description: |
+            Branch to target. When not specified, the main branch is used.
+          type: string
         index_name:
           description: Name of the index to drop
           type: string
@@ -7993,7 +8903,7 @@ components:
           example: event_year
           type: string
         source_ids:
-          description: Field IDs of the source columns in the schema
+          description: Field IDs of the source fields in the schema
           example:
           - 1
           items:
@@ -8029,7 +8939,8 @@ components:
       - id
     QueryTableRequest_columns:
       description: |
-        Optional columns to return. Provide either column_names or column_aliases, not both.
+        Optional field paths to return. Provide either column_names or
+        column_aliases, not both.
       example:
         column_aliases:
           key: column_aliases
@@ -8038,14 +8949,20 @@ components:
         - column_names
       properties:
         column_names:
-          description: List of column names to return
+          description: List of Lance field paths to return. Nested fields use dot-separated
+            segments; use backtick-quoted segments for literal dots and double backticks
+            inside quoted segments.
           items:
+            minLength: 1
             type: string
           type: array
         column_aliases:
           additionalProperties:
+            minLength: 1
             type: string
-          description: Object mapping output aliases to source column names
+          description: Object mapping output aliases to source Lance field paths.
+            Nested fields use dot-separated segments; use backtick-quoted segments
+            for literal dots and double backticks inside quoted segments.
       nullable: true
     QueryTableRequest_full_text_query:
       description: "Optional full-text search query. Provide either string_query or\

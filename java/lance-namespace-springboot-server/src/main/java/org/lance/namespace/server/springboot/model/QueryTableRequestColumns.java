@@ -27,22 +27,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/** Optional columns to return. Provide either column_names or column_aliases, not both. */
+/** Optional field paths to return. Provide either column_names or column_aliases, not both. */
 @Schema(
     name = "QueryTableRequest_columns",
     description =
-        "Optional columns to return. Provide either column_names or column_aliases, not both. ")
+        "Optional field paths to return. Provide either column_names or column_aliases, not both. ")
 @JsonTypeName("QueryTableRequest_columns")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
 public class QueryTableRequestColumns {
 
-  @Valid private List<String> columnNames = new ArrayList<>();
+  @Valid private List<@Size(min = 1) String> columnNames = new ArrayList<>();
 
   @Valid private Map<String, String> columnAliases = new HashMap<>();
 
-  public QueryTableRequestColumns columnNames(List<String> columnNames) {
+  public QueryTableRequestColumns columnNames(List<@Size(min = 1) String> columnNames) {
     this.columnNames = columnNames;
     return this;
   }
@@ -56,20 +56,22 @@ public class QueryTableRequestColumns {
   }
 
   /**
-   * List of column names to return
+   * List of Lance field paths to return. Nested fields use dot-separated segments; use
+   * backtick-quoted segments for literal dots and double backticks inside quoted segments.
    *
    * @return columnNames
    */
   @Schema(
       name = "column_names",
-      description = "List of column names to return",
+      description =
+          "List of Lance field paths to return. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("column_names")
-  public List<String> getColumnNames() {
+  public List<@Size(min = 1) String> getColumnNames() {
     return columnNames;
   }
 
-  public void setColumnNames(List<String> columnNames) {
+  public void setColumnNames(List<@Size(min = 1) String> columnNames) {
     this.columnNames = columnNames;
   }
 
@@ -87,13 +89,16 @@ public class QueryTableRequestColumns {
   }
 
   /**
-   * Object mapping output aliases to source column names
+   * Object mapping output aliases to source Lance field paths. Nested fields use dot-separated
+   * segments; use backtick-quoted segments for literal dots and double backticks inside quoted
+   * segments.
    *
    * @return columnAliases
    */
   @Schema(
       name = "column_aliases",
-      description = "Object mapping output aliases to source column names",
+      description =
+          "Object mapping output aliases to source Lance field paths. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("column_aliases")
   public Map<String, String> getColumnAliases() {

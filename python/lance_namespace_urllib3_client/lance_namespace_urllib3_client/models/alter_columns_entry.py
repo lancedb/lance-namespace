@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.alter_virtual_column_entry import AlterVirtualColumnEntry
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,7 +28,7 @@ class AlterColumnsEntry(BaseModel):
     """
     AlterColumnsEntry
     """ # noqa: E501
-    path: StrictStr = Field(description="Column path to alter")
+    path: Annotated[str, Field(min_length=1, strict=True)] = Field(description="Lance field path to alter. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.")
     data_type: Optional[Dict[str, Any]] = Field(default=None, description="New data type for the column using JSON representation (optional)")
     rename: Optional[StrictStr] = Field(default=None, description="New name for the column (optional)")
     nullable: Optional[StrictBool] = Field(default=None, description="Whether the column should be nullable (optional)")

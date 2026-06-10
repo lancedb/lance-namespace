@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** Optional columns to return. Provide either column_names or column_aliases, not both. */
+/** Optional field paths to return. Provide either column_names or column_aliases, not both. */
 @JsonPropertyOrder({
   QueryTableRequestColumns.JSON_PROPERTY_COLUMN_NAMES,
   QueryTableRequestColumns.JSON_PROPERTY_COLUMN_ALIASES
@@ -57,7 +57,8 @@ public class QueryTableRequestColumns {
   }
 
   /**
-   * List of column names to return
+   * List of Lance field paths to return. Nested fields use dot-separated segments; use
+   * backtick-quoted segments for literal dots and double backticks inside quoted segments.
    *
    * @return columnNames
    */
@@ -89,7 +90,9 @@ public class QueryTableRequestColumns {
   }
 
   /**
-   * Object mapping output aliases to source column names
+   * Object mapping output aliases to source Lance field paths. Nested fields use dot-separated
+   * segments; use backtick-quoted segments for literal dots and double backticks inside quoted
+   * segments.
    *
    * @return columnAliases
    */

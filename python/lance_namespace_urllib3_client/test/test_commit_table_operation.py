@@ -61,6 +61,7 @@ class TestCommitTableOperation(unittest.TestCase):
                         ''
                         ], 
                     version = 0, 
+                    branch = '', 
                     manifest_path = '', 
                     manifest_size = 0, 
                     e_tag = '', 
@@ -78,6 +79,7 @@ class TestCommitTableOperation(unittest.TestCase):
                     id = [
                         ''
                         ], 
+                    branch = '', 
                     ranges = [
                         lance_namespace_urllib3_client.models.version_range.VersionRange(
                             start_version = 56, 

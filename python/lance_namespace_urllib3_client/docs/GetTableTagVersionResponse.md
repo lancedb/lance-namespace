@@ -6,6 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **version** | **int** | version number that the tag points to | 
+**branch** | **str** | Branch the tag&#39;s version lives on. Absent when the tag points to the main branch.  | [optional] 
 
 ## Example
 

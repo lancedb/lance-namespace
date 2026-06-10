@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **boost** | Option<**f32**> |  | [optional]
-**column** | Option<**String**> |  | [optional]
+**column** | Option<**String**> | Lance field path to match. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Omit to use the query default fields. | [optional]
 **fuzziness** | Option<**i32**> |  | [optional]
 **max_expansions** | Option<**i32**> | The maximum number of terms to expand for fuzzy matching. Default to 50. | [optional]
 **operator** | Option<**String**> | The operator to use for combining terms. Case insensitive, supports both PascalCase and snake_case. Valid values are: - And: All terms must match. - Or: At least one term must match.  | [optional]

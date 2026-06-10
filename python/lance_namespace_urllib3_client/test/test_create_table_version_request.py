@@ -45,6 +45,7 @@ class TestCreateTableVersionRequest(unittest.TestCase):
                     ''
                     ],
                 version = 0,
+                branch = '',
                 manifest_path = '',
                 manifest_size = 0,
                 e_tag = '',

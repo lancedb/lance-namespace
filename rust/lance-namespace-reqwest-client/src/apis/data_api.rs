@@ -656,11 +656,12 @@ pub async fn explain_table_query_plan(configuration: &configuration::Configurati
 }
 
 /// Insert new records into table `id`.  For tables that have been declared but not yet created on storage (is_only_declared=true), this operation will create the table with the provided data.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `InsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
-pub async fn insert_into_table(configuration: &configuration::Configuration, id: &str, body: Vec<u8>, delimiter: Option<&str>, mode: Option<&str>) -> Result<models::InsertIntoTableResponse, Error<InsertIntoTableError>> {
+pub async fn insert_into_table(configuration: &configuration::Configuration, id: &str, body: Vec<u8>, delimiter: Option<&str>, branch: Option<&str>, mode: Option<&str>) -> Result<models::InsertIntoTableResponse, Error<InsertIntoTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_body = body;
     let p_delimiter = delimiter;
+    let p_branch = branch;
     let p_mode = mode;
 
     let uri_str = format!("{}/v1/table/{id}/insert", configuration.base_path, id=crate::apis::urlencode(p_id));
@@ -668,6 +669,9 @@ pub async fn insert_into_table(configuration: &configuration::Configuration, id:
 
     if let Some(ref param_value) = p_delimiter {
         req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_branch {
+        req_builder = req_builder.query(&[("branch", &param_value.to_string())]);
     }
     if let Some(ref param_value) = p_mode {
         req_builder = req_builder.query(&[("mode", &param_value.to_string())]);
@@ -717,12 +721,13 @@ pub async fn insert_into_table(configuration: &configuration::Configuration, id:
 }
 
 /// Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don't match. It returns the number of rows inserted and updated.  For tables that have been declared but not yet created on storage (is_only_declared=true), this operation will create the table with the provided data (since there are no existing rows to merge with).  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
-pub async fn merge_insert_into_table(configuration: &configuration::Configuration, id: &str, on: &str, body: Vec<u8>, delimiter: Option<&str>, when_matched_update_all: Option<bool>, when_matched_update_all_filt: Option<&str>, when_not_matched_insert_all: Option<bool>, when_not_matched_by_source_delete: Option<bool>, when_not_matched_by_source_delete_filt: Option<&str>, timeout: Option<&str>, use_index: Option<bool>) -> Result<models::MergeInsertIntoTableResponse, Error<MergeInsertIntoTableError>> {
+pub async fn merge_insert_into_table(configuration: &configuration::Configuration, id: &str, on: &str, body: Vec<u8>, delimiter: Option<&str>, branch: Option<&str>, when_matched_update_all: Option<bool>, when_matched_update_all_filt: Option<&str>, when_not_matched_insert_all: Option<bool>, when_not_matched_by_source_delete: Option<bool>, when_not_matched_by_source_delete_filt: Option<&str>, timeout: Option<&str>, use_index: Option<bool>) -> Result<models::MergeInsertIntoTableResponse, Error<MergeInsertIntoTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_on = on;
     let p_body = body;
     let p_delimiter = delimiter;
+    let p_branch = branch;
     let p_when_matched_update_all = when_matched_update_all;
     let p_when_matched_update_all_filt = when_matched_update_all_filt;
     let p_when_not_matched_insert_all = when_not_matched_insert_all;
@@ -736,6 +741,9 @@ pub async fn merge_insert_into_table(configuration: &configuration::Configuratio
 
     if let Some(ref param_value) = p_delimiter {
         req_builder = req_builder.query(&[("delimiter", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_branch {
+        req_builder = req_builder.query(&[("branch", &param_value.to_string())]);
     }
     req_builder = req_builder.query(&[("on", &p_on.to_string())]);
     if let Some(ref param_value) = p_when_matched_update_all {

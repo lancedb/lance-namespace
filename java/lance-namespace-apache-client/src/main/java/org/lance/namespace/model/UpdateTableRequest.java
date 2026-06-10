@@ -27,13 +27,14 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
- * Each update consists of a column name and an SQL expression that will be evaluated against the
+ * Each update consists of a field path and an SQL expression that will be evaluated against the
  * current row&#39;s value. Optionally, a predicate can be provided to filter which rows to update.
  */
 @JsonPropertyOrder({
   UpdateTableRequest.JSON_PROPERTY_IDENTITY,
   UpdateTableRequest.JSON_PROPERTY_CONTEXT,
   UpdateTableRequest.JSON_PROPERTY_ID,
+  UpdateTableRequest.JSON_PROPERTY_BRANCH,
   UpdateTableRequest.JSON_PROPERTY_PREDICATE,
   UpdateTableRequest.JSON_PROPERTY_UPDATES,
   UpdateTableRequest.JSON_PROPERTY_PROPERTIES
@@ -50,6 +51,9 @@ public class UpdateTableRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_PREDICATE = "predicate";
   @javax.annotation.Nullable private String predicate;
@@ -154,6 +158,30 @@ public class UpdateTableRequest {
     this.id = id;
   }
 
+  public UpdateTableRequest branch(@javax.annotation.Nullable String branch) {
+
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public UpdateTableRequest predicate(@javax.annotation.Nullable String predicate) {
 
     this.predicate = predicate;
@@ -161,7 +189,9 @@ public class UpdateTableRequest {
   }
 
   /**
-   * Optional SQL predicate to filter rows for update
+   * Optional SQL predicate to filter rows for update. Field references must use Lance field path
+   * syntax: nested fields use dot-separated segments, literal dots require backtick-quoted
+   * segments, and backticks inside quoted segments are doubled.
    *
    * @return predicate
    */
@@ -193,7 +223,9 @@ public class UpdateTableRequest {
   }
 
   /**
-   * List of column updates as [column_name, expression] pairs
+   * List of field updates as [field_path, expression] pairs. Field paths and expression references
+   * must use Lance field path syntax: nested fields use dot-separated segments, literal dots
+   * require backtick-quoted segments, and backticks inside quoted segments are doubled.
    *
    * @return updates
    */
@@ -254,6 +286,7 @@ public class UpdateTableRequest {
     return Objects.equals(this.identity, updateTableRequest.identity)
         && Objects.equals(this.context, updateTableRequest.context)
         && Objects.equals(this.id, updateTableRequest.id)
+        && Objects.equals(this.branch, updateTableRequest.branch)
         && Objects.equals(this.predicate, updateTableRequest.predicate)
         && Objects.equals(this.updates, updateTableRequest.updates)
         && Objects.equals(this.properties, updateTableRequest.properties);
@@ -261,7 +294,7 @@ public class UpdateTableRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, predicate, updates, properties);
+    return Objects.hash(identity, context, id, branch, predicate, updates, properties);
   }
 
   @Override
@@ -271,6 +304,7 @@ public class UpdateTableRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    predicate: ").append(toIndentedString(predicate)).append("\n");
     sb.append("    updates: ").append(toIndentedString(updates)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
@@ -365,6 +399,21 @@ public class UpdateTableRequest {
           // Should never happen, UTF-8 is always supported
           throw new RuntimeException(e);
         }
+      }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sbranch%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getBranch()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
       }
     }
 

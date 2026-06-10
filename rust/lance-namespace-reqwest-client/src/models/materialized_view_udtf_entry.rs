@@ -28,13 +28,11 @@ pub struct MaterializedViewUdtfEntry {
     /// Version of the UDTF
     #[serde(rename = "udtf_version")]
     pub udtf_version: String,
-    /// Source columns the UDTF reads. Null means all columns (batch UDTF only). 
+    /// Source Lance field paths the UDTF reads. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Null means all fields (batch UDTF only). 
     #[serde(rename = "input_columns", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub input_columns: Option<Option<Vec<String>>>,
-    /// Batch UDTF only. Column-value partition key for partition-parallel execution. Mutually exclusive with `partition_by_indexed_column`. 
     #[serde(rename = "partition_by", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub partition_by: Option<Option<String>>,
-    /// Batch UDTF only. Source column with an IVF-family index used for index-based partitioning. The server validates the index exists at create time. 
     #[serde(rename = "partition_by_indexed_column", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub partition_by_indexed_column: Option<Option<String>>,
     /// Ray actor CPU request.

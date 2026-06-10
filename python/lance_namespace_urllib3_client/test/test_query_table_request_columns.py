@@ -36,10 +36,10 @@ class TestQueryTableRequestColumns(unittest.TestCase):
         if include_optional:
             return QueryTableRequestColumns(
                 column_names = [
-                    ''
+                    '0'
                     ],
                 column_aliases = {
-                    'key' : ''
+                    'key' : '0'
                     }
             )
         else:

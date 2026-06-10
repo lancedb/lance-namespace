@@ -32,8 +32,9 @@ class DescribeTableIndexStatsRequest(BaseModel):
     context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Optional table version to get stats for")
+    branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
     index_name: Optional[StrictStr] = Field(default=None, description="Name of the index")
-    __properties: ClassVar[List[str]] = ["identity", "context", "id", "version", "index_name"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "version", "branch", "index_name"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -93,6 +94,7 @@ class DescribeTableIndexStatsRequest(BaseModel):
             "context": obj.get("context"),
             "id": obj.get("id"),
             "version": obj.get("version"),
+            "branch": obj.get("branch"),
             "index_name": obj.get("index_name")
         })
         return _obj

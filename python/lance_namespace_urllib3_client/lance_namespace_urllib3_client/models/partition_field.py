@@ -29,7 +29,7 @@ class PartitionField(BaseModel):
     Partition field definition
     """ # noqa: E501
     field_id: StrictStr = Field(description="Unique identifier for this partition field (must not be renamed)")
-    source_ids: List[StrictInt] = Field(description="Field IDs of the source columns in the schema")
+    source_ids: List[StrictInt] = Field(description="Field IDs of the source fields in the schema")
     transform: Optional[PartitionTransform] = Field(default=None, description="Well-known partition transform. Exactly one of transform or expression must be specified.")
     expression: Optional[StrictStr] = Field(default=None, description="DataFusion SQL expression using col0, col1, ... as column references. Exactly one of transform or expression must be specified.")
     result_type: JsonArrowDataType = Field(description="The output type of the partition value (JsonArrowDataType format)")

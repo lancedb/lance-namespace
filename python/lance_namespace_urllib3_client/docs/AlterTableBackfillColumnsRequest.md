@@ -7,7 +7,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **identity** | [**Identity**](Identity.md) |  | [optional] 
 **id** | **List[str]** | Table identifier path (namespace + table name) | [optional] 
-**column** | **str** | Column name to backfill | 
+**branch** | **str** | Branch to target. When not specified, the main branch is used.  | [optional] 
+**column** | **str** | Lance field path to backfill. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound. | 
 **where** | **str** | Optional WHERE clause filter | [optional] 
 **concurrency** | **int** | Optional concurrency override | [optional] 
 **intra_applier_concurrency** | **int** | Optional intra-applier concurrency override | [optional] 

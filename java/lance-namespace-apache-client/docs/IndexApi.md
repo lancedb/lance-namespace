@@ -18,7 +18,7 @@ All URIs are relative to *http://localhost:2333*
 
 Create an index on a table
 
-Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to monitor index creation progress. 
+Create an index on a table field for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to monitor index creation progress. 
 
 ### Example
 
@@ -109,7 +109,7 @@ public class Example {
 
 Create a scalar index on a table
 
-Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to monitor index creation progress. 
+Create a scalar index on a table field for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to monitor index creation progress. 
 
 ### Example
 
@@ -289,7 +289,7 @@ public class Example {
 
 ## dropTableIndex
 
-> DropTableIndexResponse dropTableIndex(id, indexName, delimiter)
+> DropTableIndexResponse dropTableIndex(id, indexName, delimiter, branch)
 
 Drop a specific index
 
@@ -329,8 +329,9 @@ public class Example {
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
         String indexName = "indexName_example"; // String | Name of the index to drop
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
+        String branch = "branch_example"; // String | Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. 
         try {
-            DropTableIndexResponse result = apiInstance.dropTableIndex(id, indexName, delimiter);
+            DropTableIndexResponse result = apiInstance.dropTableIndex(id, indexName, delimiter, branch);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling IndexApi#dropTableIndex");
@@ -351,6 +352,7 @@ public class Example {
 | **id** | **String**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | |
 | **indexName** | **String**| Name of the index to drop | |
 | **delimiter** | **String**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] |
+| **branch** | **String**| Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry &#x60;branch&#x60; as a body field instead.  | [optional] |
 
 ### Return type
 

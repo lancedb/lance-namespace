@@ -79,7 +79,7 @@ public class MaterializedViewUdtfEntry {
 
   private String udtfVersion;
 
-  @Valid private List<String> inputColumns;
+  @Valid private List<@Size(min = 1) String> inputColumns;
 
   private String partitionBy = null;
 
@@ -235,7 +235,7 @@ public class MaterializedViewUdtfEntry {
     this.udtfVersion = udtfVersion;
   }
 
-  public MaterializedViewUdtfEntry inputColumns(List<String> inputColumns) {
+  public MaterializedViewUdtfEntry inputColumns(List<@Size(min = 1) String> inputColumns) {
     this.inputColumns = inputColumns;
     return this;
   }
@@ -249,20 +249,23 @@ public class MaterializedViewUdtfEntry {
   }
 
   /**
-   * Source columns the UDTF reads. Null means all columns (batch UDTF only).
+   * Source Lance field paths the UDTF reads. Nested fields use dot-separated segments; use
+   * backtick-quoted segments for literal dots and double backticks inside quoted segments. Null
+   * means all fields (batch UDTF only).
    *
    * @return inputColumns
    */
   @Schema(
       name = "input_columns",
-      description = "Source columns the UDTF reads. Null means all columns (batch UDTF only). ",
+      description =
+          "Source Lance field paths the UDTF reads. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Null means all fields (batch UDTF only). ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("input_columns")
-  public List<String> getInputColumns() {
+  public List<@Size(min = 1) String> getInputColumns() {
     return inputColumns;
   }
 
-  public void setInputColumns(List<String> inputColumns) {
+  public void setInputColumns(List<@Size(min = 1) String> inputColumns) {
     this.inputColumns = inputColumns;
   }
 
@@ -272,16 +275,12 @@ public class MaterializedViewUdtfEntry {
   }
 
   /**
-   * Batch UDTF only. Column-value partition key for partition-parallel execution. Mutually
-   * exclusive with `partition_by_indexed_column`.
+   * Get partitionBy
    *
    * @return partitionBy
    */
-  @Schema(
-      name = "partition_by",
-      description =
-          "Batch UDTF only. Column-value partition key for partition-parallel execution. Mutually exclusive with `partition_by_indexed_column`. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Size(min = 1)
+  @Schema(name = "partition_by", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("partition_by")
   public String getPartitionBy() {
     return partitionBy;
@@ -297,16 +296,12 @@ public class MaterializedViewUdtfEntry {
   }
 
   /**
-   * Batch UDTF only. Source column with an IVF-family index used for index-based partitioning. The
-   * server validates the index exists at create time.
+   * Get partitionByIndexedColumn
    *
    * @return partitionByIndexedColumn
    */
-  @Schema(
-      name = "partition_by_indexed_column",
-      description =
-          "Batch UDTF only. Source column with an IVF-family index used for index-based partitioning. The server validates the index exists at create time. ",
-      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Size(min = 1)
+  @Schema(name = "partition_by_indexed_column", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("partition_by_indexed_column")
   public String getPartitionByIndexedColumn() {
     return partitionByIndexedColumn;

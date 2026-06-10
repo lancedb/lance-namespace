@@ -47,6 +47,8 @@ public class CreateTableVersionRequest {
 
   private Long version;
 
+  private String branch;
+
   private String manifestPath;
 
   private Long manifestSize;
@@ -177,6 +179,29 @@ public class CreateTableVersionRequest {
 
   public void setVersion(Long version) {
     this.version = version;
+  }
+
+  public CreateTableVersionRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
   }
 
   public CreateTableVersionRequest manifestPath(String manifestPath) {
@@ -323,6 +348,7 @@ public class CreateTableVersionRequest {
         && Objects.equals(this.context, createTableVersionRequest.context)
         && Objects.equals(this.id, createTableVersionRequest.id)
         && Objects.equals(this.version, createTableVersionRequest.version)
+        && Objects.equals(this.branch, createTableVersionRequest.branch)
         && Objects.equals(this.manifestPath, createTableVersionRequest.manifestPath)
         && Objects.equals(this.manifestSize, createTableVersionRequest.manifestSize)
         && Objects.equals(this.eTag, createTableVersionRequest.eTag)
@@ -333,7 +359,16 @@ public class CreateTableVersionRequest {
   @Override
   public int hashCode() {
     return Objects.hash(
-        identity, context, id, version, manifestPath, manifestSize, eTag, metadata, namingScheme);
+        identity,
+        context,
+        id,
+        version,
+        branch,
+        manifestPath,
+        manifestSize,
+        eTag,
+        metadata,
+        namingScheme);
   }
 
   @Override
@@ -344,6 +379,7 @@ public class CreateTableVersionRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    manifestPath: ").append(toIndentedString(manifestPath)).append("\n");
     sb.append("    manifestSize: ").append(toIndentedString(manifestSize)).append("\n");
     sb.append("    eTag: ").append(toIndentedString(eTag)).append("\n");

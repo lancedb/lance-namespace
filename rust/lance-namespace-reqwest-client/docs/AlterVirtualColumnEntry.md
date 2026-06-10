@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**input_columns** | Option<**Vec<String>**> | List of input column names for the virtual column (optional) | [optional]
+**input_columns** | Option<**Vec<String>**> | List of input Lance field paths for the virtual column. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Optional. | [optional]
 **image** | Option<**String**> | Docker image to use for the UDF (optional) | [optional]
 **udf** | Option<**String**> | Base64 encoded pickled UDF (optional) | [optional]
 **udf_name** | Option<**String**> | Name of the UDF (optional) | [optional]

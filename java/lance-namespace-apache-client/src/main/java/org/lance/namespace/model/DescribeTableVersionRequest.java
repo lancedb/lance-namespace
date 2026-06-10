@@ -31,7 +31,8 @@ import java.util.StringJoiner;
   DescribeTableVersionRequest.JSON_PROPERTY_IDENTITY,
   DescribeTableVersionRequest.JSON_PROPERTY_CONTEXT,
   DescribeTableVersionRequest.JSON_PROPERTY_ID,
-  DescribeTableVersionRequest.JSON_PROPERTY_VERSION
+  DescribeTableVersionRequest.JSON_PROPERTY_VERSION,
+  DescribeTableVersionRequest.JSON_PROPERTY_BRANCH
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -48,6 +49,9 @@ public class DescribeTableVersionRequest {
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nullable private Long version;
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public DescribeTableVersionRequest() {}
 
@@ -168,6 +172,30 @@ public class DescribeTableVersionRequest {
     this.version = version;
   }
 
+  public DescribeTableVersionRequest branch(@javax.annotation.Nullable String branch) {
+
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -180,12 +208,13 @@ public class DescribeTableVersionRequest {
     return Objects.equals(this.identity, describeTableVersionRequest.identity)
         && Objects.equals(this.context, describeTableVersionRequest.context)
         && Objects.equals(this.id, describeTableVersionRequest.id)
-        && Objects.equals(this.version, describeTableVersionRequest.version);
+        && Objects.equals(this.version, describeTableVersionRequest.version)
+        && Objects.equals(this.branch, describeTableVersionRequest.branch);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, version);
+    return Objects.hash(identity, context, id, version, branch);
   }
 
   @Override
@@ -196,6 +225,7 @@ public class DescribeTableVersionRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -299,6 +329,21 @@ public class DescribeTableVersionRequest {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sbranch%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getBranch()), "UTF-8").replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

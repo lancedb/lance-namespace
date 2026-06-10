@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
 from typing_extensions import Self
@@ -30,15 +31,16 @@ class MergeInsertIntoTableRequest(BaseModel):
     identity: Optional[Identity] = None
     context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
-    on: Optional[StrictStr] = Field(default=None, description="Column name to use for matching rows (required)")
+    branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
+    on: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Lance field path to use for matching rows. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.")
     when_matched_update_all: Optional[StrictBool] = Field(default=False, description="Update all columns when rows match")
-    when_matched_update_all_filt: Optional[StrictStr] = Field(default=None, description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true")
+    when_matched_update_all_filt: Optional[StrictStr] = Field(default=None, description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.")
     when_not_matched_insert_all: Optional[StrictBool] = Field(default=False, description="Insert all columns when rows don't match")
     when_not_matched_by_source_delete: Optional[StrictBool] = Field(default=False, description="Delete all rows from target table that don't match a row in the source table")
-    when_not_matched_by_source_delete_filt: Optional[StrictStr] = Field(default=None, description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true")
+    when_not_matched_by_source_delete_filt: Optional[StrictStr] = Field(default=None, description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.")
     timeout: Optional[StrictStr] = Field(default=None, description="Timeout for the operation (e.g., \"30s\", \"5m\")")
     use_index: Optional[StrictBool] = Field(default=False, description="Whether to use index for matching rows")
-    __properties: ClassVar[List[str]] = ["identity", "context", "id", "on", "when_matched_update_all", "when_matched_update_all_filt", "when_not_matched_insert_all", "when_not_matched_by_source_delete", "when_not_matched_by_source_delete_filt", "timeout", "use_index"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "branch", "on", "when_matched_update_all", "when_matched_update_all_filt", "when_not_matched_insert_all", "when_not_matched_by_source_delete", "when_not_matched_by_source_delete_filt", "timeout", "use_index"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -97,6 +99,7 @@ class MergeInsertIntoTableRequest(BaseModel):
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "context": obj.get("context"),
             "id": obj.get("id"),
+            "branch": obj.get("branch"),
             "on": obj.get("on"),
             "when_matched_update_all": obj.get("when_matched_update_all") if obj.get("when_matched_update_all") is not None else False,
             "when_matched_update_all_filt": obj.get("when_matched_update_all_filt"),

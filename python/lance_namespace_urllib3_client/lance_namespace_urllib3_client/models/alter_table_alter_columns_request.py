@@ -30,8 +30,9 @@ class AlterTableAlterColumnsRequest(BaseModel):
     """ # noqa: E501
     identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = Field(default=None, description="Table identifier path (namespace + table name)")
+    branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
     alterations: List[AlterColumnsEntry] = Field(description="List of column alterations to apply to the table")
-    __properties: ClassVar[List[str]] = ["identity", "id", "alterations"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "branch", "alterations"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -96,6 +97,7 @@ class AlterTableAlterColumnsRequest(BaseModel):
         _obj = cls.model_validate({
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
+            "branch": obj.get("branch"),
             "alterations": [AlterColumnsEntry.from_dict(_item) for _item in obj["alterations"]] if obj.get("alterations") is not None else None
         })
         return _obj

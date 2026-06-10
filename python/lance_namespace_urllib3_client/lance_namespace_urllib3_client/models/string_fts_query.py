@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,7 +27,7 @@ class StringFtsQuery(BaseModel):
     """
     StringFtsQuery
     """ # noqa: E501
-    columns: Optional[List[StrictStr]] = None
+    columns: Optional[List[Annotated[str, Field(min_length=1, strict=True)]]] = Field(default=None, description="Lance field paths to search. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Omit to search all indexed FTS fields.")
     query: StrictStr
     __properties: ClassVar[List[str]] = ["columns", "query"]
 

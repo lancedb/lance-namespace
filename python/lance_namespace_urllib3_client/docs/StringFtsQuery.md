@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**columns** | **List[str]** |  | [optional] 
+**columns** | **List[str]** | Lance field paths to search. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Omit to search all indexed FTS fields. | [optional] 
 **query** | **str** |  | 
 
 ## Example

@@ -45,7 +45,8 @@ class TestUpdateTableTagRequest(unittest.TestCase):
                     ''
                     ],
                 tag = '',
-                version = 0
+                version = 0,
+                branch = ''
             )
         else:
             return UpdateTableTagRequest(

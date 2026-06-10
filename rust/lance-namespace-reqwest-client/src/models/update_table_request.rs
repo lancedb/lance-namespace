@@ -11,7 +11,7 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// UpdateTableRequest : Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
+/// UpdateTableRequest : Each update consists of a field path and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct UpdateTableRequest {
     #[serde(rename = "identity", skip_serializing_if = "Option::is_none")]
@@ -21,10 +21,13 @@ pub struct UpdateTableRequest {
     pub context: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
-    /// Optional SQL predicate to filter rows for update
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
+    /// Optional SQL predicate to filter rows for update. Field references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.
     #[serde(rename = "predicate", skip_serializing_if = "Option::is_none")]
     pub predicate: Option<String>,
-    /// List of column updates as [column_name, expression] pairs
+    /// List of field updates as [field_path, expression] pairs. Field paths and expression references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.
     #[serde(rename = "updates")]
     pub updates: Vec<Vec<String>>,
     /// Properties stored on the table, if supported by the implementation. 
@@ -33,12 +36,13 @@ pub struct UpdateTableRequest {
 }
 
 impl UpdateTableRequest {
-    /// Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
+    /// Each update consists of a field path and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
     pub fn new(updates: Vec<Vec<String>>) -> UpdateTableRequest {
         UpdateTableRequest {
             identity: None,
             context: None,
             id: None,
+            branch: None,
             predicate: None,
             updates,
             properties: None,

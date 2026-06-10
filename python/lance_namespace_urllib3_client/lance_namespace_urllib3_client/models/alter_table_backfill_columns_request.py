@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,7 +30,8 @@ class AlterTableBackfillColumnsRequest(BaseModel):
     """ # noqa: E501
     identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = Field(default=None, description="Table identifier path (namespace + table name)")
-    column: StrictStr = Field(description="Column name to backfill")
+    branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
+    column: Annotated[str, Field(min_length=1, strict=True)] = Field(description="Lance field path to backfill. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.")
     where: Optional[StrictStr] = Field(default=None, description="Optional WHERE clause filter")
     concurrency: Optional[StrictInt] = Field(default=None, description="Optional concurrency override")
     intra_applier_concurrency: Optional[StrictInt] = Field(default=None, description="Optional intra-applier concurrency override")
@@ -43,7 +45,7 @@ class AlterTableBackfillColumnsRequest(BaseModel):
     commit_granularity: Optional[StrictInt] = Field(default=None, description="Optional commit granularity")
     cluster: Optional[StrictStr] = Field(default=None, description="Optional cluster name")
     manifest: Optional[StrictStr] = Field(default=None, description="Optional manifest name")
-    __properties: ClassVar[List[str]] = ["identity", "id", "column", "where", "concurrency", "intra_applier_concurrency", "min_checkpoint_size", "max_checkpoint_size", "batch_checkpoint_flush_interval_seconds", "read_version", "task_size", "num_frags", "checkpoint_size", "commit_granularity", "cluster", "manifest"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "branch", "column", "where", "concurrency", "intra_applier_concurrency", "min_checkpoint_size", "max_checkpoint_size", "batch_checkpoint_flush_interval_seconds", "read_version", "task_size", "num_frags", "checkpoint_size", "commit_granularity", "cluster", "manifest"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -166,6 +168,7 @@ class AlterTableBackfillColumnsRequest(BaseModel):
         _obj = cls.model_validate({
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "id": obj.get("id"),
+            "branch": obj.get("branch"),
             "column": obj.get("column"),
             "where": obj.get("where"),
             "concurrency": obj.get("concurrency"),

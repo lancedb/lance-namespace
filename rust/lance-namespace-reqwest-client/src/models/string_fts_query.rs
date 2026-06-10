@@ -13,6 +13,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct StringFtsQuery {
+    /// Lance field paths to search. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Omit to search all indexed FTS fields.
     #[serde(rename = "columns", skip_serializing_if = "Option::is_none")]
     pub columns: Option<Vec<String>>,
     #[serde(rename = "query")]

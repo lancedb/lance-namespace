@@ -7,7 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**inputColumns** | **List&lt;String&gt;** | List of input column names for the virtual column (optional) |  [optional] |
+|**inputColumns** | **List&lt;String&gt;** | List of input Lance field paths for the virtual column. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Optional. |  [optional] |
 |**image** | **String** | Docker image to use for the UDF (optional) |  [optional] |
 |**udf** | **String** | Base64 encoded pickled UDF (optional) |  [optional] |
 |**udfName** | **String** | Name of the UDF (optional) |  [optional] |

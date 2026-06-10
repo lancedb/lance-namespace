@@ -11,19 +11,19 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// QueryTableRequestColumns : Optional columns to return. Provide either column_names or column_aliases, not both. 
+/// QueryTableRequestColumns : Optional field paths to return. Provide either column_names or column_aliases, not both. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryTableRequestColumns {
-    /// List of column names to return
+    /// List of Lance field paths to return. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments.
     #[serde(rename = "column_names", skip_serializing_if = "Option::is_none")]
     pub column_names: Option<Vec<String>>,
-    /// Object mapping output aliases to source column names
+    /// Object mapping output aliases to source Lance field paths. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments.
     #[serde(rename = "column_aliases", skip_serializing_if = "Option::is_none")]
     pub column_aliases: Option<std::collections::HashMap<String, String>>,
 }
 
 impl QueryTableRequestColumns {
-    /// Optional columns to return. Provide either column_names or column_aliases, not both. 
+    /// Optional field paths to return. Provide either column_names or column_aliases, not both. 
     pub fn new() -> QueryTableRequestColumns {
         QueryTableRequestColumns {
             column_names: None,

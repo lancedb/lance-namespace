@@ -611,6 +611,18 @@ public interface LanceNamespaceAsync {
   }
 
   /**
+   * Update per-field metadata.
+   *
+   * @param request The update field metadata request
+   * @return A CompletableFuture containing the update field metadata response
+   */
+  default CompletableFuture<UpdateFieldMetadataResponse> updateFieldMetadata(
+      UpdateFieldMetadataRequest request) {
+    return CompletableFuture.failedFuture(
+        new UnsupportedOperationException("Not supported: updateFieldMetadata"));
+  }
+
+  /**
    * Get table statistics.
    *
    * @param request The get table stats request
@@ -777,6 +789,44 @@ public interface LanceNamespaceAsync {
   default CompletableFuture<UpdateTableTagResponse> updateTableTag(UpdateTableTagRequest request) {
     return CompletableFuture.failedFuture(
         new UnsupportedOperationException("Not supported: updateTableTag"));
+  }
+
+  // Branch operations
+
+  /**
+   * Create a branch for a table.
+   *
+   * @param request The create table branch request
+   * @return A CompletableFuture containing the create table branch response
+   */
+  default CompletableFuture<CreateTableBranchResponse> createTableBranch(
+      CreateTableBranchRequest request) {
+    return CompletableFuture.failedFuture(
+        new UnsupportedOperationException("Not supported: createTableBranch"));
+  }
+
+  /**
+   * List all branches for a table.
+   *
+   * @param request The list table branches request
+   * @return A CompletableFuture containing the list table branches response
+   */
+  default CompletableFuture<ListTableBranchesResponse> listTableBranches(
+      ListTableBranchesRequest request) {
+    return CompletableFuture.failedFuture(
+        new UnsupportedOperationException("Not supported: listTableBranches"));
+  }
+
+  /**
+   * Delete a branch from a table.
+   *
+   * @param request The delete table branch request
+   * @return A CompletableFuture containing the delete table branch response
+   */
+  default CompletableFuture<DeleteTableBranchResponse> deleteTableBranch(
+      DeleteTableBranchRequest request) {
+    return CompletableFuture.failedFuture(
+        new UnsupportedOperationException("Not supported: deleteTableBranch"));
   }
 
   // Transaction operations

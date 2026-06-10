@@ -17,7 +17,7 @@ package org.lance.namespace.client.apache;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class Configuration {
-  public static final String VERSION = "0.7.7";
+  public static final String VERSION = "0.8.3-beta.1";
 
   private static volatile ApiClient defaultApiClient = new ApiClient();
 

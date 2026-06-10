@@ -45,6 +45,7 @@ class TestDescribeTableIndexStatsRequest(unittest.TestCase):
                     ''
                     ],
                 version = 0,
+                branch = '',
                 index_name = ''
             )
         else:

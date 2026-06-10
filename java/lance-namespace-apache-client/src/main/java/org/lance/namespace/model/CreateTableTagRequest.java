@@ -32,7 +32,8 @@ import java.util.StringJoiner;
   CreateTableTagRequest.JSON_PROPERTY_CONTEXT,
   CreateTableTagRequest.JSON_PROPERTY_ID,
   CreateTableTagRequest.JSON_PROPERTY_TAG,
-  CreateTableTagRequest.JSON_PROPERTY_VERSION
+  CreateTableTagRequest.JSON_PROPERTY_VERSION,
+  CreateTableTagRequest.JSON_PROPERTY_BRANCH
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -52,6 +53,9 @@ public class CreateTableTagRequest {
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nonnull private Long version;
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public CreateTableTagRequest() {}
 
@@ -195,6 +199,30 @@ public class CreateTableTagRequest {
     this.version = version;
   }
 
+  public CreateTableTagRequest branch(@javax.annotation.Nullable String branch) {
+
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -208,12 +236,13 @@ public class CreateTableTagRequest {
         && Objects.equals(this.context, createTableTagRequest.context)
         && Objects.equals(this.id, createTableTagRequest.id)
         && Objects.equals(this.tag, createTableTagRequest.tag)
-        && Objects.equals(this.version, createTableTagRequest.version);
+        && Objects.equals(this.version, createTableTagRequest.version)
+        && Objects.equals(this.branch, createTableTagRequest.branch);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, tag, version);
+    return Objects.hash(identity, context, id, tag, version, branch);
   }
 
   @Override
@@ -225,6 +254,7 @@ public class CreateTableTagRequest {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tag: ").append(toIndentedString(tag)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -343,6 +373,21 @@ public class CreateTableTagRequest {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sbranch%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getBranch()), "UTF-8").replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

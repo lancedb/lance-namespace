@@ -51,7 +51,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>org.lance</groupId>
   <artifactId>lance-namespace-apache-client</artifactId>
-  <version>0.7.7</version>
+  <version>0.8.3-beta.1</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -61,7 +61,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "org.lance:lance-namespace-apache-client:0.7.7"
+compile "org.lance:lance-namespace-apache-client:0.8.3-beta.1"
 ```
 
 ### Others
@@ -74,7 +74,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-- `target/lance-namespace-apache-client-0.7.7.jar`
+- `target/lance-namespace-apache-client-0.8.3-beta.1.jar`
 - `target/lib/*.jar`
 
 ## Getting Started
@@ -86,9 +86,9 @@ Please follow the [installation](#installation) instruction and execute the foll
 import org.lance.namespace.client.apache.*;
 import org.lance.namespace.client.apache.auth.*;
 import org.lance.namespace.model.*;
-import org.lance.namespace.client.apache.api.DataApi;
+import org.lance.namespace.client.apache.api.BranchApi;
 
-public class DataApiExample {
+public class BranchApiExample {
 
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
@@ -108,15 +108,15 @@ public class DataApiExample {
         HttpBearerAuth BearerAuth = (HttpBearerAuth) defaultClient.getAuthentication("BearerAuth");
         BearerAuth.setBearerToken("BEARER TOKEN");
 
-        DataApi apiInstance = new DataApi(defaultClient);
+        BranchApi apiInstance = new BranchApi(defaultClient);
         String id = "id_example"; // String | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
-        AlterTableAddColumnsRequest alterTableAddColumnsRequest = new AlterTableAddColumnsRequest(); // AlterTableAddColumnsRequest | 
+        CreateTableBranchRequest createTableBranchRequest = new CreateTableBranchRequest(); // CreateTableBranchRequest | 
         String delimiter = "delimiter_example"; // String | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. 
         try {
-            AlterTableAddColumnsResponse result = apiInstance.alterTableAddColumns(id, alterTableAddColumnsRequest, delimiter);
+            CreateTableBranchResponse result = apiInstance.createTableBranch(id, createTableBranchRequest, delimiter);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling DataApi#alterTableAddColumns");
+            System.err.println("Exception when calling BranchApi#createTableBranch");
             System.err.println("Status code: " + e.getCode());
             System.err.println("Reason: " + e.getResponseBody());
             System.err.println("Response headers: " + e.getResponseHeaders());
@@ -133,6 +133,9 @@ All URIs are relative to *http://localhost:2333*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*BranchApi* | [**createTableBranch**](docs/BranchApi.md#createTableBranch) | **POST** /v1/table/{id}/branches/create | Create a new branch
+*BranchApi* | [**deleteTableBranch**](docs/BranchApi.md#deleteTableBranch) | **POST** /v1/table/{id}/branches/delete | Delete a branch
+*BranchApi* | [**listTableBranches**](docs/BranchApi.md#listTableBranches) | **POST** /v1/table/{id}/branches/list | List all branches for a table
 *DataApi* | [**alterTableAddColumns**](docs/DataApi.md#alterTableAddColumns) | **POST** /v1/table/{id}/add_columns | Add new columns to table schema
 *DataApi* | [**alterTableBackfillColumns**](docs/DataApi.md#alterTableBackfillColumns) | **POST** /v1/table/{id}/backfill_column | Trigger an async column backfill job
 *DataApi* | [**analyzeTableQueryPlan**](docs/DataApi.md#analyzeTableQueryPlan) | **POST** /v1/table/{id}/analyze_plan | Analyze query execution plan
@@ -160,11 +163,13 @@ Class | Method | HTTP request | Description
 *MetadataApi* | [**batchCreateTableVersions**](docs/MetadataApi.md#batchCreateTableVersions) | **POST** /v1/table/version/batch-create | Atomically create versions for multiple tables
 *MetadataApi* | [**batchDeleteTableVersions**](docs/MetadataApi.md#batchDeleteTableVersions) | **POST** /v1/table/{id}/version/delete | Delete table version records
 *MetadataApi* | [**createNamespace**](docs/MetadataApi.md#createNamespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
+*MetadataApi* | [**createTableBranch**](docs/MetadataApi.md#createTableBranch) | **POST** /v1/table/{id}/branches/create | Create a new branch
 *MetadataApi* | [**createTableIndex**](docs/MetadataApi.md#createTableIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
 *MetadataApi* | [**createTableScalarIndex**](docs/MetadataApi.md#createTableScalarIndex) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *MetadataApi* | [**createTableTag**](docs/MetadataApi.md#createTableTag) | **POST** /v1/table/{id}/tags/create | Create a new tag
 *MetadataApi* | [**createTableVersion**](docs/MetadataApi.md#createTableVersion) | **POST** /v1/table/{id}/version/create | Create a new table version
 *MetadataApi* | [**declareTable**](docs/MetadataApi.md#declareTable) | **POST** /v1/table/{id}/declare | Declare a table
+*MetadataApi* | [**deleteTableBranch**](docs/MetadataApi.md#deleteTableBranch) | **POST** /v1/table/{id}/branches/delete | Delete a branch
 *MetadataApi* | [**deleteTableTag**](docs/MetadataApi.md#deleteTableTag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
 *MetadataApi* | [**deregisterTable**](docs/MetadataApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table
 *MetadataApi* | [**describeNamespace**](docs/MetadataApi.md#describeNamespace) | **POST** /v1/namespace/{id}/describe | Describe a namespace
@@ -178,6 +183,7 @@ Class | Method | HTTP request | Description
 *MetadataApi* | [**getTableStats**](docs/MetadataApi.md#getTableStats) | **POST** /v1/table/{id}/stats | Get table statistics
 *MetadataApi* | [**getTableTagVersion**](docs/MetadataApi.md#getTableTagVersion) | **POST** /v1/table/{id}/tags/version | Get version for a specific tag
 *MetadataApi* | [**listNamespaces**](docs/MetadataApi.md#listNamespaces) | **GET** /v1/namespace/{id}/list | List namespaces
+*MetadataApi* | [**listTableBranches**](docs/MetadataApi.md#listTableBranches) | **POST** /v1/table/{id}/branches/list | List all branches for a table
 *MetadataApi* | [**listTableIndices**](docs/MetadataApi.md#listTableIndices) | **POST** /v1/table/{id}/index/list | List indexes on a table
 *MetadataApi* | [**listTableTags**](docs/MetadataApi.md#listTableTags) | **POST** /v1/table/{id}/tags/list | List all tags for a table
 *MetadataApi* | [**listTableVersions**](docs/MetadataApi.md#listTableVersions) | **POST** /v1/table/{id}/version/list | List all versions of a table
@@ -187,6 +193,7 @@ Class | Method | HTTP request | Description
 *MetadataApi* | [**renameTable**](docs/MetadataApi.md#renameTable) | **POST** /v1/table/{id}/rename | Rename a table
 *MetadataApi* | [**restoreTable**](docs/MetadataApi.md#restoreTable) | **POST** /v1/table/{id}/restore | Restore table to a specific version
 *MetadataApi* | [**tableExists**](docs/MetadataApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists
+*MetadataApi* | [**updateFieldMetadata**](docs/MetadataApi.md#updateFieldMetadata) | **POST** /v1/table/{id}/update_field_metadata | Update per-field metadata
 *MetadataApi* | [**updateTableSchemaMetadata**](docs/MetadataApi.md#updateTableSchemaMetadata) | **POST** /v1/table/{id}/schema_metadata/update | Update table schema metadata
 *MetadataApi* | [**updateTableTag**](docs/MetadataApi.md#updateTableTag) | **POST** /v1/table/{id}/tags/update | Update a tag to point to a different version
 *NamespaceApi* | [**createNamespace**](docs/NamespaceApi.md#createNamespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
@@ -205,12 +212,14 @@ Class | Method | HTTP request | Description
 *TableApi* | [**batchDeleteTableVersions**](docs/TableApi.md#batchDeleteTableVersions) | **POST** /v1/table/{id}/version/delete | Delete table version records
 *TableApi* | [**countTableRows**](docs/TableApi.md#countTableRows) | **POST** /v1/table/{id}/count_rows | Count rows in a table
 *TableApi* | [**createTable**](docs/TableApi.md#createTable) | **POST** /v1/table/{id}/create | Create a table with the given name
+*TableApi* | [**createTableBranch**](docs/TableApi.md#createTableBranch) | **POST** /v1/table/{id}/branches/create | Create a new branch
 *TableApi* | [**createTableIndex**](docs/TableApi.md#createTableIndex) | **POST** /v1/table/{id}/create_index | Create an index on a table
 *TableApi* | [**createTableScalarIndex**](docs/TableApi.md#createTableScalarIndex) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 *TableApi* | [**createTableTag**](docs/TableApi.md#createTableTag) | **POST** /v1/table/{id}/tags/create | Create a new tag
 *TableApi* | [**createTableVersion**](docs/TableApi.md#createTableVersion) | **POST** /v1/table/{id}/version/create | Create a new table version
 *TableApi* | [**declareTable**](docs/TableApi.md#declareTable) | **POST** /v1/table/{id}/declare | Declare a table
 *TableApi* | [**deleteFromTable**](docs/TableApi.md#deleteFromTable) | **POST** /v1/table/{id}/delete | Delete rows from a table
+*TableApi* | [**deleteTableBranch**](docs/TableApi.md#deleteTableBranch) | **POST** /v1/table/{id}/branches/delete | Delete a branch
 *TableApi* | [**deleteTableTag**](docs/TableApi.md#deleteTableTag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
 *TableApi* | [**deregisterTable**](docs/TableApi.md#deregisterTable) | **POST** /v1/table/{id}/deregister | Deregister a table
 *TableApi* | [**describeTable**](docs/TableApi.md#describeTable) | **POST** /v1/table/{id}/describe | Describe information of a table
@@ -223,6 +232,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**getTableTagVersion**](docs/TableApi.md#getTableTagVersion) | **POST** /v1/table/{id}/tags/version | Get version for a specific tag
 *TableApi* | [**insertIntoTable**](docs/TableApi.md#insertIntoTable) | **POST** /v1/table/{id}/insert | Insert records into a table
 *TableApi* | [**listAllTables**](docs/TableApi.md#listAllTables) | **GET** /v1/table | List all tables
+*TableApi* | [**listTableBranches**](docs/TableApi.md#listTableBranches) | **POST** /v1/table/{id}/branches/list | List all branches for a table
 *TableApi* | [**listTableIndices**](docs/TableApi.md#listTableIndices) | **POST** /v1/table/{id}/index/list | List indexes on a table
 *TableApi* | [**listTableTags**](docs/TableApi.md#listTableTags) | **POST** /v1/table/{id}/tags/list | List all tags for a table
 *TableApi* | [**listTableVersions**](docs/TableApi.md#listTableVersions) | **POST** /v1/table/{id}/version/list | List all versions of a table
@@ -233,6 +243,7 @@ Class | Method | HTTP request | Description
 *TableApi* | [**renameTable**](docs/TableApi.md#renameTable) | **POST** /v1/table/{id}/rename | Rename a table
 *TableApi* | [**restoreTable**](docs/TableApi.md#restoreTable) | **POST** /v1/table/{id}/restore | Restore table to a specific version
 *TableApi* | [**tableExists**](docs/TableApi.md#tableExists) | **POST** /v1/table/{id}/exists | Check if a table exists
+*TableApi* | [**updateFieldMetadata**](docs/TableApi.md#updateFieldMetadata) | **POST** /v1/table/{id}/update_field_metadata | Update per-field metadata
 *TableApi* | [**updateTable**](docs/TableApi.md#updateTable) | **POST** /v1/table/{id}/update | Update rows in a table
 *TableApi* | [**updateTableSchemaMetadata**](docs/TableApi.md#updateTableSchemaMetadata) | **POST** /v1/table/{id}/schema_metadata/update | Update table schema metadata
 *TableApi* | [**updateTableTag**](docs/TableApi.md#updateTableTag) | **POST** /v1/table/{id}/tags/update | Update a tag to point to a different version
@@ -250,6 +261,7 @@ Class | Method | HTTP request | Description
 
  - [AddColumnsEntry](docs/AddColumnsEntry.md)
  - [AddVirtualColumnEntry](docs/AddVirtualColumnEntry.md)
+ - [AddVirtualColumnOutputEntry](docs/AddVirtualColumnOutputEntry.md)
  - [AlterColumnsEntry](docs/AlterColumnsEntry.md)
  - [AlterTableAddColumnsRequest](docs/AlterTableAddColumnsRequest.md)
  - [AlterTableAddColumnsResponse](docs/AlterTableAddColumnsResponse.md)
@@ -276,6 +288,7 @@ Class | Method | HTTP request | Description
  - [BatchDeleteTableVersionsResponse](docs/BatchDeleteTableVersionsResponse.md)
  - [BooleanQuery](docs/BooleanQuery.md)
  - [BoostQuery](docs/BoostQuery.md)
+ - [BranchContents](docs/BranchContents.md)
  - [CommitTableOperation](docs/CommitTableOperation.md)
  - [CommitTableResult](docs/CommitTableResult.md)
  - [CountTableRowsRequest](docs/CountTableRowsRequest.md)
@@ -283,6 +296,8 @@ Class | Method | HTTP request | Description
  - [CreateMaterializedViewResponse](docs/CreateMaterializedViewResponse.md)
  - [CreateNamespaceRequest](docs/CreateNamespaceRequest.md)
  - [CreateNamespaceResponse](docs/CreateNamespaceResponse.md)
+ - [CreateTableBranchRequest](docs/CreateTableBranchRequest.md)
+ - [CreateTableBranchResponse](docs/CreateTableBranchResponse.md)
  - [CreateTableIndexRequest](docs/CreateTableIndexRequest.md)
  - [CreateTableIndexResponse](docs/CreateTableIndexResponse.md)
  - [CreateTableRequest](docs/CreateTableRequest.md)
@@ -297,6 +312,8 @@ Class | Method | HTTP request | Description
  - [DeclareTableResponse](docs/DeclareTableResponse.md)
  - [DeleteFromTableRequest](docs/DeleteFromTableRequest.md)
  - [DeleteFromTableResponse](docs/DeleteFromTableResponse.md)
+ - [DeleteTableBranchRequest](docs/DeleteTableBranchRequest.md)
+ - [DeleteTableBranchResponse](docs/DeleteTableBranchResponse.md)
  - [DeleteTableTagRequest](docs/DeleteTableTagRequest.md)
  - [DeleteTableTagResponse](docs/DeleteTableTagResponse.md)
  - [DeregisterTableRequest](docs/DeregisterTableRequest.md)
@@ -336,6 +353,8 @@ Class | Method | HTTP request | Description
  - [JsonArrowSchema](docs/JsonArrowSchema.md)
  - [ListNamespacesRequest](docs/ListNamespacesRequest.md)
  - [ListNamespacesResponse](docs/ListNamespacesResponse.md)
+ - [ListTableBranchesRequest](docs/ListTableBranchesRequest.md)
+ - [ListTableBranchesResponse](docs/ListTableBranchesResponse.md)
  - [ListTableIndicesRequest](docs/ListTableIndicesRequest.md)
  - [ListTableIndicesResponse](docs/ListTableIndicesResponse.md)
  - [ListTableTagsRequest](docs/ListTableTagsRequest.md)
@@ -372,6 +391,9 @@ Class | Method | HTTP request | Description
  - [TableExistsRequest](docs/TableExistsRequest.md)
  - [TableVersion](docs/TableVersion.md)
  - [TagContents](docs/TagContents.md)
+ - [UpdateFieldMetadataEntry](docs/UpdateFieldMetadataEntry.md)
+ - [UpdateFieldMetadataRequest](docs/UpdateFieldMetadataRequest.md)
+ - [UpdateFieldMetadataResponse](docs/UpdateFieldMetadataResponse.md)
  - [UpdateTableRequest](docs/UpdateTableRequest.md)
  - [UpdateTableResponse](docs/UpdateTableResponse.md)
  - [UpdateTableSchemaMetadataRequest](docs/UpdateTableSchemaMetadataRequest.md)

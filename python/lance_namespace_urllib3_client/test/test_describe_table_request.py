@@ -45,6 +45,7 @@ class TestDescribeTableRequest(unittest.TestCase):
                     ''
                     ],
                 version = 0,
+                branch = '',
                 with_table_uri = True,
                 load_detailed_metadata = True,
                 check_declared = True,

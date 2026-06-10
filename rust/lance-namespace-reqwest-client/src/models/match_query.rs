@@ -15,6 +15,7 @@ use serde::{Deserialize, Serialize};
 pub struct MatchQuery {
     #[serde(rename = "boost", skip_serializing_if = "Option::is_none")]
     pub boost: Option<f32>,
+    /// Lance field path to match. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Omit to use the query default fields.
     #[serde(rename = "column", skip_serializing_if = "Option::is_none")]
     pub column: Option<String>,
     #[serde(rename = "fuzziness", skip_serializing_if = "Option::is_none")]

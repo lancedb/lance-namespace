@@ -44,14 +44,15 @@ class TestAlterTableDropColumnsRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 columns = [
-                    ''
+                    '0'
                     ]
             )
         else:
             return AlterTableDropColumnsRequest(
                 columns = [
-                    ''
+                    '0'
                     ],
         )
         """

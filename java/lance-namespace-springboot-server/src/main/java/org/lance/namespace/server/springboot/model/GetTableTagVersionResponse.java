@@ -29,6 +29,8 @@ public class GetTableTagVersionResponse {
 
   private Long version;
 
+  private String branch;
+
   public GetTableTagVersionResponse() {
     super();
   }
@@ -63,6 +65,30 @@ public class GetTableTagVersionResponse {
     this.version = version;
   }
 
+  public GetTableTagVersionResponse branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch the tag's version lives on. Absent when the tag points to the main branch.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description =
+          "Branch the tag's version lives on. Absent when the tag points to the main branch. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -72,12 +98,13 @@ public class GetTableTagVersionResponse {
       return false;
     }
     GetTableTagVersionResponse getTableTagVersionResponse = (GetTableTagVersionResponse) o;
-    return Objects.equals(this.version, getTableTagVersionResponse.version);
+    return Objects.equals(this.version, getTableTagVersionResponse.version)
+        && Objects.equals(this.branch, getTableTagVersionResponse.branch);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version);
+    return Objects.hash(version, branch);
   }
 
   @Override
@@ -85,6 +112,7 @@ public class GetTableTagVersionResponse {
     StringBuilder sb = new StringBuilder();
     sb.append("class GetTableTagVersionResponse {\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("}");
     return sb.toString();
   }

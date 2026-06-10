@@ -27,13 +27,13 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Each update consists of a column name and an SQL expression that will be evaluated against the
+ * Each update consists of a field path and an SQL expression that will be evaluated against the
  * current row&#39;s value. Optionally, a predicate can be provided to filter which rows to update.
  */
 @Schema(
     name = "UpdateTableRequest",
     description =
-        "Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. ")
+        "Each update consists of a field path and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. ")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
@@ -44,6 +44,8 @@ public class UpdateTableRequest {
   @Valid private Map<String, String> context = new HashMap<>();
 
   @Valid private List<String> id = new ArrayList<>();
+
+  private String branch;
 
   private String predicate;
 
@@ -144,19 +146,45 @@ public class UpdateTableRequest {
     this.id = id;
   }
 
+  public UpdateTableRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   public UpdateTableRequest predicate(String predicate) {
     this.predicate = predicate;
     return this;
   }
 
   /**
-   * Optional SQL predicate to filter rows for update
+   * Optional SQL predicate to filter rows for update. Field references must use Lance field path
+   * syntax: nested fields use dot-separated segments, literal dots require backtick-quoted
+   * segments, and backticks inside quoted segments are doubled.
    *
    * @return predicate
    */
   @Schema(
       name = "predicate",
-      description = "Optional SQL predicate to filter rows for update",
+      description =
+          "Optional SQL predicate to filter rows for update. Field references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("predicate")
   public String getPredicate() {
@@ -181,7 +209,9 @@ public class UpdateTableRequest {
   }
 
   /**
-   * List of column updates as [column_name, expression] pairs
+   * List of field updates as [field_path, expression] pairs. Field paths and expression references
+   * must use Lance field path syntax: nested fields use dot-separated segments, literal dots
+   * require backtick-quoted segments, and backticks inside quoted segments are doubled.
    *
    * @return updates
    */
@@ -189,7 +219,8 @@ public class UpdateTableRequest {
   @Valid
   @Schema(
       name = "updates",
-      description = "List of column updates as [column_name, expression] pairs",
+      description =
+          "List of field updates as [field_path, expression] pairs. Field paths and expression references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("updates")
   public List<List<String>> getUpdates() {
@@ -243,6 +274,7 @@ public class UpdateTableRequest {
     return Objects.equals(this.identity, updateTableRequest.identity)
         && Objects.equals(this.context, updateTableRequest.context)
         && Objects.equals(this.id, updateTableRequest.id)
+        && Objects.equals(this.branch, updateTableRequest.branch)
         && Objects.equals(this.predicate, updateTableRequest.predicate)
         && Objects.equals(this.updates, updateTableRequest.updates)
         && Objects.equals(this.properties, updateTableRequest.properties);
@@ -250,7 +282,7 @@ public class UpdateTableRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, predicate, updates, properties);
+    return Objects.hash(identity, context, id, branch, predicate, updates, properties);
   }
 
   @Override
@@ -260,6 +292,7 @@ public class UpdateTableRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    predicate: ").append(toIndentedString(predicate)).append("\n");
     sb.append("    updates: ").append(toIndentedString(updates)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");

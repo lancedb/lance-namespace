@@ -17,17 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
 class QueryTableRequestColumns(BaseModel):
     """
-    Optional columns to return. Provide either column_names or column_aliases, not both. 
+    Optional field paths to return. Provide either column_names or column_aliases, not both. 
     """ # noqa: E501
-    column_names: Optional[List[StrictStr]] = Field(default=None, description="List of column names to return")
-    column_aliases: Optional[Dict[str, StrictStr]] = Field(default=None, description="Object mapping output aliases to source column names")
+    column_names: Optional[List[Annotated[str, Field(min_length=1, strict=True)]]] = Field(default=None, description="List of Lance field paths to return. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments.")
+    column_aliases: Optional[Dict[str, Annotated[str, Field(min_length=1, strict=True)]]] = Field(default=None, description="Object mapping output aliases to source Lance field paths. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments.")
     __properties: ClassVar[List[str]] = ["column_names", "column_aliases"]
 
     model_config = ConfigDict(

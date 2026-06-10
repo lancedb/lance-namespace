@@ -11,11 +11,13 @@ Method | HTTP request | Description
 [**batch_create_table_versions**](MetadataApi.md#batch_create_table_versions) | **POST** /v1/table/version/batch-create | Atomically create versions for multiple tables
 [**batch_delete_table_versions**](MetadataApi.md#batch_delete_table_versions) | **POST** /v1/table/{id}/version/delete | Delete table version records
 [**create_namespace**](MetadataApi.md#create_namespace) | **POST** /v1/namespace/{id}/create | Create a new namespace
+[**create_table_branch**](MetadataApi.md#create_table_branch) | **POST** /v1/table/{id}/branches/create | Create a new branch
 [**create_table_index**](MetadataApi.md#create_table_index) | **POST** /v1/table/{id}/create_index | Create an index on a table
 [**create_table_scalar_index**](MetadataApi.md#create_table_scalar_index) | **POST** /v1/table/{id}/create_scalar_index | Create a scalar index on a table
 [**create_table_tag**](MetadataApi.md#create_table_tag) | **POST** /v1/table/{id}/tags/create | Create a new tag
 [**create_table_version**](MetadataApi.md#create_table_version) | **POST** /v1/table/{id}/version/create | Create a new table version
 [**declare_table**](MetadataApi.md#declare_table) | **POST** /v1/table/{id}/declare | Declare a table
+[**delete_table_branch**](MetadataApi.md#delete_table_branch) | **POST** /v1/table/{id}/branches/delete | Delete a branch
 [**delete_table_tag**](MetadataApi.md#delete_table_tag) | **POST** /v1/table/{id}/tags/delete | Delete a tag
 [**deregister_table**](MetadataApi.md#deregister_table) | **POST** /v1/table/{id}/deregister | Deregister a table
 [**describe_namespace**](MetadataApi.md#describe_namespace) | **POST** /v1/namespace/{id}/describe | Describe a namespace
@@ -29,6 +31,7 @@ Method | HTTP request | Description
 [**get_table_stats**](MetadataApi.md#get_table_stats) | **POST** /v1/table/{id}/stats | Get table statistics
 [**get_table_tag_version**](MetadataApi.md#get_table_tag_version) | **POST** /v1/table/{id}/tags/version | Get version for a specific tag
 [**list_namespaces**](MetadataApi.md#list_namespaces) | **GET** /v1/namespace/{id}/list | List namespaces
+[**list_table_branches**](MetadataApi.md#list_table_branches) | **POST** /v1/table/{id}/branches/list | List all branches for a table
 [**list_table_indices**](MetadataApi.md#list_table_indices) | **POST** /v1/table/{id}/index/list | List indexes on a table
 [**list_table_tags**](MetadataApi.md#list_table_tags) | **POST** /v1/table/{id}/tags/list | List all tags for a table
 [**list_table_versions**](MetadataApi.md#list_table_versions) | **POST** /v1/table/{id}/version/list | List all versions of a table
@@ -38,6 +41,7 @@ Method | HTTP request | Description
 [**rename_table**](MetadataApi.md#rename_table) | **POST** /v1/table/{id}/rename | Rename a table
 [**restore_table**](MetadataApi.md#restore_table) | **POST** /v1/table/{id}/restore | Restore table to a specific version
 [**table_exists**](MetadataApi.md#table_exists) | **POST** /v1/table/{id}/exists | Check if a table exists
+[**update_field_metadata**](MetadataApi.md#update_field_metadata) | **POST** /v1/table/{id}/update_field_metadata | Update per-field metadata
 [**update_table_schema_metadata**](MetadataApi.md#update_table_schema_metadata) | **POST** /v1/table/{id}/schema_metadata/update | Update table schema metadata
 [**update_table_tag**](MetadataApi.md#update_table_tag) | **POST** /v1/table/{id}/tags/update | Update a tag to point to a different version
 
@@ -771,12 +775,114 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **create_table_branch**
+> CreateTableBranchResponse create_table_branch(id, create_table_branch_request, delimiter=delimiter)
+
+Create a new branch
+
+Create a new branch for table `id` starting from a source ref (another
+branch and/or version), defaulting to the latest version of the main branch.
+
+
+### Example
+
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
+
+```python
+import lance_namespace_urllib3_client
+from lance_namespace_urllib3_client.models.create_table_branch_request import CreateTableBranchRequest
+from lance_namespace_urllib3_client.models.create_table_branch_response import CreateTableBranchResponse
+from lance_namespace_urllib3_client.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to http://localhost:2333
+# See configuration.py for a list of all supported configuration parameters.
+configuration = lance_namespace_urllib3_client.Configuration(
+    host = "http://localhost:2333"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
+
+# Enter a context with an instance of the API client
+with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = lance_namespace_urllib3_client.MetadataApi(api_client)
+    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
+    create_table_branch_request = lance_namespace_urllib3_client.CreateTableBranchRequest() # CreateTableBranchRequest | 
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
+
+    try:
+        # Create a new branch
+        api_response = api_instance.create_table_branch(id, create_table_branch_request, delimiter=delimiter)
+        print("The response of MetadataApi->create_table_branch:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling MetadataApi->create_table_branch: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
+ **create_table_branch_request** | [**CreateTableBranchRequest**](CreateTableBranchRequest.md)|  | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] 
+
+### Return type
+
+[**CreateTableBranchResponse**](CreateTableBranchResponse.md)
+
+### Authorization
+
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Create branch response |  -  |
+**400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+**401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
+**403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
+**404** | A server-side problem that means can not find the specified resource. |  -  |
+**409** | The request conflicts with the current state of the target resource. |  -  |
+**503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
+**5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **create_table_index**
 > CreateTableIndexResponse create_table_index(id, create_table_index_request, delimiter=delimiter)
 
 Create an index on a table
 
-Create an index on a table column for faster search operations.
+Create an index on a table field for faster search operations.
 Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.).
 Index creation is handled asynchronously.
 Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress.
@@ -879,7 +985,7 @@ Name | Type | Description  | Notes
 
 Create a scalar index on a table
 
-Create a scalar index on a table column for faster filtering operations.
+Create a scalar index on a table field for faster filtering operations.
 Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.).
 This is an alias for CreateTableIndex specifically for scalar indexes.
 Index creation is handled asynchronously.
@@ -1283,6 +1389,106 @@ Name | Type | Description  | Notes
 **403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
 **404** | A server-side problem that means can not find the specified resource. |  -  |
 **409** | The request conflicts with the current state of the target resource. |  -  |
+**503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
+**5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **delete_table_branch**
+> DeleteTableBranchResponse delete_table_branch(id, delete_table_branch_request, delimiter=delimiter)
+
+Delete a branch
+
+Delete an existing branch from table `id`.
+
+
+### Example
+
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
+
+```python
+import lance_namespace_urllib3_client
+from lance_namespace_urllib3_client.models.delete_table_branch_request import DeleteTableBranchRequest
+from lance_namespace_urllib3_client.models.delete_table_branch_response import DeleteTableBranchResponse
+from lance_namespace_urllib3_client.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to http://localhost:2333
+# See configuration.py for a list of all supported configuration parameters.
+configuration = lance_namespace_urllib3_client.Configuration(
+    host = "http://localhost:2333"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
+
+# Enter a context with an instance of the API client
+with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = lance_namespace_urllib3_client.MetadataApi(api_client)
+    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
+    delete_table_branch_request = lance_namespace_urllib3_client.DeleteTableBranchRequest() # DeleteTableBranchRequest | 
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
+
+    try:
+        # Delete a branch
+        api_response = api_instance.delete_table_branch(id, delete_table_branch_request, delimiter=delimiter)
+        print("The response of MetadataApi->delete_table_branch:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling MetadataApi->delete_table_branch: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
+ **delete_table_branch_request** | [**DeleteTableBranchRequest**](DeleteTableBranchRequest.md)|  | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] 
+
+### Return type
+
+[**DeleteTableBranchResponse**](DeleteTableBranchResponse.md)
+
+### Authorization
+
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Delete branch response |  -  |
+**400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+**401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
+**403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
+**404** | A server-side problem that means can not find the specified resource. |  -  |
 **503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
 **5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
 
@@ -2206,7 +2412,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **drop_table_index**
-> DropTableIndexResponse drop_table_index(id, index_name, delimiter=delimiter)
+> DropTableIndexResponse drop_table_index(id, index_name, delimiter=delimiter, branch=branch)
 
 Drop a specific index
 
@@ -2262,10 +2468,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
     index_name = 'index_name_example' # str | Name of the index to drop
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
+    branch = 'branch_example' # str | Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead.  (optional)
 
     try:
         # Drop a specific index
-        api_response = api_instance.drop_table_index(id, index_name, delimiter=delimiter)
+        api_response = api_instance.drop_table_index(id, index_name, delimiter=delimiter, branch=branch)
         print("The response of MetadataApi->drop_table_index:\n")
         pprint(api_response)
     except Exception as e:
@@ -2282,6 +2489,7 @@ Name | Type | Description  | Notes
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **index_name** | **str**| Name of the index to drop | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] 
+ **branch** | **str**| Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry &#x60;branch&#x60; as a body field instead.  | [optional] 
 
 ### Return type
 
@@ -2619,6 +2827,115 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **list_table_branches**
+> ListTableBranchesResponse list_table_branches(id, delimiter=delimiter, page_token=page_token, limit=limit)
+
+List all branches for a table
+
+List all branches that have been created for table `id`.
+Returns a map of branch names to their contents.
+
+REST NAMESPACE ONLY
+REST namespace does not use a request body for this operation.
+The `ListTableBranchesRequest` information is passed in the following way:
+- `id`: pass through path parameter of the same name
+- `page_token`: pass through query parameter of the same name
+- `limit`: pass through query parameter of the same name
+
+
+### Example
+
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
+
+```python
+import lance_namespace_urllib3_client
+from lance_namespace_urllib3_client.models.list_table_branches_response import ListTableBranchesResponse
+from lance_namespace_urllib3_client.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to http://localhost:2333
+# See configuration.py for a list of all supported configuration parameters.
+configuration = lance_namespace_urllib3_client.Configuration(
+    host = "http://localhost:2333"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
+
+# Enter a context with an instance of the API client
+with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = lance_namespace_urllib3_client.MetadataApi(api_client)
+    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
+    page_token = 'page_token_example' # str | Pagination token from a previous request (optional)
+    limit = 56 # int | Maximum number of items to return (optional)
+
+    try:
+        # List all branches for a table
+        api_response = api_instance.list_table_branches(id, delimiter=delimiter, page_token=page_token, limit=limit)
+        print("The response of MetadataApi->list_table_branches:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling MetadataApi->list_table_branches: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] 
+ **page_token** | **str**| Pagination token from a previous request | [optional] 
+ **limit** | **int**| Maximum number of items to return | [optional] 
+
+### Return type
+
+[**ListTableBranchesResponse**](ListTableBranchesResponse.md)
+
+### Authorization
+
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | List of table branches |  -  |
+**400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+**401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
+**403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
+**404** | A server-side problem that means can not find the specified resource. |  -  |
+**503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
+**5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **list_table_indices**
 > ListTableIndicesResponse list_table_indices(id, list_table_indices_request, delimiter=delimiter)
 
@@ -2830,7 +3147,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_table_versions**
-> ListTableVersionsResponse list_table_versions(id, delimiter=delimiter, page_token=page_token, limit=limit, descending=descending)
+> ListTableVersionsResponse list_table_versions(id, delimiter=delimiter, branch=branch, page_token=page_token, limit=limit, descending=descending)
 
 List all versions of a table
 
@@ -2890,13 +3207,14 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     api_instance = lance_namespace_urllib3_client.MetadataApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
+    branch = 'branch_example' # str | Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead.  (optional)
     page_token = 'page_token_example' # str | Pagination token from a previous request (optional)
     limit = 56 # int | Maximum number of items to return (optional)
     descending = True # bool | When true, versions are guaranteed to be returned in descending order (latest to oldest). When false or not specified, the ordering is implementation-defined.  (optional)
 
     try:
         # List all versions of a table
-        api_response = api_instance.list_table_versions(id, delimiter=delimiter, page_token=page_token, limit=limit, descending=descending)
+        api_response = api_instance.list_table_versions(id, delimiter=delimiter, branch=branch, page_token=page_token, limit=limit, descending=descending)
         print("The response of MetadataApi->list_table_versions:\n")
         pprint(api_response)
     except Exception as e:
@@ -2912,6 +3230,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] 
+ **branch** | **str**| Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry &#x60;branch&#x60; as a body field instead.  | [optional] 
  **page_token** | **str**| Pagination token from a previous request | [optional] 
  **limit** | **int**| Maximum number of items to return | [optional] 
  **descending** | **bool**| When true, versions are guaranteed to be returned in descending order (latest to oldest). When false or not specified, the ordering is implementation-defined.  | [optional] 
@@ -3562,8 +3881,112 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **update_field_metadata**
+> UpdateFieldMetadataResponse update_field_metadata(id, update_field_metadata_request, delimiter=delimiter)
+
+Update per-field metadata
+
+Update the Arrow field (column) metadata for table `id`.
+
+Each entry targets a field by `path` and merges the provided key-value
+pairs into that field's existing metadata, or replaces it when `replace`
+is true. A null metadata value deletes that key.
+
+
+### Example
+
+* OAuth Authentication (OAuth2):
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
+
+```python
+import lance_namespace_urllib3_client
+from lance_namespace_urllib3_client.models.update_field_metadata_request import UpdateFieldMetadataRequest
+from lance_namespace_urllib3_client.models.update_field_metadata_response import UpdateFieldMetadataResponse
+from lance_namespace_urllib3_client.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to http://localhost:2333
+# See configuration.py for a list of all supported configuration parameters.
+configuration = lance_namespace_urllib3_client.Configuration(
+    host = "http://localhost:2333"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+configuration.access_token = os.environ["ACCESS_TOKEN"]
+
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['ApiKeyAuth'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
+
+# Configure Bearer authorization: BearerAuth
+configuration = lance_namespace_urllib3_client.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
+
+# Enter a context with an instance of the API client
+with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = lance_namespace_urllib3_client.MetadataApi(api_client)
+    id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
+    update_field_metadata_request = lance_namespace_urllib3_client.UpdateFieldMetadataRequest() # UpdateFieldMetadataRequest | 
+    delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
+
+    try:
+        # Update per-field metadata
+        api_response = api_instance.update_field_metadata(id, update_field_metadata_request, delimiter=delimiter)
+        print("The response of MetadataApi->update_field_metadata:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling MetadataApi->update_field_metadata: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
+ **update_field_metadata_request** | [**UpdateFieldMetadataRequest**](UpdateFieldMetadataRequest.md)|  | 
+ **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] 
+
+### Return type
+
+[**UpdateFieldMetadataResponse**](UpdateFieldMetadataResponse.md)
+
+### Authorization
+
+[OAuth2](../README.md#OAuth2), [ApiKeyAuth](../README.md#ApiKeyAuth), [BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Field metadata update result |  -  |
+**400** | Indicates a bad request error. It could be caused by an unexpected request body format or other forms of request validation failure, such as invalid json. Usually serves application/json content, although in some cases simple text/plain content might be returned by the server&#39;s middleware. |  -  |
+**401** | Unauthorized. The request lacks valid authentication credentials for the operation. |  -  |
+**403** | Forbidden. Authenticated user does not have the necessary permissions. |  -  |
+**404** | A server-side problem that means can not find the specified resource. |  -  |
+**503** | The service is not ready to handle the request. The client should wait and retry. The service may additionally send a Retry-After header to indicate when to retry. |  -  |
+**5XX** | A server-side problem that might not be addressable from the client side. Used for server 5xx errors without more specific documentation in individual routes. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **update_table_schema_metadata**
-> Dict[str, str] update_table_schema_metadata(id, request_body, delimiter=delimiter)
+> Dict[str, str] update_table_schema_metadata(id, request_body, delimiter=delimiter, branch=branch)
 
 Update table schema metadata
 
@@ -3616,10 +4039,11 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
     request_body = {'key': 'request_body_example'} # Dict[str, str] | 
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
+    branch = 'branch_example' # str | Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead.  (optional)
 
     try:
         # Update table schema metadata
-        api_response = api_instance.update_table_schema_metadata(id, request_body, delimiter=delimiter)
+        api_response = api_instance.update_table_schema_metadata(id, request_body, delimiter=delimiter, branch=branch)
         print("The response of MetadataApi->update_table_schema_metadata:\n")
         pprint(api_response)
     except Exception as e:
@@ -3636,6 +4060,7 @@ Name | Type | Description  | Notes
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
  **request_body** | [**Dict[str, str]**](str.md)|  | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] 
+ **branch** | **str**| Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry &#x60;branch&#x60; as a body field instead.  | [optional] 
 
 ### Return type
 

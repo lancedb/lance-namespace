@@ -20,6 +20,9 @@ pub struct ExplainTableQueryPlanRequest {
     pub context: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     #[serde(rename = "query")]
     pub query: Box<models::QueryTableRequest>,
     /// Whether to return verbose explanation
@@ -33,6 +36,7 @@ impl ExplainTableQueryPlanRequest {
             identity: None,
             context: None,
             id: None,
+            branch: None,
             query: Box::new(query),
             verbose: None,
         }

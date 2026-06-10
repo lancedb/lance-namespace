@@ -36,7 +36,7 @@ class TestMatchQuery(unittest.TestCase):
         if include_optional:
             return MatchQuery(
                 boost = 1.337,
-                column = '',
+                column = '0',
                 fuzziness = 0,
                 max_expansions = 0,
                 operator = '',

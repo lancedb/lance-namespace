@@ -44,7 +44,8 @@ class TestCreateTableIndexRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
-                column = '',
+                branch = '',
+                column = '0',
                 index_type = '',
                 name = '',
                 distance_type = '',
@@ -59,7 +60,7 @@ class TestCreateTableIndexRequest(unittest.TestCase):
             )
         else:
             return CreateTableIndexRequest(
-                column = '',
+                column = '0',
                 index_type = '',
         )
         """

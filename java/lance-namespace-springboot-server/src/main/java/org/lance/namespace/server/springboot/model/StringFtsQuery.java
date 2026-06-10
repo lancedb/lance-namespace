@@ -30,7 +30,7 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class StringFtsQuery {
 
-  @Valid private List<String> columns = new ArrayList<>();
+  @Valid private List<@Size(min = 1) String> columns = new ArrayList<>();
 
   private String query;
 
@@ -43,7 +43,7 @@ public class StringFtsQuery {
     this.query = query;
   }
 
-  public StringFtsQuery columns(List<String> columns) {
+  public StringFtsQuery columns(List<@Size(min = 1) String> columns) {
     this.columns = columns;
     return this;
   }
@@ -57,17 +57,23 @@ public class StringFtsQuery {
   }
 
   /**
-   * Get columns
+   * Lance field paths to search. Nested fields use dot-separated segments; use backtick-quoted
+   * segments for literal dots and double backticks inside quoted segments. Omit to search all
+   * indexed FTS fields.
    *
    * @return columns
    */
-  @Schema(name = "columns", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(
+      name = "columns",
+      description =
+          "Lance field paths to search. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Omit to search all indexed FTS fields.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("columns")
-  public List<String> getColumns() {
+  public List<@Size(min = 1) String> getColumns() {
     return columns;
   }
 
-  public void setColumns(List<String> columns) {
+  public void setColumns(List<@Size(min = 1) String> columns) {
     this.columns = columns;
   }
 

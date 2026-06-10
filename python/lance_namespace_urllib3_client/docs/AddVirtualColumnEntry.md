@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**input_columns** | **List[str]** | List of input column names for the virtual column | 
-**data_type** | **object** | Data type of the virtual column using JSON representation | 
+**input_columns** | **List[str]** | List of input Lance field paths for the virtual column. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. | 
+**outputs** | [**List[AddVirtualColumnOutputEntry]**](AddVirtualColumnOutputEntry.md) | Output columns produced by the virtual column UDF | 
 **image** | **str** | Docker image to use for the UDF | 
 **udf** | **str** | Base64 encoded pickled UDF | 
 **udf_name** | **str** | Name of the UDF | 

@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -31,9 +32,9 @@ class MaterializedViewUdtfEntry(BaseModel):
     udtf_sha: StrictStr = Field(description="SHA-256 checksum of the envelope; server validates.")
     udtf_name: StrictStr = Field(description="Name of the UDTF")
     udtf_version: StrictStr = Field(description="Version of the UDTF")
-    input_columns: Optional[List[StrictStr]] = Field(default=None, description="Source columns the UDTF reads. Null means all columns (batch UDTF only). ")
-    partition_by: Optional[StrictStr] = Field(default=None, description="Batch UDTF only. Column-value partition key for partition-parallel execution. Mutually exclusive with `partition_by_indexed_column`. ")
-    partition_by_indexed_column: Optional[StrictStr] = Field(default=None, description="Batch UDTF only. Source column with an IVF-family index used for index-based partitioning. The server validates the index exists at create time. ")
+    input_columns: Optional[List[Annotated[str, Field(min_length=1, strict=True)]]] = Field(default=None, description="Source Lance field paths the UDTF reads. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Null means all fields (batch UDTF only). ")
+    partition_by: Optional[Annotated[str, Field(min_length=1, strict=True)]] = None
+    partition_by_indexed_column: Optional[Annotated[str, Field(min_length=1, strict=True)]] = None
     num_cpus: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Ray actor CPU request.")
     num_gpus: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Ray actor GPU request.")
     memory: Optional[StrictInt] = Field(default=None, description="Ray actor memory request, in bytes.")

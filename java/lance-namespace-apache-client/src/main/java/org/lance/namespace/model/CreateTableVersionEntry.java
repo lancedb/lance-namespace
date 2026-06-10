@@ -33,6 +33,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({
   CreateTableVersionEntry.JSON_PROPERTY_ID,
   CreateTableVersionEntry.JSON_PROPERTY_VERSION,
+  CreateTableVersionEntry.JSON_PROPERTY_BRANCH,
   CreateTableVersionEntry.JSON_PROPERTY_MANIFEST_PATH,
   CreateTableVersionEntry.JSON_PROPERTY_MANIFEST_SIZE,
   CreateTableVersionEntry.JSON_PROPERTY_E_TAG,
@@ -48,6 +49,9 @@ public class CreateTableVersionEntry {
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nonnull private Long version;
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_MANIFEST_PATH = "manifest_path";
   @javax.annotation.Nonnull private String manifestPath;
@@ -120,6 +124,30 @@ public class CreateTableVersionEntry {
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public void setVersion(@javax.annotation.Nonnull Long version) {
     this.version = version;
+  }
+
+  public CreateTableVersionEntry branch(@javax.annotation.Nullable String branch) {
+
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
   }
 
   public CreateTableVersionEntry manifestPath(@javax.annotation.Nonnull String manifestPath) {
@@ -266,6 +294,7 @@ public class CreateTableVersionEntry {
     CreateTableVersionEntry createTableVersionEntry = (CreateTableVersionEntry) o;
     return Objects.equals(this.id, createTableVersionEntry.id)
         && Objects.equals(this.version, createTableVersionEntry.version)
+        && Objects.equals(this.branch, createTableVersionEntry.branch)
         && Objects.equals(this.manifestPath, createTableVersionEntry.manifestPath)
         && Objects.equals(this.manifestSize, createTableVersionEntry.manifestSize)
         && Objects.equals(this.eTag, createTableVersionEntry.eTag)
@@ -275,7 +304,8 @@ public class CreateTableVersionEntry {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, version, manifestPath, manifestSize, eTag, metadata, namingScheme);
+    return Objects.hash(
+        id, version, branch, manifestPath, manifestSize, eTag, metadata, namingScheme);
   }
 
   @Override
@@ -284,6 +314,7 @@ public class CreateTableVersionEntry {
     sb.append("class CreateTableVersionEntry {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    manifestPath: ").append(toIndentedString(manifestPath)).append("\n");
     sb.append("    manifestSize: ").append(toIndentedString(manifestSize)).append("\n");
     sb.append("    eTag: ").append(toIndentedString(eTag)).append("\n");
@@ -365,6 +396,21 @@ public class CreateTableVersionEntry {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sbranch%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getBranch()), "UTF-8").replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

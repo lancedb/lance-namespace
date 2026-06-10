@@ -32,6 +32,7 @@ import java.util.StringJoiner;
   DescribeTableRequest.JSON_PROPERTY_CONTEXT,
   DescribeTableRequest.JSON_PROPERTY_ID,
   DescribeTableRequest.JSON_PROPERTY_VERSION,
+  DescribeTableRequest.JSON_PROPERTY_BRANCH,
   DescribeTableRequest.JSON_PROPERTY_WITH_TABLE_URI,
   DescribeTableRequest.JSON_PROPERTY_LOAD_DETAILED_METADATA,
   DescribeTableRequest.JSON_PROPERTY_CHECK_DECLARED,
@@ -52,6 +53,9 @@ public class DescribeTableRequest {
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nullable private Long version;
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_WITH_TABLE_URI = "with_table_uri";
   @javax.annotation.Nullable private Boolean withTableUri = false;
@@ -184,6 +188,30 @@ public class DescribeTableRequest {
     this.version = version;
   }
 
+  public DescribeTableRequest branch(@javax.annotation.Nullable String branch) {
+
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public DescribeTableRequest withTableUri(@javax.annotation.Nullable Boolean withTableUri) {
 
     this.withTableUri = withTableUri;
@@ -302,6 +330,7 @@ public class DescribeTableRequest {
         && Objects.equals(this.context, describeTableRequest.context)
         && Objects.equals(this.id, describeTableRequest.id)
         && Objects.equals(this.version, describeTableRequest.version)
+        && Objects.equals(this.branch, describeTableRequest.branch)
         && Objects.equals(this.withTableUri, describeTableRequest.withTableUri)
         && Objects.equals(this.loadDetailedMetadata, describeTableRequest.loadDetailedMetadata)
         && Objects.equals(this.checkDeclared, describeTableRequest.checkDeclared)
@@ -315,6 +344,7 @@ public class DescribeTableRequest {
         context,
         id,
         version,
+        branch,
         withTableUri,
         loadDetailedMetadata,
         checkDeclared,
@@ -329,6 +359,7 @@ public class DescribeTableRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    withTableUri: ").append(toIndentedString(withTableUri)).append("\n");
     sb.append("    loadDetailedMetadata: ")
         .append(toIndentedString(loadDetailedMetadata))
@@ -438,6 +469,21 @@ public class DescribeTableRequest {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sbranch%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getBranch()), "UTF-8").replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
         throw new RuntimeException(e);

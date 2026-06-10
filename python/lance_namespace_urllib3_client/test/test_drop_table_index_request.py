@@ -44,6 +44,7 @@ class TestDropTableIndexRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 index_name = ''
             )
         else:

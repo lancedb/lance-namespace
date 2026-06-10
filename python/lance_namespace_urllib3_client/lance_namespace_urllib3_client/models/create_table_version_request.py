@@ -32,12 +32,13 @@ class CreateTableVersionRequest(BaseModel):
     context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = Field(default=None, description="The table identifier")
     version: Annotated[int, Field(strict=True, ge=0)] = Field(description="Version number to create")
+    branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
     manifest_path: StrictStr = Field(description="Path to the manifest file for this version")
     manifest_size: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Size of the manifest file in bytes")
     e_tag: Optional[StrictStr] = Field(default=None, description="Optional ETag for the manifest file")
     metadata: Optional[Dict[str, StrictStr]] = Field(default=None, description="Optional metadata for the version")
     naming_scheme: Optional[StrictStr] = Field(default=None, description="The naming scheme used for manifest files in the `_versions/` directory.  Known values: - `V1`: `_versions/{version}.manifest` - Simple version-based naming - `V2`: `_versions/{inverted_version}.manifest` - Zero-padded, reversed version number   (uses `u64::MAX - version`) for O(1) lookup of latest version on object stores  V2 is preferred for new tables as it enables efficient latest-version discovery without needing to list all versions. ")
-    __properties: ClassVar[List[str]] = ["identity", "context", "id", "version", "manifest_path", "manifest_size", "e_tag", "metadata", "naming_scheme"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "version", "branch", "manifest_path", "manifest_size", "e_tag", "metadata", "naming_scheme"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -97,6 +98,7 @@ class CreateTableVersionRequest(BaseModel):
             "context": obj.get("context"),
             "id": obj.get("id"),
             "version": obj.get("version"),
+            "branch": obj.get("branch"),
             "manifest_path": obj.get("manifest_path"),
             "manifest_size": obj.get("manifest_size"),
             "e_tag": obj.get("e_tag"),

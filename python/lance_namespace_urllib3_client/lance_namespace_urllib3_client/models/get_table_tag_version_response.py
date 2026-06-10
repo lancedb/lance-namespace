@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,7 +28,8 @@ class GetTableTagVersionResponse(BaseModel):
     GetTableTagVersionResponse
     """ # noqa: E501
     version: Annotated[int, Field(strict=True, ge=0)] = Field(description="version number that the tag points to")
-    __properties: ClassVar[List[str]] = ["version"]
+    branch: Optional[StrictStr] = Field(default=None, description="Branch the tag's version lives on. Absent when the tag points to the main branch. ")
+    __properties: ClassVar[List[str]] = ["version", "branch"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,7 +82,8 @@ class GetTableTagVersionResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "version": obj.get("version")
+            "version": obj.get("version"),
+            "branch": obj.get("branch")
         })
         return _obj
 

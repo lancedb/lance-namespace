@@ -31,6 +31,7 @@ import java.util.StringJoiner;
   MergeInsertIntoTableRequest.JSON_PROPERTY_IDENTITY,
   MergeInsertIntoTableRequest.JSON_PROPERTY_CONTEXT,
   MergeInsertIntoTableRequest.JSON_PROPERTY_ID,
+  MergeInsertIntoTableRequest.JSON_PROPERTY_BRANCH,
   MergeInsertIntoTableRequest.JSON_PROPERTY_ON,
   MergeInsertIntoTableRequest.JSON_PROPERTY_WHEN_MATCHED_UPDATE_ALL,
   MergeInsertIntoTableRequest.JSON_PROPERTY_WHEN_MATCHED_UPDATE_ALL_FILT,
@@ -52,6 +53,9 @@ public class MergeInsertIntoTableRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_ON = "on";
   @javax.annotation.Nullable private String on;
@@ -173,13 +177,39 @@ public class MergeInsertIntoTableRequest {
     this.id = id;
   }
 
+  public MergeInsertIntoTableRequest branch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public MergeInsertIntoTableRequest on(@javax.annotation.Nullable String on) {
     this.on = on;
     return this;
   }
 
   /**
-   * Column name to use for matching rows (required)
+   * Lance field path to use for matching rows. Nested fields use dot-separated segments; use
+   * backtick-quoted segments for literal dots and double backticks inside quoted segments. Use
+   * canonical full paths for display and errors; leaf names alone only identify top-level fields;
+   * invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
    *
    * @return on
    */
@@ -228,7 +258,9 @@ public class MergeInsertIntoTableRequest {
 
   /**
    * The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to
-   * true
+   * true. Field references must use Lance field path syntax: nested fields use dot-separated
+   * segments, literal dots require backtick-quoted segments, and backticks inside quoted segments
+   * are doubled.
    *
    * @return whenMatchedUpdateAllFilt
    */
@@ -303,7 +335,10 @@ public class MergeInsertIntoTableRequest {
   }
 
   /**
-   * Delete rows from the target table if there is no match AND the SQL expression evaluates to true
+   * Delete rows from the target table if there is no match AND the SQL expression evaluates to
+   * true. Field references must use Lance field path syntax: nested fields use dot-separated
+   * segments, literal dots require backtick-quoted segments, and backticks inside quoted segments
+   * are doubled.
    *
    * @return whenNotMatchedBySourceDeleteFilt
    */
@@ -380,6 +415,7 @@ public class MergeInsertIntoTableRequest {
     return Objects.equals(this.identity, mergeInsertIntoTableRequest.identity)
         && Objects.equals(this.context, mergeInsertIntoTableRequest.context)
         && Objects.equals(this.id, mergeInsertIntoTableRequest.id)
+        && Objects.equals(this.branch, mergeInsertIntoTableRequest.branch)
         && Objects.equals(this.on, mergeInsertIntoTableRequest.on)
         && Objects.equals(
             this.whenMatchedUpdateAll, mergeInsertIntoTableRequest.whenMatchedUpdateAll)
@@ -403,6 +439,7 @@ public class MergeInsertIntoTableRequest {
         identity,
         context,
         id,
+        branch,
         on,
         whenMatchedUpdateAll,
         whenMatchedUpdateAllFilt,
@@ -420,6 +457,7 @@ public class MergeInsertIntoTableRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    on: ").append(toIndentedString(on)).append("\n");
     sb.append("    whenMatchedUpdateAll: ")
         .append(toIndentedString(whenMatchedUpdateAll))
@@ -518,6 +556,14 @@ public class MergeInsertIntoTableRequest {
                     : String.format("%s%d%s", containerPrefix, i, containerSuffix),
                 ApiClient.urlEncode(ApiClient.valueToString(getId().get(i)))));
       }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      joiner.add(
+          String.format(
+              "%sbranch%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBranch()))));
     }
 
     // add `on` to the URL query string

@@ -87,7 +87,7 @@ public class ErrorResponse {
    * already exists 8 - TableTagNotFound: The specified table tag does not exist 9 -
    * TableTagAlreadyExists: A table tag with this name already exists 10 - TransactionNotFound: The
    * specified transaction does not exist 11 - TableVersionNotFound: The specified table version
-   * does not exist 12 - TableColumnNotFound: The specified table column does not exist 13 -
+   * does not exist 12 - TableColumnNotFound: The specified table field does not exist 13 -
    * InvalidInput: Malformed request or invalid parameters 14 - ConcurrentModification: Optimistic
    * concurrency conflict 15 - PermissionDenied: User lacks permission for this operation 16 -
    * Unauthenticated: Authentication credentials are missing or invalid 17 - ServiceUnavailable:

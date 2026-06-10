@@ -9,9 +9,9 @@ Name | Type | Description | Notes
 **udtf_sha** | **String** | SHA-256 checksum of the envelope; server validates. | 
 **udtf_name** | **String** | Name of the UDTF | 
 **udtf_version** | **String** | Version of the UDTF | 
-**input_columns** | Option<**Vec<String>**> | Source columns the UDTF reads. Null means all columns (batch UDTF only).  | [optional]
-**partition_by** | Option<**String**> | Batch UDTF only. Column-value partition key for partition-parallel execution. Mutually exclusive with `partition_by_indexed_column`.  | [optional]
-**partition_by_indexed_column** | Option<**String**> | Batch UDTF only. Source column with an IVF-family index used for index-based partitioning. The server validates the index exists at create time.  | [optional]
+**input_columns** | Option<**Vec<String>**> | Source Lance field paths the UDTF reads. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Null means all fields (batch UDTF only).  | [optional]
+**partition_by** | Option<**String**> |  | [optional]
+**partition_by_indexed_column** | Option<**String**> |  | [optional]
 **num_cpus** | Option<**f64**> | Ray actor CPU request. | [optional]
 **num_gpus** | Option<**f64**> | Ray actor GPU request. | [optional]
 **memory** | Option<**i32**> | Ray actor memory request, in bytes. | [optional]

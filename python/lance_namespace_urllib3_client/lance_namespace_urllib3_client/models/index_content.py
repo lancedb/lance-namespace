@@ -17,8 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,9 +30,18 @@ class IndexContent(BaseModel):
     """ # noqa: E501
     index_name: StrictStr = Field(description="Name of the index")
     index_uuid: StrictStr = Field(description="Unique identifier for the index")
-    columns: List[StrictStr] = Field(description="Columns covered by this index")
+    columns: List[Annotated[str, Field(min_length=1, strict=True)]] = Field(description="Canonical Lance field paths covered by this index. Nested fields use dot-separated segments; segments containing literal dots are backtick-quoted, and backticks inside quoted segments are doubled.")
     status: StrictStr = Field(description="Current status of the index")
-    __properties: ClassVar[List[str]] = ["index_name", "index_uuid", "columns", "status"]
+    index_type: Optional[StrictStr] = Field(default=None, description="Friendly index type, e.g. IVF_PQ, BTREE. Unknown if no plugin recognizes the index.")
+    type_url: Optional[StrictStr] = Field(default=None, description="Protobuf type URL, a precise type identifier for the index.")
+    num_indexed_rows: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of live rows covered by the index. This does not count rows that are in the index but have since been deleted.")
+    num_unindexed_rows: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of rows that are not indexed.")
+    size_bytes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Total index size in bytes across all segments. Null for indices predating file-size tracking.")
+    num_segments: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of index deltas/segments.")
+    created_at: Optional[datetime] = Field(default=None, description="Creation time for indexes. Null for legacy indices.")
+    index_version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="On-disk index format version.")
+    index_details: Optional[StrictStr] = Field(default=None, description="Opaque, type-specific JSON with additional index details. For vector indices this carries metric/distance type, partitioning, and HNSW/PQ/SQ/RQ parameters.")
+    __properties: ClassVar[List[str]] = ["index_name", "index_uuid", "columns", "status", "index_type", "type_url", "num_indexed_rows", "num_unindexed_rows", "size_bytes", "num_segments", "created_at", "index_version", "index_details"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -86,7 +97,16 @@ class IndexContent(BaseModel):
             "index_name": obj.get("index_name"),
             "index_uuid": obj.get("index_uuid"),
             "columns": obj.get("columns"),
-            "status": obj.get("status")
+            "status": obj.get("status"),
+            "index_type": obj.get("index_type"),
+            "type_url": obj.get("type_url"),
+            "num_indexed_rows": obj.get("num_indexed_rows"),
+            "num_unindexed_rows": obj.get("num_unindexed_rows"),
+            "size_bytes": obj.get("size_bytes"),
+            "num_segments": obj.get("num_segments"),
+            "created_at": obj.get("created_at"),
+            "index_version": obj.get("index_version"),
+            "index_details": obj.get("index_details")
         })
         return _obj
 

@@ -34,12 +34,13 @@ class QueryTableRequest(BaseModel):
     identity: Optional[Identity] = None
     context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
+    branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
     bypass_vector_index: Optional[StrictBool] = Field(default=None, description="Whether to bypass vector index")
     columns: Optional[QueryTableRequestColumns] = None
     distance_type: Optional[StrictStr] = Field(default=None, description="Distance metric to use")
     ef: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Search effort parameter for HNSW index")
     fast_search: Optional[StrictBool] = Field(default=None, description="Whether to use fast search")
-    filter: Optional[StrictStr] = Field(default=None, description="Optional SQL filter expression")
+    filter: Optional[StrictStr] = Field(default=None, description="Optional SQL filter expression. Field references in the expression must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled. ")
     full_text_query: Optional[QueryTableRequestFullTextQuery] = None
     k: Annotated[int, Field(strict=True, ge=0)] = Field(description="Number of results to return")
     lower_bound: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Lower bound for search")
@@ -49,10 +50,10 @@ class QueryTableRequest(BaseModel):
     refine_factor: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Refine factor for search")
     upper_bound: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Upper bound for search")
     vector: QueryTableRequestVector
-    vector_column: Optional[StrictStr] = Field(default=None, description="Name of the vector column to search")
+    vector_column: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Lance field path of the vector field to search. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.")
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Table version to query")
     with_row_id: Optional[StrictBool] = Field(default=None, description="If true, return the row id as a column called `_rowid`")
-    __properties: ClassVar[List[str]] = ["identity", "context", "id", "bypass_vector_index", "columns", "distance_type", "ef", "fast_search", "filter", "full_text_query", "k", "lower_bound", "nprobes", "offset", "prefilter", "refine_factor", "upper_bound", "vector", "vector_column", "version", "with_row_id"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "branch", "bypass_vector_index", "columns", "distance_type", "ef", "fast_search", "filter", "full_text_query", "k", "lower_bound", "nprobes", "offset", "prefilter", "refine_factor", "upper_bound", "vector", "vector_column", "version", "with_row_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -120,6 +121,7 @@ class QueryTableRequest(BaseModel):
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "context": obj.get("context"),
             "id": obj.get("id"),
+            "branch": obj.get("branch"),
             "bypass_vector_index": obj.get("bypass_vector_index"),
             "columns": QueryTableRequestColumns.from_dict(obj["columns"]) if obj.get("columns") is not None else None,
             "distance_type": obj.get("distance_type"),

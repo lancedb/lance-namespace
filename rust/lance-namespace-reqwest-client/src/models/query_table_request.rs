@@ -20,6 +20,9 @@ pub struct QueryTableRequest {
     pub context: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// Whether to bypass vector index
     #[serde(rename = "bypass_vector_index", skip_serializing_if = "Option::is_none")]
     pub bypass_vector_index: Option<bool>,
@@ -34,7 +37,7 @@ pub struct QueryTableRequest {
     /// Whether to use fast search
     #[serde(rename = "fast_search", skip_serializing_if = "Option::is_none")]
     pub fast_search: Option<bool>,
-    /// Optional SQL filter expression
+    /// Optional SQL filter expression. Field references in the expression must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled. 
     #[serde(rename = "filter", skip_serializing_if = "Option::is_none")]
     pub filter: Option<String>,
     #[serde(rename = "full_text_query", skip_serializing_if = "Option::is_none")]
@@ -62,7 +65,7 @@ pub struct QueryTableRequest {
     pub upper_bound: Option<f32>,
     #[serde(rename = "vector")]
     pub vector: Box<models::QueryTableRequestVector>,
-    /// Name of the vector column to search
+    /// Lance field path of the vector field to search. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
     #[serde(rename = "vector_column", skip_serializing_if = "Option::is_none")]
     pub vector_column: Option<String>,
     /// Table version to query
@@ -79,6 +82,7 @@ impl QueryTableRequest {
             identity: None,
             context: None,
             id: None,
+            branch: None,
             bypass_vector_index: None,
             columns: None,
             distance_type: None,

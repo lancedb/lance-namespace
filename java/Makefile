@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VERSION = 0.7.7
+VERSION = 0.8.3-beta.1
 
 .PHONY: clean-async-client
 clean-async-client:

@@ -32,7 +32,7 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class AlterVirtualColumnEntry {
 
-  @Valid private List<String> inputColumns;
+  @Valid private List<@Size(min = 1) String> inputColumns;
 
   private String image = null;
 
@@ -52,7 +52,7 @@ public class AlterVirtualColumnEntry {
 
   @Valid private Map<String, String> fieldMetadata = new HashMap<>();
 
-  public AlterVirtualColumnEntry inputColumns(List<String> inputColumns) {
+  public AlterVirtualColumnEntry inputColumns(List<@Size(min = 1) String> inputColumns) {
     this.inputColumns = inputColumns;
     return this;
   }
@@ -66,20 +66,23 @@ public class AlterVirtualColumnEntry {
   }
 
   /**
-   * List of input column names for the virtual column (optional)
+   * List of input Lance field paths for the virtual column. Nested fields use dot-separated
+   * segments; use backtick-quoted segments for literal dots and double backticks inside quoted
+   * segments. Optional.
    *
    * @return inputColumns
    */
   @Schema(
       name = "input_columns",
-      description = "List of input column names for the virtual column (optional)",
+      description =
+          "List of input Lance field paths for the virtual column. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Optional.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("input_columns")
-  public List<String> getInputColumns() {
+  public List<@Size(min = 1) String> getInputColumns() {
     return inputColumns;
   }
 
-  public void setInputColumns(List<String> inputColumns) {
+  public void setInputColumns(List<@Size(min = 1) String> inputColumns) {
     this.inputColumns = inputColumns;
   }
 

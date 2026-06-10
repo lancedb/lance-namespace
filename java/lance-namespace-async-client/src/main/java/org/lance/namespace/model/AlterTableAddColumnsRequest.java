@@ -28,6 +28,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({
   AlterTableAddColumnsRequest.JSON_PROPERTY_IDENTITY,
   AlterTableAddColumnsRequest.JSON_PROPERTY_ID,
+  AlterTableAddColumnsRequest.JSON_PROPERTY_BRANCH,
   AlterTableAddColumnsRequest.JSON_PROPERTY_NEW_COLUMNS
 })
 @javax.annotation.Generated(
@@ -39,6 +40,9 @@ public class AlterTableAddColumnsRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_NEW_COLUMNS = "new_columns";
   @javax.annotation.Nonnull private List<AddColumnsEntry> newColumns = new ArrayList<>();
@@ -99,6 +103,29 @@ public class AlterTableAddColumnsRequest {
     this.id = id;
   }
 
+  public AlterTableAddColumnsRequest branch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public AlterTableAddColumnsRequest newColumns(
       @javax.annotation.Nonnull List<AddColumnsEntry> newColumns) {
     this.newColumns = newColumns;
@@ -143,12 +170,13 @@ public class AlterTableAddColumnsRequest {
     AlterTableAddColumnsRequest alterTableAddColumnsRequest = (AlterTableAddColumnsRequest) o;
     return Objects.equals(this.identity, alterTableAddColumnsRequest.identity)
         && Objects.equals(this.id, alterTableAddColumnsRequest.id)
+        && Objects.equals(this.branch, alterTableAddColumnsRequest.branch)
         && Objects.equals(this.newColumns, alterTableAddColumnsRequest.newColumns);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, newColumns);
+    return Objects.hash(identity, id, branch, newColumns);
   }
 
   @Override
@@ -157,6 +185,7 @@ public class AlterTableAddColumnsRequest {
     sb.append("class AlterTableAddColumnsRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    newColumns: ").append(toIndentedString(newColumns)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -222,6 +251,14 @@ public class AlterTableAddColumnsRequest {
                     : String.format("%s%d%s", containerPrefix, i, containerSuffix),
                 ApiClient.urlEncode(ApiClient.valueToString(getId().get(i)))));
       }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      joiner.add(
+          String.format(
+              "%sbranch%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBranch()))));
     }
 
     // add `new_columns` to the URL query string

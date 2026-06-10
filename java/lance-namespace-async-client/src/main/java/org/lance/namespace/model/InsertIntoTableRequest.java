@@ -31,6 +31,7 @@ import java.util.StringJoiner;
   InsertIntoTableRequest.JSON_PROPERTY_IDENTITY,
   InsertIntoTableRequest.JSON_PROPERTY_CONTEXT,
   InsertIntoTableRequest.JSON_PROPERTY_ID,
+  InsertIntoTableRequest.JSON_PROPERTY_BRANCH,
   InsertIntoTableRequest.JSON_PROPERTY_MODE
 })
 @javax.annotation.Generated(
@@ -45,6 +46,9 @@ public class InsertIntoTableRequest {
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
+
+  public static final String JSON_PROPERTY_BRANCH = "branch";
+  @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_MODE = "mode";
   @javax.annotation.Nullable private String mode = "append";
@@ -140,6 +144,29 @@ public class InsertIntoTableRequest {
     this.id = id;
   }
 
+  public InsertIntoTableRequest branch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getBranch() {
+    return branch;
+  }
+
+  @JsonProperty(JSON_PROPERTY_BRANCH)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBranch(@javax.annotation.Nullable String branch) {
+    this.branch = branch;
+  }
+
   public InsertIntoTableRequest mode(@javax.annotation.Nullable String mode) {
     this.mode = mode;
     return this;
@@ -178,12 +205,13 @@ public class InsertIntoTableRequest {
     return Objects.equals(this.identity, insertIntoTableRequest.identity)
         && Objects.equals(this.context, insertIntoTableRequest.context)
         && Objects.equals(this.id, insertIntoTableRequest.id)
+        && Objects.equals(this.branch, insertIntoTableRequest.branch)
         && Objects.equals(this.mode, insertIntoTableRequest.mode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, mode);
+    return Objects.hash(identity, context, id, branch, mode);
   }
 
   @Override
@@ -193,6 +221,7 @@ public class InsertIntoTableRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -274,6 +303,14 @@ public class InsertIntoTableRequest {
                     : String.format("%s%d%s", containerPrefix, i, containerSuffix),
                 ApiClient.urlEncode(ApiClient.valueToString(getId().get(i)))));
       }
+    }
+
+    // add `branch` to the URL query string
+    if (getBranch() != null) {
+      joiner.add(
+          String.format(
+              "%sbranch%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getBranch()))));
     }
 
     // add `mode` to the URL query string

@@ -299,7 +299,9 @@ public class MaterializedViewUdtfEntry {
   }
 
   /**
-   * Source columns the UDTF reads. Null means all columns (batch UDTF only).
+   * Source Lance field paths the UDTF reads. Nested fields use dot-separated segments; use
+   * backtick-quoted segments for literal dots and double backticks inside quoted segments. Null
+   * means all fields (batch UDTF only).
    *
    * @return inputColumns
    */
@@ -331,8 +333,7 @@ public class MaterializedViewUdtfEntry {
   }
 
   /**
-   * Batch UDTF only. Column-value partition key for partition-parallel execution. Mutually
-   * exclusive with &#x60;partition_by_indexed_column&#x60;.
+   * Get partitionBy
    *
    * @return partitionBy
    */
@@ -365,8 +366,7 @@ public class MaterializedViewUdtfEntry {
   }
 
   /**
-   * Batch UDTF only. Source column with an IVF-family index used for index-based partitioning. The
-   * server validates the index exists at create time.
+   * Get partitionByIndexedColumn
    *
    * @return partitionByIndexedColumn
    */

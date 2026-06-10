@@ -10,9 +10,9 @@ Name | Type | Description | Notes
 **udtf_sha** | **str** | SHA-256 checksum of the envelope; server validates. | 
 **udtf_name** | **str** | Name of the UDTF | 
 **udtf_version** | **str** | Version of the UDTF | 
-**input_columns** | **List[str]** | Source columns the UDTF reads. Null means all columns (batch UDTF only).  | [optional] 
-**partition_by** | **str** | Batch UDTF only. Column-value partition key for partition-parallel execution. Mutually exclusive with &#x60;partition_by_indexed_column&#x60;.  | [optional] 
-**partition_by_indexed_column** | **str** | Batch UDTF only. Source column with an IVF-family index used for index-based partitioning. The server validates the index exists at create time.  | [optional] 
+**input_columns** | **List[str]** | Source Lance field paths the UDTF reads. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Null means all fields (batch UDTF only).  | [optional] 
+**partition_by** | **str** |  | [optional] 
+**partition_by_indexed_column** | **str** |  | [optional] 
 **num_cpus** | **float** | Ray actor CPU request. | [optional] 
 **num_gpus** | **float** | Ray actor GPU request. | [optional] 
 **memory** | **int** | Ray actor memory request, in bytes. | [optional] 

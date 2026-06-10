@@ -38,6 +38,8 @@ public class UpdateTableSchemaMetadataRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   @Valid private Map<String, String> metadata = new HashMap<>();
 
   public UpdateTableSchemaMetadataRequest identity(Identity identity) {
@@ -127,6 +129,29 @@ public class UpdateTableSchemaMetadataRequest {
     this.id = id;
   }
 
+  public UpdateTableSchemaMetadataRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   public UpdateTableSchemaMetadataRequest metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
@@ -171,12 +196,13 @@ public class UpdateTableSchemaMetadataRequest {
     return Objects.equals(this.identity, updateTableSchemaMetadataRequest.identity)
         && Objects.equals(this.context, updateTableSchemaMetadataRequest.context)
         && Objects.equals(this.id, updateTableSchemaMetadataRequest.id)
+        && Objects.equals(this.branch, updateTableSchemaMetadataRequest.branch)
         && Objects.equals(this.metadata, updateTableSchemaMetadataRequest.metadata);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, metadata);
+    return Objects.hash(identity, context, id, branch, metadata);
   }
 
   @Override
@@ -186,6 +212,7 @@ public class UpdateTableSchemaMetadataRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("}");
     return sb.toString();

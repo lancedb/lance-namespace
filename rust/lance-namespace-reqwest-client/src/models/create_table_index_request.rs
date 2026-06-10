@@ -20,7 +20,10 @@ pub struct CreateTableIndexRequest {
     pub context: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
-    /// Name of the column to create index on
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
+    /// Lance field path to create the index on. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
     #[serde(rename = "column")]
     pub column: String,
     /// Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS)
@@ -64,6 +67,7 @@ impl CreateTableIndexRequest {
             identity: None,
             context: None,
             id: None,
+            branch: None,
             column,
             index_type,
             name: None,

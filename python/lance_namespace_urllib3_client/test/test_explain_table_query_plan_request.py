@@ -44,6 +44,7 @@ class TestExplainTableQueryPlanRequest(unittest.TestCase):
                 id = [
                     ''
                     ],
+                branch = '',
                 query = lance_namespace_urllib3_client.models.query_table_request.QueryTableRequest(
                     identity = lance_namespace_urllib3_client.models.identity.Identity(
                         api_key = '', 
@@ -54,13 +55,14 @@ class TestExplainTableQueryPlanRequest(unittest.TestCase):
                     id = [
                         ''
                         ], 
+                    branch = '', 
                     bypass_vector_index = True, 
                     columns = lance_namespace_urllib3_client.models.query_table_request_columns.QueryTableRequest_columns(
                         column_names = [
-                            ''
+                            '0'
                             ], 
                         column_aliases = {
-                            'key' : ''
+                            'key' : '0'
                             }, ), 
                     distance_type = '', 
                     ef = 0, 
@@ -73,14 +75,14 @@ class TestExplainTableQueryPlanRequest(unittest.TestCase):
                             query = lance_namespace_urllib3_client.models.fts_query.FtsQuery(
                                 match = lance_namespace_urllib3_client.models.match_query.MatchQuery(
                                     boost = 1.337, 
-                                    column = '', 
+                                    column = '0', 
                                     fuzziness = 0, 
                                     max_expansions = 0, 
                                     operator = '', 
                                     prefix_length = 0, 
                                     terms = '', ), 
                                 phrase = lance_namespace_urllib3_client.models.phrase_query.PhraseQuery(
-                                    column = '', 
+                                    column = '0', 
                                     slop = 0, 
                                     terms = '', ), 
                                 boost = lance_namespace_urllib3_client.models.boost_query.BoostQuery(
@@ -88,7 +90,7 @@ class TestExplainTableQueryPlanRequest(unittest.TestCase):
                                         multi_match = lance_namespace_urllib3_client.models.multi_match_query.MultiMatchQuery(
                                             match_queries = [
                                                 lance_namespace_urllib3_client.models.match_query.MatchQuery(
-                                                    column = '', 
+                                                    column = '0', 
                                                     fuzziness = 0, 
                                                     max_expansions = 0, 
                                                     operator = '', 
@@ -137,7 +139,7 @@ class TestExplainTableQueryPlanRequest(unittest.TestCase):
                                 1.337
                                 ]
                             ], ), 
-                    vector_column = '', 
+                    vector_column = '0', 
                     version = 0, 
                     with_row_id = True, ),
                 verbose = True
@@ -154,13 +156,14 @@ class TestExplainTableQueryPlanRequest(unittest.TestCase):
                     id = [
                         ''
                         ], 
+                    branch = '', 
                     bypass_vector_index = True, 
                     columns = lance_namespace_urllib3_client.models.query_table_request_columns.QueryTableRequest_columns(
                         column_names = [
-                            ''
+                            '0'
                             ], 
                         column_aliases = {
-                            'key' : ''
+                            'key' : '0'
                             }, ), 
                     distance_type = '', 
                     ef = 0, 
@@ -173,14 +176,14 @@ class TestExplainTableQueryPlanRequest(unittest.TestCase):
                             query = lance_namespace_urllib3_client.models.fts_query.FtsQuery(
                                 match = lance_namespace_urllib3_client.models.match_query.MatchQuery(
                                     boost = 1.337, 
-                                    column = '', 
+                                    column = '0', 
                                     fuzziness = 0, 
                                     max_expansions = 0, 
                                     operator = '', 
                                     prefix_length = 0, 
                                     terms = '', ), 
                                 phrase = lance_namespace_urllib3_client.models.phrase_query.PhraseQuery(
-                                    column = '', 
+                                    column = '0', 
                                     slop = 0, 
                                     terms = '', ), 
                                 boost = lance_namespace_urllib3_client.models.boost_query.BoostQuery(
@@ -188,7 +191,7 @@ class TestExplainTableQueryPlanRequest(unittest.TestCase):
                                         multi_match = lance_namespace_urllib3_client.models.multi_match_query.MultiMatchQuery(
                                             match_queries = [
                                                 lance_namespace_urllib3_client.models.match_query.MatchQuery(
-                                                    column = '', 
+                                                    column = '0', 
                                                     fuzziness = 0, 
                                                     max_expansions = 0, 
                                                     operator = '', 
@@ -237,7 +240,7 @@ class TestExplainTableQueryPlanRequest(unittest.TestCase):
                                 1.337
                                 ]
                             ], ), 
-                    vector_column = '', 
+                    vector_column = '0', 
                     version = 0, 
                     with_row_id = True, ),
         )

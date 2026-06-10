@@ -23,7 +23,10 @@ pub struct CountTableRowsRequest {
     /// Version of the table to describe. If not specified, server should resolve it to the latest version. 
     #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
     pub version: Option<i64>,
-    /// Optional SQL predicate to filter rows for counting 
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
+    /// Optional SQL predicate to filter rows for counting. Field references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled. 
     #[serde(rename = "predicate", skip_serializing_if = "Option::is_none")]
     pub predicate: Option<String>,
 }
@@ -35,6 +38,7 @@ impl CountTableRowsRequest {
             context: None,
             id: None,
             version: None,
+            branch: None,
             predicate: None,
         }
     }

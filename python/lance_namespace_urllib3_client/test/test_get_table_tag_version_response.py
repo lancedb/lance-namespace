@@ -35,7 +35,8 @@ class TestGetTableTagVersionResponse(unittest.TestCase):
         model = GetTableTagVersionResponse()
         if include_optional:
             return GetTableTagVersionResponse(
-                version = 0
+                version = 0,
+                branch = ''
             )
         else:
             return GetTableTagVersionResponse(

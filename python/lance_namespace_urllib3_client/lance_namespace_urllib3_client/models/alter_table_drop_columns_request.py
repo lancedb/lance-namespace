@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
 from typing_extensions import Self
@@ -30,8 +31,9 @@ class AlterTableDropColumnsRequest(BaseModel):
     identity: Optional[Identity] = None
     context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
-    columns: List[StrictStr] = Field(description="Names of columns to drop")
-    __properties: ClassVar[List[str]] = ["identity", "context", "id", "columns"]
+    branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
+    columns: List[Annotated[str, Field(min_length=1, strict=True)]] = Field(description="Lance field paths to drop. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.")
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "branch", "columns"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -90,6 +92,7 @@ class AlterTableDropColumnsRequest(BaseModel):
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
             "context": obj.get("context"),
             "id": obj.get("id"),
+            "branch": obj.get("branch"),
             "columns": obj.get("columns")
         })
         return _obj

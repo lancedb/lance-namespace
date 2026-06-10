@@ -34,6 +34,8 @@ public class AlterTableAlterColumnsRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   @Valid private List<@Valid AlterColumnsEntry> alterations = new ArrayList<>();
 
   public AlterTableAlterColumnsRequest() {
@@ -97,6 +99,29 @@ public class AlterTableAlterColumnsRequest {
     this.id = id;
   }
 
+  public AlterTableAlterColumnsRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   public AlterTableAlterColumnsRequest alterations(List<@Valid AlterColumnsEntry> alterations) {
     this.alterations = alterations;
     return this;
@@ -141,12 +166,13 @@ public class AlterTableAlterColumnsRequest {
     AlterTableAlterColumnsRequest alterTableAlterColumnsRequest = (AlterTableAlterColumnsRequest) o;
     return Objects.equals(this.identity, alterTableAlterColumnsRequest.identity)
         && Objects.equals(this.id, alterTableAlterColumnsRequest.id)
+        && Objects.equals(this.branch, alterTableAlterColumnsRequest.branch)
         && Objects.equals(this.alterations, alterTableAlterColumnsRequest.alterations);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, alterations);
+    return Objects.hash(identity, id, branch, alterations);
   }
 
   @Override
@@ -155,6 +181,7 @@ public class AlterTableAlterColumnsRequest {
     sb.append("class AlterTableAlterColumnsRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    alterations: ").append(toIndentedString(alterations)).append("\n");
     sb.append("}");
     return sb.toString();

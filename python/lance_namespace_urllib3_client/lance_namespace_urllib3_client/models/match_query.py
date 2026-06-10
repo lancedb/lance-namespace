@@ -28,7 +28,7 @@ class MatchQuery(BaseModel):
     MatchQuery
     """ # noqa: E501
     boost: Optional[Union[StrictFloat, StrictInt]] = None
-    column: Optional[StrictStr] = None
+    column: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Lance field path to match. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Omit to use the query default fields.")
     fuzziness: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
     max_expansions: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="The maximum number of terms to expand for fuzzy matching. Default to 50.")
     operator: Optional[StrictStr] = Field(default=None, description="The operator to use for combining terms. Case insensitive, supports both PascalCase and snake_case. Valid values are: - And: All terms must match. - Or: At least one term must match. ")

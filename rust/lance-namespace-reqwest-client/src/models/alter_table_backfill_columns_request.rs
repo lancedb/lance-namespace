@@ -18,7 +18,10 @@ pub struct AlterTableBackfillColumnsRequest {
     /// Table identifier path (namespace + table name)
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
-    /// Column name to backfill
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
+    /// Lance field path to backfill. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
     #[serde(rename = "column")]
     pub column: String,
     /// Optional WHERE clause filter
@@ -67,6 +70,7 @@ impl AlterTableBackfillColumnsRequest {
         AlterTableBackfillColumnsRequest {
             identity: None,
             id: None,
+            branch: None,
             column,
             r#where: None,
             concurrency: None,

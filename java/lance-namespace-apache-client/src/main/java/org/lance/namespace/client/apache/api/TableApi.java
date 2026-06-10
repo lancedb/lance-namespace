@@ -34,6 +34,8 @@ import org.lance.namespace.model.BatchCreateTableVersionsResponse;
 import org.lance.namespace.model.BatchDeleteTableVersionsRequest;
 import org.lance.namespace.model.BatchDeleteTableVersionsResponse;
 import org.lance.namespace.model.CountTableRowsRequest;
+import org.lance.namespace.model.CreateTableBranchRequest;
+import org.lance.namespace.model.CreateTableBranchResponse;
 import org.lance.namespace.model.CreateTableIndexRequest;
 import org.lance.namespace.model.CreateTableIndexResponse;
 import org.lance.namespace.model.CreateTableResponse;
@@ -46,6 +48,8 @@ import org.lance.namespace.model.DeclareTableRequest;
 import org.lance.namespace.model.DeclareTableResponse;
 import org.lance.namespace.model.DeleteFromTableRequest;
 import org.lance.namespace.model.DeleteFromTableResponse;
+import org.lance.namespace.model.DeleteTableBranchRequest;
+import org.lance.namespace.model.DeleteTableBranchResponse;
 import org.lance.namespace.model.DeleteTableTagRequest;
 import org.lance.namespace.model.DeleteTableTagResponse;
 import org.lance.namespace.model.DeregisterTableRequest;
@@ -64,6 +68,7 @@ import org.lance.namespace.model.GetTableStatsResponse;
 import org.lance.namespace.model.GetTableTagVersionRequest;
 import org.lance.namespace.model.GetTableTagVersionResponse;
 import org.lance.namespace.model.InsertIntoTableResponse;
+import org.lance.namespace.model.ListTableBranchesResponse;
 import org.lance.namespace.model.ListTableIndicesRequest;
 import org.lance.namespace.model.ListTableIndicesResponse;
 import org.lance.namespace.model.ListTableTagsResponse;
@@ -78,6 +83,8 @@ import org.lance.namespace.model.RenameTableResponse;
 import org.lance.namespace.model.RestoreTableRequest;
 import org.lance.namespace.model.RestoreTableResponse;
 import org.lance.namespace.model.TableExistsRequest;
+import org.lance.namespace.model.UpdateFieldMetadataRequest;
+import org.lance.namespace.model.UpdateFieldMetadataResponse;
 import org.lance.namespace.model.UpdateTableRequest;
 import org.lance.namespace.model.UpdateTableResponse;
 import org.lance.namespace.model.UpdateTableTagRequest;
@@ -1175,7 +1182,109 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Create an index on a table Create an index on a table column for faster search operations.
+   * Create a new branch Create a new branch for table &#x60;id&#x60; starting from a source ref
+   * (another branch and/or version), defaulting to the latest version of the main branch.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param createTableBranchRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return CreateTableBranchResponse
+   * @throws ApiException if fails to make API call
+   */
+  public CreateTableBranchResponse createTableBranch(
+      String id, CreateTableBranchRequest createTableBranchRequest, String delimiter)
+      throws ApiException {
+    return this.createTableBranch(id, createTableBranchRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Create a new branch Create a new branch for table &#x60;id&#x60; starting from a source ref
+   * (another branch and/or version), defaulting to the latest version of the main branch.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param createTableBranchRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return CreateTableBranchResponse
+   * @throws ApiException if fails to make API call
+   */
+  public CreateTableBranchResponse createTableBranch(
+      String id,
+      CreateTableBranchRequest createTableBranchRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = createTableBranchRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling createTableBranch");
+    }
+
+    // verify the required parameter 'createTableBranchRequest' is set
+    if (createTableBranchRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'createTableBranchRequest' when calling createTableBranch");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/branches/create"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
+
+    TypeReference<CreateTableBranchResponse> localVarReturnType =
+        new TypeReference<CreateTableBranchResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Create an index on a table Create an index on a table field for faster search operations.
    * Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE,
    * BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the
    * &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to monitor
@@ -1199,7 +1308,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Create an index on a table Create an index on a table column for faster search operations.
+   * Create an index on a table Create an index on a table field for faster search operations.
    * Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE,
    * BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the
    * &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to monitor
@@ -1283,7 +1392,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Create a scalar index on a table Create a scalar index on a table column for faster filtering
+   * Create a scalar index on a table Create a scalar index on a table field for faster filtering
    * operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias
    * for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously.
    * Use the &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to
@@ -1308,7 +1417,7 @@ public class TableApi extends BaseApi {
   }
 
   /**
-   * Create a scalar index on a table Create a scalar index on a table column for faster filtering
+   * Create a scalar index on a table Create a scalar index on a table field for faster filtering
    * operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias
    * for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously.
    * Use the &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to
@@ -1785,6 +1894,106 @@ public class TableApi extends BaseApi {
 
     TypeReference<DeleteFromTableResponse> localVarReturnType =
         new TypeReference<DeleteFromTableResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * Delete a branch Delete an existing branch from table &#x60;id&#x60;.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param deleteTableBranchRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return DeleteTableBranchResponse
+   * @throws ApiException if fails to make API call
+   */
+  public DeleteTableBranchResponse deleteTableBranch(
+      String id, DeleteTableBranchRequest deleteTableBranchRequest, String delimiter)
+      throws ApiException {
+    return this.deleteTableBranch(id, deleteTableBranchRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Delete a branch Delete an existing branch from table &#x60;id&#x60;.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param deleteTableBranchRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return DeleteTableBranchResponse
+   * @throws ApiException if fails to make API call
+   */
+  public DeleteTableBranchResponse deleteTableBranch(
+      String id,
+      DeleteTableBranchRequest deleteTableBranchRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = deleteTableBranchRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling deleteTableBranch");
+    }
+
+    // verify the required parameter 'deleteTableBranchRequest' is set
+    if (deleteTableBranchRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'deleteTableBranchRequest' when calling deleteTableBranch");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/branches/delete"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
+
+    TypeReference<DeleteTableBranchResponse> localVarReturnType =
+        new TypeReference<DeleteTableBranchResponse>() {};
     return apiClient.invokeAPI(
         localVarPath,
         "POST",
@@ -2468,12 +2677,16 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @return DropTableIndexResponse
    * @throws ApiException if fails to make API call
    */
-  public DropTableIndexResponse dropTableIndex(String id, String indexName, String delimiter)
-      throws ApiException {
-    return this.dropTableIndex(id, indexName, delimiter, Collections.emptyMap());
+  public DropTableIndexResponse dropTableIndex(
+      String id, String indexName, String delimiter, String branch) throws ApiException {
+    return this.dropTableIndex(id, indexName, delimiter, branch, Collections.emptyMap());
   }
 
   /**
@@ -2491,12 +2704,20 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return DropTableIndexResponse
    * @throws ApiException if fails to make API call
    */
   public DropTableIndexResponse dropTableIndex(
-      String id, String indexName, String delimiter, Map<String, String> additionalHeaders)
+      String id,
+      String indexName,
+      String delimiter,
+      String branch,
+      Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = null;
 
@@ -2530,6 +2751,7 @@ public class TableApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("branch", branch));
 
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -2884,6 +3106,10 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param mode How the insert should behave. Case insensitive, supports both PascalCase and
    *     snake_case. Valid values are: - Append (default): insert data to the existing table -
    *     Overwrite: remove all data in the table and then insert data to it (optional, default to
@@ -2892,8 +3118,8 @@ public class TableApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public InsertIntoTableResponse insertIntoTable(
-      String id, byte[] body, String delimiter, String mode) throws ApiException {
-    return this.insertIntoTable(id, body, delimiter, mode, Collections.emptyMap());
+      String id, byte[] body, String delimiter, String branch, String mode) throws ApiException {
+    return this.insertIntoTable(id, body, delimiter, branch, mode, Collections.emptyMap());
   }
 
   /**
@@ -2912,6 +3138,10 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param mode How the insert should behave. Case insensitive, supports both PascalCase and
    *     snake_case. Valid values are: - Append (default): insert data to the existing table -
    *     Overwrite: remove all data in the table and then insert data to it (optional, default to
@@ -2921,7 +3151,12 @@ public class TableApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public InsertIntoTableResponse insertIntoTable(
-      String id, byte[] body, String delimiter, String mode, Map<String, String> additionalHeaders)
+      String id,
+      byte[] body,
+      String delimiter,
+      String branch,
+      String mode,
+      Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = body;
 
@@ -2952,6 +3187,7 @@ public class TableApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("branch", branch));
     localVarQueryParams.addAll(apiClient.parameterToPair("mode", mode));
 
     localVarHeaderParams.putAll(additionalHeaders);
@@ -3068,6 +3304,116 @@ public class TableApi extends BaseApi {
     return apiClient.invokeAPI(
         localVarPath,
         "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
+   * List all branches for a table List all branches that have been created for table
+   * &#x60;id&#x60;. Returns a map of branch names to their contents. REST NAMESPACE ONLY REST
+   * namespace does not use a request body for this operation. The
+   * &#x60;ListTableBranchesRequest&#x60; information is passed in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass
+   * through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of
+   * the same name
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
+   * @return ListTableBranchesResponse
+   * @throws ApiException if fails to make API call
+   */
+  public ListTableBranchesResponse listTableBranches(
+      String id, String delimiter, String pageToken, Integer limit) throws ApiException {
+    return this.listTableBranches(id, delimiter, pageToken, limit, Collections.emptyMap());
+  }
+
+  /**
+   * List all branches for a table List all branches that have been created for table
+   * &#x60;id&#x60;. Returns a map of branch names to their contents. REST NAMESPACE ONLY REST
+   * namespace does not use a request body for this operation. The
+   * &#x60;ListTableBranchesRequest&#x60; information is passed in the following way: -
+   * &#x60;id&#x60;: pass through path parameter of the same name - &#x60;page_token&#x60;: pass
+   * through query parameter of the same name - &#x60;limit&#x60;: pass through query parameter of
+   * the same name
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param pageToken Pagination token from a previous request (optional)
+   * @param limit Maximum number of items to return (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return ListTableBranchesResponse
+   * @throws ApiException if fails to make API call
+   */
+  public ListTableBranchesResponse listTableBranches(
+      String id,
+      String delimiter,
+      String pageToken,
+      Integer limit,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = null;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling listTableBranches");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/branches/list"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("page_token", pageToken));
+    localVarQueryParams.addAll(apiClient.parameterToPair("limit", limit));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {};
+
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
+
+    TypeReference<ListTableBranchesResponse> localVarReturnType =
+        new TypeReference<ListTableBranchesResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
         localVarQueryParams,
         localVarCollectionQueryParams,
         localVarQueryStringJoiner.toString(),
@@ -3307,6 +3653,10 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param pageToken Pagination token from a previous request (optional)
    * @param limit Maximum number of items to return (optional)
    * @param descending When true, versions are guaranteed to be returned in descending order (latest
@@ -3315,10 +3665,15 @@ public class TableApi extends BaseApi {
    * @throws ApiException if fails to make API call
    */
   public ListTableVersionsResponse listTableVersions(
-      String id, String delimiter, String pageToken, Integer limit, Boolean descending)
+      String id,
+      String delimiter,
+      String branch,
+      String pageToken,
+      Integer limit,
+      Boolean descending)
       throws ApiException {
     return this.listTableVersions(
-        id, delimiter, pageToken, limit, descending, Collections.emptyMap());
+        id, delimiter, branch, pageToken, limit, descending, Collections.emptyMap());
   }
 
   /**
@@ -3338,6 +3693,10 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param pageToken Pagination token from a previous request (optional)
    * @param limit Maximum number of items to return (optional)
    * @param descending When true, versions are guaranteed to be returned in descending order (latest
@@ -3349,6 +3708,7 @@ public class TableApi extends BaseApi {
   public ListTableVersionsResponse listTableVersions(
       String id,
       String delimiter,
+      String branch,
       String pageToken,
       Integer limit,
       Boolean descending,
@@ -3377,6 +3737,7 @@ public class TableApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("branch", branch));
     localVarQueryParams.addAll(apiClient.parameterToPair("page_token", pageToken));
     localVarQueryParams.addAll(apiClient.parameterToPair("limit", limit));
     localVarQueryParams.addAll(apiClient.parameterToPair("descending", descending));
@@ -3547,20 +3908,32 @@ public class TableApi extends BaseApi {
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param on Column name to use for matching rows (required) (required)
+   * @param on Lance field path to use for matching rows. Nested fields use dot-separated segments;
+   *     use backtick-quoted segments for literal dots and double backticks inside quoted segments.
+   *     Use canonical full paths for display and errors; leaf names alone only identify top-level
+   *     fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
+   *     (required)
    * @param body Arrow IPC stream containing the records to merge (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
    * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
-   *     the SQL expression evaluates to true (optional)
+   *     the SQL expression evaluates to true. Field references must use Lance field path syntax:
+   *     nested fields use dot-separated segments, literal dots require backtick-quoted segments,
+   *     and backticks inside quoted segments are doubled. (optional)
    * @param whenNotMatchedInsertAll Insert all columns when rows don&#39;t match (optional, default
    *     to false)
    * @param whenNotMatchedBySourceDelete Delete all rows from target table that don&#39;t match a
    *     row in the source table (optional, default to false)
    * @param whenNotMatchedBySourceDeleteFilt Delete rows from the target table if there is no match
-   *     AND the SQL expression evaluates to true (optional)
+   *     AND the SQL expression evaluates to true. Field references must use Lance field path
+   *     syntax: nested fields use dot-separated segments, literal dots require backtick-quoted
+   *     segments, and backticks inside quoted segments are doubled. (optional)
    * @param timeout Timeout for the operation (e.g., \&quot;30s\&quot;, \&quot;5m\&quot;) (optional)
    * @param useIndex Whether to use index for matching rows (optional, default to false)
    * @return MergeInsertIntoTableResponse
@@ -3571,6 +3944,7 @@ public class TableApi extends BaseApi {
       String on,
       byte[] body,
       String delimiter,
+      String branch,
       Boolean whenMatchedUpdateAll,
       String whenMatchedUpdateAllFilt,
       Boolean whenNotMatchedInsertAll,
@@ -3584,6 +3958,7 @@ public class TableApi extends BaseApi {
         on,
         body,
         delimiter,
+        branch,
         whenMatchedUpdateAll,
         whenMatchedUpdateAllFilt,
         whenNotMatchedInsertAll,
@@ -3614,20 +3989,32 @@ public class TableApi extends BaseApi {
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param on Column name to use for matching rows (required) (required)
+   * @param on Lance field path to use for matching rows. Nested fields use dot-separated segments;
+   *     use backtick-quoted segments for literal dots and double backticks inside quoted segments.
+   *     Use canonical full paths for display and errors; leaf names alone only identify top-level
+   *     fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
+   *     (required)
    * @param body Arrow IPC stream containing the records to merge (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
    * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
-   *     the SQL expression evaluates to true (optional)
+   *     the SQL expression evaluates to true. Field references must use Lance field path syntax:
+   *     nested fields use dot-separated segments, literal dots require backtick-quoted segments,
+   *     and backticks inside quoted segments are doubled. (optional)
    * @param whenNotMatchedInsertAll Insert all columns when rows don&#39;t match (optional, default
    *     to false)
    * @param whenNotMatchedBySourceDelete Delete all rows from target table that don&#39;t match a
    *     row in the source table (optional, default to false)
    * @param whenNotMatchedBySourceDeleteFilt Delete rows from the target table if there is no match
-   *     AND the SQL expression evaluates to true (optional)
+   *     AND the SQL expression evaluates to true. Field references must use Lance field path
+   *     syntax: nested fields use dot-separated segments, literal dots require backtick-quoted
+   *     segments, and backticks inside quoted segments are doubled. (optional)
    * @param timeout Timeout for the operation (e.g., \&quot;30s\&quot;, \&quot;5m\&quot;) (optional)
    * @param useIndex Whether to use index for matching rows (optional, default to false)
    * @param additionalHeaders additionalHeaders for this call
@@ -3639,6 +4026,7 @@ public class TableApi extends BaseApi {
       String on,
       byte[] body,
       String delimiter,
+      String branch,
       Boolean whenMatchedUpdateAll,
       String whenMatchedUpdateAllFilt,
       Boolean whenNotMatchedInsertAll,
@@ -3683,6 +4071,7 @@ public class TableApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("branch", branch));
     localVarQueryParams.addAll(apiClient.parameterToPair("on", on));
     localVarQueryParams.addAll(
         apiClient.parameterToPair("when_matched_update_all", whenMatchedUpdateAll));
@@ -4224,6 +4613,113 @@ public class TableApi extends BaseApi {
   }
 
   /**
+   * Update per-field metadata Update the Arrow field (column) metadata for table &#x60;id&#x60;.
+   * Each entry targets a field by &#x60;path&#x60; and merges the provided key-value pairs into
+   * that field&#39;s existing metadata, or replaces it when &#x60;replace&#x60; is true. A null
+   * metadata value deletes that key.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param updateFieldMetadataRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @return UpdateFieldMetadataResponse
+   * @throws ApiException if fails to make API call
+   */
+  public UpdateFieldMetadataResponse updateFieldMetadata(
+      String id, UpdateFieldMetadataRequest updateFieldMetadataRequest, String delimiter)
+      throws ApiException {
+    return this.updateFieldMetadata(
+        id, updateFieldMetadataRequest, delimiter, Collections.emptyMap());
+  }
+
+  /**
+   * Update per-field metadata Update the Arrow field (column) metadata for table &#x60;id&#x60;.
+   * Each entry targets a field by &#x60;path&#x60; and merges the provided key-value pairs into
+   * that field&#39;s existing metadata, or replaces it when &#x60;replace&#x60; is true. A null
+   * metadata value deletes that key.
+   *
+   * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
+   *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
+   *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
+   *     root namespace. (required)
+   * @param updateFieldMetadataRequest (required)
+   * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
+   *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
+   *     (optional)
+   * @param additionalHeaders additionalHeaders for this call
+   * @return UpdateFieldMetadataResponse
+   * @throws ApiException if fails to make API call
+   */
+  public UpdateFieldMetadataResponse updateFieldMetadata(
+      String id,
+      UpdateFieldMetadataRequest updateFieldMetadataRequest,
+      String delimiter,
+      Map<String, String> additionalHeaders)
+      throws ApiException {
+    Object localVarPostBody = updateFieldMetadataRequest;
+
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(
+          400, "Missing the required parameter 'id' when calling updateFieldMetadata");
+    }
+
+    // verify the required parameter 'updateFieldMetadataRequest' is set
+    if (updateFieldMetadataRequest == null) {
+      throw new ApiException(
+          400,
+          "Missing the required parameter 'updateFieldMetadataRequest' when calling updateFieldMetadata");
+    }
+
+    // create path and map variables
+    String localVarPath =
+        "/v1/table/{id}/update_field_metadata"
+            .replaceAll(
+                "\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {"application/json"};
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {"application/json"};
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {"OAuth2", "ApiKeyAuth", "BearerAuth"};
+
+    TypeReference<UpdateFieldMetadataResponse> localVarReturnType =
+        new TypeReference<UpdateFieldMetadataResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType);
+  }
+
+  /**
    * Update rows in a table Update existing rows in table &#x60;id&#x60;.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
@@ -4334,12 +4830,18 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @return Map&lt;String, String&gt;
    * @throws ApiException if fails to make API call
    */
   public Map<String, String> updateTableSchemaMetadata(
-      String id, Map<String, String> requestBody, String delimiter) throws ApiException {
-    return this.updateTableSchemaMetadata(id, requestBody, delimiter, Collections.emptyMap());
+      String id, Map<String, String> requestBody, String delimiter, String branch)
+      throws ApiException {
+    return this.updateTableSchemaMetadata(
+        id, requestBody, delimiter, branch, Collections.emptyMap());
   }
 
   /**
@@ -4356,6 +4858,10 @@ public class TableApi extends BaseApi {
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
    *     (optional)
+   * @param branch Optional branch to target. When not specified, the main branch is used. Used by
+   *     branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body
+   *     (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry
+   *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return Map&lt;String, String&gt;
    * @throws ApiException if fails to make API call
@@ -4364,6 +4870,7 @@ public class TableApi extends BaseApi {
       String id,
       Map<String, String> requestBody,
       String delimiter,
+      String branch,
       Map<String, String> additionalHeaders)
       throws ApiException {
     Object localVarPostBody = requestBody;
@@ -4396,6 +4903,7 @@ public class TableApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("delimiter", delimiter));
+    localVarQueryParams.addAll(apiClient.parameterToPair("branch", branch));
 
     localVarHeaderParams.putAll(additionalHeaders);
 

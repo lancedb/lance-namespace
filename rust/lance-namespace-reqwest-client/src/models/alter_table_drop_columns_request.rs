@@ -20,7 +20,10 @@ pub struct AlterTableDropColumnsRequest {
     pub context: Option<std::collections::HashMap<String, String>>,
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<Vec<String>>,
-    /// Names of columns to drop
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
+    /// Lance field paths to drop. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
     #[serde(rename = "columns")]
     pub columns: Vec<String>,
 }
@@ -31,6 +34,7 @@ impl AlterTableDropColumnsRequest {
             identity: None,
             context: None,
             id: None,
+            branch: None,
             columns,
         }
     }

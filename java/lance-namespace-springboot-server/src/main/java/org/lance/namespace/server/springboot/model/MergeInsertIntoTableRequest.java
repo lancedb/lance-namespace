@@ -42,6 +42,8 @@ public class MergeInsertIntoTableRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   private String on;
 
   private Boolean whenMatchedUpdateAll = false;
@@ -142,19 +144,47 @@ public class MergeInsertIntoTableRequest {
     this.id = id;
   }
 
+  public MergeInsertIntoTableRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   public MergeInsertIntoTableRequest on(String on) {
     this.on = on;
     return this;
   }
 
   /**
-   * Column name to use for matching rows (required)
+   * Lance field path to use for matching rows. Nested fields use dot-separated segments; use
+   * backtick-quoted segments for literal dots and double backticks inside quoted segments. Use
+   * canonical full paths for display and errors; leaf names alone only identify top-level fields;
+   * invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
    *
    * @return on
    */
+  @Size(min = 1)
   @Schema(
       name = "on",
-      description = "Column name to use for matching rows (required)",
+      description =
+          "Lance field path to use for matching rows. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("on")
   public String getOn() {
@@ -195,14 +225,16 @@ public class MergeInsertIntoTableRequest {
 
   /**
    * The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to
-   * true
+   * true. Field references must use Lance field path syntax: nested fields use dot-separated
+   * segments, literal dots require backtick-quoted segments, and backticks inside quoted segments
+   * are doubled.
    *
    * @return whenMatchedUpdateAllFilt
    */
   @Schema(
       name = "when_matched_update_all_filt",
       description =
-          "The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true",
+          "The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("when_matched_update_all_filt")
   public String getWhenMatchedUpdateAllFilt() {
@@ -267,14 +299,17 @@ public class MergeInsertIntoTableRequest {
   }
 
   /**
-   * Delete rows from the target table if there is no match AND the SQL expression evaluates to true
+   * Delete rows from the target table if there is no match AND the SQL expression evaluates to
+   * true. Field references must use Lance field path syntax: nested fields use dot-separated
+   * segments, literal dots require backtick-quoted segments, and backticks inside quoted segments
+   * are doubled.
    *
    * @return whenNotMatchedBySourceDeleteFilt
    */
   @Schema(
       name = "when_not_matched_by_source_delete_filt",
       description =
-          "Delete rows from the target table if there is no match AND the SQL expression evaluates to true",
+          "Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("when_not_matched_by_source_delete_filt")
   public String getWhenNotMatchedBySourceDeleteFilt() {
@@ -343,6 +378,7 @@ public class MergeInsertIntoTableRequest {
     return Objects.equals(this.identity, mergeInsertIntoTableRequest.identity)
         && Objects.equals(this.context, mergeInsertIntoTableRequest.context)
         && Objects.equals(this.id, mergeInsertIntoTableRequest.id)
+        && Objects.equals(this.branch, mergeInsertIntoTableRequest.branch)
         && Objects.equals(this.on, mergeInsertIntoTableRequest.on)
         && Objects.equals(
             this.whenMatchedUpdateAll, mergeInsertIntoTableRequest.whenMatchedUpdateAll)
@@ -366,6 +402,7 @@ public class MergeInsertIntoTableRequest {
         identity,
         context,
         id,
+        branch,
         on,
         whenMatchedUpdateAll,
         whenMatchedUpdateAllFilt,
@@ -383,6 +420,7 @@ public class MergeInsertIntoTableRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    on: ").append(toIndentedString(on)).append("\n");
     sb.append("    whenMatchedUpdateAll: ")
         .append(toIndentedString(whenMatchedUpdateAll))

@@ -23,6 +23,9 @@ pub struct DescribeTableIndexStatsRequest {
     /// Optional table version to get stats for
     #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
     pub version: Option<i64>,
+    /// Branch to target. When not specified, the main branch is used. 
+    #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
+    pub branch: Option<String>,
     /// Name of the index
     #[serde(rename = "index_name", skip_serializing_if = "Option::is_none")]
     pub index_name: Option<String>,
@@ -35,6 +38,7 @@ impl DescribeTableIndexStatsRequest {
             context: None,
             id: None,
             version: None,
+            branch: None,
             index_name: None,
         }
     }

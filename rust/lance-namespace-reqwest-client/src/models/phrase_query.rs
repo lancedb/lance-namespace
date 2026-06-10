@@ -13,6 +13,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PhraseQuery {
+    /// Lance field path to match. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Omit to use the query default fields.
     #[serde(rename = "column", skip_serializing_if = "Option::is_none")]
     pub column: Option<String>,
     #[serde(rename = "slop", skip_serializing_if = "Option::is_none")]

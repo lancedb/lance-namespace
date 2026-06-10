@@ -38,6 +38,8 @@ public class ExplainTableQueryPlanRequest {
 
   @Valid private List<String> id = new ArrayList<>();
 
+  private String branch;
+
   private QueryTableRequest query;
 
   private Boolean verbose = false;
@@ -135,6 +137,29 @@ public class ExplainTableQueryPlanRequest {
     this.id = id;
   }
 
+  public ExplainTableQueryPlanRequest branch(String branch) {
+    this.branch = branch;
+    return this;
+  }
+
+  /**
+   * Branch to target. When not specified, the main branch is used.
+   *
+   * @return branch
+   */
+  @Schema(
+      name = "branch",
+      description = "Branch to target. When not specified, the main branch is used. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("branch")
+  public String getBranch() {
+    return branch;
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
   public ExplainTableQueryPlanRequest query(QueryTableRequest query) {
     this.query = query;
     return this;
@@ -192,13 +217,14 @@ public class ExplainTableQueryPlanRequest {
     return Objects.equals(this.identity, explainTableQueryPlanRequest.identity)
         && Objects.equals(this.context, explainTableQueryPlanRequest.context)
         && Objects.equals(this.id, explainTableQueryPlanRequest.id)
+        && Objects.equals(this.branch, explainTableQueryPlanRequest.branch)
         && Objects.equals(this.query, explainTableQueryPlanRequest.query)
         && Objects.equals(this.verbose, explainTableQueryPlanRequest.verbose);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, context, id, query, verbose);
+    return Objects.hash(identity, context, id, branch, query, verbose);
   }
 
   @Override
@@ -208,6 +234,7 @@ public class ExplainTableQueryPlanRequest {
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
     sb.append("    verbose: ").append(toIndentedString(verbose)).append("\n");
     sb.append("}");
