@@ -1112,10 +1112,10 @@ paths:
       - $ref: "#/components/parameters/branch"
       - name: "on"
         in: query
-        description: Column name to use for matching rows (required)
+        description: Field path to use for matching rows (required)
         required: true
         schema:
-          type: string
+          $ref: "#/components/schemas/FieldPath"
       - name: "when_matched_update_all"
         in: query
         description: Update all columns when rows match
@@ -1125,7 +1125,7 @@ paths:
           default: false
       - name: "when_matched_update_all_filt"
         in: query
-        description: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
+        description: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax.
         required: false
         schema:
           type: string
@@ -1145,7 +1145,7 @@ paths:
           default: false
       - name: "when_not_matched_by_source_delete_filt"
         in: query
-        description: Delete rows from the target table if there is no match AND the SQL expression evaluates to true
+        description: Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax.
         schema:
           type: string
       - name: "timeout"
@@ -1670,7 +1670,7 @@ paths:
       summary: Create an index on a table
       operationId: CreateTableIndex
       description: |
-        Create an index on a table column for faster search operations.
+        Create an index on a table field for faster search operations.
         Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.).
         Index creation is handled asynchronously.
         Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress.
@@ -1709,7 +1709,7 @@ paths:
       summary: Create a scalar index on a table
       operationId: CreateTableScalarIndex
       description: |
-        Create a scalar index on a table column for faster filtering operations.
+        Create a scalar index on a table field for faster filtering operations.
         Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.).
         This is an alias for CreateTableIndex specifically for scalar indexes.
         Index creation is handled asynchronously.
@@ -2389,7 +2389,7 @@ components:
               9 - TableTagAlreadyExists: A table tag with this name already exists
               10 - TransactionNotFound: The specified transaction does not exist
               11 - TableVersionNotFound: The specified table version does not exist
-              12 - TableColumnNotFound: The specified table column does not exist
+              12 - TableColumnNotFound: The specified table field does not exist
               13 - InvalidInput: Malformed request or invalid parameters
               14 - ConcurrentModification: Optimistic concurrency conflict
               15 - PermissionDenied: User lacks permission for this operation
@@ -2629,6 +2629,36 @@ components:
         number of results that a caller will receive.
       type: integer
       nullable: true
+
+    FieldPath:
+      type: string
+      minLength: 1
+      description: |
+        Lance field path.
+
+        A field path identifies a field in a Lance schema. Nested fields are
+        addressed by joining path segments with `.`. A `.` that is not inside
+        backticks is always a path separator, so a field name that contains a
+        literal `.` must be written as a backtick-quoted segment, for example
+        `parent.`child.with.dot``. Backticks inside a quoted segment are escaped
+        by doubling them.
+
+        The canonical display form is the full path from the table schema root
+        to the field, with any segment containing characters other than
+        alphanumeric characters or `_` quoted with backticks, for example
+        `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`.
+        Index listings and error messages should use this canonical form.
+
+        A leaf field name by itself only identifies a top-level field. Nested
+        fields must be referenced by their full path, which keeps schemas with
+        the same leaf name under different parents unambiguous. If a path cannot
+        be parsed or resolved against the table schema, the implementation should
+        reject the request with InvalidInput or TableColumnNotFound.
+      examples:
+        - metadata.status
+        - MetaData.userId
+        - "`meta-data`.`user-id`"
+        - "parent.`child.with.dot`"
 
     RegisterTableRequest:
       type: object
@@ -2902,7 +2932,8 @@ components:
             Branch to target. When not specified, the main branch is used.
         predicate:
           description: |
-            Optional SQL predicate to filter rows for counting
+            Optional SQL predicate to filter rows for counting. Field
+            references must use Lance field path syntax.
           type: string
 
     CountTableRowsResponse:
@@ -2964,14 +2995,14 @@ components:
           description: |
             Branch to target. When not specified, the main branch is used.
         "on":
-          description: Column name to use for matching rows (required)
-          type: string
+          description: Field path to use for matching rows (required)
+          $ref: "#/components/schemas/FieldPath"
         when_matched_update_all:
           description: Update all columns when rows match
           type: boolean
           default: false
         when_matched_update_all_filt:
-          description: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
+          description: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax.
           type: string
         when_not_matched_insert_all:
           description: Insert all columns when rows don't match
@@ -2982,7 +3013,7 @@ components:
           type: boolean
           default: false
         when_not_matched_by_source_delete_filt:
-          description: Delete rows from the target table if there is no match AND the SQL expression evaluates to true
+          description: Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax.
           type: string
         timeout:
           description: Timeout for the operation (e.g., "30s", "5m")
@@ -3023,7 +3054,7 @@ components:
     UpdateTableRequest:
       type: object
       description: |
-        Each update consists of a column name and an SQL expression that will be
+        Each update consists of a field path and an SQL expression that will be
         evaluated against the current row's value. Optionally, a predicate can be
         provided to filter which rows to update.
       required:
@@ -3044,7 +3075,7 @@ components:
         predicate:
           type: string
           nullable: true
-          description: Optional SQL predicate to filter rows for update
+          description: Optional SQL predicate to filter rows for update. Field references must use Lance field path syntax.
         updates:
           type: array
           items:
@@ -3053,7 +3084,7 @@ components:
             maxItems: 2
             items:
               type: string
-          description: List of column updates as [column_name, expression] pairs
+          description: List of field updates as [field_path, expression] pairs. Field paths and expression references must use Lance field path syntax.
         properties:
           type: object
           description: |
@@ -3110,7 +3141,7 @@ components:
             Branch to target. When not specified, the main branch is used.
         predicate:
           type: string
-          description: SQL predicate to filter rows for deletion
+          description: SQL predicate to filter rows for deletion. Field references must use Lance field path syntax.
 
     DeleteFromTableResponse:
       type: object
@@ -3149,18 +3180,19 @@ components:
           type: object
           nullable: true
           description: |
-            Optional columns to return. Provide either column_names or column_aliases, not both.
+            Optional field paths to return. Provide either column_names or
+            column_aliases, not both.
           properties:
             column_names:
               type: array
               items:
-                type: string
-              description: List of column names to return
+                $ref: "#/components/schemas/FieldPath"
+              description: List of field paths to return
             column_aliases:
               type: object
               additionalProperties:
-                type: string
-              description: Object mapping output aliases to source column names
+                $ref: "#/components/schemas/FieldPath"
+              description: Object mapping output aliases to source field paths
         distance_type:
           type: string
           description: Distance metric to use
@@ -3173,7 +3205,9 @@ components:
           description: Whether to use fast search
         filter:
           type: string
-          description: Optional SQL filter expression
+          description: |
+            Optional SQL filter expression. Field references in the expression
+            must use Lance field path syntax.
         full_text_query:
           type: object
           nullable: true
@@ -3231,8 +3265,8 @@ components:
                   format: float
               description: Multiple query vectors for batch search
         vector_column:
-          type: string
-          description: Name of the vector column to search
+          $ref: "#/components/schemas/FieldPath"
+          description: Field path of the vector field to search
         version:
           type: integer
           format: int64
@@ -3261,8 +3295,8 @@ components:
           description: |
             Branch to target. When not specified, the main branch is used.
         column:
-          type: string
-          description: Name of the column to create index on
+          $ref: "#/components/schemas/FieldPath"
+          description: Field path to create the index on
         index_type:
           type: string
           description: Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS)
@@ -3380,8 +3414,8 @@ components:
         columns:
           type: array
           items:
-            type: string
-          description: Columns covered by this index
+            $ref: "#/components/schemas/FieldPath"
+          description: Canonical field paths covered by this index
         status:
           type: string
           description: Current status of the index
@@ -3919,7 +3953,8 @@ components:
         columns:
           type: array
           items:
-            type: string
+            $ref: "#/components/schemas/FieldPath"
+          description: Field paths to search. Omit to search all indexed FTS fields.
         query:
           type: string
 
@@ -3958,7 +3993,8 @@ components:
           type: number
           format: float
         column:
-          type: string
+          $ref: "#/components/schemas/FieldPath"
+          description: Field path to match. Omit to use the query's default fields.
         fuzziness:
           type: integer
           format: int32
@@ -3992,7 +4028,8 @@ components:
         - terms
       properties:
         column:
-          type: string
+          $ref: "#/components/schemas/FieldPath"
+          description: Field path to match. Omit to use the query's default fields.
         slop:
           type: integer
           format: int32
@@ -4923,18 +4960,19 @@ components:
           type: object
           nullable: true
           description: |
-            Optional columns to return. Provide either column_names or column_aliases, not both.
+            Optional field paths to return. Provide either column_names or
+            column_aliases, not both.
           properties:
             column_names:
               type: array
               items:
-                type: string
-              description: List of column names to return
+                $ref: "#/components/schemas/FieldPath"
+              description: List of field paths to return
             column_aliases:
               type: object
               additionalProperties:
-                type: string
-              description: Object mapping output aliases to source column names
+                $ref: "#/components/schemas/FieldPath"
+              description: Object mapping output aliases to source field paths
         distance_type:
           type: string
           description: Distance metric to use
@@ -4947,7 +4985,9 @@ components:
           description: Whether to use fast search
         filter:
           type: string
-          description: Optional SQL filter expression
+          description: |
+            Optional SQL filter expression. Field references in the expression
+            must use Lance field path syntax.
         full_text_query:
           type: object
           nullable: true
@@ -5005,8 +5045,8 @@ components:
                   format: float
               description: Multiple query vectors for batch search
         vector_column:
-          type: string
-          description: Name of the vector column to search
+          $ref: "#/components/schemas/FieldPath"
+          description: Field path of the vector field to search
         version:
           type: integer
           format: int64
@@ -5079,8 +5119,8 @@ components:
         input_columns:
           type: array
           items:
-            type: string
-          description: List of input column names for the virtual column
+            $ref: "#/components/schemas/FieldPath"
+          description: List of input field paths for the virtual column
         outputs:
           type: array
           items:
@@ -5194,8 +5234,8 @@ components:
         - metadata
       properties:
         path:
-          type: string
-          description: Field (column) path whose metadata to update
+          $ref: "#/components/schemas/FieldPath"
+          description: Field path whose metadata to update
         metadata:
           type: object
           additionalProperties:
@@ -5260,8 +5300,8 @@ components:
         - path
       properties:
         path:
-          type: string
-          description: Column path to alter
+          $ref: "#/components/schemas/FieldPath"
+          description: Field path to alter
         data_type:
           type: object
           description: New data type for the column using JSON representation (optional)
@@ -5289,8 +5329,8 @@ components:
             - array
             - "null"
           items:
-            type: string
-          description: List of input column names for the virtual column (optional)
+            $ref: "#/components/schemas/FieldPath"
+          description: List of input field paths for the virtual column (optional)
         image:
           type:
             - string
@@ -5367,8 +5407,8 @@ components:
           description: |
             Branch to target. When not specified, the main branch is used.
         column:
-          type: string
-          description: Column name to backfill
+          $ref: "#/components/schemas/FieldPath"
+          description: Field path to backfill
         where:
           type:
             - string
@@ -5599,24 +5639,24 @@ components:
             - array
             - "null"
           items:
-            type: string
+            $ref: "#/components/schemas/FieldPath"
           description: |
-            Source columns the UDTF reads. Null means all columns (batch
+            Source field paths the UDTF reads. Null means all fields (batch
             UDTF only).
         partition_by:
-          type:
-            - string
-            - "null"
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/FieldPath"
           description: |
-            Batch UDTF only. Column-value partition key for
+            Batch UDTF only. Field-value partition key for
             partition-parallel execution. Mutually exclusive with
             `partition_by_indexed_column`.
         partition_by_indexed_column:
-          type:
-            - string
-            - "null"
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/FieldPath"
           description: |
-            Batch UDTF only. Source column with an IVF-family index used
+            Batch UDTF only. Source field with an IVF-family index used
             for index-based partitioning. The server validates the index
             exists at create time.
         num_cpus:
@@ -5696,8 +5736,8 @@ components:
         columns:
           type: array
           items:
-            type: string
-          description: Names of columns to drop
+            $ref: "#/components/schemas/FieldPath"
+          description: Field paths to drop
 
     AlterTableDropColumnsResponse:
       type: object
@@ -5876,7 +5916,7 @@ components:
           type: array
           items:
             type: integer
-          description: Field IDs of the source columns in the schema
+          description: Field IDs of the source fields in the schema
           example: [1]
         transform:
           $ref: "#/components/schemas/PartitionTransform"

@@ -36,7 +36,7 @@ class TestAlterVirtualColumnEntry(unittest.TestCase):
         if include_optional:
             return AlterVirtualColumnEntry(
                 input_columns = [
-                    ''
+                    '0'
                     ],
                 image = '',
                 udf = '',

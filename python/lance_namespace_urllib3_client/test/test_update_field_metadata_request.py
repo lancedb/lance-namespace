@@ -44,7 +44,7 @@ class TestUpdateFieldMetadataRequest(unittest.TestCase):
                 branch = '',
                 updates = [
                     lance_namespace_urllib3_client.models.update_field_metadata_entry.UpdateFieldMetadataEntry(
-                        path = '', 
+                        path = '0', 
                         metadata = {
                             'key' : ''
                             }, 
@@ -55,7 +55,7 @@ class TestUpdateFieldMetadataRequest(unittest.TestCase):
             return UpdateFieldMetadataRequest(
                 updates = [
                     lance_namespace_urllib3_client.models.update_field_metadata_entry.UpdateFieldMetadataEntry(
-                        path = '', 
+                        path = '0', 
                         metadata = {
                             'key' : ''
                             }, 

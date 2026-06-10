@@ -32,7 +32,7 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class AddVirtualColumnEntry {
 
-  @Valid private List<String> inputColumns = new ArrayList<>();
+  @Valid private List<@Size(min = 1) String> inputColumns = new ArrayList<>();
 
   @Valid private List<@Valid AddVirtualColumnOutputEntry> outputs = new ArrayList<>();
 
@@ -60,7 +60,7 @@ public class AddVirtualColumnEntry {
 
   /** Constructor with only required parameters */
   public AddVirtualColumnEntry(
-      List<String> inputColumns,
+      List<@Size(min = 1) String> inputColumns,
       List<@Valid AddVirtualColumnOutputEntry> outputs,
       String image,
       String udf,
@@ -74,7 +74,7 @@ public class AddVirtualColumnEntry {
     this.udfVersion = udfVersion;
   }
 
-  public AddVirtualColumnEntry inputColumns(List<String> inputColumns) {
+  public AddVirtualColumnEntry inputColumns(List<@Size(min = 1) String> inputColumns) {
     this.inputColumns = inputColumns;
     return this;
   }
@@ -88,21 +88,21 @@ public class AddVirtualColumnEntry {
   }
 
   /**
-   * List of input column names for the virtual column
+   * List of input field paths for the virtual column
    *
    * @return inputColumns
    */
   @NotNull
   @Schema(
       name = "input_columns",
-      description = "List of input column names for the virtual column",
+      description = "List of input field paths for the virtual column",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("input_columns")
-  public List<String> getInputColumns() {
+  public List<@Size(min = 1) String> getInputColumns() {
     return inputColumns;
   }
 
-  public void setInputColumns(List<String> inputColumns) {
+  public void setInputColumns(List<@Size(min = 1) String> inputColumns) {
     this.inputColumns = inputColumns;
   }
 

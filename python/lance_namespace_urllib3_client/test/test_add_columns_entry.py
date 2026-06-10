@@ -39,7 +39,7 @@ class TestAddColumnsEntry(unittest.TestCase):
                 expression = '',
                 virtual_column = lance_namespace_urllib3_client.models.add_virtual_column_entry.AddVirtualColumnEntry(
                     input_columns = [
-                        ''
+                        '0'
                         ], 
                     outputs = [
                         lance_namespace_urllib3_client.models.add_virtual_column_output_entry.AddVirtualColumnOutputEntry(

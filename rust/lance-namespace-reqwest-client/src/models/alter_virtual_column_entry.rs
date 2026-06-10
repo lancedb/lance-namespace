@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AlterVirtualColumnEntry {
-    /// List of input column names for the virtual column (optional)
+    /// List of input field paths for the virtual column (optional)
     #[serde(rename = "input_columns", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub input_columns: Option<Option<Vec<String>>>,
     /// Docker image to use for the UDF (optional)

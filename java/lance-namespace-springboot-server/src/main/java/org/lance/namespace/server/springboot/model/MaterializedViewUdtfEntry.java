@@ -79,11 +79,11 @@ public class MaterializedViewUdtfEntry {
 
   private String udtfVersion;
 
-  @Valid private List<String> inputColumns;
+  @Valid private List<@Size(min = 1) String> inputColumns;
 
-  private String partitionBy = null;
+  private String partitionBy;
 
-  private String partitionByIndexedColumn = null;
+  private String partitionByIndexedColumn;
 
   private BigDecimal numCpus = null;
 
@@ -235,7 +235,7 @@ public class MaterializedViewUdtfEntry {
     this.udtfVersion = udtfVersion;
   }
 
-  public MaterializedViewUdtfEntry inputColumns(List<String> inputColumns) {
+  public MaterializedViewUdtfEntry inputColumns(List<@Size(min = 1) String> inputColumns) {
     this.inputColumns = inputColumns;
     return this;
   }
@@ -249,20 +249,20 @@ public class MaterializedViewUdtfEntry {
   }
 
   /**
-   * Source columns the UDTF reads. Null means all columns (batch UDTF only).
+   * Source field paths the UDTF reads. Null means all fields (batch UDTF only).
    *
    * @return inputColumns
    */
   @Schema(
       name = "input_columns",
-      description = "Source columns the UDTF reads. Null means all columns (batch UDTF only). ",
+      description = "Source field paths the UDTF reads. Null means all fields (batch UDTF only). ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("input_columns")
-  public List<String> getInputColumns() {
+  public List<@Size(min = 1) String> getInputColumns() {
     return inputColumns;
   }
 
-  public void setInputColumns(List<String> inputColumns) {
+  public void setInputColumns(List<@Size(min = 1) String> inputColumns) {
     this.inputColumns = inputColumns;
   }
 
@@ -272,15 +272,26 @@ public class MaterializedViewUdtfEntry {
   }
 
   /**
-   * Batch UDTF only. Column-value partition key for partition-parallel execution. Mutually
-   * exclusive with `partition_by_indexed_column`.
+   * Lance field path. A field path identifies a field in a Lance schema. Nested fields are
+   * addressed by joining path segments with `.`. A `.` that is not inside backticks is always a
+   * path separator, so a field name that contains a literal `.` must be written as a
+   * backtick-quoted segment, for example `parent.`child.with.dot``. Backticks inside a quoted
+   * segment are escaped by doubling them. The canonical display form is the full path from the
+   * table schema root to the field, with any segment containing characters other than alphanumeric
+   * characters or `_` quoted with backticks, for example `metadata.status`, `MetaData.userId`, and
+   * `meta-data`.`user-id`. Index listings and error messages should use this canonical form. A leaf
+   * field name by itself only identifies a top-level field. Nested fields must be referenced by
+   * their full path, which keeps schemas with the same leaf name under different parents
+   * unambiguous. If a path cannot be parsed or resolved against the table schema, the
+   * implementation should reject the request with InvalidInput or TableColumnNotFound.
    *
    * @return partitionBy
    */
+  @Size(min = 1)
   @Schema(
       name = "partition_by",
       description =
-          "Batch UDTF only. Column-value partition key for partition-parallel execution. Mutually exclusive with `partition_by_indexed_column`. ",
+          "Lance field path.  A field path identifies a field in a Lance schema. Nested fields are addressed by joining path segments with `.`. A `.` that is not inside backticks is always a path separator, so a field name that contains a literal `.` must be written as a backtick-quoted segment, for example `parent.`child.with.dot``. Backticks inside a quoted segment are escaped by doubling them.  The canonical display form is the full path from the table schema root to the field, with any segment containing characters other than alphanumeric characters or `_` quoted with backticks, for example `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`. Index listings and error messages should use this canonical form.  A leaf field name by itself only identifies a top-level field. Nested fields must be referenced by their full path, which keeps schemas with the same leaf name under different parents unambiguous. If a path cannot be parsed or resolved against the table schema, the implementation should reject the request with InvalidInput or TableColumnNotFound. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("partition_by")
   public String getPartitionBy() {
@@ -297,15 +308,26 @@ public class MaterializedViewUdtfEntry {
   }
 
   /**
-   * Batch UDTF only. Source column with an IVF-family index used for index-based partitioning. The
-   * server validates the index exists at create time.
+   * Lance field path. A field path identifies a field in a Lance schema. Nested fields are
+   * addressed by joining path segments with `.`. A `.` that is not inside backticks is always a
+   * path separator, so a field name that contains a literal `.` must be written as a
+   * backtick-quoted segment, for example `parent.`child.with.dot``. Backticks inside a quoted
+   * segment are escaped by doubling them. The canonical display form is the full path from the
+   * table schema root to the field, with any segment containing characters other than alphanumeric
+   * characters or `_` quoted with backticks, for example `metadata.status`, `MetaData.userId`, and
+   * `meta-data`.`user-id`. Index listings and error messages should use this canonical form. A leaf
+   * field name by itself only identifies a top-level field. Nested fields must be referenced by
+   * their full path, which keeps schemas with the same leaf name under different parents
+   * unambiguous. If a path cannot be parsed or resolved against the table schema, the
+   * implementation should reject the request with InvalidInput or TableColumnNotFound.
    *
    * @return partitionByIndexedColumn
    */
+  @Size(min = 1)
   @Schema(
       name = "partition_by_indexed_column",
       description =
-          "Batch UDTF only. Source column with an IVF-family index used for index-based partitioning. The server validates the index exists at create time. ",
+          "Lance field path.  A field path identifies a field in a Lance schema. Nested fields are addressed by joining path segments with `.`. A `.` that is not inside backticks is always a path separator, so a field name that contains a literal `.` must be written as a backtick-quoted segment, for example `parent.`child.with.dot``. Backticks inside a quoted segment are escaped by doubling them.  The canonical display form is the full path from the table schema root to the field, with any segment containing characters other than alphanumeric characters or `_` quoted with backticks, for example `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`. Index listings and error messages should use this canonical form.  A leaf field name by itself only identifies a top-level field. Nested fields must be referenced by their full path, which keeps schemas with the same leaf name under different parents unambiguous. If a path cannot be parsed or resolved against the table schema, the implementation should reject the request with InvalidInput or TableColumnNotFound. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("partition_by_indexed_column")
   public String getPartitionByIndexedColumn() {

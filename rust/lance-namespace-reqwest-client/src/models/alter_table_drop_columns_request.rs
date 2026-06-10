@@ -23,7 +23,7 @@ pub struct AlterTableDropColumnsRequest {
     /// Branch to target. When not specified, the main branch is used. 
     #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
     pub branch: Option<String>,
-    /// Names of columns to drop
+    /// Field paths to drop
     #[serde(rename = "columns")]
     pub columns: Vec<String>,
 }

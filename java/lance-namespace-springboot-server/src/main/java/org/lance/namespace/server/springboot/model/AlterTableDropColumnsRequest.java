@@ -40,14 +40,14 @@ public class AlterTableDropColumnsRequest {
 
   private String branch;
 
-  @Valid private List<String> columns = new ArrayList<>();
+  @Valid private List<@Size(min = 1) String> columns = new ArrayList<>();
 
   public AlterTableDropColumnsRequest() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public AlterTableDropColumnsRequest(List<String> columns) {
+  public AlterTableDropColumnsRequest(List<@Size(min = 1) String> columns) {
     this.columns = columns;
   }
 
@@ -158,7 +158,7 @@ public class AlterTableDropColumnsRequest {
     this.branch = branch;
   }
 
-  public AlterTableDropColumnsRequest columns(List<String> columns) {
+  public AlterTableDropColumnsRequest columns(List<@Size(min = 1) String> columns) {
     this.columns = columns;
     return this;
   }
@@ -172,21 +172,21 @@ public class AlterTableDropColumnsRequest {
   }
 
   /**
-   * Names of columns to drop
+   * Field paths to drop
    *
    * @return columns
    */
   @NotNull
   @Schema(
       name = "columns",
-      description = "Names of columns to drop",
+      description = "Field paths to drop",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("columns")
-  public List<String> getColumns() {
+  public List<@Size(min = 1) String> getColumns() {
     return columns;
   }
 
-  public void setColumns(List<String> columns) {
+  public void setColumns(List<@Size(min = 1) String> columns) {
     this.columns = columns;
   }
 

@@ -27,7 +27,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
- * Each update consists of a column name and an SQL expression that will be evaluated against the
+ * Each update consists of a field path and an SQL expression that will be evaluated against the
  * current row&#39;s value. Optionally, a predicate can be provided to filter which rows to update.
  */
 @JsonPropertyOrder({
@@ -184,7 +184,8 @@ public class UpdateTableRequest {
   }
 
   /**
-   * Optional SQL predicate to filter rows for update
+   * Optional SQL predicate to filter rows for update. Field references must use Lance field path
+   * syntax.
    *
    * @return predicate
    */
@@ -215,7 +216,8 @@ public class UpdateTableRequest {
   }
 
   /**
-   * List of column updates as [column_name, expression] pairs
+   * List of field updates as [field_path, expression] pairs. Field paths and expression references
+   * must use Lance field path syntax.
    *
    * @return updates
    */

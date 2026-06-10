@@ -24,13 +24,13 @@ pub struct MergeInsertIntoTableRequest {
     /// Branch to target. When not specified, the main branch is used. 
     #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
     pub branch: Option<String>,
-    /// Column name to use for matching rows (required)
+    /// Lance field path.  A field path identifies a field in a Lance schema. Nested fields are addressed by joining path segments with `.`. A `.` that is not inside backticks is always a path separator, so a field name that contains a literal `.` must be written as a backtick-quoted segment, for example `parent.`child.with.dot``. Backticks inside a quoted segment are escaped by doubling them.  The canonical display form is the full path from the table schema root to the field, with any segment containing characters other than alphanumeric characters or `_` quoted with backticks, for example `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`. Index listings and error messages should use this canonical form.  A leaf field name by itself only identifies a top-level field. Nested fields must be referenced by their full path, which keeps schemas with the same leaf name under different parents unambiguous. If a path cannot be parsed or resolved against the table schema, the implementation should reject the request with InvalidInput or TableColumnNotFound. 
     #[serde(rename = "on", skip_serializing_if = "Option::is_none")]
     pub on: Option<String>,
     /// Update all columns when rows match
     #[serde(rename = "when_matched_update_all", skip_serializing_if = "Option::is_none")]
     pub when_matched_update_all: Option<bool>,
-    /// The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
+    /// The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax.
     #[serde(rename = "when_matched_update_all_filt", skip_serializing_if = "Option::is_none")]
     pub when_matched_update_all_filt: Option<String>,
     /// Insert all columns when rows don't match
@@ -39,7 +39,7 @@ pub struct MergeInsertIntoTableRequest {
     /// Delete all rows from target table that don't match a row in the source table
     #[serde(rename = "when_not_matched_by_source_delete", skip_serializing_if = "Option::is_none")]
     pub when_not_matched_by_source_delete: Option<bool>,
-    /// Delete rows from the target table if there is no match AND the SQL expression evaluates to true
+    /// Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax.
     #[serde(rename = "when_not_matched_by_source_delete_filt", skip_serializing_if = "Option::is_none")]
     pub when_not_matched_by_source_delete_filt: Option<String>,
     /// Timeout for the operation (e.g., \"30s\", \"5m\")

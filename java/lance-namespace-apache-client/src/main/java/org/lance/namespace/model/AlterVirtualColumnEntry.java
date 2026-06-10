@@ -112,7 +112,7 @@ public class AlterVirtualColumnEntry {
   }
 
   /**
-   * List of input column names for the virtual column (optional)
+   * List of input field paths for the virtual column (optional)
    *
    * @return inputColumns
    */

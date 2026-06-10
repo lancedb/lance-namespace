@@ -35,7 +35,7 @@ class TestPhraseQuery(unittest.TestCase):
         model = PhraseQuery()
         if include_optional:
             return PhraseQuery(
-                column = '',
+                column = '0',
                 slop = 0,
                 terms = ''
             )

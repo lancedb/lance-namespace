@@ -105,7 +105,7 @@ public class AddVirtualColumnEntry {
   }
 
   /**
-   * List of input column names for the virtual column
+   * List of input field paths for the virtual column
    *
    * @return inputColumns
    */

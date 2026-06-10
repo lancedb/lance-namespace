@@ -2120,7 +2120,7 @@ public interface TableApi {
   }
 
   /**
-   * POST /v1/table/{id}/create_index : Create an index on a table Create an index on a table column
+   * POST /v1/table/{id}/create_index : Create an index on a table Create an index on a table field
    * for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and
    * scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the
    * &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to monitor
@@ -2151,7 +2151,7 @@ public interface TableApi {
       operationId = "createTableIndex",
       summary = "Create an index on a table",
       description =
-          "Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. ",
+          "Create an index on a table field for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. ",
       tags = {"Table", "Index", "Metadata"},
       responses = {
         @ApiResponse(
@@ -2301,9 +2301,9 @@ public interface TableApi {
 
   /**
    * POST /v1/table/{id}/create_scalar_index : Create a scalar index on a table Create a scalar
-   * index on a table column for faster filtering operations. Supports scalar indexes (BTREE,
-   * BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar
-   * indexes. Index creation is handled asynchronously. Use the &#x60;ListTableIndices&#x60; and
+   * index on a table field for faster filtering operations. Supports scalar indexes (BTREE, BITMAP,
+   * LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes.
+   * Index creation is handled asynchronously. Use the &#x60;ListTableIndices&#x60; and
    * &#x60;DescribeTableIndexStats&#x60; operations to monitor index creation progress.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
@@ -2331,7 +2331,7 @@ public interface TableApi {
       operationId = "createTableScalarIndex",
       summary = "Create a scalar index on a table",
       description =
-          "Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. ",
+          "Create a scalar index on a table field for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. ",
       tags = {"Table", "Index", "Metadata"},
       responses = {
         @ApiResponse(
@@ -5900,7 +5900,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"indexes\" : [ { \"index_uuid\" : \"index_uuid\", \"size_bytes\" : 0, \"columns\" : [ \"columns\", \"columns\" ], \"created_at\" : \"2000-01-23T04:56:07.000+00:00\", \"index_details\" : \"index_details\", \"num_indexed_rows\" : 0, \"num_segments\" : 0, \"index_type\" : \"index_type\", \"index_version\" : 0, \"num_unindexed_rows\" : 0, \"index_name\" : \"index_name\", \"status\" : \"status\", \"type_url\" : \"type_url\" }, { \"index_uuid\" : \"index_uuid\", \"size_bytes\" : 0, \"columns\" : [ \"columns\", \"columns\" ], \"created_at\" : \"2000-01-23T04:56:07.000+00:00\", \"index_details\" : \"index_details\", \"num_indexed_rows\" : 0, \"num_segments\" : 0, \"index_type\" : \"index_type\", \"index_version\" : 0, \"num_unindexed_rows\" : 0, \"index_name\" : \"index_name\", \"status\" : \"status\", \"type_url\" : \"type_url\" } ], \"page_token\" : \"page_token\" }";
+                      "{ \"indexes\" : [ { \"index_uuid\" : \"index_uuid\", \"size_bytes\" : 0, \"columns\" : [ null, null ], \"created_at\" : \"2000-01-23T04:56:07.000+00:00\", \"index_details\" : \"index_details\", \"num_indexed_rows\" : 0, \"num_segments\" : 0, \"index_type\" : \"index_type\", \"index_version\" : 0, \"num_unindexed_rows\" : 0, \"index_name\" : \"index_name\", \"status\" : \"status\", \"type_url\" : \"type_url\" }, { \"index_uuid\" : \"index_uuid\", \"size_bytes\" : 0, \"columns\" : [ null, null ], \"created_at\" : \"2000-01-23T04:56:07.000+00:00\", \"index_details\" : \"index_details\", \"num_indexed_rows\" : 0, \"num_segments\" : 0, \"index_type\" : \"index_type\", \"index_version\" : 0, \"num_unindexed_rows\" : 0, \"index_name\" : \"index_name\", \"status\" : \"status\", \"type_url\" : \"type_url\" } ], \"page_token\" : \"page_token\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -6369,7 +6369,7 @@ public interface TableApi {
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
    *     For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the
    *     root namespace. (required)
-   * @param on Column name to use for matching rows (required) (required)
+   * @param on Field path to use for matching rows (required) (required)
    * @param body Arrow IPC stream containing the records to merge (required)
    * @param delimiter An optional delimiter of the &#x60;string identifier&#x60;, following the
    *     Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.
@@ -6380,13 +6380,15 @@ public interface TableApi {
    *     &#x60;branch&#x60; as a body field instead. (optional)
    * @param whenMatchedUpdateAll Update all columns when rows match (optional, default to false)
    * @param whenMatchedUpdateAllFilt The row is updated (similar to UpdateAll) only for rows where
-   *     the SQL expression evaluates to true (optional)
+   *     the SQL expression evaluates to true. Field references must use Lance field path syntax.
+   *     (optional)
    * @param whenNotMatchedInsertAll Insert all columns when rows don&#39;t match (optional, default
    *     to false)
    * @param whenNotMatchedBySourceDelete Delete all rows from target table that don&#39;t match a
    *     row in the source table (optional, default to false)
    * @param whenNotMatchedBySourceDeleteFilt Delete rows from the target table if there is no match
-   *     AND the SQL expression evaluates to true (optional)
+   *     AND the SQL expression evaluates to true. Field references must use Lance field path
+   *     syntax. (optional)
    * @param timeout Timeout for the operation (e.g., \&quot;30s\&quot;, \&quot;5m\&quot;) (optional)
    * @param useIndex Whether to use index for matching rows (optional, default to false)
    * @return Result of merge insert operation (status code 200) or Indicates a bad request error. It
@@ -6490,9 +6492,10 @@ public interface TableApi {
           @PathVariable("id")
           String id,
       @NotNull
+          @Size(min = 1)
           @Parameter(
               name = "on",
-              description = "Column name to use for matching rows (required)",
+              description = "Field path to use for matching rows (required)",
               required = true,
               in = ParameterIn.QUERY)
           @Valid
@@ -6531,7 +6534,7 @@ public interface TableApi {
       @Parameter(
               name = "when_matched_update_all_filt",
               description =
-                  "The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true",
+                  "The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax.",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "when_matched_update_all_filt", required = false)
@@ -6560,7 +6563,7 @@ public interface TableApi {
       @Parameter(
               name = "when_not_matched_by_source_delete_filt",
               description =
-                  "Delete rows from the target table if there is no match AND the SQL expression evaluates to true",
+                  "Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax.",
               in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "when_not_matched_by_source_delete_filt", required = false)

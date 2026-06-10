@@ -35,7 +35,7 @@ class TestUpdateFieldMetadataEntry(unittest.TestCase):
         model = UpdateFieldMetadataEntry()
         if include_optional:
             return UpdateFieldMetadataEntry(
-                path = '',
+                path = '0',
                 metadata = {
                     'key' : ''
                     },
@@ -43,7 +43,7 @@ class TestUpdateFieldMetadataEntry(unittest.TestCase):
             )
         else:
             return UpdateFieldMetadataEntry(
-                path = '',
+                path = '0',
                 metadata = {
                     'key' : ''
                     },

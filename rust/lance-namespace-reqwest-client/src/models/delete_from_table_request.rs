@@ -25,7 +25,7 @@ pub struct DeleteFromTableRequest {
     /// Branch to target. When not specified, the main branch is used. 
     #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
     pub branch: Option<String>,
-    /// SQL predicate to filter rows for deletion
+    /// SQL predicate to filter rows for deletion. Field references must use Lance field path syntax.
     #[serde(rename = "predicate")]
     pub predicate: String,
 }

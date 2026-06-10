@@ -90,7 +90,7 @@ public class PartitionField {
   }
 
   /**
-   * Field IDs of the source columns in the schema
+   * Field IDs of the source fields in the schema
    *
    * @return sourceIds
    */

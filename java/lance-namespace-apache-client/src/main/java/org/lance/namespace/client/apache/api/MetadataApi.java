@@ -919,7 +919,7 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Create an index on a table Create an index on a table column for faster search operations.
+   * Create an index on a table Create an index on a table field for faster search operations.
    * Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE,
    * BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the
    * &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to monitor
@@ -943,7 +943,7 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Create an index on a table Create an index on a table column for faster search operations.
+   * Create an index on a table Create an index on a table field for faster search operations.
    * Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE,
    * BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the
    * &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to monitor
@@ -1027,7 +1027,7 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Create a scalar index on a table Create a scalar index on a table column for faster filtering
+   * Create a scalar index on a table Create a scalar index on a table field for faster filtering
    * operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias
    * for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously.
    * Use the &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to
@@ -1052,7 +1052,7 @@ public class MetadataApi extends BaseApi {
   }
 
   /**
-   * Create a scalar index on a table Create a scalar index on a table column for faster filtering
+   * Create a scalar index on a table Create a scalar index on a table field for faster filtering
    * operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias
    * for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously.
    * Use the &#x60;ListTableIndices&#x60; and &#x60;DescribeTableIndexStats&#x60; operations to

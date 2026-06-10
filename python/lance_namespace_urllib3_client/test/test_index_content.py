@@ -38,7 +38,7 @@ class TestIndexContent(unittest.TestCase):
                 index_name = '',
                 index_uuid = '',
                 columns = [
-                    ''
+                    '0'
                     ],
                 status = '',
                 index_type = '',
@@ -56,7 +56,7 @@ class TestIndexContent(unittest.TestCase):
                 index_name = '',
                 index_uuid = '',
                 columns = [
-                    ''
+                    '0'
                     ],
                 status = '',
         )

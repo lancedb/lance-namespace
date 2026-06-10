@@ -9,7 +9,7 @@
 |------------ | ------------- | ------------- | -------------|
 |**indexName** | **String** | Name of the index |  |
 |**indexUuid** | **String** | Unique identifier for the index |  |
-|**columns** | **List&lt;String&gt;** | Columns covered by this index |  |
+|**columns** | **List&lt;String&gt;** | Canonical field paths covered by this index |  |
 |**status** | **String** | Current status of the index |  |
 |**indexType** | **String** | Friendly index type, e.g. IVF_PQ, BTREE. Unknown if no plugin recognizes the index. |  [optional] |
 |**typeUrl** | **String** | Protobuf type URL, a precise type identifier for the index. |  [optional] |

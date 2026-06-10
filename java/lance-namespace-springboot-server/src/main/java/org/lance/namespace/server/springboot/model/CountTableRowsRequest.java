@@ -183,13 +183,15 @@ public class CountTableRowsRequest {
   }
 
   /**
-   * Optional SQL predicate to filter rows for counting
+   * Optional SQL predicate to filter rows for counting. Field references must use Lance field path
+   * syntax.
    *
    * @return predicate
    */
   @Schema(
       name = "predicate",
-      description = "Optional SQL predicate to filter rows for counting ",
+      description =
+          "Optional SQL predicate to filter rows for counting. Field references must use Lance field path syntax. ",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("predicate")
   public String getPredicate() {

@@ -52,7 +52,7 @@ public class StringFtsQuery {
   }
 
   /**
-   * Get columns
+   * Field paths to search. Omit to search all indexed FTS fields.
    *
    * @return columns
    */

@@ -12,7 +12,7 @@
 |**id** | **List&lt;String&gt;** |  |  [optional] |
 |**version** | **Long** | Version of the table to describe. If not specified, server should resolve it to the latest version.  |  [optional] |
 |**branch** | **String** | Branch to target. When not specified, the main branch is used.  |  [optional] |
-|**predicate** | **String** | Optional SQL predicate to filter rows for counting  |  [optional] |
+|**predicate** | **String** | Optional SQL predicate to filter rows for counting. Field references must use Lance field path syntax.  |  [optional] |
 
 
 

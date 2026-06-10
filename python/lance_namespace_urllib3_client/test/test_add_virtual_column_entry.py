@@ -36,7 +36,7 @@ class TestAddVirtualColumnEntry(unittest.TestCase):
         if include_optional:
             return AddVirtualColumnEntry(
                 input_columns = [
-                    ''
+                    '0'
                     ],
                 outputs = [
                     lance_namespace_urllib3_client.models.add_virtual_column_output_entry.AddVirtualColumnOutputEntry(
@@ -63,7 +63,7 @@ class TestAddVirtualColumnEntry(unittest.TestCase):
         else:
             return AddVirtualColumnEntry(
                 input_columns = [
-                    ''
+                    '0'
                     ],
                 outputs = [
                     lance_namespace_urllib3_client.models.add_virtual_column_output_entry.AddVirtualColumnOutputEntry(

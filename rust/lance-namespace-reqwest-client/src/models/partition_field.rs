@@ -17,7 +17,7 @@ pub struct PartitionField {
     /// Unique identifier for this partition field (must not be renamed)
     #[serde(rename = "field_id")]
     pub field_id: String,
-    /// Field IDs of the source columns in the schema
+    /// Field IDs of the source fields in the schema
     #[serde(rename = "source_ids")]
     pub source_ids: Vec<i32>,
     /// Well-known partition transform. Exactly one of transform or expression must be specified.

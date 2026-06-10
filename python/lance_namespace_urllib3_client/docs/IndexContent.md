@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **index_name** | **str** | Name of the index | 
 **index_uuid** | **str** | Unique identifier for the index | 
-**columns** | **List[str]** | Columns covered by this index | 
+**columns** | **List[str]** | Canonical field paths covered by this index | 
 **status** | **str** | Current status of the index | 
 **index_type** | **str** | Friendly index type, e.g. IVF_PQ, BTREE. Unknown if no plugin recognizes the index. | [optional] 
 **type_url** | **str** | Protobuf type URL, a precise type identifier for the index. | [optional] 

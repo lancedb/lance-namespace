@@ -173,14 +173,15 @@ public class DeleteFromTableRequest {
   }
 
   /**
-   * SQL predicate to filter rows for deletion
+   * SQL predicate to filter rows for deletion. Field references must use Lance field path syntax.
    *
    * @return predicate
    */
   @NotNull
   @Schema(
       name = "predicate",
-      description = "SQL predicate to filter rows for deletion",
+      description =
+          "SQL predicate to filter rows for deletion. Field references must use Lance field path syntax.",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("predicate")
   public String getPredicate() {

@@ -26,14 +26,14 @@ from typing_extensions import Self
 
 class UpdateTableRequest(BaseModel):
     """
-    Each update consists of a column name and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
+    Each update consists of a field path and an SQL expression that will be evaluated against the current row's value. Optionally, a predicate can be provided to filter which rows to update. 
     """ # noqa: E501
     identity: Optional[Identity] = None
     context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`. ")
     id: Optional[List[StrictStr]] = None
     branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
-    predicate: Optional[StrictStr] = Field(default=None, description="Optional SQL predicate to filter rows for update")
-    updates: List[Annotated[List[StrictStr], Field(min_length=2, max_length=2)]] = Field(description="List of column updates as [column_name, expression] pairs")
+    predicate: Optional[StrictStr] = Field(default=None, description="Optional SQL predicate to filter rows for update. Field references must use Lance field path syntax.")
+    updates: List[Annotated[List[StrictStr], Field(min_length=2, max_length=2)]] = Field(description="List of field updates as [field_path, expression] pairs. Field paths and expression references must use Lance field path syntax.")
     properties: Optional[Dict[str, StrictStr]] = Field(default=None, description="Properties stored on the table, if supported by the implementation. ")
     __properties: ClassVar[List[str]] = ["identity", "context", "id", "branch", "predicate", "updates", "properties"]
 

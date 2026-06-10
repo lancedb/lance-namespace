@@ -30,7 +30,7 @@ class IndexContent(BaseModel):
     """ # noqa: E501
     index_name: StrictStr = Field(description="Name of the index")
     index_uuid: StrictStr = Field(description="Unique identifier for the index")
-    columns: List[StrictStr] = Field(description="Columns covered by this index")
+    columns: List[Annotated[str, Field(min_length=1, strict=True)]] = Field(description="Canonical field paths covered by this index")
     status: StrictStr = Field(description="Current status of the index")
     index_type: Optional[StrictStr] = Field(default=None, description="Friendly index type, e.g. IVF_PQ, BTREE. Unknown if no plugin recognizes the index.")
     type_url: Optional[StrictStr] = Field(default=None, description="Protobuf type URL, a precise type identifier for the index.")

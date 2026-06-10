@@ -19,7 +19,7 @@ pub struct IndexContent {
     /// Unique identifier for the index
     #[serde(rename = "index_uuid")]
     pub index_uuid: String,
-    /// Columns covered by this index
+    /// Canonical field paths covered by this index
     #[serde(rename = "columns")]
     pub columns: Vec<String>,
     /// Current status of the index

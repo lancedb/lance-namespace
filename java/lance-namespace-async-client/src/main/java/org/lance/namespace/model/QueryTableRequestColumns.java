@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** Optional columns to return. Provide either column_names or column_aliases, not both. */
+/** Optional field paths to return. Provide either column_names or column_aliases, not both. */
 @JsonPropertyOrder({
   QueryTableRequestColumns.JSON_PROPERTY_COLUMN_NAMES,
   QueryTableRequestColumns.JSON_PROPERTY_COLUMN_ALIASES
@@ -57,7 +57,7 @@ public class QueryTableRequestColumns {
   }
 
   /**
-   * List of column names to return
+   * List of field paths to return
    *
    * @return columnNames
    */
@@ -89,7 +89,7 @@ public class QueryTableRequestColumns {
   }
 
   /**
-   * Object mapping output aliases to source column names
+   * Object mapping output aliases to source field paths
    *
    * @return columnAliases
    */

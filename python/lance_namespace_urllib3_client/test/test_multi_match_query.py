@@ -38,7 +38,7 @@ class TestMultiMatchQuery(unittest.TestCase):
                 match_queries = [
                     lance_namespace_urllib3_client.models.match_query.MatchQuery(
                         boost = 1.337, 
-                        column = '', 
+                        column = '0', 
                         fuzziness = 0, 
                         max_expansions = 0, 
                         operator = '', 
@@ -51,7 +51,7 @@ class TestMultiMatchQuery(unittest.TestCase):
                 match_queries = [
                     lance_namespace_urllib3_client.models.match_query.MatchQuery(
                         boost = 1.337, 
-                        column = '', 
+                        column = '0', 
                         fuzziness = 0, 
                         max_expansions = 0, 
                         operator = '', 

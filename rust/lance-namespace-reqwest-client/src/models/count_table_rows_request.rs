@@ -26,7 +26,7 @@ pub struct CountTableRowsRequest {
     /// Branch to target. When not specified, the main branch is used. 
     #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
     pub branch: Option<String>,
-    /// Optional SQL predicate to filter rows for counting 
+    /// Optional SQL predicate to filter rows for counting. Field references must use Lance field path syntax. 
     #[serde(rename = "predicate", skip_serializing_if = "Option::is_none")]
     pub predicate: Option<String>,
 }

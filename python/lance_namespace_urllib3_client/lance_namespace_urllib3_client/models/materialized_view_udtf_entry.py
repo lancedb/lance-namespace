@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -31,9 +32,9 @@ class MaterializedViewUdtfEntry(BaseModel):
     udtf_sha: StrictStr = Field(description="SHA-256 checksum of the envelope; server validates.")
     udtf_name: StrictStr = Field(description="Name of the UDTF")
     udtf_version: StrictStr = Field(description="Version of the UDTF")
-    input_columns: Optional[List[StrictStr]] = Field(default=None, description="Source columns the UDTF reads. Null means all columns (batch UDTF only). ")
-    partition_by: Optional[StrictStr] = Field(default=None, description="Batch UDTF only. Column-value partition key for partition-parallel execution. Mutually exclusive with `partition_by_indexed_column`. ")
-    partition_by_indexed_column: Optional[StrictStr] = Field(default=None, description="Batch UDTF only. Source column with an IVF-family index used for index-based partitioning. The server validates the index exists at create time. ")
+    input_columns: Optional[List[Annotated[str, Field(min_length=1, strict=True)]]] = Field(default=None, description="Source field paths the UDTF reads. Null means all fields (batch UDTF only). ")
+    partition_by: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Lance field path.  A field path identifies a field in a Lance schema. Nested fields are addressed by joining path segments with `.`. A `.` that is not inside backticks is always a path separator, so a field name that contains a literal `.` must be written as a backtick-quoted segment, for example `parent.`child.with.dot``. Backticks inside a quoted segment are escaped by doubling them.  The canonical display form is the full path from the table schema root to the field, with any segment containing characters other than alphanumeric characters or `_` quoted with backticks, for example `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`. Index listings and error messages should use this canonical form.  A leaf field name by itself only identifies a top-level field. Nested fields must be referenced by their full path, which keeps schemas with the same leaf name under different parents unambiguous. If a path cannot be parsed or resolved against the table schema, the implementation should reject the request with InvalidInput or TableColumnNotFound. ")
+    partition_by_indexed_column: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Lance field path.  A field path identifies a field in a Lance schema. Nested fields are addressed by joining path segments with `.`. A `.` that is not inside backticks is always a path separator, so a field name that contains a literal `.` must be written as a backtick-quoted segment, for example `parent.`child.with.dot``. Backticks inside a quoted segment are escaped by doubling them.  The canonical display form is the full path from the table schema root to the field, with any segment containing characters other than alphanumeric characters or `_` quoted with backticks, for example `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`. Index listings and error messages should use this canonical form.  A leaf field name by itself only identifies a top-level field. Nested fields must be referenced by their full path, which keeps schemas with the same leaf name under different parents unambiguous. If a path cannot be parsed or resolved against the table schema, the implementation should reject the request with InvalidInput or TableColumnNotFound. ")
     num_cpus: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Ray actor CPU request.")
     num_gpus: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Ray actor GPU request.")
     memory: Optional[StrictInt] = Field(default=None, description="Ray actor memory request, in bytes.")
@@ -93,16 +94,6 @@ class MaterializedViewUdtfEntry(BaseModel):
         # and model_fields_set contains the field
         if self.input_columns is None and "input_columns" in self.model_fields_set:
             _dict['input_columns'] = None
-
-        # set to None if partition_by (nullable) is None
-        # and model_fields_set contains the field
-        if self.partition_by is None and "partition_by" in self.model_fields_set:
-            _dict['partition_by'] = None
-
-        # set to None if partition_by_indexed_column (nullable) is None
-        # and model_fields_set contains the field
-        if self.partition_by_indexed_column is None and "partition_by_indexed_column" in self.model_fields_set:
-            _dict['partition_by_indexed_column'] = None
 
         # set to None if num_cpus (nullable) is None
         # and model_fields_set contains the field

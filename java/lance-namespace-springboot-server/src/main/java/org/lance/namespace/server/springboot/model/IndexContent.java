@@ -36,7 +36,7 @@ public class IndexContent {
 
   private String indexUuid;
 
-  @Valid private List<String> columns = new ArrayList<>();
+  @Valid private List<@Size(min = 1) String> columns = new ArrayList<>();
 
   private String status;
 
@@ -64,7 +64,8 @@ public class IndexContent {
   }
 
   /** Constructor with only required parameters */
-  public IndexContent(String indexName, String indexUuid, List<String> columns, String status) {
+  public IndexContent(
+      String indexName, String indexUuid, List<@Size(min = 1) String> columns, String status) {
     this.indexName = indexName;
     this.indexUuid = indexUuid;
     this.columns = columns;
@@ -119,7 +120,7 @@ public class IndexContent {
     this.indexUuid = indexUuid;
   }
 
-  public IndexContent columns(List<String> columns) {
+  public IndexContent columns(List<@Size(min = 1) String> columns) {
     this.columns = columns;
     return this;
   }
@@ -133,21 +134,21 @@ public class IndexContent {
   }
 
   /**
-   * Columns covered by this index
+   * Canonical field paths covered by this index
    *
    * @return columns
    */
   @NotNull
   @Schema(
       name = "columns",
-      description = "Columns covered by this index",
+      description = "Canonical field paths covered by this index",
       requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("columns")
-  public List<String> getColumns() {
+  public List<@Size(min = 1) String> getColumns() {
     return columns;
   }
 
-  public void setColumns(List<String> columns) {
+  public void setColumns(List<@Size(min = 1) String> columns) {
     this.columns = columns;
   }
 

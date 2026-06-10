@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **index_name** | **String** | Name of the index | 
 **index_uuid** | **String** | Unique identifier for the index | 
-**columns** | **Vec<String>** | Columns covered by this index | 
+**columns** | **Vec<String>** | Canonical field paths covered by this index | 
 **status** | **String** | Current status of the index | 
 **index_type** | Option<**String**> | Friendly index type, e.g. IVF_PQ, BTREE. Unknown if no plugin recognizes the index. | [optional]
 **type_url** | Option<**String**> | Protobuf type URL, a precise type identifier for the index. | [optional]

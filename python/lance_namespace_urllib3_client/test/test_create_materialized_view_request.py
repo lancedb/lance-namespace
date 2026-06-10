@@ -51,10 +51,10 @@ class TestCreateMaterializedViewRequest(unittest.TestCase):
                     udtf_name = '', 
                     udtf_version = '', 
                     input_columns = [
-                        ''
+                        '0'
                         ], 
-                    partition_by = '', 
-                    partition_by_indexed_column = '', 
+                    partition_by = '0', 
+                    partition_by_indexed_column = '0', 
                     num_cpus = 1.337, 
                     num_gpus = 1.337, 
                     memory = 56, 

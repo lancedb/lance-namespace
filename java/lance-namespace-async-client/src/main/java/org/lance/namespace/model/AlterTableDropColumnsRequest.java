@@ -182,7 +182,7 @@ public class AlterTableDropColumnsRequest {
   }
 
   /**
-   * Names of columns to drop
+   * Field paths to drop
    *
    * @return columns
    */

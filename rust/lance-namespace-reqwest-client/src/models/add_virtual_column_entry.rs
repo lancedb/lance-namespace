@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AddVirtualColumnEntry {
-    /// List of input column names for the virtual column
+    /// List of input field paths for the virtual column
     #[serde(rename = "input_columns")]
     pub input_columns: Vec<String>,
     /// Output columns produced by the virtual column UDF

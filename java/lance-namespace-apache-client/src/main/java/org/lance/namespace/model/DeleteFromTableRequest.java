@@ -180,7 +180,7 @@ public class DeleteFromTableRequest {
   }
 
   /**
-   * SQL predicate to filter rows for deletion
+   * SQL predicate to filter rows for deletion. Field references must use Lance field path syntax.
    *
    * @return predicate
    */

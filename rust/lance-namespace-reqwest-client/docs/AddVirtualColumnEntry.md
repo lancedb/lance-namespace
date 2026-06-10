@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**input_columns** | **Vec<String>** | List of input column names for the virtual column | 
+**input_columns** | **Vec<String>** | List of input field paths for the virtual column | 
 **outputs** | [**Vec<models::AddVirtualColumnOutputEntry>**](AddVirtualColumnOutputEntry.md) | Output columns produced by the virtual column UDF | 
 **image** | **String** | Docker image to use for the UDF | 
 **udf** | **String** | Base64 encoded pickled UDF | 

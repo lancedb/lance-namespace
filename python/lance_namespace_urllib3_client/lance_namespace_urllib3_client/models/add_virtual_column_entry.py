@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.add_virtual_column_output_entry import AddVirtualColumnOutputEntry
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,7 +28,7 @@ class AddVirtualColumnEntry(BaseModel):
     """
     AddVirtualColumnEntry
     """ # noqa: E501
-    input_columns: List[StrictStr] = Field(description="List of input column names for the virtual column")
+    input_columns: List[Annotated[str, Field(min_length=1, strict=True)]] = Field(description="List of input field paths for the virtual column")
     outputs: List[AddVirtualColumnOutputEntry] = Field(description="Output columns produced by the virtual column UDF")
     image: StrictStr = Field(description="Docker image to use for the UDF")
     udf: StrictStr = Field(description="Base64 encoded pickled UDF")

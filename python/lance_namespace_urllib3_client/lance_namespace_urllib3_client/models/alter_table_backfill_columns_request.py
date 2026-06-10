@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from lance_namespace_urllib3_client.models.identity import Identity
 from typing import Optional, Set
 from typing_extensions import Self
@@ -30,7 +31,7 @@ class AlterTableBackfillColumnsRequest(BaseModel):
     identity: Optional[Identity] = None
     id: Optional[List[StrictStr]] = Field(default=None, description="Table identifier path (namespace + table name)")
     branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
-    column: StrictStr = Field(description="Column name to backfill")
+    column: Annotated[str, Field(min_length=1, strict=True)] = Field(description="Lance field path.  A field path identifies a field in a Lance schema. Nested fields are addressed by joining path segments with `.`. A `.` that is not inside backticks is always a path separator, so a field name that contains a literal `.` must be written as a backtick-quoted segment, for example `parent.`child.with.dot``. Backticks inside a quoted segment are escaped by doubling them.  The canonical display form is the full path from the table schema root to the field, with any segment containing characters other than alphanumeric characters or `_` quoted with backticks, for example `metadata.status`, `MetaData.userId`, and `meta-data`.`user-id`. Index listings and error messages should use this canonical form.  A leaf field name by itself only identifies a top-level field. Nested fields must be referenced by their full path, which keeps schemas with the same leaf name under different parents unambiguous. If a path cannot be parsed or resolved against the table schema, the implementation should reject the request with InvalidInput or TableColumnNotFound. ")
     where: Optional[StrictStr] = Field(default=None, description="Optional WHERE clause filter")
     concurrency: Optional[StrictInt] = Field(default=None, description="Optional concurrency override")
     intra_applier_concurrency: Optional[StrictInt] = Field(default=None, description="Optional intra-applier concurrency override")

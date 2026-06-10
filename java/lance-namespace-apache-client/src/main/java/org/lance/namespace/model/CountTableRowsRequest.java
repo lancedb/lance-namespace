@@ -207,7 +207,8 @@ public class CountTableRowsRequest {
   }
 
   /**
-   * Optional SQL predicate to filter rows for counting
+   * Optional SQL predicate to filter rows for counting. Field references must use Lance field path
+   * syntax.
    *
    * @return predicate
    */

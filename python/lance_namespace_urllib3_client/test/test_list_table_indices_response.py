@@ -40,7 +40,7 @@ class TestListTableIndicesResponse(unittest.TestCase):
                         index_name = '', 
                         index_uuid = '', 
                         columns = [
-                            ''
+                            '0'
                             ], 
                         status = '', 
                         index_type = '', 
@@ -62,7 +62,7 @@ class TestListTableIndicesResponse(unittest.TestCase):
                         index_name = '', 
                         index_uuid = '', 
                         columns = [
-                            ''
+                            '0'
                             ], 
                         status = '', 
                         index_type = '', 

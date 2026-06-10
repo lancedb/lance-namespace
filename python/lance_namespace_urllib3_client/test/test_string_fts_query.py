@@ -36,7 +36,7 @@ class TestStringFtsQuery(unittest.TestCase):
         if include_optional:
             return StringFtsQuery(
                 columns = [
-                    ''
+                    '0'
                     ],
                 query = ''
             )

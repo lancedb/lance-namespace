@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**columns** | **List[str]** |  | [optional] 
+**columns** | **List[str]** | Field paths to search. Omit to search all indexed FTS fields. | [optional] 
 **query** | **str** |  | 
 
 ## Example

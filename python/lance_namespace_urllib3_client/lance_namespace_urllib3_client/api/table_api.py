@@ -3757,7 +3757,7 @@ class TableApi:
     ) -> CreateTableIndexResponse:
         """Create an index on a table
 
-        Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+        Create an index on a table field for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -3838,7 +3838,7 @@ class TableApi:
     ) -> ApiResponse[CreateTableIndexResponse]:
         """Create an index on a table
 
-        Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+        Create an index on a table field for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -3919,7 +3919,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Create an index on a table
 
-        Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+        Create an index on a table field for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4083,7 +4083,7 @@ class TableApi:
     ) -> CreateTableScalarIndexResponse:
         """Create a scalar index on a table
 
-        Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+        Create a scalar index on a table field for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4164,7 +4164,7 @@ class TableApi:
     ) -> ApiResponse[CreateTableScalarIndexResponse]:
         """Create a scalar index on a table
 
-        Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+        Create a scalar index on a table field for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -4245,7 +4245,7 @@ class TableApi:
     ) -> RESTResponseType:
         """Create a scalar index on a table
 
-        Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+        Create a scalar index on a table field for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -11740,15 +11740,15 @@ class TableApi:
     def merge_insert_into_table(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
-        on: Annotated[StrictStr, Field(description="Column name to use for matching rows (required)")],
+        on: Annotated[str, Field(min_length=1, strict=True, description="Field path to use for matching rows (required)")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to merge")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         branch: Annotated[Optional[StrictStr], Field(description="Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. ")] = None,
         when_matched_update_all: Annotated[Optional[StrictBool], Field(description="Update all columns when rows match")] = None,
-        when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true")] = None,
+        when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax.")] = None,
         when_not_matched_insert_all: Annotated[Optional[StrictBool], Field(description="Insert all columns when rows don't match")] = None,
         when_not_matched_by_source_delete: Annotated[Optional[StrictBool], Field(description="Delete all rows from target table that don't match a row in the source table")] = None,
-        when_not_matched_by_source_delete_filt: Annotated[Optional[StrictStr], Field(description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true")] = None,
+        when_not_matched_by_source_delete_filt: Annotated[Optional[StrictStr], Field(description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax.")] = None,
         timeout: Annotated[Optional[StrictStr], Field(description="Timeout for the operation (e.g., \"30s\", \"5m\")")] = None,
         use_index: Annotated[Optional[StrictBool], Field(description="Whether to use index for matching rows")] = None,
         _request_timeout: Union[
@@ -11770,7 +11770,7 @@ class TableApi:
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param on: Column name to use for matching rows (required) (required)
+        :param on: Field path to use for matching rows (required) (required)
         :type on: str
         :param body: Arrow IPC stream containing the records to merge (required)
         :type body: bytearray
@@ -11780,13 +11780,13 @@ class TableApi:
         :type branch: str
         :param when_matched_update_all: Update all columns when rows match
         :type when_matched_update_all: bool
-        :param when_matched_update_all_filt: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
+        :param when_matched_update_all_filt: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax.
         :type when_matched_update_all_filt: str
         :param when_not_matched_insert_all: Insert all columns when rows don't match
         :type when_not_matched_insert_all: bool
         :param when_not_matched_by_source_delete: Delete all rows from target table that don't match a row in the source table
         :type when_not_matched_by_source_delete: bool
-        :param when_not_matched_by_source_delete_filt: Delete rows from the target table if there is no match AND the SQL expression evaluates to true
+        :param when_not_matched_by_source_delete_filt: Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax.
         :type when_not_matched_by_source_delete_filt: str
         :param timeout: Timeout for the operation (e.g., \"30s\", \"5m\")
         :type timeout: str
@@ -11857,15 +11857,15 @@ class TableApi:
     def merge_insert_into_table_with_http_info(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
-        on: Annotated[StrictStr, Field(description="Column name to use for matching rows (required)")],
+        on: Annotated[str, Field(min_length=1, strict=True, description="Field path to use for matching rows (required)")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to merge")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         branch: Annotated[Optional[StrictStr], Field(description="Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. ")] = None,
         when_matched_update_all: Annotated[Optional[StrictBool], Field(description="Update all columns when rows match")] = None,
-        when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true")] = None,
+        when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax.")] = None,
         when_not_matched_insert_all: Annotated[Optional[StrictBool], Field(description="Insert all columns when rows don't match")] = None,
         when_not_matched_by_source_delete: Annotated[Optional[StrictBool], Field(description="Delete all rows from target table that don't match a row in the source table")] = None,
-        when_not_matched_by_source_delete_filt: Annotated[Optional[StrictStr], Field(description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true")] = None,
+        when_not_matched_by_source_delete_filt: Annotated[Optional[StrictStr], Field(description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax.")] = None,
         timeout: Annotated[Optional[StrictStr], Field(description="Timeout for the operation (e.g., \"30s\", \"5m\")")] = None,
         use_index: Annotated[Optional[StrictBool], Field(description="Whether to use index for matching rows")] = None,
         _request_timeout: Union[
@@ -11887,7 +11887,7 @@ class TableApi:
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param on: Column name to use for matching rows (required) (required)
+        :param on: Field path to use for matching rows (required) (required)
         :type on: str
         :param body: Arrow IPC stream containing the records to merge (required)
         :type body: bytearray
@@ -11897,13 +11897,13 @@ class TableApi:
         :type branch: str
         :param when_matched_update_all: Update all columns when rows match
         :type when_matched_update_all: bool
-        :param when_matched_update_all_filt: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
+        :param when_matched_update_all_filt: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax.
         :type when_matched_update_all_filt: str
         :param when_not_matched_insert_all: Insert all columns when rows don't match
         :type when_not_matched_insert_all: bool
         :param when_not_matched_by_source_delete: Delete all rows from target table that don't match a row in the source table
         :type when_not_matched_by_source_delete: bool
-        :param when_not_matched_by_source_delete_filt: Delete rows from the target table if there is no match AND the SQL expression evaluates to true
+        :param when_not_matched_by_source_delete_filt: Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax.
         :type when_not_matched_by_source_delete_filt: str
         :param timeout: Timeout for the operation (e.g., \"30s\", \"5m\")
         :type timeout: str
@@ -11974,15 +11974,15 @@ class TableApi:
     def merge_insert_into_table_without_preload_content(
         self,
         id: Annotated[StrictStr, Field(description="`string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. ")],
-        on: Annotated[StrictStr, Field(description="Column name to use for matching rows (required)")],
+        on: Annotated[str, Field(min_length=1, strict=True, description="Field path to use for matching rows (required)")],
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="Arrow IPC stream containing the records to merge")],
         delimiter: Annotated[Optional[StrictStr], Field(description="An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used. ")] = None,
         branch: Annotated[Optional[StrictStr], Field(description="Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead. ")] = None,
         when_matched_update_all: Annotated[Optional[StrictBool], Field(description="Update all columns when rows match")] = None,
-        when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true")] = None,
+        when_matched_update_all_filt: Annotated[Optional[StrictStr], Field(description="The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax.")] = None,
         when_not_matched_insert_all: Annotated[Optional[StrictBool], Field(description="Insert all columns when rows don't match")] = None,
         when_not_matched_by_source_delete: Annotated[Optional[StrictBool], Field(description="Delete all rows from target table that don't match a row in the source table")] = None,
-        when_not_matched_by_source_delete_filt: Annotated[Optional[StrictStr], Field(description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true")] = None,
+        when_not_matched_by_source_delete_filt: Annotated[Optional[StrictStr], Field(description="Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax.")] = None,
         timeout: Annotated[Optional[StrictStr], Field(description="Timeout for the operation (e.g., \"30s\", \"5m\")")] = None,
         use_index: Annotated[Optional[StrictBool], Field(description="Whether to use index for matching rows")] = None,
         _request_timeout: Union[
@@ -12004,7 +12004,7 @@ class TableApi:
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
-        :param on: Column name to use for matching rows (required) (required)
+        :param on: Field path to use for matching rows (required) (required)
         :type on: str
         :param body: Arrow IPC stream containing the records to merge (required)
         :type body: bytearray
@@ -12014,13 +12014,13 @@ class TableApi:
         :type branch: str
         :param when_matched_update_all: Update all columns when rows match
         :type when_matched_update_all: bool
-        :param when_matched_update_all_filt: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
+        :param when_matched_update_all_filt: The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax.
         :type when_matched_update_all_filt: str
         :param when_not_matched_insert_all: Insert all columns when rows don't match
         :type when_not_matched_insert_all: bool
         :param when_not_matched_by_source_delete: Delete all rows from target table that don't match a row in the source table
         :type when_not_matched_by_source_delete: bool
-        :param when_not_matched_by_source_delete_filt: Delete rows from the target table if there is no match AND the SQL expression evaluates to true
+        :param when_not_matched_by_source_delete_filt: Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax.
         :type when_not_matched_by_source_delete_filt: str
         :param timeout: Timeout for the operation (e.g., \"30s\", \"5m\")
         :type timeout: str

@@ -7,7 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**inputColumns** | **List&lt;String&gt;** | List of input column names for the virtual column |  |
+|**inputColumns** | **List&lt;String&gt;** | List of input field paths for the virtual column |  |
 |**outputs** | [**List&lt;AddVirtualColumnOutputEntry&gt;**](AddVirtualColumnOutputEntry.md) | Output columns produced by the virtual column UDF |  |
 |**image** | **String** | Docker image to use for the UDF |  |
 |**udf** | **String** | Base64 encoded pickled UDF |  |

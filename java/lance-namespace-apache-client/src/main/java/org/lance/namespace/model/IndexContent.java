@@ -149,7 +149,7 @@ public class IndexContent {
   }
 
   /**
-   * Columns covered by this index
+   * Canonical field paths covered by this index
    *
    * @return columns
    */

@@ -1,13 +1,13 @@
 # QueryTableRequestColumns
 
-Optional columns to return. Provide either column_names or column_aliases, not both. 
+Optional field paths to return. Provide either column_names or column_aliases, not both. 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**column_names** | **List[str]** | List of column names to return | [optional] 
-**column_aliases** | **Dict[str, str]** | Object mapping output aliases to source column names | [optional] 
+**column_names** | **List[str]** | List of field paths to return | [optional] 
+**column_aliases** | **Dict[str, str]** | Object mapping output aliases to source field paths | [optional] 
 
 ## Example
 

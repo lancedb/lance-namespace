@@ -48,10 +48,10 @@ class TestAnalyzeTableQueryPlanRequest(unittest.TestCase):
                 bypass_vector_index = True,
                 columns = lance_namespace_urllib3_client.models.query_table_request_columns.QueryTableRequest_columns(
                     column_names = [
-                        ''
+                        '0'
                         ], 
                     column_aliases = {
-                        'key' : ''
+                        'key' : '0'
                         }, ),
                 distance_type = '',
                 ef = 0,
@@ -60,21 +60,21 @@ class TestAnalyzeTableQueryPlanRequest(unittest.TestCase):
                 full_text_query = lance_namespace_urllib3_client.models.query_table_request_full_text_query.QueryTableRequest_full_text_query(
                     string_query = lance_namespace_urllib3_client.models.string_fts_query.StringFtsQuery(
                         columns = [
-                            ''
+                            '0'
                             ], 
                         query = '', ), 
                     structured_query = lance_namespace_urllib3_client.models.structured_fts_query.StructuredFtsQuery(
                         query = lance_namespace_urllib3_client.models.fts_query.FtsQuery(
                             match = lance_namespace_urllib3_client.models.match_query.MatchQuery(
                                 boost = 1.337, 
-                                column = '', 
+                                column = '0', 
                                 fuzziness = 0, 
                                 max_expansions = 0, 
                                 operator = '', 
                                 prefix_length = 0, 
                                 terms = '', ), 
                             phrase = lance_namespace_urllib3_client.models.phrase_query.PhraseQuery(
-                                column = '', 
+                                column = '0', 
                                 slop = 0, 
                                 terms = '', ), 
                             boost = lance_namespace_urllib3_client.models.boost_query.BoostQuery(
@@ -82,7 +82,7 @@ class TestAnalyzeTableQueryPlanRequest(unittest.TestCase):
                                     multi_match = lance_namespace_urllib3_client.models.multi_match_query.MultiMatchQuery(
                                         match_queries = [
                                             lance_namespace_urllib3_client.models.match_query.MatchQuery(
-                                                column = '', 
+                                                column = '0', 
                                                 fuzziness = 0, 
                                                 max_expansions = 0, 
                                                 operator = '', 
@@ -131,7 +131,7 @@ class TestAnalyzeTableQueryPlanRequest(unittest.TestCase):
                             1.337
                             ]
                         ], ),
-                vector_column = '',
+                vector_column = '0',
                 version = 0,
                 with_row_id = True
             )
