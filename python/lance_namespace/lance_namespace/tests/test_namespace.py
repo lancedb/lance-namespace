@@ -175,3 +175,23 @@ class NotANamespace:
 
     def __init__(self, **properties):
         pass
+
+
+class TestErrorCodes:
+    """Error code round trips for programmatic handling."""
+
+    def test_branch_error_codes_round_trip(self):
+        from lance_namespace import (
+            ErrorCode,
+            TableBranchAlreadyExistsError,
+            TableBranchNotFoundError,
+            from_error_code,
+        )
+
+        err = from_error_code(22, "branch missing")
+        assert isinstance(err, TableBranchNotFoundError)
+        assert err.code == ErrorCode.TABLE_BRANCH_NOT_FOUND
+
+        err = from_error_code(23, "branch exists")
+        assert isinstance(err, TableBranchAlreadyExistsError)
+        assert err.code == ErrorCode.TABLE_BRANCH_ALREADY_EXISTS

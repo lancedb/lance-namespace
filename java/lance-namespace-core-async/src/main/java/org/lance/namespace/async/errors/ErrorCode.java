@@ -40,7 +40,9 @@ public enum ErrorCode {
   INTERNAL(18, "Internal error"),
   INVALID_TABLE_STATE(19, "Invalid table state"),
   TABLE_SCHEMA_VALIDATION_ERROR(20, "Table schema validation error"),
-  THROTTLING(21, "Request rate limit exceeded");
+  THROTTLING(21, "Request rate limit exceeded"),
+  TABLE_BRANCH_NOT_FOUND(22, "Table branch not found"),
+  TABLE_BRANCH_ALREADY_EXISTS(23, "Table branch already exists");
 
   private final int code;
   private final String description;

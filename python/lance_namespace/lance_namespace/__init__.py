@@ -54,6 +54,8 @@ from lance_namespace.errors import (
     InvalidTableStateError,
     TableSchemaValidationError,
     ThrottlingError,
+    TableBranchNotFoundError,
+    TableBranchAlreadyExistsError,
     from_error_code,
 )
 
@@ -204,6 +206,8 @@ __all__ = [
     "InvalidTableStateError",
     "TableSchemaValidationError",
     "ThrottlingError",
+    "TableBranchNotFoundError",
+    "TableBranchAlreadyExistsError",
     "from_error_code",
     # Request/Response types (re-exported from lance_namespace_urllib3_client)
     "AlterTableAddColumnsRequest",
