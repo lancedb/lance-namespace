@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
-members = ["lance-namespace-reqwest-client"]
+members = ["lance-namespace-reqwest-client", "lance-namespace-base"]
 
 [workspace.dependencies]
 lance-namespace-reqwest-client = { path = "lance-namespace-reqwest-client", version = "0.8.4" }
+lance-namespace-base = { path = "lance-namespace-base", version = "0.1.0" }

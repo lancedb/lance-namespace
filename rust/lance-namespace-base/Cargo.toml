@@ -1,0 +1,44 @@
+[package]
+name = "lance-namespace-base"
+version = "0.1.0"
+edition = "2024"
+description = "Base Lance Namespace implementation using the Lance SDK directly"
+license = "Apache-2.0"
+rust-version = "1.91.0"
+
+[features]
+default = ["aws", "azure", "gcp"]
+gcp = ["lance-io/gcp", "lance/gcp"]
+aws = ["lance-io/aws", "lance/aws"]
+azure = ["lance-io/azure", "lance/azure"]
+
+[dependencies]
+# Lance core crates (path deps to lance repo)
+lance-namespace = { path = "../../../lance/rust/lance-namespace" }
+lance-core = { path = "../../../lance/rust/lance-core" }
+lance = { path = "../../../lance/rust/lance", default-features = false }
+lance-index = { path = "../../../lance/rust/lance-index" }
+lance-linalg = { path = "../../../lance/rust/lance-linalg" }
+lance-io = { path = "../../../lance/rust/lance-io", default-features = false }
+lance-table = { path = "../../../lance/rust/lance-table" }
+
+# Arrow
+arrow = { version = "58.0.0", features = ["prettyprint"] }
+arrow-ipc = { version = "58.0.0", features = ["zstd"] }
+arrow-schema = "58.0.0"
+
+# Object store
+object_store = "0.13"
+
+# Common
+async-trait = "0.1"
+bytes = "1.11.1"
+snafu = "0.9"
+tokio = { version = "1.23", features = ["full"] }
+serde_json = "1"
+futures = "0.3"
+log = "0.4"
+chrono = { version = "0.4", default-features = false, features = ["std", "now"] }
+
+[dev-dependencies]
+tempfile = "3"
