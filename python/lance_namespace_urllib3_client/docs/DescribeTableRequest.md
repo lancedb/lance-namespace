@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **context** | **Dict[str, str]** | Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention &#x60;x-lance-ctx-&lt;key&gt;: &lt;value&gt;&#x60;. For example, a context entry &#x60;{\&quot;trace_id\&quot;: \&quot;abc123\&quot;}&#x60; would be sent as the header &#x60;x-lance-ctx-trace_id: abc123&#x60;.  | [optional] 
 **id** | **List[str]** |  | [optional] 
 **version** | **int** | Version of the table to describe. If not specified, server should resolve it to the latest version.  | [optional] 
+**tag** | **str** | Tag name to describe the table at. If specified, the server should resolve the tag to a version number and describe that version. Cannot be used together with &#x60;version&#x60; or &#x60;branch&#x60;.  | [optional] 
 **branch** | **str** | Branch to target. When not specified, the main branch is used.  | [optional] 
 **with_table_uri** | **bool** | Whether to include the table URI in the response. Default is false.  | [optional] [default to False]
 **load_detailed_metadata** | **bool** | Whether to load detailed metadata that requires opening the dataset. When true, the response must include all detailed metadata such as &#x60;version&#x60;, &#x60;schema&#x60;, and &#x60;stats&#x60; which require reading the dataset. When not set, the implementation can decide whether to return detailed metadata and which parts of detailed metadata to return.  | [optional] 

@@ -40,6 +40,8 @@ public class DescribeTableRequest {
 
   private Long version;
 
+  private String tag;
+
   private String branch;
 
   private Boolean withTableUri = false;
@@ -158,6 +160,31 @@ public class DescribeTableRequest {
 
   public void setVersion(Long version) {
     this.version = version;
+  }
+
+  public DescribeTableRequest tag(String tag) {
+    this.tag = tag;
+    return this;
+  }
+
+  /**
+   * Tag name to describe the table at. If specified, the server should resolve the tag to a version
+   * number and describe that version. Cannot be used together with `version` or `branch`.
+   *
+   * @return tag
+   */
+  @Schema(
+      name = "tag",
+      description =
+          "Tag name to describe the table at. If specified, the server should resolve the tag to a version number and describe that version. Cannot be used together with `version` or `branch`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("tag")
+  public String getTag() {
+    return tag;
+  }
+
+  public void setTag(String tag) {
+    this.tag = tag;
   }
 
   public DescribeTableRequest branch(String branch) {
@@ -299,6 +326,7 @@ public class DescribeTableRequest {
         && Objects.equals(this.context, describeTableRequest.context)
         && Objects.equals(this.id, describeTableRequest.id)
         && Objects.equals(this.version, describeTableRequest.version)
+        && Objects.equals(this.tag, describeTableRequest.tag)
         && Objects.equals(this.branch, describeTableRequest.branch)
         && Objects.equals(this.withTableUri, describeTableRequest.withTableUri)
         && Objects.equals(this.loadDetailedMetadata, describeTableRequest.loadDetailedMetadata)
@@ -313,6 +341,7 @@ public class DescribeTableRequest {
         context,
         id,
         version,
+        tag,
         branch,
         withTableUri,
         loadDetailedMetadata,
@@ -328,6 +357,7 @@ public class DescribeTableRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    tag: ").append(toIndentedString(tag)).append("\n");
     sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    withTableUri: ").append(toIndentedString(withTableUri)).append("\n");
     sb.append("    loadDetailedMetadata: ")

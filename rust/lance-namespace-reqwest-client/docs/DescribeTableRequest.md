@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **context** | Option<**std::collections::HashMap<String, String>**> | Arbitrary context for a request as key-value pairs. How to use the context is custom to the specific implementation.  REST NAMESPACE ONLY Context entries are passed via HTTP headers using the naming convention `x-lance-ctx-<key>: <value>`. For example, a context entry `{\"trace_id\": \"abc123\"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.  | [optional]
 **id** | Option<**Vec<String>**> |  | [optional]
 **version** | Option<**i64**> | Version of the table to describe. If not specified, server should resolve it to the latest version.  | [optional]
+**tag** | Option<**String**> | Tag name to describe the table at. If specified, the server should resolve the tag to a version number and describe that version. Cannot be used together with `version` or `branch`.  | [optional]
 **branch** | Option<**String**> | Branch to target. When not specified, the main branch is used.  | [optional]
 **with_table_uri** | Option<**bool**> | Whether to include the table URI in the response. Default is false.  | [optional][default to false]
 **load_detailed_metadata** | Option<**bool**> | Whether to load detailed metadata that requires opening the dataset. When true, the response must include all detailed metadata such as `version`, `schema`, and `stats` which require reading the dataset. When not set, the implementation can decide whether to return detailed metadata and which parts of detailed metadata to return.  | [optional]
