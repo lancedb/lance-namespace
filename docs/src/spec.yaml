@@ -5503,6 +5503,13 @@ components:
             - integer
             - "null"
           description: Optional intra-applier concurrency override
+        source_task_size:
+          type:
+            - integer
+            - "null"
+          description: |
+            Optional number of source row ids per work item during expansion.
+            Bounds per-actor memory for chunker materialized views.
         cluster:
           type:
             - string
