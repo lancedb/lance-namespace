@@ -92,6 +92,10 @@ public final class ErrorFactory {
         return new TableSchemaValidationException(message, detail, instance);
       case THROTTLING:
         return new ThrottlingException(message, detail, instance);
+      case TABLE_BRANCH_NOT_FOUND:
+        return new TableBranchNotFoundException(message, detail, instance);
+      case TABLE_BRANCH_ALREADY_EXISTS:
+        return new TableBranchAlreadyExistsException(message, detail, instance);
       default:
         return new InternalException(message, detail, instance);
     }

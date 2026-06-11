@@ -3278,6 +3278,9 @@ components:
               18 - Internal: Unexpected server/implementation error
               19 - InvalidTableState: Table is in an invalid state for the operation
               20 - TableSchemaValidationError: Table schema validation failed
+              21 - Throttling: Request rate limit exceeded
+              22 - TableBranchNotFound: The specified table branch does not exist
+              23 - TableBranchAlreadyExists: A table branch with this name already exists
           example: 4
           minimum: 0
           type: integer

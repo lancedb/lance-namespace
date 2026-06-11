@@ -68,6 +68,8 @@ class ErrorCode(IntEnum):
     INVALID_TABLE_STATE = 19
     TABLE_SCHEMA_VALIDATION_ERROR = 20
     THROTTLING = 21
+    TABLE_BRANCH_NOT_FOUND = 22
+    TABLE_BRANCH_ALREADY_EXISTS = 23
 
 
 class LanceNamespaceError(Exception):
@@ -217,6 +219,18 @@ class ThrottlingError(LanceNamespaceError):
     code = ErrorCode.THROTTLING
 
 
+class TableBranchNotFoundError(LanceNamespaceError):
+    """Raised when the specified table branch does not exist."""
+
+    code = ErrorCode.TABLE_BRANCH_NOT_FOUND
+
+
+class TableBranchAlreadyExistsError(LanceNamespaceError):
+    """Raised when a table branch with the specified name already exists."""
+
+    code = ErrorCode.TABLE_BRANCH_ALREADY_EXISTS
+
+
 # Mapping from error code to exception class
 _ERROR_CODE_TO_EXCEPTION: Dict[ErrorCode, Type[LanceNamespaceError]] = {
     ErrorCode.UNSUPPORTED: UnsupportedOperationError,
@@ -241,6 +255,8 @@ _ERROR_CODE_TO_EXCEPTION: Dict[ErrorCode, Type[LanceNamespaceError]] = {
     ErrorCode.INVALID_TABLE_STATE: InvalidTableStateError,
     ErrorCode.TABLE_SCHEMA_VALIDATION_ERROR: TableSchemaValidationError,
     ErrorCode.THROTTLING: ThrottlingError,
+    ErrorCode.TABLE_BRANCH_NOT_FOUND: TableBranchNotFoundError,
+    ErrorCode.TABLE_BRANCH_ALREADY_EXISTS: TableBranchAlreadyExistsError,
 }
 
 

@@ -93,7 +93,9 @@ public class ErrorResponse {
    * Unauthenticated: Authentication credentials are missing or invalid 17 - ServiceUnavailable:
    * Service is temporarily unavailable 18 - Internal: Unexpected server/implementation error 19 -
    * InvalidTableState: Table is in an invalid state for the operation 20 -
-   * TableSchemaValidationError: Table schema validation failed minimum: 0
+   * TableSchemaValidationError: Table schema validation failed 21 - Throttling: Request rate limit
+   * exceeded 22 - TableBranchNotFound: The specified table branch does not exist 23 -
+   * TableBranchAlreadyExists: A table branch with this name already exists minimum: 0
    *
    * @return code
    */
