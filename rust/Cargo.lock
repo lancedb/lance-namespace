@@ -712,7 +712,7 @@ dependencies = [
 
 [[package]]
 name = "lance-namespace-reqwest-client"
-version = "0.8.5"
+version = "0.8.6"
 dependencies = [
  "reqwest",
  "serde",

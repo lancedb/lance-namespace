@@ -51,7 +51,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>org.lance</groupId>
   <artifactId>lance-namespace-async-client</artifactId>
-  <version>0.8.5</version>
+  <version>0.8.6</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -61,7 +61,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "org.lance:lance-namespace-async-client:0.8.5"
+compile "org.lance:lance-namespace-async-client:0.8.6"
 ```
 
 ### Others
@@ -74,7 +74,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-- `target/lance-namespace-async-client-0.8.5.jar`
+- `target/lance-namespace-async-client-0.8.6.jar`
 - `target/lib/*.jar`
 
 ## Getting Started
