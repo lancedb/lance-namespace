@@ -33,11 +33,10 @@ class RefreshMaterializedViewRequest(BaseModel):
     max_rows_per_fragment: Optional[StrictInt] = Field(default=None, description="Optional maximum rows per fragment")
     concurrency: Optional[StrictInt] = Field(default=None, description="Optional concurrency override")
     intra_applier_concurrency: Optional[StrictInt] = Field(default=None, description="Optional intra-applier concurrency override")
-    source_task_size: Optional[StrictInt] = Field(default=None, description="Optional number of source row ids per work item during expansion. Bounds per-actor memory for chunker materialized views. ")
     cluster: Optional[StrictStr] = Field(default=None, description="Optional cluster name (operational override)")
     output_limit: Optional[StrictInt] = Field(default=None, description="Post-trim cap on view row count after expansion. Valid only for chunker materialized views; returns 400 if set on other kinds. ")
     manifest: Optional[StrictStr] = Field(default=None, description="Optional inline JSON-serialized GenevaManifest. Operational override for this refresh only; does not mutate the view's snapshotted manifest. When omitted, the manifest stored in the view's metadata is used. ")
-    __properties: ClassVar[List[str]] = ["identity", "id", "src_version", "max_rows_per_fragment", "concurrency", "intra_applier_concurrency", "source_task_size", "cluster", "output_limit", "manifest"]
+    __properties: ClassVar[List[str]] = ["identity", "id", "src_version", "max_rows_per_fragment", "concurrency", "intra_applier_concurrency", "cluster", "output_limit", "manifest"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -101,11 +100,6 @@ class RefreshMaterializedViewRequest(BaseModel):
         if self.intra_applier_concurrency is None and "intra_applier_concurrency" in self.model_fields_set:
             _dict['intra_applier_concurrency'] = None
 
-        # set to None if source_task_size (nullable) is None
-        # and model_fields_set contains the field
-        if self.source_task_size is None and "source_task_size" in self.model_fields_set:
-            _dict['source_task_size'] = None
-
         # set to None if cluster (nullable) is None
         # and model_fields_set contains the field
         if self.cluster is None and "cluster" in self.model_fields_set:
@@ -139,7 +133,6 @@ class RefreshMaterializedViewRequest(BaseModel):
             "max_rows_per_fragment": obj.get("max_rows_per_fragment"),
             "concurrency": obj.get("concurrency"),
             "intra_applier_concurrency": obj.get("intra_applier_concurrency"),
-            "source_task_size": obj.get("source_task_size"),
             "cluster": obj.get("cluster"),
             "output_limit": obj.get("output_limit"),
             "manifest": obj.get("manifest")

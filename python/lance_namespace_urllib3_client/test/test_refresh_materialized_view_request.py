@@ -45,7 +45,6 @@ class TestRefreshMaterializedViewRequest(unittest.TestCase):
                 max_rows_per_fragment = 56,
                 concurrency = 56,
                 intra_applier_concurrency = 56,
-                source_task_size = 56,
                 cluster = '',
                 output_limit = 56,
                 manifest = ''
