@@ -35,6 +35,7 @@ import java.util.StringJoiner;
   RefreshMaterializedViewRequest.JSON_PROPERTY_MAX_ROWS_PER_FRAGMENT,
   RefreshMaterializedViewRequest.JSON_PROPERTY_CONCURRENCY,
   RefreshMaterializedViewRequest.JSON_PROPERTY_INTRA_APPLIER_CONCURRENCY,
+  RefreshMaterializedViewRequest.JSON_PROPERTY_SOURCE_TASK_SIZE,
   RefreshMaterializedViewRequest.JSON_PROPERTY_CLUSTER,
   RefreshMaterializedViewRequest.JSON_PROPERTY_OUTPUT_LIMIT,
   RefreshMaterializedViewRequest.JSON_PROPERTY_MANIFEST
@@ -68,6 +69,11 @@ public class RefreshMaterializedViewRequest {
 
   @javax.annotation.Nullable
   private JsonNullable<Integer> intraApplierConcurrency = JsonNullable.<Integer>undefined();
+
+  public static final String JSON_PROPERTY_SOURCE_TASK_SIZE = "source_task_size";
+
+  @javax.annotation.Nullable
+  private JsonNullable<Integer> sourceTaskSize = JsonNullable.<Integer>undefined();
 
   public static final String JSON_PROPERTY_CLUSTER = "cluster";
 
@@ -275,6 +281,40 @@ public class RefreshMaterializedViewRequest {
     this.intraApplierConcurrency = JsonNullable.<Integer>of(intraApplierConcurrency);
   }
 
+  public RefreshMaterializedViewRequest sourceTaskSize(
+      @javax.annotation.Nullable Integer sourceTaskSize) {
+    this.sourceTaskSize = JsonNullable.<Integer>of(sourceTaskSize);
+
+    return this;
+  }
+
+  /**
+   * Optional number of source row ids per work item during expansion. Bounds per-actor memory for
+   * chunker materialized views.
+   *
+   * @return sourceTaskSize
+   */
+  @javax.annotation.Nullable
+  @JsonIgnore
+  public Integer getSourceTaskSize() {
+    return sourceTaskSize.orElse(null);
+  }
+
+  @JsonProperty(JSON_PROPERTY_SOURCE_TASK_SIZE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public JsonNullable<Integer> getSourceTaskSize_JsonNullable() {
+    return sourceTaskSize;
+  }
+
+  @JsonProperty(JSON_PROPERTY_SOURCE_TASK_SIZE)
+  public void setSourceTaskSize_JsonNullable(JsonNullable<Integer> sourceTaskSize) {
+    this.sourceTaskSize = sourceTaskSize;
+  }
+
+  public void setSourceTaskSize(@javax.annotation.Nullable Integer sourceTaskSize) {
+    this.sourceTaskSize = JsonNullable.<Integer>of(sourceTaskSize);
+  }
+
   public RefreshMaterializedViewRequest cluster(@javax.annotation.Nullable String cluster) {
     this.cluster = JsonNullable.<String>of(cluster);
 
@@ -393,6 +433,7 @@ public class RefreshMaterializedViewRequest {
         && equalsNullable(this.concurrency, refreshMaterializedViewRequest.concurrency)
         && equalsNullable(
             this.intraApplierConcurrency, refreshMaterializedViewRequest.intraApplierConcurrency)
+        && equalsNullable(this.sourceTaskSize, refreshMaterializedViewRequest.sourceTaskSize)
         && equalsNullable(this.cluster, refreshMaterializedViewRequest.cluster)
         && equalsNullable(this.outputLimit, refreshMaterializedViewRequest.outputLimit)
         && equalsNullable(this.manifest, refreshMaterializedViewRequest.manifest);
@@ -416,6 +457,7 @@ public class RefreshMaterializedViewRequest {
         hashCodeNullable(maxRowsPerFragment),
         hashCodeNullable(concurrency),
         hashCodeNullable(intraApplierConcurrency),
+        hashCodeNullable(sourceTaskSize),
         hashCodeNullable(cluster),
         hashCodeNullable(outputLimit),
         hashCodeNullable(manifest));
@@ -440,6 +482,7 @@ public class RefreshMaterializedViewRequest {
     sb.append("    intraApplierConcurrency: ")
         .append(toIndentedString(intraApplierConcurrency))
         .append("\n");
+    sb.append("    sourceTaskSize: ").append(toIndentedString(sourceTaskSize)).append("\n");
     sb.append("    cluster: ").append(toIndentedString(cluster)).append("\n");
     sb.append("    outputLimit: ").append(toIndentedString(outputLimit)).append("\n");
     sb.append("    manifest: ").append(toIndentedString(manifest)).append("\n");
@@ -572,6 +615,22 @@ public class RefreshMaterializedViewRequest {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getIntraApplierConcurrency()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `source_task_size` to the URL query string
+    if (getSourceTaskSize() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%ssource_task_size%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getSourceTaskSize()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported

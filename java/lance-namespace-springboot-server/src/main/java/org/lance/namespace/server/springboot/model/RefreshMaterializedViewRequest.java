@@ -42,6 +42,8 @@ public class RefreshMaterializedViewRequest {
 
   private Integer intraApplierConcurrency = null;
 
+  private Integer sourceTaskSize = null;
+
   private String cluster = null;
 
   private Integer outputLimit = null;
@@ -192,6 +194,31 @@ public class RefreshMaterializedViewRequest {
     this.intraApplierConcurrency = intraApplierConcurrency;
   }
 
+  public RefreshMaterializedViewRequest sourceTaskSize(Integer sourceTaskSize) {
+    this.sourceTaskSize = sourceTaskSize;
+    return this;
+  }
+
+  /**
+   * Optional number of source row ids per work item during expansion. Bounds per-actor memory for
+   * chunker materialized views.
+   *
+   * @return sourceTaskSize
+   */
+  @Schema(
+      name = "source_task_size",
+      description =
+          "Optional number of source row ids per work item during expansion. Bounds per-actor memory for chunker materialized views. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("source_task_size")
+  public Integer getSourceTaskSize() {
+    return sourceTaskSize;
+  }
+
+  public void setSourceTaskSize(Integer sourceTaskSize) {
+    this.sourceTaskSize = sourceTaskSize;
+  }
+
   public RefreshMaterializedViewRequest cluster(String cluster) {
     this.cluster = cluster;
     return this;
@@ -284,6 +311,7 @@ public class RefreshMaterializedViewRequest {
         && Objects.equals(this.concurrency, refreshMaterializedViewRequest.concurrency)
         && Objects.equals(
             this.intraApplierConcurrency, refreshMaterializedViewRequest.intraApplierConcurrency)
+        && Objects.equals(this.sourceTaskSize, refreshMaterializedViewRequest.sourceTaskSize)
         && Objects.equals(this.cluster, refreshMaterializedViewRequest.cluster)
         && Objects.equals(this.outputLimit, refreshMaterializedViewRequest.outputLimit)
         && Objects.equals(this.manifest, refreshMaterializedViewRequest.manifest);
@@ -298,6 +326,7 @@ public class RefreshMaterializedViewRequest {
         maxRowsPerFragment,
         concurrency,
         intraApplierConcurrency,
+        sourceTaskSize,
         cluster,
         outputLimit,
         manifest);
@@ -315,6 +344,7 @@ public class RefreshMaterializedViewRequest {
     sb.append("    intraApplierConcurrency: ")
         .append(toIndentedString(intraApplierConcurrency))
         .append("\n");
+    sb.append("    sourceTaskSize: ").append(toIndentedString(sourceTaskSize)).append("\n");
     sb.append("    cluster: ").append(toIndentedString(cluster)).append("\n");
     sb.append("    outputLimit: ").append(toIndentedString(outputLimit)).append("\n");
     sb.append("    manifest: ").append(toIndentedString(manifest)).append("\n");

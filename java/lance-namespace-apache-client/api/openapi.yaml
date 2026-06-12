@@ -8383,6 +8383,7 @@ components:
     RefreshMaterializedViewRequest:
       example:
         src_version: 0
+        source_task_size: 5
         cluster: cluster
         identity:
           api_key: api_key
@@ -8393,7 +8394,7 @@ components:
         - id
         max_rows_per_fragment: 6
         intra_applier_concurrency: 5
-        output_limit: 5
+        output_limit: 2
         concurrency: 1
       properties:
         identity:
@@ -8417,6 +8418,12 @@ components:
           type: integer
         intra_applier_concurrency:
           description: Optional intra-applier concurrency override
+          nullable: true
+          type: integer
+        source_task_size:
+          description: |
+            Optional number of source row ids per work item during expansion.
+            Bounds per-actor memory for chunker materialized views.
           nullable: true
           type: integer
         cluster:
