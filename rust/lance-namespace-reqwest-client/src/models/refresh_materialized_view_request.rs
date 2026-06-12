@@ -30,7 +30,7 @@ pub struct RefreshMaterializedViewRequest {
     /// Optional intra-applier concurrency override
     #[serde(rename = "intra_applier_concurrency", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub intra_applier_concurrency: Option<Option<i32>>,
-    /// Optional number of source row ids per work item during expansion. Bounds per-actor memory for chunker materialized views.
+    /// Optional number of source row ids per work item during expansion. Bounds per-actor memory for chunker materialized views. 
     #[serde(rename = "source_task_size", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub source_task_size: Option<Option<i32>>,
     /// Optional cluster name (operational override)

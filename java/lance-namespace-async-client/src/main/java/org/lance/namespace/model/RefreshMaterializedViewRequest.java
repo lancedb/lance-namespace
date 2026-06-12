@@ -35,6 +35,7 @@ import java.util.StringJoiner;
   RefreshMaterializedViewRequest.JSON_PROPERTY_MAX_ROWS_PER_FRAGMENT,
   RefreshMaterializedViewRequest.JSON_PROPERTY_CONCURRENCY,
   RefreshMaterializedViewRequest.JSON_PROPERTY_INTRA_APPLIER_CONCURRENCY,
+  RefreshMaterializedViewRequest.JSON_PROPERTY_SOURCE_TASK_SIZE,
   RefreshMaterializedViewRequest.JSON_PROPERTY_CLUSTER,
   RefreshMaterializedViewRequest.JSON_PROPERTY_OUTPUT_LIMIT,
   RefreshMaterializedViewRequest.JSON_PROPERTY_MANIFEST
@@ -60,6 +61,9 @@ public class RefreshMaterializedViewRequest {
 
   public static final String JSON_PROPERTY_INTRA_APPLIER_CONCURRENCY = "intra_applier_concurrency";
   private JsonNullable<Integer> intraApplierConcurrency = JsonNullable.<Integer>undefined();
+
+  public static final String JSON_PROPERTY_SOURCE_TASK_SIZE = "source_task_size";
+  private JsonNullable<Integer> sourceTaskSize = JsonNullable.<Integer>undefined();
 
   public static final String JSON_PROPERTY_CLUSTER = "cluster";
   private JsonNullable<String> cluster = JsonNullable.<String>undefined();
@@ -255,6 +259,39 @@ public class RefreshMaterializedViewRequest {
     this.intraApplierConcurrency = JsonNullable.<Integer>of(intraApplierConcurrency);
   }
 
+  public RefreshMaterializedViewRequest sourceTaskSize(
+      @javax.annotation.Nullable Integer sourceTaskSize) {
+    this.sourceTaskSize = JsonNullable.<Integer>of(sourceTaskSize);
+    return this;
+  }
+
+  /**
+   * Optional number of source row ids per work item during expansion. Bounds per-actor memory for
+   * chunker materialized views.
+   *
+   * @return sourceTaskSize
+   */
+  @javax.annotation.Nullable
+  @JsonIgnore
+  public Integer getSourceTaskSize() {
+    return sourceTaskSize.orElse(null);
+  }
+
+  @JsonProperty(JSON_PROPERTY_SOURCE_TASK_SIZE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public JsonNullable<Integer> getSourceTaskSize_JsonNullable() {
+    return sourceTaskSize;
+  }
+
+  @JsonProperty(JSON_PROPERTY_SOURCE_TASK_SIZE)
+  public void setSourceTaskSize_JsonNullable(JsonNullable<Integer> sourceTaskSize) {
+    this.sourceTaskSize = sourceTaskSize;
+  }
+
+  public void setSourceTaskSize(@javax.annotation.Nullable Integer sourceTaskSize) {
+    this.sourceTaskSize = JsonNullable.<Integer>of(sourceTaskSize);
+  }
+
   public RefreshMaterializedViewRequest cluster(@javax.annotation.Nullable String cluster) {
     this.cluster = JsonNullable.<String>of(cluster);
     return this;
@@ -371,6 +408,7 @@ public class RefreshMaterializedViewRequest {
         && equalsNullable(this.concurrency, refreshMaterializedViewRequest.concurrency)
         && equalsNullable(
             this.intraApplierConcurrency, refreshMaterializedViewRequest.intraApplierConcurrency)
+        && equalsNullable(this.sourceTaskSize, refreshMaterializedViewRequest.sourceTaskSize)
         && equalsNullable(this.cluster, refreshMaterializedViewRequest.cluster)
         && equalsNullable(this.outputLimit, refreshMaterializedViewRequest.outputLimit)
         && equalsNullable(this.manifest, refreshMaterializedViewRequest.manifest);
@@ -394,6 +432,7 @@ public class RefreshMaterializedViewRequest {
         hashCodeNullable(maxRowsPerFragment),
         hashCodeNullable(concurrency),
         hashCodeNullable(intraApplierConcurrency),
+        hashCodeNullable(sourceTaskSize),
         hashCodeNullable(cluster),
         hashCodeNullable(outputLimit),
         hashCodeNullable(manifest));
@@ -418,6 +457,7 @@ public class RefreshMaterializedViewRequest {
     sb.append("    intraApplierConcurrency: ")
         .append(toIndentedString(intraApplierConcurrency))
         .append("\n");
+    sb.append("    sourceTaskSize: ").append(toIndentedString(sourceTaskSize)).append("\n");
     sb.append("    cluster: ").append(toIndentedString(cluster)).append("\n");
     sb.append("    outputLimit: ").append(toIndentedString(outputLimit)).append("\n");
     sb.append("    manifest: ").append(toIndentedString(manifest)).append("\n");
@@ -521,6 +561,14 @@ public class RefreshMaterializedViewRequest {
               prefix,
               suffix,
               ApiClient.urlEncode(ApiClient.valueToString(getIntraApplierConcurrency()))));
+    }
+
+    // add `source_task_size` to the URL query string
+    if (getSourceTaskSize() != null) {
+      joiner.add(
+          String.format(
+              "%ssource_task_size%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getSourceTaskSize()))));
     }
 
     // add `cluster` to the URL query string
