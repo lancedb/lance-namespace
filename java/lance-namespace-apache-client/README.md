@@ -51,7 +51,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>org.lance</groupId>
   <artifactId>lance-namespace-apache-client</artifactId>
-  <version>0.8.6</version>
+  <version>0.8.7-beta.1</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -61,7 +61,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "org.lance:lance-namespace-apache-client:0.8.6"
+compile "org.lance:lance-namespace-apache-client:0.8.7-beta.1"
 ```
 
 ### Others
@@ -74,7 +74,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-- `target/lance-namespace-apache-client-0.8.6.jar`
+- `target/lance-namespace-apache-client-0.8.7-beta.1.jar`
 - `target/lib/*.jar`
 
 ## Getting Started
