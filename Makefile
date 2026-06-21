@@ -26,6 +26,18 @@ gen-rust:
 build-rust:
 	cd rust; make build
 
+.PHONY: clean-cpp
+clean-cpp:
+	cd cpp; make clean
+
+.PHONY: sync gen-cpp
+gen-cpp:
+	cd cpp; make gen
+
+.PHONY: build-cpp
+build-cpp:
+	cd cpp; make build
+
 .PHONY: clean-python
 clean-python:
 	cd python; make clean
@@ -63,10 +75,10 @@ sync:
 	uv sync --all-packages
 
 .PHONY: clean
-clean: clean-rust clean-python clean-java
+clean: clean-rust clean-cpp clean-python clean-java
 
 .PHONY: gen
-gen: lint gen-rust gen-python gen-java
+gen: lint gen-rust gen-cpp gen-python gen-java
 
 .PHONY: build
-build: lint build-docs build-rust build-python build-java
+build: lint build-docs build-rust build-cpp build-python build-java

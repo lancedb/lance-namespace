@@ -39,6 +39,11 @@ search = "VERSION = {current_version}"
 replace = "VERSION = {new_version}"
 
 [[tool.bumpversion.files]]
+filename = "cpp/Makefile"
+search = "VERSION = {current_version}"
+replace = "VERSION = {new_version}"
+
+[[tool.bumpversion.files]]
 filename = "rust/Makefile"
 search = "VERSION = {current_version}"
 replace = "VERSION = {new_version}"
@@ -76,6 +81,12 @@ filename = "rust/reqwest-client.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
 
+# C++ version header
+[[tool.bumpversion.files]]
+filename = "cpp/include/lance_namespace/version.h"
+search = 'LANCE_NAMESPACE_VERSION_STRING "{current_version}"'
+replace = 'LANCE_NAMESPACE_VERSION_STRING "{new_version}"'
+
 # Python lance_namespace package
 [[tool.bumpversion.files]]
 filename = "python/lance_namespace/pyproject.toml"
@@ -87,7 +98,6 @@ replace = 'version = "{new_version}"'
 filename = "python/lance_namespace/pyproject.toml"
 search = 'lance-namespace-urllib3-client=={current_version}'
 replace = 'lance-namespace-urllib3-client=={new_version}'
-
 
 # Java lance-namespace-core module
 [[tool.bumpversion.files]]
