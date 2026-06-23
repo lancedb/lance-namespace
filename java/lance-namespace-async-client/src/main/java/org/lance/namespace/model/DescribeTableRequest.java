@@ -32,6 +32,7 @@ import java.util.StringJoiner;
   DescribeTableRequest.JSON_PROPERTY_CONTEXT,
   DescribeTableRequest.JSON_PROPERTY_ID,
   DescribeTableRequest.JSON_PROPERTY_VERSION,
+  DescribeTableRequest.JSON_PROPERTY_TAG,
   DescribeTableRequest.JSON_PROPERTY_BRANCH,
   DescribeTableRequest.JSON_PROPERTY_WITH_TABLE_URI,
   DescribeTableRequest.JSON_PROPERTY_LOAD_DETAILED_METADATA,
@@ -53,6 +54,9 @@ public class DescribeTableRequest {
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nullable private Long version;
+
+  public static final String JSON_PROPERTY_TAG = "tag";
+  @javax.annotation.Nullable private String tag;
 
   public static final String JSON_PROPERTY_BRANCH = "branch";
   @javax.annotation.Nullable private String branch;
@@ -182,6 +186,31 @@ public class DescribeTableRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setVersion(@javax.annotation.Nullable Long version) {
     this.version = version;
+  }
+
+  public DescribeTableRequest tag(@javax.annotation.Nullable String tag) {
+    this.tag = tag;
+    return this;
+  }
+
+  /**
+   * Tag name to describe the table at. If specified, the server should resolve the tag to a version
+   * number and describe that version. Cannot be used together with &#x60;version&#x60; or
+   * &#x60;branch&#x60;.
+   *
+   * @return tag
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TAG)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getTag() {
+    return tag;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TAG)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTag(@javax.annotation.Nullable String tag) {
+    this.tag = tag;
   }
 
   public DescribeTableRequest branch(@javax.annotation.Nullable String branch) {
@@ -322,6 +351,7 @@ public class DescribeTableRequest {
         && Objects.equals(this.context, describeTableRequest.context)
         && Objects.equals(this.id, describeTableRequest.id)
         && Objects.equals(this.version, describeTableRequest.version)
+        && Objects.equals(this.tag, describeTableRequest.tag)
         && Objects.equals(this.branch, describeTableRequest.branch)
         && Objects.equals(this.withTableUri, describeTableRequest.withTableUri)
         && Objects.equals(this.loadDetailedMetadata, describeTableRequest.loadDetailedMetadata)
@@ -336,6 +366,7 @@ public class DescribeTableRequest {
         context,
         id,
         version,
+        tag,
         branch,
         withTableUri,
         loadDetailedMetadata,
@@ -351,6 +382,7 @@ public class DescribeTableRequest {
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    tag: ").append(toIndentedString(tag)).append("\n");
     sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    withTableUri: ").append(toIndentedString(withTableUri)).append("\n");
     sb.append("    loadDetailedMetadata: ")
@@ -446,6 +478,14 @@ public class DescribeTableRequest {
           String.format(
               "%sversion%s=%s",
               prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getVersion()))));
+    }
+
+    // add `tag` to the URL query string
+    if (getTag() != null) {
+      joiner.add(
+          String.format(
+              "%stag%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getTag()))));
     }
 
     // add `branch` to the URL query string

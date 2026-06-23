@@ -2738,6 +2738,12 @@ components:
           type: integer
           format: int64
           minimum: 0
+        tag:
+          description: |
+            Tag name to describe the table at.
+            If specified, the server should resolve the tag to a version number and describe that version.
+            Cannot be used together with `version` or `branch`.
+          type: string
         branch:
           type: string
           description: |

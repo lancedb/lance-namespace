@@ -23,6 +23,9 @@ pub struct DescribeTableRequest {
     /// Version of the table to describe. If not specified, server should resolve it to the latest version. 
     #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
     pub version: Option<i64>,
+    /// Tag name to describe the table at. If specified, the server should resolve the tag to a version number and describe that version. Cannot be used together with `version` or `branch`. 
+    #[serde(rename = "tag", skip_serializing_if = "Option::is_none")]
+    pub tag: Option<String>,
     /// Branch to target. When not specified, the main branch is used. 
     #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
     pub branch: Option<String>,
@@ -47,6 +50,7 @@ impl DescribeTableRequest {
             context: None,
             id: None,
             version: None,
+            tag: None,
             branch: None,
             with_table_uri: None,
             load_detailed_metadata: None,
