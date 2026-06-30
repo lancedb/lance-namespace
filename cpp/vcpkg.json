@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "name": "lance-namespace-cpp",
+  "version": "0.8.7",
+  "description": "C/C++ SDK for the Lance Namespace interface",
+  "dependencies": [
+    "cpprestsdk"
+  ]
+}
