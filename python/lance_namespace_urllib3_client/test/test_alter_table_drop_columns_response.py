@@ -35,6 +35,9 @@ class TestAlterTableDropColumnsResponse(unittest.TestCase):
         model = AlterTableDropColumnsResponse()
         if include_optional:
             return AlterTableDropColumnsResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = '',
                 version = 0
             )

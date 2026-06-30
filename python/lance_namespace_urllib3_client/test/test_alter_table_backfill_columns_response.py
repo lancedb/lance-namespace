@@ -35,6 +35,9 @@ class TestAlterTableBackfillColumnsResponse(unittest.TestCase):
         model = AlterTableBackfillColumnsResponse()
         if include_optional:
             return AlterTableBackfillColumnsResponse(
+                context = {
+                    'key' : ''
+                    },
                 job_id = ''
             )
         else:

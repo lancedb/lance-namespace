@@ -35,6 +35,9 @@ class TestCreateTableBranchResponse(unittest.TestCase):
         model = CreateTableBranchResponse()
         if include_optional:
             return CreateTableBranchResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = ''
             )
         else:

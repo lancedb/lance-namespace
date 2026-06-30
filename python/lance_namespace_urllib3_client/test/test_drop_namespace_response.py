@@ -35,6 +35,9 @@ class TestDropNamespaceResponse(unittest.TestCase):
         model = DropNamespaceResponse()
         if include_optional:
             return DropNamespaceResponse(
+                context = {
+                    'key' : ''
+                    },
                 properties = {
                     'key' : ''
                     },

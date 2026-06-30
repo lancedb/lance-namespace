@@ -35,6 +35,9 @@ class TestCreateTableScalarIndexResponse(unittest.TestCase):
         model = CreateTableScalarIndexResponse()
         if include_optional:
             return CreateTableScalarIndexResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = ''
             )
         else:

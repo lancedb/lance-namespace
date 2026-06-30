@@ -35,6 +35,9 @@ class TestCreateTableVersionResponse(unittest.TestCase):
         model = CreateTableVersionResponse()
         if include_optional:
             return CreateTableVersionResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = '',
                 version = lance_namespace_urllib3_client.models.table_version.TableVersion(
                     version = 0, 

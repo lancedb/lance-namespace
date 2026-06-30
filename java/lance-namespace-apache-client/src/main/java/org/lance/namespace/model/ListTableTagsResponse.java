@@ -26,6 +26,7 @@ import java.util.StringJoiner;
 
 /** Response containing table tags */
 @JsonPropertyOrder({
+  ListTableTagsResponse.JSON_PROPERTY_CONTEXT,
   ListTableTagsResponse.JSON_PROPERTY_TAGS,
   ListTableTagsResponse.JSON_PROPERTY_PAGE_TOKEN
 })
@@ -33,6 +34,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class ListTableTagsResponse {
+  public static final String JSON_PROPERTY_CONTEXT = "context";
+  @javax.annotation.Nullable private Map<String, String> context = new HashMap<>();
+
   public static final String JSON_PROPERTY_TAGS = "tags";
   @javax.annotation.Nonnull private Map<String, TagContents> tags = new HashMap<>();
 
@@ -40,6 +44,48 @@ public class ListTableTagsResponse {
   @javax.annotation.Nullable private String pageToken;
 
   public ListTableTagsResponse() {}
+
+  public ListTableTagsResponse context(@javax.annotation.Nullable Map<String, String> context) {
+
+    this.context = context;
+    return this;
+  }
+
+  public ListTableTagsResponse putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context as key-value pairs. How to use the context is custom to the specific
+   * implementation. On a request, it carries caller-provided context to the implementation. On a
+   * response, it carries implementation-provided context back to the caller. REST NAMESPACE ONLY
+   * Context entries are mapped to and from HTTP headers using the &#x60;header.&#x60; prefix: - On
+   * a request, any entry whose key starts with &#x60;header.&#x60; is sent as an HTTP request
+   * header with the prefix stripped. For example, the entry
+   * &#x60;{\&quot;header.Authorization\&quot;: \&quot;Bearer abc\&quot;}&#x60; is sent as the
+   * request header &#x60;Authorization: Bearer abc&#x60;. - On a response, every HTTP response
+   * header is returned as an entry whose key is the header name prefixed with &#x60;header.&#x60;.
+   * For example, the response header &#x60;x-request-id: abc123&#x60; is returned as the entry
+   * &#x60;{\&quot;header.x-request-id\&quot;: \&quot;abc123\&quot;}&#x60;.
+   *
+   * @return context
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_CONTEXT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  @JsonProperty(JSON_PROPERTY_CONTEXT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContext(@javax.annotation.Nullable Map<String, String> context) {
+    this.context = context;
+  }
 
   public ListTableTagsResponse tags(@javax.annotation.Nonnull Map<String, TagContents> tags) {
 
@@ -110,19 +156,21 @@ public class ListTableTagsResponse {
       return false;
     }
     ListTableTagsResponse listTableTagsResponse = (ListTableTagsResponse) o;
-    return Objects.equals(this.tags, listTableTagsResponse.tags)
+    return Objects.equals(this.context, listTableTagsResponse.context)
+        && Objects.equals(this.tags, listTableTagsResponse.tags)
         && Objects.equals(this.pageToken, listTableTagsResponse.pageToken);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(tags, pageToken);
+    return Objects.hash(context, tags, pageToken);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ListTableTagsResponse {\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
     sb.append("    pageToken: ").append(toIndentedString(pageToken)).append("\n");
     sb.append("}");
@@ -170,6 +218,28 @@ public class ListTableTagsResponse {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `context` to the URL query string
+    if (getContext() != null) {
+      for (String _key : getContext().keySet()) {
+        try {
+          joiner.add(
+              String.format(
+                  "%scontext%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
+                  getContext().get(_key),
+                  URLEncoder.encode(String.valueOf(getContext().get(_key)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
+      }
+    }
 
     // add `tags` to the URL query string
     if (getTags() != null) {

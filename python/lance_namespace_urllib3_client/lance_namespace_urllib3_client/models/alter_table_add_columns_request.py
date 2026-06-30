@@ -29,10 +29,11 @@ class AlterTableAddColumnsRequest(BaseModel):
     AlterTableAddColumnsRequest
     """ # noqa: E501
     identity: Optional[Identity] = None
+    context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context as key-value pairs. How to use the context is custom to the specific implementation.  On a request, it carries caller-provided context to the implementation. On a response, it carries implementation-provided context back to the caller.  REST NAMESPACE ONLY Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request, any entry whose key starts with `header.` is sent as an HTTP   request header with the prefix stripped. For example, the entry   `{\"header.Authorization\": \"Bearer abc\"}` is sent as the request header   `Authorization: Bearer abc`. - On a response, every HTTP response header is returned as an entry whose key is the   header name prefixed with `header.`. For example, the response header   `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\": \"abc123\"}`. ")
     id: Optional[List[StrictStr]] = Field(default=None, description="Table identifier path (namespace + table name)")
     branch: Optional[StrictStr] = Field(default=None, description="Branch to target. When not specified, the main branch is used. ")
     new_columns: List[AddColumnsEntry] = Field(description="List of new columns to add to the table")
-    __properties: ClassVar[List[str]] = ["identity", "id", "branch", "new_columns"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "branch", "new_columns"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -96,6 +97,7 @@ class AlterTableAddColumnsRequest(BaseModel):
 
         _obj = cls.model_validate({
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
+            "context": obj.get("context"),
             "id": obj.get("id"),
             "branch": obj.get("branch"),
             "new_columns": [AddColumnsEntry.from_dict(_item) for _item in obj["new_columns"]] if obj.get("new_columns") is not None else None

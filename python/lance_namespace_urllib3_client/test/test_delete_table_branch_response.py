@@ -35,6 +35,9 @@ class TestDeleteTableBranchResponse(unittest.TestCase):
         model = DeleteTableBranchResponse()
         if include_optional:
             return DeleteTableBranchResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = ''
             )
         else:

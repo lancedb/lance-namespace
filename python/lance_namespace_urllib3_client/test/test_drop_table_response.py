@@ -35,6 +35,9 @@ class TestDropTableResponse(unittest.TestCase):
         model = DropTableResponse()
         if include_optional:
             return DropTableResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = '',
                 id = [
                     ''

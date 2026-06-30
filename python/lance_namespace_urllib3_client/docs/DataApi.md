@@ -1114,6 +1114,8 @@ Returns results in Arrow IPC file or stream format.
 REST NAMESPACE ONLY
 REST namespace returns the response as Arrow IPC file binary data
 instead of the `QueryTableResponse` JSON object.
+Because the response has no JSON body, there is no `context` field; any response
+context is available only as raw HTTP response headers.
 
 
 ### Example

@@ -35,6 +35,9 @@ class TestInsertIntoTableResponse(unittest.TestCase):
         model = InsertIntoTableResponse()
         if include_optional:
             return InsertIntoTableResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = ''
             )
         else:

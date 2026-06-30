@@ -35,6 +35,9 @@ class TestDescribeTransactionResponse(unittest.TestCase):
         model = DescribeTransactionResponse()
         if include_optional:
             return DescribeTransactionResponse(
+                context = {
+                    'key' : ''
+                    },
                 status = '',
                 properties = {
                     'key' : ''

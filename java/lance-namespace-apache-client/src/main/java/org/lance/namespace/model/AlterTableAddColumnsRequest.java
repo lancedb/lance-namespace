@@ -20,13 +20,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 /** AlterTableAddColumnsRequest */
 @JsonPropertyOrder({
   AlterTableAddColumnsRequest.JSON_PROPERTY_IDENTITY,
+  AlterTableAddColumnsRequest.JSON_PROPERTY_CONTEXT,
   AlterTableAddColumnsRequest.JSON_PROPERTY_ID,
   AlterTableAddColumnsRequest.JSON_PROPERTY_BRANCH,
   AlterTableAddColumnsRequest.JSON_PROPERTY_NEW_COLUMNS
@@ -37,6 +40,9 @@ import java.util.StringJoiner;
 public class AlterTableAddColumnsRequest {
   public static final String JSON_PROPERTY_IDENTITY = "identity";
   @javax.annotation.Nullable private Identity identity;
+
+  public static final String JSON_PROPERTY_CONTEXT = "context";
+  @javax.annotation.Nullable private Map<String, String> context = new HashMap<>();
 
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable private List<String> id = new ArrayList<>();
@@ -71,6 +77,49 @@ public class AlterTableAddColumnsRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setIdentity(@javax.annotation.Nullable Identity identity) {
     this.identity = identity;
+  }
+
+  public AlterTableAddColumnsRequest context(
+      @javax.annotation.Nullable Map<String, String> context) {
+
+    this.context = context;
+    return this;
+  }
+
+  public AlterTableAddColumnsRequest putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context as key-value pairs. How to use the context is custom to the specific
+   * implementation. On a request, it carries caller-provided context to the implementation. On a
+   * response, it carries implementation-provided context back to the caller. REST NAMESPACE ONLY
+   * Context entries are mapped to and from HTTP headers using the &#x60;header.&#x60; prefix: - On
+   * a request, any entry whose key starts with &#x60;header.&#x60; is sent as an HTTP request
+   * header with the prefix stripped. For example, the entry
+   * &#x60;{\&quot;header.Authorization\&quot;: \&quot;Bearer abc\&quot;}&#x60; is sent as the
+   * request header &#x60;Authorization: Bearer abc&#x60;. - On a response, every HTTP response
+   * header is returned as an entry whose key is the header name prefixed with &#x60;header.&#x60;.
+   * For example, the response header &#x60;x-request-id: abc123&#x60; is returned as the entry
+   * &#x60;{\&quot;header.x-request-id\&quot;: \&quot;abc123\&quot;}&#x60;.
+   *
+   * @return context
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_CONTEXT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  @JsonProperty(JSON_PROPERTY_CONTEXT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContext(@javax.annotation.Nullable Map<String, String> context) {
+    this.context = context;
   }
 
   public AlterTableAddColumnsRequest id(@javax.annotation.Nullable List<String> id) {
@@ -172,6 +221,7 @@ public class AlterTableAddColumnsRequest {
     }
     AlterTableAddColumnsRequest alterTableAddColumnsRequest = (AlterTableAddColumnsRequest) o;
     return Objects.equals(this.identity, alterTableAddColumnsRequest.identity)
+        && Objects.equals(this.context, alterTableAddColumnsRequest.context)
         && Objects.equals(this.id, alterTableAddColumnsRequest.id)
         && Objects.equals(this.branch, alterTableAddColumnsRequest.branch)
         && Objects.equals(this.newColumns, alterTableAddColumnsRequest.newColumns);
@@ -179,7 +229,7 @@ public class AlterTableAddColumnsRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, branch, newColumns);
+    return Objects.hash(identity, context, id, branch, newColumns);
   }
 
   @Override
@@ -187,6 +237,7 @@ public class AlterTableAddColumnsRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTableAddColumnsRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    newColumns: ").append(toIndentedString(newColumns)).append("\n");
@@ -239,6 +290,28 @@ public class AlterTableAddColumnsRequest {
     // add `identity` to the URL query string
     if (getIdentity() != null) {
       joiner.add(getIdentity().toUrlQueryString(prefix + "identity" + suffix));
+    }
+
+    // add `context` to the URL query string
+    if (getContext() != null) {
+      for (String _key : getContext().keySet()) {
+        try {
+          joiner.add(
+              String.format(
+                  "%scontext%s%s=%s",
+                  prefix,
+                  suffix,
+                  "".equals(suffix)
+                      ? ""
+                      : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
+                  getContext().get(_key),
+                  URLEncoder.encode(String.valueOf(getContext().get(_key)), "UTF-8")
+                      .replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
+      }
     }
 
     // add `id` to the URL query string

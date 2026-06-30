@@ -27,11 +27,12 @@ class ErrorResponse(BaseModel):
     """
     Common JSON error response model
     """ # noqa: E501
+    context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context as key-value pairs. How to use the context is custom to the specific implementation.  On a request, it carries caller-provided context to the implementation. On a response, it carries implementation-provided context back to the caller.  REST NAMESPACE ONLY Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request, any entry whose key starts with `header.` is sent as an HTTP   request header with the prefix stripped. For example, the entry   `{\"header.Authorization\": \"Bearer abc\"}` is sent as the request header   `Authorization: Bearer abc`. - On a response, every HTTP response header is returned as an entry whose key is the   header name prefixed with `header.`. For example, the response header   `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\": \"abc123\"}`. ")
     error: Optional[StrictStr] = Field(default=None, description="A brief, human-readable message about the error.")
     code: Annotated[int, Field(strict=True, ge=0)] = Field(description="Lance Namespace error code identifying the error type.  Error codes:   0 - Unsupported: Operation not supported by this backend   1 - NamespaceNotFound: The specified namespace does not exist   2 - NamespaceAlreadyExists: A namespace with this name already exists   3 - NamespaceNotEmpty: Namespace contains tables or child namespaces   4 - TableNotFound: The specified table does not exist   5 - TableAlreadyExists: A table with this name already exists   6 - TableIndexNotFound: The specified table index does not exist   7 - TableIndexAlreadyExists: A table index with this name already exists   8 - TableTagNotFound: The specified table tag does not exist   9 - TableTagAlreadyExists: A table tag with this name already exists   10 - TransactionNotFound: The specified transaction does not exist   11 - TableVersionNotFound: The specified table version does not exist   12 - TableColumnNotFound: The specified table field does not exist   13 - InvalidInput: Malformed request or invalid parameters   14 - ConcurrentModification: Optimistic concurrency conflict   15 - PermissionDenied: User lacks permission for this operation   16 - Unauthenticated: Authentication credentials are missing or invalid   17 - ServiceUnavailable: Service is temporarily unavailable   18 - Internal: Unexpected server/implementation error   19 - InvalidTableState: Table is in an invalid state for the operation   20 - TableSchemaValidationError: Table schema validation failed   21 - Throttling: Request rate limit exceeded   22 - TableBranchNotFound: The specified table branch does not exist   23 - TableBranchAlreadyExists: A table branch with this name already exists ")
     detail: Optional[StrictStr] = Field(default=None, description="An optional human-readable explanation of the error. This can be used to record additional information such as stack trace. ")
     instance: Optional[StrictStr] = Field(default=None, description="A string that identifies the specific occurrence of the error. This can be a URI, a request or response ID, or anything that the implementation can recognize to trace specific occurrence of the error. ")
-    __properties: ClassVar[List[str]] = ["error", "code", "detail", "instance"]
+    __properties: ClassVar[List[str]] = ["context", "error", "code", "detail", "instance"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -84,6 +85,7 @@ class ErrorResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "context": obj.get("context"),
             "error": obj.get("error"),
             "code": obj.get("code"),
             "detail": obj.get("detail"),

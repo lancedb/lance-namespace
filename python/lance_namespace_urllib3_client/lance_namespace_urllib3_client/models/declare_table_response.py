@@ -26,12 +26,13 @@ class DeclareTableResponse(BaseModel):
     """
     Response for declaring a table. 
     """ # noqa: E501
+    context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context as key-value pairs. How to use the context is custom to the specific implementation.  On a request, it carries caller-provided context to the implementation. On a response, it carries implementation-provided context back to the caller.  REST NAMESPACE ONLY Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request, any entry whose key starts with `header.` is sent as an HTTP   request header with the prefix stripped. For example, the entry   `{\"header.Authorization\": \"Bearer abc\"}` is sent as the request header   `Authorization: Bearer abc`. - On a response, every HTTP response header is returned as an entry whose key is the   header name prefixed with `header.`. For example, the response header   `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\": \"abc123\"}`. ")
     transaction_id: Optional[StrictStr] = Field(default=None, description="Optional transaction identifier")
     location: Optional[StrictStr] = None
     storage_options: Optional[Dict[str, StrictStr]] = Field(default=None, description="Configuration options to be used to access storage. The available options depend on the type of storage in use. These will be passed directly to Lance to initialize storage access. ")
     properties: Optional[Dict[str, StrictStr]] = Field(default=None, description="If the implementation does not support table properties, it should return null for this field. Otherwise it should return the properties. ")
     managed_versioning: Optional[StrictBool] = Field(default=None, description="When true, the caller should use namespace table version operations (CreateTableVersion, BatchCreateTableVersions, DescribeTableVersion, ListTableVersions, BatchDeleteTableVersions) to manage table versions instead of relying on Lance's native version management. ")
-    __properties: ClassVar[List[str]] = ["transaction_id", "location", "storage_options", "properties", "managed_versioning"]
+    __properties: ClassVar[List[str]] = ["context", "transaction_id", "location", "storage_options", "properties", "managed_versioning"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -84,6 +85,7 @@ class DeclareTableResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "context": obj.get("context"),
             "transaction_id": obj.get("transaction_id"),
             "location": obj.get("location"),
             "storage_options": obj.get("storage_options"),

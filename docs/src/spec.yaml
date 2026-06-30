@@ -1299,6 +1299,8 @@ paths:
         REST NAMESPACE ONLY
         REST namespace returns the response as Arrow IPC file binary data
         instead of the `QueryTableResponse` JSON object.
+        Because the response has no JSON body, there is no `context` field; any response
+        context is available only as raw HTTP response headers.
       requestBody:
         description: Query request
         content:
@@ -2367,6 +2369,8 @@ components:
       required:
         - code
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         error:
           type: string
           description: A brief, human-readable message about the error.
@@ -2441,13 +2445,21 @@ components:
     Context:
       type: object
       description: |
-        Arbitrary context for a request as key-value pairs.
+        Arbitrary context as key-value pairs.
         How to use the context is custom to the specific implementation.
 
+        On a request, it carries caller-provided context to the implementation.
+        On a response, it carries implementation-provided context back to the caller.
+
         REST NAMESPACE ONLY
-        Context entries are passed via HTTP headers using the naming convention
-        `x-lance-ctx-<key>: <value>`. For example, a context entry
-        `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+        Context entries are mapped to and from HTTP headers using the `header.` prefix:
+        - On a request, any entry whose key starts with `header.` is sent as an HTTP
+          request header with the prefix stripped. For example, the entry
+          `{"header.Authorization": "Bearer abc"}` is sent as the request header
+          `Authorization: Bearer abc`.
+        - On a response, every HTTP response header is returned as an entry whose key is the
+          header name prefixed with `header.`. For example, the response header
+          `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
       additionalProperties:
         type: string
 
@@ -2481,6 +2493,8 @@ components:
     CreateNamespaceResponse:
       type: object
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -2515,6 +2529,8 @@ components:
       required:
         - namespaces
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         namespaces:
           type: array
           uniqueItems: true
@@ -2540,6 +2556,8 @@ components:
     DescribeNamespaceResponse:
       type: object
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         properties:
           type: object
           description:
@@ -2582,6 +2600,8 @@ components:
     DropNamespaceResponse:
       type: object
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         properties:
           type: object
           description: |
@@ -2667,6 +2687,8 @@ components:
     RegisterTableResponse:
       type: object
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -2708,6 +2730,8 @@ components:
       required:
         - tables
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         tables:
           type: array
           uniqueItems: true
@@ -2782,6 +2806,8 @@ components:
     DescribeTableResponse:
       type: object
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         table:
           type: string
           description: |
@@ -2922,6 +2948,9 @@ components:
       description: |
         Response containing the count of rows.
         Serializes transparently as just the number for backward compatibility.
+
+        Because this serializes as a bare number, there is no `context` field; any response
+        context is available only as raw HTTP response headers.
       minimum: 0
 
     InsertIntoTableRequest:
@@ -2953,6 +2982,8 @@ components:
       type: object
       description: Response from inserting records into a table
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -3008,6 +3039,8 @@ components:
       type: object
       description: Response from merge insert operation
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -3079,6 +3112,8 @@ components:
         - updated_rows
         - version
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -3127,6 +3162,8 @@ components:
     DeleteFromTableResponse:
       type: object
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -3329,6 +3366,8 @@ components:
       type: object
       description: Response for create index operation
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -3337,6 +3376,8 @@ components:
       type: object
       description: Response for create scalar index operation
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -3373,6 +3414,8 @@ components:
       required:
         - indexes
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         indexes:
           type: array
           items:
@@ -3485,6 +3528,8 @@ components:
     DescribeTableIndexStatsResponse:
       type: object
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         distance_type:
           type: string
           nullable: true
@@ -3617,6 +3662,8 @@ components:
     CreateTableResponse:
       type: object
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -3683,6 +3730,8 @@ components:
       description: |
         Response for declaring a table.
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -3759,6 +3808,8 @@ components:
       required:
         - status
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         status:
           $ref: "#/components/schemas/TransactionStatus"
         properties:
@@ -3850,6 +3901,8 @@ components:
       required:
         - status
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         status:
           $ref: "#/components/schemas/TransactionStatus"
         properties:
@@ -3875,6 +3928,8 @@ components:
     DropTableResponse:
       type: object
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -3911,6 +3966,8 @@ components:
     DeregisterTableResponse:
       type: object
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -4106,6 +4163,8 @@ components:
       required:
         - version
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         version:
           type: integer
           format: int64
@@ -4148,6 +4207,8 @@ components:
       type: object
       description: Response for create tag operation
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -4173,6 +4234,8 @@ components:
       type: object
       description: Response for delete tag operation
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -4208,6 +4271,8 @@ components:
       type: object
       description: Response for update tag operation
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -4235,6 +4300,8 @@ components:
       required:
         - tags
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         tags:
           type: object
           additionalProperties:
@@ -4329,6 +4396,8 @@ components:
       type: object
       description: Response for create branch operation
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -4354,6 +4423,8 @@ components:
       type: object
       description: Response for delete branch operation
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -4381,6 +4452,8 @@ components:
       required:
         - branches
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         branches:
           type: object
           additionalProperties:
@@ -4416,6 +4489,8 @@ components:
       type: object
       description: Response for restore table operation
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -4446,6 +4521,8 @@ components:
     RenameTableResponse:
       type: object
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -4475,6 +4552,8 @@ components:
     UpdateTableSchemaMetadataResponse:
       type: object
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         metadata:
           type: object
           additionalProperties:
@@ -4514,6 +4593,8 @@ components:
       required:
         - versions
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         versions:
           type: array
           items:
@@ -4575,6 +4656,8 @@ components:
       type: object
       description: Response for creating a table version
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -4610,6 +4693,8 @@ components:
       required:
         - version
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         version:
           $ref: "#/components/schemas/TableVersion"
           description: The table version information
@@ -4670,6 +4755,8 @@ components:
       type: object
       description: Response for deleting table version records
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         deleted_count:
           type: integer
           format: int64
@@ -4749,6 +4836,8 @@ components:
       required:
         - versions
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -4831,6 +4920,8 @@ components:
       required:
         - results
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier for the batch commit
@@ -4919,6 +5010,8 @@ components:
       required:
         - plan
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         plan:
           type: string
           description: Human-readable query execution plan
@@ -5051,6 +5144,8 @@ components:
       required:
         - analysis
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         analysis:
           type: string
           description: Detailed analysis of the query execution plan
@@ -5062,6 +5157,8 @@ components:
       properties:
         identity:
           $ref: "#/components/schemas/Identity"
+        context:
+          $ref: "#/components/schemas/Context"
         id:
           type: array
           items:
@@ -5190,6 +5287,8 @@ components:
       required:
         - version
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         version:
           type: integer
           format: int64
@@ -5203,6 +5302,8 @@ components:
       properties:
         identity:
           $ref: "#/components/schemas/Identity"
+        context:
+          $ref: "#/components/schemas/Context"
         id:
           type: array
           items:
@@ -5250,6 +5351,8 @@ components:
       required:
         - version
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         version:
           type: integer
           format: int64
@@ -5271,6 +5374,8 @@ components:
       properties:
         identity:
           $ref: "#/components/schemas/Identity"
+        context:
+          $ref: "#/components/schemas/Context"
         id:
           type: array
           items:
@@ -5378,6 +5483,8 @@ components:
       required:
         - version
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         version:
           type: integer
           format: int64
@@ -5391,6 +5498,8 @@ components:
       properties:
         identity:
           $ref: "#/components/schemas/Identity"
+        context:
+          $ref: "#/components/schemas/Context"
         id:
           type: array
           items:
@@ -5475,6 +5584,8 @@ components:
       required:
         - job_id
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         job_id:
           type: string
           description: The job ID for tracking the backfill job
@@ -5484,6 +5595,8 @@ components:
       properties:
         identity:
           $ref: "#/components/schemas/Identity"
+        context:
+          $ref: "#/components/schemas/Context"
         id:
           type: array
           items:
@@ -5543,6 +5656,8 @@ components:
       required:
         - job_id
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         job_id:
           type: string
           description: The job ID for tracking the refresh job
@@ -5556,6 +5671,8 @@ components:
       properties:
         identity:
           $ref: "#/components/schemas/Identity"
+        context:
+          $ref: "#/components/schemas/Context"
         id:
           type: array
           items:
@@ -5704,6 +5821,8 @@ components:
       required:
         - version
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         version:
           type: integer
           format: int64
@@ -5745,6 +5864,8 @@ components:
       required:
         - version
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier
@@ -5778,6 +5899,8 @@ components:
         - num_indices
         - fragment_stats
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         total_bytes:
           type: integer
           format: int64
@@ -5881,6 +6004,8 @@ components:
       type: object
       description: Response for drop index operation
       properties:
+        context:
+          $ref: "#/components/schemas/Context"
         transaction_id:
           type: string
           description: Optional transaction identifier

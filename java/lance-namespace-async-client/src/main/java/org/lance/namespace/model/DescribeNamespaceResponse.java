@@ -25,15 +25,62 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /** DescribeNamespaceResponse */
-@JsonPropertyOrder({DescribeNamespaceResponse.JSON_PROPERTY_PROPERTIES})
+@JsonPropertyOrder({
+  DescribeNamespaceResponse.JSON_PROPERTY_CONTEXT,
+  DescribeNamespaceResponse.JSON_PROPERTY_PROPERTIES
+})
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DescribeNamespaceResponse {
+  public static final String JSON_PROPERTY_CONTEXT = "context";
+  @javax.annotation.Nullable private Map<String, String> context = new HashMap<>();
+
   public static final String JSON_PROPERTY_PROPERTIES = "properties";
   @javax.annotation.Nullable private Map<String, String> properties = new HashMap<>();
 
   public DescribeNamespaceResponse() {}
+
+  public DescribeNamespaceResponse context(@javax.annotation.Nullable Map<String, String> context) {
+    this.context = context;
+    return this;
+  }
+
+  public DescribeNamespaceResponse putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context as key-value pairs. How to use the context is custom to the specific
+   * implementation. On a request, it carries caller-provided context to the implementation. On a
+   * response, it carries implementation-provided context back to the caller. REST NAMESPACE ONLY
+   * Context entries are mapped to and from HTTP headers using the &#x60;header.&#x60; prefix: - On
+   * a request, any entry whose key starts with &#x60;header.&#x60; is sent as an HTTP request
+   * header with the prefix stripped. For example, the entry
+   * &#x60;{\&quot;header.Authorization\&quot;: \&quot;Bearer abc\&quot;}&#x60; is sent as the
+   * request header &#x60;Authorization: Bearer abc&#x60;. - On a response, every HTTP response
+   * header is returned as an entry whose key is the header name prefixed with &#x60;header.&#x60;.
+   * For example, the response header &#x60;x-request-id: abc123&#x60; is returned as the entry
+   * &#x60;{\&quot;header.x-request-id\&quot;: \&quot;abc123\&quot;}&#x60;.
+   *
+   * @return context
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_CONTEXT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  @JsonProperty(JSON_PROPERTY_CONTEXT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContext(@javax.annotation.Nullable Map<String, String> context) {
+    this.context = context;
+  }
 
   public DescribeNamespaceResponse properties(
       @javax.annotation.Nullable Map<String, String> properties) {
@@ -79,18 +126,20 @@ public class DescribeNamespaceResponse {
       return false;
     }
     DescribeNamespaceResponse describeNamespaceResponse = (DescribeNamespaceResponse) o;
-    return Objects.equals(this.properties, describeNamespaceResponse.properties);
+    return Objects.equals(this.context, describeNamespaceResponse.context)
+        && Objects.equals(this.properties, describeNamespaceResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(properties);
+    return Objects.hash(context, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeNamespaceResponse {\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -137,6 +186,22 @@ public class DescribeNamespaceResponse {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `context` to the URL query string
+    if (getContext() != null) {
+      for (String _key : getContext().keySet()) {
+        joiner.add(
+            String.format(
+                "%scontext%s%s=%s",
+                prefix,
+                suffix,
+                "".equals(suffix)
+                    ? ""
+                    : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
+                getContext().get(_key),
+                ApiClient.urlEncode(ApiClient.valueToString(getContext().get(_key)))));
+      }
+    }
 
     // add `properties` to the URL query string
     if (getProperties() != null) {

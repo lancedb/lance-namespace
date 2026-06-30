@@ -35,6 +35,9 @@ class TestDescribeNamespaceResponse(unittest.TestCase):
         model = DescribeNamespaceResponse()
         if include_optional:
             return DescribeNamespaceResponse(
+                context = {
+                    'key' : ''
+                    },
                 properties = {owner=Ralph, created_at=1452120468}
             )
         else:

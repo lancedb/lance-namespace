@@ -35,6 +35,9 @@ class TestCreateTableTagResponse(unittest.TestCase):
         model = CreateTableTagResponse()
         if include_optional:
             return CreateTableTagResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = ''
             )
         else:

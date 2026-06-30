@@ -1554,6 +1554,8 @@ paths:
         REST NAMESPACE ONLY
         REST namespace returns the response as Arrow IPC file binary data
         instead of the `QueryTableResponse` JSON object.
+        Because the response has no JSON body, there is no `context` field; any response
+        context is available only as raw HTTP response headers.
       operationId: QueryTable
       parameters:
       - $ref: '#/components/parameters/id'
@@ -3245,9 +3247,30 @@ components:
       example:
         code: 4
         instance: /v1/table/production$users/describe
+        context:
+          key: context
         detail: The table may have been dropped or renamed
         error: Table 'users' not found in namespace 'production'
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         error:
           description: "A brief, human-readable message about the error."
           example: Table 'users' not found in namespace 'production'
@@ -3325,13 +3348,21 @@ components:
       additionalProperties:
         type: string
       description: |
-        Arbitrary context for a request as key-value pairs.
+        Arbitrary context as key-value pairs.
         How to use the context is custom to the specific implementation.
 
+        On a request, it carries caller-provided context to the implementation.
+        On a response, it carries implementation-provided context back to the caller.
+
         REST NAMESPACE ONLY
-        Context entries are passed via HTTP headers using the naming convention
-        `x-lance-ctx-<key>: <value>`. For example, a context entry
-        `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+        Context entries are mapped to and from HTTP headers using the `header.` prefix:
+        - On a request, any entry whose key starts with `header.` is sent as an HTTP
+          request header with the prefix stripped. For example, the entry
+          `{"header.Authorization": "Bearer abc"}` is sent as the request header
+          `Authorization: Bearer abc`.
+        - On a response, every HTTP response header is returned as an entry whose key is the
+          header name prefixed with `header.`. For example, the response header
+          `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
     CreateNamespaceRequest:
       example:
         mode: mode
@@ -3352,13 +3383,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -3380,9 +3419,30 @@ components:
     CreateNamespaceResponse:
       example:
         transaction_id: transaction_id
+        context:
+          key: context
         properties:
           key: properties
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -3402,13 +3462,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -3440,11 +3508,32 @@ components:
           nullable: true
     ListNamespacesResponse:
       example:
+        context:
+          key: context
         page_token: page_token
         namespaces:
         - namespaces
         - namespaces
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         namespaces:
           description: |
             The list of names of the child namespaces relative to the parent namespace `id` in the request.
@@ -3490,23 +3579,52 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
           type: array
     DescribeNamespaceResponse:
       example:
+        context:
+          key: context
         properties:
           owner: Ralph
           created_at: "1452120468"
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         properties:
           additionalProperties:
             type: string
@@ -3538,13 +3656,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -3569,9 +3695,30 @@ components:
         transaction_id:
         - transaction_id
         - transaction_id
+        context:
+          key: context
         properties:
           key: properties
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         properties:
           additionalProperties:
             type: string
@@ -3600,13 +3747,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -3657,13 +3812,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -3688,10 +3851,31 @@ components:
     RegisterTableResponse:
       example:
         transaction_id: transaction_id
+        context:
+          key: context
         location: location
         properties:
           key: properties
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -3710,13 +3894,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -3759,8 +3951,29 @@ components:
         tables:
         - tables
         - tables
+        context:
+          key: context
         page_token: page_token
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         tables:
           description: |
             The list of names of all the tables under the connected namespace implementation.
@@ -3815,13 +4028,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -3899,26 +4120,47 @@ components:
               - null
               - null
               type: type
-        is_only_declared: true
         metadata:
           key: metadata
         table_uri: table_uri
+        version: 0
+        managed_versioning: true
+        is_only_declared: true
         stats:
           num_deleted_rows: 0
           num_fragments: 0
+        context:
+          key: context
         namespace:
         - namespace
         - namespace
         location: location
-        version: 0
         table: table
         properties:
           owner: Ralph
           created_at: "1452120468"
-        managed_versioning: true
         storage_options:
           key: storage_options
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         table:
           description: |
             Table name.
@@ -4037,13 +4279,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -4068,6 +4318,9 @@ components:
       description: |
         Response containing the count of rows.
         Serializes transparently as just the number for backward compatibility.
+
+        Because this serializes as a bare number, there is no `context` field; any response
+        context is available only as raw HTTP response headers.
       format: int64
       minimum: 0
       type: integer
@@ -4081,13 +4334,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -4107,7 +4368,28 @@ components:
       description: Response from inserting records into a table
       example:
         transaction_id: transaction_id
+        context:
+          key: context
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -4121,13 +4403,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -4184,9 +4474,30 @@ components:
         transaction_id: transaction_id
         num_inserted_rows: 0
         num_updated_rows: 0
+        context:
+          key: context
         num_deleted_rows: 0
         version: 0
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -4240,13 +4551,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -4285,10 +4604,31 @@ components:
       example:
         transaction_id: transaction_id
         updated_rows: 0
+        context:
+          key: context
         version: 0
         properties:
           key: properties
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -4332,13 +4672,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: The namespace identifier
           items:
@@ -4359,8 +4707,29 @@ components:
     DeleteFromTableResponse:
       example:
         transaction_id: transaction_id
+        context:
+          key: context
         version: 0
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -4467,13 +4836,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -4582,13 +4959,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -4658,7 +5043,28 @@ components:
       description: Response for create index operation
       example:
         transaction_id: transaction_id
+        context:
+          key: context
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -4666,7 +5072,28 @@ components:
       description: Response for create scalar index operation
       example:
         transaction_id: transaction_id
+        context:
+          key: context
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -4691,13 +5118,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: The namespace identifier
           items:
@@ -4771,8 +5206,29 @@ components:
           index_name: index_name
           status: status
           type_url: type_url
+        context:
+          key: context
         page_token: page_token
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         indexes:
           description: List of indexes on the table
           items:
@@ -4905,13 +5361,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -4934,9 +5398,30 @@ components:
         num_indices: 0
         distance_type: distance_type
         num_unindexed_rows: 0
+        context:
+          key: context
         num_indexed_rows: 0
         index_type: index_type
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         distance_type:
           description: Distance type for vector indexes
           type: string
@@ -5067,13 +5552,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -5102,6 +5595,8 @@ components:
     CreateTableResponse:
       example:
         transaction_id: transaction_id
+        context:
+          key: context
         location: location
         version: 0
         properties:
@@ -5110,6 +5605,25 @@ components:
         storage_options:
           key: storage_options
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -5161,13 +5675,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -5194,6 +5716,8 @@ components:
         Response for declaring a table.
       example:
         transaction_id: transaction_id
+        context:
+          key: context
         location: location
         properties:
           owner: Ralph
@@ -5202,6 +5726,25 @@ components:
         storage_options:
           key: storage_options
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -5248,13 +5791,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -5293,23 +5844,52 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
           type: array
     DescribeTransactionResponse:
       example:
+        context:
+          key: context
         properties:
           key: properties
         status: status
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         status:
           description: |
             The status of a transaction.
@@ -5449,13 +6029,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -5469,10 +6057,31 @@ components:
       - actions
     AlterTransactionResponse:
       example:
+        context:
+          key: context
         properties:
           key: properties
         status: status
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         status:
           description: |
             The status of a transaction.
@@ -5499,13 +6108,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -5513,6 +6130,8 @@ components:
     DropTableResponse:
       example:
         transaction_id: transaction_id
+        context:
+          key: context
         location: location
         id:
         - id
@@ -5521,6 +6140,25 @@ components:
           owner: Ralph
           created_at: "1452120468"
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -5559,13 +6197,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -5573,6 +6219,8 @@ components:
     DeregisterTableResponse:
       example:
         transaction_id: transaction_id
+        context:
+          key: context
         location: location
         id:
         - id
@@ -5581,6 +6229,25 @@ components:
           owner: Ralph
           created_at: "1452120468"
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -5896,13 +6563,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -5914,9 +6589,30 @@ components:
       - tag
     GetTableTagVersionResponse:
       example:
+        context:
+          key: context
         version: 0
         branch: branch
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         version:
           description: version number that the tag points to
           format: int64
@@ -5949,13 +6645,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -5979,7 +6683,28 @@ components:
       description: Response for create tag operation
       example:
         transaction_id: transaction_id
+        context:
+          key: context
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -6001,13 +6726,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -6021,7 +6754,28 @@ components:
       description: Response for delete tag operation
       example:
         transaction_id: transaction_id
+        context:
+          key: context
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -6045,13 +6799,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -6075,7 +6837,28 @@ components:
       description: Response for update tag operation
       example:
         transaction_id: transaction_id
+        context:
+          key: context
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -6087,13 +6870,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: The table identifier
           items:
@@ -6127,6 +6918,8 @@ components:
     ListTableTagsResponse:
       description: Response containing table tags
       example:
+        context:
+          key: context
         page_token: page_token
         tags:
           key:
@@ -6134,6 +6927,25 @@ components:
             version: 0
             manifestSize: 0
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         tags:
           additionalProperties:
             $ref: '#/components/schemas/TagContents'
@@ -6239,13 +7051,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -6271,7 +7091,28 @@ components:
       description: Response for create branch operation
       example:
         transaction_id: transaction_id
+        context:
+          key: context
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -6293,13 +7134,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -6313,7 +7162,28 @@ components:
       description: Response for delete branch operation
       example:
         transaction_id: transaction_id
+        context:
+          key: context
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -6325,13 +7195,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: The table identifier
           items:
@@ -6365,6 +7243,8 @@ components:
     ListTableBranchesResponse:
       description: Response containing table branches
       example:
+        context:
+          key: context
         page_token: page_token
         branches:
           key:
@@ -6375,6 +7255,25 @@ components:
             parentVersion: 0
             manifestSize: 0
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         branches:
           additionalProperties:
             $ref: '#/components/schemas/BranchContents'
@@ -6419,13 +7318,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -6445,7 +7352,28 @@ components:
       description: Response for restore table operation
       example:
         transaction_id: transaction_id
+        context:
+          key: context
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -6470,13 +7398,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: The table identifier
           items:
@@ -6496,7 +7432,28 @@ components:
     RenameTableResponse:
       example:
         transaction_id: transaction_id
+        context:
+          key: context
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -6508,13 +7465,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: The table identifier
           items:
@@ -6530,6 +7495,25 @@ components:
           description: Schema metadata key-value pairs to set
     UpdateTableSchemaMetadataResponse:
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         metadata:
           additionalProperties:
             type: string
@@ -6545,13 +7529,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -6607,8 +7599,29 @@ components:
           manifest_size: 0
           e_tag: e_tag
           version: 0
+        context:
+          key: context
         page_token: page_token
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         versions:
           description: |
             List of table versions. When `descending=true`, guaranteed to be ordered from latest to oldest.
@@ -6666,13 +7679,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: The table identifier
           items:
@@ -6722,6 +7743,8 @@ components:
       description: Response for creating a table version
       example:
         transaction_id: transaction_id
+        context:
+          key: context
         version:
           metadata:
             key: metadata
@@ -6731,6 +7754,25 @@ components:
           e_tag: e_tag
           version: 0
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -6756,13 +7798,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: The table identifier
           items:
@@ -6780,6 +7830,8 @@ components:
     DescribeTableVersionResponse:
       description: Response containing the table version information
       example:
+        context:
+          key: context
         version:
           metadata:
             key: metadata
@@ -6789,6 +7841,25 @@ components:
           e_tag: e_tag
           version: 0
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         version:
           $ref: '#/components/schemas/TableVersion'
       required:
@@ -6819,13 +7890,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: The table identifier
           items:
@@ -6872,8 +7951,29 @@ components:
       description: Response for deleting table version records
       example:
         transaction_id: transaction_id
+        context:
+          key: context
         deleted_count: 0
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         deleted_count:
           description: Number of version records deleted
           format: int64
@@ -6922,13 +8022,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         entries:
           description: List of table version entries to create atomically
           items:
@@ -7021,7 +8129,28 @@ components:
           manifest_size: 0
           e_tag: e_tag
           version: 0
+        context:
+          key: context
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -7164,13 +8293,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         operations:
           description: |
             List of operations to commit atomically.
@@ -7257,6 +8394,8 @@ components:
       example:
         deregister_table:
           transaction_id: transaction_id
+          context:
+            key: context
           location: location
           id:
           - id
@@ -7266,6 +8405,8 @@ components:
             created_at: "1452120468"
         create_table_version:
           transaction_id: transaction_id
+          context:
+            key: context
           version:
             metadata:
               key: metadata
@@ -7276,9 +8417,13 @@ components:
             version: 0
         delete_table_versions:
           transaction_id: transaction_id
+          context:
+            key: context
           deleted_count: 0
         declare_table:
           transaction_id: transaction_id
+          context:
+            key: context
           location: location
           properties:
             owner: Ralph
@@ -7301,9 +8446,13 @@ components:
         Contains the results of each operation in the same order as the request.
       example:
         transaction_id: transaction_id
+        context:
+          key: context
         results:
         - deregister_table:
             transaction_id: transaction_id
+            context:
+              key: context
             location: location
             id:
             - id
@@ -7313,6 +8462,8 @@ components:
               created_at: "1452120468"
           create_table_version:
             transaction_id: transaction_id
+            context:
+              key: context
             version:
               metadata:
                 key: metadata
@@ -7323,9 +8474,13 @@ components:
               version: 0
           delete_table_versions:
             transaction_id: transaction_id
+            context:
+              key: context
             deleted_count: 0
           declare_table:
             transaction_id: transaction_id
+            context:
+              key: context
             location: location
             properties:
               owner: Ralph
@@ -7335,6 +8490,8 @@ components:
               key: storage_options
         - deregister_table:
             transaction_id: transaction_id
+            context:
+              key: context
             location: location
             id:
             - id
@@ -7344,6 +8501,8 @@ components:
               created_at: "1452120468"
           create_table_version:
             transaction_id: transaction_id
+            context:
+              key: context
             version:
               metadata:
                 key: metadata
@@ -7354,9 +8513,13 @@ components:
               version: 0
           delete_table_versions:
             transaction_id: transaction_id
+            context:
+              key: context
             deleted_count: 0
           declare_table:
             transaction_id: transaction_id
+            context:
+              key: context
             location: location
             properties:
               owner: Ralph
@@ -7365,6 +8528,25 @@ components:
             storage_options:
               key: storage_options
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier for the batch commit
           type: string
@@ -7539,13 +8721,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -7564,6 +8754,25 @@ components:
       - query
     ExplainTableQueryPlanResponse:
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         plan:
           description: Human-readable query execution plan
           type: string
@@ -7667,13 +8876,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -7754,6 +8971,25 @@ components:
       - vector
     AnalyzeTableQueryPlanResponse:
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         analysis:
           description: Detailed analysis of the query execution plan
           type: string
@@ -7823,6 +9059,8 @@ components:
             udf_backend: udf_backend
             auto_backfill: true
             udf_version: udf_version
+        context:
+          key: context
         id:
         - id
         - id
@@ -7830,6 +9068,25 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: Table identifier path (namespace + table name)
           items:
@@ -8003,8 +9260,29 @@ components:
       - struct_field
     AlterTableAddColumnsResponse:
       example:
+        context:
+          key: context
         version: 0
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         version:
           description: The commit version associated with the operation
           format: int64
@@ -8017,6 +9295,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         id:
         - id
         - id
@@ -8033,6 +9313,25 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: Table identifier path (namespace + table name)
           items:
@@ -8082,11 +9381,32 @@ components:
       - path
     UpdateFieldMetadataResponse:
       example:
+        context:
+          key: context
         fields:
           key:
             key: fields
         version: 0
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         version:
           description: The commit version associated with the operation
           format: int64
@@ -8105,6 +9425,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         alterations:
         - path: path
           nullable: true
@@ -8149,6 +9471,25 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: Table identifier path (namespace + table name)
           items:
@@ -8272,8 +9613,29 @@ components:
           description: User-supplied field metadata (optional)
     AlterTableAlterColumnsResponse:
       example:
+        context:
+          key: context
         version: 0
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         version:
           description: The commit version associated with the operation
           format: int64
@@ -8299,6 +9661,8 @@ components:
         identity:
           api_key: api_key
           auth_token: auth_token
+        context:
+          key: context
         where: where
         id:
         - id
@@ -8307,6 +9671,25 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: Table identifier path (namespace + table name)
           items:
@@ -8381,7 +9764,28 @@ components:
     AlterTableBackfillColumnsResponse:
       example:
         job_id: job_id
+        context:
+          key: context
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         job_id:
           description: The job ID for tracking the backfill job
           type: string
@@ -8396,6 +9800,8 @@ components:
           api_key: api_key
           auth_token: auth_token
         manifest: manifest
+        context:
+          key: context
         id:
         - id
         - id
@@ -8406,6 +9812,25 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: Table identifier path (namespace + table name)
           items:
@@ -8454,7 +9879,28 @@ components:
     RefreshMaterializedViewResponse:
       example:
         job_id: job_id
+        context:
+          key: context
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         job_id:
           description: The job ID for tracking the refresh job
           type: string
@@ -8486,6 +9932,8 @@ components:
           - input_columns
           - input_columns
           udtf_sha: udtf_sha
+        context:
+          key: context
         with_no_data: true
         id:
         - id
@@ -8494,6 +9942,25 @@ components:
       properties:
         identity:
           $ref: '#/components/schemas/Identity'
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           description: View identifier path (namespace + view name)
           items:
@@ -8639,8 +10106,29 @@ components:
     CreateMaterializedViewResponse:
       example:
         job_id: job_id
+        context:
+          key: context
         version: 0
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         version:
           description: The commit version that created the materialized view
           format: int64
@@ -8674,13 +10162,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -8704,8 +10200,29 @@ components:
     AlterTableDropColumnsResponse:
       example:
         transaction_id: transaction_id
+        context:
+          key: context
         version: 0
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string
@@ -8734,13 +10251,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -8752,6 +10277,8 @@ components:
     GetTableStatsResponse:
       example:
         num_indices: 0
+        context:
+          key: context
         total_bytes: 0
         num_rows: 0
         fragment_stats:
@@ -8766,6 +10293,25 @@ components:
             p75: 0
           num_fragments: 0
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         total_bytes:
           description: The total number of bytes in the table
           format: int64
@@ -8871,13 +10417,21 @@ components:
           additionalProperties:
             type: string
           description: |
-            Arbitrary context for a request as key-value pairs.
+            Arbitrary context as key-value pairs.
             How to use the context is custom to the specific implementation.
 
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
             REST NAMESPACE ONLY
-            Context entries are passed via HTTP headers using the naming convention
-            `x-lance-ctx-<key>: <value>`. For example, a context entry
-            `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         id:
           items:
             type: string
@@ -8893,7 +10447,28 @@ components:
       description: Response for drop index operation
       example:
         transaction_id: transaction_id
+        context:
+          key: context
       properties:
+        context:
+          additionalProperties:
+            type: string
+          description: |
+            Arbitrary context as key-value pairs.
+            How to use the context is custom to the specific implementation.
+
+            On a request, it carries caller-provided context to the implementation.
+            On a response, it carries implementation-provided context back to the caller.
+
+            REST NAMESPACE ONLY
+            Context entries are mapped to and from HTTP headers using the `header.` prefix:
+            - On a request, any entry whose key starts with `header.` is sent as an HTTP
+              request header with the prefix stripped. For example, the entry
+              `{"header.Authorization": "Bearer abc"}` is sent as the request header
+              `Authorization: Bearer abc`.
+            - On a response, every HTTP response header is returned as an entry whose key is the
+              header name prefixed with `header.`. For example, the response header
+              `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
         transaction_id:
           description: Optional transaction identifier
           type: string

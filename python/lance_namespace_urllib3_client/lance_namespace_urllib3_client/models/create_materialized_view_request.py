@@ -29,6 +29,7 @@ class CreateMaterializedViewRequest(BaseModel):
     CreateMaterializedViewRequest
     """ # noqa: E501
     identity: Optional[Identity] = None
+    context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context as key-value pairs. How to use the context is custom to the specific implementation.  On a request, it carries caller-provided context to the implementation. On a response, it carries implementation-provided context back to the caller.  REST NAMESPACE ONLY Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request, any entry whose key starts with `header.` is sent as an HTTP   request header with the prefix stripped. For example, the entry   `{\"header.Authorization\": \"Bearer abc\"}` is sent as the request header   `Authorization: Bearer abc`. - On a response, every HTTP response header is returned as an entry whose key is the   header name prefixed with `header.`. For example, the response header   `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\": \"abc123\"}`. ")
     id: Optional[List[StrictStr]] = Field(default=None, description="View identifier path (namespace + view name)")
     kind: StrictStr = Field(description="The materialized view kind. - `query` — plain query-backed view (no UDTF), 1:1 rows. - `udtf` — batch UDTF-backed view (N:M rows, full refresh). - `chunker`, aka 'scalar_udtf' — chunker view (1:N row expansion, incremental refresh). ")
     source_query: StrictStr = Field(description="Opaque serialized representation of the source query that defines the view's input. The format is defined by the client; the namespace server stores it without interpreting it. ")
@@ -36,7 +37,7 @@ class CreateMaterializedViewRequest(BaseModel):
     udtf_spec: Optional[MaterializedViewUdtfEntry] = None
     with_no_data: Optional[StrictBool] = Field(default=True, description="If false, the server kicks off an initial refresh immediately after creating the view and the response includes a job ID. ")
     auto_refresh: Optional[StrictBool] = Field(default=False, description="If true, the view is automatically refreshed when source-table data changes past the deployment-level threshold. Boolean opt-in only; the threshold and cooldown are configured on the deployment, not per-view. ")
-    __properties: ClassVar[List[str]] = ["identity", "id", "kind", "source_query", "output_schema", "udtf_spec", "with_no_data", "auto_refresh"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "kind", "source_query", "output_schema", "udtf_spec", "with_no_data", "auto_refresh"]
 
     @field_validator('kind')
     def kind_validate_enum(cls, value):
@@ -113,6 +114,7 @@ class CreateMaterializedViewRequest(BaseModel):
 
         _obj = cls.model_validate({
             "identity": Identity.from_dict(obj["identity"]) if obj.get("identity") is not None else None,
+            "context": obj.get("context"),
             "id": obj.get("id"),
             "kind": obj.get("kind"),
             "source_query": obj.get("source_query"),

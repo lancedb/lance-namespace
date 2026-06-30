@@ -19,11 +19,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 /** DescribeTableIndexStatsResponse */
 @JsonPropertyOrder({
+  DescribeTableIndexStatsResponse.JSON_PROPERTY_CONTEXT,
   DescribeTableIndexStatsResponse.JSON_PROPERTY_DISTANCE_TYPE,
   DescribeTableIndexStatsResponse.JSON_PROPERTY_INDEX_TYPE,
   DescribeTableIndexStatsResponse.JSON_PROPERTY_NUM_INDEXED_ROWS,
@@ -34,6 +37,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DescribeTableIndexStatsResponse {
+  public static final String JSON_PROPERTY_CONTEXT = "context";
+  @javax.annotation.Nullable private Map<String, String> context = new HashMap<>();
+
   public static final String JSON_PROPERTY_DISTANCE_TYPE = "distance_type";
   @javax.annotation.Nullable private String distanceType;
 
@@ -50,6 +56,48 @@ public class DescribeTableIndexStatsResponse {
   @javax.annotation.Nullable private Integer numIndices;
 
   public DescribeTableIndexStatsResponse() {}
+
+  public DescribeTableIndexStatsResponse context(
+      @javax.annotation.Nullable Map<String, String> context) {
+    this.context = context;
+    return this;
+  }
+
+  public DescribeTableIndexStatsResponse putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context as key-value pairs. How to use the context is custom to the specific
+   * implementation. On a request, it carries caller-provided context to the implementation. On a
+   * response, it carries implementation-provided context back to the caller. REST NAMESPACE ONLY
+   * Context entries are mapped to and from HTTP headers using the &#x60;header.&#x60; prefix: - On
+   * a request, any entry whose key starts with &#x60;header.&#x60; is sent as an HTTP request
+   * header with the prefix stripped. For example, the entry
+   * &#x60;{\&quot;header.Authorization\&quot;: \&quot;Bearer abc\&quot;}&#x60; is sent as the
+   * request header &#x60;Authorization: Bearer abc&#x60;. - On a response, every HTTP response
+   * header is returned as an entry whose key is the header name prefixed with &#x60;header.&#x60;.
+   * For example, the response header &#x60;x-request-id: abc123&#x60; is returned as the entry
+   * &#x60;{\&quot;header.x-request-id\&quot;: \&quot;abc123\&quot;}&#x60;.
+   *
+   * @return context
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_CONTEXT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  @JsonProperty(JSON_PROPERTY_CONTEXT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContext(@javax.annotation.Nullable Map<String, String> context) {
+    this.context = context;
+  }
 
   public DescribeTableIndexStatsResponse distanceType(
       @javax.annotation.Nullable String distanceType) {
@@ -180,7 +228,8 @@ public class DescribeTableIndexStatsResponse {
     }
     DescribeTableIndexStatsResponse describeTableIndexStatsResponse =
         (DescribeTableIndexStatsResponse) o;
-    return Objects.equals(this.distanceType, describeTableIndexStatsResponse.distanceType)
+    return Objects.equals(this.context, describeTableIndexStatsResponse.context)
+        && Objects.equals(this.distanceType, describeTableIndexStatsResponse.distanceType)
         && Objects.equals(this.indexType, describeTableIndexStatsResponse.indexType)
         && Objects.equals(this.numIndexedRows, describeTableIndexStatsResponse.numIndexedRows)
         && Objects.equals(this.numUnindexedRows, describeTableIndexStatsResponse.numUnindexedRows)
@@ -189,13 +238,15 @@ public class DescribeTableIndexStatsResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(distanceType, indexType, numIndexedRows, numUnindexedRows, numIndices);
+    return Objects.hash(
+        context, distanceType, indexType, numIndexedRows, numUnindexedRows, numIndices);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeTableIndexStatsResponse {\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    distanceType: ").append(toIndentedString(distanceType)).append("\n");
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
     sb.append("    numIndexedRows: ").append(toIndentedString(numIndexedRows)).append("\n");
@@ -246,6 +297,22 @@ public class DescribeTableIndexStatsResponse {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `context` to the URL query string
+    if (getContext() != null) {
+      for (String _key : getContext().keySet()) {
+        joiner.add(
+            String.format(
+                "%scontext%s%s=%s",
+                prefix,
+                suffix,
+                "".equals(suffix)
+                    ? ""
+                    : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
+                getContext().get(_key),
+                ApiClient.urlEncode(ApiClient.valueToString(getContext().get(_key)))));
+      }
+    }
 
     // add `distance_type` to the URL query string
     if (getDistanceType() != null) {

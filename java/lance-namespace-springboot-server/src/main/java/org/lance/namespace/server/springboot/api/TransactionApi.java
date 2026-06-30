@@ -190,49 +190,49 @@ public interface TransactionApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"properties\" : { \"key\" : \"properties\" }, \"status\" : \"status\" }";
+                      "{ \"context\" : { \"key\" : \"context\" }, \"properties\" : { \"key\" : \"properties\" }, \"status\" : \"status\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"context\" : { \"key\" : \"context\" }, \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"context\" : { \"key\" : \"context\" }, \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"context\" : { \"key\" : \"context\" }, \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"context\" : { \"key\" : \"context\" }, \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"context\" : { \"key\" : \"context\" }, \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"context\" : { \"key\" : \"context\" }, \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"context\" : { \"key\" : \"context\" }, \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
@@ -370,43 +370,43 @@ public interface TransactionApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"properties\" : { \"key\" : \"properties\" }, \"status\" : \"status\" }";
+                      "{ \"context\" : { \"key\" : \"context\" }, \"properties\" : { \"key\" : \"properties\" }, \"status\" : \"status\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"context\" : { \"key\" : \"context\" }, \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"context\" : { \"key\" : \"context\" }, \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"context\" : { \"key\" : \"context\" }, \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"context\" : { \"key\" : \"context\" }, \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"context\" : { \"key\" : \"context\" }, \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
+                      "{ \"code\" : 4, \"instance\" : \"/v1/table/production$users/describe\", \"context\" : { \"key\" : \"context\" }, \"detail\" : \"The table may have been dropped or renamed\", \"error\" : \"Table 'users' not found in namespace 'production'\" }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }

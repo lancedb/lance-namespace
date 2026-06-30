@@ -65,22 +65,37 @@ When identity information is provided in both the request body and headers, the 
 
 ## Context Header Mapping
 
-All request schemas include an optional `context` field for passing arbitrary key-value pairs.
-This allows clients to send implementation-specific context that can be used by the server
-or forwarded to downstream services.
+All request and response schemas include an optional `context` field for passing arbitrary
+key-value pairs. This allows clients to send implementation-specific context to the server,
+and the server to return implementation-specific context back to the client.
 
-For REST Catalog, context entries are mapped to HTTP headers using the naming convention:
+For REST Catalog, context entries are mapped to and from HTTP headers using the `header.`
+prefix:
 
-| Context Entry              | REST Form                     | Location |
-|----------------------------|-------------------------------|----------|
-| `{"<key>": "<value>"}`     | `x-lance-ctx-<key>`           | Header   |
+| Direction | Context Entry                  | REST Form                          |
+|-----------|--------------------------------|------------------------------------|
+| Request   | `{"header.<name>": "<value>"}` | request header `<name>: <value>`   |
+| Response  | `{"header.<name>": "<value>"}` | response header `<name>: <value>`  |
 
-For example, a context entry `{"trace_id": "abc123", "user_region": "us-west"}` would be sent as:
+On a request, any context entry whose key starts with `header.` is sent as an HTTP request
+header with the prefix stripped. For example, a context entry
+`{"header.x-trace-id": "abc123", "header.x-user-region": "us-west"}` would be sent as:
 
 ```
-x-lance-ctx-trace_id: abc123
-x-lance-ctx-user_region: us-west
+x-trace-id: abc123
+x-user-region: us-west
 ```
+
+On a response, every HTTP response header is returned as a context entry whose key is the
+header name prefixed with `header.`. For example, the response headers:
+
+```
+x-trace-id: abc123
+x-user-region: us-west
+```
+
+would be returned as the context entry
+`{"header.x-trace-id": "abc123", "header.x-user-region": "us-west"}`.
 
 How to use the context is custom to the specific implementation.
 Common use cases include:
@@ -88,8 +103,6 @@ Common use cases include:
 - Passing trace IDs for distributed tracing
 - Forwarding user context to downstream services
 - Providing hints to the implementation for optimization
-
-When context is provided in both the request body and headers, the header values take precedence.
 
 ## Non-Standard Operations
 

@@ -24,7 +24,9 @@ import org.springframework.lang.Nullable;
 
 import java.util.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /** CreateMaterializedViewRequest */
@@ -34,6 +36,8 @@ import java.util.Objects;
 public class CreateMaterializedViewRequest {
 
   private Identity identity;
+
+  @Valid private Map<String, String> context = new HashMap<>();
 
   @Valid private List<String> id = new ArrayList<>();
 
@@ -118,6 +122,47 @@ public class CreateMaterializedViewRequest {
 
   public void setIdentity(Identity identity) {
     this.identity = identity;
+  }
+
+  public CreateMaterializedViewRequest context(Map<String, String> context) {
+    this.context = context;
+    return this;
+  }
+
+  public CreateMaterializedViewRequest putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context as key-value pairs. How to use the context is custom to the specific
+   * implementation. On a request, it carries caller-provided context to the implementation. On a
+   * response, it carries implementation-provided context back to the caller. REST NAMESPACE ONLY
+   * Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request,
+   * any entry whose key starts with `header.` is sent as an HTTP request header with the prefix
+   * stripped. For example, the entry `{\"header.Authorization\": \"Bearer abc\"}` is sent as the
+   * request header `Authorization: Bearer abc`. - On a response, every HTTP response header is
+   * returned as an entry whose key is the header name prefixed with `header.`. For example, the
+   * response header `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\":
+   * \"abc123\"}`.
+   *
+   * @return context
+   */
+  @Schema(
+      name = "context",
+      description =
+          "Arbitrary context as key-value pairs. How to use the context is custom to the specific implementation.  On a request, it carries caller-provided context to the implementation. On a response, it carries implementation-provided context back to the caller.  REST NAMESPACE ONLY Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request, any entry whose key starts with `header.` is sent as an HTTP   request header with the prefix stripped. For example, the entry   `{\"header.Authorization\": \"Bearer abc\"}` is sent as the request header   `Authorization: Bearer abc`. - On a response, every HTTP response header is returned as an entry whose key is the   header name prefixed with `header.`. For example, the response header   `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\": \"abc123\"}`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("context")
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  public void setContext(Map<String, String> context) {
+    this.context = context;
   }
 
   public CreateMaterializedViewRequest id(List<String> id) {
@@ -310,6 +355,7 @@ public class CreateMaterializedViewRequest {
     }
     CreateMaterializedViewRequest createMaterializedViewRequest = (CreateMaterializedViewRequest) o;
     return Objects.equals(this.identity, createMaterializedViewRequest.identity)
+        && Objects.equals(this.context, createMaterializedViewRequest.context)
         && Objects.equals(this.id, createMaterializedViewRequest.id)
         && Objects.equals(this.kind, createMaterializedViewRequest.kind)
         && Objects.equals(this.sourceQuery, createMaterializedViewRequest.sourceQuery)
@@ -322,7 +368,7 @@ public class CreateMaterializedViewRequest {
   @Override
   public int hashCode() {
     return Objects.hash(
-        identity, id, kind, sourceQuery, outputSchema, udtfSpec, withNoData, autoRefresh);
+        identity, context, id, kind, sourceQuery, outputSchema, udtfSpec, withNoData, autoRefresh);
   }
 
   @Override
@@ -330,6 +376,7 @@ public class CreateMaterializedViewRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateMaterializedViewRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    kind: ").append(toIndentedString(kind)).append("\n");
     sb.append("    sourceQuery: ").append(toIndentedString(sourceQuery)).append("\n");

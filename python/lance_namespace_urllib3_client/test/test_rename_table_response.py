@@ -35,6 +35,9 @@ class TestRenameTableResponse(unittest.TestCase):
         model = RenameTableResponse()
         if include_optional:
             return RenameTableResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = ''
             )
         else:

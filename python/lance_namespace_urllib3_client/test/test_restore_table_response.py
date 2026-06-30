@@ -35,6 +35,9 @@ class TestRestoreTableResponse(unittest.TestCase):
         model = RestoreTableResponse()
         if include_optional:
             return RestoreTableResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = ''
             )
         else:

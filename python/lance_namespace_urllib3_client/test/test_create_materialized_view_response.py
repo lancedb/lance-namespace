@@ -35,6 +35,9 @@ class TestCreateMaterializedViewResponse(unittest.TestCase):
         model = CreateMaterializedViewResponse()
         if include_optional:
             return CreateMaterializedViewResponse(
+                context = {
+                    'key' : ''
+                    },
                 version = 0,
                 job_id = ''
             )

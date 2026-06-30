@@ -35,6 +35,9 @@ class TestUpdateTableSchemaMetadataResponse(unittest.TestCase):
         model = UpdateTableSchemaMetadataResponse()
         if include_optional:
             return UpdateTableSchemaMetadataResponse(
+                context = {
+                    'key' : ''
+                    },
                 metadata = {
                     'key' : ''
                     },

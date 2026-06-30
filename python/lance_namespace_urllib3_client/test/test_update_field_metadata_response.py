@@ -35,6 +35,9 @@ class TestUpdateFieldMetadataResponse(unittest.TestCase):
         model = UpdateFieldMetadataResponse()
         if include_optional:
             return UpdateFieldMetadataResponse(
+                context = {
+                    'key' : ''
+                    },
                 version = 0,
                 fields = {
                     'key' : {

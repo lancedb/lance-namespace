@@ -35,10 +35,16 @@ class TestBatchCommitTablesResponse(unittest.TestCase):
         model = BatchCommitTablesResponse()
         if include_optional:
             return BatchCommitTablesResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = '',
                 results = [
                     lance_namespace_urllib3_client.models.commit_table_result.CommitTableResult(
                         declare_table = lance_namespace_urllib3_client.models.declare_table_response.DeclareTableResponse(
+                            context = {
+                                'key' : ''
+                                }, 
                             transaction_id = '', 
                             location = '', 
                             storage_options = {
@@ -74,6 +80,9 @@ class TestBatchCommitTablesResponse(unittest.TestCase):
                 results = [
                     lance_namespace_urllib3_client.models.commit_table_result.CommitTableResult(
                         declare_table = lance_namespace_urllib3_client.models.declare_table_response.DeclareTableResponse(
+                            context = {
+                                'key' : ''
+                                }, 
                             transaction_id = '', 
                             location = '', 
                             storage_options = {

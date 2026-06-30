@@ -35,6 +35,9 @@ class TestListTableTagsResponse(unittest.TestCase):
         model = ListTableTagsResponse()
         if include_optional:
             return ListTableTagsResponse(
+                context = {
+                    'key' : ''
+                    },
                 tags = {
                     'key' : lance_namespace_urllib3_client.models.tag_contents.TagContents(
                         branch = '', 
