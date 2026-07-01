@@ -21,7 +21,9 @@ import jakarta.validation.constraints.*;
 
 import java.util.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /** AlterTableAddColumnsRequest */
@@ -31,6 +33,8 @@ import java.util.Objects;
 public class AlterTableAddColumnsRequest {
 
   private Identity identity;
+
+  @Valid private Map<String, String> context = new HashMap<>();
 
   @Valid private List<String> id = new ArrayList<>();
 
@@ -66,6 +70,47 @@ public class AlterTableAddColumnsRequest {
 
   public void setIdentity(Identity identity) {
     this.identity = identity;
+  }
+
+  public AlterTableAddColumnsRequest context(Map<String, String> context) {
+    this.context = context;
+    return this;
+  }
+
+  public AlterTableAddColumnsRequest putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context as key-value pairs. How to use the context is custom to the specific
+   * implementation. On a request, it carries caller-provided context to the implementation. On a
+   * response, it carries implementation-provided context back to the caller. REST NAMESPACE ONLY
+   * Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request,
+   * any entry whose key starts with `header.` is sent as an HTTP request header with the prefix
+   * stripped. For example, the entry `{\"header.Authorization\": \"Bearer abc\"}` is sent as the
+   * request header `Authorization: Bearer abc`. - On a response, every HTTP response header is
+   * returned as an entry whose key is the header name prefixed with `header.`. For example, the
+   * response header `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\":
+   * \"abc123\"}`.
+   *
+   * @return context
+   */
+  @Schema(
+      name = "context",
+      description =
+          "Arbitrary context as key-value pairs. How to use the context is custom to the specific implementation.  On a request, it carries caller-provided context to the implementation. On a response, it carries implementation-provided context back to the caller.  REST NAMESPACE ONLY Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request, any entry whose key starts with `header.` is sent as an HTTP   request header with the prefix stripped. For example, the entry   `{\"header.Authorization\": \"Bearer abc\"}` is sent as the request header   `Authorization: Bearer abc`. - On a response, every HTTP response header is returned as an entry whose key is the   header name prefixed with `header.`. For example, the response header   `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\": \"abc123\"}`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("context")
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  public void setContext(Map<String, String> context) {
+    this.context = context;
   }
 
   public AlterTableAddColumnsRequest id(List<String> id) {
@@ -165,6 +210,7 @@ public class AlterTableAddColumnsRequest {
     }
     AlterTableAddColumnsRequest alterTableAddColumnsRequest = (AlterTableAddColumnsRequest) o;
     return Objects.equals(this.identity, alterTableAddColumnsRequest.identity)
+        && Objects.equals(this.context, alterTableAddColumnsRequest.context)
         && Objects.equals(this.id, alterTableAddColumnsRequest.id)
         && Objects.equals(this.branch, alterTableAddColumnsRequest.branch)
         && Objects.equals(this.newColumns, alterTableAddColumnsRequest.newColumns);
@@ -172,7 +218,7 @@ public class AlterTableAddColumnsRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(identity, id, branch, newColumns);
+    return Objects.hash(identity, context, id, branch, newColumns);
   }
 
   @Override
@@ -180,6 +226,7 @@ public class AlterTableAddColumnsRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlterTableAddColumnsRequest {\n");
     sb.append("    identity: ").append(toIndentedString(identity)).append("\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    branch: ").append(toIndentedString(branch)).append("\n");
     sb.append("    newColumns: ").append(toIndentedString(newColumns)).append("\n");

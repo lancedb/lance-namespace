@@ -35,6 +35,9 @@ class TestBatchDeleteTableVersionsResponse(unittest.TestCase):
         model = BatchDeleteTableVersionsResponse()
         if include_optional:
             return BatchDeleteTableVersionsResponse(
+                context = {
+                    'key' : ''
+                    },
                 deleted_count = 0,
                 transaction_id = ''
             )

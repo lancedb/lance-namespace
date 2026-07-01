@@ -26,6 +26,7 @@ import java.util.StringJoiner;
 
 /** Response for declaring a table. */
 @JsonPropertyOrder({
+  DeclareTableResponse.JSON_PROPERTY_CONTEXT,
   DeclareTableResponse.JSON_PROPERTY_TRANSACTION_ID,
   DeclareTableResponse.JSON_PROPERTY_LOCATION,
   DeclareTableResponse.JSON_PROPERTY_STORAGE_OPTIONS,
@@ -36,6 +37,9 @@ import java.util.StringJoiner;
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
     comments = "Generator version: 7.12.0")
 public class DeclareTableResponse {
+  public static final String JSON_PROPERTY_CONTEXT = "context";
+  @javax.annotation.Nullable private Map<String, String> context = new HashMap<>();
+
   public static final String JSON_PROPERTY_TRANSACTION_ID = "transaction_id";
   @javax.annotation.Nullable private String transactionId;
 
@@ -52,6 +56,47 @@ public class DeclareTableResponse {
   @javax.annotation.Nullable private Boolean managedVersioning;
 
   public DeclareTableResponse() {}
+
+  public DeclareTableResponse context(@javax.annotation.Nullable Map<String, String> context) {
+    this.context = context;
+    return this;
+  }
+
+  public DeclareTableResponse putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context as key-value pairs. How to use the context is custom to the specific
+   * implementation. On a request, it carries caller-provided context to the implementation. On a
+   * response, it carries implementation-provided context back to the caller. REST NAMESPACE ONLY
+   * Context entries are mapped to and from HTTP headers using the &#x60;header.&#x60; prefix: - On
+   * a request, any entry whose key starts with &#x60;header.&#x60; is sent as an HTTP request
+   * header with the prefix stripped. For example, the entry
+   * &#x60;{\&quot;header.Authorization\&quot;: \&quot;Bearer abc\&quot;}&#x60; is sent as the
+   * request header &#x60;Authorization: Bearer abc&#x60;. - On a response, every HTTP response
+   * header is returned as an entry whose key is the header name prefixed with &#x60;header.&#x60;.
+   * For example, the response header &#x60;x-request-id: abc123&#x60; is returned as the entry
+   * &#x60;{\&quot;header.x-request-id\&quot;: \&quot;abc123\&quot;}&#x60;.
+   *
+   * @return context
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_CONTEXT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  @JsonProperty(JSON_PROPERTY_CONTEXT)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContext(@javax.annotation.Nullable Map<String, String> context) {
+    this.context = context;
+  }
 
   public DeclareTableResponse transactionId(@javax.annotation.Nullable String transactionId) {
     this.transactionId = transactionId;
@@ -201,7 +246,8 @@ public class DeclareTableResponse {
       return false;
     }
     DeclareTableResponse declareTableResponse = (DeclareTableResponse) o;
-    return Objects.equals(this.transactionId, declareTableResponse.transactionId)
+    return Objects.equals(this.context, declareTableResponse.context)
+        && Objects.equals(this.transactionId, declareTableResponse.transactionId)
         && Objects.equals(this.location, declareTableResponse.location)
         && Objects.equals(this.storageOptions, declareTableResponse.storageOptions)
         && Objects.equals(this.properties, declareTableResponse.properties)
@@ -210,13 +256,15 @@ public class DeclareTableResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(transactionId, location, storageOptions, properties, managedVersioning);
+    return Objects.hash(
+        context, transactionId, location, storageOptions, properties, managedVersioning);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeclareTableResponse {\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    storageOptions: ").append(toIndentedString(storageOptions)).append("\n");
@@ -267,6 +315,22 @@ public class DeclareTableResponse {
     }
 
     StringJoiner joiner = new StringJoiner("&");
+
+    // add `context` to the URL query string
+    if (getContext() != null) {
+      for (String _key : getContext().keySet()) {
+        joiner.add(
+            String.format(
+                "%scontext%s%s=%s",
+                prefix,
+                suffix,
+                "".equals(suffix)
+                    ? ""
+                    : String.format("%s%d%s", containerPrefix, _key, containerSuffix),
+                getContext().get(_key),
+                ApiClient.urlEncode(ApiClient.valueToString(getContext().get(_key)))));
+      }
+    }
 
     // add `transaction_id` to the URL query string
     if (getTransactionId() != null) {

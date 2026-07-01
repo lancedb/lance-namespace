@@ -36,6 +36,9 @@ class TestCommitTableResult(unittest.TestCase):
         if include_optional:
             return CommitTableResult(
                 declare_table = lance_namespace_urllib3_client.models.declare_table_response.DeclareTableResponse(
+                    context = {
+                        'key' : ''
+                        }, 
                     transaction_id = '', 
                     location = '', 
                     storage_options = {
@@ -44,6 +47,9 @@ class TestCommitTableResult(unittest.TestCase):
                     properties = {owner=Ralph, created_at=1452120468}, 
                     managed_versioning = True, ),
                 create_table_version = lance_namespace_urllib3_client.models.create_table_version_response.CreateTableVersionResponse(
+                    context = {
+                        'key' : ''
+                        }, 
                     transaction_id = '', 
                     version = lance_namespace_urllib3_client.models.table_version.TableVersion(
                         version = 0, 
@@ -55,9 +61,15 @@ class TestCommitTableResult(unittest.TestCase):
                             'key' : ''
                             }, ), ),
                 delete_table_versions = lance_namespace_urllib3_client.models.batch_delete_table_versions_response.BatchDeleteTableVersionsResponse(
+                    context = {
+                        'key' : ''
+                        }, 
                     deleted_count = 0, 
                     transaction_id = '', ),
                 deregister_table = lance_namespace_urllib3_client.models.deregister_table_response.DeregisterTableResponse(
+                    context = {
+                        'key' : ''
+                        }, 
                     transaction_id = '', 
                     id = [
                         ''

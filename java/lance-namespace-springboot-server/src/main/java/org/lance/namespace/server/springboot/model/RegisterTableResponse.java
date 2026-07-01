@@ -30,11 +30,54 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class RegisterTableResponse {
 
+  @Valid private Map<String, String> context = new HashMap<>();
+
   private String transactionId;
 
   private String location;
 
   @Valid private Map<String, String> properties = new HashMap<>();
+
+  public RegisterTableResponse context(Map<String, String> context) {
+    this.context = context;
+    return this;
+  }
+
+  public RegisterTableResponse putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context as key-value pairs. How to use the context is custom to the specific
+   * implementation. On a request, it carries caller-provided context to the implementation. On a
+   * response, it carries implementation-provided context back to the caller. REST NAMESPACE ONLY
+   * Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request,
+   * any entry whose key starts with `header.` is sent as an HTTP request header with the prefix
+   * stripped. For example, the entry `{\"header.Authorization\": \"Bearer abc\"}` is sent as the
+   * request header `Authorization: Bearer abc`. - On a response, every HTTP response header is
+   * returned as an entry whose key is the header name prefixed with `header.`. For example, the
+   * response header `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\":
+   * \"abc123\"}`.
+   *
+   * @return context
+   */
+  @Schema(
+      name = "context",
+      description =
+          "Arbitrary context as key-value pairs. How to use the context is custom to the specific implementation.  On a request, it carries caller-provided context to the implementation. On a response, it carries implementation-provided context back to the caller.  REST NAMESPACE ONLY Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request, any entry whose key starts with `header.` is sent as an HTTP   request header with the prefix stripped. For example, the entry   `{\"header.Authorization\": \"Bearer abc\"}` is sent as the request header   `Authorization: Bearer abc`. - On a response, every HTTP response header is returned as an entry whose key is the   header name prefixed with `header.`. For example, the response header   `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\": \"abc123\"}`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("context")
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  public void setContext(Map<String, String> context) {
+    this.context = context;
+  }
 
   public RegisterTableResponse transactionId(String transactionId) {
     this.transactionId = transactionId;
@@ -121,20 +164,22 @@ public class RegisterTableResponse {
       return false;
     }
     RegisterTableResponse registerTableResponse = (RegisterTableResponse) o;
-    return Objects.equals(this.transactionId, registerTableResponse.transactionId)
+    return Objects.equals(this.context, registerTableResponse.context)
+        && Objects.equals(this.transactionId, registerTableResponse.transactionId)
         && Objects.equals(this.location, registerTableResponse.location)
         && Objects.equals(this.properties, registerTableResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(transactionId, location, properties);
+    return Objects.hash(context, transactionId, location, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class RegisterTableResponse {\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");

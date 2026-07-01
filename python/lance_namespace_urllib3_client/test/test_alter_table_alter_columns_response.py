@@ -35,6 +35,9 @@ class TestAlterTableAlterColumnsResponse(unittest.TestCase):
         model = AlterTableAlterColumnsResponse()
         if include_optional:
             return AlterTableAlterColumnsResponse(
+                context = {
+                    'key' : ''
+                    },
                 version = 0
             )
         else:

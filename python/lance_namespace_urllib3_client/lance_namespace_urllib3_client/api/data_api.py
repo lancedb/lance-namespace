@@ -1056,7 +1056,7 @@ class DataApi:
     ) -> int:
         """Count rows in a table
 
-        Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. 
+        Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. The REST response maps to the `CountTableRowsResponse` model as follows: - the integer response body maps to `count` - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1137,7 +1137,7 @@ class DataApi:
     ) -> ApiResponse[int]:
         """Count rows in a table
 
-        Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. 
+        Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. The REST response maps to the `CountTableRowsResponse` model as follows: - the integer response body maps to `count` - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1218,7 +1218,7 @@ class DataApi:
     ) -> RESTResponseType:
         """Count rows in a table
 
-        Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. 
+        Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. The REST response maps to the `CountTableRowsResponse` model as follows: - the integer response body maps to `count` - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -3606,7 +3606,7 @@ class DataApi:
     ) -> bytearray:
         """Query a table
 
-        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. 
+        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. The REST response maps to the `QueryTableResponse` model as follows: - the Arrow IPC file binary body maps to `data` - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -3687,7 +3687,7 @@ class DataApi:
     ) -> ApiResponse[bytearray]:
         """Query a table
 
-        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. 
+        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. The REST response maps to the `QueryTableResponse` model as follows: - the Arrow IPC file binary body maps to `data` - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -3768,7 +3768,7 @@ class DataApi:
     ) -> RESTResponseType:
         """Query a table
 
-        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. 
+        Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. The REST response maps to the `QueryTableResponse` model as follows: - the Arrow IPC file binary body maps to `data` - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str

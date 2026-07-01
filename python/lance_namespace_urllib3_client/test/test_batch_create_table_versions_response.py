@@ -35,6 +35,9 @@ class TestBatchCreateTableVersionsResponse(unittest.TestCase):
         model = BatchCreateTableVersionsResponse()
         if include_optional:
             return BatchCreateTableVersionsResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = '',
                 versions = [
                     lance_namespace_urllib3_client.models.table_version.TableVersion(

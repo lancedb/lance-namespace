@@ -35,6 +35,9 @@ class TestDeleteTableTagResponse(unittest.TestCase):
         model = DeleteTableTagResponse()
         if include_optional:
             return DeleteTableTagResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = ''
             )
         else:

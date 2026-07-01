@@ -80,6 +80,7 @@ from lance_namespace_urllib3_client.models import (
     CommitTableOperation,
     CommitTableResult,
     CountTableRowsRequest,
+    CountTableRowsResponse,
     CreateMaterializedViewRequest,
     CreateMaterializedViewResponse,
     MaterializedViewUdtfEntry,
@@ -145,7 +146,9 @@ from lance_namespace_urllib3_client.models import (
     MergeInsertIntoTableRequest,
     MergeInsertIntoTableResponse,
     NamespaceExistsRequest,
+    NamespaceExistsResponse,
     QueryTableRequest,
+    QueryTableResponse,
     RefreshMaterializedViewRequest,
     RefreshMaterializedViewResponse,
     RegisterTableRequest,
@@ -155,6 +158,7 @@ from lance_namespace_urllib3_client.models import (
     RestoreTableRequest,
     RestoreTableResponse,
     TableExistsRequest,
+    TableExistsResponse,
     TableVersion,
     UpdateFieldMetadataRequest,
     UpdateFieldMetadataResponse,
@@ -230,6 +234,7 @@ __all__ = [
     "CommitTableOperation",
     "CommitTableResult",
     "CountTableRowsRequest",
+    "CountTableRowsResponse",
     "CreateMaterializedViewRequest",
     "CreateMaterializedViewResponse",
     "MaterializedViewUdtfEntry",
@@ -298,7 +303,9 @@ __all__ = [
     "MergeInsertIntoTableRequest",
     "MergeInsertIntoTableResponse",
     "NamespaceExistsRequest",
+    "NamespaceExistsResponse",
     "QueryTableRequest",
+    "QueryTableResponse",
     "RefreshMaterializedViewRequest",
     "RefreshMaterializedViewResponse",
     "RegisterTableRequest",
@@ -308,6 +315,7 @@ __all__ = [
     "RestoreTableRequest",
     "RestoreTableResponse",
     "TableExistsRequest",
+    "TableExistsResponse",
     "TableVersion",
     "UpdateFieldMetadataRequest",
     "UpdateFieldMetadataResponse",
@@ -413,8 +421,15 @@ class LanceNamespace(ABC):
         """
         raise UnsupportedOperationError("Not supported: drop_namespace")
 
-    def namespace_exists(self, request: NamespaceExistsRequest) -> None:
+    def namespace_exists(
+        self, request: NamespaceExistsRequest
+    ) -> NamespaceExistsResponse:
         """Check if a namespace exists.
+
+        Returns
+        -------
+        NamespaceExistsResponse
+            The response returned when the namespace exists.
 
         Raises
         ------
@@ -461,8 +476,13 @@ class LanceNamespace(ABC):
         """
         raise UnsupportedOperationError("Not supported: register_table")
 
-    def table_exists(self, request: TableExistsRequest) -> None:
+    def table_exists(self, request: TableExistsRequest) -> TableExistsResponse:
         """Check if a table exists.
+
+        Returns
+        -------
+        TableExistsResponse
+            The response returned when the table exists.
 
         Raises
         ------
@@ -499,8 +519,15 @@ class LanceNamespace(ABC):
         """
         raise UnsupportedOperationError("Not supported: deregister_table")
 
-    def count_table_rows(self, request: CountTableRowsRequest) -> int:
+    def count_table_rows(
+        self, request: CountTableRowsRequest
+    ) -> CountTableRowsResponse:
         """Count rows in a table.
+
+        Returns
+        -------
+        CountTableRowsResponse
+            The response containing the row count.
 
         Raises
         ------
@@ -647,8 +674,13 @@ class LanceNamespace(ABC):
         """
         raise UnsupportedOperationError("Not supported: delete_from_table")
 
-    def query_table(self, request: QueryTableRequest) -> bytes:
+    def query_table(self, request: QueryTableRequest) -> QueryTableResponse:
         """Query a table.
+
+        Returns
+        -------
+        QueryTableResponse
+            The response containing the query results as Arrow IPC file data.
 
         Raises
         ------

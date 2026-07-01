@@ -20,6 +20,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /** Response for creating a table version */
@@ -29,9 +31,52 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class CreateTableVersionResponse {
 
+  @Valid private Map<String, String> context = new HashMap<>();
+
   private String transactionId;
 
   private TableVersion version;
+
+  public CreateTableVersionResponse context(Map<String, String> context) {
+    this.context = context;
+    return this;
+  }
+
+  public CreateTableVersionResponse putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context as key-value pairs. How to use the context is custom to the specific
+   * implementation. On a request, it carries caller-provided context to the implementation. On a
+   * response, it carries implementation-provided context back to the caller. REST NAMESPACE ONLY
+   * Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request,
+   * any entry whose key starts with `header.` is sent as an HTTP request header with the prefix
+   * stripped. For example, the entry `{\"header.Authorization\": \"Bearer abc\"}` is sent as the
+   * request header `Authorization: Bearer abc`. - On a response, every HTTP response header is
+   * returned as an entry whose key is the header name prefixed with `header.`. For example, the
+   * response header `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\":
+   * \"abc123\"}`.
+   *
+   * @return context
+   */
+  @Schema(
+      name = "context",
+      description =
+          "Arbitrary context as key-value pairs. How to use the context is custom to the specific implementation.  On a request, it carries caller-provided context to the implementation. On a response, it carries implementation-provided context back to the caller.  REST NAMESPACE ONLY Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request, any entry whose key starts with `header.` is sent as an HTTP   request header with the prefix stripped. For example, the entry   `{\"header.Authorization\": \"Bearer abc\"}` is sent as the request header   `Authorization: Bearer abc`. - On a response, every HTTP response header is returned as an entry whose key is the   header name prefixed with `header.`. For example, the response header   `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\": \"abc123\"}`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("context")
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  public void setContext(Map<String, String> context) {
+    this.context = context;
+  }
 
   public CreateTableVersionResponse transactionId(String transactionId) {
     this.transactionId = transactionId;
@@ -86,19 +131,21 @@ public class CreateTableVersionResponse {
       return false;
     }
     CreateTableVersionResponse createTableVersionResponse = (CreateTableVersionResponse) o;
-    return Objects.equals(this.transactionId, createTableVersionResponse.transactionId)
+    return Objects.equals(this.context, createTableVersionResponse.context)
+        && Objects.equals(this.transactionId, createTableVersionResponse.transactionId)
         && Objects.equals(this.version, createTableVersionResponse.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(transactionId, version);
+    return Objects.hash(context, transactionId, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTableVersionResponse {\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");

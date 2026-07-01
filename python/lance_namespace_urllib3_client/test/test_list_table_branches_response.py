@@ -35,6 +35,9 @@ class TestListTableBranchesResponse(unittest.TestCase):
         model = ListTableBranchesResponse()
         if include_optional:
             return ListTableBranchesResponse(
+                context = {
+                    'key' : ''
+                    },
                 branches = {
                     'key' : lance_namespace_urllib3_client.models.branch_contents.BranchContents(
                         parent_branch = '', 

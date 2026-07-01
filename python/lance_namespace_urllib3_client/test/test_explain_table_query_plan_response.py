@@ -35,6 +35,9 @@ class TestExplainTableQueryPlanResponse(unittest.TestCase):
         model = ExplainTableQueryPlanResponse()
         if include_optional:
             return ExplainTableQueryPlanResponse(
+                context = {
+                    'key' : ''
+                    },
                 plan = ''
             )
         else:

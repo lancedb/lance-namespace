@@ -35,6 +35,9 @@ class TestDescribeTableVersionResponse(unittest.TestCase):
         model = DescribeTableVersionResponse()
         if include_optional:
             return DescribeTableVersionResponse(
+                context = {
+                    'key' : ''
+                    },
                 version = lance_namespace_urllib3_client.models.table_version.TableVersion(
                     version = 0, 
                     manifest_path = '', 

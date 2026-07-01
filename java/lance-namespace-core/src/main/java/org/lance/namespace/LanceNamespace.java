@@ -236,9 +236,10 @@ public interface LanceNamespace {
    * Check if a namespace exists.
    *
    * @param request The namespace exists request
+   * @return The response returned when the namespace exists
    * @throws org.lance.namespace.errors.NamespaceNotFoundException if the namespace does not exist
    */
-  default void namespaceExists(NamespaceExistsRequest request) {
+  default NamespaceExistsResponse namespaceExists(NamespaceExistsRequest request) {
     throw new UnsupportedOperationException("Not supported: namespaceExists");
   }
 
@@ -278,9 +279,10 @@ public interface LanceNamespace {
    * Check if a table exists.
    *
    * @param request The table exists request
+   * @return The response returned when the table exists
    * @throws RuntimeException if the table does not exist
    */
-  default void tableExists(TableExistsRequest request) {
+  default TableExistsResponse tableExists(TableExistsRequest request) {
     throw new UnsupportedOperationException("Not supported: tableExists");
   }
 
@@ -308,9 +310,9 @@ public interface LanceNamespace {
    * Count rows in a table.
    *
    * @param request The count table rows request
-   * @return The row count
+   * @return The response containing the row count
    */
-  default Long countTableRows(CountTableRowsRequest request) {
+  default CountTableRowsResponse countTableRows(CountTableRowsRequest request) {
     throw new UnsupportedOperationException("Not supported: countTableRows");
   }
 
@@ -385,9 +387,9 @@ public interface LanceNamespace {
    * Query a table.
    *
    * @param request The query table request
-   * @return Arrow IPC stream data containing query results
+   * @return The response containing the query results as Arrow IPC file data
    */
-  default byte[] queryTable(QueryTableRequest request) {
+  default QueryTableResponse queryTable(QueryTableRequest request) {
     throw new UnsupportedOperationException("Not supported: queryTable");
   }
 

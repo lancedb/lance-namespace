@@ -27,12 +27,13 @@ class MergeInsertIntoTableResponse(BaseModel):
     """
     Response from merge insert operation
     """ # noqa: E501
+    context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context as key-value pairs. How to use the context is custom to the specific implementation.  On a request, it carries caller-provided context to the implementation. On a response, it carries implementation-provided context back to the caller.  REST NAMESPACE ONLY Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request, any entry whose key starts with `header.` is sent as an HTTP   request header with the prefix stripped. For example, the entry   `{\"header.Authorization\": \"Bearer abc\"}` is sent as the request header   `Authorization: Bearer abc`. - On a response, every HTTP response header is returned as an entry whose key is the   header name prefixed with `header.`. For example, the response header   `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\": \"abc123\"}`. ")
     transaction_id: Optional[StrictStr] = Field(default=None, description="Optional transaction identifier")
     num_updated_rows: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of rows updated")
     num_inserted_rows: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of rows inserted")
     num_deleted_rows: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of rows deleted (typically 0 for merge insert)")
     version: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="The commit version associated with the operation")
-    __properties: ClassVar[List[str]] = ["transaction_id", "num_updated_rows", "num_inserted_rows", "num_deleted_rows", "version"]
+    __properties: ClassVar[List[str]] = ["context", "transaction_id", "num_updated_rows", "num_inserted_rows", "num_deleted_rows", "version"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -85,6 +86,7 @@ class MergeInsertIntoTableResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "context": obj.get("context"),
             "transaction_id": obj.get("transaction_id"),
             "num_updated_rows": obj.get("num_updated_rows"),
             "num_inserted_rows": obj.get("num_inserted_rows"),

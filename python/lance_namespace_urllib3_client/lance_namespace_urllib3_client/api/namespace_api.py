@@ -1742,7 +1742,7 @@ class NamespaceApi:
     ) -> None:
         """Check if a namespace exists
 
-        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body. 
+        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `NamespaceExistsResponse` model as follows: - a `200` response means the namespace exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1823,7 +1823,7 @@ class NamespaceApi:
     ) -> ApiResponse[None]:
         """Check if a namespace exists
 
-        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body. 
+        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `NamespaceExistsResponse` model as follows: - a `200` response means the namespace exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -1904,7 +1904,7 @@ class NamespaceApi:
     ) -> RESTResponseType:
         """Check if a namespace exists
 
-        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body. 
+        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `NamespaceExistsResponse` model as follows: - a `200` response means the namespace exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str

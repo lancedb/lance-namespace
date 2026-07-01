@@ -35,6 +35,9 @@ class TestAlterTransactionResponse(unittest.TestCase):
         model = AlterTransactionResponse()
         if include_optional:
             return AlterTransactionResponse(
+                context = {
+                    'key' : ''
+                    },
                 status = '',
                 properties = {
                     'key' : ''

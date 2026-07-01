@@ -35,6 +35,9 @@ class TestDescribeTableIndexStatsResponse(unittest.TestCase):
         model = DescribeTableIndexStatsResponse()
         if include_optional:
             return DescribeTableIndexStatsResponse(
+                context = {
+                    'key' : ''
+                    },
                 distance_type = '',
                 index_type = '',
                 num_indexed_rows = 0,

@@ -35,6 +35,9 @@ class TestUpdateTableResponse(unittest.TestCase):
         model = UpdateTableResponse()
         if include_optional:
             return UpdateTableResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = '',
                 updated_rows = 0,
                 version = 0,

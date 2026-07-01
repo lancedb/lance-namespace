@@ -30,6 +30,8 @@ import java.util.Objects;
     comments = "Generator version: 7.12.0")
 public class DescribeTransactionResponse {
 
+  @Valid private Map<String, String> context = new HashMap<>();
+
   private String status;
 
   @Valid private Map<String, String> properties = new HashMap<>();
@@ -41,6 +43,47 @@ public class DescribeTransactionResponse {
   /** Constructor with only required parameters */
   public DescribeTransactionResponse(String status) {
     this.status = status;
+  }
+
+  public DescribeTransactionResponse context(Map<String, String> context) {
+    this.context = context;
+    return this;
+  }
+
+  public DescribeTransactionResponse putContextItem(String key, String contextItem) {
+    if (this.context == null) {
+      this.context = new HashMap<>();
+    }
+    this.context.put(key, contextItem);
+    return this;
+  }
+
+  /**
+   * Arbitrary context as key-value pairs. How to use the context is custom to the specific
+   * implementation. On a request, it carries caller-provided context to the implementation. On a
+   * response, it carries implementation-provided context back to the caller. REST NAMESPACE ONLY
+   * Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request,
+   * any entry whose key starts with `header.` is sent as an HTTP request header with the prefix
+   * stripped. For example, the entry `{\"header.Authorization\": \"Bearer abc\"}` is sent as the
+   * request header `Authorization: Bearer abc`. - On a response, every HTTP response header is
+   * returned as an entry whose key is the header name prefixed with `header.`. For example, the
+   * response header `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\":
+   * \"abc123\"}`.
+   *
+   * @return context
+   */
+  @Schema(
+      name = "context",
+      description =
+          "Arbitrary context as key-value pairs. How to use the context is custom to the specific implementation.  On a request, it carries caller-provided context to the implementation. On a response, it carries implementation-provided context back to the caller.  REST NAMESPACE ONLY Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request, any entry whose key starts with `header.` is sent as an HTTP   request header with the prefix stripped. For example, the entry   `{\"header.Authorization\": \"Bearer abc\"}` is sent as the request header   `Authorization: Bearer abc`. - On a response, every HTTP response header is returned as an entry whose key is the   header name prefixed with `header.`. For example, the response header   `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\": \"abc123\"}`. ",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("context")
+  public Map<String, String> getContext() {
+    return context;
+  }
+
+  public void setContext(Map<String, String> context) {
+    this.context = context;
   }
 
   public DescribeTransactionResponse status(String status) {
@@ -108,19 +151,21 @@ public class DescribeTransactionResponse {
       return false;
     }
     DescribeTransactionResponse describeTransactionResponse = (DescribeTransactionResponse) o;
-    return Objects.equals(this.status, describeTransactionResponse.status)
+    return Objects.equals(this.context, describeTransactionResponse.context)
+        && Objects.equals(this.status, describeTransactionResponse.status)
         && Objects.equals(this.properties, describeTransactionResponse.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(status, properties);
+    return Objects.hash(context, status, properties);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DescribeTransactionResponse {\n");
+    sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
     sb.append("}");

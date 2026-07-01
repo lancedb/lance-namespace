@@ -35,6 +35,9 @@ class TestDeclareTableResponse(unittest.TestCase):
         model = DeclareTableResponse()
         if include_optional:
             return DeclareTableResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = '',
                 location = '',
                 storage_options = {

@@ -3498,7 +3498,12 @@ public class MetadataApi extends BaseApi {
 
   /**
    * Check if a namespace exists Check if namespace &#x60;id&#x60; exists. This operation must
-   * behave exactly like the DescribeNamespace API, except it does not contain a response body.
+   * behave exactly like the DescribeNamespace API, except it does not contain a response body. REST
+   * NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response
+   * body. The REST response maps to the &#x60;NamespaceExistsResponse&#x60; model as follows: - a
+   * &#x60;200&#x60; response means the namespace exists; a &#x60;404&#x60; response means it does
+   * not - response headers map to &#x60;context&#x60; via the &#x60;header.&#x60; prefix (see the
+   * &#x60;Context&#x60; schema)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -3518,7 +3523,12 @@ public class MetadataApi extends BaseApi {
 
   /**
    * Check if a namespace exists Check if namespace &#x60;id&#x60; exists. This operation must
-   * behave exactly like the DescribeNamespace API, except it does not contain a response body.
+   * behave exactly like the DescribeNamespace API, except it does not contain a response body. REST
+   * NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response
+   * body. The REST response maps to the &#x60;NamespaceExistsResponse&#x60; model as follows: - a
+   * &#x60;200&#x60; response means the namespace exists; a &#x60;404&#x60; response means it does
+   * not - response headers map to &#x60;context&#x60; via the &#x60;header.&#x60; prefix (see the
+   * &#x60;Context&#x60; schema)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -3889,10 +3899,15 @@ public class MetadataApi extends BaseApi {
 
   /**
    * Check if a table exists Check if table &#x60;id&#x60; exists. This operation should behave
-   * exactly like DescribeTable, except it does not contain a response body. For DirectoryNamespace
-   * implementation, a table exists if either: - The table has Lance data versions (regular table
-   * created with CreateTable) - A &#x60;.lance-reserved&#x60; file exists in the table directory
-   * (declared table created with DeclareTable)
+   * exactly like DescribeTable, except it does not contain a response body. REST NAMESPACE ONLY
+   * REST namespace conveys the result through the HTTP status code with no response body. The REST
+   * response maps to the &#x60;TableExistsResponse&#x60; model as follows: - a &#x60;200&#x60;
+   * response means the table exists; a &#x60;404&#x60; response means it does not - response
+   * headers map to &#x60;context&#x60; via the &#x60;header.&#x60; prefix (see the
+   * &#x60;Context&#x60; schema) For DirectoryNamespace implementation, a table exists if either: -
+   * The table has Lance data versions (regular table created with CreateTable) - A
+   * &#x60;.lance-reserved&#x60; file exists in the table directory (declared table created with
+   * DeclareTable)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -3911,10 +3926,15 @@ public class MetadataApi extends BaseApi {
 
   /**
    * Check if a table exists Check if table &#x60;id&#x60; exists. This operation should behave
-   * exactly like DescribeTable, except it does not contain a response body. For DirectoryNamespace
-   * implementation, a table exists if either: - The table has Lance data versions (regular table
-   * created with CreateTable) - A &#x60;.lance-reserved&#x60; file exists in the table directory
-   * (declared table created with DeclareTable)
+   * exactly like DescribeTable, except it does not contain a response body. REST NAMESPACE ONLY
+   * REST namespace conveys the result through the HTTP status code with no response body. The REST
+   * response maps to the &#x60;TableExistsResponse&#x60; model as follows: - a &#x60;200&#x60;
+   * response means the table exists; a &#x60;404&#x60; response means it does not - response
+   * headers map to &#x60;context&#x60; via the &#x60;header.&#x60; prefix (see the
+   * &#x60;Context&#x60; schema) For DirectoryNamespace implementation, a table exists if either: -
+   * The table has Lance data versions (regular table created with CreateTable) - A
+   * &#x60;.lance-reserved&#x60; file exists in the table directory (declared table created with
+   * DeclareTable)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.

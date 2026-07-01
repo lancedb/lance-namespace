@@ -35,6 +35,9 @@ class TestCreateNamespaceResponse(unittest.TestCase):
         model = CreateNamespaceResponse()
         if include_optional:
             return CreateNamespaceResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = '',
                 properties = {
                     'key' : ''

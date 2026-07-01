@@ -35,6 +35,9 @@ class TestDescribeTableResponse(unittest.TestCase):
         model = DescribeTableResponse()
         if include_optional:
             return DescribeTableResponse(
+                context = {
+                    'key' : ''
+                    },
                 table = '',
                 namespace = [
                     ''

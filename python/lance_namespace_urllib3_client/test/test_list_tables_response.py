@@ -35,6 +35,9 @@ class TestListTablesResponse(unittest.TestCase):
         model = ListTablesResponse()
         if include_optional:
             return ListTablesResponse(
+                context = {
+                    'key' : ''
+                    },
                 tables = [
                     ''
                     ],

@@ -35,6 +35,9 @@ class TestErrorResponse(unittest.TestCase):
         model = ErrorResponse()
         if include_optional:
             return ErrorResponse(
+                context = {
+                    'key' : ''
+                    },
                 error = 'Table 'users' not found in namespace 'production'',
                 code = 4,
                 detail = 'The table may have been dropped or renamed',

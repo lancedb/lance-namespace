@@ -35,6 +35,9 @@ class TestListTableVersionsResponse(unittest.TestCase):
         model = ListTableVersionsResponse()
         if include_optional:
             return ListTableVersionsResponse(
+                context = {
+                    'key' : ''
+                    },
                 versions = [
                     lance_namespace_urllib3_client.models.table_version.TableVersion(
                         version = 0, 

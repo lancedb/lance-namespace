@@ -35,6 +35,9 @@ class TestGetTableStatsResponse(unittest.TestCase):
         model = GetTableStatsResponse()
         if include_optional:
             return GetTableStatsResponse(
+                context = {
+                    'key' : ''
+                    },
                 total_bytes = 0,
                 num_rows = 0,
                 num_indices = 0,

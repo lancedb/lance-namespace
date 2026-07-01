@@ -35,6 +35,9 @@ class TestListNamespacesResponse(unittest.TestCase):
         model = ListNamespacesResponse()
         if include_optional:
             return ListNamespacesResponse(
+                context = {
+                    'key' : ''
+                    },
                 namespaces = [
                     ''
                     ],

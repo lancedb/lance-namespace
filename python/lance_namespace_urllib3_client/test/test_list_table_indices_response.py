@@ -35,6 +35,9 @@ class TestListTableIndicesResponse(unittest.TestCase):
         model = ListTableIndicesResponse()
         if include_optional:
             return ListTableIndicesResponse(
+                context = {
+                    'key' : ''
+                    },
                 indexes = [
                     lance_namespace_urllib3_client.models.index_content.IndexContent(
                         index_name = '', 

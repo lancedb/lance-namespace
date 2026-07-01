@@ -10688,7 +10688,7 @@ class MetadataApi:
     ) -> None:
         """Check if a namespace exists
 
-        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body. 
+        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `NamespaceExistsResponse` model as follows: - a `200` response means the namespace exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -10769,7 +10769,7 @@ class MetadataApi:
     ) -> ApiResponse[None]:
         """Check if a namespace exists
 
-        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body. 
+        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `NamespaceExistsResponse` model as follows: - a `200` response means the namespace exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -10850,7 +10850,7 @@ class MetadataApi:
     ) -> RESTResponseType:
         """Check if a namespace exists
 
-        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body. 
+        Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `NamespaceExistsResponse` model as follows: - a `200` response means the namespace exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -12001,7 +12001,7 @@ class MetadataApi:
     ) -> None:
         """Check if a table exists
 
-        Check if table `id` exists.  This operation should behave exactly like DescribeTable, except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (declared table created with DeclareTable) 
+        Check if table `id` exists.  This operation should behave exactly like DescribeTable, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `TableExistsResponse` model as follows: - a `200` response means the table exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema)  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (declared table created with DeclareTable) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -12082,7 +12082,7 @@ class MetadataApi:
     ) -> ApiResponse[None]:
         """Check if a table exists
 
-        Check if table `id` exists.  This operation should behave exactly like DescribeTable, except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (declared table created with DeclareTable) 
+        Check if table `id` exists.  This operation should behave exactly like DescribeTable, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `TableExistsResponse` model as follows: - a `200` response means the table exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema)  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (declared table created with DeclareTable) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -12163,7 +12163,7 @@ class MetadataApi:
     ) -> RESTResponseType:
         """Check if a table exists
 
-        Check if table `id` exists.  This operation should behave exactly like DescribeTable, except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (declared table created with DeclareTable) 
+        Check if table `id` exists.  This operation should behave exactly like DescribeTable, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `TableExistsResponse` model as follows: - a `200` response means the table exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema)  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (declared table created with DeclareTable) 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str

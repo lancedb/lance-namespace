@@ -26,9 +26,10 @@ class CreateNamespaceResponse(BaseModel):
     """
     CreateNamespaceResponse
     """ # noqa: E501
+    context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context as key-value pairs. How to use the context is custom to the specific implementation.  On a request, it carries caller-provided context to the implementation. On a response, it carries implementation-provided context back to the caller.  REST NAMESPACE ONLY Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request, any entry whose key starts with `header.` is sent as an HTTP   request header with the prefix stripped. For example, the entry   `{\"header.Authorization\": \"Bearer abc\"}` is sent as the request header   `Authorization: Bearer abc`. - On a response, every HTTP response header is returned as an entry whose key is the   header name prefixed with `header.`. For example, the response header   `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\": \"abc123\"}`. ")
     transaction_id: Optional[StrictStr] = Field(default=None, description="Optional transaction identifier")
     properties: Optional[Dict[str, StrictStr]] = Field(default=None, description="Properties after the namespace is created.  If the server does not support namespace properties, it should return null for this field. If namespace properties are supported, but none are set, it should return an empty object. ")
-    __properties: ClassVar[List[str]] = ["transaction_id", "properties"]
+    __properties: ClassVar[List[str]] = ["context", "transaction_id", "properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,6 +82,7 @@ class CreateNamespaceResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "context": obj.get("context"),
             "transaction_id": obj.get("transaction_id"),
             "properties": obj.get("properties")
         })

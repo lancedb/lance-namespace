@@ -3384,6 +3384,12 @@ Check if namespace `id` exists.
 This operation must behave exactly like the DescribeNamespace API,
 except it does not contain a response body.
 
+REST NAMESPACE ONLY
+REST namespace conveys the result through the HTTP status code with no response body.
+The REST response maps to the `NamespaceExistsResponse` model as follows:
+- a `200` response means the namespace exists; a `404` response means it does not
+- response headers map to `context` via the `header.` prefix (see the `Context` schema)
+
 
 ### Example
 
@@ -3786,6 +3792,12 @@ Check if table `id` exists.
 
 This operation should behave exactly like DescribeTable,
 except it does not contain a response body.
+
+REST NAMESPACE ONLY
+REST namespace conveys the result through the HTTP status code with no response body.
+The REST response maps to the `TableExistsResponse` model as follows:
+- a `200` response means the table exists; a `404` response means it does not
+- response headers map to `context` via the `header.` prefix (see the `Context` schema)
 
 For DirectoryNamespace implementation, a table exists if either:
 - The table has Lance data versions (regular table created with CreateTable)

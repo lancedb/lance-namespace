@@ -240,10 +240,11 @@ public interface LanceNamespaceAsync {
    * Check if a namespace exists.
    *
    * @param request The namespace exists request
-   * @return A CompletableFuture that completes successfully if namespace exists, or exceptionally
-   *     if not
+   * @return A CompletableFuture with the response if the namespace exists, or that completes
+   *     exceptionally if not
    */
-  default CompletableFuture<Void> namespaceExists(NamespaceExistsRequest request) {
+  default CompletableFuture<NamespaceExistsResponse> namespaceExists(
+      NamespaceExistsRequest request) {
     return CompletableFuture.failedFuture(
         new UnsupportedOperationException("Not supported: namespaceExists"));
   }
@@ -287,10 +288,10 @@ public interface LanceNamespaceAsync {
    * Check if a table exists.
    *
    * @param request The table exists request
-   * @return A CompletableFuture that completes successfully if table exists, or exceptionally if
-   *     not
+   * @return A CompletableFuture with the response if the table exists, or that completes
+   *     exceptionally if not
    */
-  default CompletableFuture<Void> tableExists(TableExistsRequest request) {
+  default CompletableFuture<TableExistsResponse> tableExists(TableExistsRequest request) {
     return CompletableFuture.failedFuture(
         new UnsupportedOperationException("Not supported: tableExists"));
   }
@@ -322,9 +323,9 @@ public interface LanceNamespaceAsync {
    * Count rows in a table.
    *
    * @param request The count table rows request
-   * @return A CompletableFuture containing the row count
+   * @return A CompletableFuture containing the response with the row count
    */
-  default CompletableFuture<Long> countTableRows(CountTableRowsRequest request) {
+  default CompletableFuture<CountTableRowsResponse> countTableRows(CountTableRowsRequest request) {
     return CompletableFuture.failedFuture(
         new UnsupportedOperationException("Not supported: countTableRows"));
   }
@@ -408,9 +409,10 @@ public interface LanceNamespaceAsync {
    * Query a table.
    *
    * @param request The query table request
-   * @return A CompletableFuture containing Arrow IPC stream data with query results
+   * @return A CompletableFuture containing the response with the query results as Arrow IPC file
+   *     data
    */
-  default CompletableFuture<byte[]> queryTable(QueryTableRequest request) {
+  default CompletableFuture<QueryTableResponse> queryTable(QueryTableRequest request) {
     return CompletableFuture.failedFuture(
         new UnsupportedOperationException("Not supported: queryTable"));
   }

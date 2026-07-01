@@ -35,6 +35,9 @@ class TestMergeInsertIntoTableResponse(unittest.TestCase):
         model = MergeInsertIntoTableResponse()
         if include_optional:
             return MergeInsertIntoTableResponse(
+                context = {
+                    'key' : ''
+                    },
                 transaction_id = '',
                 num_updated_rows = 0,
                 num_inserted_rows = 0,

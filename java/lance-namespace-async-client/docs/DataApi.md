@@ -618,7 +618,7 @@ CompletableFuture<ApiResponse<**String**>>
 
 Count rows in a table
 
-Count the number of rows in table &#x60;id&#x60;  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the &#x60;CountTableRowsResponse&#x60; JSON object. 
+Count the number of rows in table &#x60;id&#x60;  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the &#x60;CountTableRowsResponse&#x60; JSON object. The REST response maps to the &#x60;CountTableRowsResponse&#x60; model as follows: - the integer response body maps to &#x60;count&#x60; - response headers map to &#x60;context&#x60; via the &#x60;header.&#x60; prefix (see the &#x60;Context&#x60; schema) 
 
 ### Example
 
@@ -709,7 +709,7 @@ CompletableFuture<**Long**>
 
 Count rows in a table
 
-Count the number of rows in table &#x60;id&#x60;  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the &#x60;CountTableRowsResponse&#x60; JSON object. 
+Count the number of rows in table &#x60;id&#x60;  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the &#x60;CountTableRowsResponse&#x60; JSON object. The REST response maps to the &#x60;CountTableRowsResponse&#x60; model as follows: - the integer response body maps to &#x60;count&#x60; - response headers map to &#x60;context&#x60; via the &#x60;header.&#x60; prefix (see the &#x60;Context&#x60; schema) 
 
 ### Example
 
@@ -2029,7 +2029,7 @@ CompletableFuture<ApiResponse<[**MergeInsertIntoTableResponse**](MergeInsertInto
 
 Query a table
 
-Query table &#x60;id&#x60; with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the &#x60;QueryTableResponse&#x60; JSON object. 
+Query table &#x60;id&#x60; with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the &#x60;QueryTableResponse&#x60; JSON object. The REST response maps to the &#x60;QueryTableResponse&#x60; model as follows: - the Arrow IPC file binary body maps to &#x60;data&#x60; - response headers map to &#x60;context&#x60; via the &#x60;header.&#x60; prefix (see the &#x60;Context&#x60; schema) 
 
 ### Example
 
@@ -2120,7 +2120,7 @@ CompletableFuture<**byte[]**>
 
 Query a table
 
-Query table &#x60;id&#x60; with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the &#x60;QueryTableResponse&#x60; JSON object. 
+Query table &#x60;id&#x60; with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the &#x60;QueryTableResponse&#x60; JSON object. The REST response maps to the &#x60;QueryTableResponse&#x60; model as follows: - the Arrow IPC file binary body maps to &#x60;data&#x60; - response headers map to &#x60;context&#x60; via the &#x60;header.&#x60; prefix (see the &#x60;Context&#x60; schema) 
 
 ### Example
 
