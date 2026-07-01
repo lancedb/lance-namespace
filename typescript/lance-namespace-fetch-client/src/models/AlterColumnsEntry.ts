@@ -28,7 +28,7 @@ import {
  */
 export interface AlterColumnsEntry {
     /**
-     * Column path to alter
+     * Lance field path to alter. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
      * @type {string}
      * @memberof AlterColumnsEntry
      */
@@ -38,25 +38,25 @@ export interface AlterColumnsEntry {
      * @type {object}
      * @memberof AlterColumnsEntry
      */
-    data_type: object;
+    data_type?: object;
     /**
      * New name for the column (optional)
      * @type {string}
      * @memberof AlterColumnsEntry
      */
-    rename?: string;
+    rename?: string | null;
     /**
      * Whether the column should be nullable (optional)
      * @type {boolean}
      * @memberof AlterColumnsEntry
      */
-    nullable?: boolean;
+    nullable?: boolean | null;
     /**
-     * Virtual column alterations (optional)
+     * 
      * @type {AlterVirtualColumnEntry}
      * @memberof AlterColumnsEntry
      */
-    virtual_column?: AlterVirtualColumnEntry;
+    virtual_column?: AlterVirtualColumnEntry | null;
 }
 
 /**
@@ -64,7 +64,6 @@ export interface AlterColumnsEntry {
  */
 export function instanceOfAlterColumnsEntry(value: object): value is AlterColumnsEntry {
     if (!('path' in value) || value['path'] === undefined) return false;
-    if (!('data_type' in value) || value['data_type'] === undefined) return false;
     return true;
 }
 
@@ -79,7 +78,7 @@ export function AlterColumnsEntryFromJSONTyped(json: any, ignoreDiscriminator: b
     return {
         
         'path': json['path'],
-        'data_type': json['data_type'],
+        'data_type': json['data_type'] == null ? undefined : json['data_type'],
         'rename': json['rename'] == null ? undefined : json['rename'],
         'nullable': json['nullable'] == null ? undefined : json['nullable'],
         'virtual_column': json['virtual_column'] == null ? undefined : AlterVirtualColumnEntryFromJSON(json['virtual_column']),

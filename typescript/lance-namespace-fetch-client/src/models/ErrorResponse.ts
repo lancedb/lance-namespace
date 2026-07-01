@@ -20,6 +20,27 @@ import { mapValues } from '../runtime';
  */
 export interface ErrorResponse {
     /**
+     * Arbitrary context as key-value pairs.
+     * How to use the context is custom to the specific implementation.
+     * 
+     * On a request, it carries caller-provided context to the implementation.
+     * On a response, it carries implementation-provided context back to the caller.
+     * 
+     * REST NAMESPACE ONLY
+     * Context entries are mapped to and from HTTP headers using the `header.` prefix:
+     * - On a request, any entry whose key starts with `header.` is sent as an HTTP
+     *   request header with the prefix stripped. For example, the entry
+     *   `{"header.Authorization": "Bearer abc"}` is sent as the request header
+     *   `Authorization: Bearer abc`.
+     * - On a response, every HTTP response header is returned as an entry whose key is the
+     *   header name prefixed with `header.`. For example, the response header
+     *   `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ErrorResponse
+     */
+    context?: { [key: string]: string; };
+    /**
      * A brief, human-readable message about the error.
      * @type {string}
      * @memberof ErrorResponse
@@ -41,7 +62,7 @@ export interface ErrorResponse {
      *   9 - TableTagAlreadyExists: A table tag with this name already exists
      *   10 - TransactionNotFound: The specified transaction does not exist
      *   11 - TableVersionNotFound: The specified table version does not exist
-     *   12 - TableColumnNotFound: The specified table column does not exist
+     *   12 - TableColumnNotFound: The specified table field does not exist
      *   13 - InvalidInput: Malformed request or invalid parameters
      *   14 - ConcurrentModification: Optimistic concurrency conflict
      *   15 - PermissionDenied: User lacks permission for this operation
@@ -50,6 +71,9 @@ export interface ErrorResponse {
      *   18 - Internal: Unexpected server/implementation error
      *   19 - InvalidTableState: Table is in an invalid state for the operation
      *   20 - TableSchemaValidationError: Table schema validation failed
+     *   21 - Throttling: Request rate limit exceeded
+     *   22 - TableBranchNotFound: The specified table branch does not exist
+     *   23 - TableBranchAlreadyExists: A table branch with this name already exists
      * 
      * @type {number}
      * @memberof ErrorResponse
@@ -92,6 +116,7 @@ export function ErrorResponseFromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
+        'context': json['context'] == null ? undefined : json['context'],
         'error': json['error'] == null ? undefined : json['error'],
         'code': json['code'],
         'detail': json['detail'] == null ? undefined : json['detail'],
@@ -110,6 +135,7 @@ export function ErrorResponseToJSONTyped(value?: ErrorResponse | null, ignoreDis
 
     return {
         
+        'context': value['context'],
         'error': value['error'],
         'code': value['code'],
         'detail': value['detail'],

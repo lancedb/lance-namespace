@@ -35,13 +35,21 @@ export interface MergeInsertIntoTableRequest {
      */
     identity?: Identity;
     /**
-     * Arbitrary context for a request as key-value pairs.
+     * Arbitrary context as key-value pairs.
      * How to use the context is custom to the specific implementation.
      * 
+     * On a request, it carries caller-provided context to the implementation.
+     * On a response, it carries implementation-provided context back to the caller.
+     * 
      * REST NAMESPACE ONLY
-     * Context entries are passed via HTTP headers using the naming convention
-     * `x-lance-ctx-<key>: <value>`. For example, a context entry
-     * `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+     * Context entries are mapped to and from HTTP headers using the `header.` prefix:
+     * - On a request, any entry whose key starts with `header.` is sent as an HTTP
+     *   request header with the prefix stripped. For example, the entry
+     *   `{"header.Authorization": "Bearer abc"}` is sent as the request header
+     *   `Authorization: Bearer abc`.
+     * - On a response, every HTTP response header is returned as an entry whose key is the
+     *   header name prefixed with `header.`. For example, the response header
+     *   `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
      * 
      * @type {{ [key: string]: string; }}
      * @memberof MergeInsertIntoTableRequest
@@ -54,7 +62,14 @@ export interface MergeInsertIntoTableRequest {
      */
     id?: Array<string>;
     /**
-     * Column name to use for matching rows (required)
+     * Branch to target. When not specified, the main branch is used.
+     * 
+     * @type {string}
+     * @memberof MergeInsertIntoTableRequest
+     */
+    branch?: string;
+    /**
+     * Lance field path to use for matching rows. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
      * @type {string}
      * @memberof MergeInsertIntoTableRequest
      */
@@ -66,7 +81,7 @@ export interface MergeInsertIntoTableRequest {
      */
     when_matched_update_all?: boolean;
     /**
-     * The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true
+     * The row is updated (similar to UpdateAll) only for rows where the SQL expression evaluates to true. Field references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.
      * @type {string}
      * @memberof MergeInsertIntoTableRequest
      */
@@ -84,7 +99,7 @@ export interface MergeInsertIntoTableRequest {
      */
     when_not_matched_by_source_delete?: boolean;
     /**
-     * Delete rows from the target table if there is no match AND the SQL expression evaluates to true
+     * Delete rows from the target table if there is no match AND the SQL expression evaluates to true. Field references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.
      * @type {string}
      * @memberof MergeInsertIntoTableRequest
      */
@@ -123,6 +138,7 @@ export function MergeInsertIntoTableRequestFromJSONTyped(json: any, ignoreDiscri
         'identity': json['identity'] == null ? undefined : IdentityFromJSON(json['identity']),
         'context': json['context'] == null ? undefined : json['context'],
         'id': json['id'] == null ? undefined : json['id'],
+        'branch': json['branch'] == null ? undefined : json['branch'],
         'on': json['on'] == null ? undefined : json['on'],
         'when_matched_update_all': json['when_matched_update_all'] == null ? undefined : json['when_matched_update_all'],
         'when_matched_update_all_filt': json['when_matched_update_all_filt'] == null ? undefined : json['when_matched_update_all_filt'],
@@ -148,6 +164,7 @@ export function MergeInsertIntoTableRequestToJSONTyped(value?: MergeInsertIntoTa
         'identity': IdentityToJSON(value['identity']),
         'context': value['context'],
         'id': value['id'],
+        'branch': value['branch'],
         'on': value['on'],
         'when_matched_update_all': value['when_matched_update_all'],
         'when_matched_update_all_filt': value['when_matched_update_all_filt'],

@@ -23,7 +23,7 @@ on:
       - ready_for_review
       - reopened
     paths:
-      - docs/src/rest.yaml
+      - docs/src/spec.yaml
       - typescript/**
       - Makefile
       - .github/workflows/typescript.yml

@@ -17,8 +17,12 @@ import * as runtime from '../runtime';
 import type {
   AlterTableAddColumnsRequest,
   AlterTableAddColumnsResponse,
+  AlterTableBackfillColumnsRequest,
+  AlterTableBackfillColumnsResponse,
   AnalyzeTableQueryPlanRequest,
   CountTableRowsRequest,
+  CreateMaterializedViewRequest,
+  CreateMaterializedViewResponse,
   CreateTableResponse,
   DeleteFromTableRequest,
   DeleteFromTableResponse,
@@ -27,6 +31,8 @@ import type {
   InsertIntoTableResponse,
   MergeInsertIntoTableResponse,
   QueryTableRequest,
+  RefreshMaterializedViewRequest,
+  RefreshMaterializedViewResponse,
   UpdateTableRequest,
   UpdateTableResponse,
 } from '../models/index';
@@ -35,10 +41,18 @@ import {
     AlterTableAddColumnsRequestToJSON,
     AlterTableAddColumnsResponseFromJSON,
     AlterTableAddColumnsResponseToJSON,
+    AlterTableBackfillColumnsRequestFromJSON,
+    AlterTableBackfillColumnsRequestToJSON,
+    AlterTableBackfillColumnsResponseFromJSON,
+    AlterTableBackfillColumnsResponseToJSON,
     AnalyzeTableQueryPlanRequestFromJSON,
     AnalyzeTableQueryPlanRequestToJSON,
     CountTableRowsRequestFromJSON,
     CountTableRowsRequestToJSON,
+    CreateMaterializedViewRequestFromJSON,
+    CreateMaterializedViewRequestToJSON,
+    CreateMaterializedViewResponseFromJSON,
+    CreateMaterializedViewResponseToJSON,
     CreateTableResponseFromJSON,
     CreateTableResponseToJSON,
     DeleteFromTableRequestFromJSON,
@@ -55,6 +69,10 @@ import {
     MergeInsertIntoTableResponseToJSON,
     QueryTableRequestFromJSON,
     QueryTableRequestToJSON,
+    RefreshMaterializedViewRequestFromJSON,
+    RefreshMaterializedViewRequestToJSON,
+    RefreshMaterializedViewResponseFromJSON,
+    RefreshMaterializedViewResponseToJSON,
     UpdateTableRequestFromJSON,
     UpdateTableRequestToJSON,
     UpdateTableResponseFromJSON,
@@ -64,6 +82,12 @@ import {
 export interface AlterTableAddColumnsOperationRequest {
     id: string;
     alterTableAddColumnsRequest: AlterTableAddColumnsRequest;
+    delimiter?: string;
+}
+
+export interface AlterTableBackfillColumnsOperationRequest {
+    id: string;
+    alterTableBackfillColumnsRequest: AlterTableBackfillColumnsRequest;
     delimiter?: string;
 }
 
@@ -79,11 +103,19 @@ export interface CountTableRowsOperationRequest {
     delimiter?: string;
 }
 
+export interface CreateMaterializedViewOperationRequest {
+    id: string;
+    createMaterializedViewRequest: CreateMaterializedViewRequest;
+    delimiter?: string;
+}
+
 export interface CreateTableRequest {
     id: string;
     body: Blob;
     delimiter?: string;
     mode?: string;
+    properties?: string;
+    storageOptions?: string;
 }
 
 export interface DeleteFromTableOperationRequest {
@@ -102,6 +134,7 @@ export interface InsertIntoTableRequest {
     id: string;
     body: Blob;
     delimiter?: string;
+    branch?: string;
     mode?: string;
 }
 
@@ -110,6 +143,7 @@ export interface MergeInsertIntoTableRequest {
     on: string;
     body: Blob;
     delimiter?: string;
+    branch?: string;
     whenMatchedUpdateAll?: boolean;
     whenMatchedUpdateAllFilt?: string;
     whenNotMatchedInsertAll?: boolean;
@@ -123,6 +157,12 @@ export interface QueryTableOperationRequest {
     id: string;
     queryTableRequest: QueryTableRequest;
     delimiter?: string;
+}
+
+export interface RefreshMaterializedViewOperationRequest {
+    id: string;
+    delimiter?: string;
+    refreshMaterializedViewRequest?: RefreshMaterializedViewRequest;
 }
 
 export interface UpdateTableOperationRequest {
@@ -203,6 +243,72 @@ export class DataApi extends runtime.BaseAPI {
     }
 
     /**
+     * Trigger an asynchronous backfill job for a computed column on table `id`. The column must be a virtual (UDF-backed) column. Returns a job ID for tracking. 
+     * Trigger an async column backfill job
+     */
+    async alterTableBackfillColumnsRaw(requestParameters: AlterTableBackfillColumnsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AlterTableBackfillColumnsResponse>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling alterTableBackfillColumns().'
+            );
+        }
+
+        if (requestParameters['alterTableBackfillColumnsRequest'] == null) {
+            throw new runtime.RequiredError(
+                'alterTableBackfillColumnsRequest',
+                'Required parameter "alterTableBackfillColumnsRequest" was null or undefined when calling alterTableBackfillColumns().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['delimiter'] != null) {
+            queryParameters['delimiter'] = requestParameters['delimiter'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2", []);
+        }
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // ApiKeyAuth authentication
+        }
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("BearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/v1/table/{id}/backfill_column`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: AlterTableBackfillColumnsRequestToJSON(requestParameters['alterTableBackfillColumnsRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AlterTableBackfillColumnsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Trigger an asynchronous backfill job for a computed column on table `id`. The column must be a virtual (UDF-backed) column. Returns a job ID for tracking. 
+     * Trigger an async column backfill job
+     */
+    async alterTableBackfillColumns(requestParameters: AlterTableBackfillColumnsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AlterTableBackfillColumnsResponse> {
+        const response = await this.alterTableBackfillColumnsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Analyze the query execution plan for a query against table `id`. Returns detailed statistics and analysis of the query execution plan.  REST NAMESPACE ONLY REST namespace returns the response as a plain string instead of the `AnalyzeTableQueryPlanResponse` JSON object. 
      * Analyze query execution plan
      */
@@ -273,7 +379,7 @@ export class DataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. 
+     * Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. The REST response maps to the `CountTableRowsResponse` model as follows: - the integer response body maps to `count` - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
      * Count rows in a table
      */
     async countTableRowsRaw(requestParameters: CountTableRowsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<number>> {
@@ -334,7 +440,7 @@ export class DataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. 
+     * Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. The REST response maps to the `CountTableRowsResponse` model as follows: - the integer response body maps to `count` - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
      * Count rows in a table
      */
     async countTableRows(requestParameters: CountTableRowsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<number> {
@@ -343,7 +449,73 @@ export class DataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema. If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
+     * Create a materialized view at identifier `id`. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the `kind` discriminator. 
+     * Create a materialized view
+     */
+    async createMaterializedViewRaw(requestParameters: CreateMaterializedViewOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateMaterializedViewResponse>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling createMaterializedView().'
+            );
+        }
+
+        if (requestParameters['createMaterializedViewRequest'] == null) {
+            throw new runtime.RequiredError(
+                'createMaterializedViewRequest',
+                'Required parameter "createMaterializedViewRequest" was null or undefined when calling createMaterializedView().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['delimiter'] != null) {
+            queryParameters['delimiter'] = requestParameters['delimiter'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2", []);
+        }
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // ApiKeyAuth authentication
+        }
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("BearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/v1/materialized_view/{id}/create`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CreateMaterializedViewRequestToJSON(requestParameters['createMaterializedViewRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CreateMaterializedViewResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Create a materialized view at identifier `id`. The view may be query-backed, UDTF-backed, or chunker-backed, controlled by the `kind` discriminator. 
+     * Create a materialized view
+     */
+    async createMaterializedView(requestParameters: CreateMaterializedViewOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateMaterializedViewResponse> {
+        const response = await this.createMaterializedViewRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema. If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name - `properties`: serialize as a single JSON-encoded query parameter such as   `properties={\"user\":\"alice\",\"team\":\"eng\"}`; these are business logic properties   managed by the namespace implementation outside Lance context - `storage_options`: serialize as a single JSON-encoded query parameter such as   `storage_options={\"aws_region\":\"us-east-1\",\"timeout\":\"30s\"}`; these configure   write-time overrides for data and metadata written during table creation 
      * Create a table with the given name
      */
     async createTableRaw(requestParameters: CreateTableRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateTableResponse>> {
@@ -369,6 +541,14 @@ export class DataApi extends runtime.BaseAPI {
 
         if (requestParameters['mode'] != null) {
             queryParameters['mode'] = requestParameters['mode'];
+        }
+
+        if (requestParameters['properties'] != null) {
+            queryParameters['properties'] = requestParameters['properties'];
+        }
+
+        if (requestParameters['storageOptions'] != null) {
+            queryParameters['storage_options'] = requestParameters['storageOptions'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -404,7 +584,7 @@ export class DataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema. If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
+     * Create table `id` in the namespace with the given data in Arrow IPC stream.  The schema of the Arrow IPC stream is used as the table schema. If the stream is empty, the API creates a new empty table.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `CreateTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name - `properties`: serialize as a single JSON-encoded query parameter such as   `properties={\"user\":\"alice\",\"team\":\"eng\"}`; these are business logic properties   managed by the namespace implementation outside Lance context - `storage_options`: serialize as a single JSON-encoded query parameter such as   `storage_options={\"aws_region\":\"us-east-1\",\"timeout\":\"30s\"}`; these configure   write-time overrides for data and metadata written during table creation 
      * Create a table with the given name
      */
     async createTable(requestParameters: CreateTableRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateTableResponse> {
@@ -549,7 +729,7 @@ export class DataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Insert new records into table `id`.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `InsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
+     * Insert new records into table `id`.  For tables that have been declared but not yet created on storage (is_only_declared=true), this operation will create the table with the provided data.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `InsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
      * Insert records into a table
      */
     async insertIntoTableRaw(requestParameters: InsertIntoTableRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InsertIntoTableResponse>> {
@@ -571,6 +751,10 @@ export class DataApi extends runtime.BaseAPI {
 
         if (requestParameters['delimiter'] != null) {
             queryParameters['delimiter'] = requestParameters['delimiter'];
+        }
+
+        if (requestParameters['branch'] != null) {
+            queryParameters['branch'] = requestParameters['branch'];
         }
 
         if (requestParameters['mode'] != null) {
@@ -610,7 +794,7 @@ export class DataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Insert new records into table `id`.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `InsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
+     * Insert new records into table `id`.  For tables that have been declared but not yet created on storage (is_only_declared=true), this operation will create the table with the provided data.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `InsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `mode`: pass through query parameter of the same name 
      * Insert records into a table
      */
     async insertIntoTable(requestParameters: InsertIntoTableRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InsertIntoTableResponse> {
@@ -619,7 +803,7 @@ export class DataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don\'t match. It returns the number of rows inserted and updated.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
+     * Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don\'t match. It returns the number of rows inserted and updated.  For tables that have been declared but not yet created on storage (is_only_declared=true), this operation will create the table with the provided data (since there are no existing rows to merge with).  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
      * Merge insert (upsert) records into a table
      */
     async mergeInsertIntoTableRaw(requestParameters: MergeInsertIntoTableRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MergeInsertIntoTableResponse>> {
@@ -648,6 +832,10 @@ export class DataApi extends runtime.BaseAPI {
 
         if (requestParameters['delimiter'] != null) {
             queryParameters['delimiter'] = requestParameters['delimiter'];
+        }
+
+        if (requestParameters['branch'] != null) {
+            queryParameters['branch'] = requestParameters['branch'];
         }
 
         if (requestParameters['on'] != null) {
@@ -715,7 +903,7 @@ export class DataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don\'t match. It returns the number of rows inserted and updated.  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
+     * Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don\'t match. It returns the number of rows inserted and updated.  For tables that have been declared but not yet created on storage (is_only_declared=true), this operation will create the table with the provided data (since there are no existing rows to merge with).  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
      * Merge insert (upsert) records into a table
      */
     async mergeInsertIntoTable(requestParameters: MergeInsertIntoTableRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MergeInsertIntoTableResponse> {
@@ -724,7 +912,7 @@ export class DataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. 
+     * Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. The REST response maps to the `QueryTableResponse` model as follows: - the Arrow IPC file binary body maps to `data` - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
      * Query a table
      */
     async queryTableRaw(requestParameters: QueryTableOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Blob>> {
@@ -781,11 +969,70 @@ export class DataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. 
+     * Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. The REST response maps to the `QueryTableResponse` model as follows: - the Arrow IPC file binary body maps to `data` - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
      * Query a table
      */
     async queryTable(requestParameters: QueryTableOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Blob> {
         const response = await this.queryTableRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Trigger an asynchronous refresh job for materialized view `id`. Returns a job ID for tracking. 
+     * Trigger an async materialized view refresh
+     */
+    async refreshMaterializedViewRaw(requestParameters: RefreshMaterializedViewOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RefreshMaterializedViewResponse>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling refreshMaterializedView().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['delimiter'] != null) {
+            queryParameters['delimiter'] = requestParameters['delimiter'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2", []);
+        }
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // ApiKeyAuth authentication
+        }
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("BearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/v1/materialized_view/{id}/refresh`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RefreshMaterializedViewRequestToJSON(requestParameters['refreshMaterializedViewRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RefreshMaterializedViewResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Trigger an asynchronous refresh job for materialized view `id`. Returns a job ID for tracking. 
+     * Trigger an async materialized view refresh
+     */
+    async refreshMaterializedView(requestParameters: RefreshMaterializedViewOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RefreshMaterializedViewResponse> {
+        const response = await this.refreshMaterializedViewRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

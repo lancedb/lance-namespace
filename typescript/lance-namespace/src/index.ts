@@ -13,7 +13,7 @@
 import { InvalidInputError } from "./errors";
 import { LanceNamespace } from "./namespace";
 
-export * from "@lance/namespace-fetch-client";
+export * from "@lance-format/lance-namespace-fetch-client";
 export * from "./errors";
 export { LanceNamespace } from "./namespace";
 
@@ -22,11 +22,6 @@ export type NamespaceClassPath = string;
 type NamespaceConstructor = new (
   properties: NamespaceProperties,
 ) => LanceNamespace;
-
-export const NATIVE_IMPLS: Readonly<Record<string, NamespaceClassPath>> = {
-  rest: "@lance/lance-namespace-rest#RestNamespace",
-  dir: "@lance/lance-namespace-dir#DirectoryNamespace",
-};
 
 const REGISTERED_IMPLS: Map<string, NamespaceClassPath> = new Map();
 
@@ -45,10 +40,7 @@ export async function connect(
   implementation: string,
   properties: NamespaceProperties,
 ): Promise<LanceNamespace> {
-  const classPath =
-    NATIVE_IMPLS[implementation] ??
-    REGISTERED_IMPLS.get(implementation) ??
-    implementation;
+  const classPath = REGISTERED_IMPLS.get(implementation) ?? implementation;
 
   return loadImplementation(classPath, properties);
 }

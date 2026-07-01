@@ -21,14 +21,16 @@ import type {
   AlterTableDropColumnsResponse,
   AlterTransactionRequest,
   AlterTransactionResponse,
+  BatchCommitTablesRequest,
+  BatchCommitTablesResponse,
   BatchCreateTableVersionsRequest,
   BatchCreateTableVersionsResponse,
   BatchDeleteTableVersionsRequest,
   BatchDeleteTableVersionsResponse,
-  CreateEmptyTableRequest,
-  CreateEmptyTableResponse,
   CreateNamespaceRequest,
   CreateNamespaceResponse,
+  CreateTableBranchRequest,
+  CreateTableBranchResponse,
   CreateTableIndexRequest,
   CreateTableIndexResponse,
   CreateTableScalarIndexResponse,
@@ -38,6 +40,8 @@ import type {
   CreateTableVersionResponse,
   DeclareTableRequest,
   DeclareTableResponse,
+  DeleteTableBranchRequest,
+  DeleteTableBranchResponse,
   DeleteTableTagRequest,
   DeleteTableTagResponse,
   DeregisterTableRequest,
@@ -62,6 +66,7 @@ import type {
   GetTableTagVersionRequest,
   GetTableTagVersionResponse,
   ListNamespacesResponse,
+  ListTableBranchesResponse,
   ListTableIndicesRequest,
   ListTableIndicesResponse,
   ListTableTagsResponse,
@@ -75,6 +80,8 @@ import type {
   RestoreTableRequest,
   RestoreTableResponse,
   TableExistsRequest,
+  UpdateFieldMetadataRequest,
+  UpdateFieldMetadataResponse,
   UpdateTableTagRequest,
   UpdateTableTagResponse,
 } from '../models/index';
@@ -91,6 +98,10 @@ import {
     AlterTransactionRequestToJSON,
     AlterTransactionResponseFromJSON,
     AlterTransactionResponseToJSON,
+    BatchCommitTablesRequestFromJSON,
+    BatchCommitTablesRequestToJSON,
+    BatchCommitTablesResponseFromJSON,
+    BatchCommitTablesResponseToJSON,
     BatchCreateTableVersionsRequestFromJSON,
     BatchCreateTableVersionsRequestToJSON,
     BatchCreateTableVersionsResponseFromJSON,
@@ -99,14 +110,14 @@ import {
     BatchDeleteTableVersionsRequestToJSON,
     BatchDeleteTableVersionsResponseFromJSON,
     BatchDeleteTableVersionsResponseToJSON,
-    CreateEmptyTableRequestFromJSON,
-    CreateEmptyTableRequestToJSON,
-    CreateEmptyTableResponseFromJSON,
-    CreateEmptyTableResponseToJSON,
     CreateNamespaceRequestFromJSON,
     CreateNamespaceRequestToJSON,
     CreateNamespaceResponseFromJSON,
     CreateNamespaceResponseToJSON,
+    CreateTableBranchRequestFromJSON,
+    CreateTableBranchRequestToJSON,
+    CreateTableBranchResponseFromJSON,
+    CreateTableBranchResponseToJSON,
     CreateTableIndexRequestFromJSON,
     CreateTableIndexRequestToJSON,
     CreateTableIndexResponseFromJSON,
@@ -125,6 +136,10 @@ import {
     DeclareTableRequestToJSON,
     DeclareTableResponseFromJSON,
     DeclareTableResponseToJSON,
+    DeleteTableBranchRequestFromJSON,
+    DeleteTableBranchRequestToJSON,
+    DeleteTableBranchResponseFromJSON,
+    DeleteTableBranchResponseToJSON,
     DeleteTableTagRequestFromJSON,
     DeleteTableTagRequestToJSON,
     DeleteTableTagResponseFromJSON,
@@ -173,6 +188,8 @@ import {
     GetTableTagVersionResponseToJSON,
     ListNamespacesResponseFromJSON,
     ListNamespacesResponseToJSON,
+    ListTableBranchesResponseFromJSON,
+    ListTableBranchesResponseToJSON,
     ListTableIndicesRequestFromJSON,
     ListTableIndicesRequestToJSON,
     ListTableIndicesResponseFromJSON,
@@ -199,6 +216,10 @@ import {
     RestoreTableResponseToJSON,
     TableExistsRequestFromJSON,
     TableExistsRequestToJSON,
+    UpdateFieldMetadataRequestFromJSON,
+    UpdateFieldMetadataRequestToJSON,
+    UpdateFieldMetadataResponseFromJSON,
+    UpdateFieldMetadataResponseToJSON,
     UpdateTableTagRequestFromJSON,
     UpdateTableTagRequestToJSON,
     UpdateTableTagResponseFromJSON,
@@ -223,6 +244,11 @@ export interface AlterTransactionOperationRequest {
     delimiter?: string;
 }
 
+export interface BatchCommitTablesOperationRequest {
+    batchCommitTablesRequest: BatchCommitTablesRequest;
+    delimiter?: string;
+}
+
 export interface BatchCreateTableVersionsOperationRequest {
     batchCreateTableVersionsRequest: BatchCreateTableVersionsRequest;
     delimiter?: string;
@@ -234,15 +260,15 @@ export interface BatchDeleteTableVersionsOperationRequest {
     delimiter?: string;
 }
 
-export interface CreateEmptyTableOperationRequest {
-    id: string;
-    createEmptyTableRequest: CreateEmptyTableRequest;
-    delimiter?: string;
-}
-
 export interface CreateNamespaceOperationRequest {
     id: string;
     createNamespaceRequest: CreateNamespaceRequest;
+    delimiter?: string;
+}
+
+export interface CreateTableBranchOperationRequest {
+    id: string;
+    createTableBranchRequest: CreateTableBranchRequest;
     delimiter?: string;
 }
 
@@ -276,6 +302,12 @@ export interface DeclareTableOperationRequest {
     delimiter?: string;
 }
 
+export interface DeleteTableBranchOperationRequest {
+    id: string;
+    deleteTableBranchRequest: DeleteTableBranchRequest;
+    delimiter?: string;
+}
+
 export interface DeleteTableTagOperationRequest {
     id: string;
     deleteTableTagRequest: DeleteTableTagRequest;
@@ -300,6 +332,7 @@ export interface DescribeTableOperationRequest {
     delimiter?: string;
     withTableUri?: boolean;
     loadDetailedMetadata?: boolean;
+    checkDeclared?: boolean;
 }
 
 export interface DescribeTableIndexStatsOperationRequest {
@@ -336,6 +369,7 @@ export interface DropTableIndexRequest {
     id: string;
     indexName: string;
     delimiter?: string;
+    branch?: string;
 }
 
 export interface GetTableStatsOperationRequest {
@@ -351,6 +385,13 @@ export interface GetTableTagVersionOperationRequest {
 }
 
 export interface ListNamespacesRequest {
+    id: string;
+    delimiter?: string;
+    pageToken?: string;
+    limit?: number;
+}
+
+export interface ListTableBranchesRequest {
     id: string;
     delimiter?: string;
     pageToken?: string;
@@ -373,6 +414,7 @@ export interface ListTableTagsRequest {
 export interface ListTableVersionsRequest {
     id: string;
     delimiter?: string;
+    branch?: string;
     pageToken?: string;
     limit?: number;
     descending?: boolean;
@@ -383,6 +425,7 @@ export interface ListTablesRequest {
     delimiter?: string;
     pageToken?: string;
     limit?: number;
+    includeDeclared?: boolean;
 }
 
 export interface NamespaceExistsOperationRequest {
@@ -415,10 +458,17 @@ export interface TableExistsOperationRequest {
     delimiter?: string;
 }
 
+export interface UpdateFieldMetadataOperationRequest {
+    id: string;
+    updateFieldMetadataRequest: UpdateFieldMetadataRequest;
+    delimiter?: string;
+}
+
 export interface UpdateTableSchemaMetadataRequest {
     id: string;
     requestBody: { [key: string]: string; };
     delimiter?: string;
+    branch?: string;
 }
 
 export interface UpdateTableTagOperationRequest {
@@ -631,6 +681,65 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
+     * Atomically commit a batch of table operations. This is a generalized version of `BatchCreateTableVersions` that supports mixed operation types within a single atomic transaction at the metadata layer.  Supported operation types: - `DeclareTable`: Declare (reserve) a new table - `CreateTableVersion`: Create a new version entry for a table - `DeleteTableVersions`: Delete version ranges from a table - `DeregisterTable`: Deregister (soft-delete) a table  All operations are committed atomically: either all succeed or none are applied. 
+     * Atomically commit a batch of mixed table operations
+     */
+    async batchCommitTablesRaw(requestParameters: BatchCommitTablesOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BatchCommitTablesResponse>> {
+        if (requestParameters['batchCommitTablesRequest'] == null) {
+            throw new runtime.RequiredError(
+                'batchCommitTablesRequest',
+                'Required parameter "batchCommitTablesRequest" was null or undefined when calling batchCommitTables().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['delimiter'] != null) {
+            queryParameters['delimiter'] = requestParameters['delimiter'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2", []);
+        }
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // ApiKeyAuth authentication
+        }
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("BearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/v1/table/batch-commit`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: BatchCommitTablesRequestToJSON(requestParameters['batchCommitTablesRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => BatchCommitTablesResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Atomically commit a batch of table operations. This is a generalized version of `BatchCreateTableVersions` that supports mixed operation types within a single atomic transaction at the metadata layer.  Supported operation types: - `DeclareTable`: Declare (reserve) a new table - `CreateTableVersion`: Create a new version entry for a table - `DeleteTableVersions`: Delete version ranges from a table - `DeregisterTable`: Deregister (soft-delete) a table  All operations are committed atomically: either all succeed or none are applied. 
+     * Atomically commit a batch of mixed table operations
+     */
+    async batchCommitTables(requestParameters: BatchCommitTablesOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BatchCommitTablesResponse> {
+        const response = await this.batchCommitTablesRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Atomically create new version entries for multiple tables.  This operation is atomic: either all table versions are created successfully, or none are created. If any version creation fails (e.g., due to conflict), the entire batch operation fails.  Each entry in the request specifies the table identifier and version details. This supports `put_if_not_exists` semantics for each version entry. 
      * Atomically create versions for multiple tables
      */
@@ -756,74 +865,6 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control.  For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory to mark the table\'s existence without creating actual Lance data files.  **Deprecated**: Use `DeclareTable` instead. 
-     * Create an empty table
-     * @deprecated
-     */
-    async createEmptyTableRaw(requestParameters: CreateEmptyTableOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateEmptyTableResponse>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling createEmptyTable().'
-            );
-        }
-
-        if (requestParameters['createEmptyTableRequest'] == null) {
-            throw new runtime.RequiredError(
-                'createEmptyTableRequest',
-                'Required parameter "createEmptyTableRequest" was null or undefined when calling createEmptyTable().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        if (requestParameters['delimiter'] != null) {
-            queryParameters['delimiter'] = requestParameters['delimiter'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.accessToken) {
-            // oauth required
-            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2", []);
-        }
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // ApiKeyAuth authentication
-        }
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("BearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-        const response = await this.request({
-            path: `/v1/table/{id}/create-empty`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: CreateEmptyTableRequestToJSON(requestParameters['createEmptyTableRequest']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => CreateEmptyTableResponseFromJSON(jsonValue));
-    }
-
-    /**
-     * Create an empty table with the given name without touching storage. This is a metadata-only operation that records the table existence and sets up aspects like access control.  For DirectoryNamespace implementation, this creates a `.lance-reserved` file in the table directory to mark the table\'s existence without creating actual Lance data files.  **Deprecated**: Use `DeclareTable` instead. 
-     * Create an empty table
-     * @deprecated
-     */
-    async createEmptyTable(requestParameters: CreateEmptyTableOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateEmptyTableResponse> {
-        const response = await this.createEmptyTableRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
      * Create new namespace `id`.  During the creation process, the implementation may modify user-provided `properties`, such as adding additional properties like `created_at` to user-provided properties, omitting any specific property, or performing actions based on any property value. 
      * Create a new namespace
      */
@@ -890,7 +931,73 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+     * Create a new branch for table `id` starting from a source ref (another branch and/or version), defaulting to the latest version of the main branch. 
+     * Create a new branch
+     */
+    async createTableBranchRaw(requestParameters: CreateTableBranchOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateTableBranchResponse>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling createTableBranch().'
+            );
+        }
+
+        if (requestParameters['createTableBranchRequest'] == null) {
+            throw new runtime.RequiredError(
+                'createTableBranchRequest',
+                'Required parameter "createTableBranchRequest" was null or undefined when calling createTableBranch().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['delimiter'] != null) {
+            queryParameters['delimiter'] = requestParameters['delimiter'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2", []);
+        }
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // ApiKeyAuth authentication
+        }
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("BearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/v1/table/{id}/branches/create`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CreateTableBranchRequestToJSON(requestParameters['createTableBranchRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CreateTableBranchResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Create a new branch for table `id` starting from a source ref (another branch and/or version), defaulting to the latest version of the main branch. 
+     * Create a new branch
+     */
+    async createTableBranch(requestParameters: CreateTableBranchOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateTableBranchResponse> {
+        const response = await this.createTableBranchRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Create an index on a table field for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
      * Create an index on a table
      */
     async createTableIndexRaw(requestParameters: CreateTableIndexOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateTableIndexResponse>> {
@@ -947,7 +1054,7 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+     * Create an index on a table field for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
      * Create an index on a table
      */
     async createTableIndex(requestParameters: CreateTableIndexOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateTableIndexResponse> {
@@ -956,7 +1063,7 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+     * Create a scalar index on a table field for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
      * Create a scalar index on a table
      */
     async createTableScalarIndexRaw(requestParameters: CreateTableScalarIndexRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateTableScalarIndexResponse>> {
@@ -1013,7 +1120,7 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+     * Create a scalar index on a table field for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
      * Create a scalar index on a table
      */
     async createTableScalarIndex(requestParameters: CreateTableScalarIndexRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateTableScalarIndexResponse> {
@@ -1220,6 +1327,72 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
+     * Delete an existing branch from table `id`. 
+     * Delete a branch
+     */
+    async deleteTableBranchRaw(requestParameters: DeleteTableBranchOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DeleteTableBranchResponse>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling deleteTableBranch().'
+            );
+        }
+
+        if (requestParameters['deleteTableBranchRequest'] == null) {
+            throw new runtime.RequiredError(
+                'deleteTableBranchRequest',
+                'Required parameter "deleteTableBranchRequest" was null or undefined when calling deleteTableBranch().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['delimiter'] != null) {
+            queryParameters['delimiter'] = requestParameters['delimiter'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2", []);
+        }
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // ApiKeyAuth authentication
+        }
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("BearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/v1/table/{id}/branches/delete`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: DeleteTableBranchRequestToJSON(requestParameters['deleteTableBranchRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DeleteTableBranchResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Delete an existing branch from table `id`. 
+     * Delete a branch
+     */
+    async deleteTableBranch(requestParameters: DeleteTableBranchOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DeleteTableBranchResponse> {
+        const response = await this.deleteTableBranchRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Delete an existing tag from table `id`. 
      * Delete a tag
      */
@@ -1418,7 +1591,7 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` and `load_detailed_metadata` as query parameters instead of in the request body. 
+     * Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri`, `load_detailed_metadata`, and `check_declared` as query parameters instead of in the request body. 
      * Describe information of a table
      */
     async describeTableRaw(requestParameters: DescribeTableOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DescribeTableResponse>> {
@@ -1448,6 +1621,10 @@ export class MetadataApi extends runtime.BaseAPI {
 
         if (requestParameters['loadDetailedMetadata'] != null) {
             queryParameters['load_detailed_metadata'] = requestParameters['loadDetailedMetadata'];
+        }
+
+        if (requestParameters['checkDeclared'] != null) {
+            queryParameters['check_declared'] = requestParameters['checkDeclared'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -1483,7 +1660,7 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri` and `load_detailed_metadata` as query parameters instead of in the request body. 
+     * Describe the detailed information for table `id`.  REST NAMESPACE ONLY REST namespace passes `with_table_uri`, `load_detailed_metadata`, and `check_declared` as query parameters instead of in the request body. 
      * Describe information of a table
      */
     async describeTable(requestParameters: DescribeTableOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DescribeTableResponse> {
@@ -1843,6 +2020,10 @@ export class MetadataApi extends runtime.BaseAPI {
             queryParameters['delimiter'] = requestParameters['delimiter'];
         }
 
+        if (requestParameters['branch'] != null) {
+            queryParameters['branch'] = requestParameters['branch'];
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.accessToken) {
@@ -2078,6 +2259,70 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
+     * List all branches that have been created for table `id`. Returns a map of branch names to their contents.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableBranchesRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+     * List all branches for a table
+     */
+    async listTableBranchesRaw(requestParameters: ListTableBranchesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ListTableBranchesResponse>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling listTableBranches().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['delimiter'] != null) {
+            queryParameters['delimiter'] = requestParameters['delimiter'];
+        }
+
+        if (requestParameters['pageToken'] != null) {
+            queryParameters['page_token'] = requestParameters['pageToken'];
+        }
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2", []);
+        }
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // ApiKeyAuth authentication
+        }
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("BearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/v1/table/{id}/branches/list`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ListTableBranchesResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * List all branches that have been created for table `id`. Returns a map of branch names to their contents.  REST NAMESPACE ONLY REST namespace does not use a request body for this operation. The `ListTableBranchesRequest` information is passed in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+     * List all branches for a table
+     */
+    async listTableBranches(requestParameters: ListTableBranchesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListTableBranchesResponse> {
+        const response = await this.listTableBranchesRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * List all indices created on a table. Returns information about each index including name, columns, status, and UUID. 
      * List indexes on a table
      */
@@ -2225,6 +2470,10 @@ export class MetadataApi extends runtime.BaseAPI {
             queryParameters['delimiter'] = requestParameters['delimiter'];
         }
 
+        if (requestParameters['branch'] != null) {
+            queryParameters['branch'] = requestParameters['branch'];
+        }
+
         if (requestParameters['pageToken'] != null) {
             queryParameters['page_token'] = requestParameters['pageToken'];
         }
@@ -2276,7 +2525,7 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
-     * List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+     * List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name - `include_declared`: pass through query parameter of the same name 
      * List tables in a namespace
      */
     async listTablesRaw(requestParameters: ListTablesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ListTablesResponse>> {
@@ -2299,6 +2548,10 @@ export class MetadataApi extends runtime.BaseAPI {
 
         if (requestParameters['limit'] != null) {
             queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['includeDeclared'] != null) {
+            queryParameters['include_declared'] = requestParameters['includeDeclared'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -2331,7 +2584,7 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
-     * List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+     * List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name - `include_declared`: pass through query parameter of the same name 
      * List tables in a namespace
      */
     async listTables(requestParameters: ListTablesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListTablesResponse> {
@@ -2340,7 +2593,7 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body. 
+     * Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `NamespaceExistsResponse` model as follows: - a `200` response means the namespace exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
      * Check if a namespace exists
      */
     async namespaceExistsRaw(requestParameters: NamespaceExistsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
@@ -2397,7 +2650,7 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body. 
+     * Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `NamespaceExistsResponse` model as follows: - a `200` response means the namespace exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
      * Check if a namespace exists
      */
     async namespaceExists(requestParameters: NamespaceExistsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
@@ -2603,7 +2856,7 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Check if table `id` exists.  This operation should behave exactly like DescribeTable, except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (declared table created with DeclareTable) 
+     * Check if table `id` exists.  This operation should behave exactly like DescribeTable, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `TableExistsResponse` model as follows: - a `200` response means the table exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema)  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (declared table created with DeclareTable) 
      * Check if a table exists
      */
     async tableExistsRaw(requestParameters: TableExistsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
@@ -2660,11 +2913,77 @@ export class MetadataApi extends runtime.BaseAPI {
     }
 
     /**
-     * Check if table `id` exists.  This operation should behave exactly like DescribeTable, except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (declared table created with DeclareTable) 
+     * Check if table `id` exists.  This operation should behave exactly like DescribeTable, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `TableExistsResponse` model as follows: - a `200` response means the table exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema)  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (declared table created with DeclareTable) 
      * Check if a table exists
      */
     async tableExists(requestParameters: TableExistsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.tableExistsRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Update the Arrow field (column) metadata for table `id`.  Each entry targets a field by `path` and merges the provided key-value pairs into that field\'s existing metadata, or replaces it when `replace` is true. A null metadata value deletes that key. 
+     * Update per-field metadata
+     */
+    async updateFieldMetadataRaw(requestParameters: UpdateFieldMetadataOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpdateFieldMetadataResponse>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling updateFieldMetadata().'
+            );
+        }
+
+        if (requestParameters['updateFieldMetadataRequest'] == null) {
+            throw new runtime.RequiredError(
+                'updateFieldMetadataRequest',
+                'Required parameter "updateFieldMetadataRequest" was null or undefined when calling updateFieldMetadata().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['delimiter'] != null) {
+            queryParameters['delimiter'] = requestParameters['delimiter'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2", []);
+        }
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // ApiKeyAuth authentication
+        }
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("BearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/v1/table/{id}/update_field_metadata`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UpdateFieldMetadataRequestToJSON(requestParameters['updateFieldMetadataRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UpdateFieldMetadataResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Update the Arrow field (column) metadata for table `id`.  Each entry targets a field by `path` and merges the provided key-value pairs into that field\'s existing metadata, or replaces it when `replace` is true. A null metadata value deletes that key. 
+     * Update per-field metadata
+     */
+    async updateFieldMetadata(requestParameters: UpdateFieldMetadataOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpdateFieldMetadataResponse> {
+        const response = await this.updateFieldMetadataRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
@@ -2690,6 +3009,10 @@ export class MetadataApi extends runtime.BaseAPI {
 
         if (requestParameters['delimiter'] != null) {
             queryParameters['delimiter'] = requestParameters['delimiter'];
+        }
+
+        if (requestParameters['branch'] != null) {
+            queryParameters['branch'] = requestParameters['branch'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

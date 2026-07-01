@@ -20,35 +20,65 @@ import { mapValues } from '../runtime';
  */
 export interface AlterVirtualColumnEntry {
     /**
-     * List of input column names for the virtual column (optional)
+     * List of input Lance field paths for the virtual column. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Optional.
      * @type {Array<string>}
      * @memberof AlterVirtualColumnEntry
      */
-    input_columns?: Array<string>;
+    input_columns?: Array<string> | null;
     /**
      * Docker image to use for the UDF (optional)
      * @type {string}
      * @memberof AlterVirtualColumnEntry
      */
-    image?: string;
+    image?: string | null;
     /**
      * Base64 encoded pickled UDF (optional)
      * @type {string}
      * @memberof AlterVirtualColumnEntry
      */
-    udf?: string;
+    udf?: string | null;
     /**
      * Name of the UDF (optional)
      * @type {string}
      * @memberof AlterVirtualColumnEntry
      */
-    udf_name?: string;
+    udf_name?: string | null;
     /**
      * Version of the UDF (optional)
      * @type {string}
      * @memberof AlterVirtualColumnEntry
      */
-    udf_version?: string;
+    udf_version?: string | null;
+    /**
+     * UDF backend type (e.g. DockerUDFSpecV1) (optional)
+     * @type {string}
+     * @memberof AlterVirtualColumnEntry
+     */
+    udf_backend?: string | null;
+    /**
+     * Whether to automatically backfill the column (optional)
+     * @type {boolean}
+     * @memberof AlterVirtualColumnEntry
+     */
+    auto_backfill?: boolean | null;
+    /**
+     * JSON-serialized manifest for the UDF environment (optional)
+     * @type {string}
+     * @memberof AlterVirtualColumnEntry
+     */
+    manifest?: string | null;
+    /**
+     * SHA-256 checksum of the manifest content (optional)
+     * @type {string}
+     * @memberof AlterVirtualColumnEntry
+     */
+    manifest_checksum?: string | null;
+    /**
+     * User-supplied field metadata (optional)
+     * @type {{ [key: string]: string; }}
+     * @memberof AlterVirtualColumnEntry
+     */
+    field_metadata?: { [key: string]: string; };
 }
 
 /**
@@ -73,6 +103,11 @@ export function AlterVirtualColumnEntryFromJSONTyped(json: any, ignoreDiscrimina
         'udf': json['udf'] == null ? undefined : json['udf'],
         'udf_name': json['udf_name'] == null ? undefined : json['udf_name'],
         'udf_version': json['udf_version'] == null ? undefined : json['udf_version'],
+        'udf_backend': json['udf_backend'] == null ? undefined : json['udf_backend'],
+        'auto_backfill': json['auto_backfill'] == null ? undefined : json['auto_backfill'],
+        'manifest': json['manifest'] == null ? undefined : json['manifest'],
+        'manifest_checksum': json['manifest_checksum'] == null ? undefined : json['manifest_checksum'],
+        'field_metadata': json['field_metadata'] == null ? undefined : json['field_metadata'],
     };
 }
 
@@ -92,6 +127,11 @@ export function AlterVirtualColumnEntryToJSONTyped(value?: AlterVirtualColumnEnt
         'udf': value['udf'],
         'udf_name': value['udf_name'],
         'udf_version': value['udf_version'],
+        'udf_backend': value['udf_backend'],
+        'auto_backfill': value['auto_backfill'],
+        'manifest': value['manifest'],
+        'manifest_checksum': value['manifest_checksum'],
+        'field_metadata': value['field_metadata'],
     };
 }
 

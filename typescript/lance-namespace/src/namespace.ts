@@ -10,7 +10,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import type * as Models from "@lance/namespace-fetch-client";
+import type * as Models from "@lance-format/lance-namespace-fetch-client";
 
 import { UnsupportedOperationError } from "./errors";
 
@@ -47,7 +47,7 @@ export abstract class LanceNamespace {
 
   public async namespaceExists(
     _request: Models.NamespaceExistsRequest,
-  ): Promise<void> {
+  ): Promise<Models.NamespaceExistsResponse> {
     return this.unsupported("namespaceExists");
   }
 
@@ -75,7 +75,9 @@ export abstract class LanceNamespace {
     return this.unsupported("registerTable");
   }
 
-  public async tableExists(_request: Models.TableExistsRequest): Promise<void> {
+  public async tableExists(
+    _request: Models.TableExistsRequest,
+  ): Promise<Models.TableExistsResponse> {
     return this.unsupported("tableExists");
   }
 
@@ -102,12 +104,6 @@ export abstract class LanceNamespace {
     _request: Models.DeclareTableRequest,
   ): Promise<Models.DeclareTableResponse> {
     return this.unsupported("declareTable");
-  }
-
-  public async createEmptyTable(
-    _request: Models.CreateEmptyTableRequest,
-  ): Promise<Models.CreateEmptyTableResponse> {
-    return this.unsupported("createEmptyTable");
   }
 
   public async insertIntoTable(
@@ -138,13 +134,13 @@ export abstract class LanceNamespace {
 
   public async queryTable(
     _request: Models.QueryTableRequest,
-  ): Promise<Uint8Array> {
+  ): Promise<Models.QueryTableResponse> {
     return this.unsupported("queryTable");
   }
 
   public async countTableRows(
     _request: Models.CountTableRowsRequest,
-  ): Promise<number> {
+  ): Promise<Models.CountTableRowsResponse> {
     return this.unsupported("countTableRows");
   }
 
@@ -220,10 +216,22 @@ export abstract class LanceNamespace {
     return this.unsupported("batchCreateTableVersions");
   }
 
+  public async batchCommitTables(
+    _request: Models.BatchCommitTablesRequest,
+  ): Promise<Models.BatchCommitTablesResponse> {
+    return this.unsupported("batchCommitTables");
+  }
+
   public async updateTableSchemaMetadata(
     _request: Models.UpdateTableSchemaMetadataRequest,
   ): Promise<Models.UpdateTableSchemaMetadataResponse> {
     return this.unsupported("updateTableSchemaMetadata");
+  }
+
+  public async updateFieldMetadata(
+    _request: Models.UpdateFieldMetadataRequest,
+  ): Promise<Models.UpdateFieldMetadataResponse> {
+    return this.unsupported("updateFieldMetadata");
   }
 
   public async getTableStats(
@@ -254,6 +262,24 @@ export abstract class LanceNamespace {
     _request: Models.AlterTableAlterColumnsRequest,
   ): Promise<Models.AlterTableAlterColumnsResponse> {
     return this.unsupported("alterTableAlterColumns");
+  }
+
+  public async alterTableBackfillColumns(
+    _request: Models.AlterTableBackfillColumnsRequest,
+  ): Promise<Models.AlterTableBackfillColumnsResponse> {
+    return this.unsupported("alterTableBackfillColumns");
+  }
+
+  public async createMaterializedView(
+    _request: Models.CreateMaterializedViewRequest,
+  ): Promise<Models.CreateMaterializedViewResponse> {
+    return this.unsupported("createMaterializedView");
+  }
+
+  public async refreshMaterializedView(
+    _request: Models.RefreshMaterializedViewRequest,
+  ): Promise<Models.RefreshMaterializedViewResponse> {
+    return this.unsupported("refreshMaterializedView");
   }
 
   public async alterTableDropColumns(
@@ -290,6 +316,24 @@ export abstract class LanceNamespace {
     _request: Models.UpdateTableTagRequest,
   ): Promise<Models.UpdateTableTagResponse> {
     return this.unsupported("updateTableTag");
+  }
+
+  public async createTableBranch(
+    _request: Models.CreateTableBranchRequest,
+  ): Promise<Models.CreateTableBranchResponse> {
+    return this.unsupported("createTableBranch");
+  }
+
+  public async listTableBranches(
+    _request: Models.ListTableBranchesRequest,
+  ): Promise<Models.ListTableBranchesResponse> {
+    return this.unsupported("listTableBranches");
+  }
+
+  public async deleteTableBranch(
+    _request: Models.DeleteTableBranchRequest,
+  ): Promise<Models.DeleteTableBranchResponse> {
+    return this.unsupported("deleteTableBranch");
   }
 
   public async describeTransaction(

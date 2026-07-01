@@ -2,9 +2,13 @@
 
 This folder contains the TypeScript modules for Lance Namespace:
 
-- `@lance/namespace-fetch-client`: generated fetch client from `docs/src/rest.yaml`
-- `@lance/lance-namespace`: hand-written core interface, error model, and class-path registry
-- `@lance/lance-namespace-rest`: REST implementation package for `@lance/lance-namespace`
+- `@lance-format/lance-namespace-fetch-client`: generated fetch client from `docs/src/spec.yaml`
+- `@lance-format/lance-namespace`: hand-written core interface, error model, and class-path registry
+
+Namespace implementations (e.g. REST, directory) are **not** part of these packages.
+Like the Python and Java cores, `@lance-format/lance-namespace` only provides the abstract
+`LanceNamespace` interface and the generic `connect` / `registerNamespaceImpl` machinery;
+concrete implementations are provided by separate packages and loaded dynamically by class path.
 
 ## Build
 
@@ -50,26 +54,26 @@ import {
   registerNamespaceImpl,
   LanceNamespace,
   type ListNamespacesRequest,
-} from "@lance/lance-namespace";
+} from "@lance-format/lance-namespace";
 
-const ns = await connect("rest", {
-  uri: "http://localhost:2333",
-  "headers.X-Request-ID": "req-1",
-});
-
-const listRequest: ListNamespacesRequest = { id: [] };
-const listResp = await ns.listNamespaces(listRequest);
-console.log(listResp.namespaces);
-
+// Implement the interface, or bring one from an implementation package.
 class MockNamespace extends LanceNamespace {
   namespaceId(): string {
     return "MockNamespace";
   }
 }
 
+// Register an implementation by class path, then connect by its alias.
 registerNamespaceImpl("mock", "my-namespace-package#MockNamespace");
-const mock = await connect("mock", {});
-console.log(mock.namespaceId());
+const ns = await connect("mock", {});
+console.log(ns.namespaceId());
+
+// You can also connect directly with a full class path.
+const other = await connect("my-namespace-package#MockNamespace", {});
+
+const listRequest: ListNamespacesRequest = { id: [] };
+const listResp = await other.listNamespaces(listRequest);
+console.log(listResp.namespaces);
 ```
 
 ### Error handling
@@ -78,7 +82,7 @@ console.log(mock.namespaceId());
 import {
   ErrorCode,
   LanceNamespaceError,
-} from "@lance/lance-namespace";
+} from "@lance-format/lance-namespace";
 
 try {
   await ns.describeTable({ id: ["ns", "missing"] });

@@ -20,6 +20,27 @@ import { mapValues } from '../runtime';
  */
 export interface ListNamespacesResponse {
     /**
+     * Arbitrary context as key-value pairs.
+     * How to use the context is custom to the specific implementation.
+     * 
+     * On a request, it carries caller-provided context to the implementation.
+     * On a response, it carries implementation-provided context back to the caller.
+     * 
+     * REST NAMESPACE ONLY
+     * Context entries are mapped to and from HTTP headers using the `header.` prefix:
+     * - On a request, any entry whose key starts with `header.` is sent as an HTTP
+     *   request header with the prefix stripped. For example, the entry
+     *   `{"header.Authorization": "Bearer abc"}` is sent as the request header
+     *   `Authorization: Bearer abc`.
+     * - On a response, every HTTP response header is returned as an entry whose key is the
+     *   header name prefixed with `header.`. For example, the response header
+     *   `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof ListNamespacesResponse
+     */
+    context?: { [key: string]: string; };
+    /**
      * The list of names of the child namespaces relative to the parent namespace `id` in the request.
      * 
      * @type {Set<string>}
@@ -67,6 +88,7 @@ export function ListNamespacesResponseFromJSONTyped(json: any, ignoreDiscriminat
     }
     return {
         
+        'context': json['context'] == null ? undefined : json['context'],
         'namespaces': new Set(json['namespaces']),
         'page_token': json['page_token'] == null ? undefined : json['page_token'],
     };
@@ -83,6 +105,7 @@ export function ListNamespacesResponseToJSONTyped(value?: ListNamespacesResponse
 
     return {
         
+        'context': value['context'],
         'namespaces': Array.from(value['namespaces'] as Set<any>),
         'page_token': value['page_token'],
     };

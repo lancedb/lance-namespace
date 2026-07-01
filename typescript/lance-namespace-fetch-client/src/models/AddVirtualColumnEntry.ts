@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { AddVirtualColumnOutputEntry } from './AddVirtualColumnOutputEntry';
+import {
+    AddVirtualColumnOutputEntryFromJSON,
+    AddVirtualColumnOutputEntryFromJSONTyped,
+    AddVirtualColumnOutputEntryToJSON,
+    AddVirtualColumnOutputEntryToJSONTyped,
+} from './AddVirtualColumnOutputEntry';
+
 /**
  * 
  * @export
@@ -20,17 +28,17 @@ import { mapValues } from '../runtime';
  */
 export interface AddVirtualColumnEntry {
     /**
-     * List of input column names for the virtual column
+     * List of input Lance field paths for the virtual column. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments.
      * @type {Array<string>}
      * @memberof AddVirtualColumnEntry
      */
     input_columns: Array<string>;
     /**
-     * Data type of the virtual column using JSON representation
-     * @type {object}
+     * Output columns produced by the virtual column UDF
+     * @type {Array<AddVirtualColumnOutputEntry>}
      * @memberof AddVirtualColumnEntry
      */
-    data_type: object;
+    outputs: Array<AddVirtualColumnOutputEntry>;
     /**
      * Docker image to use for the UDF
      * @type {string}
@@ -55,6 +63,36 @@ export interface AddVirtualColumnEntry {
      * @memberof AddVirtualColumnEntry
      */
     udf_version: string;
+    /**
+     * UDF backend type (e.g. DockerUDFSpecV1)
+     * @type {string}
+     * @memberof AddVirtualColumnEntry
+     */
+    udf_backend?: string | null;
+    /**
+     * Whether to automatically backfill the column after creation
+     * @type {boolean}
+     * @memberof AddVirtualColumnEntry
+     */
+    auto_backfill?: boolean | null;
+    /**
+     * JSON-serialized manifest for the UDF environment
+     * @type {string}
+     * @memberof AddVirtualColumnEntry
+     */
+    manifest?: string | null;
+    /**
+     * SHA-256 checksum of the manifest content
+     * @type {string}
+     * @memberof AddVirtualColumnEntry
+     */
+    manifest_checksum?: string | null;
+    /**
+     * User-supplied field metadata (string key-value pairs)
+     * @type {{ [key: string]: string; }}
+     * @memberof AddVirtualColumnEntry
+     */
+    field_metadata?: { [key: string]: string; };
 }
 
 /**
@@ -62,7 +100,7 @@ export interface AddVirtualColumnEntry {
  */
 export function instanceOfAddVirtualColumnEntry(value: object): value is AddVirtualColumnEntry {
     if (!('input_columns' in value) || value['input_columns'] === undefined) return false;
-    if (!('data_type' in value) || value['data_type'] === undefined) return false;
+    if (!('outputs' in value) || value['outputs'] === undefined) return false;
     if (!('image' in value) || value['image'] === undefined) return false;
     if (!('udf' in value) || value['udf'] === undefined) return false;
     if (!('udf_name' in value) || value['udf_name'] === undefined) return false;
@@ -81,11 +119,16 @@ export function AddVirtualColumnEntryFromJSONTyped(json: any, ignoreDiscriminato
     return {
         
         'input_columns': json['input_columns'],
-        'data_type': json['data_type'],
+        'outputs': ((json['outputs'] as Array<any>).map(AddVirtualColumnOutputEntryFromJSON)),
         'image': json['image'],
         'udf': json['udf'],
         'udf_name': json['udf_name'],
         'udf_version': json['udf_version'],
+        'udf_backend': json['udf_backend'] == null ? undefined : json['udf_backend'],
+        'auto_backfill': json['auto_backfill'] == null ? undefined : json['auto_backfill'],
+        'manifest': json['manifest'] == null ? undefined : json['manifest'],
+        'manifest_checksum': json['manifest_checksum'] == null ? undefined : json['manifest_checksum'],
+        'field_metadata': json['field_metadata'] == null ? undefined : json['field_metadata'],
     };
 }
 
@@ -101,11 +144,16 @@ export function AddVirtualColumnEntryToJSONTyped(value?: AddVirtualColumnEntry |
     return {
         
         'input_columns': value['input_columns'],
-        'data_type': value['data_type'],
+        'outputs': ((value['outputs'] as Array<any>).map(AddVirtualColumnOutputEntryToJSON)),
         'image': value['image'],
         'udf': value['udf'],
         'udf_name': value['udf_name'],
         'udf_version': value['udf_version'],
+        'udf_backend': value['udf_backend'],
+        'auto_backfill': value['auto_backfill'],
+        'manifest': value['manifest'],
+        'manifest_checksum': value['manifest_checksum'],
+        'field_metadata': value['field_metadata'],
     };
 }
 

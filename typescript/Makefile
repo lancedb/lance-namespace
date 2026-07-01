@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VERSION = 0.5.2
+VERSION = 0.9.0
 PUBLISH_FLAGS ?= --no-git-checks --access public
 
 .PHONY: clean-fetch-client
@@ -20,10 +20,10 @@ clean-fetch-client:
 .PHONY: gen-fetch-client
 gen-fetch-client: clean-fetch-client
 	uv run openapi-generator-cli generate \
-	  -i ../docs/src/rest.yaml \
+	  -i ../docs/src/spec.yaml \
 	  -g typescript-fetch \
 	  -o lance-namespace-fetch-client \
-	  --additional-properties=npmName=@lance/namespace-fetch-client,npmVersion=$(VERSION),supportsES6=true,typescriptThreePlus=true,modelPropertyNaming=original,stringEnums=true
+	  --additional-properties=npmName=@lance-format/lance-namespace-fetch-client,npmVersion=$(VERSION),supportsES6=true,typescriptThreePlus=true,modelPropertyNaming=original,stringEnums=true
 	rm -rf lance-namespace-fetch-client/.openapi-generator
 	rm -f lance-namespace-fetch-client/.openapi-generator-ignore
 	rm -f lance-namespace-fetch-client/git_push.sh
@@ -32,12 +32,11 @@ gen-fetch-client: clean-fetch-client
 .PHONY: build-fetch-client
 build-fetch-client: gen-fetch-client
 	pnpm install --frozen-lockfile=false
-	pnpm --filter @lance/namespace-fetch-client run build
+	pnpm --filter @lance-format/lance-namespace-fetch-client run build
 
 .PHONY: clean
 clean: clean-fetch-client
 	rm -rf lance-namespace/dist
-	rm -rf lance-namespace-rest/dist
 
 .PHONY: gen
 gen: gen-fetch-client
@@ -45,32 +44,27 @@ gen: gen-fetch-client
 .PHONY: build
 build: gen
 	pnpm install --frozen-lockfile=false
-	pnpm --filter @lance/namespace-fetch-client run build
-	pnpm --filter @lance/lance-namespace run build
-	pnpm --filter @lance/lance-namespace-rest run build
-	pnpm --filter @lance/namespace-fetch-client run test
-	pnpm --filter @lance/lance-namespace run test
-	pnpm --filter @lance/lance-namespace-rest run test
+	pnpm --filter @lance-format/lance-namespace-fetch-client run build
+	pnpm --filter @lance-format/lance-namespace run build
+	pnpm --filter @lance-format/lance-namespace-fetch-client run test
+	pnpm --filter @lance-format/lance-namespace run test
 
 .PHONY: test
 test:
 	pnpm install --frozen-lockfile=false
-	pnpm --filter @lance/namespace-fetch-client run test
-	pnpm --filter @lance/lance-namespace run test
-	pnpm --filter @lance/lance-namespace-rest run test
+	pnpm --filter @lance-format/lance-namespace-fetch-client run test
+	pnpm --filter @lance-format/lance-namespace run test
 
 .PHONY: lint
 lint:
 	pnpm install --frozen-lockfile=false
-	pnpm --filter @lance/namespace-fetch-client run build
-	pnpm --filter @lance/lance-namespace run build
-	pnpm --filter @lance/namespace-fetch-client run lint
-	pnpm --filter @lance/lance-namespace run lint
-	pnpm --filter @lance/lance-namespace-rest run lint
+	pnpm --filter @lance-format/lance-namespace-fetch-client run build
+	pnpm --filter @lance-format/lance-namespace run build
+	pnpm --filter @lance-format/lance-namespace-fetch-client run lint
+	pnpm --filter @lance-format/lance-namespace run lint
 
 .PHONY: publish
 publish:
 	pnpm install --frozen-lockfile=false
-	pnpm --filter @lance/namespace-fetch-client publish $(PUBLISH_FLAGS)
-	pnpm --filter @lance/lance-namespace publish $(PUBLISH_FLAGS)
-	pnpm --filter @lance/lance-namespace-rest publish $(PUBLISH_FLAGS)
+	pnpm --filter @lance-format/lance-namespace-fetch-client publish $(PUBLISH_FLAGS)
+	pnpm --filter @lance-format/lance-namespace publish $(PUBLISH_FLAGS)

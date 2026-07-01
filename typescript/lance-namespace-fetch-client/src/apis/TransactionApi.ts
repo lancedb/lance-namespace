@@ -17,6 +17,8 @@ import * as runtime from '../runtime';
 import type {
   AlterTransactionRequest,
   AlterTransactionResponse,
+  BatchCommitTablesRequest,
+  BatchCommitTablesResponse,
   DescribeTransactionRequest,
   DescribeTransactionResponse,
   ErrorResponse,
@@ -26,6 +28,10 @@ import {
     AlterTransactionRequestToJSON,
     AlterTransactionResponseFromJSON,
     AlterTransactionResponseToJSON,
+    BatchCommitTablesRequestFromJSON,
+    BatchCommitTablesRequestToJSON,
+    BatchCommitTablesResponseFromJSON,
+    BatchCommitTablesResponseToJSON,
     DescribeTransactionRequestFromJSON,
     DescribeTransactionRequestToJSON,
     DescribeTransactionResponseFromJSON,
@@ -37,6 +43,11 @@ import {
 export interface AlterTransactionOperationRequest {
     id: string;
     alterTransactionRequest: AlterTransactionRequest;
+    delimiter?: string;
+}
+
+export interface BatchCommitTablesOperationRequest {
+    batchCommitTablesRequest: BatchCommitTablesRequest;
     delimiter?: string;
 }
 
@@ -114,6 +125,65 @@ export class TransactionApi extends runtime.BaseAPI {
      */
     async alterTransaction(requestParameters: AlterTransactionOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AlterTransactionResponse> {
         const response = await this.alterTransactionRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Atomically commit a batch of table operations. This is a generalized version of `BatchCreateTableVersions` that supports mixed operation types within a single atomic transaction at the metadata layer.  Supported operation types: - `DeclareTable`: Declare (reserve) a new table - `CreateTableVersion`: Create a new version entry for a table - `DeleteTableVersions`: Delete version ranges from a table - `DeregisterTable`: Deregister (soft-delete) a table  All operations are committed atomically: either all succeed or none are applied. 
+     * Atomically commit a batch of mixed table operations
+     */
+    async batchCommitTablesRaw(requestParameters: BatchCommitTablesOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BatchCommitTablesResponse>> {
+        if (requestParameters['batchCommitTablesRequest'] == null) {
+            throw new runtime.RequiredError(
+                'batchCommitTablesRequest',
+                'Required parameter "batchCommitTablesRequest" was null or undefined when calling batchCommitTables().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['delimiter'] != null) {
+            queryParameters['delimiter'] = requestParameters['delimiter'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2", []);
+        }
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // ApiKeyAuth authentication
+        }
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("BearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/v1/table/batch-commit`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: BatchCommitTablesRequestToJSON(requestParameters['batchCommitTablesRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => BatchCommitTablesResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Atomically commit a batch of table operations. This is a generalized version of `BatchCreateTableVersions` that supports mixed operation types within a single atomic transaction at the metadata layer.  Supported operation types: - `DeclareTable`: Declare (reserve) a new table - `CreateTableVersion`: Create a new version entry for a table - `DeleteTableVersions`: Delete version ranges from a table - `DeregisterTable`: Deregister (soft-delete) a table  All operations are committed atomically: either all succeed or none are applied. 
+     * Atomically commit a batch of mixed table operations
+     */
+    async batchCommitTables(requestParameters: BatchCommitTablesOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BatchCommitTablesResponse> {
+        const response = await this.batchCommitTablesRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

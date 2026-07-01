@@ -69,6 +69,7 @@ export interface DropTableIndexRequest {
     id: string;
     indexName: string;
     delimiter?: string;
+    branch?: string;
 }
 
 export interface ListTableIndicesOperationRequest {
@@ -83,7 +84,7 @@ export interface ListTableIndicesOperationRequest {
 export class IndexApi extends runtime.BaseAPI {
 
     /**
-     * Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+     * Create an index on a table field for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
      * Create an index on a table
      */
     async createTableIndexRaw(requestParameters: CreateTableIndexOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateTableIndexResponse>> {
@@ -140,7 +141,7 @@ export class IndexApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create an index on a table column for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+     * Create an index on a table field for faster search operations. Supports vector indexes (IVF_FLAT, IVF_HNSW_SQ, IVF_PQ, etc.) and scalar indexes (BTREE, BITMAP, FTS, etc.). Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
      * Create an index on a table
      */
     async createTableIndex(requestParameters: CreateTableIndexOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateTableIndexResponse> {
@@ -149,7 +150,7 @@ export class IndexApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+     * Create a scalar index on a table field for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
      * Create a scalar index on a table
      */
     async createTableScalarIndexRaw(requestParameters: CreateTableScalarIndexRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateTableScalarIndexResponse>> {
@@ -206,7 +207,7 @@ export class IndexApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create a scalar index on a table column for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
+     * Create a scalar index on a table field for faster filtering operations. Supports scalar indexes (BTREE, BITMAP, LABEL_LIST, FTS, etc.). This is an alias for CreateTableIndex specifically for scalar indexes. Index creation is handled asynchronously. Use the `ListTableIndices` and `DescribeTableIndexStats` operations to monitor index creation progress. 
      * Create a scalar index on a table
      */
     async createTableScalarIndex(requestParameters: CreateTableScalarIndexRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateTableScalarIndexResponse> {
@@ -310,6 +311,10 @@ export class IndexApi extends runtime.BaseAPI {
 
         if (requestParameters['delimiter'] != null) {
             queryParameters['delimiter'] = requestParameters['delimiter'];
+        }
+
+        if (requestParameters['branch'] != null) {
+            queryParameters['branch'] = requestParameters['branch'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

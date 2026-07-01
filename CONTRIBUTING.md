@@ -108,7 +108,6 @@ This repository currently contains the following components:
 | Java SpringBoot Server| Java     | java/lance-namespace-springboot-server | Generated Java SpringBoot server for Lance REST Namespace  |
 | Rust Reqwest Client   | Rust     | rust/lance-namespace-reqwest-client    | Generated Rust reqwest client for Lance REST Namespace     |
 | TypeScript Core       | TypeScript | typescript/lance-namespace            | Core LanceNamespace interface and connect functionality    |
-| TypeScript REST Impl  | TypeScript | typescript/lance-namespace-rest       | REST namespace implementation for TypeScript core interface |
 | TypeScript Fetch Client | TypeScript | typescript/lance-namespace-fetch-client | Generated TypeScript fetch client for Lance REST Namespace |
 
 

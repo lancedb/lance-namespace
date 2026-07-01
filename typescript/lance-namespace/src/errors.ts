@@ -10,7 +10,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import type { ErrorResponse } from "@lance/namespace-fetch-client";
+import type { ErrorResponse } from "@lance-format/lance-namespace-fetch-client";
 
 export enum ErrorCode {
   UNSUPPORTED = 0,

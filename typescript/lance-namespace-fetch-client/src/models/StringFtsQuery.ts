@@ -20,7 +20,7 @@ import { mapValues } from '../runtime';
  */
 export interface StringFtsQuery {
     /**
-     * 
+     * Lance field paths to search. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Omit to search all indexed FTS fields.
      * @type {Array<string>}
      * @memberof StringFtsQuery
      */

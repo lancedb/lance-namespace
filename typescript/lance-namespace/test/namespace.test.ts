@@ -1,10 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import type { ListNamespacesRequest } from "@lance/namespace-fetch-client";
+import type { ListNamespacesRequest } from "@lance-format/lance-namespace-fetch-client";
 
 import {
   LanceNamespace,
-  NATIVE_IMPLS,
   UnsupportedOperationError,
   clearRegisteredNamespaceImplsForTest,
   connect,
@@ -52,10 +51,5 @@ describe("namespace interface and registry", () => {
     await expect(connect("non-existent-module", {})).rejects.toThrow(
       "Failed to construct namespace impl",
     );
-  });
-
-  it("defines python-style native aliases", () => {
-    expect(NATIVE_IMPLS.rest).toBe("@lance/lance-namespace-rest#RestNamespace");
-    expect(NATIVE_IMPLS.dir).toBe("@lance/lance-namespace-dir#DirectoryNamespace");
   });
 });

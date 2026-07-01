@@ -24,42 +24,42 @@ import {
 /**
  * 
  * @export
- * @interface NewColumnTransform
+ * @interface AddColumnsEntry
  */
-export interface NewColumnTransform {
+export interface AddColumnsEntry {
     /**
      * Name of the new column
      * @type {string}
-     * @memberof NewColumnTransform
+     * @memberof AddColumnsEntry
      */
     name: string;
     /**
-     * SQL expression to compute the column value (optional if virtual_column is specified)
+     * SQL expression for the column (optional if virtual_column is specified)
      * @type {string}
-     * @memberof NewColumnTransform
+     * @memberof AddColumnsEntry
      */
-    expression?: string;
+    expression?: string | null;
     /**
-     * Virtual column definition (optional if expression is specified)
+     * 
      * @type {AddVirtualColumnEntry}
-     * @memberof NewColumnTransform
+     * @memberof AddColumnsEntry
      */
-    virtual_column?: AddVirtualColumnEntry;
+    virtual_column?: AddVirtualColumnEntry | null;
 }
 
 /**
- * Check if a given object implements the NewColumnTransform interface.
+ * Check if a given object implements the AddColumnsEntry interface.
  */
-export function instanceOfNewColumnTransform(value: object): value is NewColumnTransform {
+export function instanceOfAddColumnsEntry(value: object): value is AddColumnsEntry {
     if (!('name' in value) || value['name'] === undefined) return false;
     return true;
 }
 
-export function NewColumnTransformFromJSON(json: any): NewColumnTransform {
-    return NewColumnTransformFromJSONTyped(json, false);
+export function AddColumnsEntryFromJSON(json: any): AddColumnsEntry {
+    return AddColumnsEntryFromJSONTyped(json, false);
 }
 
-export function NewColumnTransformFromJSONTyped(json: any, ignoreDiscriminator: boolean): NewColumnTransform {
+export function AddColumnsEntryFromJSONTyped(json: any, ignoreDiscriminator: boolean): AddColumnsEntry {
     if (json == null) {
         return json;
     }
@@ -71,11 +71,11 @@ export function NewColumnTransformFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function NewColumnTransformToJSON(json: any): NewColumnTransform {
-    return NewColumnTransformToJSONTyped(json, false);
+export function AddColumnsEntryToJSON(json: any): AddColumnsEntry {
+    return AddColumnsEntryToJSONTyped(json, false);
 }
 
-export function NewColumnTransformToJSONTyped(value?: NewColumnTransform | null, ignoreDiscriminator: boolean = false): any {
+export function AddColumnsEntryToJSONTyped(value?: AddColumnsEntry | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

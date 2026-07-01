@@ -22,7 +22,7 @@ import {
 } from './Identity';
 
 /**
- * Each update consists of a column name and an SQL expression that will be
+ * Each update consists of a field path and an SQL expression that will be
  * evaluated against the current row's value. Optionally, a predicate can be
  * provided to filter which rows to update.
  * 
@@ -37,13 +37,21 @@ export interface UpdateTableRequest {
      */
     identity?: Identity;
     /**
-     * Arbitrary context for a request as key-value pairs.
+     * Arbitrary context as key-value pairs.
      * How to use the context is custom to the specific implementation.
      * 
+     * On a request, it carries caller-provided context to the implementation.
+     * On a response, it carries implementation-provided context back to the caller.
+     * 
      * REST NAMESPACE ONLY
-     * Context entries are passed via HTTP headers using the naming convention
-     * `x-lance-ctx-<key>: <value>`. For example, a context entry
-     * `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+     * Context entries are mapped to and from HTTP headers using the `header.` prefix:
+     * - On a request, any entry whose key starts with `header.` is sent as an HTTP
+     *   request header with the prefix stripped. For example, the entry
+     *   `{"header.Authorization": "Bearer abc"}` is sent as the request header
+     *   `Authorization: Bearer abc`.
+     * - On a response, every HTTP response header is returned as an entry whose key is the
+     *   header name prefixed with `header.`. For example, the response header
+     *   `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
      * 
      * @type {{ [key: string]: string; }}
      * @memberof UpdateTableRequest
@@ -56,13 +64,20 @@ export interface UpdateTableRequest {
      */
     id?: Array<string>;
     /**
-     * Optional SQL predicate to filter rows for update
+     * Branch to target. When not specified, the main branch is used.
+     * 
+     * @type {string}
+     * @memberof UpdateTableRequest
+     */
+    branch?: string;
+    /**
+     * Optional SQL predicate to filter rows for update. Field references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.
      * @type {string}
      * @memberof UpdateTableRequest
      */
     predicate?: string;
     /**
-     * List of column updates as [column_name, expression] pairs
+     * List of field updates as [field_path, expression] pairs. Field paths and expression references must use Lance field path syntax: nested fields use dot-separated segments, literal dots require backtick-quoted segments, and backticks inside quoted segments are doubled.
      * @type {Array<Array<string>>}
      * @memberof UpdateTableRequest
      */
@@ -97,6 +112,7 @@ export function UpdateTableRequestFromJSONTyped(json: any, ignoreDiscriminator: 
         'identity': json['identity'] == null ? undefined : IdentityFromJSON(json['identity']),
         'context': json['context'] == null ? undefined : json['context'],
         'id': json['id'] == null ? undefined : json['id'],
+        'branch': json['branch'] == null ? undefined : json['branch'],
         'predicate': json['predicate'] == null ? undefined : json['predicate'],
         'updates': json['updates'],
         'properties': json['properties'] == null ? undefined : json['properties'],
@@ -117,6 +133,7 @@ export function UpdateTableRequestToJSONTyped(value?: UpdateTableRequest | null,
         'identity': IdentityToJSON(value['identity']),
         'context': value['context'],
         'id': value['id'],
+        'branch': value['branch'],
         'predicate': value['predicate'],
         'updates': value['updates'],
         'properties': value['properties'],

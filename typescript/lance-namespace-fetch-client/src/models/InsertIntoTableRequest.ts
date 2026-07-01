@@ -35,13 +35,21 @@ export interface InsertIntoTableRequest {
      */
     identity?: Identity;
     /**
-     * Arbitrary context for a request as key-value pairs.
+     * Arbitrary context as key-value pairs.
      * How to use the context is custom to the specific implementation.
      * 
+     * On a request, it carries caller-provided context to the implementation.
+     * On a response, it carries implementation-provided context back to the caller.
+     * 
      * REST NAMESPACE ONLY
-     * Context entries are passed via HTTP headers using the naming convention
-     * `x-lance-ctx-<key>: <value>`. For example, a context entry
-     * `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+     * Context entries are mapped to and from HTTP headers using the `header.` prefix:
+     * - On a request, any entry whose key starts with `header.` is sent as an HTTP
+     *   request header with the prefix stripped. For example, the entry
+     *   `{"header.Authorization": "Bearer abc"}` is sent as the request header
+     *   `Authorization: Bearer abc`.
+     * - On a response, every HTTP response header is returned as an entry whose key is the
+     *   header name prefixed with `header.`. For example, the response header
+     *   `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
      * 
      * @type {{ [key: string]: string; }}
      * @memberof InsertIntoTableRequest
@@ -53,6 +61,13 @@ export interface InsertIntoTableRequest {
      * @memberof InsertIntoTableRequest
      */
     id?: Array<string>;
+    /**
+     * Branch to target. When not specified, the main branch is used.
+     * 
+     * @type {string}
+     * @memberof InsertIntoTableRequest
+     */
+    branch?: string;
     /**
      * How the insert should behave. Case insensitive, supports both PascalCase and snake_case. Valid values are:
      * - Append (default): insert data to the existing table
@@ -84,6 +99,7 @@ export function InsertIntoTableRequestFromJSONTyped(json: any, ignoreDiscriminat
         'identity': json['identity'] == null ? undefined : IdentityFromJSON(json['identity']),
         'context': json['context'] == null ? undefined : json['context'],
         'id': json['id'] == null ? undefined : json['id'],
+        'branch': json['branch'] == null ? undefined : json['branch'],
         'mode': json['mode'] == null ? undefined : json['mode'],
     };
 }
@@ -102,6 +118,7 @@ export function InsertIntoTableRequestToJSONTyped(value?: InsertIntoTableRequest
         'identity': IdentityToJSON(value['identity']),
         'context': value['context'],
         'id': value['id'],
+        'branch': value['branch'],
         'mode': value['mode'],
     };
 }

@@ -79,6 +79,7 @@ export interface ListTablesRequest {
     delimiter?: string;
     pageToken?: string;
     limit?: number;
+    includeDeclared?: boolean;
 }
 
 export interface NamespaceExistsOperationRequest {
@@ -355,7 +356,7 @@ export class NamespaceApi extends runtime.BaseAPI {
     }
 
     /**
-     * List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+     * List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name - `include_declared`: pass through query parameter of the same name 
      * List tables in a namespace
      */
     async listTablesRaw(requestParameters: ListTablesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ListTablesResponse>> {
@@ -378,6 +379,10 @@ export class NamespaceApi extends runtime.BaseAPI {
 
         if (requestParameters['limit'] != null) {
             queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['includeDeclared'] != null) {
+            queryParameters['include_declared'] = requestParameters['includeDeclared'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -410,7 +415,7 @@ export class NamespaceApi extends runtime.BaseAPI {
     }
 
     /**
-     * List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name 
+     * List all child table names of the parent namespace `id`.  REST NAMESPACE ONLY REST namespace uses GET to perform this operation without a request body. It passes in the `ListTablesRequest` information in the following way: - `id`: pass through path parameter of the same name - `page_token`: pass through query parameter of the same name - `limit`: pass through query parameter of the same name - `include_declared`: pass through query parameter of the same name 
      * List tables in a namespace
      */
     async listTables(requestParameters: ListTablesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListTablesResponse> {
@@ -419,7 +424,7 @@ export class NamespaceApi extends runtime.BaseAPI {
     }
 
     /**
-     * Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body. 
+     * Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `NamespaceExistsResponse` model as follows: - a `200` response means the namespace exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
      * Check if a namespace exists
      */
     async namespaceExistsRaw(requestParameters: NamespaceExistsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
@@ -476,7 +481,7 @@ export class NamespaceApi extends runtime.BaseAPI {
     }
 
     /**
-     * Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body. 
+     * Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `NamespaceExistsResponse` model as follows: - a `200` response means the namespace exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
      * Check if a namespace exists
      */
     async namespaceExists(requestParameters: NamespaceExistsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {

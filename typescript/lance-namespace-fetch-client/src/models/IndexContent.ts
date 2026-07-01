@@ -32,7 +32,7 @@ export interface IndexContent {
      */
     index_uuid: string;
     /**
-     * Columns covered by this index
+     * Canonical Lance field paths covered by this index. Nested fields use dot-separated segments; segments containing literal dots are backtick-quoted, and backticks inside quoted segments are doubled.
      * @type {Array<string>}
      * @memberof IndexContent
      */
@@ -43,6 +43,60 @@ export interface IndexContent {
      * @memberof IndexContent
      */
     status: string;
+    /**
+     * Friendly index type, e.g. IVF_PQ, BTREE. Unknown if no plugin recognizes the index.
+     * @type {string}
+     * @memberof IndexContent
+     */
+    index_type?: string;
+    /**
+     * Protobuf type URL, a precise type identifier for the index.
+     * @type {string}
+     * @memberof IndexContent
+     */
+    type_url?: string;
+    /**
+     * Number of live rows covered by the index. This does not count rows that are in the index but have since been deleted.
+     * @type {number}
+     * @memberof IndexContent
+     */
+    num_indexed_rows?: number;
+    /**
+     * Number of rows that are not indexed.
+     * @type {number}
+     * @memberof IndexContent
+     */
+    num_unindexed_rows?: number;
+    /**
+     * Total index size in bytes across all segments. Null for indices predating file-size tracking.
+     * @type {number}
+     * @memberof IndexContent
+     */
+    size_bytes?: number;
+    /**
+     * Number of index deltas/segments.
+     * @type {number}
+     * @memberof IndexContent
+     */
+    num_segments?: number;
+    /**
+     * Creation time for indexes. Null for legacy indices.
+     * @type {Date}
+     * @memberof IndexContent
+     */
+    created_at?: Date;
+    /**
+     * On-disk index format version.
+     * @type {number}
+     * @memberof IndexContent
+     */
+    index_version?: number;
+    /**
+     * Opaque, type-specific JSON with additional index details. For vector indices this carries metric/distance type, partitioning, and HNSW/PQ/SQ/RQ parameters.
+     * @type {string}
+     * @memberof IndexContent
+     */
+    index_details?: string;
 }
 
 /**
@@ -70,6 +124,15 @@ export function IndexContentFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'index_uuid': json['index_uuid'],
         'columns': json['columns'],
         'status': json['status'],
+        'index_type': json['index_type'] == null ? undefined : json['index_type'],
+        'type_url': json['type_url'] == null ? undefined : json['type_url'],
+        'num_indexed_rows': json['num_indexed_rows'] == null ? undefined : json['num_indexed_rows'],
+        'num_unindexed_rows': json['num_unindexed_rows'] == null ? undefined : json['num_unindexed_rows'],
+        'size_bytes': json['size_bytes'] == null ? undefined : json['size_bytes'],
+        'num_segments': json['num_segments'] == null ? undefined : json['num_segments'],
+        'created_at': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
+        'index_version': json['index_version'] == null ? undefined : json['index_version'],
+        'index_details': json['index_details'] == null ? undefined : json['index_details'],
     };
 }
 
@@ -88,6 +151,15 @@ export function IndexContentToJSONTyped(value?: IndexContent | null, ignoreDiscr
         'index_uuid': value['index_uuid'],
         'columns': value['columns'],
         'status': value['status'],
+        'index_type': value['index_type'],
+        'type_url': value['type_url'],
+        'num_indexed_rows': value['num_indexed_rows'],
+        'num_unindexed_rows': value['num_unindexed_rows'],
+        'size_bytes': value['size_bytes'],
+        'num_segments': value['num_segments'],
+        'created_at': value['created_at'] == null ? undefined : ((value['created_at']).toISOString()),
+        'index_version': value['index_version'],
+        'index_details': value['index_details'],
     };
 }
 

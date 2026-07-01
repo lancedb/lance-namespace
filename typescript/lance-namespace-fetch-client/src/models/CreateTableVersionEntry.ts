@@ -35,6 +35,13 @@ export interface CreateTableVersionEntry {
      */
     version: number;
     /**
+     * Branch to target. When not specified, the main branch is used.
+     * 
+     * @type {string}
+     * @memberof CreateTableVersionEntry
+     */
+    branch?: string;
+    /**
      * Path to the manifest file for this version
      * @type {string}
      * @memberof CreateTableVersionEntry
@@ -97,6 +104,7 @@ export function CreateTableVersionEntryFromJSONTyped(json: any, ignoreDiscrimina
         
         'id': json['id'],
         'version': json['version'],
+        'branch': json['branch'] == null ? undefined : json['branch'],
         'manifest_path': json['manifest_path'],
         'manifest_size': json['manifest_size'] == null ? undefined : json['manifest_size'],
         'e_tag': json['e_tag'] == null ? undefined : json['e_tag'],
@@ -118,6 +126,7 @@ export function CreateTableVersionEntryToJSONTyped(value?: CreateTableVersionEnt
         
         'id': value['id'],
         'version': value['version'],
+        'branch': value['branch'],
         'manifest_path': value['manifest_path'],
         'manifest_size': value['manifest_size'],
         'e_tag': value['e_tag'],

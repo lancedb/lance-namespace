@@ -34,13 +34,21 @@ export interface DescribeTableRequest {
      */
     identity?: Identity;
     /**
-     * Arbitrary context for a request as key-value pairs.
+     * Arbitrary context as key-value pairs.
      * How to use the context is custom to the specific implementation.
      * 
+     * On a request, it carries caller-provided context to the implementation.
+     * On a response, it carries implementation-provided context back to the caller.
+     * 
      * REST NAMESPACE ONLY
-     * Context entries are passed via HTTP headers using the naming convention
-     * `x-lance-ctx-<key>: <value>`. For example, a context entry
-     * `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+     * Context entries are mapped to and from HTTP headers using the `header.` prefix:
+     * - On a request, any entry whose key starts with `header.` is sent as an HTTP
+     *   request header with the prefix stripped. For example, the entry
+     *   `{"header.Authorization": "Bearer abc"}` is sent as the request header
+     *   `Authorization: Bearer abc`.
+     * - On a response, every HTTP response header is returned as an entry whose key is the
+     *   header name prefixed with `header.`. For example, the response header
+     *   `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
      * 
      * @type {{ [key: string]: string; }}
      * @memberof DescribeTableRequest
@@ -61,6 +69,22 @@ export interface DescribeTableRequest {
      */
     version?: number;
     /**
+     * Tag name to describe the table at.
+     * If specified, the server should resolve the tag to a version number and describe that version.
+     * Cannot be used together with `version` or `branch`.
+     * 
+     * @type {string}
+     * @memberof DescribeTableRequest
+     */
+    tag?: string;
+    /**
+     * Branch to target. When not specified, the main branch is used.
+     * 
+     * @type {string}
+     * @memberof DescribeTableRequest
+     */
+    branch?: string;
+    /**
      * Whether to include the table URI in the response.
      * Default is false.
      * 
@@ -79,6 +103,18 @@ export interface DescribeTableRequest {
      * @memberof DescribeTableRequest
      */
     load_detailed_metadata?: boolean;
+    /**
+     * Whether to check if the table exists only as a namespace declaration
+     * without storage data. Default is false.
+     * When true, the response should populate `is_only_declared`.
+     * When false, the implementation should return null for `is_only_declared`
+     * unless another option such as `load_detailed_metadata` requires
+     * checking declared-only table state.
+     * 
+     * @type {boolean}
+     * @memberof DescribeTableRequest
+     */
+    check_declared?: boolean;
     /**
      * Whether to include vended credentials in the response `storage_options`.
      * When true, the implementation should provide vended credentials for accessing storage.
@@ -111,8 +147,11 @@ export function DescribeTableRequestFromJSONTyped(json: any, ignoreDiscriminator
         'context': json['context'] == null ? undefined : json['context'],
         'id': json['id'] == null ? undefined : json['id'],
         'version': json['version'] == null ? undefined : json['version'],
+        'tag': json['tag'] == null ? undefined : json['tag'],
+        'branch': json['branch'] == null ? undefined : json['branch'],
         'with_table_uri': json['with_table_uri'] == null ? undefined : json['with_table_uri'],
         'load_detailed_metadata': json['load_detailed_metadata'] == null ? undefined : json['load_detailed_metadata'],
+        'check_declared': json['check_declared'] == null ? undefined : json['check_declared'],
         'vend_credentials': json['vend_credentials'] == null ? undefined : json['vend_credentials'],
     };
 }
@@ -132,8 +171,11 @@ export function DescribeTableRequestToJSONTyped(value?: DescribeTableRequest | n
         'context': value['context'],
         'id': value['id'],
         'version': value['version'],
+        'tag': value['tag'],
+        'branch': value['branch'],
         'with_table_uri': value['with_table_uri'],
         'load_detailed_metadata': value['load_detailed_metadata'],
+        'check_declared': value['check_declared'],
         'vend_credentials': value['vend_credentials'],
     };
 }

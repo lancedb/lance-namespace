@@ -10,7 +10,7 @@ importers:
 
   lance-namespace:
     dependencies:
-      '@lance/namespace-fetch-client':
+      '@lance-format/lance-namespace-fetch-client':
         specifier: workspace:*
         version: link:../lance-namespace-fetch-client
     devDependencies:
@@ -22,22 +22,6 @@ importers:
         version: 2.1.9
 
   lance-namespace-fetch-client:
-    devDependencies:
-      typescript:
-        specifier: ^5.8.3
-        version: 5.9.3
-      vitest:
-        specifier: ^2.1.9
-        version: 2.1.9
-
-  lance-namespace-rest:
-    dependencies:
-      '@lance/lance-namespace':
-        specifier: workspace:*
-        version: link:../lance-namespace
-      '@lance/namespace-fetch-client':
-        specifier: workspace:*
-        version: link:../lance-namespace-fetch-client
     devDependencies:
       typescript:
         specifier: ^5.8.3

@@ -35,6 +35,27 @@ import {
  */
 export interface DescribeTableResponse {
     /**
+     * Arbitrary context as key-value pairs.
+     * How to use the context is custom to the specific implementation.
+     * 
+     * On a request, it carries caller-provided context to the implementation.
+     * On a response, it carries implementation-provided context back to the caller.
+     * 
+     * REST NAMESPACE ONLY
+     * Context entries are mapped to and from HTTP headers using the `header.` prefix:
+     * - On a request, any entry whose key starts with `header.` is sent as an HTTP
+     *   request header with the prefix stripped. For example, the entry
+     *   `{"header.Authorization": "Bearer abc"}` is sent as the request header
+     *   `Authorization: Bearer abc`.
+     * - On a response, every HTTP response header is returned as an entry whose key is the
+     *   header name prefixed with `header.`. For example, the response header
+     *   `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof DescribeTableResponse
+     */
+    context?: { [key: string]: string; };
+    /**
      * Table name.
      * Only populated when `load_detailed_metadata` is true.
      * 
@@ -125,6 +146,22 @@ export interface DescribeTableResponse {
      * @memberof DescribeTableResponse
      */
     managed_versioning?: boolean;
+    /**
+     * When true, indicates that the table has been declared in the namespace
+     * but not yet created on storage. This means the table exists in the
+     * namespace but has no data files on the underlying storage.
+     * When false, the table has storage components (data and metadata files).
+     * When null, the implementation did not check whether the table is only
+     * declared. Clients should treat an omitted value as null. Implementations
+     * should populate this field when `check_declared` is true or another
+     * option such as `load_detailed_metadata` requires checking declared-only
+     * table state. Operations like describe_table with load_detailed_metadata=true
+     * may fail for declared-only tables.
+     * 
+     * @type {boolean}
+     * @memberof DescribeTableResponse
+     */
+    is_only_declared?: boolean;
 }
 
 /**
@@ -144,6 +181,7 @@ export function DescribeTableResponseFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
+        'context': json['context'] == null ? undefined : json['context'],
         'table': json['table'] == null ? undefined : json['table'],
         'namespace': json['namespace'] == null ? undefined : json['namespace'],
         'version': json['version'] == null ? undefined : json['version'],
@@ -155,6 +193,7 @@ export function DescribeTableResponseFromJSONTyped(json: any, ignoreDiscriminato
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'properties': json['properties'] == null ? undefined : json['properties'],
         'managed_versioning': json['managed_versioning'] == null ? undefined : json['managed_versioning'],
+        'is_only_declared': json['is_only_declared'] == null ? undefined : json['is_only_declared'],
     };
 }
 
@@ -169,6 +208,7 @@ export function DescribeTableResponseToJSONTyped(value?: DescribeTableResponse |
 
     return {
         
+        'context': value['context'],
         'table': value['table'],
         'namespace': value['namespace'],
         'version': value['version'],
@@ -180,6 +220,7 @@ export function DescribeTableResponseToJSONTyped(value?: DescribeTableResponse |
         'metadata': value['metadata'],
         'properties': value['properties'],
         'managed_versioning': value['managed_versioning'],
+        'is_only_declared': value['is_only_declared'],
     };
 }
 

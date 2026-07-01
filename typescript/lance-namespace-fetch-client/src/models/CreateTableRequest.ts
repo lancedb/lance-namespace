@@ -23,6 +23,8 @@ import {
 
 /**
  * Request for creating a table, excluding the Arrow IPC stream.
+ * The table location and any credential vending behavior are determined by the implementation
+ * and returned in the response, rather than specified in this request.
  * 
  * @export
  * @interface CreateTableRequest
@@ -35,13 +37,21 @@ export interface CreateTableRequest {
      */
     identity?: Identity;
     /**
-     * Arbitrary context for a request as key-value pairs.
+     * Arbitrary context as key-value pairs.
      * How to use the context is custom to the specific implementation.
      * 
+     * On a request, it carries caller-provided context to the implementation.
+     * On a response, it carries implementation-provided context back to the caller.
+     * 
      * REST NAMESPACE ONLY
-     * Context entries are passed via HTTP headers using the naming convention
-     * `x-lance-ctx-<key>: <value>`. For example, a context entry
-     * `{"trace_id": "abc123"}` would be sent as the header `x-lance-ctx-trace_id: abc123`.
+     * Context entries are mapped to and from HTTP headers using the `header.` prefix:
+     * - On a request, any entry whose key starts with `header.` is sent as an HTTP
+     *   request header with the prefix stripped. For example, the entry
+     *   `{"header.Authorization": "Bearer abc"}` is sent as the request header
+     *   `Authorization: Bearer abc`.
+     * - On a response, every HTTP response header is returned as an entry whose key is the
+     *   header name prefixed with `header.`. For example, the response header
+     *   `x-request-id: abc123` is returned as the entry `{"header.x-request-id": "abc123"}`.
      * 
      * @type {{ [key: string]: string; }}
      * @memberof CreateTableRequest
@@ -66,12 +76,21 @@ export interface CreateTableRequest {
      */
     mode?: string;
     /**
-     * Properties stored on the table, if supported by the implementation.
+     * Business logic properties stored and managed by the namespace implementation outside
+     * Lance context, if supported by the implementation.
      * 
      * @type {{ [key: string]: string; }}
      * @memberof CreateTableRequest
      */
     properties?: { [key: string]: string; };
+    /**
+     * Storage options that configure overrides for writing table data and metadata during
+     * table creation. These are passed to Lance for the write path.
+     * 
+     * @type {{ [key: string]: string; }}
+     * @memberof CreateTableRequest
+     */
+    storage_options?: { [key: string]: string; };
 }
 
 /**
@@ -96,6 +115,7 @@ export function CreateTableRequestFromJSONTyped(json: any, ignoreDiscriminator: 
         'id': json['id'] == null ? undefined : json['id'],
         'mode': json['mode'] == null ? undefined : json['mode'],
         'properties': json['properties'] == null ? undefined : json['properties'],
+        'storage_options': json['storage_options'] == null ? undefined : json['storage_options'],
     };
 }
 
@@ -115,6 +135,7 @@ export function CreateTableRequestToJSONTyped(value?: CreateTableRequest | null,
         'id': value['id'],
         'mode': value['mode'],
         'properties': value['properties'],
+        'storage_options': value['storage_options'],
     };
 }
 

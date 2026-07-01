@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -17,6 +17,9 @@ packageJson.repository = {
   url: "https://github.com/lance-format/lance-namespace",
 };
 packageJson.license = "Apache-2.0";
+// Publish only compiled output; consumers import from dist. Matches the
+// dist-only layout of the hand-written @lance-format/lance-namespace package.
+packageJson.files = ["dist"];
 packageJson.scripts = {
   build: "tsc && tsc -p tsconfig.esm.json",
   lint: "tsc --noEmit && tsc -p tsconfig.esm.json --noEmit",
@@ -59,10 +62,27 @@ await writeFile(
   `${JSON.stringify(tsconfigEsm, null, 2)}\n`,
 );
 
-const apisIndex = `/* tslint:disable */\n/* eslint-disable */\nexport { DataApi } from "./DataApi";\nexport { IndexApi } from "./IndexApi";\nexport { MetadataApi } from "./MetadataApi";\nexport { NamespaceApi } from "./NamespaceApi";\nexport { TableApi } from "./TableApi";\nexport { TagApi } from "./TagApi";\nexport { TransactionApi } from "./TransactionApi";\n`;
-await writeFile(join(packageDir, "src", "apis", "index.ts"), apisIndex);
+// Discover the generated API classes dynamically so new spec tags (e.g. Branch,
+// MaterializedView) are exported without having to edit this script. Each
+// typescript-fetch API lives in `src/apis/<Tag>Api.ts` and exports a `<Tag>Api`
+// class; we re-export the classes by name (not `export *`) to avoid colliding
+// the per-operation parameter interfaces with the identically named body models.
+const apisDir = join(packageDir, "src", "apis");
+const apiClasses = (await readdir(apisDir))
+  .filter((name) => name.endsWith(".ts") && name !== "index.ts")
+  .map((name) => name.slice(0, -".ts".length))
+  .sort();
 
-const rootIndex = `/* tslint:disable */\n/* eslint-disable */\nexport * from "./runtime";\nexport { DataApi, IndexApi, MetadataApi, NamespaceApi, TableApi, TagApi, TransactionApi } from "./apis/index";\nexport * from "./models/index";\n`;
+const apisIndex =
+  `/* tslint:disable */\n/* eslint-disable */\n` +
+  apiClasses.map((api) => `export { ${api} } from "./${api}";\n`).join("");
+await writeFile(join(apisDir, "index.ts"), apisIndex);
+
+const rootIndex =
+  `/* tslint:disable */\n/* eslint-disable */\n` +
+  `export * from "./runtime";\n` +
+  `export { ${apiClasses.join(", ")} } from "./apis/index";\n` +
+  `export * from "./models/index";\n`;
 await writeFile(join(packageDir, "src", "index.ts"), rootIndex);
 
 const vitestConfig = `import { defineConfig } from "vitest/config";
