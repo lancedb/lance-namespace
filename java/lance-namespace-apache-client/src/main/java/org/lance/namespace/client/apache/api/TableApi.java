@@ -4120,8 +4120,9 @@ public class TableApi extends BaseApi {
    * Query a table Query table &#x60;id&#x60; with vector search, full text search and optional SQL
    * filtering. Returns results in Arrow IPC file or stream format. REST NAMESPACE ONLY REST
    * namespace returns the response as Arrow IPC file binary data instead of the
-   * &#x60;QueryTableResponse&#x60; JSON object. Because the response has no JSON body, there is no
-   * &#x60;context&#x60; field; any response context is available only as raw HTTP response headers.
+   * &#x60;QueryTableResponse&#x60; JSON object. The REST response has no JSON body, so REST conveys
+   * any response context via response headers. The &#x60;QueryTableResponse&#x60; object model
+   * (context plus the Arrow data) is provided for non-REST LanceNamespace interfaces.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -4143,8 +4144,9 @@ public class TableApi extends BaseApi {
    * Query a table Query table &#x60;id&#x60; with vector search, full text search and optional SQL
    * filtering. Returns results in Arrow IPC file or stream format. REST NAMESPACE ONLY REST
    * namespace returns the response as Arrow IPC file binary data instead of the
-   * &#x60;QueryTableResponse&#x60; JSON object. Because the response has no JSON body, there is no
-   * &#x60;context&#x60; field; any response context is available only as raw HTTP response headers.
+   * &#x60;QueryTableResponse&#x60; JSON object. The REST response has no JSON body, so REST conveys
+   * any response context via response headers. The &#x60;QueryTableResponse&#x60; object model
+   * (context plus the Arrow data) is provided for non-REST LanceNamespace interfaces.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.

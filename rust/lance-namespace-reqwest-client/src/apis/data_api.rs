@@ -811,7 +811,7 @@ pub async fn merge_insert_into_table(configuration: &configuration::Configuratio
     }
 }
 
-/// Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. Because the response has no JSON body, there is no `context` field; any response context is available only as raw HTTP response headers. 
+/// Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. The REST response has no JSON body, so REST conveys any response context via response headers. The `QueryTableResponse` object model (context plus the Arrow data) is provided for non-REST LanceNamespace interfaces. 
 pub async fn query_table(configuration: &configuration::Configuration, id: &str, query_table_request: models::QueryTableRequest, delimiter: Option<&str>) -> Result<reqwest::Response, Error<QueryTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;

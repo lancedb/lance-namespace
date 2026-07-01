@@ -1299,8 +1299,9 @@ paths:
         REST NAMESPACE ONLY
         REST namespace returns the response as Arrow IPC file binary data
         instead of the `QueryTableResponse` JSON object.
-        Because the response has no JSON body, there is no `context` field; any response
-        context is available only as raw HTTP response headers.
+        The REST response has no JSON body, so REST conveys any response context via
+        response headers. The `QueryTableResponse` object model (context plus the Arrow
+        data) is provided for non-REST LanceNamespace interfaces.
       requestBody:
         description: Query request
         content:
@@ -2627,6 +2628,18 @@ components:
           items:
             type: string
 
+    NamespaceExistsResponse:
+      type: object
+      description: |
+        Response for a namespace existence check.
+
+        This model is not used by the REST namespace, which conveys existence via the HTTP
+        status code (200 if the namespace exists, 404 otherwise). It is provided as a
+        standard data model for non-REST LanceNamespace interfaces (e.g. Java, Python).
+      properties:
+        context:
+          $ref: "#/components/schemas/Context"
+
     PageToken:
       description: |
         An opaque token that allows pagination for list operations (e.g. ListNamespaces).
@@ -2943,15 +2956,21 @@ components:
           type: string
 
     CountTableRowsResponse:
-      type: integer
-      format: int64
+      type: object
       description: |
         Response containing the count of rows.
-        Serializes transparently as just the number for backward compatibility.
 
-        Because this serializes as a bare number, there is no `context` field; any response
-        context is available only as raw HTTP response headers.
-      minimum: 0
+        This model is not used by the REST namespace, which returns the count as a bare
+        number (see the CountTableRows operation). It is provided as a standard data model
+        for non-REST LanceNamespace interfaces (e.g. Java, Python).
+      properties:
+        context:
+          $ref: "#/components/schemas/Context"
+        count:
+          type: integer
+          format: int64
+          minimum: 0
+          description: The count of rows.
 
     InsertIntoTableRequest:
       type: object
@@ -3295,6 +3314,22 @@ components:
         with_row_id:
           type: boolean
           description: If true, return the row id as a column called `_rowid`
+
+    QueryTableResponse:
+      type: object
+      description: |
+        Query results.
+
+        This model is not used by the REST namespace, which returns the Arrow IPC file
+        binary data directly (see the QueryTable operation). It is provided as a standard
+        data model for non-REST LanceNamespace interfaces (e.g. Java, Python).
+      properties:
+        context:
+          $ref: "#/components/schemas/Context"
+        data:
+          type: string
+          format: binary
+          description: Query results as Arrow IPC file binary data.
 
     CreateTableIndexRequest:
       type: object
@@ -3779,6 +3814,18 @@ components:
           type: integer
           format: int64
           minimum: 0
+
+    TableExistsResponse:
+      type: object
+      description: |
+        Response for a table existence check.
+
+        This model is not used by the REST namespace, which conveys existence via the HTTP
+        status code (200 if the table exists, 404 otherwise). It is provided as a standard
+        data model for non-REST LanceNamespace interfaces (e.g. Java, Python).
+      properties:
+        context:
+          $ref: "#/components/schemas/Context"
 
     TransactionStatus:
       type: string
@@ -6128,7 +6175,12 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/CountTableRowsResponse"
+            type: integer
+            format: int64
+            minimum: 0
+            description: |
+              Row count serialized transparently as a bare number for the REST namespace.
+              The CountTableRowsResponse object model is used by non-REST interfaces.
 
     CreateTableResponse:
       description: Table properties result when creating a table
