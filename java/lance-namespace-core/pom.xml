@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.lance</groupId>
         <artifactId>lance-namespace-root</artifactId>
-        <version>0.8.7-beta.1</version>
+        <version>0.9.0</version>
     </parent>
 
     <artifactId>lance-namespace-core</artifactId>
