@@ -334,6 +334,9 @@ Count the number of rows in table `id`
 REST NAMESPACE ONLY
 REST namespace returns the response as a plain integer
 instead of the `CountTableRowsResponse` JSON object.
+The REST response maps to the `CountTableRowsResponse` model as follows:
+- the integer response body maps to `count`
+- response headers map to `context` via the `header.` prefix (see the `Context` schema)
 
 
 ### Example
@@ -1114,9 +1117,9 @@ Returns results in Arrow IPC file or stream format.
 REST NAMESPACE ONLY
 REST namespace returns the response as Arrow IPC file binary data
 instead of the `QueryTableResponse` JSON object.
-The REST response has no JSON body, so REST conveys any response context via
-response headers. The `QueryTableResponse` object model (context plus the Arrow
-data) is provided for non-REST LanceNamespace interfaces.
+The REST response maps to the `QueryTableResponse` model as follows:
+- the Arrow IPC file binary body maps to `data`
+- response headers map to `context` via the `header.` prefix (see the `Context` schema)
 
 
 ### Example

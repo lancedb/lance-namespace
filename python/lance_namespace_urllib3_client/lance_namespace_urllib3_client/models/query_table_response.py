@@ -24,7 +24,7 @@ from typing_extensions import Self
 
 class QueryTableResponse(BaseModel):
     """
-    Query results.  This model is not used by the REST namespace, which returns the Arrow IPC file binary data directly (see the QueryTable operation). It is provided as a standard data model for non-REST LanceNamespace interfaces (e.g. Java, Python). 
+    Query results.  The REST namespace does not transmit this object directly (see the QueryTable operation for how the Arrow IPC binary response maps to it). It is the standard data model for the LanceNamespace interfaces (e.g. Java, Python). 
     """ # noqa: E501
     context: Optional[Dict[str, StrictStr]] = Field(default=None, description="Arbitrary context as key-value pairs. How to use the context is custom to the specific implementation.  On a request, it carries caller-provided context to the implementation. On a response, it carries implementation-provided context back to the caller.  REST NAMESPACE ONLY Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request, any entry whose key starts with `header.` is sent as an HTTP   request header with the prefix stripped. For example, the entry   `{\"header.Authorization\": \"Bearer abc\"}` is sent as the request header   `Authorization: Bearer abc`. - On a response, every HTTP response header is returned as an entry whose key is the   header name prefixed with `header.`. For example, the response header   `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\": \"abc123\"}`. ")
     data: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = Field(default=None, description="Query results as Arrow IPC file binary data.")

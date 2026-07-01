@@ -1054,7 +1054,11 @@ public interface NamespaceApi {
   /**
    * POST /v1/namespace/{id}/exists : Check if a namespace exists Check if namespace &#x60;id&#x60;
    * exists. This operation must behave exactly like the DescribeNamespace API, except it does not
-   * contain a response body.
+   * contain a response body. REST NAMESPACE ONLY REST namespace conveys the result through the HTTP
+   * status code with no response body. The REST response maps to the
+   * &#x60;NamespaceExistsResponse&#x60; model as follows: - a &#x60;200&#x60; response means the
+   * namespace exists; a &#x60;404&#x60; response means it does not - response headers map to
+   * &#x60;context&#x60; via the &#x60;header.&#x60; prefix (see the &#x60;Context&#x60; schema)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1081,7 +1085,7 @@ public interface NamespaceApi {
       operationId = "namespaceExists",
       summary = "Check if a namespace exists",
       description =
-          "Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body. ",
+          "Check if namespace `id` exists.  This operation must behave exactly like the DescribeNamespace API, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `NamespaceExistsResponse` model as follows: - a `200` response means the namespace exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema) ",
       tags = {"Namespace", "Metadata"},
       responses = {
         @ApiResponse(responseCode = "200", description = "Success, no content"),

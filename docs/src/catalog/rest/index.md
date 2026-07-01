@@ -218,21 +218,49 @@ that updates existing rows based on a matching column and inserts new rows that 
 
 **Response Content-Type:** `application/vnd.apache.arrow.file`
 
-The response body contains Arrow IPC file data instead of JSON.
+The response body contains Arrow IPC file data instead of JSON. It maps to the
+`QueryTableResponse` model as follows:
 
-| Response Field | REST Form     | Notes                             |
-|----------------|---------------|-----------------------------------|
-| (results)      | Response body | Arrow IPC file (binary, not JSON) |
+| Response Field | REST Form                     | Notes                                                   |
+|----------------|-------------------------------|---------------------------------------------------------|
+| `data`         | Response body                 | Arrow IPC file (binary, not JSON)                       |
+| `context`      | Response headers (`header.*`) | Each response header maps to a `header.`-prefixed entry |
 
 ### CountTableRows
 
 **Route:** `POST /v1/table/{id}/count_rows`
 
-The response is returned as a plain integer instead of a JSON object.
+The response is returned as a plain integer instead of a JSON object. It maps to the
+`CountTableRowsResponse` model as follows:
 
-| Response Field | REST Form     | Notes                            |
-|----------------|---------------|----------------------------------|
-| (count)        | Response body | Plain integer (not JSON wrapped) |
+| Response Field | REST Form                     | Notes                                                   |
+|----------------|-------------------------------|---------------------------------------------------------|
+| `count`        | Response body                 | Plain integer (not JSON wrapped)                        |
+| `context`      | Response headers (`header.*`) | Each response header maps to a `header.`-prefixed entry |
+
+### NamespaceExists
+
+**Route:** `POST /v1/namespace/{id}/exists`
+
+Existence is conveyed through the HTTP status code with no response body. The response maps
+to the `NamespaceExistsResponse` model as follows:
+
+| Response Field | REST Form                     | Notes                                                   |
+|----------------|-------------------------------|---------------------------------------------------------|
+| (existence)    | HTTP status code              | `200` if the namespace exists, `404` otherwise          |
+| `context`      | Response headers (`header.*`) | Each response header maps to a `header.`-prefixed entry |
+
+### TableExists
+
+**Route:** `POST /v1/table/{id}/exists`
+
+Existence is conveyed through the HTTP status code with no response body. The response maps
+to the `TableExistsResponse` model as follows:
+
+| Response Field | REST Form                     | Notes                                                   |
+|----------------|-------------------------------|---------------------------------------------------------|
+| (existence)    | HTTP status code              | `200` if the table exists, `404` otherwise              |
+| `context`      | Response headers (`header.*`) | Each response header maps to a `header.`-prefixed entry |
 
 ### DropTable
 

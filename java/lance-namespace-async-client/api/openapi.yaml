@@ -245,6 +245,12 @@ paths:
 
         This operation must behave exactly like the DescribeNamespace API,
         except it does not contain a response body.
+
+        REST NAMESPACE ONLY
+        REST namespace conveys the result through the HTTP status code with no response body.
+        The REST response maps to the `NamespaceExistsResponse` model as follows:
+        - a `200` response means the namespace exists; a `404` response means it does not
+        - response headers map to `context` via the `header.` prefix (see the `Context` schema)
       operationId: NamespaceExists
       parameters:
       - $ref: '#/components/parameters/id'
@@ -463,6 +469,12 @@ paths:
 
         This operation should behave exactly like DescribeTable,
         except it does not contain a response body.
+
+        REST NAMESPACE ONLY
+        REST namespace conveys the result through the HTTP status code with no response body.
+        The REST response maps to the `TableExistsResponse` model as follows:
+        - a `200` response means the table exists; a `404` response means it does not
+        - response headers map to `context` via the `header.` prefix (see the `Context` schema)
 
         For DirectoryNamespace implementation, a table exists if either:
         - The table has Lance data versions (regular table created with CreateTable)
@@ -1554,9 +1566,9 @@ paths:
         REST NAMESPACE ONLY
         REST namespace returns the response as Arrow IPC file binary data
         instead of the `QueryTableResponse` JSON object.
-        The REST response has no JSON body, so REST conveys any response context via
-        response headers. The `QueryTableResponse` object model (context plus the Arrow
-        data) is provided for non-REST LanceNamespace interfaces.
+        The REST response maps to the `QueryTableResponse` model as follows:
+        - the Arrow IPC file binary body maps to `data`
+        - response headers map to `context` via the `header.` prefix (see the `Context` schema)
       operationId: QueryTable
       parameters:
       - $ref: '#/components/parameters/id'
@@ -1602,6 +1614,9 @@ paths:
         REST NAMESPACE ONLY
         REST namespace returns the response as a plain integer
         instead of the `CountTableRowsResponse` JSON object.
+        The REST response maps to the `CountTableRowsResponse` model as follows:
+        - the integer response body maps to `count`
+        - response headers map to `context` via the `header.` prefix (see the `Context` schema)
       operationId: CountTableRows
       parameters:
       - $ref: '#/components/parameters/id'
@@ -3776,9 +3791,9 @@ components:
       description: |
         Response for a namespace existence check.
 
-        This model is not used by the REST namespace, which conveys existence via the HTTP
-        status code (200 if the namespace exists, 404 otherwise). It is provided as a
-        standard data model for non-REST LanceNamespace interfaces (e.g. Java, Python).
+        The REST namespace does not transmit this object directly (see the NamespaceExists
+        operation for how the status-code response maps to it). It is the standard data model
+        for the LanceNamespace interfaces (e.g. Java, Python).
       properties:
         context:
           additionalProperties:
@@ -4351,9 +4366,9 @@ components:
       description: |
         Response containing the count of rows.
 
-        This model is not used by the REST namespace, which returns the count as a bare
-        number (see the CountTableRows operation). It is provided as a standard data model
-        for non-REST LanceNamespace interfaces (e.g. Java, Python).
+        The REST namespace does not transmit this object directly (see the CountTableRows
+        operation for how the bare-number response maps to it). It is the standard data model
+        for the LanceNamespace interfaces (e.g. Java, Python).
       properties:
         context:
           additionalProperties:
@@ -4988,9 +5003,9 @@ components:
       description: |
         Query results.
 
-        This model is not used by the REST namespace, which returns the Arrow IPC file
-        binary data directly (see the QueryTable operation). It is provided as a standard
-        data model for non-REST LanceNamespace interfaces (e.g. Java, Python).
+        The REST namespace does not transmit this object directly (see the QueryTable
+        operation for how the Arrow IPC binary response maps to it). It is the standard data
+        model for the LanceNamespace interfaces (e.g. Java, Python).
       properties:
         context:
           additionalProperties:
@@ -5907,9 +5922,9 @@ components:
       description: |
         Response for a table existence check.
 
-        This model is not used by the REST namespace, which conveys existence via the HTTP
-        status code (200 if the table exists, 404 otherwise). It is provided as a standard
-        data model for non-REST LanceNamespace interfaces (e.g. Java, Python).
+        The REST namespace does not transmit this object directly (see the TableExists
+        operation for how the status-code response maps to it). It is the standard data model
+        for the LanceNamespace interfaces (e.g. Java, Python).
       properties:
         context:
           additionalProperties:

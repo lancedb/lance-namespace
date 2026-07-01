@@ -1,6 +1,6 @@
 # QueryTableResponse
 
-Query results.  This model is not used by the REST namespace, which returns the Arrow IPC file binary data directly (see the QueryTable operation). It is provided as a standard data model for non-REST LanceNamespace interfaces (e.g. Java, Python). 
+Query results.  The REST namespace does not transmit this object directly (see the QueryTable operation for how the Arrow IPC binary response maps to it). It is the standard data model for the LanceNamespace interfaces (e.g. Java, Python). 
 
 ## Properties
 

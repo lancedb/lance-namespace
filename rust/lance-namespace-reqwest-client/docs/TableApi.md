@@ -311,7 +311,7 @@ Name | Type | Description  | Required | Notes
 > i64 count_table_rows(id, count_table_rows_request, delimiter)
 Count rows in a table
 
-Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. 
+Count the number of rows in table `id`  REST NAMESPACE ONLY REST namespace returns the response as a plain integer instead of the `CountTableRowsResponse` JSON object. The REST response maps to the `CountTableRowsResponse` model as follows: - the integer response body maps to `count` - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
 
 ### Parameters
 
@@ -1233,7 +1233,7 @@ Name | Type | Description  | Required | Notes
 > Vec<u8> query_table(id, query_table_request, delimiter)
 Query a table
 
-Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. The REST response has no JSON body, so REST conveys any response context via response headers. The `QueryTableResponse` object model (context plus the Arrow data) is provided for non-REST LanceNamespace interfaces. 
+Query table `id` with vector search, full text search and optional SQL filtering. Returns results in Arrow IPC file or stream format.  REST NAMESPACE ONLY REST namespace returns the response as Arrow IPC file binary data instead of the `QueryTableResponse` JSON object. The REST response maps to the `QueryTableResponse` model as follows: - the Arrow IPC file binary body maps to `data` - response headers map to `context` via the `header.` prefix (see the `Context` schema) 
 
 ### Parameters
 
@@ -1361,7 +1361,7 @@ Name | Type | Description  | Required | Notes
 > table_exists(id, table_exists_request, delimiter)
 Check if a table exists
 
-Check if table `id` exists.  This operation should behave exactly like DescribeTable, except it does not contain a response body.  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (declared table created with DeclareTable) 
+Check if table `id` exists.  This operation should behave exactly like DescribeTable, except it does not contain a response body.  REST NAMESPACE ONLY REST namespace conveys the result through the HTTP status code with no response body. The REST response maps to the `TableExistsResponse` model as follows: - a `200` response means the table exists; a `404` response means it does not - response headers map to `context` via the `header.` prefix (see the `Context` schema)  For DirectoryNamespace implementation, a table exists if either: - The table has Lance data versions (regular table created with CreateTable) - A `.lance-reserved` file exists in the table directory (declared table created with DeclareTable) 
 
 ### Parameters
 

@@ -1,6 +1,6 @@
 # NamespaceExistsResponse
 
-Response for a namespace existence check.  This model is not used by the REST namespace, which conveys existence via the HTTP status code (200 if the namespace exists, 404 otherwise). It is provided as a standard data model for non-REST LanceNamespace interfaces (e.g. Java, Python). 
+Response for a namespace existence check.  The REST namespace does not transmit this object directly (see the NamespaceExists operation for how the status-code response maps to it). It is the standard data model for the LanceNamespace interfaces (e.g. Java, Python). 
 
 ## Properties
 

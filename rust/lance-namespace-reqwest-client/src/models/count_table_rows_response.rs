@@ -11,7 +11,7 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// CountTableRowsResponse : Response containing the count of rows.  This model is not used by the REST namespace, which returns the count as a bare number (see the CountTableRows operation). It is provided as a standard data model for non-REST LanceNamespace interfaces (e.g. Java, Python). 
+/// CountTableRowsResponse : Response containing the count of rows.  The REST namespace does not transmit this object directly (see the CountTableRows operation for how the bare-number response maps to it). It is the standard data model for the LanceNamespace interfaces (e.g. Java, Python). 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CountTableRowsResponse {
     /// Arbitrary context as key-value pairs. How to use the context is custom to the specific implementation.  On a request, it carries caller-provided context to the implementation. On a response, it carries implementation-provided context back to the caller.  REST NAMESPACE ONLY Context entries are mapped to and from HTTP headers using the `header.` prefix: - On a request, any entry whose key starts with `header.` is sent as an HTTP   request header with the prefix stripped. For example, the entry   `{\"header.Authorization\": \"Bearer abc\"}` is sent as the request header   `Authorization: Bearer abc`. - On a response, every HTTP response header is returned as an entry whose key is the   header name prefixed with `header.`. For example, the response header   `x-request-id: abc123` is returned as the entry `{\"header.x-request-id\": \"abc123\"}`. 
@@ -23,7 +23,7 @@ pub struct CountTableRowsResponse {
 }
 
 impl CountTableRowsResponse {
-    /// Response containing the count of rows.  This model is not used by the REST namespace, which returns the count as a bare number (see the CountTableRows operation). It is provided as a standard data model for non-REST LanceNamespace interfaces (e.g. Java, Python). 
+    /// Response containing the count of rows.  The REST namespace does not transmit this object directly (see the CountTableRows operation for how the bare-number response maps to it). It is the standard data model for the LanceNamespace interfaces (e.g. Java, Python). 
     pub fn new() -> CountTableRowsResponse {
         CountTableRowsResponse {
             context: None,

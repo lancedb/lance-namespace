@@ -379,7 +379,10 @@ public class DataApi extends BaseApi {
   /**
    * Count rows in a table Count the number of rows in table &#x60;id&#x60; REST NAMESPACE ONLY REST
    * namespace returns the response as a plain integer instead of the
-   * &#x60;CountTableRowsResponse&#x60; JSON object.
+   * &#x60;CountTableRowsResponse&#x60; JSON object. The REST response maps to the
+   * &#x60;CountTableRowsResponse&#x60; model as follows: - the integer response body maps to
+   * &#x60;count&#x60; - response headers map to &#x60;context&#x60; via the &#x60;header.&#x60;
+   * prefix (see the &#x60;Context&#x60; schema)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -401,7 +404,10 @@ public class DataApi extends BaseApi {
   /**
    * Count rows in a table Count the number of rows in table &#x60;id&#x60; REST NAMESPACE ONLY REST
    * namespace returns the response as a plain integer instead of the
-   * &#x60;CountTableRowsResponse&#x60; JSON object.
+   * &#x60;CountTableRowsResponse&#x60; JSON object. The REST response maps to the
+   * &#x60;CountTableRowsResponse&#x60; model as follows: - the integer response body maps to
+   * &#x60;count&#x60; - response headers map to &#x60;context&#x60; via the &#x60;header.&#x60;
+   * prefix (see the &#x60;Context&#x60; schema)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1303,9 +1309,10 @@ public class DataApi extends BaseApi {
    * Query a table Query table &#x60;id&#x60; with vector search, full text search and optional SQL
    * filtering. Returns results in Arrow IPC file or stream format. REST NAMESPACE ONLY REST
    * namespace returns the response as Arrow IPC file binary data instead of the
-   * &#x60;QueryTableResponse&#x60; JSON object. The REST response has no JSON body, so REST conveys
-   * any response context via response headers. The &#x60;QueryTableResponse&#x60; object model
-   * (context plus the Arrow data) is provided for non-REST LanceNamespace interfaces.
+   * &#x60;QueryTableResponse&#x60; JSON object. The REST response maps to the
+   * &#x60;QueryTableResponse&#x60; model as follows: - the Arrow IPC file binary body maps to
+   * &#x60;data&#x60; - response headers map to &#x60;context&#x60; via the &#x60;header.&#x60;
+   * prefix (see the &#x60;Context&#x60; schema)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -1327,9 +1334,10 @@ public class DataApi extends BaseApi {
    * Query a table Query table &#x60;id&#x60; with vector search, full text search and optional SQL
    * filtering. Returns results in Arrow IPC file or stream format. REST NAMESPACE ONLY REST
    * namespace returns the response as Arrow IPC file binary data instead of the
-   * &#x60;QueryTableResponse&#x60; JSON object. The REST response has no JSON body, so REST conveys
-   * any response context via response headers. The &#x60;QueryTableResponse&#x60; object model
-   * (context plus the Arrow data) is provided for non-REST LanceNamespace interfaces.
+   * &#x60;QueryTableResponse&#x60; JSON object. The REST response maps to the
+   * &#x60;QueryTableResponse&#x60; model as follows: - the Arrow IPC file binary body maps to
+   * &#x60;data&#x60; - response headers map to &#x60;context&#x60; via the &#x60;header.&#x60;
+   * prefix (see the &#x60;Context&#x60; schema)
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.

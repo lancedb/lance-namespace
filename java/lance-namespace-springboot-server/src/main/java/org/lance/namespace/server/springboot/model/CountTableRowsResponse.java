@@ -25,14 +25,14 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Response containing the count of rows. This model is not used by the REST namespace, which
- * returns the count as a bare number (see the CountTableRows operation). It is provided as a
- * standard data model for non-REST LanceNamespace interfaces (e.g. Java, Python).
+ * Response containing the count of rows. The REST namespace does not transmit this object directly
+ * (see the CountTableRows operation for how the bare-number response maps to it). It is the
+ * standard data model for the LanceNamespace interfaces (e.g. Java, Python).
  */
 @Schema(
     name = "CountTableRowsResponse",
     description =
-        "Response containing the count of rows.  This model is not used by the REST namespace, which returns the count as a bare number (see the CountTableRows operation). It is provided as a standard data model for non-REST LanceNamespace interfaces (e.g. Java, Python). ")
+        "Response containing the count of rows.  The REST namespace does not transmit this object directly (see the CountTableRows operation for how the bare-number response maps to it). It is the standard data model for the LanceNamespace interfaces (e.g. Java, Python). ")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     comments = "Generator version: 7.12.0")
