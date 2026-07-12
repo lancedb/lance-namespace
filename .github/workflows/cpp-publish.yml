@@ -1,0 +1,239 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: C++ Publish
+
+on:
+  release:
+    types:
+      - released
+  pull_request:
+    paths:
+      - .github/workflows/cpp-publish.yml
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Release mode'
+        required: true
+        type: choice
+        default: dry_run
+        options:
+          - dry_run
+          - release
+      ref:
+        description: 'Branch, tag or SHA to checkout'
+        required: false
+        type: string
+
+permissions:
+  contents: write  # needed to upload release assets
+
+jobs:
+  build:
+    name: Build (${{ matrix.target }})
+    runs-on: ${{ matrix.runner }}
+    container: ${{ matrix.container || '' }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            container: quay.io/pypa/manylinux_2_28_x86_64
+            target: x86_64-unknown-linux-gnu
+            cc: clang
+            cxx: clang++
+          - runner: ubuntu-24.04-arm
+            container: quay.io/pypa/manylinux_2_28_aarch64
+            target: aarch64-unknown-linux-gnu
+            cc: clang
+            cxx: clang++
+          - runner: macos-14
+            target: aarch64-apple-darwin
+            cc: clang
+            cxx: clang++
+          - runner: windows-latest
+            target: x86_64-pc-windows-msvc
+            cc: ''
+            cxx: ''
+
+    env:
+      CC: ${{ matrix.cc }}
+      CXX: ${{ matrix.cxx }}
+      MACOSX_DEPLOYMENT_TARGET: "11"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.ref || '' }}
+
+      # ── Linux setup ──────────────────────────────────────────────────────
+      - name: Install Clang 20 (Linux)
+        if: runner.os == 'Linux'
+        run: manylinux-install-clang -v 20.1.8.0
+
+      - name: Install CMake & Ninja (Linux)
+        if: runner.os == 'Linux'
+        run: pip3 install --quiet cmake ninja
+
+      - name: Install cpprestsdk (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          yum install -y openssl-devel boost-devel zlib-devel || \
+          dnf install -y openssl-devel boost-devel zlib-devel || true
+          git clone --depth 1 --branch v2.10.19 \
+              https://github.com/microsoft/cpprestsdk.git /tmp/cpprestsdk
+          cmake -S /tmp/cpprestsdk/Release -B /tmp/cpprestsdk_build \
+              -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF -DBUILD_SAMPLES=OFF \
+              -DCMAKE_INSTALL_PREFIX=/usr/local
+          cmake --build /tmp/cpprestsdk_build --parallel $(nproc)
+          cmake --install /tmp/cpprestsdk_build
+
+      # ── macOS setup ──────────────────────────────────────────────────────
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: brew install cpprestsdk cmake ninja
+
+      # ── Windows setup ────────────────────────────────────────────────────
+      - name: Set up vcpkg (Windows)
+        if: runner.os == 'Windows'
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgDirectory: ${{ github.workspace }}/vcpkg
+          vcpkgGitCommitId: "b322364f06308bdd24823a9352d330bc5c6b54cf"
+
+      - name: Install cpprestsdk via vcpkg (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: >
+          ${{ github.workspace }}\vcpkg\vcpkg install cpprestsdk:x64-windows
+
+      # ── Code generation ──────────────────────────────────────────────────
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Generate REST client
+        working-directory: cpp
+        shell: bash
+        run: make gen-rest-client
+
+      # ── Build & install ───────────────────────────────────────────────────
+      - name: Resolve version
+        id: ver
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ inputs.version || '0.0.0-dev' }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure & build (Linux / macOS)
+        if: runner.os != 'Windows'
+        working-directory: cpp
+        run: |
+          cmake -S . -B build \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DLANCE_NAMESPACE_BUILD_TESTS=OFF \
+              -DCMAKE_INSTALL_PREFIX=stage
+          cmake --build build --parallel $(nproc 2>/dev/null || sysctl -n hw.logicalcpu)
+          cmake --install build --prefix stage
+
+      - name: Configure & build (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $vcpkg = "${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake"
+          cmake -S cpp -B cpp/build `
+            -DCMAKE_BUILD_TYPE=Release `
+            "-DCMAKE_TOOLCHAIN_FILE=$vcpkg" `
+            -DVCPKG_TARGET_TRIPLET=x64-windows `
+            -DLANCE_NAMESPACE_BUILD_TESTS=OFF `
+            -DCMAKE_INSTALL_PREFIX=cpp/stage
+          cmake --build cpp/build --config Release --parallel
+          cmake --install cpp/build --config Release --prefix cpp/stage
+
+      # ── Package ───────────────────────────────────────────────────────────
+      - name: Create archive (Linux / macOS)
+        if: runner.os != 'Windows'
+        id: pack_unix
+        working-directory: cpp
+        run: |
+          VERSION=${{ steps.ver.outputs.version }}
+          TARGET=${{ matrix.target }}
+          ARCHIVE="lance-namespace-cpp-v${VERSION}-${TARGET}.tar.xz"
+          tar -C stage -cJf "${ARCHIVE}" .
+          if command -v shasum > /dev/null 2>&1; then
+            shasum -a 256 "${ARCHIVE}" > "${ARCHIVE}.sha256"
+            shasum -a 512 "${ARCHIVE}" > "${ARCHIVE}.sha512"
+          else
+            sha256sum "${ARCHIVE}" > "${ARCHIVE}.sha256"
+            sha512sum "${ARCHIVE}" > "${ARCHIVE}.sha512"
+          fi
+          echo "archive=${ARCHIVE}" >> "$GITHUB_OUTPUT"
+
+      - name: Create archive (Windows)
+        if: runner.os == 'Windows'
+        id: pack_win
+        shell: pwsh
+        working-directory: cpp
+        run: |
+          $VERSION = "${{ steps.ver.outputs.version }}"
+          $TARGET  = "${{ matrix.target }}"
+          $ARCHIVE = "lance-namespace-cpp-v${VERSION}-${TARGET}.zip"
+          Compress-Archive -Path stage\* -DestinationPath $ARCHIVE
+          $hash256 = (Get-FileHash $ARCHIVE -Algorithm SHA256).Hash.ToLower()
+          $hash512 = (Get-FileHash $ARCHIVE -Algorithm SHA512).Hash.ToLower()
+          "$hash256  $ARCHIVE" | Out-File "${ARCHIVE}.sha256" -Encoding ascii
+          "$hash512  $ARCHIVE" | Out-File "${ARCHIVE}.sha512" -Encoding ascii
+          echo "archive=$ARCHIVE" >> $env:GITHUB_OUTPUT
+
+      # ── Upload to workflow artefacts ──────────────────────────────────────
+      - name: Upload artefact (Linux / macOS)
+        if: runner.os != 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: |
+            cpp/${{ steps.pack_unix.outputs.archive }}
+            cpp/${{ steps.pack_unix.outputs.archive }}.sha256
+            cpp/${{ steps.pack_unix.outputs.archive }}.sha512
+
+      - name: Upload artefact (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: |
+            cpp/${{ steps.pack_win.outputs.archive }}
+            cpp/${{ steps.pack_win.outputs.archive }}.sha256
+            cpp/${{ steps.pack_win.outputs.archive }}.sha512
+
+  # ─── Attach to GitHub Release ─────────────────────────────────────────────
+  release:
+    name: Attach to GitHub Release
+    needs: build
+    runs-on: ubuntu-24.04
+    if: |
+      (github.event_name == 'release' && github.event.action == 'released') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'release')
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.release.tag_name }}
+          files: artifacts/**
