@@ -88,8 +88,6 @@ jobs:
       - name: Install cpprestsdk (Linux)
         if: runner.os == 'Linux'
         run: |
-          yum install -y openssl-devel boost-devel zlib-devel || \
-          dnf install -y openssl-devel boost-devel zlib-devel || true
           git clone --depth 1 --branch v2.10.19 \
               https://github.com/microsoft/cpprestsdk.git /tmp/cpprestsdk
           cmake -S /tmp/cpprestsdk/Release -B /tmp/cpprestsdk_build \
@@ -121,6 +119,9 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
 
+      - name: Install rest-sdk dependencies
+        run: uv sync --all-packages
+
       - name: Generate REST client
         working-directory: cpp
         shell: bash
@@ -139,13 +140,14 @@ jobs:
 
       - name: Configure & build (Linux / macOS)
         if: runner.os != 'Windows'
-        working-directory: cpp
+        working-directory: cpp/lance_namespace
         run: |
           cmake -S . -B build \
               -DCMAKE_BUILD_TYPE=Release \
               -DLANCE_NAMESPACE_BUILD_TESTS=OFF \
               -DCMAKE_INSTALL_PREFIX=stage
-          cmake --build build --parallel $(nproc 2>/dev/null || sysctl -n hw.logicalcpu)
+          NPROC=$(nproc 2>/dev/null || sysctl -n hw.logicalcpu)
+          cmake --build build --parallel $NPROC
           cmake --install build --prefix stage
 
       - name: Configure & build (Windows)
@@ -153,14 +155,14 @@ jobs:
         shell: pwsh
         run: |
           $vcpkg = "${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake"
-          cmake -S cpp -B cpp/build `
+          cmake -S cpp/lance_namespace -B cpp/lance_namespace/build `
             -DCMAKE_BUILD_TYPE=Release `
             "-DCMAKE_TOOLCHAIN_FILE=$vcpkg" `
             -DVCPKG_TARGET_TRIPLET=x64-windows `
             -DLANCE_NAMESPACE_BUILD_TESTS=OFF `
-            -DCMAKE_INSTALL_PREFIX=cpp/stage
-          cmake --build cpp/build --config Release --parallel
-          cmake --install cpp/build --config Release --prefix cpp/stage
+            -DCMAKE_INSTALL_PREFIX=cpp/lance_namespace/stage
+          cmake --build cpp/lance_namespace/build --config Release --parallel
+          cmake --install cpp/lance_namespace/build --config Release --prefix cpp/lance_namespace/stage
 
       # ── Package ───────────────────────────────────────────────────────────
       - name: Create archive (Linux / macOS)

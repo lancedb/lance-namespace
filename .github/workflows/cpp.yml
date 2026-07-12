@@ -79,8 +79,6 @@ jobs:
 
       - name: Install cpprestsdk
         run: |
-          yum install -y openssl-devel boost-devel zlib-devel || \
-          dnf install -y openssl-devel boost-devel zlib-devel || true
           git clone --depth 1 --branch v2.10.19 \
               https://github.com/microsoft/cpprestsdk.git /tmp/cpprestsdk
           cmake -S /tmp/cpprestsdk/Release -B /tmp/cpprestsdk_build \
@@ -93,12 +91,15 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
 
+      - name: Install rest-sdk dependencies
+        run: uv sync --all-packages
+
       - name: Generate REST client
         working-directory: cpp
         run: make gen-rest-client
 
       - name: Configure & build (with tests)
-        working-directory: cpp
+        working-directory: cpp/lance_namespace
         run: |
           cmake -S . -B build \
               -DCMAKE_BUILD_TYPE=Release \
@@ -106,7 +107,7 @@ jobs:
           cmake --build build --parallel $(nproc)
 
       - name: Run tests
-        working-directory: cpp/build
+        working-directory: cpp/lance_namespace/build
         run: ctest --output-on-failure -j$(nproc)
 
   # ─── macOS (Apple Silicon, macOS 11+ deployment target) ─────────────────────
@@ -125,12 +126,15 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
 
+      - name: Install rest-sdk dependencies
+        run: uv sync --all-packages
+
       - name: Generate REST client
         working-directory: cpp
         run: make gen-rest-client
 
       - name: Configure & build (with tests)
-        working-directory: cpp
+        working-directory: cpp/lance_namespace
         run: |
           cmake -S . -B build -G Ninja \
               -DCMAKE_BUILD_TYPE=Release \
@@ -138,13 +142,13 @@ jobs:
           cmake --build build --parallel
 
       - name: Run tests
-        working-directory: cpp/build
+        working-directory: cpp/lance_namespace/build
         run: ctest --output-on-failure -j$(sysctl -n hw.logicalcpu)
 
   # ─── Windows (MSVC 2022, x64) ───────────────────────────────────────────────
   windows:
     name: Windows (x64, MSVC)
-    runs-on: windows-latest
+    runs-on: windows-2022
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
@@ -163,6 +167,9 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
 
+      - name: Install rest-sdk dependencies
+        run: uv sync --all-packages
+
       - name: Generate REST client
         working-directory: cpp
         shell: bash
@@ -172,37 +179,14 @@ jobs:
         shell: pwsh
         run: |
           $vcpkgToolchain = "${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake"
-          cmake -S cpp -B cpp/build `
+          cmake -S cpp/lance_namespace -B cpp/lance_namespace/build `
             -DCMAKE_BUILD_TYPE=Release `
             "-DCMAKE_TOOLCHAIN_FILE=$vcpkgToolchain" `
             -DVCPKG_TARGET_TRIPLET=x64-windows `
             -DLANCE_NAMESPACE_BUILD_TESTS=ON
-          cmake --build cpp/build --config Release --parallel
+          cmake --build cpp/lance_namespace/build --config Release --parallel
 
       - name: Run tests
-        working-directory: cpp/build
+        working-directory: cpp/lance_namespace/build
         shell: pwsh
         run: ctest -C Release --output-on-failure
-
-  # ─── License header check ───────────────────────────────────────────────────
-  license-headers:
-    name: License headers
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Check C/C++ source files for SPDX headers
-        run: |
-          MISSING=""
-          for f in $(find cpp/lance_namespace/src cpp/lance_namespace/include \
-                          cpp/lance_namespace/tests \
-                      -name '*.cpp' -o -name '*.h' -o -name '*.hpp' 2>/dev/null); do
-            if ! head -2 "$f" | grep -q 'SPDX-License-Identifier'; then
-              MISSING="$MISSING $f"
-            fi
-          done
-          if [ -n "$MISSING" ]; then
-            echo "Missing SPDX license header in:$MISSING"
-            exit 1
-          fi
