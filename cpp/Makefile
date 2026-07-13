@@ -12,19 +12,14 @@
 
 VERSION    = 0.8.7-beta.1
 SPEC       = ../docs/src/spec.yaml
-NPROC     := $(shell nproc 2>/dev/null || sysctl -n hw.logicalcpu 2>/dev/null || echo 4)
+NPROC     := $(shell nproc 2>/dev/null || sysctl -n hw.logicalcpu 2>/dev/null || echo 8)
 CLANG_FMT ?= clang-format-20
 
 # ─── REST client (cpp-restsdk, generated) ────────────────────────────────────
 
 .PHONY: clean-rest-client
 clean-rest-client:
-	rm -rf lance_namespace_rest_client/include \
-	        lance_namespace_rest_client/src \
-	        lance_namespace_rest_client/model \
-	        lance_namespace_rest_client/api \
-	        lance_namespace_rest_client/CMakeLists.txt
-	mkdir -p lance_namespace_rest_client
+	rm -rf lance_namespace_rest_client
 
 .PHONY: gen-rest-client
 gen-rest-client: clean-rest-client
@@ -41,13 +36,13 @@ gen-rest-client: clean-rest-client
 # ─── Core build ──────────────────────────────────────────────────────────────
 
 .PHONY: build-core
-build-core:
-	cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-	cmake --build build --parallel $(NPROC)
+build-core: gen-rest-client
+	cmake -S lance_namespace -B lance_namespace/build -DCMAKE_BUILD_TYPE=Release
+	cmake --build lance_namespace/build --parallel $(NPROC)
 
 .PHONY: test-core
 test-core: build-core
-	cd build && ctest --output-on-failure -j$(NPROC)
+	cd lance_namespace/build && ctest --output-on-failure -j$(NPROC)
 
 # ─── clang-format ────────────────────────────────────────────────────────────
 
@@ -68,17 +63,15 @@ format-check:
 	fi
 	@echo "All files pass clang-format-20."
 
-# ─── Phony aggregates ────────────────────────────────────────────────────────
-
 .PHONY: clean
 clean: clean-rest-client
-	rm -rf build
+	rm -rf lance_namespace/build
 
 .PHONY: gen
 gen: gen-rest-client
 
 .PHONY: build
-build: gen build-core
+build: build-core
 
 .PHONY: test
 test: test-core
