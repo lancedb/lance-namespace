@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/BranchContents.h"
+#include "lance_namespace_rest_client/model/BranchContents.h"
 
 namespace org {
 namespace openapitools {

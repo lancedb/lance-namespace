@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/ListTablesRequest.h"
+#include "lance_namespace_rest_client/model/ListTablesRequest.h"
 
 namespace org {
 namespace openapitools {

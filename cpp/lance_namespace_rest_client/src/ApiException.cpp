@@ -9,7 +9,7 @@
  * Do not edit the class manually.
  */
 
-#include "LanceNamespace/ApiException.h"
+#include "lance_namespace_rest_client/ApiException.h"
 
 namespace org {
 namespace openapitools {

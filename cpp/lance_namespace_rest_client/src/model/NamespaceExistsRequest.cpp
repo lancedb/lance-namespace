@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/NamespaceExistsRequest.h"
+#include "lance_namespace_rest_client/model/NamespaceExistsRequest.h"
 
 namespace org {
 namespace openapitools {

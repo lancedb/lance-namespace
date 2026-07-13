@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/AlterVirtualColumnEntry.h"
+#include "lance_namespace_rest_client/model/AlterVirtualColumnEntry.h"
 
 namespace org {
 namespace openapitools {

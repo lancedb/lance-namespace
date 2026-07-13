@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/CreateTableScalarIndexResponse.h"
+#include "lance_namespace_rest_client/model/CreateTableScalarIndexResponse.h"
 
 namespace org {
 namespace openapitools {

@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/PhraseQuery.h"
+#include "lance_namespace_rest_client/model/PhraseQuery.h"
 
 namespace org {
 namespace openapitools {

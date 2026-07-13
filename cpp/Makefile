@@ -27,7 +27,7 @@ gen-rest-client: clean-rest-client
 	  -i $(SPEC) \
 	  -g cpp-restsdk \
 	  -o lance_namespace_rest_client \
-	  --additional-properties=packageName=LanceNamespace,packageVersion=$(VERSION),httpUserAgent=lance-namespace-cpp/$(VERSION)
+	  --additional-properties=packageName=lance_namespace_rest_client,packageVersion=$(VERSION)
 	rm -rf lance_namespace_rest_client/.openapi-generator
 	rm -f  lance_namespace_rest_client/.gitignore
 	rm -f  lance_namespace_rest_client/git_push.sh

@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/CreateTableVersionEntry.h"
+#include "lance_namespace_rest_client/model/CreateTableVersionEntry.h"
 
 namespace org {
 namespace openapitools {

@@ -9,9 +9,9 @@
  * Do not edit the class manually.
  */
 
-#include "LanceNamespace/ApiClient.h"
-#include "LanceNamespace/MultipartFormData.h"
-#include "LanceNamespace/ModelBase.h"
+#include "lance_namespace_rest_client/ApiClient.h"
+#include "lance_namespace_rest_client/MultipartFormData.h"
+#include "lance_namespace_rest_client/ModelBase.h"
 
 #include <sstream>
 #include <limits>

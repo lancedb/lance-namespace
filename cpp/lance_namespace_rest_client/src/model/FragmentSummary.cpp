@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/FragmentSummary.h"
+#include "lance_namespace_rest_client/model/FragmentSummary.h"
 
 namespace org {
 namespace openapitools {

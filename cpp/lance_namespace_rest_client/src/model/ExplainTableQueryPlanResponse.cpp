@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/ExplainTableQueryPlanResponse.h"
+#include "lance_namespace_rest_client/model/ExplainTableQueryPlanResponse.h"
 
 namespace org {
 namespace openapitools {

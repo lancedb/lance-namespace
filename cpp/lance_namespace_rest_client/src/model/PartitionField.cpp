@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/PartitionField.h"
+#include "lance_namespace_rest_client/model/PartitionField.h"
 
 namespace org {
 namespace openapitools {

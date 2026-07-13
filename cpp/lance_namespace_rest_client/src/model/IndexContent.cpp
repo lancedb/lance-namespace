@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/IndexContent.h"
+#include "lance_namespace_rest_client/model/IndexContent.h"
 
 namespace org {
 namespace openapitools {

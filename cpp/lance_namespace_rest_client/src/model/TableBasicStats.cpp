@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/TableBasicStats.h"
+#include "lance_namespace_rest_client/model/TableBasicStats.h"
 
 namespace org {
 namespace openapitools {

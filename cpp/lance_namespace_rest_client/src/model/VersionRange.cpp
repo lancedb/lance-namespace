@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/VersionRange.h"
+#include "lance_namespace_rest_client/model/VersionRange.h"
 
 namespace org {
 namespace openapitools {

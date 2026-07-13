@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/BoostQuery.h"
+#include "lance_namespace_rest_client/model/BoostQuery.h"
 
 namespace org {
 namespace openapitools {

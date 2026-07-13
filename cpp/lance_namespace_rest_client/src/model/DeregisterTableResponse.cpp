@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/DeregisterTableResponse.h"
+#include "lance_namespace_rest_client/model/DeregisterTableResponse.h"
 
 namespace org {
 namespace openapitools {

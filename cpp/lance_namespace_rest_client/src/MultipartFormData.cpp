@@ -9,8 +9,8 @@
  * Do not edit the class manually.
  */
 
-#include "LanceNamespace/MultipartFormData.h"
-#include "LanceNamespace/ModelBase.h"
+#include "lance_namespace_rest_client/MultipartFormData.h"
+#include "lance_namespace_rest_client/ModelBase.h"
 
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>

@@ -9,7 +9,7 @@
  * Do not edit the class manually.
  */
 
-#include "LanceNamespace/JsonBody.h"
+#include "lance_namespace_rest_client/JsonBody.h"
 
 namespace org {
 namespace openapitools {

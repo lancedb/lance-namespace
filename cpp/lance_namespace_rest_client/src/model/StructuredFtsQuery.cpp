@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/StructuredFtsQuery.h"
+#include "lance_namespace_rest_client/model/StructuredFtsQuery.h"
 
 namespace org {
 namespace openapitools {

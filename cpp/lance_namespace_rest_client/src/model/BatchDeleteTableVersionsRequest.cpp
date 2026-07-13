@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/BatchDeleteTableVersionsRequest.h"
+#include "lance_namespace_rest_client/model/BatchDeleteTableVersionsRequest.h"
 
 namespace org {
 namespace openapitools {

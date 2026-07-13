@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/QueryTableRequest_vector.h"
+#include "lance_namespace_rest_client/model/QueryTableRequest_vector.h"
 
 namespace org {
 namespace openapitools {

@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/AlterTransactionSetProperty.h"
+#include "lance_namespace_rest_client/model/AlterTransactionSetProperty.h"
 
 namespace org {
 namespace openapitools {

@@ -9,7 +9,7 @@
  * Do not edit the class manually.
  */
 
-#include "LanceNamespace/ModelBase.h"
+#include "lance_namespace_rest_client/ModelBase.h"
 
 namespace org {
 namespace openapitools {

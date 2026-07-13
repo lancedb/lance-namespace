@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/RefreshMaterializedViewRequest.h"
+#include "lance_namespace_rest_client/model/RefreshMaterializedViewRequest.h"
 
 namespace org {
 namespace openapitools {

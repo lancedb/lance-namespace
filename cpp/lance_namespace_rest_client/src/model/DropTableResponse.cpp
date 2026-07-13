@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/DropTableResponse.h"
+#include "lance_namespace_rest_client/model/DropTableResponse.h"
 
 namespace org {
 namespace openapitools {

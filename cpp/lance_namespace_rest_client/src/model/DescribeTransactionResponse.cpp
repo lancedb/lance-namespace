@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/DescribeTransactionResponse.h"
+#include "lance_namespace_rest_client/model/DescribeTransactionResponse.h"
 
 namespace org {
 namespace openapitools {

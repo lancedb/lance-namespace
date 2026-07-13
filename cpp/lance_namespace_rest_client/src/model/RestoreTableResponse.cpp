@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/RestoreTableResponse.h"
+#include "lance_namespace_rest_client/model/RestoreTableResponse.h"
 
 namespace org {
 namespace openapitools {

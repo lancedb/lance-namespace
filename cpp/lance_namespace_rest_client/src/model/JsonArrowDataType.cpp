@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/JsonArrowDataType.h"
+#include "lance_namespace_rest_client/model/JsonArrowDataType.h"
 
 namespace org {
 namespace openapitools {

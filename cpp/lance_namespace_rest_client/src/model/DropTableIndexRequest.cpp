@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/DropTableIndexRequest.h"
+#include "lance_namespace_rest_client/model/DropTableIndexRequest.h"
 
 namespace org {
 namespace openapitools {

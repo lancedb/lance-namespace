@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/DropNamespaceRequest.h"
+#include "lance_namespace_rest_client/model/DropNamespaceRequest.h"
 
 namespace org {
 namespace openapitools {

@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/CountTableRowsRequest.h"
+#include "lance_namespace_rest_client/model/CountTableRowsRequest.h"
 
 namespace org {
 namespace openapitools {

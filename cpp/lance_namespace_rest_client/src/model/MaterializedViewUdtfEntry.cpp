@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/MaterializedViewUdtfEntry.h"
+#include "lance_namespace_rest_client/model/MaterializedViewUdtfEntry.h"
 
 namespace org {
 namespace openapitools {

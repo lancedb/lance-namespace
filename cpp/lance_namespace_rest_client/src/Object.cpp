@@ -9,7 +9,7 @@
  * Do not edit the class manually.
  */
 
-#include "LanceNamespace/Object.h"
+#include "lance_namespace_rest_client/Object.h"
 
 namespace org {
 namespace openapitools {

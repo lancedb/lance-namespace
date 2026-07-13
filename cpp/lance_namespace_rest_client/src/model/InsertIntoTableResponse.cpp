@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/InsertIntoTableResponse.h"
+#include "lance_namespace_rest_client/model/InsertIntoTableResponse.h"
 
 namespace org {
 namespace openapitools {

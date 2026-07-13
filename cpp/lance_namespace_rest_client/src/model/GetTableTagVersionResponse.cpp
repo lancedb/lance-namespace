@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/GetTableTagVersionResponse.h"
+#include "lance_namespace_rest_client/model/GetTableTagVersionResponse.h"
 
 namespace org {
 namespace openapitools {

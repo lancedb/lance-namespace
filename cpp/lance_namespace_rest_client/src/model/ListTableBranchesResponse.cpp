@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/ListTableBranchesResponse.h"
+#include "lance_namespace_rest_client/model/ListTableBranchesResponse.h"
 
 namespace org {
 namespace openapitools {

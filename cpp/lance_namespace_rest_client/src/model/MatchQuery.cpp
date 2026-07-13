@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/MatchQuery.h"
+#include "lance_namespace_rest_client/model/MatchQuery.h"
 
 namespace org {
 namespace openapitools {

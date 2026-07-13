@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/DeleteFromTableRequest.h"
+#include "lance_namespace_rest_client/model/DeleteFromTableRequest.h"
 
 namespace org {
 namespace openapitools {

@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/AlterTableBackfillColumnsResponse.h"
+#include "lance_namespace_rest_client/model/AlterTableBackfillColumnsResponse.h"
 
 namespace org {
 namespace openapitools {

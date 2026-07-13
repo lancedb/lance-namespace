@@ -10,10 +10,10 @@
  */
 
 
-#include "LanceNamespace/api/BranchApi.h"
-#include "LanceNamespace/IHttpBody.h"
-#include "LanceNamespace/JsonBody.h"
-#include "LanceNamespace/MultipartFormData.h"
+#include "lance_namespace_rest_client/api/BranchApi.h"
+#include "lance_namespace_rest_client/IHttpBody.h"
+#include "lance_namespace_rest_client/JsonBody.h"
+#include "lance_namespace_rest_client/MultipartFormData.h"
 
 #include <boost/algorithm/string/replace.hpp>
 

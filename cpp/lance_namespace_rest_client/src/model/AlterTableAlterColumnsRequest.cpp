@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/AlterTableAlterColumnsRequest.h"
+#include "lance_namespace_rest_client/model/AlterTableAlterColumnsRequest.h"
 
 namespace org {
 namespace openapitools {

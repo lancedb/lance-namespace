@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/PartitionTransform.h"
+#include "lance_namespace_rest_client/model/PartitionTransform.h"
 
 namespace org {
 namespace openapitools {

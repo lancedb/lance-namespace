@@ -9,7 +9,7 @@
  * Do not edit the class manually.
  */
 
-#include "LanceNamespace/HttpContent.h"
+#include "lance_namespace_rest_client/HttpContent.h"
 
 namespace org {
 namespace openapitools {

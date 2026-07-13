@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/ErrorResponse.h"
+#include "lance_namespace_rest_client/model/ErrorResponse.h"
 
 namespace org {
 namespace openapitools {

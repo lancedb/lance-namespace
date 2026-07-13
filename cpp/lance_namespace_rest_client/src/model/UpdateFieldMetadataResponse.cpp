@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/UpdateFieldMetadataResponse.h"
+#include "lance_namespace_rest_client/model/UpdateFieldMetadataResponse.h"
 
 namespace org {
 namespace openapitools {

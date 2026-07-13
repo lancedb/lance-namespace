@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/DeleteTableBranchResponse.h"
+#include "lance_namespace_rest_client/model/DeleteTableBranchResponse.h"
 
 namespace org {
 namespace openapitools {

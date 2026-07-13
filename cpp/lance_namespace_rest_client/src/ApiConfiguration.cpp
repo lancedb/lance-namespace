@@ -9,7 +9,7 @@
  * Do not edit the class manually.
  */
 
-#include "LanceNamespace/ApiConfiguration.h"
+#include "lance_namespace_rest_client/ApiConfiguration.h"
 
 namespace org {
 namespace openapitools {

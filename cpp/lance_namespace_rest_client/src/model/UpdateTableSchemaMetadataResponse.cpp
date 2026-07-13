@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/UpdateTableSchemaMetadataResponse.h"
+#include "lance_namespace_rest_client/model/UpdateTableSchemaMetadataResponse.h"
 
 namespace org {
 namespace openapitools {

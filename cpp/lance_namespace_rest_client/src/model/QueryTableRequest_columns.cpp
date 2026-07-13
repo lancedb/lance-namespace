@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/QueryTableRequest_columns.h"
+#include "lance_namespace_rest_client/model/QueryTableRequest_columns.h"
 
 namespace org {
 namespace openapitools {

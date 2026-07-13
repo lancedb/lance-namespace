@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/CommitTableResult.h"
+#include "lance_namespace_rest_client/model/CommitTableResult.h"
 
 namespace org {
 namespace openapitools {

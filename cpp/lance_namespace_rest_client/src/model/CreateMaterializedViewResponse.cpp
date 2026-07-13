@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/CreateMaterializedViewResponse.h"
+#include "lance_namespace_rest_client/model/CreateMaterializedViewResponse.h"
 
 namespace org {
 namespace openapitools {

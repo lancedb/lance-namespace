@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/TagContents.h"
+#include "lance_namespace_rest_client/model/TagContents.h"
 
 namespace org {
 namespace openapitools {

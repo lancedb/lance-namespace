@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/BatchCreateTableVersionsRequest.h"
+#include "lance_namespace_rest_client/model/BatchCreateTableVersionsRequest.h"
 
 namespace org {
 namespace openapitools {

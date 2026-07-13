@@ -11,7 +11,7 @@
 
 
 
-#include "LanceNamespace/model/BooleanQuery.h"
+#include "lance_namespace_rest_client/model/BooleanQuery.h"
 
 namespace org {
 namespace openapitools {

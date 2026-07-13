@@ -10,7 +10,7 @@
 
 cmake_minimum_required (VERSION 3.5)
 
-project(LanceNamespace CXX)
+project(lance_namespace_rest_client CXX)
 
 # Force -fPIC even if the project is configured for building a static library.
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
