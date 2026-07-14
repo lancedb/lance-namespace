@@ -5,24 +5,19 @@
  * @file lance_namespace.hpp
  * @brief C++20 RAII wrapper for the Lance Namespace C API.
  *
- * All 55 namespace/table operations are exposed as methods that accept
- * and return std::string (UTF-8 JSON).  query_table() returns
- * std::vector<uint8_t> (raw Arrow IPC bytes).
- *
- * REST client model types live in a separate header in this library.
- * Include it manually when you need typed request/response objects:
+ * All operations are exposed as strongly-typed methods that accept and return
+ * generated model objects (consistent with the Python SDK's LanceNamespace
+ * interface). query_table() returns std::vector<uint8_t> (raw Arrow IPC bytes).
  *
  * @code
  *   #include <lance_namespace/lance_namespace.hpp>
- *   #include <lance_namespace/models.hpp>  // optional, for typed models
- *
- *   // Typed model objects:
- *   lance_namespace::models::CreateNamespaceRequest req;
- *   req.setNamespace({"myns"});
  *
  *   lance::namespace_::Properties props{{"uri", "http://localhost:2333"}};
  *   auto ns = lance::namespace_::connect("rest", props);
- *   std::string resp = ns.list_namespaces(R"({"parent":[]})");
+ *
+ *   lance_namespace::models::ListTablesRequest req;
+ *   req.setId({"myns"});
+ *   auto resp = ns.list_tables(req);  // resp is ListTablesResponse
  * @endcode
  *
  * Generate the REST client once with:
@@ -33,11 +28,13 @@
 #define LANCE_NAMESPACE_HPP
 
 #include <lance_namespace/lance_namespace.h>
+#include <lance_namespace/models.hpp>
 
+#include <cpprest/details/basic_types.h>
+#include <cpprest/json.h>
 #include <cstdint>
 #include <stdexcept>
 #include <string>
-#include <string_view>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -128,7 +125,8 @@ class Namespace {
  public:
   Namespace() = default;
   explicit Namespace(lance_namespace_t *raw) : raw_(raw) {
-    if (!raw_) throw_last_error();
+    if (!raw_)
+      throw_last_error();
   }
 
   ~Namespace() { reset(); }
@@ -159,90 +157,131 @@ class Namespace {
 
   /* ── Namespace operations ── */
 
-  std::string list_namespaces(std::string_view req) const {
-    return call_json(lance_namespace_list_namespaces(raw_, c(req)));
+  lance_namespace::models::ListNamespacesResponse list_namespaces(
+      const lance_namespace::models::ListNamespacesRequest &req) const {
+    return call_typed<lance_namespace::models::ListNamespacesResponse>(
+        lance_namespace_list_namespaces(raw_, c(req)));
   }
-  std::string describe_namespace(std::string_view req) const {
-    return call_json(lance_namespace_describe_namespace(raw_, c(req)));
+  lance_namespace::models::DescribeNamespaceResponse describe_namespace(
+      const lance_namespace::models::DescribeNamespaceRequest &req) const {
+    return call_typed<lance_namespace::models::DescribeNamespaceResponse>(
+        lance_namespace_describe_namespace(raw_, c(req)));
   }
-  std::string create_namespace(std::string_view req) const {
-    return call_json(lance_namespace_create_namespace(raw_, c(req)));
+  lance_namespace::models::CreateNamespaceResponse create_namespace(
+      const lance_namespace::models::CreateNamespaceRequest &req) const {
+    return call_typed<lance_namespace::models::CreateNamespaceResponse>(
+        lance_namespace_create_namespace(raw_, c(req)));
   }
-  std::string drop_namespace(std::string_view req) const {
-    return call_json(lance_namespace_drop_namespace(raw_, c(req)));
+  lance_namespace::models::DropNamespaceResponse drop_namespace(
+      const lance_namespace::models::DropNamespaceRequest &req) const {
+    return call_typed<lance_namespace::models::DropNamespaceResponse>(
+        lance_namespace_drop_namespace(raw_, c(req)));
   }
-  /** Returns true if namespace exists; throws Error with NAMESPACE_NOT_FOUND if not. */
-  bool namespace_exists(std::string_view req) const {
+  /**
+   * Check whether a namespace exists.
+   * Throws Error with NAMESPACE_NOT_FOUND if the namespace does not exist.
+   */
+  void namespace_exists(const lance_namespace::models::NamespaceExistsRequest &req) const {
     int r = lance_namespace_namespace_exists(raw_, c(req));
-    if (r < 0) throw_last_error();
-    return r == 0;
+    if (r < 0)
+      throw_last_error();
   }
 
   /* ── Table operations ── */
 
-  std::string list_tables(std::string_view req) const {
-    return call_json(lance_namespace_list_tables(raw_, c(req)));
+  lance_namespace::models::ListTablesResponse list_tables(
+      const lance_namespace::models::ListTablesRequest &req) const {
+    return call_typed<lance_namespace::models::ListTablesResponse>(
+        lance_namespace_list_tables(raw_, c(req)));
   }
-  std::string list_all_tables(std::string_view req) const {
-    return call_json(lance_namespace_list_all_tables(raw_, c(req)));
+  lance_namespace::models::ListTablesResponse list_all_tables(
+      const lance_namespace::models::ListTablesRequest &req) const {
+    return call_typed<lance_namespace::models::ListTablesResponse>(
+        lance_namespace_list_all_tables(raw_, c(req)));
   }
-  std::string describe_table(std::string_view req) const {
-    return call_json(lance_namespace_describe_table(raw_, c(req)));
+  lance_namespace::models::DescribeTableResponse describe_table(
+      const lance_namespace::models::DescribeTableRequest &req) const {
+    return call_typed<lance_namespace::models::DescribeTableResponse>(
+        lance_namespace_describe_table(raw_, c(req)));
   }
-  std::string register_table(std::string_view req) const {
-    return call_json(lance_namespace_register_table(raw_, c(req)));
+  lance_namespace::models::RegisterTableResponse register_table(
+      const lance_namespace::models::RegisterTableRequest &req) const {
+    return call_typed<lance_namespace::models::RegisterTableResponse>(
+        lance_namespace_register_table(raw_, c(req)));
   }
-  /** Returns true if table exists; throws Error with TABLE_NOT_FOUND if not. */
-  bool table_exists(std::string_view req) const {
+  /**
+   * Check whether a table exists.
+   * Throws Error with TABLE_NOT_FOUND if the table does not exist.
+   */
+  void table_exists(const lance_namespace::models::TableExistsRequest &req) const {
     int r = lance_namespace_table_exists(raw_, c(req));
-    if (r < 0) throw_last_error();
-    return r == 0;
+    if (r < 0)
+      throw_last_error();
   }
-  std::string drop_table(std::string_view req) const {
-    return call_json(lance_namespace_drop_table(raw_, c(req)));
+  lance_namespace::models::DropTableResponse drop_table(
+      const lance_namespace::models::DropTableRequest &req) const {
+    return call_typed<lance_namespace::models::DropTableResponse>(
+        lance_namespace_drop_table(raw_, c(req)));
   }
-  std::string deregister_table(std::string_view req) const {
-    return call_json(lance_namespace_deregister_table(raw_, c(req)));
+  lance_namespace::models::DeregisterTableResponse deregister_table(
+      const lance_namespace::models::DeregisterTableRequest &req) const {
+    return call_typed<lance_namespace::models::DeregisterTableResponse>(
+        lance_namespace_deregister_table(raw_, c(req)));
   }
-  std::string rename_table(std::string_view req) const {
-    return call_json(lance_namespace_rename_table(raw_, c(req)));
+  lance_namespace::models::RenameTableResponse rename_table(
+      const lance_namespace::models::RenameTableRequest &req) const {
+    return call_typed<lance_namespace::models::RenameTableResponse>(
+        lance_namespace_rename_table(raw_, c(req)));
   }
-  std::string restore_table(std::string_view req) const {
-    return call_json(lance_namespace_restore_table(raw_, c(req)));
+  lance_namespace::models::RestoreTableResponse restore_table(
+      const lance_namespace::models::RestoreTableRequest &req) const {
+    return call_typed<lance_namespace::models::RestoreTableResponse>(
+        lance_namespace_restore_table(raw_, c(req)));
   }
 
   /* ── Table data ── */
 
-  int64_t count_table_rows(std::string_view req) const {
+  int64_t count_table_rows(const lance_namespace::models::CountTableRowsRequest &req) const {
     int64_t r = lance_namespace_count_table_rows(raw_, c(req));
-    if (r < 0) throw_last_error();
+    if (r < 0)
+      throw_last_error();
     return r;
   }
-  std::string create_table(std::string_view req) const {
-    return call_json(lance_namespace_create_table(raw_, c(req)));
+  lance_namespace::models::CreateTableResponse create_table(
+      const lance_namespace::models::CreateTableRequest &req) const {
+    return call_typed<lance_namespace::models::CreateTableResponse>(
+        lance_namespace_create_table(raw_, c(req)));
   }
-  std::string declare_table(std::string_view req) const {
-    return call_json(lance_namespace_declare_table(raw_, c(req)));
+  lance_namespace::models::DeclareTableResponse declare_table(
+      const lance_namespace::models::DeclareTableRequest &req) const {
+    return call_typed<lance_namespace::models::DeclareTableResponse>(
+        lance_namespace_declare_table(raw_, c(req)));
   }
-  std::string create_empty_table(std::string_view req) const {
-    return call_json(lance_namespace_create_empty_table(raw_, c(req)));
+  lance_namespace::models::InsertIntoTableResponse insert_into_table(
+      const lance_namespace::models::InsertIntoTableRequest &req) const {
+    return call_typed<lance_namespace::models::InsertIntoTableResponse>(
+        lance_namespace_insert_into_table(raw_, c(req)));
   }
-  std::string insert_into_table(std::string_view req) const {
-    return call_json(lance_namespace_insert_into_table(raw_, c(req)));
+  lance_namespace::models::MergeInsertIntoTableResponse merge_insert_into_table(
+      const lance_namespace::models::MergeInsertIntoTableRequest &req) const {
+    return call_typed<lance_namespace::models::MergeInsertIntoTableResponse>(
+        lance_namespace_merge_insert_into_table(raw_, c(req)));
   }
-  std::string merge_insert_into_table(std::string_view req) const {
-    return call_json(lance_namespace_merge_insert_into_table(raw_, c(req)));
+  lance_namespace::models::UpdateTableResponse update_table(
+      const lance_namespace::models::UpdateTableRequest &req) const {
+    return call_typed<lance_namespace::models::UpdateTableResponse>(
+        lance_namespace_update_table(raw_, c(req)));
   }
-  std::string update_table(std::string_view req) const {
-    return call_json(lance_namespace_update_table(raw_, c(req)));
+  lance_namespace::models::DeleteFromTableResponse delete_from_table(
+      const lance_namespace::models::DeleteFromTableRequest &req) const {
+    return call_typed<lance_namespace::models::DeleteFromTableResponse>(
+        lance_namespace_delete_from_table(raw_, c(req)));
   }
-  std::string delete_from_table(std::string_view req) const {
-    return call_json(lance_namespace_delete_from_table(raw_, c(req)));
-  }
-  /** Returns Arrow IPC bytes. */
-  std::vector<uint8_t> query_table(std::string_view req) const {
+  /** Returns raw Arrow IPC bytes. */
+  std::vector<uint8_t> query_table(const lance_namespace::models::QueryTableRequest &req) const {
     lance_namespace_bytes_t *b = lance_namespace_query_table(raw_, c(req));
-    if (!b) throw_last_error();
+    if (!b)
+      throw_last_error();
     std::vector<uint8_t> v(b->data, b->data + b->length);
     lance_namespace_free_bytes(b);
     return v;
@@ -250,145 +289,221 @@ class Namespace {
 
   /* ── Table schema / metadata ── */
 
-  std::string get_table_stats(std::string_view req) const {
-    return call_json(lance_namespace_get_table_stats(raw_, c(req)));
+  lance_namespace::models::GetTableStatsResponse get_table_stats(
+      const lance_namespace::models::GetTableStatsRequest &req) const {
+    return call_typed<lance_namespace::models::GetTableStatsResponse>(
+        lance_namespace_get_table_stats(raw_, c(req)));
   }
-  std::string update_table_schema_metadata(std::string_view req) const {
-    return call_json(lance_namespace_update_table_schema_metadata(raw_, c(req)));
+  lance_namespace::models::UpdateTableSchemaMetadataResponse update_table_schema_metadata(
+      const lance_namespace::models::UpdateTableSchemaMetadataRequest &req) const {
+    return call_typed<lance_namespace::models::UpdateTableSchemaMetadataResponse>(
+        lance_namespace_update_table_schema_metadata(raw_, c(req)));
   }
-  std::string update_field_metadata(std::string_view req) const {
-    return call_json(lance_namespace_update_field_metadata(raw_, c(req)));
+  lance_namespace::models::UpdateFieldMetadataResponse update_field_metadata(
+      const lance_namespace::models::UpdateFieldMetadataRequest &req) const {
+    return call_typed<lance_namespace::models::UpdateFieldMetadataResponse>(
+        lance_namespace_update_field_metadata(raw_, c(req)));
   }
-  std::string explain_table_query_plan(std::string_view req) const {
-    return call_json(lance_namespace_explain_table_query_plan(raw_, c(req)));
+  lance_namespace::models::ExplainTableQueryPlanResponse explain_table_query_plan(
+      const lance_namespace::models::ExplainTableQueryPlanRequest &req) const {
+    return call_typed<lance_namespace::models::ExplainTableQueryPlanResponse>(
+        lance_namespace_explain_table_query_plan(raw_, c(req)));
   }
-  std::string analyze_table_query_plan(std::string_view req) const {
-    return call_json(lance_namespace_analyze_table_query_plan(raw_, c(req)));
+  lance_namespace::models::AnalyzeTableQueryPlanResponse analyze_table_query_plan(
+      const lance_namespace::models::AnalyzeTableQueryPlanRequest &req) const {
+    return call_typed<lance_namespace::models::AnalyzeTableQueryPlanResponse>(
+        lance_namespace_analyze_table_query_plan(raw_, c(req)));
   }
 
   /* ── Table alter ── */
 
-  std::string alter_table_add_columns(std::string_view req) const {
-    return call_json(lance_namespace_alter_table_add_columns(raw_, c(req)));
+  lance_namespace::models::AlterTableAddColumnsResponse alter_table_add_columns(
+      const lance_namespace::models::AlterTableAddColumnsRequest &req) const {
+    return call_typed<lance_namespace::models::AlterTableAddColumnsResponse>(
+        lance_namespace_alter_table_add_columns(raw_, c(req)));
   }
-  std::string alter_table_alter_columns(std::string_view req) const {
-    return call_json(lance_namespace_alter_table_alter_columns(raw_, c(req)));
+  lance_namespace::models::AlterTableAlterColumnsResponse alter_table_alter_columns(
+      const lance_namespace::models::AlterTableAlterColumnsRequest &req) const {
+    return call_typed<lance_namespace::models::AlterTableAlterColumnsResponse>(
+        lance_namespace_alter_table_alter_columns(raw_, c(req)));
   }
-  std::string alter_table_backfill_columns(std::string_view req) const {
-    return call_json(lance_namespace_alter_table_backfill_columns(raw_, c(req)));
+  lance_namespace::models::AlterTableBackfillColumnsResponse alter_table_backfill_columns(
+      const lance_namespace::models::AlterTableBackfillColumnsRequest &req) const {
+    return call_typed<lance_namespace::models::AlterTableBackfillColumnsResponse>(
+        lance_namespace_alter_table_backfill_columns(raw_, c(req)));
   }
-  std::string alter_table_drop_columns(std::string_view req) const {
-    return call_json(lance_namespace_alter_table_drop_columns(raw_, c(req)));
+  lance_namespace::models::AlterTableDropColumnsResponse alter_table_drop_columns(
+      const lance_namespace::models::AlterTableDropColumnsRequest &req) const {
+    return call_typed<lance_namespace::models::AlterTableDropColumnsResponse>(
+        lance_namespace_alter_table_drop_columns(raw_, c(req)));
   }
 
   /* ── Table index ── */
 
-  std::string create_table_index(std::string_view req) const {
-    return call_json(lance_namespace_create_table_index(raw_, c(req)));
+  lance_namespace::models::CreateTableIndexResponse create_table_index(
+      const lance_namespace::models::CreateTableIndexRequest &req) const {
+    return call_typed<lance_namespace::models::CreateTableIndexResponse>(
+        lance_namespace_create_table_index(raw_, c(req)));
   }
-  std::string create_table_scalar_index(std::string_view req) const {
-    return call_json(lance_namespace_create_table_scalar_index(raw_, c(req)));
+  lance_namespace::models::CreateTableScalarIndexResponse create_table_scalar_index(
+      const lance_namespace::models::CreateTableIndexRequest &req) const {
+    return call_typed<lance_namespace::models::CreateTableScalarIndexResponse>(
+        lance_namespace_create_table_scalar_index(raw_, c(req)));
   }
-  std::string list_table_indices(std::string_view req) const {
-    return call_json(lance_namespace_list_table_indices(raw_, c(req)));
+  lance_namespace::models::ListTableIndicesResponse list_table_indices(
+      const lance_namespace::models::ListTableIndicesRequest &req) const {
+    return call_typed<lance_namespace::models::ListTableIndicesResponse>(
+        lance_namespace_list_table_indices(raw_, c(req)));
   }
-  std::string describe_table_index_stats(std::string_view req) const {
-    return call_json(lance_namespace_describe_table_index_stats(raw_, c(req)));
+  lance_namespace::models::DescribeTableIndexStatsResponse describe_table_index_stats(
+      const lance_namespace::models::DescribeTableIndexStatsRequest &req) const {
+    return call_typed<lance_namespace::models::DescribeTableIndexStatsResponse>(
+        lance_namespace_describe_table_index_stats(raw_, c(req)));
   }
-  std::string drop_table_index(std::string_view req) const {
-    return call_json(lance_namespace_drop_table_index(raw_, c(req)));
+  lance_namespace::models::DropTableIndexResponse drop_table_index(
+      const lance_namespace::models::DropTableIndexRequest &req) const {
+    return call_typed<lance_namespace::models::DropTableIndexResponse>(
+        lance_namespace_drop_table_index(raw_, c(req)));
   }
 
   /* ── Table versions ── */
 
-  std::string list_table_versions(std::string_view req) const {
-    return call_json(lance_namespace_list_table_versions(raw_, c(req)));
+  lance_namespace::models::ListTableVersionsResponse list_table_versions(
+      const lance_namespace::models::ListTableVersionsRequest &req) const {
+    return call_typed<lance_namespace::models::ListTableVersionsResponse>(
+        lance_namespace_list_table_versions(raw_, c(req)));
   }
-  std::string create_table_version(std::string_view req) const {
-    return call_json(lance_namespace_create_table_version(raw_, c(req)));
+  lance_namespace::models::CreateTableVersionResponse create_table_version(
+      const lance_namespace::models::CreateTableVersionRequest &req) const {
+    return call_typed<lance_namespace::models::CreateTableVersionResponse>(
+        lance_namespace_create_table_version(raw_, c(req)));
   }
-  std::string describe_table_version(std::string_view req) const {
-    return call_json(lance_namespace_describe_table_version(raw_, c(req)));
+  lance_namespace::models::DescribeTableVersionResponse describe_table_version(
+      const lance_namespace::models::DescribeTableVersionRequest &req) const {
+    return call_typed<lance_namespace::models::DescribeTableVersionResponse>(
+        lance_namespace_describe_table_version(raw_, c(req)));
   }
-  std::string batch_delete_table_versions(std::string_view req) const {
-    return call_json(lance_namespace_batch_delete_table_versions(raw_, c(req)));
+  lance_namespace::models::BatchDeleteTableVersionsResponse batch_delete_table_versions(
+      const lance_namespace::models::BatchDeleteTableVersionsRequest &req) const {
+    return call_typed<lance_namespace::models::BatchDeleteTableVersionsResponse>(
+        lance_namespace_batch_delete_table_versions(raw_, c(req)));
   }
-  std::string batch_create_table_versions(std::string_view req) const {
-    return call_json(lance_namespace_batch_create_table_versions(raw_, c(req)));
+  lance_namespace::models::BatchCreateTableVersionsResponse batch_create_table_versions(
+      const lance_namespace::models::BatchCreateTableVersionsRequest &req) const {
+    return call_typed<lance_namespace::models::BatchCreateTableVersionsResponse>(
+        lance_namespace_batch_create_table_versions(raw_, c(req)));
   }
-  std::string batch_commit_tables(std::string_view req) const {
-    return call_json(lance_namespace_batch_commit_tables(raw_, c(req)));
+  lance_namespace::models::BatchCommitTablesResponse batch_commit_tables(
+      const lance_namespace::models::BatchCommitTablesRequest &req) const {
+    return call_typed<lance_namespace::models::BatchCommitTablesResponse>(
+        lance_namespace_batch_commit_tables(raw_, c(req)));
   }
 
   /* ── Materialized views ── */
 
-  std::string create_materialized_view(std::string_view req) const {
-    return call_json(lance_namespace_create_materialized_view(raw_, c(req)));
+  lance_namespace::models::CreateMaterializedViewResponse create_materialized_view(
+      const lance_namespace::models::CreateMaterializedViewRequest &req) const {
+    return call_typed<lance_namespace::models::CreateMaterializedViewResponse>(
+        lance_namespace_create_materialized_view(raw_, c(req)));
   }
-  std::string refresh_materialized_view(std::string_view req) const {
-    return call_json(lance_namespace_refresh_materialized_view(raw_, c(req)));
+  lance_namespace::models::RefreshMaterializedViewResponse refresh_materialized_view(
+      const lance_namespace::models::RefreshMaterializedViewRequest &req) const {
+    return call_typed<lance_namespace::models::RefreshMaterializedViewResponse>(
+        lance_namespace_refresh_materialized_view(raw_, c(req)));
   }
 
   /* ── Tags ── */
 
-  std::string list_table_tags(std::string_view req) const {
-    return call_json(lance_namespace_list_table_tags(raw_, c(req)));
+  lance_namespace::models::ListTableTagsResponse list_table_tags(
+      const lance_namespace::models::ListTableTagsRequest &req) const {
+    return call_typed<lance_namespace::models::ListTableTagsResponse>(
+        lance_namespace_list_table_tags(raw_, c(req)));
   }
-  std::string get_table_tag_version(std::string_view req) const {
-    return call_json(lance_namespace_get_table_tag_version(raw_, c(req)));
+  lance_namespace::models::GetTableTagVersionResponse get_table_tag_version(
+      const lance_namespace::models::GetTableTagVersionRequest &req) const {
+    return call_typed<lance_namespace::models::GetTableTagVersionResponse>(
+        lance_namespace_get_table_tag_version(raw_, c(req)));
   }
-  std::string create_table_tag(std::string_view req) const {
-    return call_json(lance_namespace_create_table_tag(raw_, c(req)));
+  lance_namespace::models::CreateTableTagResponse create_table_tag(
+      const lance_namespace::models::CreateTableTagRequest &req) const {
+    return call_typed<lance_namespace::models::CreateTableTagResponse>(
+        lance_namespace_create_table_tag(raw_, c(req)));
   }
-  std::string delete_table_tag(std::string_view req) const {
-    return call_json(lance_namespace_delete_table_tag(raw_, c(req)));
+  lance_namespace::models::DeleteTableTagResponse delete_table_tag(
+      const lance_namespace::models::DeleteTableTagRequest &req) const {
+    return call_typed<lance_namespace::models::DeleteTableTagResponse>(
+        lance_namespace_delete_table_tag(raw_, c(req)));
   }
-  std::string update_table_tag(std::string_view req) const {
-    return call_json(lance_namespace_update_table_tag(raw_, c(req)));
+  lance_namespace::models::UpdateTableTagResponse update_table_tag(
+      const lance_namespace::models::UpdateTableTagRequest &req) const {
+    return call_typed<lance_namespace::models::UpdateTableTagResponse>(
+        lance_namespace_update_table_tag(raw_, c(req)));
   }
 
   /* ── Branches ── */
 
-  std::string create_table_branch(std::string_view req) const {
-    return call_json(lance_namespace_create_table_branch(raw_, c(req)));
+  lance_namespace::models::CreateTableBranchResponse create_table_branch(
+      const lance_namespace::models::CreateTableBranchRequest &req) const {
+    return call_typed<lance_namespace::models::CreateTableBranchResponse>(
+        lance_namespace_create_table_branch(raw_, c(req)));
   }
-  std::string list_table_branches(std::string_view req) const {
-    return call_json(lance_namespace_list_table_branches(raw_, c(req)));
+  lance_namespace::models::ListTableBranchesResponse list_table_branches(
+      const lance_namespace::models::ListTableBranchesRequest &req) const {
+    return call_typed<lance_namespace::models::ListTableBranchesResponse>(
+        lance_namespace_list_table_branches(raw_, c(req)));
   }
-  std::string delete_table_branch(std::string_view req) const {
-    return call_json(lance_namespace_delete_table_branch(raw_, c(req)));
+  lance_namespace::models::DeleteTableBranchResponse delete_table_branch(
+      const lance_namespace::models::DeleteTableBranchRequest &req) const {
+    return call_typed<lance_namespace::models::DeleteTableBranchResponse>(
+        lance_namespace_delete_table_branch(raw_, c(req)));
   }
 
   /* ── Transactions ── */
 
-  std::string describe_transaction(std::string_view req) const {
-    return call_json(lance_namespace_describe_transaction(raw_, c(req)));
+  lance_namespace::models::DescribeTransactionResponse describe_transaction(
+      const lance_namespace::models::DescribeTransactionRequest &req) const {
+    return call_typed<lance_namespace::models::DescribeTransactionResponse>(
+        lance_namespace_describe_transaction(raw_, c(req)));
   }
-  std::string alter_transaction(std::string_view req) const {
-    return call_json(lance_namespace_alter_transaction(raw_, c(req)));
+  lance_namespace::models::AlterTransactionResponse alter_transaction(
+      const lance_namespace::models::AlterTransactionRequest &req) const {
+    return call_typed<lance_namespace::models::AlterTransactionResponse>(
+        lance_namespace_alter_transaction(raw_, c(req)));
   }
 
  private:
   lance_namespace_t *raw_{nullptr};
 
-  static const char *c(std::string_view sv) noexcept {
-    // string_view may not be null-terminated; callers pass string literals or
-    // std::string data so this is safe in practice for the tests/examples.
-    // For safety we rely on callers passing null-terminated strings.
-    return sv.data();
+  // Serialize a model to a temporary UTF-8 JSON string and return its c_str().
+  // The returned pointer is valid only for the lifetime of the std::string returned.
+  static std::string serialize(const org::openapitools::client::model::ModelBase &model) {
+    return utility::conversions::to_utf8string(model.toJson().serialize());
   }
 
-  // Adopt an owned char* response; frees it and returns std::string.
-  static std::string call_json(char *raw) {
-    if (!raw) throw_last_error();
-    std::string s(raw);
-    lance_namespace_free_string(raw);
-    return s;
+  // Serialize req to JSON and return its c_str() for passing to the C API.
+  // Uses a thread-local buffer so the pointer outlives the call_typed invocation.
+  static const char *c(const org::openapitools::client::model::ModelBase &req) {
+    thread_local std::string buf;
+    buf = serialize(req);
+    return buf.c_str();
+  }
+
+  // Adopt an owned char* JSON response; deserialize into T and free.
+  template <typename T>
+  static T call_typed(char *raw_json) {
+    if (!raw_json)
+      throw_last_error();
+    std::string s(raw_json);
+    lance_namespace_free_string(raw_json);
+    T result;
+    result.fromJson(web::json::value::parse(utility::conversions::to_string_t(s)));
+    return result;
   }
 
   // For lance_namespace_id: pointer owned by handle, do not free.
   static std::string call_str(const char *raw, bool /*owned*/) {
-    if (!raw) throw_last_error();
+    if (!raw)
+      throw_last_error();
     return raw;
   }
 };
@@ -417,4 +532,3 @@ inline void register_impl(std::string_view impl_type, lance_namespace_factory_fn
 }  // namespace lance
 
 #endif /* LANCE_NAMESPACE_HPP */
-

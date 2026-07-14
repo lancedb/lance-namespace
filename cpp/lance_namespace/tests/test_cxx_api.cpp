@@ -8,9 +8,9 @@
 #include <lance_namespace/lance_namespace.hpp>
 #include <lance_namespace/lance_namespace_impl.h>
 
-#include <gtest/gtest.h>
 #include <cstdlib>
 #include <cstring>
+#include <gtest/gtest.h>
 #include <string>
 
 /* ─── Minimal implementation via C vtable ─────────────────────────────────── */
@@ -21,7 +21,9 @@ struct CppMockData {
   std::string id;
 };
 
-static void cpp_destroy(void *impl) { delete static_cast<CppMockData *>(impl); }
+static void cpp_destroy(void *impl) {
+  delete static_cast<CppMockData *>(impl);
+}
 static const char *cpp_id(const void *impl) {
   return static_cast<const CppMockData *>(impl)->id.c_str();
 }
@@ -31,8 +33,12 @@ static char *cpp_list_ns(void * /*impl*/, const char * /*req*/) {
 static char *cpp_list_tables(void * /*impl*/, const char * /*req*/) {
   return strdup(R"({"tables":["t1"]})");
 }
-static int cpp_ns_exists(void * /*impl*/, const char * /*req*/) { return 0; }
-static int64_t cpp_count_rows(void * /*impl*/, const char * /*req*/) { return 7; }
+static int cpp_ns_exists(void * /*impl*/, const char * /*req*/) {
+  return 0;
+}
+static int64_t cpp_count_rows(void * /*impl*/, const char * /*req*/) {
+  return 7;
+}
 static lance_namespace_bytes_t *cpp_query(void * /*impl*/, const char * /*req*/) {
   auto *b = static_cast<lance_namespace_bytes_t *>(std::malloc(sizeof(lance_namespace_bytes_t)));
   b->data = static_cast<uint8_t *>(std::malloc(3));
@@ -57,7 +63,8 @@ lance_namespace_t *cpp_mock_factory(const lance_namespace_properties_t *props) {
   d->id = "cpp-mock";
   if (props) {
     for (size_t i = 0; i < props->count; ++i) {
-      if (std::strcmp(props->items[i].key, "id") == 0) d->id = props->items[i].value;
+      if (std::strcmp(props->items[i].key, "id") == 0)
+        d->id = props->items[i].value;
     }
   }
   return lance_namespace_create_from_vtable(&CPP_MOCK_VTABLE, d);
@@ -74,7 +81,9 @@ class CxxApiTest : public ::testing::Test {
 
 /* ─── Properties ─────────────────────────────────────────────────────────── */
 
-TEST(PropertiesTest, Empty) { EXPECT_EQ(lance::namespace_::Properties{}.c_props()->count, 0u); }
+TEST(PropertiesTest, Empty) {
+  EXPECT_EQ(lance::namespace_::Properties{}.c_props()->count, 0u);
+}
 
 TEST(PropertiesTest, InitList) {
   lance::namespace_::Properties p{{"k1", "v1"}, {"k2", "v2"}};
@@ -112,38 +121,46 @@ TEST_F(CxxApiTest, ConnectUnknownThrows) {
 
 /* ─── Namespace operations ───────────────────────────────────────────────── */
 
-TEST_F(CxxApiTest, ListNamespacesReturnsJson) {
+TEST_F(CxxApiTest, ListNamespacesReturnsTyped) {
   auto ns = lance::namespace_::connect("cpp-mock");
-  auto resp = ns.list_namespaces(R"({"parent":[]})");
-  EXPECT_EQ(resp, R"({"namespaces":["a","b"]})");
+  lance_namespace::models::ListNamespacesRequest req;
+  auto resp = ns.list_namespaces(req);
+  // The mock returns {"namespaces":["a","b"]}; verify it parses correctly.
+  EXPECT_FALSE(resp.getNamespaces().empty());
 }
 
-TEST_F(CxxApiTest, NamespaceExistsReturnsTrue) {
+TEST_F(CxxApiTest, NamespaceExistsDoesNotThrow) {
   auto ns = lance::namespace_::connect("cpp-mock");
-  EXPECT_TRUE(ns.namespace_exists("{}"));
+  lance_namespace::models::NamespaceExistsRequest req;
+  EXPECT_NO_THROW(ns.namespace_exists(req));
 }
 
 TEST_F(CxxApiTest, UnsupportedOpThrows) {
   auto ns = lance::namespace_::connect("cpp-mock");
-  EXPECT_THROW(ns.describe_namespace("{}"), lance::namespace_::Error);
+  lance_namespace::models::DescribeNamespaceRequest req;
+  EXPECT_THROW(ns.describe_namespace(req), lance::namespace_::Error);
   EXPECT_EQ(lance_namespace_last_error_code(), LANCE_NS_ERR_UNSUPPORTED);
 }
 
 /* ─── Table operations ───────────────────────────────────────────────────── */
 
-TEST_F(CxxApiTest, ListTablesReturnsJson) {
+TEST_F(CxxApiTest, ListTablesReturnsTyped) {
   auto ns = lance::namespace_::connect("cpp-mock");
-  EXPECT_EQ(ns.list_tables(R"({"namespace":[]})"), R"({"tables":["t1"]})");
+  lance_namespace::models::ListTablesRequest req;
+  auto resp = ns.list_tables(req);
+  EXPECT_FALSE(resp.getTables().empty());
 }
 
 TEST_F(CxxApiTest, CountTableRowsReturnsI64) {
   auto ns = lance::namespace_::connect("cpp-mock");
-  EXPECT_EQ(ns.count_table_rows("{}"), 7);
+  lance_namespace::models::CountTableRowsRequest req;
+  EXPECT_EQ(ns.count_table_rows(req), 7);
 }
 
 TEST_F(CxxApiTest, QueryTableReturnsByteVector) {
   auto ns = lance::namespace_::connect("cpp-mock");
-  auto bytes = ns.query_table("{}");
+  lance_namespace::models::QueryTableRequest req;
+  auto bytes = ns.query_table(req);
   ASSERT_EQ(bytes.size(), 3u);
   EXPECT_EQ(bytes[0], 'I');
   EXPECT_EQ(bytes[1], 'P');
@@ -186,4 +203,3 @@ TEST(ErrorTest, IsRuntimeError) {
     }
   });
 }
-

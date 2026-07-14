@@ -89,6 +89,8 @@
 #include <model/DropTableRequest.h>
 #include <model/DropTableResponse.h>
 #include <model/ExplainTableQueryPlanRequest.h>
+#include <model/ExplainTableQueryPlanResponse.h>
+#include <model/AnalyzeTableQueryPlanResponse.h>
 #include <model/GetTableStatsRequest.h>
 #include <model/GetTableStatsResponse.h>
 #include <model/GetTableTagVersionRequest.h>
@@ -199,6 +201,8 @@ using org::openapitools::client::model::DropTableIndexResponse;
 using org::openapitools::client::model::DropTableRequest;
 using org::openapitools::client::model::DropTableResponse;
 using org::openapitools::client::model::ExplainTableQueryPlanRequest;
+using org::openapitools::client::model::ExplainTableQueryPlanResponse;
+using org::openapitools::client::model::AnalyzeTableQueryPlanResponse;
 using org::openapitools::client::model::GetTableStatsRequest;
 using org::openapitools::client::model::GetTableStatsResponse;
 using org::openapitools::client::model::GetTableTagVersionRequest;

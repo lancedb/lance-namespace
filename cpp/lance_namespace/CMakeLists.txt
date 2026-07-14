@@ -20,10 +20,19 @@ endif()
 
 add_library(LanceNamespace::lance_namespace ALIAS lance_namespace)
 
+# cpprestsdk is required by lance_namespace.hpp (typed model API).
+# It is an INTERFACE dependency: the static library itself does not link
+# against it, but consumers that include the header need it.
+find_package(cpprestsdk REQUIRED)
+
 target_include_directories(lance_namespace
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
         $<INSTALL_INTERFACE:include>)
+
+target_link_libraries(lance_namespace
+    INTERFACE
+        cpprestsdk::cpprest)
 
 # ─── Compiler warnings ───────────────────────────────────────────────────────
 if(MSVC)
