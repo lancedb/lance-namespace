@@ -38,7 +38,9 @@ class TestInsertIntoTableResponse(unittest.TestCase):
                 context = {
                     'key' : ''
                     },
-                transaction_id = ''
+                transaction_id = '',
+                num_inserted_rows = 0,
+                version = 0
             )
         else:
             return InsertIntoTableResponse(

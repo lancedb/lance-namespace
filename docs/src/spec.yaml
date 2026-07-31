@@ -3021,6 +3021,16 @@ components:
         transaction_id:
           type: string
           description: Optional transaction identifier
+        num_inserted_rows:
+          type: integer
+          format: int64
+          description: Number of rows inserted
+          minimum: 0
+        version:
+          type: integer
+          format: int64
+          description: The commit version associated with the operation
+          minimum: 0
 
     MergeInsertIntoTableRequest:
       type: object
