@@ -29,6 +29,10 @@ gen-urllib3-client: clean-urllib3-client
 	rm -f lance_namespace_urllib3_client/poetry.lock
 	# Replace poetry pyproject.toml with uv-compatible version
 	cp pyproject.urllib3_client.toml lance_namespace_urllib3_client/pyproject.toml
+	# Replace the generated test stub (which wraps the example in a triple-quoted
+	# string and is therefore never executed) with an executable version that
+	# actually exercises the new num_inserted_rows / version fields.
+	cp test_insert_into_table_response.py.tpl lance_namespace_urllib3_client/test/test_insert_into_table_response.py
 
 .PHONY: build-urllib3-client
 build-urllib3-client: gen-urllib3-client
