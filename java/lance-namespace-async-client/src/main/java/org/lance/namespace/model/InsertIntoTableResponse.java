@@ -27,7 +27,9 @@ import java.util.StringJoiner;
 /** Response from inserting records into a table */
 @JsonPropertyOrder({
   InsertIntoTableResponse.JSON_PROPERTY_CONTEXT,
-  InsertIntoTableResponse.JSON_PROPERTY_TRANSACTION_ID
+  InsertIntoTableResponse.JSON_PROPERTY_TRANSACTION_ID,
+  InsertIntoTableResponse.JSON_PROPERTY_NUM_INSERTED_ROWS,
+  InsertIntoTableResponse.JSON_PROPERTY_VERSION
 })
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.JavaClientCodegen",
@@ -38,6 +40,12 @@ public class InsertIntoTableResponse {
 
   public static final String JSON_PROPERTY_TRANSACTION_ID = "transaction_id";
   @javax.annotation.Nullable private String transactionId;
+
+  public static final String JSON_PROPERTY_NUM_INSERTED_ROWS = "num_inserted_rows";
+  @javax.annotation.Nullable private Long numInsertedRows;
+
+  public static final String JSON_PROPERTY_VERSION = "version";
+  @javax.annotation.Nullable private Long version;
 
   public InsertIntoTableResponse() {}
 
@@ -105,6 +113,52 @@ public class InsertIntoTableResponse {
     this.transactionId = transactionId;
   }
 
+  public InsertIntoTableResponse numInsertedRows(@javax.annotation.Nullable Long numInsertedRows) {
+    this.numInsertedRows = numInsertedRows;
+    return this;
+  }
+
+  /**
+   * Number of rows inserted minimum: 0
+   *
+   * @return numInsertedRows
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_NUM_INSERTED_ROWS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Long getNumInsertedRows() {
+    return numInsertedRows;
+  }
+
+  @JsonProperty(JSON_PROPERTY_NUM_INSERTED_ROWS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNumInsertedRows(@javax.annotation.Nullable Long numInsertedRows) {
+    this.numInsertedRows = numInsertedRows;
+  }
+
+  public InsertIntoTableResponse version(@javax.annotation.Nullable Long version) {
+    this.version = version;
+    return this;
+  }
+
+  /**
+   * The commit version associated with the operation minimum: 0
+   *
+   * @return version
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_VERSION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Long getVersion() {
+    return version;
+  }
+
+  @JsonProperty(JSON_PROPERTY_VERSION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setVersion(@javax.annotation.Nullable Long version) {
+    this.version = version;
+  }
+
   /** Return true if this InsertIntoTableResponse object is equal to o. */
   @Override
   public boolean equals(Object o) {
@@ -116,12 +170,14 @@ public class InsertIntoTableResponse {
     }
     InsertIntoTableResponse insertIntoTableResponse = (InsertIntoTableResponse) o;
     return Objects.equals(this.context, insertIntoTableResponse.context)
-        && Objects.equals(this.transactionId, insertIntoTableResponse.transactionId);
+        && Objects.equals(this.transactionId, insertIntoTableResponse.transactionId)
+        && Objects.equals(this.numInsertedRows, insertIntoTableResponse.numInsertedRows)
+        && Objects.equals(this.version, insertIntoTableResponse.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(context, transactionId);
+    return Objects.hash(context, transactionId, numInsertedRows, version);
   }
 
   @Override
@@ -130,6 +186,8 @@ public class InsertIntoTableResponse {
     sb.append("class InsertIntoTableResponse {\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
+    sb.append("    numInsertedRows: ").append(toIndentedString(numInsertedRows)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -198,6 +256,22 @@ public class InsertIntoTableResponse {
           String.format(
               "%stransaction_id%s=%s",
               prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getTransactionId()))));
+    }
+
+    // add `num_inserted_rows` to the URL query string
+    if (getNumInsertedRows() != null) {
+      joiner.add(
+          String.format(
+              "%snum_inserted_rows%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getNumInsertedRows()))));
+    }
+
+    // add `version` to the URL query string
+    if (getVersion() != null) {
+      joiner.add(
+          String.format(
+              "%sversion%s=%s",
+              prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getVersion()))));
     }
 
     return joiner.toString();

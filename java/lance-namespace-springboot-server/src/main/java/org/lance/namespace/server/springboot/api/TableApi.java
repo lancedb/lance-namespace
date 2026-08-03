@@ -5374,7 +5374,7 @@ public interface TableApi {
               for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                   String exampleString =
-                      "{ \"transaction_id\" : \"transaction_id\", \"context\" : { \"key\" : \"context\" } }";
+                      "{ \"transaction_id\" : \"transaction_id\", \"num_inserted_rows\" : 0, \"context\" : { \"key\" : \"context\" }, \"version\" : 0 }";
                   ApiUtil.setExampleResponse(request, "application/json", exampleString);
                   break;
                 }

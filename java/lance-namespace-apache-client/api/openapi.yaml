@@ -4438,8 +4438,10 @@ components:
       description: Response from inserting records into a table
       example:
         transaction_id: transaction_id
+        num_inserted_rows: 0
         context:
           key: context
+        version: 0
       properties:
         context:
           additionalProperties:
@@ -4463,6 +4465,16 @@ components:
         transaction_id:
           description: Optional transaction identifier
           type: string
+        num_inserted_rows:
+          description: Number of rows inserted
+          format: int64
+          minimum: 0
+          type: integer
+        version:
+          description: The commit version associated with the operation
+          format: int64
+          minimum: 0
+          type: integer
     MergeInsertIntoTableRequest:
       description: |
         Request for merging or inserting records into a table, excluding the Arrow IPC stream.

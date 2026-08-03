@@ -37,6 +37,10 @@ public class InsertIntoTableResponse {
 
   private String transactionId;
 
+  private Long numInsertedRows;
+
+  private Long version;
+
   public InsertIntoTableResponse context(Map<String, String> context) {
     this.context = context;
     return this;
@@ -101,6 +105,54 @@ public class InsertIntoTableResponse {
     this.transactionId = transactionId;
   }
 
+  public InsertIntoTableResponse numInsertedRows(Long numInsertedRows) {
+    this.numInsertedRows = numInsertedRows;
+    return this;
+  }
+
+  /**
+   * Number of rows inserted minimum: 0
+   *
+   * @return numInsertedRows
+   */
+  @Min(0L)
+  @Schema(
+      name = "num_inserted_rows",
+      description = "Number of rows inserted",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("num_inserted_rows")
+  public Long getNumInsertedRows() {
+    return numInsertedRows;
+  }
+
+  public void setNumInsertedRows(Long numInsertedRows) {
+    this.numInsertedRows = numInsertedRows;
+  }
+
+  public InsertIntoTableResponse version(Long version) {
+    this.version = version;
+    return this;
+  }
+
+  /**
+   * The commit version associated with the operation minimum: 0
+   *
+   * @return version
+   */
+  @Min(0L)
+  @Schema(
+      name = "version",
+      description = "The commit version associated with the operation",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("version")
+  public Long getVersion() {
+    return version;
+  }
+
+  public void setVersion(Long version) {
+    this.version = version;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -111,12 +163,14 @@ public class InsertIntoTableResponse {
     }
     InsertIntoTableResponse insertIntoTableResponse = (InsertIntoTableResponse) o;
     return Objects.equals(this.context, insertIntoTableResponse.context)
-        && Objects.equals(this.transactionId, insertIntoTableResponse.transactionId);
+        && Objects.equals(this.transactionId, insertIntoTableResponse.transactionId)
+        && Objects.equals(this.numInsertedRows, insertIntoTableResponse.numInsertedRows)
+        && Objects.equals(this.version, insertIntoTableResponse.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(context, transactionId);
+    return Objects.hash(context, transactionId, numInsertedRows, version);
   }
 
   @Override
@@ -125,6 +179,8 @@ public class InsertIntoTableResponse {
     sb.append("class InsertIntoTableResponse {\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
     sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
+    sb.append("    numInsertedRows: ").append(toIndentedString(numInsertedRows)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
     return sb.toString();
   }

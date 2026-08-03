@@ -20,6 +20,12 @@ pub struct InsertIntoTableResponse {
     /// Optional transaction identifier
     #[serde(rename = "transaction_id", skip_serializing_if = "Option::is_none")]
     pub transaction_id: Option<String>,
+    /// Number of rows inserted
+    #[serde(rename = "num_inserted_rows", skip_serializing_if = "Option::is_none")]
+    pub num_inserted_rows: Option<i64>,
+    /// The commit version associated with the operation
+    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
+    pub version: Option<i64>,
 }
 
 impl InsertIntoTableResponse {
@@ -28,6 +34,8 @@ impl InsertIntoTableResponse {
         InsertIntoTableResponse {
             context: None,
             transaction_id: None,
+            num_inserted_rows: None,
+            version: None,
         }
     }
 }
