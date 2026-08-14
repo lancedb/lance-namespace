@@ -49,6 +49,7 @@ class TestAlterTableAddColumnsRequest(unittest.TestCase):
                     lance_namespace_urllib3_client.models.add_columns_entry.AddColumnsEntry(
                         name = '', 
                         expression = '', 
+                        computed = '', 
                         virtual_column = lance_namespace_urllib3_client.models.add_virtual_column_entry.AddVirtualColumnEntry(
                             input_columns = [
                                 '0'
@@ -82,6 +83,7 @@ class TestAlterTableAddColumnsRequest(unittest.TestCase):
                     lance_namespace_urllib3_client.models.add_columns_entry.AddColumnsEntry(
                         name = '', 
                         expression = '', 
+                        computed = '', 
                         virtual_column = lance_namespace_urllib3_client.models.add_virtual_column_entry.AddVirtualColumnEntry(
                             input_columns = [
                                 '0'

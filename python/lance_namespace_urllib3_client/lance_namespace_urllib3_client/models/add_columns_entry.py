@@ -28,9 +28,10 @@ class AddColumnsEntry(BaseModel):
     AddColumnsEntry
     """ # noqa: E501
     name: StrictStr = Field(description="Name of the new column")
-    expression: Optional[StrictStr] = Field(default=None, description="SQL expression for the column (optional if virtual_column is specified)")
+    expression: Optional[StrictStr] = Field(default=None, description="SQL expression for the column (optional if virtual_column or computed is specified). Evaluated once over existing rows; nothing is stored, so rows appended later read null.")
+    computed: Optional[StrictStr] = Field(default=None, description="SQL expression declaring a maintained computed column (optional if expression or virtual_column is specified). The column is added all-null with the expression persisted as its binding in field metadata; its type and input columns are inferred from the expression. Rows are filled by backfill, never at declaration.")
     virtual_column: Optional[AddVirtualColumnEntry] = None
-    __properties: ClassVar[List[str]] = ["name", "expression", "virtual_column"]
+    __properties: ClassVar[List[str]] = ["name", "expression", "computed", "virtual_column"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -79,6 +80,11 @@ class AddColumnsEntry(BaseModel):
         if self.expression is None and "expression" in self.model_fields_set:
             _dict['expression'] = None
 
+        # set to None if computed (nullable) is None
+        # and model_fields_set contains the field
+        if self.computed is None and "computed" in self.model_fields_set:
+            _dict['computed'] = None
+
         # set to None if virtual_column (nullable) is None
         # and model_fields_set contains the field
         if self.virtual_column is None and "virtual_column" in self.model_fields_set:
@@ -98,6 +104,7 @@ class AddColumnsEntry(BaseModel):
         _obj = cls.model_validate({
             "name": obj.get("name"),
             "expression": obj.get("expression"),
+            "computed": obj.get("computed"),
             "virtual_column": AddVirtualColumnEntry.from_dict(obj["virtual_column"]) if obj.get("virtual_column") is not None else None
         })
         return _obj

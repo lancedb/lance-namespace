@@ -32,6 +32,8 @@ public class AddColumnsEntry {
 
   private String expression = null;
 
+  private String computed = null;
+
   private AddVirtualColumnEntry virtualColumn = null;
 
   public AddColumnsEntry() {
@@ -73,13 +75,15 @@ public class AddColumnsEntry {
   }
 
   /**
-   * SQL expression for the column (optional if virtual_column is specified)
+   * SQL expression for the column (optional if virtual_column or computed is specified). Evaluated
+   * once over existing rows; nothing is stored, so rows appended later read null.
    *
    * @return expression
    */
   @Schema(
       name = "expression",
-      description = "SQL expression for the column (optional if virtual_column is specified)",
+      description =
+          "SQL expression for the column (optional if virtual_column or computed is specified). Evaluated once over existing rows; nothing is stored, so rows appended later read null.",
       requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("expression")
   public String getExpression() {
@@ -88,6 +92,33 @@ public class AddColumnsEntry {
 
   public void setExpression(String expression) {
     this.expression = expression;
+  }
+
+  public AddColumnsEntry computed(String computed) {
+    this.computed = computed;
+    return this;
+  }
+
+  /**
+   * SQL expression declaring a maintained computed column (optional if expression or virtual_column
+   * is specified). The column is added all-null with the expression persisted as its binding in
+   * field metadata; its type and input columns are inferred from the expression. Rows are filled by
+   * backfill, never at declaration.
+   *
+   * @return computed
+   */
+  @Schema(
+      name = "computed",
+      description =
+          "SQL expression declaring a maintained computed column (optional if expression or virtual_column is specified). The column is added all-null with the expression persisted as its binding in field metadata; its type and input columns are inferred from the expression. Rows are filled by backfill, never at declaration.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("computed")
+  public String getComputed() {
+    return computed;
+  }
+
+  public void setComputed(String computed) {
+    this.computed = computed;
   }
 
   public AddColumnsEntry virtualColumn(AddVirtualColumnEntry virtualColumn) {
@@ -122,12 +153,13 @@ public class AddColumnsEntry {
     AddColumnsEntry addColumnsEntry = (AddColumnsEntry) o;
     return Objects.equals(this.name, addColumnsEntry.name)
         && Objects.equals(this.expression, addColumnsEntry.expression)
+        && Objects.equals(this.computed, addColumnsEntry.computed)
         && Objects.equals(this.virtualColumn, addColumnsEntry.virtualColumn);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, expression, virtualColumn);
+    return Objects.hash(name, expression, computed, virtualColumn);
   }
 
   @Override
@@ -136,6 +168,7 @@ public class AddColumnsEntry {
     sb.append("class AddColumnsEntry {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    expression: ").append(toIndentedString(expression)).append("\n");
+    sb.append("    computed: ").append(toIndentedString(computed)).append("\n");
     sb.append("    virtualColumn: ").append(toIndentedString(virtualColumn)).append("\n");
     sb.append("}");
     return sb.toString();

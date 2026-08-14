@@ -57,7 +57,7 @@ Name | Type | Description  | Required | Notes
 > models::AlterTableBackfillColumnsResponse alter_table_backfill_columns(id, alter_table_backfill_columns_request, delimiter)
 Trigger an async column backfill job
 
-Trigger an asynchronous backfill job for a computed column on table `id`. The column must be a virtual (UDF-backed) column. Returns a job ID for tracking. 
+Trigger an asynchronous backfill job for a computed column on table `id`. The column must be a virtual (UDF-backed) column or a computed column declared with an expression binding. Returns a job ID for tracking. 
 
 ### Parameters
 

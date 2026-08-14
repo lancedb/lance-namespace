@@ -244,7 +244,7 @@ pub async fn alter_table_add_columns(configuration: &configuration::Configuratio
     }
 }
 
-/// Trigger an asynchronous backfill job for a computed column on table `id`. The column must be a virtual (UDF-backed) column. Returns a job ID for tracking. 
+/// Trigger an asynchronous backfill job for a computed column on table `id`. The column must be a virtual (UDF-backed) column or a computed column declared with an expression binding. Returns a job ID for tracking. 
 pub async fn alter_table_backfill_columns(configuration: &configuration::Configuration, id: &str, alter_table_backfill_columns_request: models::AlterTableBackfillColumnsRequest, delimiter: Option<&str>) -> Result<models::AlterTableBackfillColumnsResponse, Error<AlterTableBackfillColumnsError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;

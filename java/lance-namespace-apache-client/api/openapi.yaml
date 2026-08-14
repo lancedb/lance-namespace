@@ -1901,7 +1901,8 @@ paths:
     post:
       description: |
         Trigger an asynchronous backfill job for a computed column on table `id`.
-        The column must be a virtual (UDF-backed) column. Returns a job ID for tracking.
+        The column must be a virtual (UDF-backed) column or a computed column
+        declared with an expression binding. Returns a job ID for tracking.
       operationId: AlterTableBackfillColumns
       parameters:
       - $ref: '#/components/parameters/id'
@@ -9142,6 +9143,7 @@ components:
           auth_token: auth_token
         new_columns:
         - expression: expression
+          computed: computed
           name: name
           virtual_column:
             outputs:
@@ -9171,6 +9173,7 @@ components:
             auto_backfill: true
             udf_version: udf_version
         - expression: expression
+          computed: computed
           name: name
           virtual_column:
             outputs:
@@ -9246,6 +9249,7 @@ components:
     AddColumnsEntry:
       example:
         expression: expression
+        computed: computed
         name: name
         virtual_column:
           outputs:
@@ -9279,8 +9283,19 @@ components:
           description: Name of the new column
           type: string
         expression:
-          description: SQL expression for the column (optional if virtual_column is
-            specified)
+          description: |-
+            SQL expression for the column (optional if virtual_column or computed
+            is specified). Evaluated once over existing rows; nothing is stored,
+            so rows appended later read null.
+          nullable: true
+          type: string
+        computed:
+          description: |-
+            SQL expression declaring a maintained computed column (optional if
+            expression or virtual_column is specified). The column is added
+            all-null with the expression persisted as its binding in field
+            metadata; its type and input columns are inferred from the
+            expression. Rows are filled by backfill, never at declaration.
           nullable: true
           type: string
         virtual_column:

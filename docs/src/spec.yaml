@@ -1579,7 +1579,8 @@ paths:
       operationId: AlterTableBackfillColumns
       description: |
         Trigger an asynchronous backfill job for a computed column on table `id`.
-        The column must be a virtual (UDF-backed) column. Returns a job ID for tracking.
+        The column must be a virtual (UDF-backed) column or a computed column
+        declared with an expression binding. Returns a job ID for tracking.
       requestBody:
         required: true
         content:
@@ -5258,12 +5259,27 @@ components:
           type:
             - string
             - "null"
-          description: SQL expression for the column (optional if virtual_column is specified)
+          description: |-
+            SQL expression for the column (optional if virtual_column or computed
+            is specified). Evaluated once over existing rows; nothing is stored,
+            so rows appended later read null.
+        computed:
+          type:
+            - string
+            - "null"
+          description: |-
+            SQL expression declaring a maintained computed column (optional if
+            expression or virtual_column is specified). The column is added
+            all-null with the expression persisted as its binding in field
+            metadata; its type and input columns are inferred from the
+            expression. Rows are filled by backfill, never at declaration.
         virtual_column:
           oneOf:
             - type: "null"
             - $ref: "#/components/schemas/AddVirtualColumnEntry"
-          description: Virtual column definition (optional if expression is specified)
+          description: |-
+            Virtual column definition (optional if expression or computed is
+            specified)
 
     AddVirtualColumnEntry:
       type: object
