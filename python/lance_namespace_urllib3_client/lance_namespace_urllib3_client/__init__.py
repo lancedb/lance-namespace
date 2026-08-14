@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "0.10.0-beta.1"
+__version__ = "0.11.0"
 
 # import apis into sdk package
 from lance_namespace_urllib3_client.api.branch_api import BranchApi
