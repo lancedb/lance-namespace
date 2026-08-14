@@ -37,6 +37,7 @@ class TestAddColumnsEntry(unittest.TestCase):
             return AddColumnsEntry(
                 name = '',
                 expression = '',
+                computed = '',
                 virtual_column = lance_namespace_urllib3_client.models.add_virtual_column_entry.AddVirtualColumnEntry(
                     input_columns = [
                         '0'

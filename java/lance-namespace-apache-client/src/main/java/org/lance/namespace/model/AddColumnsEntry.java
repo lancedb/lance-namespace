@@ -29,6 +29,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({
   AddColumnsEntry.JSON_PROPERTY_NAME,
   AddColumnsEntry.JSON_PROPERTY_EXPRESSION,
+  AddColumnsEntry.JSON_PROPERTY_COMPUTED,
   AddColumnsEntry.JSON_PROPERTY_VIRTUAL_COLUMN
 })
 @javax.annotation.Generated(
@@ -42,6 +43,11 @@ public class AddColumnsEntry {
 
   @javax.annotation.Nullable
   private JsonNullable<String> expression = JsonNullable.<String>undefined();
+
+  public static final String JSON_PROPERTY_COMPUTED = "computed";
+
+  @javax.annotation.Nullable
+  private JsonNullable<String> computed = JsonNullable.<String>undefined();
 
   public static final String JSON_PROPERTY_VIRTUAL_COLUMN = "virtual_column";
 
@@ -82,7 +88,8 @@ public class AddColumnsEntry {
   }
 
   /**
-   * SQL expression for the column (optional if virtual_column is specified)
+   * SQL expression for the column (optional if virtual_column or computed is specified). Evaluated
+   * once over existing rows; nothing is stored, so rows appended later read null.
    *
    * @return expression
    */
@@ -105,6 +112,41 @@ public class AddColumnsEntry {
 
   public void setExpression(@javax.annotation.Nullable String expression) {
     this.expression = JsonNullable.<String>of(expression);
+  }
+
+  public AddColumnsEntry computed(@javax.annotation.Nullable String computed) {
+    this.computed = JsonNullable.<String>of(computed);
+
+    return this;
+  }
+
+  /**
+   * SQL expression declaring a maintained computed column (optional if expression or virtual_column
+   * is specified). The column is added all-null with the expression persisted as its binding in
+   * field metadata; its type and input columns are inferred from the expression. Rows are filled by
+   * backfill, never at declaration.
+   *
+   * @return computed
+   */
+  @javax.annotation.Nullable
+  @JsonIgnore
+  public String getComputed() {
+    return computed.orElse(null);
+  }
+
+  @JsonProperty(JSON_PROPERTY_COMPUTED)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public JsonNullable<String> getComputed_JsonNullable() {
+    return computed;
+  }
+
+  @JsonProperty(JSON_PROPERTY_COMPUTED)
+  public void setComputed_JsonNullable(JsonNullable<String> computed) {
+    this.computed = computed;
+  }
+
+  public void setComputed(@javax.annotation.Nullable String computed) {
+    this.computed = JsonNullable.<String>of(computed);
   }
 
   public AddColumnsEntry virtualColumn(
@@ -151,6 +193,7 @@ public class AddColumnsEntry {
     AddColumnsEntry addColumnsEntry = (AddColumnsEntry) o;
     return Objects.equals(this.name, addColumnsEntry.name)
         && equalsNullable(this.expression, addColumnsEntry.expression)
+        && equalsNullable(this.computed, addColumnsEntry.computed)
         && equalsNullable(this.virtualColumn, addColumnsEntry.virtualColumn);
   }
 
@@ -165,7 +208,11 @@ public class AddColumnsEntry {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, hashCodeNullable(expression), hashCodeNullable(virtualColumn));
+    return Objects.hash(
+        name,
+        hashCodeNullable(expression),
+        hashCodeNullable(computed),
+        hashCodeNullable(virtualColumn));
   }
 
   private static <T> int hashCodeNullable(JsonNullable<T> a) {
@@ -181,6 +228,7 @@ public class AddColumnsEntry {
     sb.append("class AddColumnsEntry {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    expression: ").append(toIndentedString(expression)).append("\n");
+    sb.append("    computed: ").append(toIndentedString(computed)).append("\n");
     sb.append("    virtualColumn: ").append(toIndentedString(virtualColumn)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -252,6 +300,22 @@ public class AddColumnsEntry {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getExpression()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `computed` to the URL query string
+    if (getComputed() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%scomputed%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getComputed()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported

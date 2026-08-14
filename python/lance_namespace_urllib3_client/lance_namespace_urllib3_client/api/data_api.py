@@ -404,7 +404,7 @@ class DataApi:
     ) -> AlterTableBackfillColumnsResponse:
         """Trigger an async column backfill job
 
-        Trigger an asynchronous backfill job for a computed column on table `id`. The column must be a virtual (UDF-backed) column. Returns a job ID for tracking. 
+        Trigger an asynchronous backfill job for a computed column on table `id`. The column must be a virtual (UDF-backed) column or a computed column declared with an expression binding. Returns a job ID for tracking. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -485,7 +485,7 @@ class DataApi:
     ) -> ApiResponse[AlterTableBackfillColumnsResponse]:
         """Trigger an async column backfill job
 
-        Trigger an asynchronous backfill job for a computed column on table `id`. The column must be a virtual (UDF-backed) column. Returns a job ID for tracking. 
+        Trigger an asynchronous backfill job for a computed column on table `id`. The column must be a virtual (UDF-backed) column or a computed column declared with an expression binding. Returns a job ID for tracking. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str
@@ -566,7 +566,7 @@ class DataApi:
     ) -> RESTResponseType:
         """Trigger an async column backfill job
 
-        Trigger an asynchronous backfill job for a computed column on table `id`. The column must be a virtual (UDF-backed) column. Returns a job ID for tracking. 
+        Trigger an asynchronous backfill job for a computed column on table `id`. The column must be a virtual (UDF-backed) column or a computed column declared with an expression binding. Returns a job ID for tracking. 
 
         :param id: `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace.  (required)
         :type id: str

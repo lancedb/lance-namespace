@@ -16,9 +16,12 @@ pub struct AddColumnsEntry {
     /// Name of the new column
     #[serde(rename = "name")]
     pub name: String,
-    /// SQL expression for the column (optional if virtual_column is specified)
+    /// SQL expression for the column (optional if virtual_column or computed is specified). Evaluated once over existing rows; nothing is stored, so rows appended later read null.
     #[serde(rename = "expression", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub expression: Option<Option<String>>,
+    /// SQL expression declaring a maintained computed column (optional if expression or virtual_column is specified). The column is added all-null with the expression persisted as its binding in field metadata; its type and input columns are inferred from the expression. Rows are filled by backfill, never at declaration.
+    #[serde(rename = "computed", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub computed: Option<Option<String>>,
     #[serde(rename = "virtual_column", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub virtual_column: Option<Option<Box<models::AddVirtualColumnEntry>>>,
 }
@@ -28,6 +31,7 @@ impl AddColumnsEntry {
         AddColumnsEntry {
             name,
             expression: None,
+            computed: None,
             virtual_column: None,
         }
     }

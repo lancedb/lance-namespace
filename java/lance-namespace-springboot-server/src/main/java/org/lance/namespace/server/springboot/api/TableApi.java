@@ -470,7 +470,8 @@ public interface TableApi {
   /**
    * POST /v1/table/{id}/backfill_column : Trigger an async column backfill job Trigger an
    * asynchronous backfill job for a computed column on table &#x60;id&#x60;. The column must be a
-   * virtual (UDF-backed) column. Returns a job ID for tracking.
+   * virtual (UDF-backed) column or a computed column declared with an expression binding. Returns a
+   * job ID for tracking.
    *
    * @param id &#x60;string identifier&#x60; of an object in a namespace, following the Lance
    *     Namespace spec. When the value is equal to the delimiter, it represents the root namespace.
@@ -497,7 +498,7 @@ public interface TableApi {
       operationId = "alterTableBackfillColumns",
       summary = "Trigger an async column backfill job",
       description =
-          "Trigger an asynchronous backfill job for a computed column on table `id`. The column must be a virtual (UDF-backed) column. Returns a job ID for tracking. ",
+          "Trigger an asynchronous backfill job for a computed column on table `id`. The column must be a virtual (UDF-backed) column or a computed column declared with an expression binding. Returns a job ID for tracking. ",
       tags = {"Table", "Data"},
       responses = {
         @ApiResponse(

@@ -117,7 +117,7 @@ public class Example {
 
 Trigger an async column backfill job
 
-Trigger an asynchronous backfill job for a computed column on table &#x60;id&#x60;. The column must be a virtual (UDF-backed) column. Returns a job ID for tracking. 
+Trigger an asynchronous backfill job for a computed column on table &#x60;id&#x60;. The column must be a virtual (UDF-backed) column or a computed column declared with an expression binding. Returns a job ID for tracking. 
 
 ### Example
 
