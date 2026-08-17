@@ -3389,6 +3389,46 @@ components:
         distance_type:
           type: string
           description: Distance metric type for vector indexes (e.g., l2, cosine, dot)
+        num_partitions:
+          type: integer
+          nullable: true
+          minimum: 1
+          description: Optional vector index parameter for the number of IVF partitions. Applies to all IVF index types.
+        num_sub_vectors:
+          type: integer
+          nullable: true
+          minimum: 1
+          description: Optional vector index parameter for the number of PQ sub-vectors. Applies to IVF_PQ only.
+        num_bits:
+          type: integer
+          nullable: true
+          minimum: 1
+          description: Optional vector index parameter for the number of bits used by the quantizer.
+        sample_rate:
+          type: integer
+          nullable: true
+          minimum: 1
+          description: Optional vector index parameter for the per-partition sample rate used during IVF training.
+        max_iterations:
+          type: integer
+          nullable: true
+          minimum: 1
+          description: Optional vector index parameter for the maximum number of IVF k-means training iterations.
+        target_partition_size:
+          type: integer
+          nullable: true
+          minimum: 1
+          description: Optional vector index parameter for the target partition size. Alternative to num_partitions.
+        m:
+          type: integer
+          nullable: true
+          minimum: 1
+          description: Optional vector index parameter for the number of edges per node in the HNSW graph. Applies to HNSW index types.
+        ef_construction:
+          type: integer
+          nullable: true
+          minimum: 1
+          description: Optional vector index parameter for the number of candidates evaluated during HNSW graph construction. Applies to HNSW index types.
         with_position:
           type: boolean
           nullable: true

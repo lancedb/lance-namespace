@@ -36,6 +36,14 @@ import java.util.StringJoiner;
   CreateTableIndexRequest.JSON_PROPERTY_INDEX_TYPE,
   CreateTableIndexRequest.JSON_PROPERTY_NAME,
   CreateTableIndexRequest.JSON_PROPERTY_DISTANCE_TYPE,
+  CreateTableIndexRequest.JSON_PROPERTY_NUM_PARTITIONS,
+  CreateTableIndexRequest.JSON_PROPERTY_NUM_SUB_VECTORS,
+  CreateTableIndexRequest.JSON_PROPERTY_NUM_BITS,
+  CreateTableIndexRequest.JSON_PROPERTY_SAMPLE_RATE,
+  CreateTableIndexRequest.JSON_PROPERTY_MAX_ITERATIONS,
+  CreateTableIndexRequest.JSON_PROPERTY_TARGET_PARTITION_SIZE,
+  CreateTableIndexRequest.JSON_PROPERTY_M,
+  CreateTableIndexRequest.JSON_PROPERTY_EF_CONSTRUCTION,
   CreateTableIndexRequest.JSON_PROPERTY_WITH_POSITION,
   CreateTableIndexRequest.JSON_PROPERTY_BASE_TOKENIZER,
   CreateTableIndexRequest.JSON_PROPERTY_LANGUAGE,
@@ -72,6 +80,30 @@ public class CreateTableIndexRequest {
 
   public static final String JSON_PROPERTY_DISTANCE_TYPE = "distance_type";
   @javax.annotation.Nullable private String distanceType;
+
+  public static final String JSON_PROPERTY_NUM_PARTITIONS = "num_partitions";
+  @javax.annotation.Nullable private Integer numPartitions;
+
+  public static final String JSON_PROPERTY_NUM_SUB_VECTORS = "num_sub_vectors";
+  @javax.annotation.Nullable private Integer numSubVectors;
+
+  public static final String JSON_PROPERTY_NUM_BITS = "num_bits";
+  @javax.annotation.Nullable private Integer numBits;
+
+  public static final String JSON_PROPERTY_SAMPLE_RATE = "sample_rate";
+  @javax.annotation.Nullable private Integer sampleRate;
+
+  public static final String JSON_PROPERTY_MAX_ITERATIONS = "max_iterations";
+  @javax.annotation.Nullable private Integer maxIterations;
+
+  public static final String JSON_PROPERTY_TARGET_PARTITION_SIZE = "target_partition_size";
+  @javax.annotation.Nullable private Integer targetPartitionSize;
+
+  public static final String JSON_PROPERTY_M = "m";
+  @javax.annotation.Nullable private Integer m;
+
+  public static final String JSON_PROPERTY_EF_CONSTRUCTION = "ef_construction";
+  @javax.annotation.Nullable private Integer efConstruction;
 
   public static final String JSON_PROPERTY_WITH_POSITION = "with_position";
   @javax.annotation.Nullable private Boolean withPosition;
@@ -320,6 +352,206 @@ public class CreateTableIndexRequest {
     this.distanceType = distanceType;
   }
 
+  public CreateTableIndexRequest numPartitions(@javax.annotation.Nullable Integer numPartitions) {
+
+    this.numPartitions = numPartitions;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the number of IVF partitions. Applies to all IVF index
+   * types. minimum: 1
+   *
+   * @return numPartitions
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_NUM_PARTITIONS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getNumPartitions() {
+    return numPartitions;
+  }
+
+  @JsonProperty(JSON_PROPERTY_NUM_PARTITIONS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNumPartitions(@javax.annotation.Nullable Integer numPartitions) {
+    this.numPartitions = numPartitions;
+  }
+
+  public CreateTableIndexRequest numSubVectors(@javax.annotation.Nullable Integer numSubVectors) {
+
+    this.numSubVectors = numSubVectors;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the number of PQ sub-vectors. Applies to IVF_PQ only.
+   * minimum: 1
+   *
+   * @return numSubVectors
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_NUM_SUB_VECTORS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getNumSubVectors() {
+    return numSubVectors;
+  }
+
+  @JsonProperty(JSON_PROPERTY_NUM_SUB_VECTORS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNumSubVectors(@javax.annotation.Nullable Integer numSubVectors) {
+    this.numSubVectors = numSubVectors;
+  }
+
+  public CreateTableIndexRequest numBits(@javax.annotation.Nullable Integer numBits) {
+
+    this.numBits = numBits;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the number of bits used by the quantizer. minimum: 1
+   *
+   * @return numBits
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_NUM_BITS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getNumBits() {
+    return numBits;
+  }
+
+  @JsonProperty(JSON_PROPERTY_NUM_BITS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNumBits(@javax.annotation.Nullable Integer numBits) {
+    this.numBits = numBits;
+  }
+
+  public CreateTableIndexRequest sampleRate(@javax.annotation.Nullable Integer sampleRate) {
+
+    this.sampleRate = sampleRate;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the per-partition sample rate used during IVF training.
+   * minimum: 1
+   *
+   * @return sampleRate
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_SAMPLE_RATE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getSampleRate() {
+    return sampleRate;
+  }
+
+  @JsonProperty(JSON_PROPERTY_SAMPLE_RATE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setSampleRate(@javax.annotation.Nullable Integer sampleRate) {
+    this.sampleRate = sampleRate;
+  }
+
+  public CreateTableIndexRequest maxIterations(@javax.annotation.Nullable Integer maxIterations) {
+
+    this.maxIterations = maxIterations;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the maximum number of IVF k-means training iterations.
+   * minimum: 1
+   *
+   * @return maxIterations
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_MAX_ITERATIONS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getMaxIterations() {
+    return maxIterations;
+  }
+
+  @JsonProperty(JSON_PROPERTY_MAX_ITERATIONS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setMaxIterations(@javax.annotation.Nullable Integer maxIterations) {
+    this.maxIterations = maxIterations;
+  }
+
+  public CreateTableIndexRequest targetPartitionSize(
+      @javax.annotation.Nullable Integer targetPartitionSize) {
+
+    this.targetPartitionSize = targetPartitionSize;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the target partition size. Alternative to num_partitions.
+   * minimum: 1
+   *
+   * @return targetPartitionSize
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TARGET_PARTITION_SIZE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getTargetPartitionSize() {
+    return targetPartitionSize;
+  }
+
+  @JsonProperty(JSON_PROPERTY_TARGET_PARTITION_SIZE)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTargetPartitionSize(@javax.annotation.Nullable Integer targetPartitionSize) {
+    this.targetPartitionSize = targetPartitionSize;
+  }
+
+  public CreateTableIndexRequest m(@javax.annotation.Nullable Integer m) {
+
+    this.m = m;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the number of edges per node in the HNSW graph. Applies to
+   * HNSW index types. minimum: 1
+   *
+   * @return m
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_M)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getM() {
+    return m;
+  }
+
+  @JsonProperty(JSON_PROPERTY_M)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setM(@javax.annotation.Nullable Integer m) {
+    this.m = m;
+  }
+
+  public CreateTableIndexRequest efConstruction(@javax.annotation.Nullable Integer efConstruction) {
+
+    this.efConstruction = efConstruction;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the number of candidates evaluated during HNSW graph
+   * construction. Applies to HNSW index types. minimum: 1
+   *
+   * @return efConstruction
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_EF_CONSTRUCTION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public Integer getEfConstruction() {
+    return efConstruction;
+  }
+
+  @JsonProperty(JSON_PROPERTY_EF_CONSTRUCTION)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setEfConstruction(@javax.annotation.Nullable Integer efConstruction) {
+    this.efConstruction = efConstruction;
+  }
+
   public CreateTableIndexRequest withPosition(@javax.annotation.Nullable Boolean withPosition) {
 
     this.withPosition = withPosition;
@@ -530,6 +762,14 @@ public class CreateTableIndexRequest {
         && Objects.equals(this.indexType, createTableIndexRequest.indexType)
         && Objects.equals(this.name, createTableIndexRequest.name)
         && Objects.equals(this.distanceType, createTableIndexRequest.distanceType)
+        && Objects.equals(this.numPartitions, createTableIndexRequest.numPartitions)
+        && Objects.equals(this.numSubVectors, createTableIndexRequest.numSubVectors)
+        && Objects.equals(this.numBits, createTableIndexRequest.numBits)
+        && Objects.equals(this.sampleRate, createTableIndexRequest.sampleRate)
+        && Objects.equals(this.maxIterations, createTableIndexRequest.maxIterations)
+        && Objects.equals(this.targetPartitionSize, createTableIndexRequest.targetPartitionSize)
+        && Objects.equals(this.m, createTableIndexRequest.m)
+        && Objects.equals(this.efConstruction, createTableIndexRequest.efConstruction)
         && Objects.equals(this.withPosition, createTableIndexRequest.withPosition)
         && Objects.equals(this.baseTokenizer, createTableIndexRequest.baseTokenizer)
         && Objects.equals(this.language, createTableIndexRequest.language)
@@ -551,6 +791,14 @@ public class CreateTableIndexRequest {
         indexType,
         name,
         distanceType,
+        numPartitions,
+        numSubVectors,
+        numBits,
+        sampleRate,
+        maxIterations,
+        targetPartitionSize,
+        m,
+        efConstruction,
         withPosition,
         baseTokenizer,
         language,
@@ -573,6 +821,16 @@ public class CreateTableIndexRequest {
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    distanceType: ").append(toIndentedString(distanceType)).append("\n");
+    sb.append("    numPartitions: ").append(toIndentedString(numPartitions)).append("\n");
+    sb.append("    numSubVectors: ").append(toIndentedString(numSubVectors)).append("\n");
+    sb.append("    numBits: ").append(toIndentedString(numBits)).append("\n");
+    sb.append("    sampleRate: ").append(toIndentedString(sampleRate)).append("\n");
+    sb.append("    maxIterations: ").append(toIndentedString(maxIterations)).append("\n");
+    sb.append("    targetPartitionSize: ")
+        .append(toIndentedString(targetPartitionSize))
+        .append("\n");
+    sb.append("    m: ").append(toIndentedString(m)).append("\n");
+    sb.append("    efConstruction: ").append(toIndentedString(efConstruction)).append("\n");
     sb.append("    withPosition: ").append(toIndentedString(withPosition)).append("\n");
     sb.append("    baseTokenizer: ").append(toIndentedString(baseTokenizer)).append("\n");
     sb.append("    language: ").append(toIndentedString(language)).append("\n");
@@ -745,6 +1003,132 @@ public class CreateTableIndexRequest {
                 prefix,
                 suffix,
                 URLEncoder.encode(String.valueOf(getDistanceType()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `num_partitions` to the URL query string
+    if (getNumPartitions() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%snum_partitions%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getNumPartitions()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `num_sub_vectors` to the URL query string
+    if (getNumSubVectors() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%snum_sub_vectors%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getNumSubVectors()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `num_bits` to the URL query string
+    if (getNumBits() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%snum_bits%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getNumBits()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `sample_rate` to the URL query string
+    if (getSampleRate() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%ssample_rate%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getSampleRate()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `max_iterations` to the URL query string
+    if (getMaxIterations() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%smax_iterations%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getMaxIterations()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `target_partition_size` to the URL query string
+    if (getTargetPartitionSize() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%starget_partition_size%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getTargetPartitionSize()), "UTF-8")
+                    .replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `m` to the URL query string
+    if (getM() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sm%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getM()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
+    }
+
+    // add `ef_construction` to the URL query string
+    if (getEfConstruction() != null) {
+      try {
+        joiner.add(
+            String.format(
+                "%sef_construction%s=%s",
+                prefix,
+                suffix,
+                URLEncoder.encode(String.valueOf(getEfConstruction()), "UTF-8")
                     .replaceAll("\\+", "%20")));
       } catch (UnsupportedEncodingException e) {
         // Should never happen, UTF-8 is always supported
