@@ -35,6 +35,30 @@ pub struct CreateTableIndexRequest {
     /// Distance metric type for vector indexes (e.g., l2, cosine, dot)
     #[serde(rename = "distance_type", skip_serializing_if = "Option::is_none")]
     pub distance_type: Option<String>,
+    /// Optional vector index parameter for the number of IVF partitions. Applies to all IVF index types.
+    #[serde(rename = "num_partitions", skip_serializing_if = "Option::is_none")]
+    pub num_partitions: Option<i32>,
+    /// Optional vector index parameter for the number of PQ sub-vectors. Applies to IVF_PQ only.
+    #[serde(rename = "num_sub_vectors", skip_serializing_if = "Option::is_none")]
+    pub num_sub_vectors: Option<i32>,
+    /// Optional vector index parameter for the number of bits used by the quantizer.
+    #[serde(rename = "num_bits", skip_serializing_if = "Option::is_none")]
+    pub num_bits: Option<i32>,
+    /// Optional vector index parameter for the per-partition sample rate used during IVF training.
+    #[serde(rename = "sample_rate", skip_serializing_if = "Option::is_none")]
+    pub sample_rate: Option<i32>,
+    /// Optional vector index parameter for the maximum number of IVF k-means training iterations.
+    #[serde(rename = "max_iterations", skip_serializing_if = "Option::is_none")]
+    pub max_iterations: Option<i32>,
+    /// Optional vector index parameter for the target partition size. Alternative to num_partitions.
+    #[serde(rename = "target_partition_size", skip_serializing_if = "Option::is_none")]
+    pub target_partition_size: Option<i32>,
+    /// Optional vector index parameter for the number of edges per node in the HNSW graph. Applies to HNSW index types.
+    #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
+    pub m: Option<i32>,
+    /// Optional vector index parameter for the number of candidates evaluated during HNSW graph construction. Applies to HNSW index types.
+    #[serde(rename = "ef_construction", skip_serializing_if = "Option::is_none")]
+    pub ef_construction: Option<i32>,
     /// Optional FTS parameter for position tracking
     #[serde(rename = "with_position", skip_serializing_if = "Option::is_none")]
     pub with_position: Option<bool>,
@@ -72,6 +96,14 @@ impl CreateTableIndexRequest {
             index_type,
             name: None,
             distance_type: None,
+            num_partitions: None,
+            num_sub_vectors: None,
+            num_bits: None,
+            sample_rate: None,
+            max_iterations: None,
+            target_partition_size: None,
+            m: None,
+            ef_construction: None,
             with_position: None,
             base_tokenizer: None,
             language: None,

@@ -36,6 +36,14 @@ class CreateTableIndexRequest(BaseModel):
     index_type: StrictStr = Field(description="Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS)")
     name: Optional[StrictStr] = Field(default=None, description="Optional name for the index. If not provided, a name will be auto-generated.")
     distance_type: Optional[StrictStr] = Field(default=None, description="Distance metric type for vector indexes (e.g., l2, cosine, dot)")
+    num_partitions: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Optional vector index parameter for the number of IVF partitions. Applies to all IVF index types.")
+    num_sub_vectors: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Optional vector index parameter for the number of PQ sub-vectors. Applies to IVF_PQ only.")
+    num_bits: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Optional vector index parameter for the number of bits used by the quantizer.")
+    sample_rate: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Optional vector index parameter for the per-partition sample rate used during IVF training.")
+    max_iterations: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Optional vector index parameter for the maximum number of IVF k-means training iterations.")
+    target_partition_size: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Optional vector index parameter for the target partition size. Alternative to num_partitions.")
+    m: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Optional vector index parameter for the number of edges per node in the HNSW graph. Applies to HNSW index types.")
+    ef_construction: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Optional vector index parameter for the number of candidates evaluated during HNSW graph construction. Applies to HNSW index types.")
     with_position: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for position tracking")
     base_tokenizer: Optional[StrictStr] = Field(default=None, description="Optional FTS parameter for base tokenizer")
     language: Optional[StrictStr] = Field(default=None, description="Optional FTS parameter for language")
@@ -44,7 +52,7 @@ class CreateTableIndexRequest(BaseModel):
     stem: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for stemming")
     remove_stop_words: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for stop word removal")
     ascii_folding: Optional[StrictBool] = Field(default=None, description="Optional FTS parameter for ASCII folding")
-    __properties: ClassVar[List[str]] = ["identity", "context", "id", "branch", "column", "index_type", "name", "distance_type", "with_position", "base_tokenizer", "language", "max_token_length", "lower_case", "stem", "remove_stop_words", "ascii_folding"]
+    __properties: ClassVar[List[str]] = ["identity", "context", "id", "branch", "column", "index_type", "name", "distance_type", "num_partitions", "num_sub_vectors", "num_bits", "sample_rate", "max_iterations", "target_partition_size", "m", "ef_construction", "with_position", "base_tokenizer", "language", "max_token_length", "lower_case", "stem", "remove_stop_words", "ascii_folding"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -108,6 +116,14 @@ class CreateTableIndexRequest(BaseModel):
             "index_type": obj.get("index_type"),
             "name": obj.get("name"),
             "distance_type": obj.get("distance_type"),
+            "num_partitions": obj.get("num_partitions"),
+            "num_sub_vectors": obj.get("num_sub_vectors"),
+            "num_bits": obj.get("num_bits"),
+            "sample_rate": obj.get("sample_rate"),
+            "max_iterations": obj.get("max_iterations"),
+            "target_partition_size": obj.get("target_partition_size"),
+            "m": obj.get("m"),
+            "ef_construction": obj.get("ef_construction"),
             "with_position": obj.get("with_position"),
             "base_tokenizer": obj.get("base_tokenizer"),
             "language": obj.get("language"),

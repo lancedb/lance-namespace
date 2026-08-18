@@ -48,6 +48,22 @@ public class CreateTableIndexRequest {
 
   private String distanceType;
 
+  private Integer numPartitions;
+
+  private Integer numSubVectors;
+
+  private Integer numBits;
+
+  private Integer sampleRate;
+
+  private Integer maxIterations;
+
+  private Integer targetPartitionSize;
+
+  private Integer m;
+
+  private Integer efConstruction;
+
   private Boolean withPosition;
 
   private String baseTokenizer;
@@ -287,6 +303,212 @@ public class CreateTableIndexRequest {
     this.distanceType = distanceType;
   }
 
+  public CreateTableIndexRequest numPartitions(Integer numPartitions) {
+    this.numPartitions = numPartitions;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the number of IVF partitions. Applies to all IVF index
+   * types. minimum: 1
+   *
+   * @return numPartitions
+   */
+  @Min(1)
+  @Schema(
+      name = "num_partitions",
+      description =
+          "Optional vector index parameter for the number of IVF partitions. Applies to all IVF index types.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("num_partitions")
+  public Integer getNumPartitions() {
+    return numPartitions;
+  }
+
+  public void setNumPartitions(Integer numPartitions) {
+    this.numPartitions = numPartitions;
+  }
+
+  public CreateTableIndexRequest numSubVectors(Integer numSubVectors) {
+    this.numSubVectors = numSubVectors;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the number of PQ sub-vectors. Applies to IVF_PQ only.
+   * minimum: 1
+   *
+   * @return numSubVectors
+   */
+  @Min(1)
+  @Schema(
+      name = "num_sub_vectors",
+      description =
+          "Optional vector index parameter for the number of PQ sub-vectors. Applies to IVF_PQ only.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("num_sub_vectors")
+  public Integer getNumSubVectors() {
+    return numSubVectors;
+  }
+
+  public void setNumSubVectors(Integer numSubVectors) {
+    this.numSubVectors = numSubVectors;
+  }
+
+  public CreateTableIndexRequest numBits(Integer numBits) {
+    this.numBits = numBits;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the number of bits used by the quantizer. minimum: 1
+   *
+   * @return numBits
+   */
+  @Min(1)
+  @Schema(
+      name = "num_bits",
+      description = "Optional vector index parameter for the number of bits used by the quantizer.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("num_bits")
+  public Integer getNumBits() {
+    return numBits;
+  }
+
+  public void setNumBits(Integer numBits) {
+    this.numBits = numBits;
+  }
+
+  public CreateTableIndexRequest sampleRate(Integer sampleRate) {
+    this.sampleRate = sampleRate;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the per-partition sample rate used during IVF training.
+   * minimum: 1
+   *
+   * @return sampleRate
+   */
+  @Min(1)
+  @Schema(
+      name = "sample_rate",
+      description =
+          "Optional vector index parameter for the per-partition sample rate used during IVF training.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("sample_rate")
+  public Integer getSampleRate() {
+    return sampleRate;
+  }
+
+  public void setSampleRate(Integer sampleRate) {
+    this.sampleRate = sampleRate;
+  }
+
+  public CreateTableIndexRequest maxIterations(Integer maxIterations) {
+    this.maxIterations = maxIterations;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the maximum number of IVF k-means training iterations.
+   * minimum: 1
+   *
+   * @return maxIterations
+   */
+  @Min(1)
+  @Schema(
+      name = "max_iterations",
+      description =
+          "Optional vector index parameter for the maximum number of IVF k-means training iterations.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("max_iterations")
+  public Integer getMaxIterations() {
+    return maxIterations;
+  }
+
+  public void setMaxIterations(Integer maxIterations) {
+    this.maxIterations = maxIterations;
+  }
+
+  public CreateTableIndexRequest targetPartitionSize(Integer targetPartitionSize) {
+    this.targetPartitionSize = targetPartitionSize;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the target partition size. Alternative to num_partitions.
+   * minimum: 1
+   *
+   * @return targetPartitionSize
+   */
+  @Min(1)
+  @Schema(
+      name = "target_partition_size",
+      description =
+          "Optional vector index parameter for the target partition size. Alternative to num_partitions.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("target_partition_size")
+  public Integer getTargetPartitionSize() {
+    return targetPartitionSize;
+  }
+
+  public void setTargetPartitionSize(Integer targetPartitionSize) {
+    this.targetPartitionSize = targetPartitionSize;
+  }
+
+  public CreateTableIndexRequest m(Integer m) {
+    this.m = m;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the number of edges per node in the HNSW graph. Applies to
+   * HNSW index types. minimum: 1
+   *
+   * @return m
+   */
+  @Min(1)
+  @Schema(
+      name = "m",
+      description =
+          "Optional vector index parameter for the number of edges per node in the HNSW graph. Applies to HNSW index types.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("m")
+  public Integer getM() {
+    return m;
+  }
+
+  public void setM(Integer m) {
+    this.m = m;
+  }
+
+  public CreateTableIndexRequest efConstruction(Integer efConstruction) {
+    this.efConstruction = efConstruction;
+    return this;
+  }
+
+  /**
+   * Optional vector index parameter for the number of candidates evaluated during HNSW graph
+   * construction. Applies to HNSW index types. minimum: 1
+   *
+   * @return efConstruction
+   */
+  @Min(1)
+  @Schema(
+      name = "ef_construction",
+      description =
+          "Optional vector index parameter for the number of candidates evaluated during HNSW graph construction. Applies to HNSW index types.",
+      requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("ef_construction")
+  public Integer getEfConstruction() {
+    return efConstruction;
+  }
+
+  public void setEfConstruction(Integer efConstruction) {
+    this.efConstruction = efConstruction;
+  }
+
   public CreateTableIndexRequest withPosition(Boolean withPosition) {
     this.withPosition = withPosition;
     return this;
@@ -489,6 +711,14 @@ public class CreateTableIndexRequest {
         && Objects.equals(this.indexType, createTableIndexRequest.indexType)
         && Objects.equals(this.name, createTableIndexRequest.name)
         && Objects.equals(this.distanceType, createTableIndexRequest.distanceType)
+        && Objects.equals(this.numPartitions, createTableIndexRequest.numPartitions)
+        && Objects.equals(this.numSubVectors, createTableIndexRequest.numSubVectors)
+        && Objects.equals(this.numBits, createTableIndexRequest.numBits)
+        && Objects.equals(this.sampleRate, createTableIndexRequest.sampleRate)
+        && Objects.equals(this.maxIterations, createTableIndexRequest.maxIterations)
+        && Objects.equals(this.targetPartitionSize, createTableIndexRequest.targetPartitionSize)
+        && Objects.equals(this.m, createTableIndexRequest.m)
+        && Objects.equals(this.efConstruction, createTableIndexRequest.efConstruction)
         && Objects.equals(this.withPosition, createTableIndexRequest.withPosition)
         && Objects.equals(this.baseTokenizer, createTableIndexRequest.baseTokenizer)
         && Objects.equals(this.language, createTableIndexRequest.language)
@@ -510,6 +740,14 @@ public class CreateTableIndexRequest {
         indexType,
         name,
         distanceType,
+        numPartitions,
+        numSubVectors,
+        numBits,
+        sampleRate,
+        maxIterations,
+        targetPartitionSize,
+        m,
+        efConstruction,
         withPosition,
         baseTokenizer,
         language,
@@ -532,6 +770,16 @@ public class CreateTableIndexRequest {
     sb.append("    indexType: ").append(toIndentedString(indexType)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    distanceType: ").append(toIndentedString(distanceType)).append("\n");
+    sb.append("    numPartitions: ").append(toIndentedString(numPartitions)).append("\n");
+    sb.append("    numSubVectors: ").append(toIndentedString(numSubVectors)).append("\n");
+    sb.append("    numBits: ").append(toIndentedString(numBits)).append("\n");
+    sb.append("    sampleRate: ").append(toIndentedString(sampleRate)).append("\n");
+    sb.append("    maxIterations: ").append(toIndentedString(maxIterations)).append("\n");
+    sb.append("    targetPartitionSize: ")
+        .append(toIndentedString(targetPartitionSize))
+        .append("\n");
+    sb.append("    m: ").append(toIndentedString(m)).append("\n");
+    sb.append("    efConstruction: ").append(toIndentedString(efConstruction)).append("\n");
     sb.append("    withPosition: ").append(toIndentedString(withPosition)).append("\n");
     sb.append("    baseTokenizer: ").append(toIndentedString(baseTokenizer)).append("\n");
     sb.append("    language: ").append(toIndentedString(language)).append("\n");

@@ -15,6 +15,14 @@
 |**indexType** | **String** | Type of index to create (e.g., BTREE, BITMAP, LABEL_LIST, IVF_FLAT, IVF_PQ, IVF_HNSW_SQ, FTS) |  |
 |**name** | **String** | Optional name for the index. If not provided, a name will be auto-generated. |  [optional] |
 |**distanceType** | **String** | Distance metric type for vector indexes (e.g., l2, cosine, dot) |  [optional] |
+|**numPartitions** | **Integer** | Optional vector index parameter for the number of IVF partitions. Applies to all IVF index types. |  [optional] |
+|**numSubVectors** | **Integer** | Optional vector index parameter for the number of PQ sub-vectors. Applies to IVF_PQ only. |  [optional] |
+|**numBits** | **Integer** | Optional vector index parameter for the number of bits used by the quantizer. |  [optional] |
+|**sampleRate** | **Integer** | Optional vector index parameter for the per-partition sample rate used during IVF training. |  [optional] |
+|**maxIterations** | **Integer** | Optional vector index parameter for the maximum number of IVF k-means training iterations. |  [optional] |
+|**targetPartitionSize** | **Integer** | Optional vector index parameter for the target partition size. Alternative to num_partitions. |  [optional] |
+|**m** | **Integer** | Optional vector index parameter for the number of edges per node in the HNSW graph. Applies to HNSW index types. |  [optional] |
+|**efConstruction** | **Integer** | Optional vector index parameter for the number of candidates evaluated during HNSW graph construction. Applies to HNSW index types. |  [optional] |
 |**withPosition** | **Boolean** | Optional FTS parameter for position tracking |  [optional] |
 |**baseTokenizer** | **String** | Optional FTS parameter for base tokenizer |  [optional] |
 |**language** | **String** | Optional FTS parameter for language |  [optional] |
