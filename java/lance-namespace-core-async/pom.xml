@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.lance</groupId>
         <artifactId>lance-namespace-root</artifactId>
-        <version>0.11.0</version>
+        <version>0.11.1</version>
     </parent>
 
     <artifactId>lance-namespace-core-async</artifactId>
