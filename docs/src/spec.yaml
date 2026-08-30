@@ -29,6 +29,11 @@ info:
     Lance REST Namespace implementation, which defines a complete REST server that can work with Lance datasets.
     See https://lance.org/format/namespace/rest for more details.
 servers:
+  # A concrete URL must come first. Documentation renderers and API consoles
+  # substitute no variables when every server is templated, so they cannot build
+  # a request URL and render an error in place of each endpoint's code samples.
+  - url: http://localhost:2333
+    description: Default local server
   - url: "{scheme}://{host}:{port}/{basePath}"
     description: Generic server URL with all parts configurable
     variables:
