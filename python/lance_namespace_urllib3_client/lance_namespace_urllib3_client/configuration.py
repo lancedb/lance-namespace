@@ -557,6 +557,10 @@ conf = lance_namespace_urllib3_client.Configuration(
         """
         return [
             {
+                'url': "http://localhost:2333",
+                'description': "Default local server",
+            },
+            {
                 'url': "{scheme}://{host}:{port}/{basePath}",
                 'description': "Generic server URL with all parts configurable",
                 'variables': {

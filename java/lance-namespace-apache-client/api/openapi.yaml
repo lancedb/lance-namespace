@@ -16,6 +16,8 @@ info:
   title: Lance Namespace Specification
   version: 1.0.0
 servers:
+- description: Default local server
+  url: http://localhost:2333
 - description: Generic server URL with all parts configurable
   url: "{scheme}://{host}:{port}/{basePath}"
   variables:

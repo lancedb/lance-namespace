@@ -87,6 +87,10 @@ public class ApiClient extends JavaTimeFormatter {
       new ArrayList<ServerConfiguration>(
           Arrays.asList(
               new ServerConfiguration(
+                  "http://localhost:2333",
+                  "Default local server",
+                  new HashMap<String, ServerVariable>()),
+              new ServerConfiguration(
                   "{scheme}://{host}:{port}/{basePath}",
                   "Generic server URL with all parts configurable",
                   new HashMap<String, ServerVariable>() {
