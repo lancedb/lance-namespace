@@ -43,6 +43,9 @@ labels:
 - label: rust
   files:
     - "rust\\/.*"
+- label: cpp
+  files:
+    - "cpp\\/.*"
 - label: spec
   files:
     - "spec\\/.*"

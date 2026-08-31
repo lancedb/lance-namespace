@@ -1,0 +1,192 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: C++
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+      - reopened
+    paths:
+      - docs/src/spec.yaml
+      - cpp/**
+      - .github/workflows/cpp.yml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # ─── clang-format-20 ────────────────────────────────────────────────────────
+  format:
+    name: clang-format-20
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install clang-format-20
+        run: |
+          wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+          echo "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-20 main" | sudo tee /etc/apt/sources.list.d/llvm.list
+          sudo apt update -qq
+          sudo apt install -y clang-format-20
+      - name: Check formatting
+        working-directory: cpp
+        run: make format-check
+
+  # ─── Linux (manylinux_2_28 — GLIBC 2.28, Clang 20) ─────────────────────────
+  linux:
+    name: Linux (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    container: ${{ matrix.container }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            container: quay.io/pypa/manylinux_2_28_x86_64
+            arch: x86_64
+          - runner: ubuntu-24.04-arm
+            container: quay.io/pypa/manylinux_2_28_aarch64
+            arch: aarch64
+    env:
+      CC: clang
+      CXX: clang++
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Clang 20
+        run: manylinux-install-clang -v 20.1.8.0
+
+      - name: Install CMake & Ninja
+        run: pip3 install --quiet cmake ninja
+
+      - name: Install cpprestsdk
+        run: |
+          git clone --depth 1 --branch v2.10.19 \
+              https://github.com/microsoft/cpprestsdk.git /tmp/cpprestsdk
+          cmake -S /tmp/cpprestsdk/Release -B /tmp/cpprestsdk_build \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DBUILD_TESTS=OFF -DBUILD_SAMPLES=OFF \
+              -DCMAKE_INSTALL_PREFIX=/usr/local
+          cmake --build /tmp/cpprestsdk_build --parallel $(nproc)
+          cmake --install /tmp/cpprestsdk_build
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install rest-sdk dependencies
+        run: uv sync --all-packages
+
+      - name: Generate REST client
+        working-directory: cpp
+        run: make gen-rest-client
+
+      - name: Configure & build (with tests)
+        working-directory: cpp/lance_namespace
+        run: |
+          cmake -S . -B build \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DLANCE_NAMESPACE_BUILD_TESTS=ON
+          cmake --build build --parallel $(nproc)
+
+      - name: Run tests
+        working-directory: cpp/lance_namespace/build
+        run: ctest --output-on-failure -j$(nproc)
+
+  # ─── macOS (Apple Silicon, macOS 11+ deployment target) ─────────────────────
+  macos:
+    name: macOS (aarch64)
+    runs-on: macos-14
+    timeout-minutes: 60
+    env:
+      MACOSX_DEPLOYMENT_TARGET: "11"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: brew install cpprestsdk cmake ninja
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install rest-sdk dependencies
+        run: uv sync --all-packages
+
+      - name: Generate REST client
+        working-directory: cpp
+        run: make gen-rest-client
+
+      - name: Configure & build (with tests)
+        working-directory: cpp/lance_namespace
+        run: |
+          cmake -S . -B build -G Ninja \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DLANCE_NAMESPACE_BUILD_TESTS=ON
+          cmake --build build --parallel
+
+      - name: Run tests
+        working-directory: cpp/lance_namespace/build
+        run: ctest --output-on-failure -j$(sysctl -n hw.logicalcpu)
+
+  # ─── Windows (MSVC 2022, x64) ───────────────────────────────────────────────
+  windows:
+    name: Windows (x64, MSVC)
+    runs-on: windows-2022
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgDirectory: ${{ github.workspace }}/vcpkg
+          vcpkgGitCommitId: "b322364f06308bdd24823a9352d330bc5c6b54cf"
+
+      - name: Install cpprestsdk via vcpkg
+        shell: pwsh
+        run: >
+          ${{ github.workspace }}\vcpkg\vcpkg install cpprestsdk:x64-windows
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install rest-sdk dependencies
+        run: uv sync --all-packages
+
+      - name: Generate REST client
+        working-directory: cpp
+        shell: bash
+        run: make gen-rest-client
+
+      - name: Configure & build (with tests)
+        shell: pwsh
+        run: |
+          $vcpkgToolchain = "${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake"
+          cmake -S cpp/lance_namespace -B cpp/lance_namespace/build `
+            -DCMAKE_BUILD_TYPE=Release `
+            "-DCMAKE_TOOLCHAIN_FILE=$vcpkgToolchain" `
+            -DVCPKG_TARGET_TRIPLET=x64-windows `
+            -DLANCE_NAMESPACE_BUILD_TESTS=ON
+          cmake --build cpp/lance_namespace/build --config Release --parallel
+
+      - name: Run tests
+        working-directory: cpp/lance_namespace/build
+        shell: pwsh
+        run: ctest -C Release --output-on-failure

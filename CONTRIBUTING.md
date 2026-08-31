@@ -13,7 +13,7 @@ or to add new clients and servers to be generated based on community demand.
 In general, we welcome more generated components to be added as long as 
 the contributor is willing to set up all the automations for generation and publication.
 
-For contributing changes to directory and REST namespaces, please go to the [lance](https://github.com/lance-format/lance) repo.
+For contributing changes to directory and REST namespaces, please go to the [lance-c](https://github.com/lance-format/lance-c) repo for C/C++ and [lance](https://github.com/lance-format/lance) repo for other languages.
 
 For contributing changes to implementations other than the directory and REST namespace, 
 or for adding new namespace implementations,
@@ -32,11 +32,11 @@ This is because Rust uses source code builds, and separating modules across repo
 
 The dependency chain is: `lance-namespace` → `lance` → `lance-namespace-impls`
 
-### Other Languages (e.g. Python, Java)
+### Other Languages (e.g. Python, Java, C/C++)
 
 For Python, Java, and other languages, the core `LanceNamespace` interface and generic connect functionality
 are maintained in **this repository** (e.g., `lance-namespace` for Python, `lance-namespace-core` for Java).
-The core [lance-format/lance](https://github.com/lance-format/lance) repository then imports these modules.
+The core repos [lance-format/lance](https://github.com/lance-format/lance) and [lance-format/lance-c](https://github.com/lance-format/lance-c) then import these modules. 
 
 The reason for this import direction is that `lance-namespace-impls` (REST and directory namespace implementations)
 are used in the Lance Python and Java bindings, and are exposed back through the corresponding language interfaces.
@@ -107,6 +107,8 @@ This repository currently contains the following components:
 | Java Apache Client    | Java     | java/lance-namespace-apache-client     | Generated Java Apache HTTP client for Lance REST Namespace |
 | Java SpringBoot Server| Java     | java/lance-namespace-springboot-server | Generated Java SpringBoot server for Lance REST Namespace  |
 | Rust Reqwest Client   | Rust     | rust/lance-namespace-reqwest-client    | Generated Rust reqwest client for Lance REST Namespace     |
+| C/C++ Core            | C/C++    | cpp/lance_namespace                    | Core LanceNamespace interface and connect functionality    |
+| C/C++ REST Client     | C/C++    | cpp/lance_namespace_rest_client        | Generated C/C++ REST client for Lance REST Namespace       |
 
 
 ## Install uv
@@ -200,5 +202,5 @@ This section describes the CI/CD workflows for automated version management, rel
    - Go to the [Releases page](../../releases) to review the draft
    - Edit release notes if needed
    - Click "Publish release" to:
-     - For stable releases: Trigger automatic publishing for Java, Python, Rust
+     - For stable releases: Trigger automatic publishing for Java, Python, Rust, and C/C++
      - For preview releases: Create a beta release (not published)
