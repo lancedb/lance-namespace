@@ -1259,18 +1259,23 @@ paths:
     - $ref: '#/components/parameters/id'
     - $ref: '#/components/parameters/delimiter'
     - $ref: '#/components/parameters/branch'
-    - description: Lance field path to use for matching rows. Nested fields use dot-separated
-        segments; use backtick-quoted segments for literal dots and double backticks
-        inside quoted segments. Use canonical full paths for display and errors; leaf
-        names alone only identify top-level fields; invalid or unresolved paths should
-        return InvalidInput or TableColumnNotFound.
+    - description: Lance field paths to use for matching rows. Repeat the parameter
+        once per field to match on a composite key; a row matches only when every
+        listed field is equal. Nested fields use dot-separated segments; use backtick-quoted
+        segments for literal dots and double backticks inside quoted segments. Use
+        canonical full paths for display and errors; leaf names alone only identify
+        top-level fields; invalid or unresolved paths should return InvalidInput or
+        TableColumnNotFound.
       explode: true
       in: query
       name: "on"
       required: true
       schema:
-        minLength: 1
-        type: string
+        items:
+          minLength: 1
+          type: string
+        minItems: 1
+        type: array
       style: form
     - description: Update all columns when rows match
       explode: true
@@ -1343,7 +1348,7 @@ paths:
       description: |
         Performs a merge insert (upsert) operation on table `id`.
         This operation updates existing rows
-        based on a matching column and inserts new rows that don't match.
+        based on one or more matching columns and inserts new rows that don't match.
         It returns the number of rows inserted and updated.
 
         For tables that have been declared but not yet created on storage
@@ -1354,7 +1359,7 @@ paths:
         REST namespace uses Arrow IPC stream as the request body.
         It passes in the `MergeInsertIntoTableRequest` information in the following way:
         - `id`: pass through path parameter of the same name
-        - `on`: pass through query parameter of the same name
+        - `on`: pass through query parameter of the same name, repeated once per field path
         - `when_matched_update_all`: pass through query parameter of the same name
         - `when_matched_update_all_filt`: pass through query parameter of the same name
         - `when_not_matched_insert_all`: pass through query parameter of the same name
@@ -1365,18 +1370,23 @@ paths:
       - $ref: '#/components/parameters/id'
       - $ref: '#/components/parameters/delimiter'
       - $ref: '#/components/parameters/branch'
-      - description: Lance field path to use for matching rows. Nested fields use
-          dot-separated segments; use backtick-quoted segments for literal dots and
-          double backticks inside quoted segments. Use canonical full paths for display
-          and errors; leaf names alone only identify top-level fields; invalid or
-          unresolved paths should return InvalidInput or TableColumnNotFound.
+      - description: Lance field paths to use for matching rows. Repeat the parameter
+          once per field to match on a composite key; a row matches only when every
+          listed field is equal. Nested fields use dot-separated segments; use backtick-quoted
+          segments for literal dots and double backticks inside quoted segments. Use
+          canonical full paths for display and errors; leaf names alone only identify
+          top-level fields; invalid or unresolved paths should return InvalidInput
+          or TableColumnNotFound.
         explode: true
         in: query
         name: "on"
         required: true
         schema:
-          minLength: 1
-          type: string
+          items:
+            minLength: 1
+            type: string
+          minItems: 1
+          type: array
         style: form
       - description: Update all columns when rows match
         explode: true
@@ -4512,13 +4522,18 @@ components:
             Branch to target. When not specified, the main branch is used.
           type: string
         "on":
-          description: Lance field path to use for matching rows. Nested fields use
-            dot-separated segments; use backtick-quoted segments for literal dots
-            and double backticks inside quoted segments. Use canonical full paths
-            for display and errors; leaf names alone only identify top-level fields;
-            invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
-          minLength: 1
-          type: string
+          description: Lance field paths to use for matching rows. Multiple fields
+            form a composite match key; a row matches only when every listed field
+            is equal. Nested fields use dot-separated segments; use backtick-quoted
+            segments for literal dots and double backticks inside quoted segments.
+            Use canonical full paths for display and errors; leaf names alone only
+            identify top-level fields; invalid or unresolved paths should return InvalidInput
+            or TableColumnNotFound.
+          items:
+            minLength: 1
+            type: string
+          minItems: 1
+          type: array
         when_matched_update_all:
           default: false
           description: Update all columns when rows match

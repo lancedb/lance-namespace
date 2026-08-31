@@ -24,9 +24,9 @@ pub struct MergeInsertIntoTableRequest {
     /// Branch to target. When not specified, the main branch is used. 
     #[serde(rename = "branch", skip_serializing_if = "Option::is_none")]
     pub branch: Option<String>,
-    /// Lance field path to use for matching rows. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
+    /// Lance field paths to use for matching rows. Multiple fields form a composite match key; a row matches only when every listed field is equal. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
     #[serde(rename = "on", skip_serializing_if = "Option::is_none")]
-    pub on: Option<String>,
+    pub on: Option<Vec<String>>,
     /// Update all columns when rows match
     #[serde(rename = "when_matched_update_all", skip_serializing_if = "Option::is_none")]
     pub when_matched_update_all: Option<bool>,

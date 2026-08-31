@@ -45,7 +45,9 @@ class TestMergeInsertIntoTableRequest(unittest.TestCase):
                     ''
                     ],
                 branch = '',
-                on = '0',
+                on = [
+                    '0'
+                    ],
                 when_matched_update_all = True,
                 when_matched_update_all_filt = '',
                 when_not_matched_insert_all = True,

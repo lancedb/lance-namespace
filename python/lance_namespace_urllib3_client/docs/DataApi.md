@@ -979,7 +979,7 @@ Merge insert (upsert) records into a table
 
 Performs a merge insert (upsert) operation on table `id`.
 This operation updates existing rows
-based on a matching column and inserts new rows that don't match.
+based on one or more matching columns and inserts new rows that don't match.
 It returns the number of rows inserted and updated.
 
 For tables that have been declared but not yet created on storage
@@ -990,7 +990,7 @@ REST NAMESPACE ONLY
 REST namespace uses Arrow IPC stream as the request body.
 It passes in the `MergeInsertIntoTableRequest` information in the following way:
 - `id`: pass through path parameter of the same name
-- `on`: pass through query parameter of the same name
+- `on`: pass through query parameter of the same name, repeated once per field path
 - `when_matched_update_all`: pass through query parameter of the same name
 - `when_matched_update_all_filt`: pass through query parameter of the same name
 - `when_not_matched_insert_all`: pass through query parameter of the same name
@@ -1039,7 +1039,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = lance_namespace_urllib3_client.DataApi(api_client)
     id = 'id_example' # str | `string identifier` of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, `v1/namespace/$/list` performs a `ListNamespace` on the root namespace. 
-    on = 'on_example' # str | Lance field path to use for matching rows. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
+    on = ['on_example'] # List[str] | Lance field paths to use for matching rows. Repeat the parameter once per field to match on a composite key; a row matches only when every listed field is equal. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
     body = None # bytearray | Arrow IPC stream containing the records to merge
     delimiter = 'delimiter_example' # str | An optional delimiter of the `string identifier`, following the Lance Namespace spec. When not specified, the `$` delimiter must be used.  (optional)
     branch = 'branch_example' # str | Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a `branch` field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry `branch` as a body field instead.  (optional)
@@ -1068,7 +1068,7 @@ with lance_namespace_urllib3_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| &#x60;string identifier&#x60; of an object in a namespace, following the Lance Namespace spec. When the value is equal to the delimiter, it represents the root namespace. For example, &#x60;v1/namespace/$/list&#x60; performs a &#x60;ListNamespace&#x60; on the root namespace.  | 
- **on** | **str**| Lance field path to use for matching rows. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound. | 
+ **on** | [**List[str]**](str.md)| Lance field paths to use for matching rows. Repeat the parameter once per field to match on a composite key; a row matches only when every listed field is equal. Nested fields use dot-separated segments; use backtick-quoted segments for literal dots and double backticks inside quoted segments. Use canonical full paths for display and errors; leaf names alone only identify top-level fields; invalid or unresolved paths should return InvalidInput or TableColumnNotFound. | 
  **body** | **bytearray**| Arrow IPC stream containing the records to merge | 
  **delimiter** | **str**| An optional delimiter of the &#x60;string identifier&#x60;, following the Lance Namespace spec. When not specified, the &#x60;$&#x60; delimiter must be used.  | [optional] 
  **branch** | **str**| Optional branch to target. When not specified, the main branch is used. Used by branch-scoped operations that cannot carry a &#x60;branch&#x60; field in their request body (Arrow IPC stream and bodyless operations). Operations with a JSON request body carry &#x60;branch&#x60; as a body field instead.  | [optional] 

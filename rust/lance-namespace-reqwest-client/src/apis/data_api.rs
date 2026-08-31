@@ -720,8 +720,8 @@ pub async fn insert_into_table(configuration: &configuration::Configuration, id:
     }
 }
 
-/// Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on a matching column and inserts new rows that don't match. It returns the number of rows inserted and updated.  For tables that have been declared but not yet created on storage (is_only_declared=true), this operation will create the table with the provided data (since there are no existing rows to merge with).  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
-pub async fn merge_insert_into_table(configuration: &configuration::Configuration, id: &str, on: &str, body: Vec<u8>, delimiter: Option<&str>, branch: Option<&str>, when_matched_update_all: Option<bool>, when_matched_update_all_filt: Option<&str>, when_not_matched_insert_all: Option<bool>, when_not_matched_by_source_delete: Option<bool>, when_not_matched_by_source_delete_filt: Option<&str>, timeout: Option<&str>, use_index: Option<bool>) -> Result<models::MergeInsertIntoTableResponse, Error<MergeInsertIntoTableError>> {
+/// Performs a merge insert (upsert) operation on table `id`. This operation updates existing rows based on one or more matching columns and inserts new rows that don't match. It returns the number of rows inserted and updated.  For tables that have been declared but not yet created on storage (is_only_declared=true), this operation will create the table with the provided data (since there are no existing rows to merge with).  REST NAMESPACE ONLY REST namespace uses Arrow IPC stream as the request body. It passes in the `MergeInsertIntoTableRequest` information in the following way: - `id`: pass through path parameter of the same name - `on`: pass through query parameter of the same name, repeated once per field path - `when_matched_update_all`: pass through query parameter of the same name - `when_matched_update_all_filt`: pass through query parameter of the same name - `when_not_matched_insert_all`: pass through query parameter of the same name - `when_not_matched_by_source_delete`: pass through query parameter of the same name - `when_not_matched_by_source_delete_filt`: pass through query parameter of the same name 
+pub async fn merge_insert_into_table(configuration: &configuration::Configuration, id: &str, on: Vec<String>, body: Vec<u8>, delimiter: Option<&str>, branch: Option<&str>, when_matched_update_all: Option<bool>, when_matched_update_all_filt: Option<&str>, when_not_matched_insert_all: Option<bool>, when_not_matched_by_source_delete: Option<bool>, when_not_matched_by_source_delete_filt: Option<&str>, timeout: Option<&str>, use_index: Option<bool>) -> Result<models::MergeInsertIntoTableResponse, Error<MergeInsertIntoTableError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_id = id;
     let p_on = on;
@@ -745,7 +745,10 @@ pub async fn merge_insert_into_table(configuration: &configuration::Configuratio
     if let Some(ref param_value) = p_branch {
         req_builder = req_builder.query(&[("branch", &param_value.to_string())]);
     }
-    req_builder = req_builder.query(&[("on", &p_on.to_string())]);
+    req_builder = match "multi" {
+        "multi" => req_builder.query(&p_on.into_iter().map(|p| ("on".to_owned(), p.to_string())).collect::<Vec<(std::string::String, std::string::String)>>()),
+        _ => req_builder.query(&[("on", &p_on.into_iter().map(|p| p.to_string()).collect::<Vec<String>>().join(",").to_string())]),
+    };
     if let Some(ref param_value) = p_when_matched_update_all {
         req_builder = req_builder.query(&[("when_matched_update_all", &param_value.to_string())]);
     }

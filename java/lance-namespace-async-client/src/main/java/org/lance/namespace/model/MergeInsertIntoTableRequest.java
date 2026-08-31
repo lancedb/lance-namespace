@@ -58,7 +58,7 @@ public class MergeInsertIntoTableRequest {
   @javax.annotation.Nullable private String branch;
 
   public static final String JSON_PROPERTY_ON = "on";
-  @javax.annotation.Nullable private String on;
+  @javax.annotation.Nullable private List<String> on = new ArrayList<>();
 
   public static final String JSON_PROPERTY_WHEN_MATCHED_UPDATE_ALL = "when_matched_update_all";
   @javax.annotation.Nullable private Boolean whenMatchedUpdateAll = false;
@@ -206,13 +206,22 @@ public class MergeInsertIntoTableRequest {
     this.branch = branch;
   }
 
-  public MergeInsertIntoTableRequest on(@javax.annotation.Nullable String on) {
+  public MergeInsertIntoTableRequest on(@javax.annotation.Nullable List<String> on) {
     this.on = on;
     return this;
   }
 
+  public MergeInsertIntoTableRequest addOnItem(String onItem) {
+    if (this.on == null) {
+      this.on = new ArrayList<>();
+    }
+    this.on.add(onItem);
+    return this;
+  }
+
   /**
-   * Lance field path to use for matching rows. Nested fields use dot-separated segments; use
+   * Lance field paths to use for matching rows. Multiple fields form a composite match key; a row
+   * matches only when every listed field is equal. Nested fields use dot-separated segments; use
    * backtick-quoted segments for literal dots and double backticks inside quoted segments. Use
    * canonical full paths for display and errors; leaf names alone only identify top-level fields;
    * invalid or unresolved paths should return InvalidInput or TableColumnNotFound.
@@ -222,13 +231,13 @@ public class MergeInsertIntoTableRequest {
   @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_ON)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public String getOn() {
+  public List<String> getOn() {
     return on;
   }
 
   @JsonProperty(JSON_PROPERTY_ON)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setOn(@javax.annotation.Nullable String on) {
+  public void setOn(@javax.annotation.Nullable List<String> on) {
     this.on = on;
   }
 
@@ -574,9 +583,17 @@ public class MergeInsertIntoTableRequest {
 
     // add `on` to the URL query string
     if (getOn() != null) {
-      joiner.add(
-          String.format(
-              "%son%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getOn()))));
+      for (int i = 0; i < getOn().size(); i++) {
+        joiner.add(
+            String.format(
+                "%son%s%s=%s",
+                prefix,
+                suffix,
+                "".equals(suffix)
+                    ? ""
+                    : String.format("%s%d%s", containerPrefix, i, containerSuffix),
+                ApiClient.urlEncode(ApiClient.valueToString(getOn().get(i)))));
+      }
     }
 
     // add `when_matched_update_all` to the URL query string

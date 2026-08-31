@@ -197,20 +197,21 @@ The request body contains Arrow IPC stream data with records to insert.
 **Content-Type:** `application/vnd.apache.arrow.stream`
 
 The request body contains Arrow IPC stream data. Performs a merge insert (upsert) operation
-that updates existing rows based on a matching column and inserts new rows that don't match.
+that updates existing rows based on one or more matching columns and inserts new rows that
+don't match.
 
-| Request Field                            | REST Form                                | Location                                             |
-|------------------------------------------|------------------------------------------|------------------------------------------------------|
-| `id`                                     | `{id}`                                   | Path parameter                                       |
-| `on`                                     | `on`                                     | Query parameter (required)                           |
-| `when_matched_update_all`                | `when_matched_update_all`                | Query parameter (boolean)                            |
-| `when_matched_update_all_filt`           | `when_matched_update_all_filt`           | Query parameter (SQL expression)                     |
-| `when_not_matched_insert_all`            | `when_not_matched_insert_all`            | Query parameter (boolean)                            |
-| `when_not_matched_by_source_delete`      | `when_not_matched_by_source_delete`      | Query parameter (boolean)                            |
-| `when_not_matched_by_source_delete_filt` | `when_not_matched_by_source_delete_filt` | Query parameter (SQL expression)                     |
-| `timeout`                                | `timeout`                                | Query parameter (duration string, e.g., "30s", "5m") |
-| `use_index`                              | `use_index`                              | Query parameter (boolean)                            |
-| `data`                                   | Request body                             | Body (Arrow IPC stream)                              |
+| Request Field                            | REST Form                                | Location                                                 |
+|------------------------------------------|------------------------------------------|----------------------------------------------------------|
+| `id`                                     | `{id}`                                   | Path parameter                                           |
+| `on`                                     | `on`                                     | Query parameter (required, repeated once per field path) |
+| `when_matched_update_all`                | `when_matched_update_all`                | Query parameter (boolean)                                |
+| `when_matched_update_all_filt`           | `when_matched_update_all_filt`           | Query parameter (SQL expression)                         |
+| `when_not_matched_insert_all`            | `when_not_matched_insert_all`            | Query parameter (boolean)                                |
+| `when_not_matched_by_source_delete`      | `when_not_matched_by_source_delete`      | Query parameter (boolean)                                |
+| `when_not_matched_by_source_delete_filt` | `when_not_matched_by_source_delete_filt` | Query parameter (SQL expression)                         |
+| `timeout`                                | `timeout`                                | Query parameter (duration string, e.g., "30s", "5m")     |
+| `use_index`                              | `use_index`                              | Query parameter (boolean)                                |
+| `data`                                   | Request body                             | Body (Arrow IPC stream)                                  |
 
 ### QueryTable
 
