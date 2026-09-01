@@ -133,11 +133,24 @@ check-apache-client:
 check-springboot-server:
 	./mvnw checkstyle:check spotless:check -pl lance-namespace-springboot-server -am
 
+# lance-namespace-base module (hand-written, no codegen)
+.PHONY: lint-base
+lint-base: gen-apache-client
+	./mvnw spotless:apply -pl lance-namespace-base -am
+
+.PHONY: build-base
+build-base: build-apache-client build-core lint-base
+	./mvnw install -pl lance-namespace-base -am
+
+.PHONY: check-base
+check-base:
+	./mvnw checkstyle:check spotless:check -pl lance-namespace-base -am
+
 .PHONY: check
-check: check-apache-client check-async-client check-springboot-server check-core check-core-async
+check: check-apache-client check-async-client check-springboot-server check-core check-core-async check-base
 
 .PHONY: lint
-lint: lint-apache-client lint-async-client lint-springboot-server lint-core lint-core-async
+lint: lint-apache-client lint-async-client lint-springboot-server lint-core lint-core-async lint-base
 
 .PHONY: build
-build: build-apache-client build-async-client build-springboot-server build-core build-core-async
+build: build-apache-client build-async-client build-springboot-server build-core build-core-async build-base

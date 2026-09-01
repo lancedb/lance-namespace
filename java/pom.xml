@@ -93,6 +93,7 @@
         <module>lance-namespace-springboot-server</module>
         <module>lance-namespace-core</module>
         <module>lance-namespace-core-async</module>
+        <module>lance-namespace-base</module>
     </modules>
 
     <dependencyManagement>
